@@ -12,6 +12,11 @@ const prismaClientSingleton = () => {
     throw new Error('L\'URL de connexion MongoDB n\'est pas définie');
   }
 
+  // S'assurer que l'URL contient un nom de base de données
+  if (!url.includes('/dazlng')) {
+    throw new Error('L\'URL de connexion MongoDB doit contenir le nom de la base de données (dazlng)');
+  }
+
   return new PrismaClient({
     log: ['query', 'error', 'warn', 'info'],
     datasources: {

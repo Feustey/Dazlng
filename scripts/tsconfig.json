@@ -5,7 +5,11 @@
     "moduleResolution": "node",
     "noEmit": true,
     "allowJs": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "*": ["../*"]
+    }
   },
   "include": ["./**/*.ts"]
 } 

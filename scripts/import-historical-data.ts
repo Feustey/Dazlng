@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import connectToDatabase from '../lib/mongodb';
+import { connectToDatabase } from '../lib/mongodb';
 import Node from '../models/Node';
 
 const PUBKEY = "02778f4a4eb3a2344b9fd8ee72e7ec5f03f803e5f5273e2e1a2af508910cf2b12b";
