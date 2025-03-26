@@ -15,4 +15,36 @@ model History {
   marketCap Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Node {
+  id                      String   @id @default(auto()) @map("_id") @db.ObjectId
+  pubkey                  String   @unique
+  alias                   String
+  platform                String
+  version                 String
+  total_fees              Float
+  avg_fee_rate_ppm        Float
+  total_capacity          Float
+  active_channel_count    Int
+  total_volume            Float
+  total_peers             Int
+  uptime                  Float
+  opened_channel_count    Int
+  color                   String
+  address                 String
+  closed_channel_count    Int
+  pending_channel_count   Int
+  avg_capacity            Float
+  avg_fee_rate            Float
+  avg_base_fee_rate       Float
+  betweenness_rank        Int
+  eigenvector_rank        Int
+  closeness_rank          Int
+  weighted_betweenness_rank Int
+  weighted_closeness_rank   Int
+  weighted_eigenvector_rank Int
+  timestamp               DateTime @default(now())
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
 } 
