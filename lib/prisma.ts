@@ -13,7 +13,7 @@ const prismaClientSingleton = () => {
   }
 
   // S'assurer que l'URL contient un nom de base de données
-  if (!url.includes('/dazlng')) {
+  if (!url.includes('dazlng')) {
     throw new Error('L\'URL de connexion MongoDB doit contenir le nom de la base de données (dazlng)');
   }
 
