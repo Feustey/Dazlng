@@ -13,6 +13,7 @@ const nodeSchema = new mongoose.Schema({
   total_peers: { type: Number, required: true },
   uptime: { type: Number, required: true },
   opened_channel_count: { type: Number, required: true },
+  color: { type: String, required: true },
   timestamp: { type: Date, default: Date.now }
 });
 
@@ -31,6 +32,7 @@ export interface INode {
   total_peers: number;
   uptime: number;
   opened_channel_count: number;
+  color: string;
   timestamp: Date;
 }
 

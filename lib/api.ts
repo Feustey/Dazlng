@@ -12,6 +12,7 @@ export interface NodeStats {
   uptime: number;
   opened_channel_count: number;
   last_update: string;
+  color: string;
 }
 
 export interface HistoricalData {

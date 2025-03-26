@@ -32,6 +32,7 @@ export async function GET() {
       total_peers: latestNode.total_peers,
       uptime: latestNode.uptime,
       opened_channel_count: latestNode.opened_channel_count,
+      color: latestNode.color,
       last_update: latestNode.timestamp
     };
 
