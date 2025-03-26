@@ -1,3 +1,1 @@
-import historyModule from './route';
-
-export const GET = historyModule.GET; 
+export { GET } from './route'; 
