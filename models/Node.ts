@@ -32,8 +32,9 @@ const nodeSchema = new mongoose.Schema({
 const Node = mongoose.models.Node || mongoose.model('Node', nodeSchema);
 
 export interface INode {
-  alias: string;
+  _id?: string;
   pubkey: string;
+  alias: string;
   platform: string;
   version: string;
   total_fees: number;

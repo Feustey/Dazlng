@@ -13,8 +13,8 @@ model History {
   price     Float
   volume    Float
   marketCap Float
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 
   @@map("history")
 }

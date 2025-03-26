@@ -1,5 +1,5 @@
 import { fetchAndStoreNodeData, getNodeData } from '../src/lib/sparkseerService';
-import { INode } from '../models/Node';
+import type { INode } from '../models/Node';
 
 async function testAPI() {
   try {
@@ -9,11 +9,11 @@ async function testAPI() {
     const testPubkey = '02c16cca44562b590dd279a942765bc517485aba1298dc6046a5c3918fb724c24';
     
     console.log('📥 Test de récupération et stockage des données...');
-    const storedData: INode = await fetchAndStoreNodeData(testPubkey);
+    const storedData = await fetchAndStoreNodeData(testPubkey);
     console.log('✅ Données stockées avec succès:', storedData);
 
     console.log('📤 Test de récupération des données...');
-    const retrievedData: INode | null = await getNodeData(testPubkey);
+    const retrievedData = await getNodeData(testPubkey);
     console.log('✅ Données récupérées avec succès:', retrievedData);
 
     console.log('✨ Tous les tests ont réussi !');

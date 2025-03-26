@@ -1,5 +1,5 @@
 import connectToDatabase from './mongodb';
-import Node, { INode } from '../models/Node';
+import Node, { INode } from '../../models/Node';
 
 const SPARKSEER_API_URL = 'https://api.sparkseer.com/v1';
 
@@ -35,39 +35,42 @@ export async function fetchAndStoreNodeData(pubkey: string): Promise<INode> {
     const nodeData: SparkseerNodeData = await response.json();
 
     // Préparation des données pour MongoDB
-    const nodeDocument = {
+    const nodeDocument: INode = {
       pubkey: nodeData.pubkey,
       alias: nodeData.alias,
-      capacity: nodeData.capacity,
-      channelCount: nodeData.channel_count,
-      firstSeen: new Date(nodeData.first_seen),
-      metrics: {
-        feeRate: nodeData.fee_rate,
-        baseFee: nodeData.base_fee,
-        minHtlc: nodeData.min_htlc,
-        maxHtlc: nodeData.max_htlc,
-        timeLockDelta: nodeData.time_lock_delta,
-      },
-      channels: nodeData.channels.map((channel) => ({
-        channelId: channel.channel_id,
-        capacity: channel.capacity,
-        node1Pubkey: channel.node1_pubkey,
-        node2Pubkey: channel.node2_pubkey,
-        lastUpdate: new Date(channel.last_update),
-        status: channel.status,
-      })),
+      platform: 'lightning', // Valeur par défaut
+      version: 'unknown', // Valeur par défaut
+      total_fees: 0, // À calculer à partir des canaux
+      avg_fee_rate_ppm: nodeData.fee_rate,
+      total_capacity: nodeData.capacity,
+      active_channel_count: nodeData.channel_count,
+      total_volume: 0, // À calculer à partir des canaux
+      total_peers: nodeData.channels.length,
+      uptime: 100, // Valeur par défaut
+      opened_channel_count: nodeData.channels.filter(c => c.status === 'active').length,
+      color: '#000000', // Valeur par défaut
+      address: '', // À remplir si disponible
+      closed_channel_count: nodeData.channels.filter(c => c.status === 'closed').length,
+      pending_channel_count: nodeData.channels.filter(c => c.status === 'pending').length,
+      avg_capacity: nodeData.capacity / nodeData.channel_count,
+      avg_fee_rate: nodeData.fee_rate,
+      avg_base_fee_rate: nodeData.base_fee,
+      betweenness_rank: 0, // À calculer
+      eigenvector_rank: 0, // À calculer
+      closeness_rank: 0, // À calculer
+      weighted_betweenness_rank: 0, // À calculer
+      weighted_closeness_rank: 0, // À calculer
+      weighted_eigenvector_rank: 0, // À calculer
+      timestamp: new Date()
     };
 
-    // Mise à jour ou création du document
-    const result = await Node.findOneAndUpdate(
-      { pubkey: nodeData.pubkey },
-      nodeDocument,
-      { upsert: true, new: true }
-    );
+    // Sauvegarde dans MongoDB
+    const node = new Node(nodeDocument);
+    await node.save();
 
-    return result;
+    return nodeDocument;
   } catch (error) {
-    console.error('Erreur lors de la récupération des données:', error);
+    console.error('Erreur lors de la récupération des données du nœud:', error);
     throw error;
   }
 }
