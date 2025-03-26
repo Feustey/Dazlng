@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import connectToDatabase from '../lib/mongodb';
 import Node from '../models/Node';
 
@@ -5,17 +6,35 @@ const PUBKEY = "02778f4a4eb3a2344b9fd8ee72e7ec5f03f803e5f5273e2e1a2af508910cf2b1
 const API_URL = "https://api.sparkseer.space/v1";
 
 async function fetchHistoricalData() {
-  const response = await fetch(`${API_URL}/node/historical/${PUBKEY}`, {
-    headers: {
-      'Authorization': `Bearer ${process.env.SPARKSEER_API_KEY}`,
-    },
-  });
+  try {
+    const apiKey = process.env.SPARKSEER_API_KEY;
+    console.log('API URL:', `${API_URL}/node/historical/${PUBKEY}`);
+    console.log('API Key length:', apiKey?.length);
+    console.log('API Key first 10 chars:', apiKey?.substring(0, 10));
+    
+    const response = await fetch(`${API_URL}/node/historical/${PUBKEY}`, {
+      headers: {
+        'api-key': apiKey || '',
+        'Content-Type': 'application/json',
+      },
+    });
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch historical data');
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('API Error:', {
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries()),
+        body: errorText
+      });
+      throw new Error(`Failed to fetch historical data: ${response.status} ${response.statusText}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error('Fetch error:', error);
+    throw error;
   }
-
-  return response.json();
 }
 
 async function importHistoricalData() {
