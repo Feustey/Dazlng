@@ -29,10 +29,23 @@ export async function connectToDatabase() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      serverSelectionTimeoutMS: 10000, // Timeout après 10 secondes
+      socketTimeoutMS: 45000, // Timeout socket après 45 secondes
+      family: 4, // Utiliser IPv4, éviter les problèmes IPv6
+      retryWrites: true,
+      retryReads: true,
+      maxPoolSize: 10,
+      minPoolSize: 5,
+      maxIdleTimeMS: 30000,
+      connectTimeoutMS: 10000,
     };
 
     cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
+      console.log('Connected to MongoDB');
       return mongoose;
+    }).catch((error) => {
+      console.error('MongoDB connection error:', error);
+      throw error;
     });
   }
 
@@ -40,6 +53,7 @@ export async function connectToDatabase() {
     cached.conn = await cached.promise;
   } catch (e) {
     cached.promise = null;
+    console.error('Failed to connect to MongoDB:', e);
     throw e;
   }
 
