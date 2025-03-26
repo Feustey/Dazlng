@@ -42,15 +42,15 @@
 
 [functions]
   node_bundler = "esbuild"
-  # Augmenter le timeout pour les fonctions
-  timeout = 30
 
 [functions.update-data]
   schedule = "0 0 * * *"
   runtime = "nodejs18"
+  timeout = 30
 
 [functions.import-historical]
   runtime = "nodejs18"
+  timeout = 30
 
 [[redirects]]
   from = "/api/sparkseer/*"
