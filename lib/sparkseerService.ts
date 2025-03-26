@@ -94,7 +94,7 @@ export async function getAllNodes(): Promise<INode[]> {
   }
 }
 
-module.exports = {
+export default {
   fetchAndStoreNodeData,
   getNodeData,
   getAllNodes

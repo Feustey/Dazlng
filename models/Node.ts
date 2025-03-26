@@ -16,7 +16,7 @@ const nodeSchema = new mongoose.Schema({
   timestamp: { type: Date, default: Date.now }
 });
 
-export const Node = mongoose.models.Node || mongoose.model('Node', nodeSchema);
+const Node = mongoose.models.Node || mongoose.model('Node', nodeSchema);
 
 export interface INode {
   alias: string;
@@ -32,4 +32,6 @@ export interface INode {
   uptime: number;
   opened_channel_count: number;
   timestamp: Date;
-} 
+}
+
+export default Node; 
