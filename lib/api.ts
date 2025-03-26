@@ -35,13 +35,22 @@ export async function getCurrentStats(): Promise<NodeStats> {
   if (!response.ok) {
     throw new Error('Failed to fetch current stats');
   }
-  return response.json();
+  const data = await response.json();
+  return data.current;
 }
 
 export async function getHistoricalData(): Promise<HistoricalData[]> {
-  const response = await fetch('/api/history');
+  const response = await fetch('/api/stats');
   if (!response.ok) {
     throw new Error('Failed to fetch historical data');
   }
-  return response.json();
+  const data = await response.json();
+  return data.historical.map((item: any) => ({
+    timestamp: item.timestamp,
+    total_fees: item.total_fees,
+    total_capacity: item.total_capacity,
+    active_channels: item.active_channel_count,
+    total_peers: item.total_peers,
+    total_volume: item.total_volume
+  }));
 }

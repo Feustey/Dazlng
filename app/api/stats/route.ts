@@ -2,51 +2,37 @@ import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import Node from '@/models/Node';
 
+const PUBKEY = "02778f4a4eb3a2344b9fd8ee72e7ec5f03f803e5f5273e2e1a2af508910cf2b12b";
+
 export async function GET() {
   try {
     await connectToDatabase();
     
-    // Récupérer le dernier nœud enregistré
-    const latestNode = await Node.findOne()
+    // Récupérer les données actuelles
+    const currentStats = await Node.findOne({ pubkey: PUBKEY })
       .sort({ timestamp: -1 })
       .limit(1);
 
-    if (!latestNode) {
+    if (!currentStats) {
       return NextResponse.json(
-        { error: 'Aucune donnée disponible' },
+        { error: 'Aucune donnée trouvée' },
         { status: 404 }
       );
     }
 
-    // Transformer les données pour correspondre au format attendu par le frontend
-    const stats = {
-      alias: latestNode.alias,
-      pubkey: latestNode.pubkey,
-      platform: latestNode.platform,
-      version: latestNode.version,
-      total_fees: latestNode.total_fees,
-      avg_fee_rate_ppm: latestNode.avg_fee_rate_ppm,
-      total_capacity: latestNode.total_capacity,
-      active_channel_count: latestNode.active_channel_count,
-      total_volume: latestNode.total_volume,
-      total_peers: latestNode.total_peers,
-      uptime: latestNode.uptime,
-      opened_channel_count: latestNode.opened_channel_count,
-      color: latestNode.color,
-      address: latestNode.address,
-      closed_channel_count: latestNode.closed_channel_count,
-      pending_channel_count: latestNode.pending_channel_count,
-      avg_capacity: latestNode.avg_capacity,
-      avg_fee_rate: latestNode.avg_fee_rate,
-      avg_base_fee_rate: latestNode.avg_base_fee_rate,
-      last_update: latestNode.timestamp
-    };
+    // Récupérer les données historiques (dernières 24 heures)
+    const historicalData = await Node.find({ pubkey: PUBKEY })
+      .sort({ timestamp: -1 })
+      .limit(24);
 
-    return NextResponse.json(stats);
+    return NextResponse.json({
+      current: currentStats,
+      historical: historicalData
+    });
   } catch (error) {
-    console.error('Erreur lors de la récupération des statistiques:', error);
+    console.error('Erreur lors de la récupération des données:', error);
     return NextResponse.json(
-      { error: 'Erreur lors de la récupération des statistiques' },
+      { error: 'Erreur lors de la récupération des données' },
       { status: 500 }
     );
   }
