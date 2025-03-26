@@ -1,4 +1,4 @@
-import connectDB from './mongodb';
+import connectToDatabase from './mongodb';
 import Node, { INode } from '../models/Node';
 
 const SPARKSEER_API_URL = 'https://api.sparkseer.com/v1';
@@ -28,7 +28,7 @@ interface SparkseerNodeData {
 
 export async function fetchAndStoreNodeData(pubkey: string): Promise<INode> {
   try {
-    await connectDB();
+    await connectToDatabase();
     
     // Appel à l'API Sparkseer
     const response = await fetch(`${SPARKSEER_API_URL}/nodes/${pubkey}`);
@@ -74,7 +74,7 @@ export async function fetchAndStoreNodeData(pubkey: string): Promise<INode> {
 
 export async function getNodeData(pubkey: string): Promise<INode | null> {
   try {
-    await connectDB();
+    await connectToDatabase();
     const node = await Node.findOne({ pubkey });
     return node;
   } catch (error) {
@@ -85,7 +85,7 @@ export async function getNodeData(pubkey: string): Promise<INode | null> {
 
 export async function getAllNodes(): Promise<INode[]> {
   try {
-    await connectDB();
+    await connectToDatabase();
     const nodes = await Node.find({});
     return nodes;
   } catch (error) {
