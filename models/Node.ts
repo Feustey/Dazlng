@@ -14,6 +14,12 @@ const nodeSchema = new mongoose.Schema({
   uptime: { type: Number, required: true },
   opened_channel_count: { type: Number, required: true },
   color: { type: String, required: true },
+  address: { type: String, required: true },
+  closed_channel_count: { type: Number, required: true },
+  pending_channel_count: { type: Number, required: true },
+  avg_capacity: { type: Number, required: true },
+  avg_fee_rate: { type: Number, required: true },
+  avg_base_fee_rate: { type: Number, required: true },
   timestamp: { type: Date, default: Date.now }
 });
 
@@ -33,6 +39,12 @@ export interface INode {
   uptime: number;
   opened_channel_count: number;
   color: string;
+  address: string;
+  closed_channel_count: number;
+  pending_channel_count: number;
+  avg_capacity: number;
+  avg_fee_rate: number;
+  avg_base_fee_rate: number;
   timestamp: Date;
 }
 

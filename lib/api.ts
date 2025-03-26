@@ -13,6 +13,12 @@ export interface NodeStats {
   opened_channel_count: number;
   last_update: string;
   color: string;
+  address: string;
+  closed_channel_count: number;
+  pending_channel_count: number;
+  avg_capacity: number;
+  avg_fee_rate: number;
+  avg_base_fee_rate: number;
 }
 
 export interface HistoricalData {

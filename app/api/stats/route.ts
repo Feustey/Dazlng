@@ -33,6 +33,12 @@ export async function GET() {
       uptime: latestNode.uptime,
       opened_channel_count: latestNode.opened_channel_count,
       color: latestNode.color,
+      address: latestNode.address,
+      closed_channel_count: latestNode.closed_channel_count,
+      pending_channel_count: latestNode.pending_channel_count,
+      avg_capacity: latestNode.avg_capacity,
+      avg_fee_rate: latestNode.avg_fee_rate,
+      avg_base_fee_rate: latestNode.avg_base_fee_rate,
       last_update: latestNode.timestamp
     };
 
