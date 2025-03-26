@@ -27,15 +27,15 @@ export async function GET() {
 
     // Remplacer les variables dans le template
     const prompt = promptTemplate
-      .replace('{total_capacity}', nodeData.totalCapacity.toString())
-      .replace('{channel_count}', nodeData.channelCount.toString())
-      .replace('{connectivity_score}', nodeData.connectivityScore.toString())
-      .replace('{betweenness_centrality}', nodeData.betweennessCentrality.toString())
+      .replace('{total_capacity}', nodeData.total_capacity.toString())
+      .replace('{channel_count}', nodeData.active_channel_count.toString())
+      .replace('{connectivity_score}', '0')
+      .replace('{betweenness_centrality}', '0')
       .replace('{node_alias}', nodeData.alias)
-      .replace('{node_country}', nodeData.country)
-      .replace('{avg_base_fee}', nodeData.avgBaseFee.toString())
-      .replace('{avg_fee_rate}', nodeData.avgFeeRate.toString())
-      .replace('{activity_history}', JSON.stringify(nodeData.activityHistory));
+      .replace('{node_country}', 'Unknown')
+      .replace('{avg_base_fee}', '0')
+      .replace('{avg_fee_rate}', nodeData.avg_fee_rate_ppm.toString())
+      .replace('{activity_history}', '[]');
 
     // Appeler l'API OpenAI
     const completion = await openai.chat.completions.create({
