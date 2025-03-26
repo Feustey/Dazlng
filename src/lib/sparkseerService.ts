@@ -1,7 +1,7 @@
 import connectToDatabase from './mongodb';
 import Node, { INode } from '../../models/Node';
 
-const SPARKSEER_API_URL = 'https://api.sparkseer.com/v1';
+const SPARKSEER_API_URL = '/api/sparkseer/v1';
 
 interface SparkseerChannel {
   channel_id: string;
