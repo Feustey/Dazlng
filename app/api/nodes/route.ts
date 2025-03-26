@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { fetchAndStoreNodeData, getNodeData, getAllNodes } from '@/lib/sparkseerService';
+import { fetchAndStoreNodeData, getNodeData, getAllNodes } from '@/src/lib/sparkseerService';
 
 export async function GET(request: Request) {
   try {

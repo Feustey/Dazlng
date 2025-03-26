@@ -1,6 +1,6 @@
 import { Handler } from '@netlify/functions';
 import { connectToDatabase } from '../../lib/mongodb';
-import { Node } from '../../models/Node';
+import Node from '../../models/Node';
 
 const PUBKEY = "02778f4a4eb3a2344b9fd8ee72e7ec5f03f803e5f5273e2e1a2af508910cf2b12b";
 const API_URL = "https://api.sparkseer.space/v1";

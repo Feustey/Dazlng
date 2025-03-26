@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import connectToDatabase from '../lib/mongodb';
+import { connectToDatabase } from '../lib/mongodb';
 import Node from '../models/Node';
 
 async function checkImportedData() {

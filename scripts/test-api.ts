@@ -1,4 +1,4 @@
-import { fetchAndStoreNodeData, getNodeData } from '../lib/sparkseerService';
+import { fetchAndStoreNodeData, getNodeData } from '../src/lib/sparkseerService';
 import { INode } from '../models/Node';
 
 async function testAPI() {
