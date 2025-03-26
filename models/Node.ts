@@ -20,6 +20,12 @@ const nodeSchema = new mongoose.Schema({
   avg_capacity: { type: Number, required: true },
   avg_fee_rate: { type: Number, required: true },
   avg_base_fee_rate: { type: Number, required: true },
+  betweenness_rank: { type: Number, required: true },
+  eigenvector_rank: { type: Number, required: true },
+  closeness_rank: { type: Number, required: true },
+  weighted_betweenness_rank: { type: Number, required: true },
+  weighted_closeness_rank: { type: Number, required: true },
+  weighted_eigenvector_rank: { type: Number, required: true },
   timestamp: { type: Date, default: Date.now }
 });
 
@@ -45,6 +51,12 @@ export interface INode {
   avg_capacity: number;
   avg_fee_rate: number;
   avg_base_fee_rate: number;
+  betweenness_rank: number;
+  eigenvector_rank: number;
+  closeness_rank: number;
+  weighted_betweenness_rank: number;
+  weighted_closeness_rank: number;
+  weighted_eigenvector_rank: number;
   timestamp: Date;
 }
 

@@ -30,7 +30,19 @@ async function fetchHistoricalData() {
       throw new Error(`Failed to fetch historical data: ${response.status} ${response.statusText}`);
     }
 
-    return response.json();
+    const data = await response.json();
+    console.log('Structure de la réponse API:', {
+      type: typeof data,
+      isArray: Array.isArray(data),
+      keys: Object.keys(data),
+      historicalStatsLength: data.historical_stats?.length
+    });
+
+    if (!data.historical_stats || !Array.isArray(data.historical_stats)) {
+      throw new Error('La réponse API ne contient pas de données historiques valides');
+    }
+
+    return data.historical_stats;
   } catch (error) {
     console.error('Fetch error:', error);
     throw error;
@@ -48,27 +60,45 @@ async function importHistoricalData() {
     // Transformer et sauvegarder chaque enregistrement
     for (const record of historicalData) {
       const nodeData = {
-        alias: record.alias,
-        pubkey: record.pubkey,
-        platform: record.platform,
-        version: record.version,
-        total_fees: record.total_fees,
-        avg_fee_rate_ppm: record.avg_fee_rate_ppm,
-        total_capacity: record.total_capacity,
-        active_channel_count: record.active_channel_count,
-        total_volume: record.total_volume,
-        total_peers: record.total_peers,
-        uptime: record.uptime,
-        opened_channel_count: record.opened_channel_count,
-        timestamp: new Date(record.timestamp)
+        alias: record.alias || 'Unknown',
+        pubkey: PUBKEY,
+        platform: record.platform || 'Unknown',
+        version: record.version || 'Unknown',
+        total_fees: record.total_fees || 0,
+        avg_fee_rate_ppm: record.avg_fee_rate_ppm || 0,
+        total_capacity: record.total_capacity || 0,
+        active_channel_count: record.num_channels || 0,
+        total_volume: record.total_volume || 0,
+        total_peers: record.total_peers || 0,
+        uptime: record.uptime || 0,
+        opened_channel_count: record.opened_channel_count || 0,
+        color: record.color || '#000000',
+        address: record.address || 'Unknown',
+        closed_channel_count: record.closed_channel_count || 0,
+        pending_channel_count: record.pending_channel_count || 0,
+        avg_capacity: record.mean_channel_capacity || 0,
+        avg_fee_rate: record.mean_outbound_fee_rate || 0,
+        avg_base_fee_rate: record.mean_outbound_base_fee || 0,
+        betweenness_rank: record.betweenness_rank || 0,
+        eigenvector_rank: record.eigenvector_rank || 0,
+        closeness_rank: record.closeness_rank || 0,
+        weighted_betweenness_rank: record.weighted_betweenness_rank || 0,
+        weighted_closeness_rank: record.weighted_closeness_rank || 0,
+        weighted_eigenvector_rank: record.weighted_eigenvector_rank || 0,
+        timestamp: new Date(record.date)
       };
 
-      // Utiliser upsert pour éviter les doublons
-      await Node.findOneAndUpdate(
-        { pubkey: nodeData.pubkey, timestamp: nodeData.timestamp },
-        nodeData,
-        { upsert: true }
-      );
+      try {
+        // Utiliser upsert pour éviter les doublons
+        const result = await Node.findOneAndUpdate(
+          { pubkey: nodeData.pubkey, timestamp: nodeData.timestamp },
+          nodeData,
+          { upsert: true, new: true }
+        );
+        console.log(`Imported/Updated node for date: ${nodeData.timestamp}`);
+      } catch (error) {
+        console.error(`Error importing node for date ${nodeData.timestamp}:`, error);
+      }
     }
 
     console.log('Historical data import completed successfully');
