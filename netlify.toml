@@ -1,12 +1,11 @@
 [build]
   command = "npm run build"
   publish = ".next"
-
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
+  functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "18"
+  NEXT_USE_NETLIFY_EDGE = "true"
 
 [build.processing]
   skip_processing = false
@@ -33,4 +32,17 @@
     "node_modules",
     ".next",
     "public"
-  ] 
+  ]
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[functions]
+  node_bundler = "esbuild"
+
+[functions.update-data]
+  schedule = "0 0 * * *"
+  runtime = "nodejs18"
+
+[functions.import-historical]
+  runtime = "nodejs18" 

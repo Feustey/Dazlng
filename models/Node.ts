@@ -1,58 +1,35 @@
-import mongoose, { Document } from 'mongoose';
+import mongoose from 'mongoose';
 
-export interface INode extends Document {
-  pubkey: string;
-  alias?: string;
-  capacity?: number;
-  channelCount?: number;
-  firstSeen?: Date;
-  updatedAt: Date;
-  metrics: {
-    feeRate?: number;
-    baseFee?: number;
-    minHtlc?: number;
-    maxHtlc?: number;
-    timeLockDelta?: number;
-  };
-  channels: Array<{
-    channelId: string;
-    capacity?: number;
-    node1Pubkey: string;
-    node2Pubkey: string;
-    lastUpdate: Date;
-    status: string;
-  }>;
-}
-
-const NodeSchema = new mongoose.Schema({
-  pubkey: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  alias: String,
-  capacity: Number,
-  channelCount: Number,
-  firstSeen: Date,
-  updatedAt: {
-    type: Date,
-    default: Date.now,
-  },
-  metrics: {
-    feeRate: Number,
-    baseFee: Number,
-    minHtlc: Number,
-    maxHtlc: Number,
-    timeLockDelta: Number,
-  },
-  channels: [{
-    channelId: String,
-    capacity: Number,
-    node1Pubkey: String,
-    node2Pubkey: String,
-    lastUpdate: Date,
-    status: String,
-  }],
+const nodeSchema = new mongoose.Schema({
+  alias: { type: String, required: true },
+  pubkey: { type: String, required: true },
+  platform: { type: String, required: true },
+  version: { type: String, required: true },
+  total_fees: { type: Number, required: true },
+  avg_fee_rate_ppm: { type: Number, required: true },
+  total_capacity: { type: Number, required: true },
+  active_channel_count: { type: Number, required: true },
+  total_volume: { type: Number, required: true },
+  total_peers: { type: Number, required: true },
+  uptime: { type: Number, required: true },
+  opened_channel_count: { type: Number, required: true },
+  timestamp: { type: Date, default: Date.now }
 });
 
-export default mongoose.models.Node || mongoose.model<INode>('Node', NodeSchema); 
+export const Node = mongoose.models.Node || mongoose.model('Node', nodeSchema);
+
+export interface INode {
+  alias: string;
+  pubkey: string;
+  platform: string;
+  version: string;
+  total_fees: number;
+  avg_fee_rate_ppm: number;
+  total_capacity: number;
+  active_channel_count: number;
+  total_volume: number;
+  total_peers: number;
+  uptime: number;
+  opened_channel_count: number;
+  timestamp: Date;
+} 

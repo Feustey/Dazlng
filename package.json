@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test:api": "ts-node --project scripts/tsconfig.json scripts/test-api.ts"
+    "test:api": "ts-node --project scripts/tsconfig.json scripts/test-api.ts",
+    "import-historical": "ts-node scripts/import-historical-data.ts",
+    "update-daily": "ts-node scripts/update-daily.ts",
+    "setup-cron": "ts-node scripts/setup-cron.ts",
+    "generate-secret": "ts-node scripts/generate-secret.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

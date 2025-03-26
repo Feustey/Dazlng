@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
-const MONGODB_URI = `mongodb+srv://feustey:<db_password>@dazlng.ug0aiaw.mongodb.net/?retryWrites=true&w=majority&appName=DazLng`;
+const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable inside .env');
+  throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
 }
 
 interface Cached {
@@ -21,7 +21,7 @@ if (!cached) {
   cached = global.mongoose = { conn: null, promise: null };
 }
 
-async function connectDB(): Promise<typeof mongoose> {
+export async function connectToDatabase() {
   if (cached.conn) {
     return cached.conn;
   }
@@ -31,7 +31,7 @@ async function connectDB(): Promise<typeof mongoose> {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+    cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
       return mongoose;
     });
   }
@@ -44,6 +44,4 @@ async function connectDB(): Promise<typeof mongoose> {
   }
 
   return cached.conn;
-}
-
-export default connectDB; 
+} 
