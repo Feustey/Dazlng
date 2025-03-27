@@ -13,9 +13,18 @@ const prisma = globalForPrisma.prisma ?? new PrismaClient()
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 
+// Vérification des variables d'environnement
+if (!process.env.OPENAI_API_KEY) {
+  throw new Error('OPENAI_API_KEY is not defined in environment variables');
+}
+
+if (!process.env.OPENAI_ORG_ID) {
+  throw new Error('OPENAI_ORG_ID is not defined in environment variables');
+}
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-  organization: 'org-T9y9m0PDO2eykV89siIoiTkz'
+  organization: process.env.OPENAI_ORG_ID
 });
 
 export async function GET() {
