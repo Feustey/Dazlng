@@ -32,9 +32,10 @@ interface ChartProps {
   dataKey: string;
   title: string;
   formatter?: (value: number) => string;
+  color?: string;
 }
 
-export function Chart({ data, dataKey, title, formatter }: ChartProps) {
+export function Chart({ data, dataKey, title, formatter, color = 'chart-1' }: ChartProps) {
   const chartData: ChartData<'line'> = {
     labels: data.map(item => new Date(item.timestamp).toLocaleDateString()),
     datasets: [
@@ -42,11 +43,12 @@ export function Chart({ data, dataKey, title, formatter }: ChartProps) {
         label: title,
         data: data.map(item => item[dataKey]),
         fill: true,
-        borderColor: 'hsl(var(--primary))',
-        backgroundColor: 'hsl(var(--primary) / 0.1)',
+        borderColor: `hsl(var(--${color}))`,
+        backgroundColor: `hsl(var(--${color}) / 0.1)`,
         tension: 0.4,
         pointRadius: 4,
         pointHoverRadius: 6,
+        borderWidth: 2,
       },
     ],
   };
@@ -61,7 +63,10 @@ export function Chart({ data, dataKey, title, formatter }: ChartProps) {
       font: {
         size: 12,
       },
-      color: 'hsl(var(--foreground))',
+      color: 'hsl(var(--muted-foreground))',
+    },
+    border: {
+      color: 'hsl(var(--border))',
     },
   };
 
@@ -74,11 +79,14 @@ export function Chart({ data, dataKey, title, formatter }: ChartProps) {
       font: {
         size: 12,
       },
-      color: 'hsl(var(--foreground))',
+      color: 'hsl(var(--muted-foreground))',
       callback: function(tickValue: number | string) {
         const value = Number(tickValue);
         return formatter ? formatter(value) : value.toString();
       },
+    },
+    border: {
+      color: 'hsl(var(--border))',
     },
   };
 
@@ -94,9 +102,9 @@ export function Chart({ data, dataKey, title, formatter }: ChartProps) {
         display: false,
       },
       tooltip: {
-        backgroundColor: 'hsl(var(--background))',
-        titleColor: 'hsl(var(--foreground))',
-        bodyColor: 'hsl(var(--foreground))',
+        backgroundColor: 'hsl(var(--card))',
+        titleColor: 'hsl(var(--card-foreground))',
+        bodyColor: 'hsl(var(--card-foreground))',
         borderColor: 'hsl(var(--border))',
         borderWidth: 1,
         padding: 12,

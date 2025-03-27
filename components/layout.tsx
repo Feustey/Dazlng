@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Bolt, Activity, MessageCircle, Settings, Menu } from "lucide-react";
+import { Bolt, Activity, MessageCircle, Settings, Menu, PlayCircle, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { LanguageSelector } from "@/components/language-selector";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -26,38 +28,60 @@ export function Layout({ children }: LayoutProps) {
           <span className="ml-2 text-lg font-bold">Lightning Manager</span>
         </div>
         <nav className="space-y-1 p-4">
-          <Button
-            variant="ghost"
-            className="w-full justify-start"
-            onClick={() => {}}
-          >
-            <Activity className="mr-2 h-4 w-4" />
-            Overview
-          </Button>
-          <Button
-            variant="ghost"
-            className="w-full justify-start"
-            onClick={() => {}}
-          >
-            <Bolt className="mr-2 h-4 w-4" />
-            Channels
-          </Button>
-          <Button
-            variant="ghost"
-            className="w-full justify-start"
-            onClick={() => {}}
-          >
-            <MessageCircle className="mr-2 h-4 w-4" />
-            Messages
-          </Button>
-          <Button
-            variant="ghost"
-            className="w-full justify-start"
-            onClick={() => {}}
-          >
-            <Settings className="mr-2 h-4 w-4" />
-            Settings
-          </Button>
+          <Link href="/">
+            <Button
+              variant="ghost"
+              className="w-full justify-start"
+            >
+              <Activity className="mr-2 h-4 w-4" />
+              Overview
+            </Button>
+          </Link>
+          <Link href="/actions">
+            <Button
+              variant="ghost"
+              className="w-full justify-start"
+            >
+              <PlayCircle className="mr-2 h-4 w-4" />
+              Actions
+            </Button>
+          </Link>
+          <Link href="/channels">
+            <Button
+              variant="ghost"
+              className="w-full justify-start"
+            >
+              <Bolt className="mr-2 h-4 w-4" />
+              Channels
+            </Button>
+          </Link>
+          <Link href="/messages">
+            <Button
+              variant="ghost"
+              className="w-full justify-start"
+            >
+              <MessageCircle className="mr-2 h-4 w-4" />
+              Messages
+            </Button>
+          </Link>
+          <Link href="/settings">
+            <Button
+              variant="ghost"
+              className="w-full justify-start"
+            >
+              <Settings className="mr-2 h-4 w-4" />
+              Settings
+            </Button>
+          </Link>
+          <Link href="/about">
+            <Button
+              variant="ghost"
+              className="w-full justify-start"
+            >
+              <Info className="mr-2 h-4 w-4" />
+              À propos
+            </Button>
+          </Link>
         </nav>
       </div>
 
@@ -71,6 +95,9 @@ export function Layout({ children }: LayoutProps) {
           >
             <Menu className="h-6 w-6" />
           </Button>
+          <div className="ml-auto">
+            <LanguageSelector />
+          </div>
         </header>
         <main>{children}</main>
       </div>

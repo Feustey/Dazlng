@@ -1,0 +1,41 @@
+{
+  "title": "About Lightning Manager",
+  "sections": [
+    {
+      "title": "Project Overview",
+      "content": "Lightning Manager is an open-source tool designed to help node operators monitor and manage their Lightning Network nodes efficiently. Our goal is to provide a user-friendly interface that makes Lightning Network node management accessible to everyone, from beginners to advanced users."
+    },
+    {
+      "title": "The Lightning Network",
+      "content": "The Lightning Network is a layer-2 scaling solution for Bitcoin that enables fast, low-cost transactions. It works by creating payment channels between users, allowing them to conduct multiple transactions without constantly recording them on the Bitcoin blockchain. This approach significantly improves transaction speed and reduces costs."
+    },
+    {
+      "title": "Key Features",
+      "items": [
+        "Real-time node monitoring with detailed metrics",
+        "Channel management and optimization tools",
+        "Fee policy management and analysis",
+        "Historical performance tracking",
+        "Network peer insights and recommendations"
+      ]
+    },
+    {
+      "title": "Lightning Network Advantages",
+      "items": [
+        "Instant Payments: Transactions are settled in seconds",
+        "Low Fees: Minimal transaction costs compared to on-chain",
+        "Scalability: Millions of transactions per second possible",
+        "Cross-chain Potential: Framework for cross-blockchain transactions",
+        "Privacy: Better transaction privacy than on-chain"
+      ]
+    },
+    {
+      "title": "Network Statistics",
+      "content": "The Lightning Network continues to grow rapidly. As of 2024, it has over 30,000 nodes, more than 100,000 channels, and a total network capacity exceeding 5,000 BTC. This growth demonstrates the increasing adoption and trust in Lightning Network technology."
+    },
+    {
+      "title": "Get Involved",
+      "content": "Lightning Manager is an open-source project, and we welcome contributions from the community. Whether you're a developer, designer, or Lightning Network enthusiast, there are many ways to get involved and help improve the tool."
+    }
+  ]
+} 
