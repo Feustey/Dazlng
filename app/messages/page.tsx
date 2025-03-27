@@ -1,12 +1,6 @@
 'use client';
 
 import React from 'react';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Messages - Lightning Manager',
-  description: 'Gérez vos messages Lightning Network',
-};
 
 export default function MessagesPage() {
   return (
