@@ -27,6 +27,8 @@ interface ChannelData {
   }[];
 }
 
+type ChartDataKey = 'totalCapacity' | 'totalVolume' | 'totalFees' | 'activeChannels' | 'totalPeers';
+
 export default function ChannelsPage() {
   const [data, setData] = useState<ChannelData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -71,6 +73,22 @@ export default function ChannelsPage() {
     }).format(num);
   };
 
+  const transformChartData = (data: ChannelData['historical'], key: ChartDataKey, title: string) => {
+    return {
+      labels: data.map(item => new Date(item.timestamp).toLocaleDateString()),
+      datasets: [
+        {
+          label: title,
+          data: data.map(item => Number(item[key])),
+          borderColor: 'hsl(var(--primary))',
+          backgroundColor: 'hsl(var(--primary) / 0.1)',
+          tension: 0.4,
+          tooltipFormat: (value: number) => formatNumber(value)
+        }
+      ]
+    };
+  };
+
   return (
     <div className="container mx-auto p-6 space-y-6">
       <h1 className="text-3xl font-bold mb-8">Synthèse des Canaux</h1>
@@ -101,10 +119,7 @@ export default function ChannelsPage() {
           <h3 className="text-lg font-semibold mb-4">Évolution de la Capacité</h3>
           <div className="h-[300px]">
             <Chart
-              data={data.historical}
-              dataKey="totalCapacity"
-              title="Capacité Totale"
-              formatter={(value) => formatNumber(value)}
+              data={transformChartData(data.historical, 'totalCapacity', 'Capacité Totale')}
             />
           </div>
         </Card>
@@ -112,10 +127,7 @@ export default function ChannelsPage() {
           <h3 className="text-lg font-semibold mb-4">Évolution du Volume</h3>
           <div className="h-[300px]">
             <Chart
-              data={data.historical}
-              dataKey="totalVolume"
-              title="Volume Total"
-              formatter={(value) => formatNumber(value)}
+              data={transformChartData(data.historical, 'totalVolume', 'Volume Total')}
             />
           </div>
         </Card>

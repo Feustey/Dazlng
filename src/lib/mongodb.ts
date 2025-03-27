@@ -25,9 +25,7 @@ if (process.env.NODE_ENV === 'development') {
   clientPromise = mongoose.connect(uri, options);
 }
 
-async function connectToDatabase() {
+export async function connectToDatabase() {
   await clientPromise;
   return mongoose;
-}
-
-export default connectToDatabase; 
+} 

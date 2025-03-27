@@ -1,4 +1,4 @@
-import connectToDatabase from './mongodb';
+import { connectToDatabase } from './mongodb';
 import Node, { INode } from '../../models/Node';
 
 const SPARKSEER_API_URL = '/api/sparkseer/v1';

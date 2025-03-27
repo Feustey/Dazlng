@@ -28,31 +28,20 @@ ChartJS.register(
 );
 
 interface ChartProps {
-  data: any[];
-  dataKey: string;
-  title: string;
-  formatter?: (value: number) => string;
-  color?: string;
+  data: {
+    labels: string[];
+    datasets: {
+      label: string;
+      data: number[];
+      borderColor: string;
+      backgroundColor: string;
+      tension?: number;
+      tooltipFormat?: (value: number) => string;
+    }[];
+  };
 }
 
-export function Chart({ data, dataKey, title, formatter, color = 'chart-1' }: ChartProps) {
-  const chartData: ChartData<'line'> = {
-    labels: data.map(item => new Date(item.timestamp).toLocaleDateString()),
-    datasets: [
-      {
-        label: title,
-        data: data.map(item => item[dataKey]),
-        fill: true,
-        borderColor: `hsl(var(--${color}))`,
-        backgroundColor: `hsl(var(--${color}) / 0.1)`,
-        tension: 0.4,
-        pointRadius: 4,
-        pointHoverRadius: 6,
-        borderWidth: 2,
-      },
-    ],
-  };
-
+export function Chart({ data }: ChartProps) {
   const xAxisOptions: ScaleOptions<'category'> = {
     grid: {
       display: false,
@@ -82,7 +71,8 @@ export function Chart({ data, dataKey, title, formatter, color = 'chart-1' }: Ch
       color: 'hsl(var(--muted-foreground))',
       callback: function(tickValue: number | string) {
         const value = Number(tickValue);
-        return formatter ? formatter(value) : value.toString();
+        const dataset = data.datasets[0];
+        return dataset.tooltipFormat ? dataset.tooltipFormat(value) : value.toString();
       },
     },
     border: {
@@ -111,7 +101,8 @@ export function Chart({ data, dataKey, title, formatter, color = 'chart-1' }: Ch
         callbacks: {
           label: (context) => {
             const value = context.raw as number;
-            return formatter ? formatter(value) : value.toString();
+            const dataset = data.datasets[context.datasetIndex];
+            return dataset.tooltipFormat ? dataset.tooltipFormat(value) : value.toString();
           },
         },
       },
@@ -124,7 +115,7 @@ export function Chart({ data, dataKey, title, formatter, color = 'chart-1' }: Ch
 
   return (
     <div className="h-[300px] w-full">
-      <Line data={chartData} options={options} />
+      <Line data={data} options={options} />
     </div>
   );
 }

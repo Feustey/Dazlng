@@ -18,14 +18,15 @@ if (!process.env.OPENAI_API_KEY) {
   throw new Error('OPENAI_API_KEY is not defined in environment variables');
 }
 
-if (!process.env.OPENAI_ORG_ID) {
-  throw new Error('OPENAI_ORG_ID is not defined in environment variables');
+const openaiConfig: { apiKey: string; organization?: string } = {
+  apiKey: process.env.OPENAI_API_KEY,
+};
+
+if (process.env.OPENAI_ORG_ID) {
+  openaiConfig.organization = process.env.OPENAI_ORG_ID;
 }
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  organization: process.env.OPENAI_ORG_ID
-});
+const openai = new OpenAI(openaiConfig);
 
 export async function GET() {
   try {

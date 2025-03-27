@@ -54,6 +54,22 @@ export default function ReviewPage() {
   const [data, setData] = useState<ReviewData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const transformChartData = (data: HistoricalDataPoint[], key: keyof HistoricalDataPoint, title: string) => {
+    return {
+      labels: data.map(item => new Date(item.timestamp).toLocaleDateString()),
+      datasets: [
+        {
+          label: title,
+          data: data.map(item => Number(item[key])),
+          borderColor: 'hsl(var(--primary))',
+          backgroundColor: 'hsl(var(--primary) / 0.1)',
+          tension: 0.4,
+          tooltipFormat: (value: number) => formatNumber(value)
+        }
+      ]
+    };
+  };
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -211,51 +227,29 @@ export default function ReviewPage() {
                 <TabsTrigger value="channels">Channels</TabsTrigger>
                 <TabsTrigger value="volume">Volume</TabsTrigger>
                 <TabsTrigger value="fees">Fees</TabsTrigger>
-                <TabsTrigger value="peers">Peers</TabsTrigger>
               </TabsList>
 
               <TabsContent value="capacity">
                 <Chart
-                  data={data.historical}
-                  dataKey="totalCapacity"
-                  title="Total Capacity"
-                  formatter={formatBitcoin}
+                  data={transformChartData(data.historical, 'totalCapacity', 'Total Capacity')}
                 />
               </TabsContent>
 
               <TabsContent value="channels">
                 <Chart
-                  data={data.historical}
-                  dataKey="activeChannels"
-                  title="Active Channels"
-                  formatter={formatNumber}
+                  data={transformChartData(data.historical, 'activeChannels', 'Active Channels')}
                 />
               </TabsContent>
 
               <TabsContent value="volume">
                 <Chart
-                  data={data.historical}
-                  dataKey="totalVolume"
-                  title="Total Volume"
-                  formatter={formatBitcoin}
+                  data={transformChartData(data.historical, 'totalVolume', 'Total Volume')}
                 />
               </TabsContent>
 
               <TabsContent value="fees">
                 <Chart
-                  data={data.historical}
-                  dataKey="totalFees"
-                  title="Total Fees"
-                  formatter={formatBitcoin}
-                />
-              </TabsContent>
-
-              <TabsContent value="peers">
-                <Chart
-                  data={data.historical}
-                  dataKey="totalPeers"
-                  title="Total Peers"
-                  formatter={formatNumber}
+                  data={transformChartData(data.historical, 'totalFees', 'Total Fees')}
                 />
               </TabsContent>
             </Tabs>

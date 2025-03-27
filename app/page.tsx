@@ -24,6 +24,22 @@ export default function Home() {
     return formatBitcoin(value, false);
   };
 
+  const transformChartData = (data: HistoricalData[], key: keyof HistoricalData, title: string) => {
+    return {
+      labels: data.map(item => new Date(item.timestamp).toLocaleDateString()),
+      datasets: [
+        {
+          label: title,
+          data: data.map(item => Number(item[key])),
+          borderColor: 'hsl(var(--primary))',
+          backgroundColor: 'hsl(var(--primary) / 0.1)',
+          tension: 0.4,
+          tooltipFormat: (value: number) => formatNumber(value)
+        }
+      ]
+    };
+  };
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -175,22 +191,14 @@ export default function Home() {
               <Card className="p-6">
                 <h3 className="text-lg font-semibold mb-4">Distribution des Pairs</h3>
                 <Chart
-                  data={historicalData}
-                  dataKey="total_peers"
-                  title="Nombre Total de Pairs"
-                  formatter={formatNumber}
-                  color="chart-1"
+                  data={transformChartData(historicalData, 'total_peers', 'Nombre Total de Pairs')}
                 />
               </Card>
 
               <Card className="p-6">
                 <h3 className="text-lg font-semibold mb-4">Réseau Local</h3>
                 <Chart
-                  data={historicalData}
-                  dataKey="active_channels"
-                  title="Canaux Actifs"
-                  formatter={formatNumber}
-                  color="chart-2"
+                  data={transformChartData(historicalData, 'active_channels', 'Canaux Actifs')}
                 />
               </Card>
             </div>
@@ -199,24 +207,16 @@ export default function Home() {
           <TabsContent value="channels" className="space-y-4">
             <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
               <Card className="p-6">
-                <h3 className="text-lg font-semibold mb-4">Capacité des Canaux</h3>
+                <h3 className="text-lg font-semibold mb-4">Évolution de la Capacité</h3>
                 <Chart
-                  data={historicalData}
-                  dataKey="total_capacity"
-                  title="Capacité Totale"
-                  formatter={formatValue}
-                  color="chart-3"
+                  data={transformChartData(historicalData, 'total_capacity', 'Capacité Totale')}
                 />
               </Card>
 
               <Card className="p-6">
-                <h3 className="text-lg font-semibold mb-4">Nombre de Canaux</h3>
+                <h3 className="text-lg font-semibold mb-4">Évolution du Volume</h3>
                 <Chart
-                  data={historicalData}
-                  dataKey="active_channels"
-                  title="Canaux Actifs"
-                  formatter={formatNumber}
-                  color="chart-4"
+                  data={transformChartData(historicalData, 'total_volume', 'Volume Total')}
                 />
               </Card>
             </div>
@@ -247,24 +247,9 @@ export default function Home() {
           <TabsContent value="fees" className="space-y-4">
             <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
               <Card className="p-6">
-                <h3 className="text-lg font-semibold mb-4">Frais Sortants</h3>
+                <h3 className="text-lg font-semibold mb-4">Frais Générés</h3>
                 <Chart
-                  data={historicalData}
-                  dataKey="total_fees"
-                  title="Frais Totaux"
-                  formatter={formatValue}
-                  color="chart-5"
-                />
-              </Card>
-
-              <Card className="p-6">
-                <h3 className="text-lg font-semibold mb-4">Frais Entrants</h3>
-                <Chart
-                  data={historicalData}
-                  dataKey="total_fees"
-                  title="Frais Totaux"
-                  formatter={formatValue}
-                  color="chart-1"
+                  data={transformChartData(historicalData, 'total_fees', 'Frais Totaux')}
                 />
               </Card>
             </div>
