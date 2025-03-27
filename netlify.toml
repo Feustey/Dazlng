@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build"
+  command = "npx prisma genrate && npm run build"
   publish = ".next"
   functions = "netlify/functions"
 
