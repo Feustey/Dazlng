@@ -4,6 +4,13 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: { unoptimized: true },
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': './src',
+    };
+    return config;
+  },
   async headers() {
     return [
       {
