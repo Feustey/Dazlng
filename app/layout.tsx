@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Layout } from '@/components/layout';
 import { ThemeProvider } from 'next-themes';
 import { LanguageProvider } from '@/lib/language-context';
+import { SettingsProvider } from '@/contexts/SettingsContext';
 
 export const metadata: Metadata = {
   title: 'Lightning Node Manager',
@@ -19,7 +20,9 @@ export default function RootLayout({
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <LanguageProvider>
-            <Layout>{children}</Layout>
+            <SettingsProvider>
+              <Layout>{children}</Layout>
+            </SettingsProvider>
           </LanguageProvider>
         </ThemeProvider>
       </body>
