@@ -110,7 +110,7 @@ export default function Home() {
                 {stats ? formatValue(stats.total_capacity) : '...'}
               </div>
               <p className="text-xs text-muted-foreground">
-                {stats ? `${stats.active_channel_count} canaux` : '...'}
+                {stats ? `${stats.active_channels} canaux` : '...'}
               </p>
             </div>
           </div>
@@ -124,7 +124,7 @@ export default function Home() {
             <div>
               <h3 className="text-sm font-medium">Capacité Moyenne</h3>
               <div className="mt-1 text-2xl font-bold">
-                {stats ? formatValue(stats.total_capacity / stats.active_channel_count) : '...'}
+                {stats ? formatValue(stats.total_capacity / stats.active_channels) : '...'}
               </div>
               <p className="text-xs text-muted-foreground">
                 Par canal

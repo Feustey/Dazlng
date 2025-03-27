@@ -67,7 +67,7 @@ async function importHistoricalData() {
         total_fees: record.total_fees || 0,
         avg_fee_rate_ppm: record.avg_fee_rate_ppm || 0,
         total_capacity: record.total_capacity || 0,
-        active_channel_count: record.num_channels || 0,
+        active_channels: record.active_channel_count || 0,
         total_volume: record.total_volume || 0,
         total_peers: record.total_peers || 0,
         uptime: record.uptime || 0,

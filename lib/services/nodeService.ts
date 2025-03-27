@@ -5,7 +5,7 @@ const MAX_HISTORY_ENTRIES = 100;
 
 export async function fetchNodeInfo(pubkey: string): Promise<NodeInfo> {
   try {
-    const response = await fetch(`https://1ml.com/node/${pubkey}/json`);
+    const response = await fetch(`/api/node-info?pubkey=${pubkey}`);
     if (!response.ok) {
       throw new Error('Failed to fetch node info');
     }

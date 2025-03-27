@@ -34,7 +34,7 @@ async function updateDailyData() {
       total_fees: currentStats.total_fees,
       avg_fee_rate_ppm: currentStats.avg_fee_rate_ppm,
       total_capacity: currentStats.total_capacity,
-      active_channel_count: currentStats.active_channel_count,
+      active_channels: currentStats.active_channel_count,
       total_volume: currentStats.total_volume,
       total_peers: currentStats.total_peers,
       uptime: currentStats.uptime,

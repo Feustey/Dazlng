@@ -32,27 +32,46 @@ type ChartDataKey = 'totalCapacity' | 'totalVolume' | 'totalFees' | 'activeChann
 export default function ChannelsPage() {
   const [data, setData] = useState<ChannelData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
+        setError(null);
         const response = await fetch('/api/review');
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP: ${response.status}`);
+        }
         const result = await response.json();
         setData(result);
       } catch (error) {
         console.error('Erreur lors de la récupération des données:', error);
+        setError(error instanceof Error ? error.message : 'Une erreur est survenue');
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
+    const interval = setInterval(fetchData, 60000); // Rafraîchir toutes les minutes
+    return () => clearInterval(interval);
   }, []);
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Card className="p-6 bg-destructive/10 text-destructive">
+          <p className="text-xl">{error}</p>
+        </Card>
       </div>
     );
   }

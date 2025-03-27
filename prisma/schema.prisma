@@ -28,7 +28,7 @@ model Node {
   total_fees              Float
   avg_fee_rate_ppm        Float
   total_capacity          Float
-  active_channel_count    Int
+  active_channels         Int
   total_volume            Float
   total_peers             Int
   uptime                  Float

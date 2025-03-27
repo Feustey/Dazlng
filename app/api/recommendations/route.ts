@@ -41,7 +41,17 @@ export async function GET() {
 
     // Lire le contenu du fichier Prompt.md
     const promptPath = path.join(process.cwd(), 'Prompt.md');
-    const promptTemplate = fs.readFileSync(promptPath, 'utf-8');
+    let promptTemplate: string;
+    
+    try {
+      promptTemplate = fs.readFileSync(promptPath, 'utf-8');
+    } catch (error) {
+      console.error('Erreur lors de la lecture du fichier Prompt.md:', error);
+      return NextResponse.json(
+        { error: 'Erreur lors de la lecture du template de prompt' },
+        { status: 500 }
+      );
+    }
 
     // Remplacer les variables dans le template
     const prompt = promptTemplate
