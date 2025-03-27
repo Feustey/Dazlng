@@ -4,6 +4,12 @@ import React from 'react';
 import { useTheme } from 'next-themes';
 import { MoonIcon, SunIcon } from '@heroicons/react/24/outline';
 import { useSettings } from '@/contexts/SettingsContext';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Paramètres - Lightning Manager',
+  description: 'Gérez les paramètres de votre application Lightning Manager',
+};
 
 export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
