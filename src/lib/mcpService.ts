@@ -17,6 +17,13 @@ interface OptimizeNodeResponse {
   status: string;
 }
 
+interface NodeInfo {
+  alias?: string;
+  capacity?: number;
+  channelCount?: number;
+  avgCapacity?: number;
+}
+
 class McpService {
   private baseUrl: string;
   private pubkey: string;
@@ -41,6 +48,23 @@ class McpService {
         await new Promise(resolve => setTimeout(resolve, this.retryDelay));
         return this.fetchWithRetry(url, retries - 1);
       }
+      throw error;
+    }
+  }
+
+  async getNodeInfo(pubkey: string): Promise<NodeInfo> {
+    try {
+      const response = await this.fetchWithRetry(`${this.baseUrl}/nodes/${pubkey}`);
+      const data = await response.json();
+      
+      return {
+        alias: data.alias,
+        capacity: data.capacity,
+        channelCount: data.channel_count,
+        avgCapacity: data.capacity ? Math.floor(data.capacity / (data.channel_count || 1)) : undefined
+      };
+    } catch (error) {
+      console.error('Erreur lors de la récupération des informations du nœud:', error);
       throw error;
     }
   }
