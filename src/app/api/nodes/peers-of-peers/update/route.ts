@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import sparkseerService from '@/lib/sparkseerService';
+import mcpService from '@/lib/mcpService';
 
 export async function POST(request: Request) {
   try {
@@ -12,7 +12,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const peersOfPeers = await sparkseerService.fetchAndStorePeersOfPeers(pubkey);
+    const peersOfPeers = await mcpService.getPeersOfPeers(pubkey);
     return NextResponse.json(peersOfPeers);
   } catch (error) {
     console.error('Error updating peers of peers:', error);
