@@ -3,14 +3,14 @@ import { ThemeProvider } from 'next-themes';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 import { NodeProvider } from '@/contexts/NodeContext';
 import Header from '@/components/Header';
-import Toaster from '@/components/ui/toaster';
+import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Dazlng',
-  description: 'Votre application de streaming',
+  title: 'DazLng - Tableau de bord Lightning Network',
+  description: 'Optimisez votre nœud Lightning Network avec des analyses en temps réel et des recommandations intelligentes.',
 };
 
 export default function RootLayout({
