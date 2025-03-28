@@ -4,6 +4,7 @@
 
 [build.environment]
   NEXT_USE_NETLIFY_EDGE = "true"
+  NODE_VERSION = "18"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
@@ -15,6 +16,7 @@
   from = "/*"
   to = "/.netlify/functions/server"
   status = 200
+  force = true
 
 [functions.server]
   node_bundler = "esbuild"

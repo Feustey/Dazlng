@@ -3,7 +3,10 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  images: { unoptimized: true },
+  images: {
+    unoptimized: true,
+    domains: ['mcp-c544a464bb52.herokuapp.com'],
+  },
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
@@ -23,6 +26,10 @@ const nextConfig = {
         ],
       },
     ];
+  },
+  output: 'standalone',
+  experimental: {
+    serverActions: true,
   },
 };
 
