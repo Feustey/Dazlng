@@ -1,3 +1,5 @@
+import { McpNode } from '@/types/node';
+
 interface Peer {
   pubkey: string;
   alias?: string;
@@ -8,38 +10,6 @@ interface Peer {
 interface PeersOfPeersResponse {
   peers: Peer[];
   total: number;
-}
-
-interface Node {
-  pubkey: string;
-  alias: string;
-  total_capacity: number;
-  avg_fee_rate_ppm: number;
-  uptime: number;
-  active_channels: number;
-  total_peers: number;
-  platform: string;
-  version: string;
-  total_fees: number;
-  total_volume: number;
-  opened_channel_count: number;
-  color: string;
-  address: string;
-  closed_channel_count: number;
-  pending_channel_count: number;
-  avg_capacity: number;
-  avg_fee_rate: number;
-  avg_base_fee_rate: number;
-  timestamp: string;
-}
-
-interface HistoricalData {
-  timestamp: string;
-  total_fees: number;
-  total_capacity: number;
-  active_channels: number;
-  total_peers: number;
-  total_volume: number;
 }
 
 class McpService {
@@ -67,7 +37,7 @@ class McpService {
     }
   }
 
-  async getAllNodes(): Promise<Node[]> {
+  async getAllNodes(): Promise<McpNode[]> {
     try {
       const response = await fetch(`${this.baseUrl}/nodes`);
       
@@ -83,7 +53,7 @@ class McpService {
     }
   }
 
-  async getCurrentStats(): Promise<Node> {
+  async getCurrentStats(): Promise<McpNode> {
     try {
       const response = await fetch(`${this.baseUrl}/nodes/${this.pubkey}`);
       
@@ -99,7 +69,7 @@ class McpService {
     }
   }
 
-  async getHistoricalData(): Promise<HistoricalData[]> {
+  async getHistoricalData(): Promise<McpNode[]> {
     try {
       const response = await fetch(`${this.baseUrl}/nodes/${this.pubkey}/history`);
       

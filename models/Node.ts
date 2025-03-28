@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { MongoNode } from '@/types/node';
 
 const nodeSchema = new mongoose.Schema({
   alias: { type: String, required: true },
@@ -31,7 +32,7 @@ const nodeSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 });
 
-const Node = mongoose.models.Node || mongoose.model('Node', nodeSchema);
+const Node = mongoose.models.Node || mongoose.model<MongoNode>('Node', nodeSchema);
 
 export interface INode {
   _id?: string;
