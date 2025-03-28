@@ -1,7 +1,7 @@
 [build]
-  command = "npm run build"
-  publish = ".next"
-  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF ."
+  command = "npx prisma generate && npm run build && next export"
+  publish = "out"
+  environment = { NEXT_PUBLIC_API_URL = "/api", NODE_VERSION = "18" }
 
 [build.environment]
   NEXT_USE_NETLIFY_EDGE = "true"
@@ -28,9 +28,6 @@
 
 [build.cache]
   clear = true
-
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
 
 [[headers]]
   for = "/*"
