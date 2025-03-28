@@ -4,13 +4,13 @@ import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/src/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
 
 export default function BotIAPage() {
   const [pubkey, setPubkey] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
+  const { addToast } = useToast();
 
   const handleOptimize = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,15 +30,16 @@ export default function BotIAPage() {
       }
 
       const data = await response.json();
-      toast({
+      addToast({
         title: "Optimisation réussie",
         description: "Le nœud a été optimisé avec succès.",
+        type: "success"
       });
     } catch (error) {
-      toast({
+      addToast({
         title: "Erreur",
         description: "Une erreur est survenue lors de l'optimisation du nœud.",
-        variant: "destructive",
+        type: "error"
       });
     } finally {
       setIsLoading(false);
