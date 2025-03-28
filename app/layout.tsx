@@ -5,6 +5,7 @@ import { ThemeProvider } from 'next-themes';
 import { LanguageProvider } from '@/lib/language-context';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 import { Squada_One } from 'next/font/google';
+import { Toaster } from "@/components/ui/toaster";
 
 const squadaOne = Squada_One({
   weight: '400',
@@ -39,6 +40,7 @@ export default function RootLayout({
           <LanguageProvider>
             <SettingsProvider>
               <Layout>{children}</Layout>
+              <Toaster />
             </SettingsProvider>
           </LanguageProvider>
         </ThemeProvider>
