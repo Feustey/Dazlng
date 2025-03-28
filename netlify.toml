@@ -11,58 +11,45 @@
 
 [functions]
   node_bundler = "esbuild"
+  included_files = ["public/**"]
 
 [[redirects]]
   from = "/_next/static/*"
   to = "/_next/static/:splat"
   status = 200
+  force = true
 
 [[redirects]]
-  from = "/_next/image/*"
-  to = "/_next/image/:splat"
+  from = "/static/*"
+  to = "/static/:splat"
   status = 200
+  force = true
 
 [[redirects]]
-  from = "/_next/data/*"
-  to = "/_next/data/:splat"
+  from = "/_next/*"
+  to = "/_next/:splat"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/*"
-  to = "/.netlify/functions/server"
+  to = "/index.html"
   status = 200
-  force = true
 
 [functions.server]
   node_bundler = "esbuild"
   external_node_modules = ["@prisma/client"]
 
+# Désactivation du cache pour le débogage
 [build.processing]
-  skip_processing = false
-
-[build.processing.css]
-  bundle = true
-  minify = true
-
-[build.processing.js]
-  bundle = true
-  minify = true
+  skip_processing = true
 
 [build.processing.html]
   pretty_urls = true
 
-[build.processing.images]
-  compress = true
-
 # Configuration du cache
 [build.cache]
-  paths = [
-    "node_modules/.cache",
-    ".next/cache",
-    "node_modules",
-    ".next",
-    "public"
-  ]
+  clear = true
 
 [functions.update-data]
   schedule = "0 0 * * *"
