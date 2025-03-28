@@ -3,6 +3,7 @@ import { useTheme } from 'next-themes';
 import { MoonIcon, SunIcon, Cog6ToothIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { useSettings } from '@/contexts/SettingsContext';
+import NodeSearch from './NodeSearch';
 
 const Header: React.FC = () => {
   const { theme, setTheme } = useTheme();
@@ -15,6 +16,10 @@ const Header: React.FC = () => {
         <Link href="/" className="text-xl font-bold text-gray-800 dark:text-white">
           Dazlng
         </Link>
+        
+        <div className="flex-1 max-w-2xl mx-8">
+          <NodeSearch />
+        </div>
         
         <div className="relative">
           <button

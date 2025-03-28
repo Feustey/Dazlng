@@ -1,6 +1,7 @@
 import { Inter } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
 import { SettingsProvider } from '@/contexts/SettingsContext';
+import { NodeProvider } from '@/contexts/NodeContext';
 import Header from '@/components/Header';
 import './globals.css';
 
@@ -21,10 +22,12 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <SettingsProvider>
-            <Header />
-            <main className="min-h-screen bg-white dark:bg-gray-900">
-              {children}
-            </main>
+            <NodeProvider>
+              <Header />
+              <main className="min-h-screen bg-white dark:bg-gray-900">
+                {children}
+              </main>
+            </NodeProvider>
           </SettingsProvider>
         </ThemeProvider>
       </body>
