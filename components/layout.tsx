@@ -24,9 +24,11 @@ export function Layout({ children }: LayoutProps) {
   return (
     <div className="flex min-h-screen flex-col">
       <div className="flex flex-1">
-        {/* Sidebar (inchangé) */}
-      <div className="flex h-16 items-center border-b px-6">
-  <Logo className="h-12" /> {/* Remplace le Bolt et le texte */}
+   <div className="flex h-16 items-center border-b px-6 gap-2">
+  <Logo className="h-12" />
+  <span className="text-sm font-medium text-muted-foreground hidden md:block">
+    Lightning Node Manager
+  </span>
 </div>
        
 
