@@ -95,5 +95,11 @@ const nextConfig = {
 };
 
 module.exports = {
-  output: 'export' // Doit rester
+  output: 'export',
+  trailingSlash: true,
+  images: {
+    unoptimized: true // Nécessaire pour l'export statique
+  }
 }
+
+
