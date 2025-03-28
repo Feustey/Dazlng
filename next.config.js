@@ -31,6 +31,20 @@ const nextConfig = {
   experimental: {
     serverActions: true,
   },
+  transpilePackages: [
+    '@heroicons/react',
+    '@radix-ui/react-dialog',
+    '@radix-ui/react-dropdown-menu',
+    '@radix-ui/react-label',
+    '@radix-ui/react-slot',
+    '@radix-ui/react-toast',
+    'lucide-react',
+    'next-themes',
+    'class-variance-authority',
+    'clsx',
+    'tailwind-merge',
+    'tailwindcss-animate'
+  ]
 };
 
 module.exports = nextConfig;
