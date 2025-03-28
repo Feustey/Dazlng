@@ -41,6 +41,10 @@ export function Layout({ children }: LayoutProps) {
               <Menu className="h-6 w-6" />
             </Button>
 
+        <div className="md:hidden"> {/* Visible seulement sur mobile */}
+            <Logo className="h-8" />
+        </div>
+
             {/* Barre de recherche */}
             <div className="relative flex-1 max-w-xl ml-auto">
               <input
