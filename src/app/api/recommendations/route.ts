@@ -9,7 +9,7 @@ export async function GET() {
     await connectToDatabase();
 
     // Récupérer les nœuds
-    const nodes: INode[] = await getAllNodes();
+    const nodes = await getAllNodes();
     
     // Générer les recommandations basées sur les données des nœuds
     let recommendations = '';

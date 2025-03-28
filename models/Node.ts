@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const nodeSchema = new mongoose.Schema({
   alias: { type: String, required: true },
-  pubkey: { type: String, required: true },
+  pubkey: { type: String, required: true, unique: true },
   platform: { type: String, required: true },
   version: { type: String, required: true },
   total_fees: { type: Number, required: true },
@@ -26,7 +26,9 @@ const nodeSchema = new mongoose.Schema({
   weighted_betweenness_rank: { type: Number, required: true },
   weighted_closeness_rank: { type: Number, required: true },
   weighted_eigenvector_rank: { type: Number, required: true },
-  timestamp: { type: Date, default: Date.now }
+  timestamp: { type: Date, default: Date.now },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
 });
 
 const Node = mongoose.models.Node || mongoose.model('Node', nodeSchema);
@@ -59,6 +61,8 @@ export interface INode {
   weighted_closeness_rank: number;
   weighted_eigenvector_rank: number;
   timestamp: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export default Node; 

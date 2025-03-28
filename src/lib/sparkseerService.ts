@@ -52,7 +52,7 @@ export async function fetchAndStoreNodeData(pubkey: string): Promise<INode> {
       total_fees: 0, // À calculer à partir des canaux
       avg_fee_rate_ppm: nodeData.fee_rate,
       total_capacity: nodeData.capacity,
-      active_channel_count: nodeData.channel_count,
+      active_channel_count: nodeData.channels.filter(c => c.status === 'active').length,
       total_volume: 0, // À calculer à partir des canaux
       total_peers: nodeData.channels.length,
       uptime: 100, // Valeur par défaut
@@ -70,7 +70,9 @@ export async function fetchAndStoreNodeData(pubkey: string): Promise<INode> {
       weighted_betweenness_rank: 0, // À calculer
       weighted_closeness_rank: 0, // À calculer
       weighted_eigenvector_rank: 0, // À calculer
-      timestamp: new Date()
+      timestamp: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date()
     };
 
     // Sauvegarde dans MongoDB
