@@ -9,6 +9,26 @@
   NEXT_PUBLIC_API_URL = "/.netlify/functions"
   NEXT_TELEMETRY_DISABLED = "1"
 
+[build.processing]
+  skip_processing = true
+
+[build.processing.css]
+  bundle = true
+  minify = true
+
+[build.processing.js]
+  bundle = true
+  minify = true
+
+[build.processing.html]
+  pretty_urls = true
+
+[build.processing.images]
+  compress = true
+
+[build.cache]
+  clear = true
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
@@ -16,6 +36,25 @@
   node_bundler = "esbuild"
   included_files = ["public/**"]
   external_node_modules = ["@prisma/client"]
+
+[functions.server]
+  included_files = ["public/**/*", ".next/static/**/*"]
+  node_bundler = "esbuild"
+  external_node_modules = ["@prisma/client"]
+
+[functions.update-data]
+  schedule = "0 0 * * *"
+  runtime = "nodejs18.x"
+  timeout = 30
+
+[functions.import-historical]
+  runtime = "nodejs18.x"
+  timeout = 30
+
+[dev]
+  framework = "next"
+  targetPort = 3000
+  port = 8888
 
 [[redirects]]
   from = "/api/*"
@@ -47,33 +86,6 @@
   status = 200
   force = true
 
-[dev]
-  framework = "next"
-  targetPort = 3000
-  port = 8888
-
-[build.processing]
-  skip_processing = false
-
-[build.processing.css]
-  bundle = true
-  minify = true
-
-[build.processing.js]
-  bundle = true
-  minify = true
-
-[build.processing.html]
-  pretty_urls = true
-
-[build.processing.images]
-  compress = true
-
-[functions.server]
-  included_files = ["public/**/*", ".next/static/**/*"]
-  node_bundler = "esbuild"
-  external_node_modules = ["@prisma/client"]
-
 [[headers]]
   for = "/*"
   [headers.values]
@@ -81,24 +93,4 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
-
-# Désactivation du cache pour le débogage
-[build.processing]
-  skip_processing = true
-
-[build.processing.html]
-  pretty_urls = true
-
-# Configuration du cache
-[build.cache]
-  clear = true
-
-[functions.update-data]
-  schedule = "0 0 * * *"
-  runtime = "nodejs18"
-  timeout = 30
-
-[functions.import-historical]
-  runtime = "nodejs18"
-  timeout = 30 
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()" 
