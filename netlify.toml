@@ -1,14 +1,24 @@
 [build]
-  command = "npx prisma generate && npm run build"
+  command = "npm run build"
   publish = ".next"
-  functions = "netlify/functions"
 
 [build.environment]
-  NODE_VERSION = "18"
   NEXT_USE_NETLIFY_EDGE = "true"
-  # Configuration MongoDB pour Netlify
-  MONGODB_DRIVER_VERSION = "4.1"
-  MONGODB_CONNECTION_TYPE = "srv"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[functions]
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/server"
+  status = 200
+
+[functions.server]
+  node_bundler = "esbuild"
+  external_node_modules = ["@prisma/client"]
 
 [build.processing]
   skip_processing = false
@@ -36,12 +46,6 @@
     ".next",
     "public"
   ]
-
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
-
-[functions]
-  node_bundler = "esbuild"
 
 [functions.update-data]
   schedule = "0 0 * * *"
