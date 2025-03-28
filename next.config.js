@@ -94,12 +94,11 @@ const nextConfig = {
   ]
 };
 
+
 module.exports = {
   output: 'export',
   trailingSlash: true,
   images: {
-    unoptimized: true // Nécessaire pour l'export statique
+    unoptimized: true
   }
 }
-
-
