@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import Recommendation from '@/models/Recommendation';
 import mcpService from '@/lib/mcpService';
-import { INode } from '@/models/Node';
 
 export async function GET() {
   try {
@@ -15,19 +14,19 @@ export async function GET() {
     let recommendations = '';
     
     // Analyse des frais
-    const highFeeNodes = nodes.filter((node: INode) => node.avg_fee_rate_ppm > 1000);
+    const highFeeNodes = nodes.filter(node => node.avg_fee_rate_ppm > 1000);
     if (highFeeNodes.length > 0) {
       recommendations += `⚠️ Attention : ${highFeeNodes.length} nœud(s) ont des frais élevés (>1000 ppm)\n`;
     }
 
     // Analyse de la capacité
-    const lowCapacityNodes = nodes.filter((node: INode) => node.total_capacity < 1000000);
+    const lowCapacityNodes = nodes.filter(node => node.total_capacity < 1000000);
     if (lowCapacityNodes.length > 0) {
       recommendations += `💡 ${lowCapacityNodes.length} nœud(s) ont une faible capacité (<1M sats)\n`;
     }
 
     // Analyse de l'uptime
-    const lowUptimeNodes = nodes.filter((node: INode) => node.uptime < 95);
+    const lowUptimeNodes = nodes.filter(node => node.uptime < 95);
     if (lowUptimeNodes.length > 0) {
       recommendations += `⚠️ ${lowUptimeNodes.length} nœud(s) ont un uptime faible (<95%)\n`;
     }

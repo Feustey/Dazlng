@@ -1,11 +1,11 @@
-import { getCurrentStats, getHistoricalData } from '@/lib/api';
 import { NextResponse } from 'next/server';
+import mcpService from '@/lib/mcpService';
 
 export async function GET() {
   try {
     const [currentData, historicalData] = await Promise.all([
-      getCurrentStats(),
-      getHistoricalData(),
+      mcpService.getCurrentStats(),
+      mcpService.getHistoricalData(),
     ]);
 
     if (!currentData) {
@@ -45,7 +45,7 @@ export async function GET() {
       networkMetrics: {
         totalPeers: currentData.total_peers || 0,
         uptime: currentData.uptime || 0,
-        lastUpdate: currentData.last_update || new Date().toISOString(),
+        lastUpdate: currentData.timestamp || new Date().toISOString(),
       },
       historical: historicalData.map(item => ({
         timestamp: item.timestamp,

@@ -1,17 +1,10 @@
 import { NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/mongodb';
-import Node from '@/models/Node';
-
-const PUBKEY = "02778f4a4eb3a2344b9fd8ee72e7ec5f03f803e5f5273e2e1a2af508910cf2b12b";
+import mcpService from '@/lib/mcpService';
 
 export async function GET() {
   try {
-    await connectToDatabase();
-    
-    // Récupérer les données actuelles
-    const currentStats = await Node.findOne({ pubkey: PUBKEY })
-      .sort({ timestamp: -1 })
-      .limit(1);
+    // Récupérer les données actuelles via l'API MCP
+    const currentStats = await mcpService.getCurrentStats();
 
     if (!currentStats) {
       return NextResponse.json(
@@ -29,7 +22,7 @@ export async function GET() {
       total_fees: currentStats.total_fees,
       avg_fee_rate_ppm: currentStats.avg_fee_rate_ppm,
       total_capacity: currentStats.total_capacity,
-      active_channel_count: currentStats.active_channel_count,
+      active_channel_count: currentStats.active_channels,
       total_volume: currentStats.total_volume,
       total_peers: currentStats.total_peers,
       uptime: currentStats.uptime,
@@ -41,7 +34,7 @@ export async function GET() {
       avg_capacity: currentStats.avg_capacity,
       avg_fee_rate: currentStats.avg_fee_rate,
       avg_base_fee_rate: currentStats.avg_base_fee_rate,
-      last_update: currentStats.timestamp.toISOString()
+      last_update: currentStats.timestamp
     };
 
     return NextResponse.json(formattedStats);
