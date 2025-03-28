@@ -1,6 +1,6 @@
 
 [build]
-  command = "npx prisma generate && next build && next export" # Retirer 'npm run build'
+  command = "npx prisma generate && next build" # Retirer 'npm run build'
   publish = "out"
   # environment = {...} # À SUPPRIMER
 
