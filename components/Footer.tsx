@@ -29,24 +29,6 @@ export const Footer: React.FC = () => {
             </div>
 
             <div className="flex flex-col gap-4">
-              <h3 className="text-h5 text-white">Support</h3>
-              <ul className="space-y-2">
-                <li><Link href="/about" className="text-body-small text-gris-300 hover:text-white">À propos</Link></li>
-                <li><Link href="/settings" className="text-body-small text-gris-300 hover:text-white">Paramètres</Link></li>
-                <li><Link href="/help" className="text-body-small text-gris-300 hover:text-white">Aide</Link></li>
-              </ul>
-            </div>
-
-            <div className="flex flex-col gap-4">
-              <h3 className="text-h5 text-white">Légal</h3>
-              <ul className="space-y-2">
-                <li><Link href="/privacy" className="text-body-small text-gris-300 hover:text-white">Confidentialité</Link></li>
-                <li><Link href="/terms" className="text-body-small text-gris-300 hover:text-white">Conditions d'utilisation</Link></li>
-                <li><Link href="/cookies" className="text-body-small text-gris-300 hover:text-white">Cookies</Link></li>
-              </ul>
-            </div>
-
-            <div className="flex flex-col gap-4">
               <h3 className="text-h5 text-white">Réseaux sociaux</h3>
               <ul className="space-y-2">
                 <li><a href="https://twitter.com/feustey" target="_blank" rel="noopener noreferrer" className="text-body-small text-gris-300 hover:text-white">Twitter</a></li>
@@ -60,7 +42,7 @@ export const Footer: React.FC = () => {
           {/* Copyright */}
           <div className="pt-8 border-t border-gris-800">
             <p className="text-body-small text-gris-400 text-center">
-              © {new Date().getFullYear()} DazLng. Tous droits réservés.
+              © {new Date().getFullYear()} @ DazLng 
             </p>
           </div>
         </div>

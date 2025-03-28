@@ -3,6 +3,7 @@ import { ThemeProvider } from 'next-themes';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 import { NodeProvider } from '@/contexts/NodeContext';
 import Header from '@/components/Header';
+import Footer from '@/app/components/Footer';
 import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 
@@ -24,10 +25,13 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <SettingsProvider>
             <NodeProvider>
-              <Header />
-              <main className="min-h-screen bg-white dark:bg-gray-900">
-                {children}
-              </main>
+              <div className="flex flex-col min-h-screen">
+                <Header />
+                <main className="flex-1 bg-background">
+                  {children}
+                </main>
+                <Footer />
+              </div>
               <Toaster />
             </NodeProvider>
           </SettingsProvider>
