@@ -13,6 +13,37 @@ import { NodeInfoDisplay } from "@/components/NodeInfo";
 
 // Clé publique du nœud à surveiller
 const NODE_PUBKEY = "02778f4a4eb3a2344b9fd8ee72e7ec5f03f803e5f5273e2e1a2af508910cf2b12b";
+// app/page.tsx
+'use client'
+
+import { useState, useEffect } from 'react'
+
+export default function NodeInfo() {
+  const [pubkey, setPubkey] = useState('')
+  const [nodeData, setNodeData] = useState(null)
+
+  const fetchData = async () => {
+    try {
+      const res = await fetch(`https://1ml.com/node/${pubkey}/json`)
+      const data = await res.json()
+      setNodeData(data)
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
+
+  return (
+    <div>
+      <input 
+        value={pubkey} 
+        onChange={(e) => setPubkey(e.target.value)}
+        placeholder="Entrez pubkey"
+      />
+      <button onClick={fetchData}>Rechercher</button>
+      {nodeData && <pre>{JSON.stringify(nodeData, null, 2)}</pre>}
+    </div>
+  )
+}
 
 export default function Home() {
   const [stats, setStats] = useState<NodeStats | null>(null);
