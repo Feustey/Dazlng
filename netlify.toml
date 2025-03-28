@@ -1,24 +1,35 @@
+
 [build]
-  command = "npx prisma generate && npm run build && next export"
+  command = "npx prisma generate && next build && next export" # Retirer 'npm run build'
   publish = "out"
-  environment = { NEXT_PUBLIC_API_URL = "/api", NODE_VERSION = "18" }
+  # environment = {...} # À SUPPRIMER
 
 [build.environment]
-  NEXT_USE_NETLIFY_EDGE = "true"
+  NEXT_USE_NETLIFY_EDGE = "false" # Edge incompatible avec static export
   NODE_VERSION = "18"
-  NEXT_PUBLIC_API_URL = "/.netlify/functions"
+  NEXT_PUBLIC_API_URL = "/api" # Uniquement cette déclaration
   NEXT_TELEMETRY_DISABLED = "1"
 
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+
+
 [build.processing]
-  skip_processing = false
+  skip_processing = true
 
 [build.processing.css]
   bundle = true
   minify = true
 
 [build.processing.js]
-  bundle = true
-  minify = true
+  bundle = false
+  minify = false
 
 [build.processing.html]
   pretty_urls = true
@@ -30,12 +41,10 @@
   clear = true
 
 [[headers]]
-  for = "/*"
+  for = "/fonts/*"
   [headers.values]
-    Content-Type = "text/html; charset=UTF-8"
-    X-Frame-Options = "DENY"
-    X-XSS-Protection = "1; mode=block"
-    X-Content-Type-Options = "nosniff"
+    Cache-Control = "public, max-age=31536000, immutable"
+    Content-Type = "font/woff2"
 
 [[headers]]
   for = "/_next/static/*"
@@ -84,27 +93,3 @@
   to = "/.netlify/functions/server"
   status = 200
   force = true
-
-[[redirects]]
-  from = "/_next/static/*"
-  to = "/_next/static/:splat"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/_next/data/*"
-  to = "/_next/data/:splat"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/_next/image/*"
-  to = "/_next/image/:splat"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/*"
-  to = "/.netlify/functions/server"
-  status = 200
-  force = true 
