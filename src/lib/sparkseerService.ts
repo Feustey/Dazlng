@@ -10,7 +10,9 @@ export interface SparkseerData {
     channels: number;
     avgChannelSize: number;
     avgFeeRate: number;
-    // Ajoutez d'autres métriques selon vos besoins
+    uptime: number;
+    total_capacity: number;
+    avg_fee_rate_ppm: number;
   };
 }
 
