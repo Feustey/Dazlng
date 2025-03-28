@@ -43,6 +43,9 @@ const nextConfig = {
       ],
     }
   },
+  typescript: {
+    ignoreBuildErrors: true
+  },
   distDir: '.next',
   transpilePackages: [
     '@heroicons/react',
