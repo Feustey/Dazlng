@@ -1,0 +1,1 @@
+Traduisez le texte suivant en français en conservant une terminologie précise et fluide, adaptée à un site spécialisé sur Bitcoin et sa couche 2 (Lightning Network, rollups, sidechains, etc.). Veillez à respecter les nuances techniques et à éviter les traductions trop littérales qui pourraient altérer le sens.

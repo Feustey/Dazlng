@@ -1,0 +1,214 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+    --blue-100: rgba(222, 226, 255, 1);
+    --blue-200: rgba(196, 201, 255, 1);
+    --blue-300: rgba(160, 166, 255, 1);
+    --blue-400: rgba(126, 123, 255, 1);
+    --blue-50: rgba(237, 239, 255, 1);
+    --blue-500: rgba(106, 91, 249, 1);
+    --blue-600: rgba(91, 61, 238, 1);
+    --blue-700: rgba(79, 47, 211, 1);
+    --blue-800: rgba(64, 41, 170, 1);
+    --blue-900: rgba(55, 41, 134, 1);
+    --green-100: rgba(217, 242, 225, 1);
+    --green-200: rgba(181, 229, 199, 1);
+    --green-300: rgba(133, 208, 165, 1);
+    --green-400: rgba(82, 181, 128, 1);
+    --green-50: rgba(239, 250, 243, 1);
+    --green-500: rgba(54, 174, 114, 1);
+    --green-600: rgba(32, 123, 80, 1);
+    --green-700: rgba(26, 98, 66, 1);
+    --green-800: rgba(23, 78, 54, 1);
+    --green-900: rgba(19, 65, 45, 1);
+    --gris-100: rgba(229, 230, 232, 1);
+    --gris-200: rgba(206, 207, 211, 1);
+    --gris-300: rgba(172, 175, 180, 1);
+    --gris-400: rgba(131, 134, 141, 1);
+    --gris-50: rgba(245, 245, 246, 1);
+    --gris-500: rgba(97, 100, 107, 1);
+    --gris-600: rgba(89, 92, 97, 1);
+    --gris-700: rgba(76, 78, 82, 1);
+    --gris-800: rgba(67, 68, 71, 1);
+    --gris-900: rgba(38, 38, 38, 1);
+    --orange-100: rgba(255, 239, 212, 1);
+    --orange-200: rgba(255, 219, 168, 1);
+    --orange-300: rgba(255, 193, 112, 1);
+    --orange-400: rgba(255, 155, 55, 1);
+    --orange-50: rgba(255, 248, 237, 1);
+    --orange-500: rgba(255, 137, 36, 1);
+    --orange-600: rgba(240, 98, 6, 1);
+    --orange-700: rgba(199, 73, 7, 1);
+    --orange-800: rgba(158, 57, 14, 1);
+    --orange-900: rgba(127, 50, 15, 1);
+    --red-100: rgba(254, 226, 226, 1);
+    --red-200: rgba(254, 202, 202, 1);
+    --red-300: rgba(252, 165, 165, 1);
+    --red-400: rgba(248, 113, 113, 1);
+    --red-50: rgba(254, 242, 242, 1);
+    --red-500: rgba(239, 68, 68, 1);
+    --red-600: rgba(220, 38, 38, 1);
+    --red-700: rgba(185, 28, 28, 1);
+    --red-800: rgba(153, 27, 27, 1);
+    --red-900: rgba(127, 29, 29, 1);
+    --dark: rgba(0, 0, 0, 1);
+    --white: rgba(255, 255, 255, 1);
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .all-\[unset\] {
+    all: unset;
+  }
+}
+
+/* Styles de base pour les titres */
+h1 {
+  @apply font-squada text-h1;
+}
+
+h2 {
+  @apply font-squada text-h2;
+}
+
+h3 {
+  @apply font-squada text-h3;
+}
+
+h4 {
+  @apply font-squada text-h4;
+}
+
+h5 {
+  @apply font-squada text-h5;
+}
+
+h6 {
+  @apply font-squada text-h6;
+}
+
+/* Styles de base pour le texte */
+p {
+  @apply text-body;
+}
+
+.text-bold {
+  @apply text-body-bold;
+}
+
+.text-italic {
+  @apply text-body italic;
+}
+
+.text-small {
+  @apply text-body-small;
+}
+
+.text-small-bold {
+  @apply text-body-small-bold;
+}
+
+.text-small2 {
+  @apply text-body-small2;
+}
+
+/* Styles pour les boutons */
+.button {
+  @apply text-button font-squada;
+}
+
+/* Styles pour les liens */
+.link-desktop {
+  @apply text-link-desktop;
+}
+
+/* Styles pour les labels */
+.label-input {
+  @apply text-label-input;
+}
+
+/* Styles pour les témoignages */
+.testimonial {
+  @apply text-body-testimonials;
+}
+
+.testimonial-bold {
+  @apply text-body-testimonials-bold;
+}

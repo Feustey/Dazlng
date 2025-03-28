@@ -3,7 +3,10 @@ import React from 'react';
 async function getRecommendations() {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/recommendations`, {
-      cache: 'no-store'
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
     
     if (!response.ok) {
@@ -12,7 +15,7 @@ async function getRecommendations() {
     
     return response.json();
   } catch (error) {
-    console.error('Fetch error:', error);
+    console.error('Error fetching recommendations:', error);
     return { error: 'Impossible de charger les recommandations' };
   }
 }
@@ -44,7 +47,9 @@ export default async function ActionsPage() {
         </h2>
         <div className="prose dark:prose-invert">
           {data.recommendations && (
-            <div dangerouslySetInnerHTML={{ __html: data.recommendations.replace(/\n/g, '<br>') }} />
+            <div className="whitespace-pre-line">
+              {data.recommendations}
+            </div>
           )}
         </div>
       </div>

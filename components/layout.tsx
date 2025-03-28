@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Bolt, Activity, MessageCircle, Settings, Menu, PlayCircle, Info } from "lucide-react";
+import { Bolt, Activity, MessageCircle, Settings, Menu, PlayCircle, Info, Bot } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -55,6 +55,15 @@ export function Layout({ children }: LayoutProps) {
               >
                 <Bolt className="mr-2 h-4 w-4" />
                 Channels
+              </Button>
+            </Link>
+            <Link href="/bot-ia">
+              <Button
+                variant="ghost"
+                className="w-full justify-start"
+              >
+                <Bot className="mr-2 h-4 w-4" />
+                Bot IA
               </Button>
             </Link>
             <Link href="/messages">
