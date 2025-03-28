@@ -54,9 +54,4 @@
 
 [functions.import-historical]
   runtime = "nodejs18"
-  timeout = 30
-
-[[redirects]]
-  from = "/api/sparkseer/*"
-  to = "/.netlify/functions/sparkseer-proxy/:splat"
-  status = 200 
+  timeout = 30 
