@@ -3,6 +3,7 @@ import { ThemeProvider } from 'next-themes';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 import { NodeProvider } from '@/contexts/NodeContext';
 import Header from '@/components/Header';
+import Toaster from '@/components/ui/toaster';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -27,6 +28,7 @@ export default function RootLayout({
               <main className="min-h-screen bg-white dark:bg-gray-900">
                 {children}
               </main>
+              <Toaster />
             </NodeProvider>
           </SettingsProvider>
         </ThemeProvider>

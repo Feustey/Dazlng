@@ -34,7 +34,6 @@ export const Footer: React.FC = () => {
                 <li><Link href="/about" className="text-body-small text-gris-300 hover:text-white">À propos</Link></li>
                 <li><Link href="/settings" className="text-body-small text-gris-300 hover:text-white">Paramètres</Link></li>
                 <li><Link href="/help" className="text-body-small text-gris-300 hover:text-white">Aide</Link></li>
-                <li><Link href="/contact" className="text-body-small text-gris-300 hover:text-white">Contact</Link></li>
               </ul>
             </div>
 
@@ -44,17 +43,16 @@ export const Footer: React.FC = () => {
                 <li><Link href="/privacy" className="text-body-small text-gris-300 hover:text-white">Confidentialité</Link></li>
                 <li><Link href="/terms" className="text-body-small text-gris-300 hover:text-white">Conditions d'utilisation</Link></li>
                 <li><Link href="/cookies" className="text-body-small text-gris-300 hover:text-white">Cookies</Link></li>
-                <li><Link href="/security" className="text-body-small text-gris-300 hover:text-white">Sécurité</Link></li>
               </ul>
             </div>
 
             <div className="flex flex-col gap-4">
               <h3 className="text-h5 text-white">Réseaux sociaux</h3>
               <ul className="space-y-2">
-                <li><a href="https://twitter.com/dazlng" target="_blank" rel="noopener noreferrer" className="text-body-small text-gris-300 hover:text-white">Twitter</a></li>
+                <li><a href="https://twitter.com/feustey" target="_blank" rel="noopener noreferrer" className="text-body-small text-gris-300 hover:text-white">Twitter</a></li>
                 <li><a href="https://github.com/dazlng" target="_blank" rel="noopener noreferrer" className="text-body-small text-gris-300 hover:text-white">GitHub</a></li>
                 <li><a href="https://discord.gg/dazlng" target="_blank" rel="noopener noreferrer" className="text-body-small text-gris-300 hover:text-white">Discord</a></li>
-                <li><a href="https://t.me/dazlng" target="_blank" rel="noopener noreferrer" className="text-body-small text-gris-300 hover:text-white">Telegram</a></li>
+                <li><a href="https://t.me/+LbcneuuYISFlZmI0" target="_blank" rel="noopener noreferrer" className="text-body-small text-gris-300 hover:text-white">Telegram</a></li>
               </ul>
             </div>
           </div>
