@@ -6,6 +6,7 @@ import { LanguageProvider } from '@/lib/language-context';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 import { Squada_One } from 'next/font/google';
 import { Toaster } from "@/components/ui/toaster";
+import { Logo } from "@/components/Logo"; // 'L' majuscule
 
 const squadaOne = Squada_One({
   weight: '400',
