@@ -29,8 +29,11 @@ const nextConfig = {
   },
   output: 'standalone',
   experimental: {
-    serverActions: true,
+    serverActions: {
+      bodySizeLimit: '2mb'
+    }
   },
+  distDir: '.next',
   transpilePackages: [
     '@heroicons/react',
     '@radix-ui/react-accordion',
