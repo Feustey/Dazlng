@@ -56,7 +56,7 @@ export async function GET() {
     // Remplacer les variables dans le template
     const prompt = promptTemplate
       .replace('{total_capacity}', nodeData.total_capacity.toString())
-      .replace('{channel_count}', nodeData.active_channel_count.toString())
+      .replace('{channel_count}', nodeData.active_channels.toString())
       .replace('{connectivity_score}', '0')
       .replace('{betweenness_centrality}', '0')
       .replace('{node_alias}', nodeData.alias)
