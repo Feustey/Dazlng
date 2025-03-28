@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import sparkseerService from '@/lib/sparkseerService';
+import mcpService from '@/lib/mcpService';
 
 export async function GET(request: Request) {
   try {
@@ -13,7 +13,7 @@ export async function GET(request: Request) {
       );
     }
 
-    const peersOfPeers = await sparkseerService.getPeersOfPeers(pubkey);
+    const peersOfPeers = await mcpService.getPeersOfPeers(pubkey);
     return NextResponse.json(peersOfPeers);
   } catch (error) {
     console.error('Error fetching peers of peers:', error);
