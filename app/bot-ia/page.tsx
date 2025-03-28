@@ -1,23 +1,33 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/src/components/ui/use-toast";
-import { Loader2 } from "lucide-react";
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Loader2 } from 'lucide-react';
 
-export default function BotIAPage() {
+interface OptimizationResponse {
+  recommendations: string[];
+  status: string;
+}
+
+export default function BotIA() {
   const [pubkey, setPubkey] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const { addToast } = useToast();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<OptimizationResponse | null>(null);
 
-  const handleOptimize = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+  const handleOptimize = async () => {
+    if (!pubkey) {
+      setError('Veuillez entrer une clé publique');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
 
     try {
-      const response = await fetch('https://mcp-c544a464bb52.herokuapp.com/optimize-node', {
+      const response = await fetch('/api/optimize', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -30,97 +40,62 @@ export default function BotIAPage() {
       }
 
       const data = await response.json();
-      addToast({
-        title: "Optimisation réussie",
-        description: "Le nœud a été optimisé avec succès.",
-        type: "success"
-      });
-    } catch (error) {
-      addToast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de l'optimisation du nœud.",
-        type: "error"
-      });
+      setResult(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Une erreur est survenue');
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-8">Bot IA - Optimisation de Nœuds</h1>
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">Optimisation IA du Nœud</h1>
       
-      <div className="grid gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Optimisation de Nœud</CardTitle>
-            <CardDescription>
-              Entrez la clé publique du nœud Lightning que vous souhaitez optimiser
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleOptimize} className="space-y-4">
-              <div className="space-y-2">
-                <label htmlFor="pubkey" className="text-sm font-medium">
-                  Clé Publique du Nœud
-                </label>
-                <Input
-                  id="pubkey"
-                  value={pubkey}
-                  onChange={(e) => setPubkey(e.target.value)}
-                  placeholder="Entrez la clé publique du nœud"
-                  required
-                />
-              </div>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Optimisation en cours...
-                  </>
-                ) : (
-                  'Optimiser le Nœud'
-                )}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+      <Card className="p-6">
+        <div className="space-y-4">
+          <div className="flex gap-4">
+            <Input
+              placeholder="Entrez la clé publique du nœud"
+              value={pubkey}
+              onChange={(e) => setPubkey(e.target.value)}
+              className="flex-1"
+            />
+            <Button 
+              onClick={handleOptimize} 
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Optimisation...
+                </>
+              ) : (
+                'Optimiser'
+              )}
+            </Button>
+          </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Documentation API</CardTitle>
-            <CardDescription>
-              Liens vers la documentation de l'API d'optimisation
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div>
-                <h3 className="font-medium mb-2">Documentation Swagger</h3>
-                <a
-                  href="https://mcp-c544a464bb52.herokuapp.com/docs"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 hover:underline"
-                >
-                  Accéder à la documentation Swagger
-                </a>
-              </div>
-              <div>
-                <h3 className="font-medium mb-2">Documentation ReDoc</h3>
-                <a
-                  href="https://mcp-c544a464bb52.herokuapp.com/redoc"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 hover:underline"
-                >
-                  Accéder à la documentation ReDoc
-                </a>
+          {error && (
+            <div className="text-red-500">
+              {error}
+            </div>
+          )}
+
+          {result && (
+            <div className="mt-6">
+              <h2 className="text-xl font-semibold mb-4">Recommandations</h2>
+              <div className="space-y-2">
+                {result.recommendations.map((recommendation, index) => (
+                  <div key={index} className="p-3 bg-muted rounded-lg">
+                    {recommendation}
+                  </div>
+                ))}
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          )}
+        </div>
+      </Card>
     </div>
   );
 } 
