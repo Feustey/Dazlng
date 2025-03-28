@@ -33,6 +33,16 @@ const nextConfig = {
       bodySizeLimit: '2mb'
     }
   },
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: '/api/:path*',
+          destination: '/api/:path*',
+        }
+      ],
+    }
+  },
   distDir: '.next',
   transpilePackages: [
     '@heroicons/react',

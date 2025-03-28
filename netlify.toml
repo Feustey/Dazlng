@@ -1,6 +1,7 @@
 [build]
   command = "npm run build"
   publish = ".next"
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF ."
 
 [build.environment]
   NEXT_USE_NETLIFY_EDGE = "true"
@@ -17,7 +18,7 @@
 
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/:splat"
+  to = "/.netlify/functions/server"
   status = 200
   force = true
 
@@ -48,6 +49,7 @@
 [dev]
   framework = "next"
   targetPort = 3000
+  port = 8888
 
 [build.processing]
   skip_processing = false
@@ -67,6 +69,7 @@
   compress = true
 
 [functions.server]
+  included_files = ["public/**/*", ".next/static/**/*"]
   node_bundler = "esbuild"
   external_node_modules = ["@prisma/client"]
 
