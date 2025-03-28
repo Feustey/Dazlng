@@ -89,4 +89,36 @@
   .all-unset {
     all: unset;
   }
+    /* Navigation */
+  .navbar {
+    @apply flex items-center justify-between py-4;
+  }
+  
+  .nav-menu {
+    @apply flex space-x-8;
+  }
+  
+  /* Sections */
+  .feature-section {
+    @apply py-16 bg-gray-50;
+  }
+  
+  .feature-card {
+    @apply p-6 bg-white rounded-lg shadow-card hover:shadow-card-hover transition-shadow;
+  }
+}
+@layer utilities {
+  /* Utilitaires personnalisés */
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 }
