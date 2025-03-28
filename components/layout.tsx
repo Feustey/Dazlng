@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Footer } from "@/components/Footer";
+import { Logo } from "@/components/logo";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -24,9 +25,10 @@ export function Layout({ children }: LayoutProps) {
     <div className="flex min-h-screen flex-col">
       <div className="flex flex-1">
         {/* Sidebar (inchangé) */}
-        <div className={cn(/* ... */)}>
-          {/* ... */}
-        </div>
+      <div className="flex h-16 items-center border-b px-6">
+  <Logo className="h-12" /> {/* Remplace le Bolt et le texte */}
+</div>
+       
 
         {/* Main content */}
         <div className={cn("flex-1", isSidebarOpen ? "ml-64" : "ml-0")}>
