@@ -65,4 +65,32 @@ export const fetchAndStoreNodeData = async (nodeId: string): Promise<void> => {
     console.error('Erreur lors de la récupération et du stockage des données:', error);
     throw error;
   }
+};
+
+export const getNodeData = async (nodeId: string): Promise<SparkseerData[]> => {
+  try {
+    const response = await fetch(`/api/nodes/${nodeId}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Erreur lors de la récupération des données du nœud:', error);
+    throw error;
+  }
+};
+
+export const getAllNodes = async (): Promise<SparkseerData[]> => {
+  try {
+    const response = await fetch('/api/nodes');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Erreur lors de la récupération de tous les nœuds:', error);
+    throw error;
+  }
 }; 
