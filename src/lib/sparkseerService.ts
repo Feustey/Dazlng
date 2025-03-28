@@ -40,4 +40,29 @@ export const fetchAllSparkseerData = async (): Promise<SparkseerData[]> => {
     console.error('Erreur lors de la récupération de toutes les données Sparkseer:', error);
     throw error;
   }
+};
+
+export const fetchAndStoreNodeData = async (nodeId: string): Promise<void> => {
+  try {
+    const data = await fetchSparkseerData(nodeId);
+    
+    // Stockage des données dans la base de données via l'API
+    const response = await fetch('/api/nodes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        nodeId,
+        data,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erreur lors du stockage des données: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Erreur lors de la récupération et du stockage des données:', error);
+    throw error;
+  }
 }; 
