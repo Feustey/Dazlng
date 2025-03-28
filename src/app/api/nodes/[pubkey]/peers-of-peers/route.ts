@@ -22,7 +22,7 @@ export async function POST(
   { params }: { params: { pubkey: string } }
 ) {
   try {
-    const peersOfPeers = await sparkseerService.fetchAndStorePeersOfPeers(params.pubkey);
+    const peersOfPeers = await mcpService.getPeersOfPeers(params.pubkey);
     return NextResponse.json(peersOfPeers);
   } catch (error) {
     console.error('Error updating peers of peers:', error);
