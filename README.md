@@ -15,6 +15,7 @@ DazLng est un tableau de bord intelligent propulsé par l'IA, conçu pour optimi
   - Capacité des canaux et nombre de canaux actifs
   - Volume total des transactions
   - Statistiques réseau et temps de fonctionnement
+- **Recommandations Intelligentes** : Conseils basés sur l'analyse des données pour optimiser votre nœud
 
 ## 🛠️ Technologies Utilisées
 
@@ -23,6 +24,8 @@ DazLng est un tableau de bord intelligent propulsé par l'IA, conçu pour optimi
 - **Graphiques** : Chart.js avec react-chartjs-2
 - **État** : React Hooks
 - **Types** : TypeScript
+- **API** : API MCP pour les données Lightning Network
+- **Base de données** : MongoDB pour le stockage des recommandations
 
 ## 📦 Installation
 
@@ -50,12 +53,31 @@ yarn dev
 
 ## 🔧 Configuration
 
-1. Créez un fichier `.env.local` à la racine du projet
+1. Créez un fichier `.env` à la racine du projet
 2. Ajoutez vos variables d'environnement :
 ```env
-# Exemple de configuration
-NEXT_PUBLIC_API_URL=votre_url_api
+# Configuration requise
+MCP_API_URL=https://mcp-c544a464bb52.herokuapp.com
+NODE_PUBKEY=votre_clé_publique
+MONGODB_URI=votre_uri_mongodb
 ```
+
+## 📊 Architecture
+
+### API Endpoints
+
+- `/api/stats` : Statistiques en temps réel du nœud
+- `/api/historical` : Données historiques (30 derniers jours)
+- `/api/review` : Vue d'ensemble complète des données
+- `/api/recommendations` : Recommandations basées sur l'analyse des données
+- `/api/nodes/[pubkey]/peers-of-peers` : Informations sur les pairs des pairs
+
+### Flux de Données
+
+1. **Collecte** : Données récupérées via l'API MCP
+2. **Transformation** : Formatage et validation des données
+3. **Stockage** : MongoDB pour les recommandations
+4. **Visualisation** : Interface utilisateur avec graphiques interactifs
 
 ## 📊 Fonctionnalités à Venir
 
@@ -84,6 +106,7 @@ Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 - La communauté Lightning Network
 - Tous les contributeurs du projet
 - Les utilisateurs qui nous font confiance
+- L'équipe MCP pour leur API
 
 ---
 
