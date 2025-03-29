@@ -4,6 +4,7 @@ import Layout from '@/components/layout';
 import { ThemeProvider } from 'next-themes';
 import { LanguageProvider } from '@/lib/language-context';
 import { SettingsProvider } from '@/contexts/SettingsContext';
+import { NodeProvider } from '@/contexts/NodeContext';
 import { Squada_One } from 'next/font/google';
 import { Toaster } from "@/components/ui/toaster";
 import { Logo } from "@/components/Logo"; // 'L' majuscule
@@ -40,8 +41,10 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <LanguageProvider>
             <SettingsProvider>
-              <Layout>{children}</Layout>
-              <Toaster />
+              <NodeProvider>
+                <Layout>{children}</Layout>
+                <Toaster />
+              </NodeProvider>
             </SettingsProvider>
           </LanguageProvider>
         </ThemeProvider>
