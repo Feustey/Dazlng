@@ -1,68 +1,45 @@
-
 [build]
-  command = "npx prisma generate && next build" # Retirer 'npm run build'
+  command = "npx prisma generate && next build"
   publish = "out"
-  # environment = {...} # À SUPPRIMER
 
 [build.environment]
-  NEXT_USE_NETLIFY_EDGE = "false" # Edge incompatible avec static export
+  NEXT_USE_NETLIFY_EDGE = "false"
   NODE_VERSION = "18"
-  NEXT_PUBLIC_API_URL = "/api" # Uniquement cette déclaration
+  NEXT_PUBLIC_API_URL = "/api"
   NEXT_TELEMETRY_DISABLED = "1"
-
 
 [[headers]]
   for = "/*"
   [headers.values]
-
     X-Frame-Options = "DENY"
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
-
-
-[build.processing]
-  skip_processing = true
-
-[build.processing.css]
-  bundle = true
-  minify = true
-
-[build.processing.js]
-  bundle = false
-  minify = false
-
-[build.processing.html]
-  pretty_urls = true
-
-[build.processing.images]
-  compress = true
-
-[build.cache]
-  clear = true
 
 [[headers]]
   for = "/fonts/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
-    Content-Type = "font/woff2"
 
 [[headers]]
   for = "/_next/static/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
-    Content-Type = "application/javascript"
 
 [[headers]]
   for = "/_next/static/css/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
-    Content-Type = "text/css"
 
 [[headers]]
   for = "/_next/static/media/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
-    Content-Type = "font/woff2"
+
+[build.processing]
+  skip_processing = true
+
+[build.cache]
+  clear = true
 
 [functions]
   node_bundler = "esbuild"
