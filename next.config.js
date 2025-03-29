@@ -12,7 +12,13 @@ const nextConfig = {
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@': './src',
+      '@': path.resolve(__dirname, './src'),
+      '@components': path.resolve(__dirname, './src/components'),
+      '@lib': path.resolve(__dirname, './src/lib'),
+      '@models': path.resolve(__dirname, './src/models'),
+      '@types': path.resolve(__dirname, './src/types'),
+      '@contexts': path.resolve(__dirname, './src/contexts'),
+      '@hooks': path.resolve(__dirname, './src/hooks'),
     };
     return config;
   },
