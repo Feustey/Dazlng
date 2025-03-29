@@ -1,4 +1,4 @@
-import { Accordion } from "@/components/ui/accordion";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 
 const faqItems = [
   {
@@ -50,7 +50,14 @@ export default function HelpPage() {
       <p className="text-body mb-8 max-w-2xl">
         Trouvez rapidement les réponses aux questions les plus fréquentes sur DazLng et la gestion de votre nœud Lightning.
       </p>
-      <Accordion items={faqItems} />
+      <Accordion type="single" collapsible>
+        {faqItems.map((item, index) => (
+          <AccordionItem key={index} value={`item-${index}`}>
+            <AccordionTrigger>{item.question}</AccordionTrigger>
+            <AccordionContent>{item.answer}</AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
     </div>
   );
 } 
