@@ -14,7 +14,7 @@ export function Toaster() {
       description: 'L\'application est prête à être utilisée',
       status: 'info',
     });
-  }, []);
+  }, [showToast]);
 
   return (
     <div className="fixed bottom-4 right-4 z-50 space-y-4">
