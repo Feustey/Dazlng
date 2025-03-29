@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
-import Recommendation from '@/models/Recommendation';
+import Recommendation from '@/../../models/Recommendation';
 import mcpService from '@/lib/mcpService';
-import { McpNode } from '@/types/node';
+import { McpNode, BaseNode } from '@/types/node';
 
 export async function GET() {
   try {
@@ -14,20 +14,20 @@ export async function GET() {
     // Générer les recommandations basées sur les données des nœuds
     let recommendations = '';
     
-    // Analyse des frais
-    const highFeeNodes = nodes.filter((node: McpNode) => node.avg_fee_rate_ppm > 1000);
+    // Analyse des frais (nous supposons que les nœuds sont de type BaseNode qui contient avg_fee_rate_ppm)
+    const highFeeNodes = nodes.filter((node: any) => node.avg_fee_rate_ppm > 1000);
     if (highFeeNodes.length > 0) {
       recommendations += `⚠️ Attention : ${highFeeNodes.length} nœud(s) ont des frais élevés (>1000 ppm)\n`;
     }
 
     // Analyse de la capacité
-    const lowCapacityNodes = nodes.filter((node: McpNode) => node.total_capacity < 1000000);
+    const lowCapacityNodes = nodes.filter((node: any) => node.capacity && node.capacity < 1000000);
     if (lowCapacityNodes.length > 0) {
       recommendations += `💡 ${lowCapacityNodes.length} nœud(s) ont une faible capacité (<1M sats)\n`;
     }
 
     // Analyse de l'uptime
-    const lowUptimeNodes = nodes.filter((node: McpNode) => node.uptime < 95);
+    const lowUptimeNodes = nodes.filter((node: any) => node.uptime && node.uptime < 95);
     if (lowUptimeNodes.length > 0) {
       recommendations += `⚠️ ${lowUptimeNodes.length} nœud(s) ont un uptime faible (<95%)\n`;
     }
