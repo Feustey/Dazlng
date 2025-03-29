@@ -10,9 +10,6 @@
     "check": "npm run lint && npm run build"
   },
   "dependencies": {
-    "@chakra-ui/react": "^3.14.2",
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
     "@heroicons/react": "^2.2.0",
     "@netlify/plugin-nextjs": "^4.41.3",
     "@prisma/client": "^5.10.2",
@@ -48,7 +45,6 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "embla-carousel-react": "^8.5.2",
-    "framer-motion": "^12.6.2",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.446.0",
     "mongoose": "^8.2.0",
