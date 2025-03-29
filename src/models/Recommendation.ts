@@ -21,5 +21,23 @@ export interface RecommendationResponse {
   limit: number;
 }
 
-// Ajout d'un export par défaut pour résoudre l'erreur d'importation
-export default Recommendation; 
+// Objet à exporter par défaut qui fournit des méthodes utilitaires pour Recommendation
+const RecommendationImpl = {
+  // Factory pour créer une nouvelle recommandation
+  create: (data: Partial<Recommendation>): Recommendation => {
+    return {
+      id: data.id || '',
+      nodePubkey: data.nodePubkey || '',
+      type: data.type || 'capacity',
+      description: data.description || '',
+      priority: data.priority || 'medium',
+      createdAt: data.createdAt || new Date(),
+      updatedAt: data.updatedAt || new Date(),
+      status: data.status || 'pending',
+      details: data.details,
+    };
+  }
+};
+
+// Export par défaut de l'objet RecommendationImpl
+export default RecommendationImpl; 
