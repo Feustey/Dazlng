@@ -85,6 +85,40 @@
   --text-xs: 12px;
 }
 
+/* === shadcn/ui compatible theme === */
+:root {
+  --radius: 0.5rem;
+
+  --background: #ffffff;
+  --foreground: #0f0f0f;
+
+  --card: #ffffff;
+  --card-foreground: #0f0f0f;
+
+  --popover: #ffffff;
+  --popover-foreground: #0f0f0f;
+
+  --primary: var(--blue-600);
+  --primary-foreground: #ffffff;
+
+  --secondary: var(--green-500);
+  --secondary-foreground: #ffffff;
+
+  --muted: var(--gris-100);
+  --muted-foreground: var(--gris-500);
+
+  --accent: var(--orange-500);
+  --accent-foreground: #ffffff;
+
+  --destructive: var(--red-500);
+  --destructive-foreground: #ffffff;
+
+  --border: var(--gris-200);
+  --input: var(--gris-200);
+  --ring: var(--blue-400);
+}
+
+
 @layer components {
   .all-unset {
     all: unset;
@@ -106,6 +140,7 @@
   .feature-card {
     @apply p-6 bg-white rounded-lg shadow-card hover:shadow-card-hover transition-shadow;
   }
+  
 }
 @layer utilities {
   /* Utilitaires personnalisés */
