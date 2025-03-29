@@ -1,6 +1,6 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Layout } from '@/components/layout';
+import Layout from '@/components/layout';
 import { ThemeProvider } from 'next-themes';
 import { LanguageProvider } from '@/lib/language-context';
 import { SettingsProvider } from '@/contexts/SettingsContext';
