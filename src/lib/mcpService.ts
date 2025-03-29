@@ -144,7 +144,12 @@ class McpService {
       return data;
     } catch (error) {
       console.error('Erreur lors de la récupération des pairs des pairs:', error);
-      throw error;
+      return {
+        pubkey: pubkey,
+        peers: [],
+        peers_of_peers: [],
+        total: 0
+      };
     }
   }
 
@@ -155,7 +160,7 @@ class McpService {
       return data;
     } catch (error) {
       console.error('Erreur lors de la récupération des nœuds:', error);
-      throw error;
+      return [];
     }
   }
 
@@ -166,7 +171,13 @@ class McpService {
       return data;
     } catch (error) {
       console.error('Erreur lors de la récupération des statistiques:', error);
-      throw error;
+      return {
+        pubkey: this.pubkey,
+        alias: "DazLng Node (Fallback)",
+        capacity: 0,
+        channel_count: 0,
+        last_update: new Date().toISOString(),
+      };
     }
   }
 
@@ -177,7 +188,7 @@ class McpService {
       return data.slice(0, 30); // Limite aux 30 derniers jours
     } catch (error) {
       console.error('Erreur lors de la récupération des données historiques:', error);
-      throw error;
+      return [];
     }
   }
 }

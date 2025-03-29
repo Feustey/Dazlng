@@ -62,6 +62,8 @@ export interface Peer {
 export interface PeersOfPeersResponse {
   peers: Peer[];
   total: number;
+  pubkey?: string;
+  peers_of_peers?: Peer[];
 }
 
 export interface OptimizeNodeResponse {

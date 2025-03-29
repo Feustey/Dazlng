@@ -9,6 +9,8 @@ const nextConfig = {
     unoptimized: true,
     domains: ['mcp-c544a464bb52.herokuapp.com'],
   },
+  output: 'export',
+  reactStrictMode: false,
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,

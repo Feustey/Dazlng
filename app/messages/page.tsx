@@ -70,8 +70,16 @@ export default function MessagesPage() {
   if (error) {
     return (
       <div className="p-6">
-        <Card className="p-6 bg-destructive/10 text-destructive">
-          <p>{error}</p>
+        <Card className="p-6 bg-gray-100 border-l-4 border-orange-400">
+          <h1 className="text-2xl font-bold mb-4">Canal Telegram DazLng</h1>
+          <p className="mb-4">Nous rencontrons actuellement des difficultés pour accéder aux données du canal Telegram.</p>
+          <p className="mb-4">Vous pouvez toujours accéder directement au canal Telegram en cliquant sur le bouton ci-dessous.</p>
+          <Link href="https://t.me/DazLngChannel" target="_blank">
+            <Button>
+              <ExternalLink className="mr-2 h-4 w-4" />
+              Accéder au canal
+            </Button>
+          </Link>
         </Card>
       </div>
     );

@@ -38,7 +38,13 @@ class TelegramService {
       return data.result;
     } catch (error) {
       console.error('Error fetching channel info:', error);
-      throw error;
+      return {
+        id: 0,
+        title: "DazLng Channel",
+        username: CHANNEL_USERNAME,
+        type: "channel",
+        description: "Canal d'actualités et d'échanges sur DazLng. Actuellement indisponible, merci de réessayer plus tard."
+      };
     }
   }
 
@@ -54,7 +60,15 @@ class TelegramService {
       return data.result.map((update: any) => update.message).filter(Boolean);
     } catch (error) {
       console.error('Error fetching messages:', error);
-      throw error;
+      return [{
+        message_id: 1,
+        date: Math.floor(Date.now() / 1000),
+        text: "Le service Telegram est temporairement indisponible. Veuillez réessayer plus tard ou accéder directement au canal Telegram.",
+        from: {
+          id: 0,
+          first_name: "DazLng Bot"
+        }
+      }];
     }
   }
 
