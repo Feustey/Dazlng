@@ -26,7 +26,7 @@ export default function AboutPage() {
       <h1 className="text-4xl font-bold">{content.title}</h1>
       
       <div className="grid gap-6">
-        {content.sections.map((section: AboutSection, index: number) => (
+        {content.sections && content.sections.map((section: AboutSection, index: number) => (
           <Card key={index} className="p-6">
             <h2 className="text-2xl font-semibold mb-4">{section.title}</h2>
             
