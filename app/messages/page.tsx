@@ -108,7 +108,7 @@ export default function MessagesPage() {
       )}
 
       <div className="space-y-4">
-        {data.messages.map((message) => (
+        {data.messages && Array.isArray(data.messages) ? data.messages.map((message) => (
           <Card key={message.message_id} className="p-4">
             <div className="flex justify-between items-start mb-2">
               <div>
@@ -123,7 +123,11 @@ export default function MessagesPage() {
             </div>
             <p className="whitespace-pre-wrap">{message.text}</p>
           </Card>
-        ))}
+        )) : (
+          <Card className="p-4">
+            <p className="text-muted-foreground">Aucun message disponible</p>
+          </Card>
+        )}
       </div>
     </div>
   );
