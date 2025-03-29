@@ -1,27 +1,27 @@
 'use client';
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-type SettingsContextType = {
+interface SettingsContextType {
+  theme: 'light' | 'dark';
+  setTheme: (theme: 'light' | 'dark') => void;
   language: string;
-  setLanguage: (lang: string) => void;
-  currency: string;
-  setCurrency: (curr: string) => void;
-};
+  setLanguage: (language: string) => void;
+}
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
-export function SettingsProvider({ children }: { children: React.ReactNode }) {
+export function SettingsProvider({ children }: { children: ReactNode }) {
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [language, setLanguage] = useState('fr');
-  const [currency, setCurrency] = useState('btc');
 
   return (
     <SettingsContext.Provider
       value={{
+        theme,
+        setTheme,
         language,
         setLanguage,
-        currency,
-        setCurrency,
       }}
     >
       {children}

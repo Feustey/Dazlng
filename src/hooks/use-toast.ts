@@ -2,6 +2,7 @@
 
 // Inspired by react-hot-toast library
 import * as React from 'react';
+import { useToast as useToastChakra } from '@chakra-ui/react';
 
 import type { ToastActionElement, ToastProps } from '@/components/ui/toast';
 
@@ -168,24 +169,35 @@ function toast({ ...props }: Toast) {
   };
 }
 
+interface ToastOptions {
+  title: string;
+  description?: string;
+  status?: 'success' | 'error' | 'warning' | 'info';
+  duration?: number;
+  isClosable?: boolean;
+}
+
 function useToast() {
-  const [state, setState] = React.useState<State>(memoryState);
+  const toast = useToastChakra();
 
-  React.useEffect(() => {
-    listeners.push(setState);
-    return () => {
-      const index = listeners.indexOf(setState);
-      if (index > -1) {
-        listeners.splice(index, 1);
-      }
-    };
-  }, [state]);
-
-  return {
-    ...state,
-    toast,
-    dismiss: (toastId?: string) => dispatch({ type: 'DISMISS_TOAST', toastId }),
+  const showToast = ({
+    title,
+    description,
+    status = 'info',
+    duration = 3000,
+    isClosable = true,
+  }: ToastOptions) => {
+    toast({
+      title,
+      description,
+      status,
+      duration,
+      isClosable,
+      position: 'top-right',
+    });
   };
+
+  return { showToast };
 }
 
 export { useToast, toast };

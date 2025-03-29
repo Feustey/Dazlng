@@ -1,9 +1,20 @@
-import React from 'react';
-import { useToast } from './use-toast';
+'use client';
+
+import React, { useEffect } from 'react';
+import { useToast } from '@/hooks/use-toast';
 import Toast from './toast';
 
-const Toaster: React.FC = () => {
-  const { toasts, removeToast } = useToast();
+export function Toaster() {
+  const { toasts, removeToast, showToast } = useToast();
+
+  useEffect(() => {
+    // Exemple d'utilisation du toast
+    showToast({
+      title: 'Bienvenue',
+      description: 'L\'application est prête à être utilisée',
+      status: 'info',
+    });
+  }, []);
 
   return (
     <div className="fixed bottom-4 right-4 z-50 space-y-4">
@@ -16,6 +27,6 @@ const Toaster: React.FC = () => {
       ))}
     </div>
   );
-};
+}
 
 export default Toaster; 

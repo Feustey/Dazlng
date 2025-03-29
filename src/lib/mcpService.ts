@@ -1,33 +1,11 @@
-import { McpNode } from '@/types/node';
+import { McpNode, NodeInfo, Peer, PeersOfPeersResponse, OptimizeNodeResponse } from '@/types/node';
+import { useSettings } from '@/contexts/SettingsContext';
+import { useToast } from '@/hooks/use-toast';
 
-interface Peer {
-  pubkey: string;
-  alias?: string;
-  capacity?: number;
-  channel_count?: number;
-}
-
-interface PeersOfPeersResponse {
-  peers: Peer[];
-  total: number;
-}
-
-interface OptimizeNodeResponse {
-  recommendations: string[];
-  status: string;
-}
-
-interface NodeInfo {
-  alias?: string;
-  capacity?: number;
-  channelCount?: number;
-  avgCapacity?: number;
-}
-
-const API_URL = process.env.NEXT_PUBLIC_MCP_API_URL || 'https://mcp-c544a464bb52.herokuapp.com'
+const API_URL = process.env.NEXT_PUBLIC_MCP_API_URL || 'https://mcp-c544a464bb52.herokuapp.com';
 
 export const mcpService = {
-  async optimize(nodeData: any) {
+  async optimize(nodeData: McpNode) {
     try {
       const response = await fetch(`${API_URL}/api/optimize`, {
         method: 'POST',
@@ -35,32 +13,53 @@ export const mcpService = {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(nodeData),
-      })
+      });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de l\'optimisation')
+        throw new Error('Erreur lors de l\'optimisation');
       }
 
-      return await response.json()
+      return await response.json();
     } catch (error) {
-      console.error('Erreur MCP Service:', error)
-      throw error
+      console.error('Erreur MCP Service:', error);
+      throw error;
     }
   },
 
   async getStatus() {
     try {
-      const response = await fetch(`${API_URL}/api/status`)
+      const response = await fetch(`${API_URL}/api/status`);
       if (!response.ok) {
-        throw new Error('Erreur lors de la récupération du statut')
+        throw new Error('Erreur lors de la récupération du statut');
       }
-      return await response.json()
+      return await response.json();
     } catch (error) {
-      console.error('Erreur MCP Service:', error)
-      throw error
+      console.error('Erreur MCP Service:', error);
+      throw error;
+    }
+  },
+
+  async getRecommendations(nodeData: McpNode) {
+    try {
+      const response = await fetch(`${API_URL}/api/recommendations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(nodeData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de la récupération des recommandations');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Erreur MCP Service:', error);
+      throw error;
     }
   }
-}
+};
 
 class McpService {
   private baseUrl: string;

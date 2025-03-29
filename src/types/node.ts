@@ -43,4 +43,28 @@ export interface McpNode {
   last_update?: string;
   status?: string;
   recommendations?: string[];
+}
+
+export interface NodeInfo {
+  alias?: string;
+  capacity?: number;
+  channelCount?: number;
+  avgCapacity?: number;
+}
+
+export interface Peer {
+  pubkey: string;
+  alias?: string;
+  capacity?: number;
+  channel_count?: number;
+}
+
+export interface PeersOfPeersResponse {
+  peers: Peer[];
+  total: number;
+}
+
+export interface OptimizeNodeResponse {
+  recommendations: string[];
+  status: string;
 } 
