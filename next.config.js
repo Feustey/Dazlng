@@ -12,7 +12,7 @@ const nextConfig = {
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@': path.resolve(__dirname), // POINT ICI ===> prend la racine
+      '@': './src',
     };
     return config;
   },

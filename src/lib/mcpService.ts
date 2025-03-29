@@ -24,6 +24,44 @@ interface NodeInfo {
   avgCapacity?: number;
 }
 
+const API_URL = process.env.NEXT_PUBLIC_MCP_API_URL || 'https://mcp-c544a464bb52.herokuapp.com'
+
+export const mcpService = {
+  async optimize(nodeData: any) {
+    try {
+      const response = await fetch(`${API_URL}/api/optimize`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(nodeData),
+      })
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de l\'optimisation')
+      }
+
+      return await response.json()
+    } catch (error) {
+      console.error('Erreur MCP Service:', error)
+      throw error
+    }
+  },
+
+  async getStatus() {
+    try {
+      const response = await fetch(`${API_URL}/api/status`)
+      if (!response.ok) {
+        throw new Error('Erreur lors de la récupération du statut')
+      }
+      return await response.json()
+    } catch (error) {
+      console.error('Erreur MCP Service:', error)
+      throw error
+    }
+  }
+}
+
 class McpService {
   private baseUrl: string;
   private pubkey: string;
@@ -136,5 +174,5 @@ class McpService {
   }
 }
 
-const mcpService = new McpService();
-export default mcpService; 
+const mcpServiceInstance = new McpService();
+export default mcpServiceInstance; 

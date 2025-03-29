@@ -34,6 +34,13 @@ export interface MongoNode extends BaseNode {
   updatedAt: Date;
 }
 
-export interface McpNode extends BaseNode {
-  active_channels: number;
+export interface McpNode {
+  pubkey: string;
+  alias?: string;
+  capacity?: number;
+  channel_count?: number;
+  avg_capacity?: number;
+  last_update?: string;
+  status?: string;
+  recommendations?: string[];
 } 
