@@ -19,4 +19,7 @@ export interface RecommendationResponse {
   total: number;
   page: number;
   limit: number;
-} 
+}
+
+// Ajout d'un export par défaut pour résoudre l'erreur d'importation
+export default Recommendation; 
