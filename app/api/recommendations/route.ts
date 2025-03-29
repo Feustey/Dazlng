@@ -49,9 +49,24 @@ export async function GET() {
     return NextResponse.json({ recommendations });
   } catch (error) {
     console.error('Erreur lors de la génération des recommandations:', error);
+    
+    // Déterminer le statut HTTP en fonction du type d'erreur
+    let statusCode = 500;
+    let errorMessage = 'Erreur lors de la génération des recommandations';
+    
+    if (error instanceof Error) {
+      // Vérifier si c'est une erreur de service indisponible
+      if (error.message.includes('503') || error.message.includes('indisponible')) {
+        statusCode = 503;
+        errorMessage = 'Le service externe est temporairement indisponible. Veuillez réessayer plus tard.';
+      } else if (error.message.includes('MongoDB') || error.message.includes('database')) {
+        errorMessage = 'Erreur de connexion à la base de données. Veuillez vérifier la configuration.';
+      }
+    }
+    
     return NextResponse.json(
-      { error: 'Erreur lors de la génération des recommandations' },
-      { status: 500 }
+      { error: errorMessage },
+      { status: statusCode }
     );
   }
 } 

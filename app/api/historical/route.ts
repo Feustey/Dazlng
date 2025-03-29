@@ -19,9 +19,22 @@ export async function GET() {
     return NextResponse.json(formattedData);
   } catch (error) {
     console.error('Erreur lors de la récupération des données historiques:', error);
+    
+    // Déterminer le statut HTTP en fonction du type d'erreur
+    let statusCode = 500;
+    let errorMessage = 'Erreur lors de la récupération des données historiques';
+    
+    if (error instanceof Error) {
+      // Vérifier si c'est une erreur de service indisponible
+      if (error.message.includes('503') || error.message.includes('indisponible')) {
+        statusCode = 503;
+        errorMessage = 'Le service externe est temporairement indisponible. Veuillez réessayer plus tard.';
+      }
+    }
+    
     return NextResponse.json(
-      { error: 'Erreur lors de la récupération des données historiques' },
-      { status: 500 }
+      { error: errorMessage },
+      { status: statusCode }
     );
   }
 } 

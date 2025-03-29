@@ -62,8 +62,8 @@ export const mcpService = {
 class McpService {
   private baseUrl: string;
   private pubkey: string;
-  private maxRetries: number = 3;
-  private retryDelay: number = 2000; // 2 secondes
+  private maxRetries: number = 5;
+  private initialRetryDelay: number = 1000;
 
   constructor() {
     this.baseUrl = process.env.MCP_API_URL || 'https://mcp-c544a464bb52.herokuapp.com';
@@ -72,16 +72,27 @@ class McpService {
 
   private async fetchWithRetry(url: string, retries: number = this.maxRetries): Promise<Response> {
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        signal: AbortSignal.timeout(10000)
+      });
+      
       if (!response.ok) {
+        if (response.status === 503) {
+          throw new Error(`Service temporairement indisponible (503)`);
+        }
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       return response;
     } catch (error) {
       if (retries > 0) {
-        console.log(`Tentative de reconnexion... (${this.maxRetries - retries + 1}/${this.maxRetries})`);
-        await new Promise(resolve => setTimeout(resolve, this.retryDelay));
+        const delay = this.initialRetryDelay * Math.pow(2, this.maxRetries - retries);
+        console.log(`Service temporairement indisponible. Nouvelle tentative dans ${delay/1000} secondes... (${this.maxRetries - retries + 1}/${this.maxRetries})`);
+        await new Promise(resolve => setTimeout(resolve, delay));
         return this.fetchWithRetry(url, retries - 1);
+      }
+      
+      if (error instanceof Error) {
+        throw new Error(`Impossible de se connecter à l'API MCP après ${this.maxRetries} tentatives: ${error.message}`);
       }
       throw error;
     }

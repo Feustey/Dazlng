@@ -34,19 +34,23 @@ export async function GET() {
   } catch (error) {
     console.error('Erreur lors de la récupération des statistiques:', error);
     
+    let statusCode = 503;
+    let errorMessage = 'Erreur lors de la récupération des statistiques';
+    
     if (error instanceof Error) {
       console.error('Message d\'erreur:', error.message);
       if (error.message.includes('MONGODB_URI n\'est pas définie')) {
-        return NextResponse.json(
-          { error: 'Configuration MongoDB manquante. Vérifiez les variables d\'environnement.' },
-          { status: 503 }
-        );
+        errorMessage = 'Configuration MongoDB manquante. Vérifiez les variables d\'environnement.';
+      } else if (error.message.includes('503') || error.message.includes('indisponible')) {
+        errorMessage = 'Le service externe est temporairement indisponible. Veuillez réessayer plus tard.';
+      } else if (error.message.includes('timeout') || error.message.includes('ETIMEDOUT')) {
+        errorMessage = 'Timeout lors de la connexion au service. Veuillez réessayer plus tard.';
       }
     }
     
     return NextResponse.json(
-      { error: 'Erreur lors de la récupération des statistiques' },
-      { status: 503 }
+      { error: errorMessage },
+      { status: statusCode }
     );
   }
 } 
