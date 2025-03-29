@@ -1,6 +1,4 @@
 import { McpNode, NodeInfo, Peer, PeersOfPeersResponse, OptimizeNodeResponse } from '@/types/node';
-import { useSettings } from '@/contexts/SettingsContext';
-import { useToast } from '@/hooks/use-toast';
 
 const API_URL = process.env.NEXT_PUBLIC_MCP_API_URL || 'https://mcp-c544a464bb52.herokuapp.com';
 
