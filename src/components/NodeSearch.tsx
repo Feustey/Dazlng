@@ -10,7 +10,7 @@ interface Node {
 
 const NodeSearch: React.FC = () => {
   const { selectedNode, setSelectedNode } = useNode();
-  const [searchTerm, setSearchTerm] = useState(selectedNode.alias);
+  const [searchTerm, setSearchTerm] = useState('');
   const [nodes, setNodes] = useState<Node[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 

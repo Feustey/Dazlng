@@ -2,6 +2,7 @@
 
 import { Card } from '@/components/ui/card';
 import { useLanguage } from '@/lib/language-context';
+import { useState, useEffect } from 'react';
 
 interface AboutSection {
   title: string;
@@ -14,12 +15,50 @@ interface AboutContent {
   sections: AboutSection[];
 }
 
-const aboutEn = require('@/content/about-en.json') as AboutContent;
-const aboutFr = require('@/content/about-fr.json') as AboutContent;
+// Contenu par défaut en cas d'erreur
+const fallbackContent: AboutContent = {
+  title: "Information",
+  sections: [
+    {
+      title: "Erreur de chargement",
+      content: "Impossible de charger le contenu. Veuillez réessayer plus tard."
+    }
+  ]
+};
 
 export default function AboutPage() {
   const { language } = useLanguage();
+  const [aboutEn, setAboutEn] = useState<AboutContent>(fallbackContent);
+  const [aboutFr, setAboutFr] = useState<AboutContent>(fallbackContent);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadContent = async () => {
+      try {
+        const enContent = await import('../../content/about-en.json');
+        setAboutEn(enContent);
+      } catch (error) {
+        console.error("Erreur lors du chargement du contenu anglais:", error);
+      }
+
+      try {
+        const frContent = await import('../../content/about-fr.json');
+        setAboutFr(frContent);
+      } catch (error) {
+        console.error("Erreur lors du chargement du contenu français:", error);
+      }
+
+      setIsLoading(false);
+    };
+
+    loadContent();
+  }, []);
+
   const content = language === 'fr' ? aboutFr : aboutEn;
+
+  if (isLoading) {
+    return <div className="container mx-auto p-6">Chargement...</div>;
+  }
 
   return (
     <div className="container mx-auto p-6 space-y-8">

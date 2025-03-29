@@ -37,17 +37,27 @@ export interface HistoricalData {
 }
 
 export async function getCurrentStats(): Promise<NodeStats> {
-  const response = await fetch('/api/stats');
-  if (!response.ok) {
-    throw new Error('Failed to fetch current stats');
+  try {
+    const response = await fetch('/api/stats');
+    if (!response.ok) {
+      throw new Error('Failed to fetch current stats');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Erreur lors de la récupération des statistiques actuelles:', error);
+    throw error;
   }
-  return response.json();
 }
 
 export async function getHistoricalData(): Promise<HistoricalData[]> {
-  const response = await fetch('/api/historical');
-  if (!response.ok) {
-    throw new Error('Failed to fetch historical data');
+  try {
+    const response = await fetch('/api/historical');
+    if (!response.ok) {
+      throw new Error('Failed to fetch historical data');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Erreur lors de la récupération des données historiques:', error);
+    throw error;
   }
-  return response.json();
 }
