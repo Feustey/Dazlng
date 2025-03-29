@@ -1,3 +1,5 @@
+const path = require('path');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
@@ -10,7 +12,7 @@ const nextConfig = {
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@': './src',
+      '@': path.resolve(__dirname), // POINT ICI ===> prend la racine
     };
     return config;
   },
@@ -94,11 +96,4 @@ const nextConfig = {
   ]
 };
 
-
-module.exports = {
-  output: 'export',
-  trailingSlash: true,
-  images: {
-    unoptimized: true
-  }
-}
+module.exports = nextConfig;
