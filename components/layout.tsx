@@ -17,8 +17,9 @@ export function Layout({ children }: LayoutProps) {
   const [searchValue, setSearchValue] = useState("");
 
   const handleSearch = () => {
-    // Logique de recherche ici
+    if (!searchValue.trim()) return; // ne rien faire si champ vide
     console.log("Recherche pour:", searchValue);
+    // Tu peux ici déclencher une vraie navigation ou un filtre
   };
 
   return (
@@ -75,11 +76,11 @@ export function Layout({ children }: LayoutProps) {
               <Menu className="h-6 w-6" />
             </Button>
 
-        <div className="md:hidden"> {/* Visible seulement sur mobile */}
-            <Logo className="h-8" />
-        </div>
+            <div className="md:hidden">
+              <Logo className="h-8" />
+            </div>
 
-            {/* Barre de recherche */}
+            {/* SearchBar corrigée */}
             <div className="relative flex-1 max-w-xl ml-auto">
               <input
                 type="text"
@@ -89,13 +90,19 @@ export function Layout({ children }: LayoutProps) {
                          font-mono text-sm"
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleSearch();
+                  }
+                }}
               />
               <Button
                 variant="ghost"
                 size="icon"
                 className="absolute right-0 top-1/2 -translate-y-1/2"
                 onClick={handleSearch}
+                type="button"
               >
                 <Search className="h-5 w-5 text-muted-foreground" />
               </Button>
