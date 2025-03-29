@@ -35,7 +35,6 @@ const nextConfig = {
       },
     ];
   },
-  output: 'export',
   experimental: {
     serverActions: {
       bodySizeLimit: '2mb'
