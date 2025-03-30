@@ -30,35 +30,17 @@ export async function GET() {
       );
     }
 
-<<<<<<< HEAD
-    return NextResponse.json(stats[0]);
-=======
-    // Formater les données pour correspondre à l'interface NodeStats
-    const formattedStats = {
-      pubkey: currentStats.pubkey,
-      alias: currentStats.alias,
-      platform: currentStats.platform,
-      version: currentStats.version,
-      total_fees: currentStats.total_fees,
-      avg_fee_rate_ppm: currentStats.avg_fee_rate_ppm,
-      total_capacity: currentStats.total_capacity,
-      active_channels: currentStats.active_channel_count,
-      total_volume: currentStats.total_volume,
-      total_peers: currentStats.total_peers,
-      uptime: currentStats.uptime,
-      opened_channel_count: currentStats.opened_channel_count,
-      color: currentStats.color,
-      address: currentStats.address,
-      closed_channel_count: currentStats.closed_channel_count,
-      pending_channel_count: currentStats.pending_channel_count,
-      avg_capacity: currentStats.avg_capacity,
-      avg_fee_rate: currentStats.avg_fee_rate,
-      avg_base_fee_rate: currentStats.avg_base_fee_rate,
-      last_update: currentStats.timestamp.toISOString()
-    };
-
-    return NextResponse.json(formattedStats);
->>>>>>> efd30f0 (Fix: Correction du nom de champ active_channel_count à active_channels pour correspondre à l'interface NodeStats)
+    // Retourner les données directement depuis le modèle History
+    const currentStats = stats[0];
+    return NextResponse.json({
+      id: currentStats.id,
+      date: currentStats.date,
+      price: currentStats.price,
+      volume: currentStats.volume,
+      marketCap: currentStats.marketCap,
+      createdAt: currentStats.createdAt,
+      updatedAt: currentStats.updatedAt
+    });
   } catch (error) {
     console.error('Erreur lors de la récupération des statistiques:', error);
     
