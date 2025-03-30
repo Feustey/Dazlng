@@ -35,27 +35,6 @@ export const mcpService = {
       console.error('Erreur MCP Service:', error);
       throw error;
     }
-  },
-
-  async getRecommendations(nodeData: McpNode) {
-    try {
-      const response = await fetch(`${API_URL}/api/recommendations`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(nodeData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Erreur lors de la récupération des recommandations');
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error('Erreur MCP Service:', error);
-      throw error;
-    }
   }
 };
 
@@ -194,4 +173,4 @@ class McpService {
 }
 
 const mcpServiceInstance = new McpService();
-export default mcpServiceInstance; 
+export default mcpServiceInstance;

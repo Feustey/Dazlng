@@ -42,7 +42,6 @@ export interface McpNode {
   avg_capacity?: number;
   last_update?: string;
   status?: string;
-  recommendations?: string[];
 }
 
 export interface NodeInfo {
