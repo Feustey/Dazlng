@@ -49,6 +49,39 @@ class McpService {
     this.pubkey = process.env.NODE_PUBKEY || "02778f4a4eb3a2344b9fd8ee72e7ec5f03f803e5f5273e2e1a2af508910cf2b12b";
   }
 
+  // Nouvelle méthode pour tester la connexion à l'API
+  async testConnection(): Promise<{isConnected: boolean, message: string}> {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      
+      const response = await fetch(`${this.baseUrl}/api/status`, {
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (response.ok) {
+        return { 
+          isConnected: true, 
+          message: 'Connexion à l\'API MCP réussie' 
+        };
+      } else {
+        return { 
+          isConnected: false, 
+          message: `Erreur de connexion à l'API MCP: ${response.status} ${response.statusText}` 
+        };
+      }
+    } catch (error) {
+      console.error('Erreur de test de connexion à l\'API MCP:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
+      return { 
+        isConnected: false, 
+        message: `Impossible de se connecter à l'API MCP: ${errorMessage}` 
+      };
+    }
+  }
+
   private async fetchWithRetry(url: string, retries: number = this.maxRetries): Promise<Response> {
     try {
       const response = await fetch(url, {
