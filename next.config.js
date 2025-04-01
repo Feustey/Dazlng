@@ -17,10 +17,10 @@ const nextConfig = {
       "@": path.resolve(__dirname),
       "@components": path.resolve(__dirname, "app/components"),
       "@lib": path.resolve(__dirname, "app/lib"),
-      "@models": path.resolve(__dirname, "app/models"),
-      "@types": path.resolve(__dirname, "app/types"),
-      "@contexts": path.resolve(__dirname, "app/contexts"),
-      "@hooks": path.resolve(__dirname, "app/hooks"),
+      "@models": path.resolve(process.cwd(), "app/models"),
+      "@types": path.resolve(process.cwd(), "app/types"),
+      "@contexts": path.resolve(process.cwd(), "app/contexts"),
+      "@hooks": path.resolve(process.cwd(), "app/hooks"),
     };
     return config;
   },
