@@ -14,9 +14,9 @@ const nextConfig = {
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      "@": path.resolve(__dirname),
-      "@components": path.resolve(__dirname, "app/components"),
-      "@lib": path.resolve(__dirname, "app/lib"),
+      "@": path.resolve(process.cwd()),
+      "@components": path.resolve(process.cwd(), "app/components"),
+      "@lib": path.resolve(process.cwd(), "app/lib"),
       "@models": path.resolve(process.cwd(), "app/models"),
       "@types": path.resolve(process.cwd(), "app/types"),
       "@contexts": path.resolve(process.cwd(), "app/contexts"),
