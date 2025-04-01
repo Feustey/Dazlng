@@ -60,3 +60,17 @@ export interface Centralities {
   weighted_closeness: CentralityNode[];
   last_update: string;
 }
+
+export interface NodeCentrality {
+  pubkey: string;
+  betweenness: number;
+  closeness: number;
+  eigenvector: number;
+  degree: number;
+  capacity: number;
+  channels: number;
+  avg_fee_rate: number;
+  avg_base_fee: number;
+  last_update: string;
+  growth_rate: number;
+}

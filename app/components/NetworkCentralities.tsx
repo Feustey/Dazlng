@@ -167,3 +167,5 @@ export function NetworkCentralities() {
     </Card>
   );
 }
+
+export default NetworkCentralities;

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import {
-  Bolt,
+  Zap,
   Activity,
   MessageCircle,
   Settings,
@@ -56,7 +56,7 @@ export default function Layout({ children }: LayoutProps) {
               href="/"
               className="flex items-center rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
             >
-              <Bolt className="mr-3 h-5 w-5" />
+              <Zap className="mr-3 h-5 w-5" />
               Dashboard
             </Link>
             <Link
