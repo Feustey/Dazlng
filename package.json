@@ -2,7 +2,6 @@
   "name": "dazlng",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "description": "Application de gestion des nœuds Lightning Network",
   "scripts": {
     "dev": "next dev",
