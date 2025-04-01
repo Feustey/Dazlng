@@ -1,38 +1,35 @@
 import "dotenv/config";
-import { connectToDatabase } from "@/lib";
-import { Node } from "@/models";
+import { connect } from "mongoose";
+import { Node } from "../app/models/mongoose-models";
 
-const PUBKEY =
-  "02778f4a4eb3a2344b9fd8ee72e7ec5f03f803e5f5273e2e1a2af508910cf2b12b";
+const MONGODB_URI =
+  process.env.MONGODB_URI || "mongodb://localhost:27017/dazlng";
+const PUBKEY = process.env.PUBKEY;
 
 async function checkHistoricalData() {
   try {
-    await connectToDatabase();
-    console.log("Connected to MongoDB");
+    // Connexion à la base de données
+    await connect(MONGODB_URI);
+    console.log("Connecté à MongoDB");
+
+    if (!PUBKEY) {
+      throw new Error("PUBKEY non définie dans les variables d'environnement");
+    }
 
     // Récupérer les données historiques
     const historicalData = await Node.find({ pubkey: PUBKEY })
       .sort({ timestamp: -1 })
       .limit(30);
 
-    console.log(`Found ${historicalData.length} historical records`);
-
-    // Afficher les données
-    historicalData.forEach((record) => {
-      console.log("\nRecord:", {
-        timestamp: record.timestamp,
-        total_peers: record.total_peers,
-        active_channels: record.active_channels,
-        total_capacity: record.total_capacity,
-        total_volume: record.total_volume,
-        total_fees: record.total_fees,
-      });
-    });
+    console.log("Données historiques récupérées :", historicalData);
   } catch (error) {
-    console.error("Error checking historical data:", error);
-    process.exit(1);
+    console.error(
+      "Erreur lors de la vérification des données historiques :",
+      error
+    );
+  } finally {
+    process.exit();
   }
 }
 
-// Exécuter la vérification
 checkHistoricalData();

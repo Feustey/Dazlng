@@ -1,37 +1,5 @@
 import mongoose from "mongoose";
-import type { Node } from "@/types/node";
-
-export interface MongoNode {
-  alias: string;
-  pubkey: string;
-  platform: string;
-  version: string;
-  total_fees: number;
-  avg_fee_rate_ppm: number;
-  capacity: number;
-  channels: number;
-  total_volume: number;
-  total_peers: number;
-  uptime: number;
-  opened_channel_count: number;
-  color: string;
-  address: string;
-  closed_channel_count: number;
-  pending_channel_count: number;
-  avg_capacity: number;
-  avg_fee_rate: number;
-  avg_base_fee_rate: number;
-  betweenness_rank: number;
-  eigenvector_rank: number;
-  closeness_rank: number;
-  weighted_betweenness_rank: number;
-  weighted_closeness_rank: number;
-  weighted_eigenvector_rank: number;
-  last_update: number;
-  timestamp: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import type { MongoNode } from "./Node";
 
 const nodeSchema = new mongoose.Schema<MongoNode>({
   alias: { type: String, required: true },
@@ -78,39 +46,5 @@ nodeSchema.index({ capacity: -1, channels: -1 });
 nodeSchema.index({ uptime: -1, total_peers: -1 });
 nodeSchema.index({ timestamp: -1, pubkey: 1 });
 
-const NodeModel =
+export const Node =
   mongoose.models.Node || mongoose.model<MongoNode>("Node", nodeSchema);
-
-export default NodeModel;
-
-export interface INode {
-  _id?: string;
-  pubkey: string;
-  alias: string;
-  platform: string;
-  version: string;
-  total_fees: number;
-  avg_fee_rate_ppm: number;
-  total_capacity: number;
-  active_channel_count: number;
-  total_volume: number;
-  total_peers: number;
-  uptime: number;
-  opened_channel_count: number;
-  color: string;
-  address: string;
-  closed_channel_count: number;
-  pending_channel_count: number;
-  avg_capacity: number;
-  avg_fee_rate: number;
-  avg_base_fee_rate: number;
-  betweenness_rank: number;
-  eigenvector_rank: number;
-  closeness_rank: number;
-  weighted_betweenness_rank: number;
-  weighted_closeness_rank: number;
-  weighted_eigenvector_rank: number;
-  timestamp: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
