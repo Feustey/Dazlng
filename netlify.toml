@@ -1,9 +1,9 @@
 [build]
-  command = "npx prisma generate && next build"
+  command = "npm run build"
   publish = "out"
 
 [build.environment]
-  NEXT_USE_NETLIFY_EDGE = "false"
+  NEXT_USE_NETLIFY_EDGE = "true"
   NODE_VERSION = "18"
   NEXT_PUBLIC_API_URL = "/api"
   NEXT_TELEMETRY_DISABLED = "1"
@@ -69,7 +69,6 @@
   port = 8888
 
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/server"
+  from = "/*"
+  to = "/index.html"
   status = 200
-  force = true
