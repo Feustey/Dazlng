@@ -1,4 +1,8 @@
-const path = require('path');
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -7,19 +11,19 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
-    domains: ['mcp-c544a464bb52.herokuapp.com'],
+    domains: ['localhost'],
   },
   reactStrictMode: false,
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@': path.resolve(__dirname, './src'),
-      '@components': path.resolve(__dirname, './src/components'),
-      '@lib': path.resolve(__dirname, './src/lib'),
-      '@models': path.resolve(__dirname, './src/models'),
-      '@types': path.resolve(__dirname, './src/types'),
-      '@contexts': path.resolve(__dirname, './src/contexts'),
-      '@hooks': path.resolve(__dirname, './src/hooks'),
+      '@': path.resolve(__dirname, './app'),
+      '@components': path.resolve(__dirname, './app/components'),
+      '@lib': path.resolve(__dirname, './app/lib'),
+      '@models': path.resolve(__dirname, './app/models'),
+      '@types': path.resolve(__dirname, './app/types'),
+      '@contexts': path.resolve(__dirname, './app/contexts'),
+      '@hooks': path.resolve(__dirname, './app/hooks'),
     };
     return config;
   },
@@ -102,4 +106,4 @@ const nextConfig = {
   ]
 };
 
-module.exports = nextConfig;
+export default nextConfig;

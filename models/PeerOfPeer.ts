@@ -30,6 +30,11 @@ const peerOfPeerSchema = new mongoose.Schema({
   timestamp: { type: Date, default: Date.now }
 });
 
+// Index pour les requêtes fréquentes
+peerOfPeerSchema.index({ nodePubkey: 1 });
+peerOfPeerSchema.index({ peerPubkey: 1 });
+peerOfPeerSchema.index({ timestamp: -1 });
+
 const PeerOfPeer = mongoose.models.PeerOfPeer || mongoose.model('PeerOfPeer', peerOfPeerSchema);
 
 export interface IPeerOfPeer {

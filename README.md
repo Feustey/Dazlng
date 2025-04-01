@@ -111,3 +111,78 @@ Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 ---
 
 Fait avec ⚡️ par l'équipe DazLng 
+
+# DazLng - Gestionnaire de Nœuds Lightning Network
+
+Application de gestion et de surveillance des nœuds Lightning Network.
+
+## Structure du projet
+
+```
+app/
+├── components/       # Composants React réutilisables
+│   ├── ui/           # Composants UI de base (boutons, inputs, etc.)
+│   └── ...           # Autres composants 
+├── contexts/         # Contextes React pour l'état global
+├── hooks/            # Hooks personnalisés
+├── lib/              # Fonctions utilitaires
+├── models/           # Modèles de données
+├── types/            # Définitions de types TypeScript
+└── ...               # Pages de l'application
+```
+
+## Convention d'importation
+
+Pour assurer la cohérence, utilisez toujours les alias d'importation définis dans `tsconfig.json` :
+
+```typescript
+// ✅ Importations correctes
+import { Button } from '@components/ui/button';
+import { useSettings } from '@contexts/SettingsContext';
+import { cn } from '@lib/utils';
+
+// ❌ Importations à éviter (chemins relatifs compliqués)
+import { Button } from '../../components/ui/button';
+import { useSettings } from '../contexts/SettingsContext';
+```
+
+## Règles de développement
+
+1. **Structure du code** : Ne jamais dupliquer la structure du projet. Tous les composants doivent être dans `/app/components`.
+
+2. **CSS et styling** : Utiliser les classes Tailwind CSS et les variables définies dans `globals.css`.
+
+3. **Conventions de nommage** :
+   - Composants : PascalCase (ex: `Button.tsx`)
+   - Hooks : camelCase commençant par "use" (ex: `useToast.ts`)
+   - Utilitaires : camelCase (ex: `utils.ts`)
+
+4. **Création de nouveaux composants** :
+   - Vérifier d'abord si un composant similaire existe déjà
+   - Observer les composants existants pour suivre les conventions du projet
+   - Utiliser les alias d'importation pour éviter les chemins relatifs complexes
+
+## Développement
+
+```bash
+# Installation des dépendances
+npm install
+
+# Démarrage du serveur de développement
+npm run dev
+
+# Build pour la production
+npm run build
+
+# Démarrage en mode production
+npm start
+```
+
+## Dépendances principales
+
+- Next.js 15.x
+- React 18.x
+- TypeScript
+- Tailwind CSS
+- next-themes (thème clair/sombre)
+- heroicons (icônes) 

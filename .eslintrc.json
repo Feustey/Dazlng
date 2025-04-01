@@ -1,20 +1,39 @@
 {
-  "extends": [
-    "next",
-    "next/core-web-vitals",
-    "plugin:@typescript-eslint/recommended",
-    "prettier"
-  ],
-  "plugins": ["@typescript-eslint"],
+  "extends": ["next/core-web-vitals", "eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "import", "prettier"],
   "rules": {
-    "@typescript-eslint/no-unused-vars": ["warn"],
-    "react/react-in-jsx-scope": "off",
-    "no-console": "warn"
+    "import/no-relative-parent-imports": "warn",
+    "import/order": [
+      "warn",
+      {
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
+        "pathGroups": [
+          { "pattern": "react", "group": "builtin", "position": "before" },
+          { "pattern": "next/**", "group": "builtin", "position": "before" },
+          { "pattern": "@/**", "group": "internal", "position": "after" }
+        ],
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        },
+        "newlines-between": "always"
+      }
+    ],
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+    ],
+    "no-console": "warn",
+    "prettier/prettier": "error"
   },
-  "plugins": ["prettier"],
-"rules": {
-   ...
-   "prettier/prettier": "error"
-}
-
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true
+      }
+    }
+  }
 }

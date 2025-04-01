@@ -32,6 +32,19 @@ const nodeSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 });
 
+// Index pour les requêtes fréquentes
+nodeSchema.index({ pubkey: 1 });
+nodeSchema.index({ timestamp: -1 });
+nodeSchema.index({ total_capacity: -1 });
+nodeSchema.index({ active_channel_count: -1 });
+nodeSchema.index({ uptime: -1 });
+nodeSchema.index({ avg_fee_rate_ppm: 1 });
+
+// Index composé pour les requêtes de tri et filtrage
+nodeSchema.index({ total_capacity: -1, active_channel_count: -1 });
+nodeSchema.index({ uptime: -1, total_peers: -1 });
+nodeSchema.index({ timestamp: -1, pubkey: 1 });
+
 const Node = mongoose.models.Node || mongoose.model<MongoNode>('Node', nodeSchema);
 
 export interface INode {

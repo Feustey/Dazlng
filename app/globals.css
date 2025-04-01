@@ -31,7 +31,7 @@
   /* Gray Scale */
   --gris-50: #f5f5f6;
   --gris-100: #e5e6e8;
-  --gris-200: #cecfD3;
+  --gris-200: #cecfd3;
   --gris-300: #acafb4;
   --gris-400: #83868d;
   --gris-500: #61646b;
@@ -118,42 +118,66 @@
   --ring: var(--blue-400);
 }
 
-
+/* Composants personnalisés */
 @layer components {
   .all-unset {
     all: unset;
   }
-    /* Navigation */
+
   .navbar {
-    @apply flex items-center justify-between py-4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
   }
-  
+
   .nav-menu {
-    @apply flex space-x-8;
+    display: flex;
+    column-gap: 2rem;
   }
-  
-  /* Sections */
+
   .feature-section {
-    @apply py-16 bg-gray-50;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    background-color: rgb(249 250 251);
   }
-  
+
   .feature-card {
-    @apply p-6 bg-white rounded-lg shadow-card hover:shadow-card-hover transition-shadow;
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition-property: box-shadow;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
   }
-  
+
+  .feature-card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
 }
+
+/* Utilitaires personnalisés */
 @layer utilities {
-  /* Utilitaires personnalisés */
   .text-balance {
     text-wrap: balance;
   }
-  
+
   .animate-fade-in {
     animation: fadeIn 0.5s ease-out;
   }
-  
+
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
