@@ -113,46 +113,65 @@ export const mockPeers = {
   ],
 };
 
-// Statistiques actuelles du réseau
-export const mockCurrentStats = {
-  total_nodes: 12500,
-  total_channels: 84000,
-  total_capacity: 4800000000000,
-  avg_capacity_per_channel: 57142857,
-  avg_channels_per_node: 6.72,
+// Données fictives pour les statistiques actuelles du réseau
+export const mockNetworkStats = {
+  total_nodes: 15000,
+  total_channels: 75000,
+  total_capacity: 5000,
+  avg_capacity_per_channel: 0.066,
+  avg_channels_per_node: 5,
   timestamp: new Date().toISOString(),
 };
 
-// Données historiques
+// Données fictives pour les données historiques
 export const mockHistoricalData = {
-  dates: [
-    "2023-01-01",
-    "2023-02-01",
-    "2023-03-01",
-    "2023-04-01",
-    "2023-05-01",
-    "2023-06-01",
-  ],
-  nodes: [11000, 11200, 11500, 11800, 12000, 12500],
-  channels: [70000, 72000, 75000, 78000, 81000, 84000],
-  capacity: [
-    4000000000000, 4100000000000, 4300000000000, 4500000000000, 4600000000000,
-    4800000000000,
-  ],
+  dates: Array.from({ length: 30 }, (_, i) => {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    return date.toISOString().split("T")[0];
+  }).reverse(),
+  nodes: Array.from({ length: 30 }, () => 15000),
+  channels: Array.from({ length: 30 }, () => 75000),
+  capacity: Array.from({ length: 30 }, () => 5000),
 };
 
-// Résumé du réseau
+// Données fictives pour le résumé du réseau
 export const mockNetworkSummary = {
-  total_nodes: 12500,
-  active_nodes: 10200,
-  total_channels: 84000,
+  total_nodes: 15000,
+  active_nodes: 14500,
+  total_channels: 75000,
   active_channels: 72000,
-  total_capacity: 4800000000000,
-  largest_node: {
-    pubkey:
-      "02778f4a4eb3a2344b9fd8ee72e7ec5f03f803e5f5273e2e1a2af508910cf2b12b",
-    alias: "ACINQ",
-    channels: 2847,
+  total_capacity: 5000,
+  avg_capacity: 0.066,
+  avg_fee_rate: 1,
+  avg_base_fee: 1,
+  network_growth: {
+    nodes: 150,
+    channels: 750,
+    capacity: 50,
   },
+  top_nodes: [
+    {
+      pubkey:
+        "02778f4a4eb3a2344b9fd8ee72e7ec5f03f803e5f5273e2e1a2af508910cf2b12b",
+      alias: "ACINQ",
+      capacity: 256000000000,
+      channels: 2847,
+    },
+    {
+      pubkey:
+        "03864ef025fde8fb587d989186ce6a4a186895ee44a926bfc370e2c366597a3f8f",
+      alias: "BITFINEX",
+      capacity: 198000000000,
+      channels: 1248,
+    },
+    {
+      pubkey:
+        "03271338633d2d37b285dae4df40b413d8c6c164d3e44116b3ec030edc816cd280",
+      alias: "Lightning Labs",
+      capacity: 178000000000,
+      channels: 1986,
+    },
+  ],
   timestamp: new Date().toISOString(),
 };
