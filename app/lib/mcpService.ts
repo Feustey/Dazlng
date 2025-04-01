@@ -1,115 +1,92 @@
-/**
- * Service pour interagir avec l'API MCP (Moniteur de Connectivité des Pairs)
- * Ce service centralise toutes les requêtes vers l'API MCP pour les nœuds Lightning Network
- */
+interface Node {
+  pubkey: string;
+  alias: string;
+  platform: string;
+  version: string;
+  total_capacity: number;
+  active_channel_count: number;
+  total_peers: number;
+  uptime: number;
+}
+
+interface PeerOfPeer {
+  peerPubkey: string;
+  alias: string;
+  total_capacity: number;
+  active_channels: number;
+  total_peers: number;
+}
+
+interface NodeStats {
+  pubkey: string;
+  alias: string;
+  color: string;
+  platform: string;
+  version: string;
+  address: string;
+  total_fees: number;
+  avg_fee_rate_ppm: number;
+  total_capacity: number;
+  active_channels: number;
+  total_volume: number;
+  total_peers: number;
+  uptime: number;
+  opened_channel_count: number;
+  closed_channel_count: number;
+  pending_channel_count: number;
+  avg_capacity: number;
+  avg_fee_rate: number;
+  avg_base_fee_rate: number;
+  betweenness_rank: number;
+  eigenvector_rank: number;
+  closeness_rank: number;
+  weighted_betweenness_rank: number;
+  weighted_closeness_rank: number;
+  weighted_eigenvector_rank: number;
+  last_update: string;
+}
+
+interface HistoricalData {
+  timestamp: string;
+  total_fees: number;
+  total_capacity: number;
+  active_channels: number;
+  total_peers: number;
+  total_volume: number;
+}
 
 const mcpService = {
-  /**
-   * Teste la connexion à l'API MCP
-   */
-  async testConnection() {
-    const apiUrl = process.env.MCP_API_URL;
-    console.log("API URL utilisée:", apiUrl);
-
-    try {
-      const response = await fetch(`${apiUrl}/status`);
-      console.log(
-        "Statut de la réponse:",
-        response.status,
-        response.statusText
-      );
-
-      return {
-        status: response.ok,
-        statusCode: response.status,
-        message: response.ok
-          ? "Connexion à l'API MCP établie"
-          : "Erreur de connexion à l'API MCP",
-        apiUrl,
-      };
-    } catch (error) {
-      console.error("Erreur de connexion à l'API MCP:", error);
-
-      return {
-        status: false,
-        statusCode: 500,
-        message: "Erreur de connexion à l'API MCP",
-        error: error instanceof Error ? error.message : String(error),
-        apiUrl,
-      };
-    }
-  },
-
-  /**
-   * Récupère tous les nœuds du réseau Lightning
-   */
-  async getAllNodes() {
-    const apiUrl = process.env.MCP_API_URL;
-    console.log("API URL pour getAllNodes:", apiUrl);
-
-    if (!apiUrl) {
-      throw new Error(
-        "La variable d'environnement MCP_API_URL n'est pas définie"
-      );
-    }
-
-    try {
-      console.log("Tentative d'appel à", `${apiUrl}/nodes`);
-      const response = await fetch(`${apiUrl}/nodes`);
-      console.log(
-        "Statut de la réponse getAllNodes:",
-        response.status,
-        response.statusText
-      );
-
-      if (!response.ok) {
-        throw new Error(
-          `Erreur lors de la récupération des nœuds: ${response.status} ${response.statusText}`
-        );
-      }
-
-      return response.json();
-    } catch (error) {
-      console.error("Erreur détaillée dans getAllNodes:", error);
-      throw error;
-    }
-  },
-
-  /**
-   * Récupère les informations détaillées d'un nœud spécifique
-   */
-  async getNodeInfo(nodePubkey: string) {
-    const response = await fetch(
-      `${process.env.MCP_API_URL}/node/${nodePubkey}`
-    );
+  async getAllNodes(): Promise<Node[]> {
+    const response = await fetch(`${process.env.MCP_API_URL}/nodes`);
     if (!response.ok) {
-      throw new Error(
-        `Erreur lors de la récupération des informations du nœud ${nodePubkey}`
-      );
+      throw new Error("Erreur lors de la récupération des nœuds");
     }
     return response.json();
   },
 
-  /**
-   * Récupère les pairs des pairs d'un nœud spécifique
-   */
-  async getPeersOfPeers(nodePubkey: string) {
+  async getPeersOfPeers(
+    nodePubkey: string
+  ): Promise<{ peers_of_peers: PeerOfPeer[] }> {
     const response = await fetch(
       `${process.env.MCP_API_URL}/node/${nodePubkey}/peers`
     );
     if (!response.ok) {
-      throw new Error(
-        `Erreur lors de la récupération des pairs du nœud ${nodePubkey}`
-      );
+      throw new Error("Erreur lors de la récupération des pairs");
     }
     return response.json();
   },
 
-  /**
-   * Récupère les statistiques actuelles du réseau
-   */
-  async getCurrentStats() {
-    const response = await fetch(`${process.env.MCP_API_URL}/stats/current`);
+  async getCurrentStats(): Promise<NodeStats> {
+    const nodePubkey = process.env.NODE_PUBKEY;
+    if (!nodePubkey) {
+      throw new Error(
+        "NODE_PUBKEY non défini dans les variables d'environnement"
+      );
+    }
+
+    const response = await fetch(
+      `${process.env.MCP_API_URL}/node/${nodePubkey}/stats`
+    );
     if (!response.ok) {
       throw new Error(
         "Erreur lors de la récupération des statistiques actuelles"
@@ -118,53 +95,19 @@ const mcpService = {
     return response.json();
   },
 
-  /**
-   * Récupère les données historiques du réseau
-   */
-  async getHistoricalData() {
-    const response = await fetch(`${process.env.MCP_API_URL}/stats/historical`);
+  async getHistoricalData(): Promise<HistoricalData[]> {
+    const nodePubkey = process.env.NODE_PUBKEY;
+    if (!nodePubkey) {
+      throw new Error(
+        "NODE_PUBKEY non défini dans les variables d'environnement"
+      );
+    }
+
+    const response = await fetch(
+      `${process.env.MCP_API_URL}/node/${nodePubkey}/history`
+    );
     if (!response.ok) {
       throw new Error("Erreur lors de la récupération des données historiques");
-    }
-    return response.json();
-  },
-
-  /**
-   * Récupère le résumé du réseau Lightning
-   */
-  async getNetworkSummary() {
-    const response = await fetch(`${process.env.MCP_API_URL}/network/summary`);
-    if (!response.ok) {
-      throw new Error("Erreur lors de la récupération du résumé du réseau");
-    }
-    return response.json();
-  },
-
-  /**
-   * Récupère les centralités des nœuds dans le réseau
-   */
-  async getCentralities() {
-    const response = await fetch(
-      `${process.env.MCP_API_URL}/network/centralities`
-    );
-    if (!response.ok) {
-      throw new Error("Erreur lors de la récupération des centralités");
-    }
-    return response.json();
-  },
-
-  /**
-   * Optimise un nœud spécifique
-   */
-  async optimizeNode(nodePubkey: string) {
-    const response = await fetch(
-      `${process.env.MCP_API_URL}/node/${nodePubkey}/optimize`,
-      {
-        method: "POST",
-      }
-    );
-    if (!response.ok) {
-      throw new Error(`Erreur lors de l'optimisation du nœud ${nodePubkey}`);
     }
     return response.json();
   },

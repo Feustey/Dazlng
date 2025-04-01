@@ -1,59 +1,52 @@
+import React from 'react';
 import Link from 'next/link';
+import { Logo } from './Logo';
 
-const Footer = () => {
+export const Footer: React.FC = () => {
   return (
-    <footer className="bg-background border-t">
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Navigation */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Navigation</h3>
-            <ul className="space-y-2">
-              <li><Link href="/" className="hover:text-primary transition-colors">Accueil</Link></li>
-              <li><Link href="/actions" className="hover:text-primary transition-colors">Actions</Link></li>
-              <li><Link href="/canaux" className="hover:text-primary transition-colors">Canaux</Link></li>
-              <li><Link href="/messages" className="hover:text-primary transition-colors">Messages</Link></li>
-            </ul>
+    <footer className="w-full bg-gris-900 py-10">
+      <div className="container mx-auto px-4 md:px-[145px]">
+        <div className="flex flex-col gap-8">
+          {/* Logo et description */}
+          <div className="flex flex-col gap-4">
+            <Logo className="h-12" />
+            <p className="text-body-small text-gris-300 max-w-md">
+              DazLng est votre gestionnaire de nœud Lightning Network tout-en-un. 
+              Gérez facilement vos canaux, surveillez votre activité et interagissez avec le réseau.
+            </p>
           </div>
 
-          {/* Support */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Support</h3>
-            <ul className="space-y-2">
-              <li><Link href="/a-propos" className="hover:text-primary transition-colors">À propos</Link></li>
-              <li><Link href="/parametres" className="hover:text-primary transition-colors">Paramètres</Link></li>
-              <li><Link href="/aide" className="hover:text-primary transition-colors">Aide</Link></li>
-            </ul>
+          {/* Liens rapides */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="flex flex-col gap-4">
+              <h3 className="text-h5 text-white">Navigation</h3>
+              <ul className="space-y-2">
+                <li><Link href="/" className="text-body-small text-gris-300 hover:text-white">Accueil</Link></li>
+                <li><Link href="/actions" className="text-body-small text-gris-300 hover:text-white">Actions</Link></li>
+                <li><Link href="/channels" className="text-body-small text-gris-300 hover:text-white">Canaux</Link></li>
+                <li><Link href="/messages" className="text-body-small text-gris-300 hover:text-white">Messages</Link></li>
+              </ul>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <h3 className="text-h5 text-white">Réseaux sociaux</h3>
+              <ul className="space-y-2">
+                <li><a href="https://twitter.com/feustey" target="_blank" rel="noopener noreferrer" className="text-body-small text-gris-300 hover:text-white">Twitter</a></li>
+                <li><a href="https://github.com/dazlng" target="_blank" rel="noopener noreferrer" className="text-body-small text-gris-300 hover:text-white">GitHub</a></li>
+                <li><a href="https://discord.gg/dazlng" target="_blank" rel="noopener noreferrer" className="text-body-small text-gris-300 hover:text-white">Discord</a></li>
+                <li><a href="https://t.me/+LbcneuuYISFlZmI0" target="_blank" rel="noopener noreferrer" className="text-body-small text-gris-300 hover:text-white">Telegram</a></li>
+              </ul>
+            </div>
           </div>
 
-          {/* Légal */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Légal</h3>
-            <ul className="space-y-2">
-              <li><Link href="/confidentialite" className="hover:text-primary transition-colors">Confidentialité</Link></li>
-              <li><Link href="/conditions" className="hover:text-primary transition-colors">Conditions d'utilisation</Link></li>
-              <li><Link href="/cookies" className="hover:text-primary transition-colors">Cookies</Link></li>
-            </ul>
+          {/* Copyright */}
+          <div className="pt-8 border-t border-gris-800">
+            <p className="text-body-small text-gris-400 text-center">
+              © {new Date().getFullYear()} @ DazLng 
+            </p>
           </div>
-
-          {/* Réseaux sociaux */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Réseaux sociaux</h3>
-            <ul className="space-y-2">
-              <li><Link href="https://twitter.com/DazLng" className="hover:text-primary transition-colors" target="_blank" rel="noopener noreferrer">Twitter</Link></li>
-              <li><Link href="https://github.com/DazLng" className="hover:text-primary transition-colors" target="_blank" rel="noopener noreferrer">GitHub</Link></li>
-              <li><Link href="https://discord.gg/DazLng" className="hover:text-primary transition-colors" target="_blank" rel="noopener noreferrer">Discord</Link></li>
-              <li><Link href="https://t.me/DazLng" className="hover:text-primary transition-colors" target="_blank" rel="noopener noreferrer">Telegram</Link></li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} DazLng. Tous droits réservés.</p>
         </div>
       </div>
     </footer>
   );
-};
-
-export default Footer; 
+}; 

@@ -1,34 +1,33 @@
-const path = require("path");
+import path from "path";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "export",
   eslint: {
     ignoreDuringBuilds: true,
   },
   images: {
-    unoptimized: true,
     domains: ["localhost", "avatars.githubusercontent.com"],
+    unoptimized: true,
   },
   reactStrictMode: true,
   swcMinify: true,
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      "@": path.resolve(__dirname, "./app"),
-      "@components": path.resolve(__dirname, "./app/components"),
-      "@lib": path.resolve(__dirname, "./app/lib"),
-      "@models": path.resolve(__dirname, "./app/models"),
-      "@types": path.resolve(__dirname, "./app/types"),
-      "@contexts": path.resolve(__dirname, "./app/contexts"),
-      "@hooks": path.resolve(__dirname, "./app/hooks"),
+      "@": path.resolve(__dirname),
+      "@components": path.resolve(__dirname, "app/components"),
+      "@lib": path.resolve(__dirname, "app/lib"),
+      "@models": path.resolve(__dirname, "app/models"),
+      "@types": path.resolve(__dirname, "app/types"),
+      "@contexts": path.resolve(__dirname, "app/contexts"),
+      "@hooks": path.resolve(__dirname, "app/hooks"),
     };
     return config;
   },
   async headers() {
     return [
       {
-        source: "/(.*)",
+        source: "/:path*",
         headers: [
           { key: "Access-Control-Allow-Origin", value: "*" },
           {
@@ -60,11 +59,11 @@ const nextConfig = {
     };
   },
   typescript: {
-    ignoreBuildErrors: true,
+    // Supprime `ignoreBuildErrors: true` temporairement pour voir les erreurs réelles
+    ignoreBuildErrors: false,
   },
   distDir: ".next",
-  assetPrefix: "/",
-  trailingSlash: true,
+  assetPrefix: "",
   transpilePackages: [
     "@heroicons/react",
     "@radix-ui/react-accordion",
@@ -110,4 +109,4 @@ const nextConfig = {
   ],
 };
 
-module.exports = nextConfig;
+export default nextConfig;

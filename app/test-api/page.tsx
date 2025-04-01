@@ -92,7 +92,7 @@ export default function TestApiPage() {
 
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-2">
-          Test de connexion à l'API
+          Test de connexion à l&apos;API
         </h2>
         <button
           onClick={testConnection}
@@ -113,7 +113,7 @@ export default function TestApiPage() {
 
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-2">
-          Test de l'endpoint /api/nodes
+          Test de l&apos;endpoint /api/nodes
         </h2>
         <button
           onClick={testNodesEndpoint}

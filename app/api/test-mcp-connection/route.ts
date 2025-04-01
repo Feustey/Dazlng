@@ -38,7 +38,7 @@ export async function GET() {
     } else {
       return NextResponse.json(
         {
-          message: `Erreur de connexion à l\'API MCP: ${response.status} ${response.statusText}`,
+          message: `Erreur de connexion à l'API MCP: ${response.status} ${response.statusText}`,
           debug,
         },
         { status: response.status }

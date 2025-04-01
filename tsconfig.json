@@ -1,35 +1,47 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
     "strict": true,
-    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "moduleDetection": "force",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
     "jsx": "preserve",
     "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./app/*"],
-      "@components/*": ["./app/components/*"],
-      "@lib/*": ["./app/lib/*"],
-      "@contexts/*": ["./app/contexts/*"],
-      "@hooks/*": ["./app/hooks/*"],
-      "@types/*": ["./app/types/*"],
-      "@models/*": ["./app/models/*"]
-    }
+      "@/*": ["./*"],
+      "@app/*": ["app/*"],
+      "@components/*": ["app/components/*", "components/*"],
+      "@lib/*": ["app/lib/*", "lib/*"],
+      "@hooks/*": ["app/hooks/*"],
+      "@contexts/*": ["app/contexts/*"],
+      "@types/*": ["app/types/*", "types/*"],
+      "@models/*": ["app/models/*", "models/*"],
+      "@api/*": ["app/api/*"],
+      "@actions/*": ["app/actions/*"],
+      "@network/*": ["app/network/*"]
+    },
+    "plugins": [{ "name": "next" }]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "components/**/*.ts",
+    "components/**/*.tsx",
+    "lib/**/*.ts",
+    "models/**/*.ts"
+  ],
+  "exclude": ["node_modules", ".next", "out"]
 }

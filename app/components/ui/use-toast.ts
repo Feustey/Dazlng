@@ -1,23 +1,18 @@
 import { useState, useCallback } from 'react';
 
-export interface Toast {
+interface Toast {
   id: string;
   title: string;
   description?: string;
-  status: 'info' | 'success' | 'warning' | 'error';
-  duration?: number;
+  type?: 'success' | 'error' | 'info' | 'warning';
 }
-
-export type ToastProps = Omit<Toast, 'id'>;
 
 export function useToast() {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const showToast = useCallback((props: ToastProps) => {
-    const id = Math.random().toString(36).substring(2, 9);
-    const toast = { ...props, id };
-    setToasts((prev) => [...prev, toast]);
-    return toast;
+  const addToast = useCallback(({ title, description, type = 'info' }: Omit<Toast, 'id'>) => {
+    const id = Math.random().toString(36).substr(2, 9);
+    setToasts((prev) => [...prev, { id, title, description, type }]);
   }, []);
 
   const removeToast = useCallback((id: string) => {
@@ -26,7 +21,7 @@ export function useToast() {
 
   return {
     toasts,
-    showToast,
+    addToast,
     removeToast,
   };
 } 
