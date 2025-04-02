@@ -1,12 +1,13 @@
 [build]
   command = "npx prisma generate && npm run build"
-  publish = "out"
+  publish = ".next"
 
 [build.environment]
   NEXT_USE_NETLIFY_EDGE = "true"
   NODE_VERSION = "18"
   NEXT_PUBLIC_API_URL = "/api"
   NEXT_TELEMETRY_DISABLED = "1"
+  NODE_ENV = "production"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
@@ -67,8 +68,3 @@
   framework = "next"
   targetPort = 3000
   port = 8888
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
