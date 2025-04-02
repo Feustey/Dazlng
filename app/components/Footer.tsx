@@ -9,7 +9,7 @@ export const Footer: React.FC = () => {
       <div className="pt-8 border-t border-gris-800">
         <div className="container mx-auto px-4 md:px-[145px]">
           <div className="py-2 flex items-center justify-between gap-4 flex-wrap">
-            <div>
+            <div className="ml-[140px]">
               <p className="text-body-small text-gris-300 whitespace-nowrap">
                 DazLng est votre gestionnaire de nœud Lightning Network
                 tout-en-un.
