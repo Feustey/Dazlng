@@ -13,17 +13,6 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-  [plugins.inputs]
-    buildCommand = "npm run build:netlify"
-    publishDirectory = ".next"
-    functionsDirectory = "netlify/functions"
-    runtime = "nodejs18.x"
-    skipBuildCache = false
-    skipFunctions = false
-    skipImageOptimization = false
-    skipStaticBuild = false
-    skipTypeCheck = true
-    skipESLint = true
 
 [[headers]]
   for = "/*"
