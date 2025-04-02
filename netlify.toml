@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build:netlify"
+  command = "npm install && npm run build"
   publish = ".next"
 
 [build.environment]
@@ -10,6 +10,7 @@
   NODE_ENV = "production"
   NEXT_IGNORE_ESLINT = "1"
   NEXT_IGNORE_TYPE_CHECKS = "1"
+  NODE_OPTIONS = "--max_old_space_size=4096"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
