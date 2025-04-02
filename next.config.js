@@ -16,19 +16,19 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   webpack: (config) => {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      "@": path.resolve(process.cwd(), "app"),
-      "@components": path.resolve(process.cwd(), "app/components"),
-      "@lib": path.resolve(process.cwd(), "app/lib"),
-      "@models": path.resolve(process.cwd(), "app/models"),
-      "@types": path.resolve(process.cwd(), "app/types"),
-      "@contexts": path.resolve(process.cwd(), "app/contexts"),
-      "@hooks": path.resolve(process.cwd(), "app/hooks"),
-      "@api": path.resolve(__dirname, "app/api"),
-      "@actions": path.resolve(__dirname, "app/actions"),
-      "@network": path.resolve(__dirname, "app/network"),
-    };
+    // config.resolve.alias = {
+    //   ...config.resolve.alias,
+    //   "@": path.resolve(process.cwd(), "app"),
+    //   "@components": path.resolve(process.cwd(), "app/components"),
+    //   "@lib": path.resolve(process.cwd(), "app/lib"),
+    //   "@models": path.resolve(process.cwd(), "app/models"),
+    //   "@types": path.resolve(process.cwd(), "app/types"),
+    //   "@contexts": path.resolve(process.cwd(), "app/contexts"),
+    //   "@hooks": path.resolve(process.cwd(), "app/hooks"),
+    //   "@api": path.resolve(__dirname, "app/api"),
+    //   "@actions": path.resolve(__dirname, "app/actions"),
+    //   "@network": path.resolve(__dirname, "app/network"),
+    // };
     return config;
   },
   async headers() {
