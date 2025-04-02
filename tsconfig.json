@@ -17,14 +17,14 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
+      "@/*": ["./app/*"],
       "@app/*": ["app/*"],
-      "@components/*": ["app/components/*", "components/*"],
-      "@lib/*": ["app/lib/*", "lib/*"],
+      "@components/*": ["app/components/*"],
+      "@lib/*": ["app/lib/*"],
       "@hooks/*": ["app/hooks/*"],
       "@contexts/*": ["app/contexts/*"],
-      "@types/*": ["app/types/*", "types/*"],
-      "@models/*": ["app/models/*", "models/*"],
+      "@types/*": ["app/types/*"],
+      "@models/*": ["app/models/*"],
       "@api/*": ["app/api/*"],
       "@actions/*": ["app/actions/*"],
       "@network/*": ["app/network/*"]
@@ -37,11 +37,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/**/*.ts",
-    "app/**/*.tsx",
-    "components/**/*.ts",
-    "components/**/*.tsx",
-    "lib/**/*.ts",
-    "models/**/*.ts"
+    "app/**/*.tsx"
   ],
   "exclude": ["node_modules", ".next", "out"]
 }

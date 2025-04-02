@@ -13,8 +13,9 @@ import {
   ChartOptions,
   ChartData,
   ScaleOptions,
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+import { ReactNode } from "react";
 
 ChartJS.register(
   CategoryScale,
@@ -28,94 +29,81 @@ ChartJS.register(
 );
 
 interface ChartProps {
-  data: {
-    labels: string[];
-    datasets: {
-      label: string;
-      data: number[];
-      borderColor: string;
-      backgroundColor: string;
-      tension?: number;
-      tooltipFormat?: (value: number) => string;
-    }[];
-  };
+  title?: string;
+  description?: string;
+  height?: number;
+  children?: ReactNode;
+  data?: ChartData<"line">;
+  options?: ChartOptions<"line">;
 }
 
-export function Chart({ data }: ChartProps) {
-  const xAxisOptions: ScaleOptions<'category'> = {
-    grid: {
-      display: false,
-    },
-    ticks: {
-      maxRotation: 45,
-      minRotation: 45,
-      font: {
-        size: 12,
-      },
-      color: 'hsl(var(--muted-foreground))',
-    },
-    border: {
-      color: 'hsl(var(--border))',
-    },
-  };
-
-  const yAxisOptions: ScaleOptions<'linear'> = {
-    beginAtZero: true,
-    grid: {
-      color: 'hsl(var(--border))',
-    },
-    ticks: {
-      font: {
-        size: 12,
-      },
-      color: 'hsl(var(--muted-foreground))',
-      callback: function(tickValue: number | string) {
-        const value = Number(tickValue);
-        const dataset = data.datasets[0];
-        return dataset.tooltipFormat ? dataset.tooltipFormat(value) : value.toString();
-      },
-    },
-    border: {
-      color: 'hsl(var(--border))',
-    },
-  };
-
-  const options: ChartOptions<'line'> = {
+export function Chart({
+  title,
+  description,
+  height,
+  children,
+  data,
+  options,
+}: ChartProps) {
+  const defaultOptions: ChartOptions<"line"> = {
     responsive: true,
     maintainAspectRatio: false,
     interaction: {
       intersect: false,
-      mode: 'index',
     },
     plugins: {
       legend: {
         display: false,
       },
-      tooltip: {
-        backgroundColor: 'hsl(var(--card))',
-        titleColor: 'hsl(var(--card-foreground))',
-        bodyColor: 'hsl(var(--card-foreground))',
-        borderColor: 'hsl(var(--border))',
-        borderWidth: 1,
-        padding: 12,
-        callbacks: {
-          label: (context) => {
-            const value = context.raw as number;
-            const dataset = data.datasets[context.datasetIndex];
-            return dataset.tooltipFormat ? dataset.tooltipFormat(value) : value.toString();
-          },
-        },
+      title: {
+        display: !!title,
+        text: title,
       },
     },
     scales: {
-      x: xAxisOptions,
-      y: yAxisOptions,
+      x: {
+        grid: {
+          display: false,
+        },
+        ticks: {
+          maxRotation: 45,
+          minRotation: 45,
+          font: {
+            size: 12,
+          },
+          color: "hsl(var(--muted-foreground))",
+        },
+        border: {
+          color: "hsl(var(--border))",
+        },
+      },
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: "hsl(var(--border))",
+        },
+        ticks: {
+          font: {
+            size: 12,
+          },
+          color: "hsl(var(--muted-foreground))",
+        },
+        border: {
+          color: "hsl(var(--border))",
+        },
+      },
     },
   };
 
+  const mergedOptions = {
+    ...defaultOptions,
+    ...options,
+  };
+
   return (
-    <div className="h-[300px] w-full">
-      <Line data={data} options={options} />
+    <div className="w-full" style={{ height: height || 400 }}>
+      {data && <Line data={data} options={mergedOptions} />}
+      {children}
     </div>
   );
 }

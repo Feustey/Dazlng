@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
-import { Node } from "@/models/Node";
+import { MongoNode } from "@/models/Node";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(
@@ -8,9 +8,8 @@ export async function GET(
   { params }: { params: { nodeId: string } }
 ) {
   try {
-    // Utiliser Prisma ou une autre méthode pour récupérer l'historique
-    // puisque le modèle Node est une interface et non un modèle Mongoose
-    const nodeHistory = await prisma.nodeHistory.findMany({
+    // Utiliser Prisma pour récupérer l'historique
+    const nodeHistory = await prisma.node.findMany({
       where: {
         pubkey: params.nodeId,
       },

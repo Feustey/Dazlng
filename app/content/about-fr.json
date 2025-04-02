@@ -1,0 +1,41 @@
+{
+  "title": "À Propos de Lightning Manager",
+  "sections": [
+    {
+      "title": "Présentation du Projet",
+      "content": "Lightning Manager est un outil open-source conçu pour aider les opérateurs de nœuds à surveiller et gérer efficacement leurs nœuds Lightning Network. Notre objectif est de fournir une interface conviviale qui rend la gestion des nœuds Lightning Network accessible à tous, des débutants aux utilisateurs avancés."
+    },
+    {
+      "title": "Le Lightning Network",
+      "content": "Le Lightning Network est une solution de mise à l'échelle de couche 2 pour Bitcoin qui permet des transactions rapides à faible coût. Il fonctionne en créant des canaux de paiement entre les utilisateurs, leur permettant d'effectuer de multiples transactions sans les enregistrer constamment sur la blockchain Bitcoin. Cette approche améliore considérablement la vitesse des transactions et réduit les coûts."
+    },
+    {
+      "title": "Fonctionnalités Principales",
+      "items": [
+        "Surveillance en temps réel du nœud avec des métriques détaillées",
+        "Outils de gestion et d'optimisation des canaux",
+        "Gestion et analyse des politiques de frais",
+        "Suivi des performances historiques",
+        "Analyse des pairs du réseau et recommandations"
+      ]
+    },
+    {
+      "title": "Avantages du Lightning Network",
+      "items": [
+        "Paiements Instantanés : Les transactions sont réglées en quelques secondes",
+        "Frais Réduits : Coûts de transaction minimaux par rapport au on-chain",
+        "Évolutivité : Possibilité de millions de transactions par seconde",
+        "Potentiel Cross-chain : Infrastructure pour les transactions inter-blockchains",
+        "Confidentialité : Meilleure confidentialité des transactions que sur la chaîne principale"
+      ]
+    },
+    {
+      "title": "Statistiques du Réseau",
+      "content": "Le Lightning Network continue de croître rapidement. En 2024, il compte plus de 30 000 nœuds, plus de 100 000 canaux, et une capacité totale du réseau dépassant 5 000 BTC. Cette croissance démontre l'adoption croissante et la confiance dans la technologie du Lightning Network."
+    },
+    {
+      "title": "Participez au Projet",
+      "content": "Lightning Manager est un projet open-source, et nous accueillons les contributions de la communauté. Que vous soyez développeur, designer, ou passionné du Lightning Network, il existe de nombreuses façons de participer et d'aider à améliorer l'outil."
+    }
+  ]
+} 

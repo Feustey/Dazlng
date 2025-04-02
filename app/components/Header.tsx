@@ -9,7 +9,7 @@ import {
   ChevronDownIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import Logo from "@/components/Logo";
+import { Logo } from "@/components/Logo";
 import NodeSearch from "@/components/NodeSearch";
 import { useSettings } from "@/contexts/SettingsContext";
 import { useLanguage } from "@/contexts/LanguageContext";

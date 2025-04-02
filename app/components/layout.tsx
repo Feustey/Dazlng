@@ -17,8 +17,8 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Logo from "./Logo";
-import Footer from "./Footer";
+import { Logo } from "./Logo";
+import { Footer } from "./Footer";
 
 interface LayoutProps {
   children: React.ReactNode;

@@ -100,7 +100,7 @@ export async function GET() {
         networkMetrics: {
           totalPeers: currentData.total_peers || 0,
           uptime: currentData.uptime || 0,
-          lastUpdate: currentData.timestamp || new Date().toISOString(),
+          lastUpdate: currentData.last_update || new Date().toISOString(),
         },
         historical: historicalData.map((item: HistoricalDataItem) => ({
           timestamp: item.timestamp,

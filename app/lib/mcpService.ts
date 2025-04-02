@@ -55,6 +55,32 @@ interface HistoricalData {
   total_volume: number;
 }
 
+interface CentralityData {
+  betweenness: number;
+  closeness: number;
+  eigenvector: number;
+}
+
+interface NetworkSummaryData {
+  totalNodes: number;
+  totalChannels: number;
+  totalCapacity: number;
+  // ... autres métriques de résumé réseau
+}
+
+interface OptimizationResult {
+  status: string;
+  message?: string;
+  // ... autres détails
+}
+
+interface NodeInfo {
+  // ... structure des informations du noeud (peut-être similaire à Node ou NodeStats ?)
+  pubkey: string;
+  alias: string;
+  // ...
+}
+
 const mcpService = {
   async getAllNodes(): Promise<Node[]> {
     const response = await fetch(`${process.env.MCP_API_URL}/nodes`);
@@ -108,6 +134,55 @@ const mcpService = {
     );
     if (!response.ok) {
       throw new Error("Erreur lors de la récupération des données historiques");
+    }
+    return response.json();
+  },
+
+  async getCentralities(): Promise<CentralityData> {
+    const nodePubkey = process.env.NODE_PUBKEY;
+    if (!nodePubkey) {
+      throw new Error("NODE_PUBKEY non défini");
+    }
+    const response = await fetch(
+      `${process.env.MCP_API_URL}/node/${nodePubkey}/centralities`
+    );
+    if (!response.ok) {
+      throw new Error(
+        "Erreur lors de la récupération des données de centralité"
+      );
+    }
+    return response.json();
+  },
+
+  async getNetworkSummary(): Promise<NetworkSummaryData> {
+    const response = await fetch(`${process.env.MCP_API_URL}/network/summary`);
+    if (!response.ok) {
+      throw new Error("Erreur lors de la récupération du résumé réseau");
+    }
+    return response.json();
+  },
+
+  async optimizeNode(nodePubkey: string): Promise<OptimizationResult> {
+    const response = await fetch(
+      `${process.env.MCP_API_URL}/node/${nodePubkey}/optimize`,
+      {
+        method: "POST",
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Erreur lors de l'optimisation du nœud");
+    }
+    return response.json();
+  },
+
+  async getNodeInfo(nodePubkey: string): Promise<NodeInfo> {
+    const response = await fetch(
+      `${process.env.MCP_API_URL}/node/${nodePubkey}`
+    );
+    if (!response.ok) {
+      throw new Error(
+        "Erreur lors de la récupération des informations du nœud"
+      );
     }
     return response.json();
   },

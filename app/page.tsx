@@ -15,6 +15,7 @@ import {
   Zap,
   Network,
   Activity,
+  Search,
 } from "lucide-react";
 import NetworkSummary from "@/components/NetworkSummary";
 
@@ -109,170 +110,195 @@ export default function HomePage() {
     fetchData();
   }, []);
 
+  const handleSearch = () => {
+    if (!searchTerm.trim()) return;
+    console.log("Recherche pour:", searchTerm);
+  };
+
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-[70vh]">
-        <div className="text-center">
-          <Loader2 className="h-12 w-12 animate-spin mx-auto mb-4" />
-          <p>Chargement des données du réseau Lightning...</p>
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center space-y-4">
+          <AlertCircle className="h-8 w-8 text-red-500 mx-auto" />
+          <p className="text-red-500">{error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-6">
-      {isUsingFallback && (
-        <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
-          <div className="flex items-center">
-            <AlertCircle className="h-5 w-5 text-yellow-400 mr-2" />
-            <p className="text-yellow-700">
-              Les données affichées sont des données de fallback car l'API est
-              temporairement indisponible.
+    <div className="container mx-auto px-4 py-8 space-y-8">
+      {/* Barre de recherche */}
+      <div className="flex gap-4">
+        <Input
+          type="text"
+          placeholder="Rechercher un nœud..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+        />
+        <Button onClick={handleSearch}>
+          <Search className="h-4 w-4 mr-2" />
+          Rechercher
+        </Button>
+      </div>
+
+      {/* Statistiques actuelles */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Nœuds Totaux</CardTitle>
+            <Network className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {formatNumber(currentStats?.total_nodes || 0)}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {formatNumber(currentStats?.avg_channels_per_node || 0)} canaux
+              par nœud
             </p>
-          </div>
-        </div>
-      )}
-
-      <div className="flex flex-col lg:flex-row items-start justify-between mb-8 gap-4">
-        <div>
-          <h1 className="text-3xl font-bold mb-2">
-            Tableau de bord Lightning Network
-          </h1>
-          <p className="text-gray-500">
-            Visualisez et analysez les données du réseau Lightning en temps réel
-          </p>
-        </div>
-
-        <div className="w-full lg:w-1/3">
-          <Input
-            placeholder="Rechercher un nœud par pubkey ou alias..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full"
-          />
-        </div>
-      </div>
-
-      {/* Cartes de statistiques principales */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <Card className="hover:shadow-md transition-shadow">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-medium text-gray-500">Nœuds</h3>
-              <Network className="h-5 w-5 text-blue-500" />
-            </div>
-            <div className="text-2xl font-bold mb-1">
-              {currentStats?.total_nodes.toLocaleString() || "-"}
-            </div>
-            <p className="text-sm text-gray-500">sur le réseau Lightning</p>
           </CardContent>
         </Card>
 
-        <Card className="hover:shadow-md transition-shadow">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-medium text-gray-500">Canaux</h3>
-              <Activity className="h-5 w-5 text-green-500" />
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Canaux Totaux</CardTitle>
+            <Activity className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {formatNumber(currentStats?.total_channels || 0)}
             </div>
-            <div className="text-2xl font-bold mb-1">
-              {currentStats?.total_channels.toLocaleString() || "-"}
-            </div>
-            <p className="text-sm text-gray-500">actifs sur le réseau</p>
+            <p className="text-xs text-muted-foreground">
+              {formatBitcoin(currentStats?.avg_capacity_per_channel || 0)} par
+              canal
+            </p>
           </CardContent>
         </Card>
 
-        <Card className="hover:shadow-md transition-shadow">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-medium text-gray-500">Capacité</h3>
-              <Zap className="h-5 w-5 text-yellow-500" />
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Capacité Totale
+            </CardTitle>
+            <Zap className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {formatBitcoin(currentStats?.total_capacity || 0)}
             </div>
-            <div className="text-2xl font-bold mb-1">
-              {currentStats ? formatBitcoin(currentStats.total_capacity) : "-"}
-            </div>
-            <p className="text-sm text-gray-500">capacité totale du réseau</p>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-md transition-shadow">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-medium text-gray-500">
-                Moy. par canal
-              </h3>
-              <ArrowUpRight className="h-5 w-5 text-purple-500" />
-            </div>
-            <div className="text-2xl font-bold mb-1">
-              {currentStats
-                ? formatBitcoin(currentStats.avg_capacity_per_channel)
-                : "-"}
-            </div>
-            <p className="text-sm text-gray-500">capacité moyenne par canal</p>
+            <p className="text-xs text-muted-foreground">
+              Dernière mise à jour:{" "}
+              {new Date(currentStats?.timestamp || "").toLocaleString()}
+            </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Résumé du réseau et graphique d'évolution historique */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <NetworkSummary />
+      {/* Graphiques */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Évolution des Nœuds</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Chart
+              data={{
+                labels: historicalData?.dates || [],
+                datasets: [
+                  {
+                    label: "Nœuds",
+                    data: historicalData?.nodes || [],
+                    borderColor: "hsl(var(--primary))",
+                    backgroundColor: "hsl(var(--primary))",
+                    tension: 0.4,
+                  },
+                ],
+              }}
+              options={{
+                plugins: {
+                  title: {
+                    display: true,
+                    text: "Nombre de nœuds au fil du temps",
+                  },
+                },
+              }}
+            />
+          </CardContent>
+        </Card>
 
-        <Chart
-          title="Évolution du réseau Lightning"
-          description="Tendances historiques"
-          height={350}
-        >
-          {historicalData ? (
-            <div className="flex flex-col h-full">
-              <div className="h-full w-full">
-                {/* Graphique simulé d'évolution historique */}
-                <div className="h-64 flex items-end justify-between px-4">
-                  {historicalData.capacity.map((value, index) => (
-                    <div
-                      key={index}
-                      className="w-5 bg-blue-500 rounded-t transition-all hover:bg-blue-600 relative group"
-                      style={{
-                        height: `${
-                          (value / Math.max(...historicalData.capacity)) * 100
-                        }%`,
-                      }}
-                    >
-                      <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                        {formatBitcoin(value)}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex justify-between px-4 mt-2 text-xs text-gray-500">
-                  {historicalData.dates.map((date, index) => (
-                    <div
-                      key={index}
-                      className="w-5 text-center overflow-hidden"
-                    >
-                      {date.substring(5, 10)}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="flex justify-center mt-4">
-                <Badge className="bg-blue-500">Capacité</Badge>
-              </div>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center h-full">
-              <p className="text-center text-gray-500">
-                Données non disponibles
-              </p>
-            </div>
-          )}
-        </Chart>
+        <Card>
+          <CardHeader>
+            <CardTitle>Évolution des Canaux</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Chart
+              data={{
+                labels: historicalData?.dates || [],
+                datasets: [
+                  {
+                    label: "Canaux",
+                    data: historicalData?.channels || [],
+                    borderColor: "hsl(var(--secondary))",
+                    backgroundColor: "hsl(var(--secondary))",
+                    tension: 0.4,
+                  },
+                ],
+              }}
+              options={{
+                plugins: {
+                  title: {
+                    display: true,
+                    text: "Nombre de canaux au fil du temps",
+                  },
+                },
+              }}
+            />
+          </CardContent>
+        </Card>
+
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Évolution de la Capacité</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Chart
+              data={{
+                labels: historicalData?.dates || [],
+                datasets: [
+                  {
+                    label: "Capacité",
+                    data: historicalData?.capacity || [],
+                    borderColor: "hsl(var(--accent))",
+                    backgroundColor: "hsl(var(--accent))",
+                    tension: 0.4,
+                  },
+                ],
+              }}
+              options={{
+                plugins: {
+                  title: {
+                    display: true,
+                    text: "Capacité totale au fil du temps",
+                  },
+                },
+              }}
+            />
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Actions */}
-      <div className="flex justify-end space-x-4">
-        <Button variant="outline">Exporter les données</Button>
-        <Button onClick={() => window.location.reload()}>Actualiser</Button>
-      </div>
+      {/* Résumé du réseau */}
+      <NetworkSummary />
     </div>
   );
 }
