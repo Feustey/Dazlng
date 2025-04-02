@@ -1,4 +1,8 @@
 import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -14,13 +18,17 @@ const nextConfig = {
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      "@": path.resolve(process.cwd()),
-      "@components": path.resolve(process.cwd(), "app/components"),
-      "@lib": path.resolve(process.cwd(), "app/lib"),
-      "@models": path.resolve(process.cwd(), "app/models"),
-      "@types": path.resolve(process.cwd(), "app/types"),
-      "@contexts": path.resolve(process.cwd(), "app/contexts"),
-      "@hooks": path.resolve(process.cwd(), "app/hooks"),
+      "@": path.resolve(__dirname, "app"),
+      "@app": path.resolve(__dirname, "app"),
+      "@components": path.resolve(__dirname, "app/components"),
+      "@lib": path.resolve(__dirname, "app/lib"),
+      "@hooks": path.resolve(__dirname, "app/hooks"),
+      "@contexts": path.resolve(__dirname, "app/contexts"),
+      "@types": path.resolve(__dirname, "app/types"),
+      "@models": path.resolve(__dirname, "app/models"),
+      "@api": path.resolve(__dirname, "app/api"),
+      "@actions": path.resolve(__dirname, "app/actions"),
+      "@network": path.resolve(__dirname, "app/network"),
     };
     return config;
   },
