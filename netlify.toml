@@ -11,6 +11,8 @@
   NEXT_IGNORE_ESLINT = "1"
   NEXT_IGNORE_TYPE_CHECKS = "1"
   NODE_OPTIONS = "--max_old_space_size=4096"
+  NEXT_FONT_OPTIMIZATION = "true"
+  NEXT_FONT_LOADER = "true"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
