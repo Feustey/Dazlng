@@ -1,7 +1,7 @@
 "use client";
 
 import "./globals.css";
-import Layout from "@components/Layout";
+import Layout from "@/components/Layout";
 import { ThemeProvider } from "next-themes";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { NodeProvider } from "@/contexts/NodeContext";

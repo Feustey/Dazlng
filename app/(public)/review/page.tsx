@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Layout from "@components/Layout";
+import Layout from "@/components/Layout";
 import { Card } from "@/components/ui/card";
 import { Chart } from "@/components/ui/chart";
 import { formatBitcoin, formatNumber } from "@/lib/utils";
