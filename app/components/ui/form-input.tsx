@@ -1,7 +1,7 @@
-import * as React from "react";
+import React, { ChangeEvent } from "react";
 import { Input, InputProps } from "./input";
 import { Label } from "./label";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 
 export interface FormInputProps extends InputProps {
   label?: string;

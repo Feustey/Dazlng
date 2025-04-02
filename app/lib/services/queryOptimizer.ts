@@ -1,6 +1,6 @@
-import { connectToDatabase } from "@/lib/mongodb";
-import Node from "@/models/Node";
-import PeerOfPeer from "@/models/PeerOfPeer";
+import { connectToDatabase } from "../mongodb";
+import Node from "../../models/Node";
+import PeerOfPeer from "../../models/PeerOfPeer";
 import { Document } from "mongoose";
 
 interface CacheEntry<T> {

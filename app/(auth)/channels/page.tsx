@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Chart } from '@/components/ui/chart';
+import { useEffect, useState } from "react";
+import { Card } from "../../components/ui/card";
+import { Chart } from "../../components/ui/chart";
 
 interface ChannelData {
   channelStats: {
@@ -27,7 +27,12 @@ interface ChannelData {
   }[];
 }
 
-type ChartDataKey = 'totalCapacity' | 'totalVolume' | 'totalFees' | 'activeChannels' | 'totalPeers';
+type ChartDataKey =
+  | "totalCapacity"
+  | "totalVolume"
+  | "totalFees"
+  | "activeChannels"
+  | "totalPeers";
 
 export default function ChannelsPage() {
   const [data, setData] = useState<ChannelData | null>(null);
@@ -39,15 +44,17 @@ export default function ChannelsPage() {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch('/api/review');
+        const response = await fetch("/api/review");
         if (!response.ok) {
           throw new Error(`Erreur HTTP: ${response.status}`);
         }
         const result = await response.json();
         setData(result);
       } catch (error) {
-        console.error('Erreur lors de la récupération des données:', error);
-        setError(error instanceof Error ? error.message : 'Une erreur est survenue');
+        console.error("Erreur lors de la récupération des données:", error);
+        setError(
+          error instanceof Error ? error.message : "Une erreur est survenue"
+        );
       } finally {
         setLoading(false);
       }
@@ -79,32 +86,38 @@ export default function ChannelsPage() {
   if (!data) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-xl text-muted-foreground">Aucune donnée disponible</p>
+        <p className="text-xl text-muted-foreground">
+          Aucune donnée disponible
+        </p>
       </div>
     );
   }
 
   const formatNumber = (num: number) => {
-    return new Intl.NumberFormat('fr-FR', {
+    return new Intl.NumberFormat("fr-FR", {
       maximumFractionDigits: 2,
-      notation: 'compact',
-      compactDisplay: 'short'
+      notation: "compact",
+      compactDisplay: "short",
     }).format(num);
   };
 
-  const transformChartData = (data: ChannelData['historical'], key: ChartDataKey, title: string) => {
+  const transformChartData = (
+    data: ChannelData["historical"],
+    key: ChartDataKey,
+    title: string
+  ) => {
     return {
-      labels: data.map(item => new Date(item.timestamp).toLocaleDateString()),
+      labels: data.map((item) => new Date(item.timestamp).toLocaleDateString()),
       datasets: [
         {
           label: title,
-          data: data.map(item => Number(item[key])),
-          borderColor: 'hsl(var(--primary))',
-          backgroundColor: 'hsl(var(--primary) / 0.1)',
+          data: data.map((item) => Number(item[key])),
+          borderColor: "hsl(var(--primary))",
+          backgroundColor: "hsl(var(--primary) / 0.1)",
           tension: 0.4,
-          tooltipFormat: (value: number) => formatNumber(value)
-        }
-      ]
+          tooltipFormat: (value: number) => formatNumber(value),
+        },
+      ],
     };
   };
 
@@ -116,29 +129,43 @@ export default function ChannelsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card className="p-6">
           <h3 className="text-lg font-semibold mb-2">Canaux Actifs</h3>
-          <p className="text-3xl font-bold text-primary">{data.channelStats.active}</p>
+          <p className="text-3xl font-bold text-primary">
+            {data.channelStats.active}
+          </p>
         </Card>
         <Card className="p-6">
           <h3 className="text-lg font-semibold mb-2">Capacité Totale</h3>
-          <p className="text-3xl font-bold text-primary">{formatNumber(data.financialMetrics.totalCapacity)} sats</p>
+          <p className="text-3xl font-bold text-primary">
+            {formatNumber(data.financialMetrics.totalCapacity)} sats
+          </p>
         </Card>
         <Card className="p-6">
           <h3 className="text-lg font-semibold mb-2">Volume Total</h3>
-          <p className="text-3xl font-bold text-primary">{formatNumber(data.financialMetrics.totalVolume)} sats</p>
+          <p className="text-3xl font-bold text-primary">
+            {formatNumber(data.financialMetrics.totalVolume)} sats
+          </p>
         </Card>
         <Card className="p-6">
           <h3 className="text-lg font-semibold mb-2">Frais Totaux</h3>
-          <p className="text-3xl font-bold text-primary">{formatNumber(data.financialMetrics.totalFees)} sats</p>
+          <p className="text-3xl font-bold text-primary">
+            {formatNumber(data.financialMetrics.totalFees)} sats
+          </p>
         </Card>
       </div>
 
       {/* Graphiques */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="p-6">
-          <h3 className="text-lg font-semibold mb-4">Évolution de la Capacité</h3>
+          <h3 className="text-lg font-semibold mb-4">
+            Évolution de la Capacité
+          </h3>
           <div className="h-[300px]">
             <Chart
-              data={transformChartData(data.historical, 'totalCapacity', 'Capacité Totale')}
+              data={transformChartData(
+                data.historical,
+                "totalCapacity",
+                "Capacité Totale"
+              )}
             />
           </div>
         </Card>
@@ -146,7 +173,11 @@ export default function ChannelsPage() {
           <h3 className="text-lg font-semibold mb-4">Évolution du Volume</h3>
           <div className="h-[300px]">
             <Chart
-              data={transformChartData(data.historical, 'totalVolume', 'Volume Total')}
+              data={transformChartData(
+                data.historical,
+                "totalVolume",
+                "Volume Total"
+              )}
             />
           </div>
         </Card>
@@ -169,11 +200,13 @@ export default function ChannelsPage() {
             <p className="text-2xl font-bold">{data.channelStats.closed}</p>
           </div>
           <div>
-            <p className="text-sm font-medium text-muted-foreground">En attente</p>
+            <p className="text-sm font-medium text-muted-foreground">
+              En attente
+            </p>
             <p className="text-2xl font-bold">{data.channelStats.pending}</p>
           </div>
         </div>
       </Card>
     </div>
   );
-} 
+}

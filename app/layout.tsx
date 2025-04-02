@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import metadata from "./metadata";
-import ClientLayout from "@/ClientLayout";
+import ClientLayout from "./ClientLayout";
 
 export { metadata };
 

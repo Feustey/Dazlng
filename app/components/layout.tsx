@@ -14,8 +14,8 @@ import {
   HelpCircle,
   Star,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { cn } from "../lib/utils";
+import { Button } from "./ui/button";
 import Link from "next/link";
 import { Logo } from "./Logo";
 import { Footer } from "./Footer";

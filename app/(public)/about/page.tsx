@@ -1,7 +1,8 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
-import { useLanguage } from "@/contexts/LanguageContext";
+import React from "react";
+import { Card } from "../../components/ui/card";
+import { useLanguage } from "../../contexts/LanguageContext";
 import { useState, useEffect } from "react";
 
 interface AboutSection {
@@ -36,15 +37,13 @@ export default function AboutPage() {
   useEffect(() => {
     const loadContent = async () => {
       try {
-        const enContent = await import("@/content/about-en.json");
-        setAboutEn(enContent);
+        setAboutEn(await import("../../content/about-en.json"));
       } catch (error) {
         console.error("Erreur lors du chargement du contenu anglais:", error);
       }
 
       try {
-        const frContent = await import("@/content/about-fr.json");
-        setAboutFr(frContent);
+        setAboutFr(await import("../../content/about-fr.json"));
       } catch (error) {
         console.error("Erreur lors du chargement du contenu français:", error);
       }

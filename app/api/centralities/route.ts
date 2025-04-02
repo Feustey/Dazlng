@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import mcpService from "@/lib/mcpService";
+import mcpService from "../../lib/mcpService";
 
 // Données fictives pour le développement
 const mockCentralities = {

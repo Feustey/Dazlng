@@ -1,4 +1,4 @@
-import { NodeInfo, NodeHistoryEntry } from "@/lib/types";
+import { NodeInfo, NodeHistoryEntry } from "../types";
 
 const NODE_HISTORY_KEY = "node_history";
 const MAX_HISTORY_ENTRIES = 100;

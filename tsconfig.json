@@ -16,19 +16,6 @@
     "jsx": "preserve",
     "incremental": true,
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["./app/*"],
-      "@app/*": ["app/*"],
-      "@components/*": ["app/components/*"],
-      "@lib/*": ["app/lib/*"],
-      "@hooks/*": ["app/hooks/*"],
-      "@contexts/*": ["app/contexts/*"],
-      "@types/*": ["app/types/*"],
-      "@models/*": ["app/models/*"],
-      "@api/*": ["app/api/*"],
-      "@actions/*": ["app/actions/*"],
-      "@network/*": ["app/network/*"]
-    },
     "plugins": [{ "name": "next" }]
   },
   "include": [

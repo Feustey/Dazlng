@@ -1,10 +1,10 @@
-import { CleanupService } from "@/lib/services";
-import { connectToDatabase } from "@/lib";
-import { Node, PeerOfPeer, History } from "@/models";
+import { CleanupService } from "app/lib/services";
+import { connectToDatabase } from "app/lib";
+import { Node, PeerOfPeer, History } from "app/models";
 
 // Mock des dépendances
-jest.mock("@/lib");
-jest.mock("@/models");
+jest.mock("app/lib");
+jest.mock("app/models");
 
 describe("CleanupService", () => {
   let cleanupService: CleanupService;

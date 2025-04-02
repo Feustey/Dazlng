@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Chart } from "@/components/ui/chart";
-import { formatBitcoin, formatNumber } from "@/lib/utils";
+import { useEffect, useState, Suspense } from "react";
+import { useLanguage } from "./contexts/LanguageContext";
+import { Card, CardHeader, CardTitle, CardContent } from "./components/ui/card";
+import { Badge } from "./components/ui/badge";
+import { Button } from "./components/ui/button";
+import { Input } from "./components/ui/input";
+import { Chart } from "./components/ui/chart";
+import { formatBitcoin, formatNumber } from "./lib/utils";
 import {
   Loader2,
   AlertCircle,
@@ -17,7 +17,7 @@ import {
   Activity,
   Search,
 } from "lucide-react";
-import NetworkSummary from "@/components/NetworkSummary";
+import NetworkSummary from "./components/NetworkSummary";
 
 interface NetworkStatsType {
   total_nodes: number;
@@ -57,7 +57,7 @@ const fallbackHistoricalData: HistoricalDataType = {
   capacity: Array.from({ length: 30 }, () => 5000),
 };
 
-export default function HomePage() {
+export default function Home() {
   const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState("");
   const [currentStats, setCurrentStats] = useState<NetworkStatsType | null>(

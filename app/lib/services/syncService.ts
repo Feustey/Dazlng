@@ -1,7 +1,7 @@
-import { connectToDatabase } from "@/lib/mongodb";
-import Node from "@/models/Node";
-import PeerOfPeer from "@/models/PeerOfPeer";
-import mcpService from "@/lib/mcpService";
+import { connectToDatabase } from "../mongodb";
+import Node from "../../models/Node";
+import PeerOfPeer from "../../models/PeerOfPeer";
+import mcpService from "../mcpService";
 
 export class SyncService {
   private static instance: SyncService;

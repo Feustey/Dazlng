@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { NodeInfo } from '@/lib/types';
-import { fetchNodeInfo, saveNodeHistory } from '@/lib/services/nodeService';
-import { Card } from '@/components/ui/card';
-import { formatBitcoin } from '@/lib/utils';
-import { useSettings } from '@/contexts/SettingsContext';
+import React, { useEffect, useState } from "react";
+import { NodeInfo as NodeInfoType } from "../lib/types";
+import { fetchNodeInfo, saveNodeHistory } from "../lib/services/nodeService";
+import { Card } from "./ui/card";
+import { formatBitcoin } from "../lib/utils";
+import { useSettings } from "../contexts/SettingsContext";
 
 interface NodeInfoProps {
   pubkey: string;
 }
 
 export function NodeInfoDisplay({ pubkey }: NodeInfoProps) {
-  const [nodeInfo, setNodeInfo] = useState<NodeInfo | null>(null);
+  const [nodeInfo, setNodeInfo] = useState<NodeInfoType | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { currency } = useSettings();
 
@@ -23,7 +23,9 @@ export function NodeInfoDisplay({ pubkey }: NodeInfoProps) {
         setNodeInfo(data);
         saveNodeHistory(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Une erreur est survenue');
+        setError(
+          err instanceof Error ? err.message : "Une erreur est survenue"
+        );
       }
     };
 
@@ -55,7 +57,8 @@ export function NodeInfoDisplay({ pubkey }: NodeInfoProps) {
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold">Informations du Nœud</h3>
           <div className="text-sm text-muted-foreground">
-            Dernière mise à jour: {new Date(nodeInfo.last_update * 1000).toLocaleString()}
+            Dernière mise à jour:{" "}
+            {new Date(nodeInfo.last_update * 1000).toLocaleString()}
           </div>
         </div>
 
@@ -71,7 +74,7 @@ export function NodeInfoDisplay({ pubkey }: NodeInfoProps) {
           <div>
             <p className="text-sm text-muted-foreground">Capacité Totale</p>
             <p className="font-medium">
-              {formatBitcoin(nodeInfo.capacity, currency === 'btc')}
+              {formatBitcoin(nodeInfo.capacity, currency === "btc")}
             </p>
           </div>
           <div>
@@ -100,4 +103,4 @@ export function NodeInfoDisplay({ pubkey }: NodeInfoProps) {
       </div>
     </Card>
   );
-} 
+}

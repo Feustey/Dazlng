@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import type { Node } from "@/types/node";
+import type { Node } from "../types/node";
 
 export interface MongoNode {
   alias: string;

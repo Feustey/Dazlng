@@ -1,42 +1,27 @@
-import { NextResponse } from "next/server";
-import mcpService from "@/lib/mcpService";
-import { mockHistoricalData } from "@/lib/mockData";
+import { NextApiRequest, NextApiResponse } from "next";
+import mcpService from "../../lib/mcpService";
+import { mockHistoricalData } from "../../lib/mockData";
 
 // Activer le mode développement pour utiliser les données fictives
-const USE_MOCK_DATA = process.env.NODE_ENV === "development";
+const devMode = process.env.DEV_MODE === "true";
 
-export async function GET() {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (devMode) {
+    // Utiliser les données fictives en mode développement
+    return res.status(200).json(mockHistoricalData);
+  }
+
   try {
-    // Tentez d'abord d'obtenir les données réelles
-    const data = await mcpService.getHistoricalData();
-    console.log(
-      "API stats/historical route: données historiques récupérées avec succès"
-    );
-    return NextResponse.json(data);
-  } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des données historiques:",
-      error
-    );
-
-    // Si mode développement, retournez des données fictives
-    if (USE_MOCK_DATA) {
-      console.log(
-        "API stats/historical route: utilisation des données fictives (mode développement)"
-      );
-      return NextResponse.json(mockHistoricalData);
+    const historicalData = await mcpService.getHistoricalData();
+    if (!historicalData) {
+      return res.status(404).json({ message: "Historical data not found" });
     }
-
-    // Sinon, retournez une erreur
-    return new NextResponse(
-      JSON.stringify({
-        message: "Erreur lors de la récupération des données historiques",
-        error: error instanceof Error ? error.message : String(error),
-      }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    return res.status(200).json(historicalData);
+  } catch (error) {
+    console.error("Error fetching historical data:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 }

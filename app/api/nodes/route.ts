@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import mcpService from "@/lib/mcpService";
-import { mockNodes } from "@/lib/mockData";
+import mcpService from "../../lib/mcpService";
+import { mockNodes } from "../../lib/mockData";
 
 // Activer le mode développement pour utiliser les données fictives
 const USE_MOCK_DATA = process.env.NODE_ENV === "development";

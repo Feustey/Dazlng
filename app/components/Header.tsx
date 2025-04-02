@@ -9,10 +9,10 @@ import {
   ChevronDownIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { Logo } from "@/components/Logo";
-import NodeSearch from "@/components/NodeSearch";
-import { useSettings } from "@/contexts/SettingsContext";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { Logo } from "./Logo";
+import NodeSearch from "./NodeSearch";
+import { useSettings } from "../contexts/SettingsContext";
+import { useLanguage } from "../contexts/LanguageContext";
 
 const Header = () => {
   const { theme, setTheme } = useTheme();

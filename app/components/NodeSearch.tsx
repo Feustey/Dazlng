@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { useNode } from "@/contexts/NodeContext";
+import { useNode } from "../contexts/NodeContext";
 
 interface Node {
   pubkey: string;

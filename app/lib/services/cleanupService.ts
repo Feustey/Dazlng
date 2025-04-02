@@ -1,7 +1,7 @@
-import { connectToDatabase } from "@/lib/mongodb";
-import Node from "@/models/Node";
-import PeerOfPeer from "@/models/PeerOfPeer";
-import History from "@/models/History";
+import { connectToDatabase } from "../mongodb";
+import Node from "../../models/Node";
+import PeerOfPeer from "../../models/PeerOfPeer";
+import History from "../../models/History";
 
 export class CleanupService {
   private static instance: CleanupService;

@@ -1,13 +1,18 @@
 "use client";
 
 import { useState, ChangeEvent } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { FormInput } from "@/components/ui/form-input";
-import { Chart } from "@/components/ui/chart";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import { Badge } from "../components/ui/badge";
+import { FormInput } from "../components/ui/form-input";
+import { Chart } from "../components/ui/chart";
 import { Line } from "react-chartjs-2";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function TestPage() {
   const { t } = useLanguage();

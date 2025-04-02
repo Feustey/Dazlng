@@ -1,6 +1,6 @@
 import "dotenv/config";
-import { connectToDatabase } from "@/lib";
-import { Node } from "@/models";
+import { connectToDatabase } from "../app/lib";
+import { Node } from "../app/models";
 
 async function checkImportedData() {
   try {

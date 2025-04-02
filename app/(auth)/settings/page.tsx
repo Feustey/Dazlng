@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { useTheme } from 'next-themes';
-import { MoonIcon, SunIcon } from '@heroicons/react/24/outline';
-import { useSettings } from '@/contexts/SettingsContext';
+import React from "react";
+import { useTheme } from "next-themes";
+import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
+import { useSettings } from "../../contexts/SettingsContext";
 
 export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
@@ -25,19 +25,19 @@ export default function SettingsPage() {
             <div className="flex items-center space-x-2">
               <SunIcon className="w-5 h-5 text-yellow-500" />
               <button
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 dark:bg-gray-700 transition-colors focus:outline-none"
               >
                 <span
                   className={`${
-                    theme === 'dark' ? 'translate-x-6' : 'translate-x-1'
+                    theme === "dark" ? "translate-x-6" : "translate-x-1"
                   } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
                 />
               </button>
               <MoonIcon className="w-5 h-5 text-gray-600 dark:text-gray-300" />
             </div>
             <span className="text-sm text-gray-600 dark:text-gray-300">
-              {theme === 'dark' ? 'Mode sombre' : 'Mode clair'}
+              {theme === "dark" ? "Mode sombre" : "Mode clair"}
             </span>
           </div>
         </div>
@@ -49,21 +49,25 @@ export default function SettingsPage() {
           </h2>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-gray-900 dark:text-white">FR</span>
+              <span className="text-sm font-medium text-gray-900 dark:text-white">
+                FR
+              </span>
               <button
-                onClick={() => setLanguage(language === 'fr' ? 'en' : 'fr')}
+                onClick={() => setLanguage(language === "fr" ? "en" : "fr")}
                 className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 dark:bg-gray-700 transition-colors focus:outline-none"
               >
                 <span
                   className={`${
-                    language === 'en' ? 'translate-x-6' : 'translate-x-1'
+                    language === "en" ? "translate-x-6" : "translate-x-1"
                   } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
                 />
               </button>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">EN</span>
+              <span className="text-sm font-medium text-gray-900 dark:text-white">
+                EN
+              </span>
             </div>
             <span className="text-sm text-gray-600 dark:text-gray-300">
-              {language === 'fr' ? 'Français' : 'English'}
+              {language === "fr" ? "Français" : "English"}
             </span>
           </div>
         </div>
@@ -75,21 +79,25 @@ export default function SettingsPage() {
           </h2>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-gray-900 dark:text-white">BTC</span>
+              <span className="text-sm font-medium text-gray-900 dark:text-white">
+                BTC
+              </span>
               <button
-                onClick={() => setCurrency(currency === 'btc' ? 'sats' : 'btc')}
+                onClick={() => setCurrency(currency === "btc" ? "sats" : "btc")}
                 className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 dark:bg-gray-700 transition-colors focus:outline-none"
               >
                 <span
                   className={`${
-                    currency === 'sats' ? 'translate-x-6' : 'translate-x-1'
+                    currency === "sats" ? "translate-x-6" : "translate-x-1"
                   } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
                 />
               </button>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">SATS</span>
+              <span className="text-sm font-medium text-gray-900 dark:text-white">
+                SATS
+              </span>
             </div>
             <span className="text-sm text-gray-600 dark:text-gray-300">
-              {currency === 'btc' ? 'Bitcoin (BTC)' : 'Satoshis (SATS)'}
+              {currency === "btc" ? "Bitcoin (BTC)" : "Satoshis (SATS)"}
             </span>
           </div>
         </div>

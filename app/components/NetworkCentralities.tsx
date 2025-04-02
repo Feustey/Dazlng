@@ -1,9 +1,10 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Loader2 } from 'lucide-react';
-import { Centralities } from '@/types/node';
+import React from "react";
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Loader2 } from "lucide-react";
+import { Centralities } from "../types/node";
 import {
   Table,
   TableBody,
@@ -11,7 +12,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "./ui/table";
 
 export default function NetworkCentralities() {
   const [loading, setLoading] = useState(true);
@@ -21,14 +22,16 @@ export default function NetworkCentralities() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/centralities');
+        const response = await fetch("/api/centralities");
         if (!response.ok) {
-          throw new Error('Erreur lors de la récupération des données');
+          throw new Error("Erreur lors de la récupération des données");
         }
         const data = await response.json();
         setCentralities(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Une erreur est survenue');
+        setError(
+          err instanceof Error ? err.message : "Une erreur est survenue"
+        );
       } finally {
         setLoading(false);
       }
@@ -46,18 +49,17 @@ export default function NetworkCentralities() {
   }
 
   if (error) {
-    return (
-      <div className="text-red-500 p-4 text-center">
-        {error}
-      </div>
-    );
+    return <div className="text-red-500 p-4 text-center">{error}</div>;
   }
 
   if (!centralities) {
     return null;
   }
 
-  const renderCentralityTable = (title: string, data: { pubkey: string; value: number; rank: number }[]) => (
+  const renderCentralityTable = (
+    title: string,
+    data: { pubkey: string; value: number; rank: number }[]
+  ) => (
     <div className="space-y-4">
       <h3 className="text-lg font-medium">{title}</h3>
       <Table>
@@ -86,19 +88,29 @@ export default function NetworkCentralities() {
   return (
     <Card className="p-6">
       <h2 className="text-xl font-semibold mb-6">Centralités du Réseau</h2>
-      
+
       <div className="space-y-8">
-        {renderCentralityTable('Betweenness', centralities.betweenness)}
-        {renderCentralityTable('Eigenvector', centralities.eigenvector)}
-        {renderCentralityTable('Closeness', centralities.closeness)}
-        {renderCentralityTable('Betweenness Pondéré', centralities.weighted_betweenness)}
-        {renderCentralityTable('Eigenvector Pondéré', centralities.weighted_eigenvector)}
-        {renderCentralityTable('Closeness Pondéré', centralities.weighted_closeness)}
+        {renderCentralityTable("Betweenness", centralities.betweenness)}
+        {renderCentralityTable("Eigenvector", centralities.eigenvector)}
+        {renderCentralityTable("Closeness", centralities.closeness)}
+        {renderCentralityTable(
+          "Betweenness Pondéré",
+          centralities.weighted_betweenness
+        )}
+        {renderCentralityTable(
+          "Eigenvector Pondéré",
+          centralities.weighted_eigenvector
+        )}
+        {renderCentralityTable(
+          "Closeness Pondéré",
+          centralities.weighted_closeness
+        )}
       </div>
 
       <div className="mt-4 text-sm text-muted-foreground">
-        Dernière mise à jour: {new Date(centralities.last_update).toLocaleString()}
+        Dernière mise à jour:{" "}
+        {new Date(centralities.last_update).toLocaleString()}
       </div>
     </Card>
   );
-} 
+}

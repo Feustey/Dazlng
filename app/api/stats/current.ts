@@ -1,42 +1,30 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import { NextResponse } from "next/server";
-import mcpService from "@/lib/mcpService";
-import { mockNetworkStats } from "@/lib/mockData";
+import mcpService from "../../lib/mcpService";
+import { mockNetworkStats } from "../../lib/mockData";
 
 // Activer le mode développement pour utiliser les données fictives
-const USE_MOCK_DATA = process.env.NODE_ENV === "development";
+const devMode = process.env.DEV_MODE === "true";
 
-export async function GET() {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (devMode) {
+    // Utiliser les données fictives en mode développement
+    return res.status(200).json(mockNetworkStats);
+    // Remarque : L'utilisation de res.status().json() est typique pour les API Routes Next.js traditionnelles.
+    // Si c'était une Route Handler (dans le dossier app), on utiliserait NextResponse.json().
+  }
+
   try {
-    // Tentez d'abord d'obtenir les données réelles
     const stats = await mcpService.getCurrentStats();
-    console.log(
-      "API stats/current route: statistiques actuelles récupérées avec succès"
-    );
-    return NextResponse.json(stats);
-  } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des statistiques actuelles:",
-      error
-    );
-
-    // Si mode développement, retournez des données fictives
-    if (USE_MOCK_DATA) {
-      console.log(
-        "API stats/current route: utilisation des données fictives (mode développement)"
-      );
-      return NextResponse.json(mockNetworkStats);
+    if (!stats) {
+      return res.status(404).json({ message: "Stats not found" });
     }
-
-    // Sinon, retournez une erreur
-    return new NextResponse(
-      JSON.stringify({
-        message: "Erreur lors de la récupération des statistiques actuelles",
-        error: error instanceof Error ? error.message : String(error),
-      }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    return res.status(200).json(stats);
+  } catch (error) {
+    console.error("Error fetching current stats:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 }
