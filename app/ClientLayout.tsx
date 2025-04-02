@@ -6,14 +6,7 @@ import { ThemeProvider } from "next-themes";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { NodeProvider } from "@/contexts/NodeContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
-import { Squada_One } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
-
-const squadaOne = Squada_One({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-squada",
-});
 
 export default function ClientLayout({
   children,
@@ -22,7 +15,7 @@ export default function ClientLayout({
 }) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <body className={squadaOne.variable}>
+      <body>
         <ThemeProvider attribute="class" defaultTheme="light">
           <LanguageProvider>
             <SettingsProvider>
