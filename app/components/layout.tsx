@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Footer } from "@/app/components/Footer";
-import Header from "@/app/components/Header";
+import { Footer } from "@components/Footer";
+import Header from "@components/Header";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
-export default function Layout({ children }: LayoutProps) {
+const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="flex min-h-screen flex-col">
       <div className="flex-1 flex flex-col">
@@ -19,4 +19,6 @@ export default function Layout({ children }: LayoutProps) {
       <Footer />
     </div>
   );
-}
+};
+
+export default Layout;
