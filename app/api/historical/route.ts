@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import mcpService from "../../lib/mcpService";
+import mcpService from "@/app/lib/mcpService";
 
 export async function GET() {
   try {

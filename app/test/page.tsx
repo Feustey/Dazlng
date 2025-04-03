@@ -4,13 +4,14 @@ import { useState, ChangeEvent } from "react";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-} from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { Badge } from "../components/ui/badge";
-import { FormInput } from "../components/ui/form-input";
-import { Chart } from "../components/ui/chart";
+} from "@/app/components/ui/card";
+import { Button } from "@/app/components/ui/button";
+import { Badge } from "@/app/components/ui/badge";
+import { FormInput } from "@/app/components/ui/form-input";
+import { Chart } from "@/app/components/ui/chart";
 import { Line } from "react-chartjs-2";
 import { useLanguage } from "../contexts/LanguageContext";
 

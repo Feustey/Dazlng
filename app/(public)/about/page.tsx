@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Card } from "../../components/ui/card";
+import { Card } from "@/app/components/ui/card";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { useState, useEffect } from "react";
 

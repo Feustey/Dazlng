@@ -1,8 +1,6 @@
-import path from "path";
-import { fileURLToPath } from "url";
+import createNextIntlPlugin from "next-intl/plugin";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const withNextIntl = createNextIntlPlugin("./i18n.ts");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -15,39 +13,10 @@ const nextConfig = {
   },
   reactStrictMode: true,
   swcMinify: true,
-  webpack: (config) => {
-    return config;
-  },
-  async headers() {
-    return [
-      {
-        source: "/:path*",
-        headers: [
-          { key: "Access-Control-Allow-Origin", value: "*" },
-          {
-            key: "Access-Control-Allow-Methods",
-            value: "GET, POST, PUT, DELETE, OPTIONS",
-          },
-          {
-            key: "Access-Control-Allow-Headers",
-            value: "Content-Type, Authorization, X-Requested-With",
-          },
-          { key: "Access-Control-Max-Age", value: "86400" },
-        ],
-      },
-    ];
-  },
-  experimental: {
-    serverActions: {
-      bodySizeLimit: "2mb",
-    },
-  },
   typescript: {
-    // Supprime `ignoreBuildErrors: true` temporairement pour voir les erreurs réelles
     ignoreBuildErrors: false,
   },
   distDir: ".next",
-  assetPrefix: "",
   transpilePackages: [
     "@heroicons/react",
     "@radix-ui/react-accordion",
@@ -93,4 +62,4 @@ const nextConfig = {
   ],
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

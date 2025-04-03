@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card } from "../../components/ui/card";
-import { Chart } from "../../components/ui/chart";
+import { Card } from "@/app/components/ui/card";
+import { Chart } from "@/app/components/ui/chart";
 import { formatBitcoin, formatNumber } from "../../lib/utils";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "../../components/ui/tabs";
+} from "@/app/components/ui/tabs";
 
 interface HistoricalDataPoint {
   timestamp: string;

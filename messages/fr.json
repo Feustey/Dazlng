@@ -1,0 +1,41 @@
+{
+  "Header": {
+    "title": "DazLng",
+    "searchPlaceholder": "Rechercher un nœud...",
+    "settings": "Paramètres",
+    "language": "Langue",
+    "theme": "Thème",
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Système",
+    "help": "Aide",
+    "messages": "Messages",
+    "dashboard": "Tableau de bord",
+    "channels": "Canaux",
+    "network": "Réseau",
+    "review": "Avis",
+    "botIA": "Bot IA",
+    "currency": "Devise",
+    "btc": "BTC",
+    "sats": "SATS"
+  },
+  "HomePage": {
+    "welcome": "Bienvenue sur DazLng",
+    "description": "Gérez vos nœuds Lightning Network."
+  },
+  "Home": {
+    "searchPlaceholder": "Rechercher un nœud...",
+    "searchButton": "Rechercher",
+    "totalNodes": "Nœuds Totaux",
+    "channelsPerNode": "{count} canaux par nœud",
+    "totalChannels": "Canaux Totaux",
+    "capacityPerChannel": "{amount} par canal",
+    "totalCapacity": "Capacité Totale",
+    "lastUpdate": "Dernière mise à jour: {date}"
+  },
+  "NotFound": {
+    "title": "Page non trouvée",
+    "description": "La page que vous recherchez n'existe pas.",
+    "backToHome": "Retour à l'accueil"
+  }
+}

@@ -1,4 +1,4 @@
-import { Accordion } from "../../components/ui/accordion";
+import { Accordion } from "@/app/components/ui/accordion";
 
 const faqItems = [
   {

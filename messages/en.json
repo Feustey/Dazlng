@@ -1,0 +1,36 @@
+{
+  "Header": {
+    "title": "DazLng",
+    "searchPlaceholder": "Search a node...",
+    "settings": "Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "help": "Help",
+    "messages": "Messages",
+    "dashboard": "Dashboard",
+    "channels": "Channels",
+    "network": "Network",
+    "review": "Review",
+    "botIA": "Bot IA",
+    "currency": "Currency",
+    "btc": "BTC",
+    "sats": "SATS"
+  },
+  "HomePage": {
+    "welcome": "Welcome to DazLng",
+    "description": "Manage your Lightning Network nodes."
+  },
+  "Home": {
+    "searchPlaceholder": "Search for a node...",
+    "searchButton": "Search",
+    "totalNodes": "Total Nodes",
+    "channelsPerNode": "{count} channels per node",
+    "totalChannels": "Total Channels",
+    "capacityPerChannel": "{amount} per channel",
+    "totalCapacity": "Total Capacity",
+    "lastUpdate": "Last update: {date}"
+  }
+}

@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Footer } from "./Footer";
-import Header from "./Header";
+import { Footer } from "@/app/components/Footer";
+import Header from "@/app/components/Header";
 
 interface LayoutProps {
   children: React.ReactNode;

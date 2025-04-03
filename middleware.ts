@@ -1,39 +1,4 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 import createMiddleware from "next-intl/middleware";
-
-export function middleware(request: NextRequest) {
-  // Gestion des erreurs API
-  if (request.nextUrl.pathname.startsWith("/api/")) {
-    try {
-      return NextResponse.next();
-    } catch (error) {
-      console.error("API Error:", error);
-      return new NextResponse(
-        JSON.stringify({
-          success: false,
-          message: "Service temporarily unavailable",
-        }),
-        {
-          status: 503,
-          headers: {
-            "content-type": "application/json",
-          },
-        }
-      );
-    }
-  }
-
-  // Gestion des assets statiques
-  if (
-    request.nextUrl.pathname.includes("/_next") ||
-    request.nextUrl.pathname.includes("/static")
-  ) {
-    return NextResponse.next();
-  }
-
-  return NextResponse.next();
-}
 
 export default createMiddleware({
   // A list of all locales that are supported
@@ -44,10 +9,15 @@ export default createMiddleware({
 });
 
 export const config = {
+  // Ajuster le matcher pour exécuter le middleware uniquement sur les chemins prévus
+  // et exclure explicitement /api, /_next/static, /_next/image, favicon.ico, etc.
   matcher: [
-    "/api/:path*",
-    "/_next/static/:path*",
-    "/static/:path*",
+    // Activer pour les chemins racine et internationalisés
+    "/",
     "/(fr|en)/:path*",
+
+    // Exclure les chemins qui ne devraient PAS être internationalisés
+    // (Ajoutez d'autres motifs si nécessaire)
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 };

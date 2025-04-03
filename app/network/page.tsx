@@ -1,7 +1,7 @@
 "use client";
 
-import NetworkSummary from "../components/NetworkSummary";
-import NetworkCentralities from "../components/NetworkCentralities";
+import NetworkSummary from "@/app/components/NetworkSummary";
+import NetworkCentralities from "@/app/components/NetworkCentralities";
 
 export default function NetworkPage() {
   return (

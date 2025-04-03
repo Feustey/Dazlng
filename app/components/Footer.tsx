@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Logo } from "./Logo";
+import { Logo } from "@/app/components/Logo";
 import { Github, MessageSquare, Send, Twitter, Zap, Info } from "lucide-react";
 
 export const Footer: React.FC = () => {

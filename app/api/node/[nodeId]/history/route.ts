@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { connectToDatabase } from "../../../../lib/mongodb";
+import { connectToDatabase } from "@/app/lib/mongodb";
 import { MongoNode } from "../../../../models/Node";
-import { prisma } from "../../../../lib/prisma";
+import { prisma } from "@/app/lib/prisma";
 
 export async function GET(
   request: Request,

@@ -2,10 +2,15 @@
 
 import React from "react";
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/app/components/ui/card";
 import { Loader2 } from "lucide-react";
-import { NetworkSummary as NetworkSummaryType } from "../types/node";
-import { formatBitcoin, formatNumber } from "../lib/utils";
+import { NetworkSummary as NetworkSummaryType } from "@/app/types/node";
+import { formatBitcoin, formatNumber } from "@/app/lib/utils";
 
 export default function NetworkSummary() {
   const [loading, setLoading] = useState(true);

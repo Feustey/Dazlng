@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Layout from "../components/Layout";
+import Layout from "@/app/components/Layout";
 
 export const metadata = {
   title: "Dazling - Network",
