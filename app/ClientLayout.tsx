@@ -1,14 +1,14 @@
 "use client";
 
 import { Inter } from "next/font/google";
-import "./globals.css";
+import "@/app/globals.css";
 import { ThemeProvider } from "next-themes";
-import { SettingsProvider } from "./contexts/SettingsContext";
-import { NodeProvider } from "./contexts/NodeContext";
-import { Toaster } from "./components/ui/toaster";
-import { Toaster as SonnerToaster } from "./components/ui/sonner";
-import Header from "./components/Header";
-import { Footer } from "./components/Footer";
+import { SettingsProvider } from "@/app/contexts/SettingsContext";
+import { NodeProvider } from "@/app/contexts/NodeContext";
+import { Toaster } from "@/app/components/ui/toaster";
+import { Toaster as SonnerToaster } from "@/app/components/ui/sonner";
+import Header from "@/app/components/Header";
+import { Footer } from "@/app/components/Footer";
 
 export default function ClientLayout({
   children,

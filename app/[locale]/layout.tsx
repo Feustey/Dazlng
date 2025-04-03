@@ -1,12 +1,7 @@
 import type { Metadata } from "next";
 import { ReactNode } from "react";
-// Importer les composants et CSS depuis la racine de app/
-import ClientLayout from "../ClientLayout";
-import "../globals.css";
-// Nous gèrerons les métadonnées dynamiques plus tard si nécessaire
-// import metadataBase from "../metadata";
-
-// Importer le provider pour les messages côté client
+import ClientLayout from "@/app/ClientLayout";
+import "@/app/globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 
@@ -16,10 +11,16 @@ type Props = {
   app: ReactNode;
 };
 
-// Note: Les métadonnées statiques exportées ici pourraient ne pas fonctionner
-// comme attendu avec les locales. Il est souvent préférable de générer
-// les métadonnées dynamiquement dans la page ou le layout.
-// export const metadata: Metadata = metadataBase;
+// 📌 Si tu veux définir des métadonnées dynamiquement, fais-le ici
+export async function generateMetadata({
+  params: { locale },
+}: Props): Promise<Metadata> {
+  return {
+    title: locale === "fr" ? "Mon Application" : "My App",
+    description:
+      locale === "fr" ? "Bienvenue sur mon app" : "Welcome to my app",
+  };
+}
 
 export default async function LocaleLayout({
   children,
@@ -30,7 +31,7 @@ export default async function LocaleLayout({
   try {
     messages = (await import(`../../messages/${locale}.json`)).default;
   } catch (error) {
-    notFound();
+    notFound(); // 🚨 Si le fichier de langue n'existe pas, on affiche une page 404
   }
 
   return (
@@ -38,8 +39,8 @@ export default async function LocaleLayout({
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ClientLayout>
-            {app}
             {children}
+            {app}
           </ClientLayout>
         </NextIntlClientProvider>
       </body>
