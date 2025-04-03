@@ -23,7 +23,7 @@ export async function GET() {
           },
         },
       ],
-      channelLink: "https://t.me/DazLngChannel",
+      channelLink: "https://t.me/dazLngBot",
       botLink: "https://t.me/dazlngBot",
     });
   } catch (error) {
@@ -34,7 +34,7 @@ export async function GET() {
       channelInfo: {
         id: 0,
         title: "DazLng Channel",
-        username: "DazLngChannel",
+        username: "dazLngBot",
         type: "channel",
         description:
           "Canal d'actualités et d'échanges sur DazLng. Actuellement indisponible.",
@@ -50,7 +50,7 @@ export async function GET() {
           },
         },
       ],
-      channelLink: "https://t.me/DazLngChannel",
+      channelLink: "https://t.me/dazLngBot",
       botLink: "https://t.me/dazlngBot",
     });
   }
