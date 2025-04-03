@@ -19,23 +19,26 @@ DazLng est un tableau de bord intelligent propulsé par l'IA, conçu pour optimi
 
 ## 🛠️ Technologies Utilisées
 
-- **Frontend** : Next.js 13.5
+- **Frontend** : Next.js 14.2
 - **UI/UX** : Tailwind CSS
 - **Graphiques** : Chart.js avec react-chartjs-2
 - **État** : React Hooks
 - **Types** : TypeScript
 - **API** : API MCP pour les données Lightning Network
 - **Base de données** : MongoDB pour le stockage des recommandations
+- **i18n** : next-intl pour l'internationalisation
 
 ## 📦 Installation
 
 1. Cloner le dépôt :
+
 ```bash
 git clone https://github.com/votre-username/DazLng.git
 cd DazLng
 ```
 
 2. Installer les dépendances :
+
 ```bash
 npm install
 # ou
@@ -43,6 +46,7 @@ yarn install
 ```
 
 3. Lancer le serveur de développement :
+
 ```bash
 npm run dev
 # ou
@@ -55,6 +59,7 @@ yarn dev
 
 1. Créez un fichier `.env` à la racine du projet
 2. Ajoutez vos variables d'environnement :
+
 ```env
 # Configuration requise
 MCP_API_URL=https://mcp-c544a464bb52.herokuapp.com
@@ -64,28 +69,87 @@ MONGODB_URI=votre_uri_mongodb
 
 ## 📊 Architecture
 
-### API Endpoints
+### Structure du projet
 
-- `/api/stats` : Statistiques en temps réel du nœud
-- `/api/historical` : Données historiques (30 derniers jours)
-- `/api/review` : Vue d'ensemble complète des données
-- `/api/recommendations` : Recommandations basées sur l'analyse des données
-- `/api/nodes/[pubkey]/peers-of-peers` : Informations sur les pairs des pairs
+```
+app/
+├── [locale]/        # Routes localisées (fr, en)
+│   ├── @app/        # Routes parallèles
+│   └── layout.tsx   # Layout principal
+├── components/      # Composants React réutilisables
+│   ├── ui/          # Composants UI de base
+│   └── ...          # Autres composants
+├── lib/            # Fonctions utilitaires
+└── messages/       # Fichiers de traduction
+    ├── en.json
+    └── fr.json
+```
 
-### Flux de Données
+### Convention d'importation
 
-1. **Collecte** : Données récupérées via l'API MCP
-2. **Transformation** : Formatage et validation des données
-3. **Stockage** : MongoDB pour les recommandations
-4. **Visualisation** : Interface utilisateur avec graphiques interactifs
+Pour assurer la cohérence, utilisez toujours des chemins relatifs :
 
-## 📊 Fonctionnalités à Venir
+```typescript
+// ✅ Importations correctes
+import { Button } from "../../../components/ui/button";
+import { useSettings } from "../../../contexts/SettingsContext";
+import { cn } from "../../../lib/utils";
 
-- [ ] Prédictions de rentabilité basées sur l'IA
-- [ ] Recommandations automatiques pour l'optimisation des canaux
-- [ ] Alertes personnalisables
-- [ ] Interface multilingue
-- [ ] Mode sombre/clair
+// ❌ Importations à éviter (alias)
+import { Button } from "@components/ui/button";
+import { useSettings } from "@contexts/SettingsContext";
+```
+
+## Règles de développement
+
+1. **Structure du code** :
+
+   - Tous les composants UI doivent être dans `/app/components/ui`
+   - Les composants spécifiques aux pages dans leurs dossiers respectifs
+   - Les traductions dans `/app/messages/{locale}.json`
+
+2. **CSS et styling** :
+
+   - Utiliser les classes Tailwind CSS
+   - Définir les styles globaux dans `app/globals.css`
+
+3. **Internationalisation** :
+
+   - Utiliser le hook `useTranslations` de next-intl
+   - Toujours définir les traductions en français et en anglais
+   - Structurer les traductions de manière logique
+
+4. **Routes et Navigation** :
+   - Utiliser le système de routes de Next.js App Router
+   - Respecter la structure des routes localisées avec [locale]
+   - Gérer correctement les routes parallèles avec @folder
+
+## Développement
+
+```bash
+# Installation des dépendances
+npm install
+
+# Démarrage du serveur de développement
+npm run dev
+
+# Build pour la production
+npm run build
+
+# Démarrage en mode production
+npm start
+```
+
+## Dépendances principales
+
+- Next.js 14.2
+- React 18
+- TypeScript 5
+- Tailwind CSS
+- next-intl
+- next-themes
+- heroicons
+- shadcn/ui
 
 ## 🤝 Contribution
 
@@ -101,16 +165,9 @@ Les contributions sont les bienvenues ! N'hésitez pas à :
 
 Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
-## 🙏 Remerciements
-
-- La communauté Lightning Network
-- Tous les contributeurs du projet
-- Les utilisateurs qui nous font confiance
-- L'équipe MCP pour leur API
-
 ---
 
-Fait avec ⚡️ par l'équipe DazLng 
+Fait avec ⚡️ par l'équipe DazLng
 
 # DazLng - Gestionnaire de Nœuds Lightning Network
 
@@ -122,7 +179,7 @@ Application de gestion et de surveillance des nœuds Lightning Network.
 app/
 ├── components/       # Composants React réutilisables
 │   ├── ui/           # Composants UI de base (boutons, inputs, etc.)
-│   └── ...           # Autres composants 
+│   └── ...           # Autres composants
 ├── contexts/         # Contextes React pour l'état global
 ├── hooks/            # Hooks personnalisés
 ├── lib/              # Fonctions utilitaires
@@ -137,13 +194,13 @@ Pour assurer la cohérence, utilisez toujours les alias d'importation définis d
 
 ```typescript
 // ✅ Importations correctes
-import { Button } from '@components/ui/button';
-import { useSettings } from '@contexts/SettingsContext';
-import { cn } from '@lib/utils';
+import { Button } from "@components/ui/button";
+import { useSettings } from "@contexts/SettingsContext";
+import { cn } from "@lib/utils";
 
 // ❌ Importations à éviter (chemins relatifs compliqués)
-import { Button } from '../../components/ui/button';
-import { useSettings } from '../contexts/SettingsContext';
+import { Button } from "../../components/ui/button";
+import { useSettings } from "../contexts/SettingsContext";
 ```
 
 ## Règles de développement
@@ -153,6 +210,7 @@ import { useSettings } from '../contexts/SettingsContext';
 2. **CSS et styling** : Utiliser les classes Tailwind CSS et les variables définies dans `globals.css`.
 
 3. **Conventions de nommage** :
+
    - Composants : PascalCase (ex: `Button.tsx`)
    - Hooks : camelCase commençant par "use" (ex: `useToast.ts`)
    - Utilitaires : camelCase (ex: `utils.ts`)
@@ -185,4 +243,4 @@ npm start
 - TypeScript
 - Tailwind CSS
 - next-themes (thème clair/sombre)
-- heroicons (icônes) 
+- heroicons (icônes)
