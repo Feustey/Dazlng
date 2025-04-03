@@ -79,13 +79,13 @@ export default function MessagesPage() {
             données du canal Telegram.
           </p>
           <p className="mb-4">
-            Vous pouvez toujours accéder directement au canal Telegram en
-            cliquant sur le bouton ci-dessous.
+            Vous pouvez toujours accéder directement au bot Telegram en cliquant
+            sur le bouton ci-dessous.
           </p>
-          <Link href="https://t.me/DazLngChannel" target="_blank">
+          <Link href="https://t.me/DazLngBot" target="_blank">
             <Button>
               <ExternalLink className="mr-2 h-4 w-4" />
-              Accéder au canal
+              Accéder au bot
             </Button>
           </Link>
         </Card>

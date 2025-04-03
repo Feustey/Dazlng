@@ -1,8 +1,9 @@
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
+import Layout from "../../components/Layout";
 
 export const metadata: Metadata = {
-  title: 'Messages - Lightning Manager',
-  description: 'Gérez vos messages Lightning Network',
+  title: "Messages - Dazling",
+  description: "Gérez vos messages Lightning Network",
 };
 
 export default function MessagesLayout({
@@ -10,5 +11,5 @@ export default function MessagesLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
-} 
+  return <Layout>{children}</Layout>;
+}

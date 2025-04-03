@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Logo } from "./Logo";
-import { Github, MessageSquare, Send, Twitter } from "lucide-react";
+import { Github, MessageSquare, Send, Twitter, Zap, Info } from "lucide-react";
 
 export const Footer: React.FC = () => {
   return (
@@ -9,10 +9,17 @@ export const Footer: React.FC = () => {
       <div className="pt-8 border-t border-gris-800">
         <div className="container mx-auto px-4 md:px-[145px]">
           <div className="py-2 flex items-center justify-between gap-4 flex-wrap">
-            <div className="ml-[140px]">
+            <div className="ml-[140px] flex items-center">
+              <Link
+                href="/about"
+                className="text-body-small text-orange-500 hover:text-blue-500 mr-5 flex items-center"
+              >
+                <Info className="w-4 h-4 mr-1" />
+                About
+              </Link>
+              <Zap className="w-5 h-5 text-gray-300 mr-2" />
               <p className="text-body-small text-gris-300 whitespace-nowrap">
-                DazLng est votre gestionnaire de nœud Lightning Network
-                tout-en-un.
+                DazLng, le meilleur gestionnaire de votre nœud Lightning
               </p>
             </div>
             <div className="flex items-center gap-4">

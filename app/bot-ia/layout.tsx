@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Layout from "../components/Layout";
 
-export const metadata = {
-  title: "Dazling - Network",
-  description: "Network view for Dazling",
+export const metadata: Metadata = {
+  title: "Bot IA - Dazling",
+  description: "Interagissez avec le Bot IA pour gérer votre nœud.",
 };
 
-export default function NetworkLayout({
+export default function BotIALayout({
   children,
 }: {
   children: React.ReactNode;

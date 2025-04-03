@@ -42,16 +42,6 @@ const nextConfig = {
       bodySizeLimit: "2mb",
     },
   },
-  async rewrites() {
-    return {
-      beforeFiles: [
-        {
-          source: "/api/:path*",
-          destination: "/api/:path*",
-        },
-      ],
-    };
-  },
   typescript: {
     // Supprime `ignoreBuildErrors: true` temporairement pour voir les erreurs réelles
     ignoreBuildErrors: false,
