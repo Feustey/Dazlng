@@ -8,6 +8,8 @@ import { NodeProvider } from "./contexts/NodeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { Toaster } from "./components/ui/toaster";
 import { Toaster as SonnerToaster } from "./components/ui/sonner";
+import Header from "./components/Header";
+import { Footer } from "./components/Footer";
 
 export default function ClientLayout({
   children,
@@ -21,8 +23,15 @@ export default function ClientLayout({
           <LanguageProvider>
             <SettingsProvider>
               <NodeProvider>
-                {children}
+                <div className="flex flex-col min-h-screen">
+                  <Header />
+                  <main className="flex-1 container mx-auto px-4 py-6">
+                    {children}
+                  </main>
+                  <Footer />
+                </div>
                 <Toaster />
+                <SonnerToaster />
               </NodeProvider>
             </SettingsProvider>
           </LanguageProvider>

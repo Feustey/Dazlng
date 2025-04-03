@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
-import Layout from "../components/Layout";
+
+export default function MessagesLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <>{children}</>;
+}
 
 export const metadata: Metadata = {
   title: "Bot IA - Dazling",

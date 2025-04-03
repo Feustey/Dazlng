@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Layout from "../../components/Layout";
 import { Card } from "../../components/ui/card";
 import { Chart } from "../../components/ui/chart";
 import { formatBitcoin, formatNumber } from "../../lib/utils";
@@ -98,245 +97,250 @@ export default function ReviewPage() {
 
   if (error) {
     return (
-      <Layout>
-        <div className="p-6">
-          <Card className="p-6">
-            <p className="text-destructive">{error}</p>
-          </Card>
-        </div>
-      </Layout>
+      <div className="p-6">
+        <Card className="p-6">
+          <p className="text-destructive">{error}</p>
+        </Card>
+      </div>
     );
   }
 
   if (!data) {
     return (
-      <Layout>
-        <div className="p-6">
-          <Card className="p-6">
-            <p>Loading...</p>
-          </Card>
-        </div>
-      </Layout>
+      <div className="p-6">
+        <Card className="p-6">
+          <p>Loading...</p>
+        </Card>
+      </div>
     );
   }
 
   return (
-    <Layout>
-      <div className="flex-1 space-y-6 p-6">
-        <h1 className="text-3xl font-bold">API Data Review</h1>
+    <div className="flex-1 space-y-6 p-6">
+      <h1 className="text-3xl font-bold">API Data Review</h1>
 
-        <div className="space-y-6">
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Node Information</h2>
-            <div className="grid gap-4">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Public Key
-                </p>
-                <p className="text-sm font-mono break-all">
-                  {data.nodeInfo.pubkey}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Alias
-                </p>
-                <p>{data.nodeInfo.alias}</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Platform & Version
-                </p>
-                <p>
-                  {data.nodeInfo.platform} - v{data.nodeInfo.version}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Address
-                </p>
-                <p className="font-mono">{data.nodeInfo.address}</p>
-              </div>
+      <div className="space-y-6">
+        <Card className="p-6">
+          <h2 className="text-xl font-semibold mb-4">Node Information</h2>
+          <div className="grid gap-4">
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">
+                Public Key
+              </p>
+              <p className="text-sm font-mono break-all">
+                {data.nodeInfo.pubkey}
+              </p>
             </div>
-          </Card>
-
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Channel Statistics</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Opened
-                </p>
-                <p className="text-2xl font-bold">{data.channelStats.opened}</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Active
-                </p>
-                <p className="text-2xl font-bold">{data.channelStats.active}</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Closed
-                </p>
-                <p className="text-2xl font-bold">{data.channelStats.closed}</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Pending
-                </p>
-                <p className="text-2xl font-bold">
-                  {data.channelStats.pending}
-                </p>
-              </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Alias</p>
+              <p>{data.nodeInfo.alias}</p>
             </div>
-          </Card>
-
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Financial Metrics</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Total Capacity
-                </p>
-                <p className="text-2xl font-bold">
-                  {formatBitcoin(data.financialMetrics.totalCapacity)}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Average Capacity
-                </p>
-                <p className="text-2xl font-bold">
-                  {formatBitcoin(data.financialMetrics.averageCapacity)}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Total Volume
-                </p>
-                <p className="text-2xl font-bold">
-                  {formatBitcoin(data.financialMetrics.totalVolume)}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Total Fees
-                </p>
-                <p className="text-2xl font-bold">
-                  {formatBitcoin(data.financialMetrics.totalFees)}
-                </p>
-              </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">
+                Platform & Version
+              </p>
+              <p>
+                {data.nodeInfo.platform} - v{data.nodeInfo.version}
+              </p>
             </div>
-          </Card>
-
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Fee Rates</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Average Rate
-                </p>
-                <p className="text-2xl font-bold">{data.feeRates.average}%</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Base Rate
-                </p>
-                <p className="text-2xl font-bold">
-                  {data.feeRates.baseRate} sats
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">PPM</p>
-                <p className="text-2xl font-bold">{data.feeRates.ppm}</p>
-              </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">
+                Address
+              </p>
+              <p className="font-mono">{data.nodeInfo.address}</p>
             </div>
-          </Card>
+          </div>
+        </Card>
 
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Network Metrics</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Total Peers
-                </p>
-                <p className="text-2xl font-bold">
-                  {formatNumber(data.networkMetrics.totalPeers)}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Uptime
-                </p>
-                <p className="text-2xl font-bold">
-                  {data.networkMetrics.uptime}%
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Last Update
-                </p>
-                <p className="text-sm">
-                  {new Date(data.networkMetrics.lastUpdate).toLocaleString()}
-                </p>
-              </div>
+        <Card className="p-6">
+          <h2 className="text-xl font-semibold mb-4">Channel Statistics</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">
+                Opened
+              </p>
+              <p className="text-2xl font-bold">{data.channelStats.opened}</p>
             </div>
-          </Card>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">
+                Active
+              </p>
+              <p className="text-2xl font-bold">{data.channelStats.active}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">
+                Closed
+              </p>
+              <p className="text-2xl font-bold">{data.channelStats.closed}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">
+                Pending
+              </p>
+              <p className="text-2xl font-bold">{data.channelStats.pending}</p>
+            </div>
+          </div>
+        </Card>
 
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Historical Data</h2>
-            <Tabs defaultValue="capacity" className="space-y-4">
-              <TabsList>
-                <TabsTrigger value="capacity">Capacity</TabsTrigger>
-                <TabsTrigger value="channels">Channels</TabsTrigger>
-                <TabsTrigger value="volume">Volume</TabsTrigger>
-                <TabsTrigger value="fees">Fees</TabsTrigger>
-              </TabsList>
+        <Card className="p-6">
+          <h2 className="text-xl font-semibold mb-4">Financial Metrics</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">
+                Total Capacity
+              </p>
+              <p className="text-2xl font-bold">
+                {formatBitcoin(data.financialMetrics.totalCapacity)}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">
+                Average Capacity
+              </p>
+              <p className="text-2xl font-bold">
+                {formatBitcoin(data.financialMetrics.averageCapacity)}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">
+                Total Volume
+              </p>
+              <p className="text-2xl font-bold">
+                {formatBitcoin(data.financialMetrics.totalVolume)}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">
+                Total Fees
+              </p>
+              <p className="text-2xl font-bold">
+                {formatBitcoin(data.financialMetrics.totalFees)}
+              </p>
+            </div>
+          </div>
+        </Card>
 
-              <TabsContent value="capacity">
-                <Chart
-                  data={transformChartData(
-                    data.historical,
-                    "totalCapacity",
-                    "Total Capacity"
-                  )}
-                />
-              </TabsContent>
+        <Card className="p-6">
+          <h2 className="text-xl font-semibold mb-4">Fee Rates</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">
+                Average Rate
+              </p>
+              <p className="text-2xl font-bold">{data.feeRates.average}%</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">
+                Base Rate
+              </p>
+              <p className="text-2xl font-bold">
+                {data.feeRates.baseRate} sats
+              </p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">PPM</p>
+              <p className="text-2xl font-bold">{data.feeRates.ppm}</p>
+            </div>
+          </div>
+        </Card>
 
-              <TabsContent value="channels">
-                <Chart
-                  data={transformChartData(
-                    data.historical,
-                    "activeChannels",
-                    "Active Channels"
-                  )}
-                />
-              </TabsContent>
+        <Card className="p-6">
+          <h2 className="text-xl font-semibold mb-4">Network Metrics</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">
+                Total Peers
+              </p>
+              <p className="text-2xl font-bold">
+                {formatNumber(data.networkMetrics.totalPeers)}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">
+                Uptime
+              </p>
+              <p className="text-2xl font-bold">
+                {data.networkMetrics.uptime}%
+              </p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">
+                Last Update
+              </p>
+              <p className="text-sm">
+                {new Date(data.networkMetrics.lastUpdate).toLocaleString()}
+              </p>
+            </div>
+          </div>
+        </Card>
 
-              <TabsContent value="volume">
-                <Chart
-                  data={transformChartData(
-                    data.historical,
-                    "totalVolume",
-                    "Total Volume"
-                  )}
-                />
-              </TabsContent>
-
-              <TabsContent value="fees">
-                <Chart
-                  data={transformChartData(
-                    data.historical,
-                    "totalFees",
-                    "Total Fees"
-                  )}
-                />
-              </TabsContent>
-            </Tabs>
-          </Card>
-        </div>
+        <Card className="p-6">
+          <h2 className="text-xl font-semibold mb-4">Historical Data</h2>
+          <Tabs defaultValue="capacity" className="w-full">
+            <TabsList>
+              <TabsTrigger value="capacity">Capacity</TabsTrigger>
+              <TabsTrigger value="channels">Active Channels</TabsTrigger>
+              <TabsTrigger value="volume">Volume</TabsTrigger>
+              <TabsTrigger value="fees">Fees</TabsTrigger>
+              <TabsTrigger value="peers">Peers</TabsTrigger>
+            </TabsList>
+            <TabsContent value="capacity">
+              <Chart
+                data={transformChartData(
+                  data.historical,
+                  "totalCapacity",
+                  "Total Capacity (BTC)"
+                )}
+                options={{
+                  plugins: {
+                    tooltip: {
+                      callbacks: {
+                        label: (context) => formatBitcoin(context.parsed.y),
+                      },
+                    },
+                  },
+                }}
+              />
+            </TabsContent>
+            <TabsContent value="channels">
+              <Chart
+                data={transformChartData(
+                  data.historical,
+                  "activeChannels",
+                  "Active Channels"
+                )}
+              />
+            </TabsContent>
+            <TabsContent value="volume">
+              <Chart
+                data={transformChartData(
+                  data.historical,
+                  "totalVolume",
+                  "Total Volume"
+                )}
+              />
+            </TabsContent>
+            <TabsContent value="fees">
+              <Chart
+                data={transformChartData(
+                  data.historical,
+                  "totalFees",
+                  "Total Fees"
+                )}
+              />
+            </TabsContent>
+            <TabsContent value="peers">
+              <Chart
+                data={transformChartData(
+                  data.historical,
+                  "totalPeers",
+                  "Total Peers"
+                )}
+              />
+            </TabsContent>
+          </Tabs>
+        </Card>
       </div>
-    </Layout>
+    </div>
   );
 }

@@ -11,5 +11,6 @@ export default function NetworkLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <Layout>{children}</Layout>;
+  // Retourner directement les enfants, ClientLayout gère la structure
+  return <>{children}</>;
 }
