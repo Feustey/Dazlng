@@ -1,4 +1,9 @@
 import createNextIntlPlugin from "next-intl/plugin";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const withNextIntl = createNextIntlPlugin("./i18n.ts");
 
@@ -17,6 +22,27 @@ const nextConfig = {
     ignoreBuildErrors: false,
   },
   distDir: ".next",
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@": __dirname,
+      "@app": join(__dirname, "app"),
+      "@components": join(__dirname, "app/components"),
+      "@ui": join(__dirname, "app/components/ui"),
+      "@lib": join(__dirname, "app/lib"),
+      "@hooks": join(__dirname, "app/hooks"),
+      "@contexts": join(__dirname, "app/contexts"),
+      "@types": join(__dirname, "app/types"),
+      "@utils": join(__dirname, "app/utils"),
+      "@styles": join(__dirname, "app/styles"),
+      "@public": join(__dirname, "public"),
+      "@api": join(__dirname, "app/api"),
+      "@models": join(__dirname, "app/models"),
+      "@config": join(__dirname, "app/config"),
+      "@locale": join(__dirname, "app/locale"),
+    };
+    return config;
+  },
   transpilePackages: [
     "@heroicons/react",
     "@radix-ui/react-accordion",

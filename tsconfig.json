@@ -18,7 +18,21 @@
     "plugins": [{ "name": "next" }],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@app/*": ["app/*"],
+      "@components/*": ["app/components/*"],
+      "@ui/*": ["app/components/ui/*"],
+      "@lib/*": ["app/lib/*"],
+      "@hooks/*": ["app/hooks/*"],
+      "@contexts/*": ["app/contexts/*"],
+      "@types/*": ["app/types/*"],
+      "@utils/*": ["app/utils/*"],
+      "@styles/*": ["app/styles/*"],
+      "@public/*": ["public/*"],
+      "@api/*": ["app/api/*"],
+      "@models/*": ["app/models/*"],
+      "@config/*": ["app/config/*"],
+      "@locale/*": ["app/locale/*"]
     }
   },
   "include": [
