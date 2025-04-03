@@ -1,0 +1,14 @@
+{
+  "title": "Messages",
+  "searchPlaceholder": "Search in messages...",
+  "sendButton": "Send",
+  "inputPlaceholder": "Write your message...",
+  "errors": {
+    "loadFailed": "Failed to load messages",
+    "sendFailed": "Failed to send message"
+  },
+  "pagination": {
+    "loadMore": "Load more messages",
+    "noMore": "No more messages to load"
+  }
+}

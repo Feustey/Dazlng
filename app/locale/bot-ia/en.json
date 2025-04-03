@@ -1,0 +1,13 @@
+{
+  "title": "AI Assistant",
+  "description": "Ask questions to the AI assistant who will help you understand the Lightning Network.",
+  "inputPlaceholder": "Write your question...",
+  "sendButton": "Send",
+  "thinking": "The assistant is thinking...",
+  "errors": {
+    "loadFailed": "Failed to load assistant",
+    "sendFailed": "Failed to send message",
+    "timeout": "Request timeout"
+  },
+  "maxLength": 500
+}

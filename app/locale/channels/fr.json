@@ -1,0 +1,26 @@
+{
+  "title": "Canaux Lightning",
+  "stats": {
+    "opened": "Canaux ouverts",
+    "active": "Canaux actifs",
+    "closed": "Canaux fermés",
+    "pending": "Canaux en attente"
+  },
+  "metrics": {
+    "capacity": "Capacité totale",
+    "volume": "Volume total",
+    "fees": "Frais totaux"
+  },
+  "errors": {
+    "loadFailed": "Échec du chargement des données",
+    "noData": "Aucune donnée disponible"
+  },
+  "tabs": {
+    "overview": "Vue d'ensemble",
+    "analytics": "Analytiques"
+  },
+  "charts": {
+    "capacity": "Évolution de la capacité",
+    "channels": "Évolution des canaux actifs"
+  }
+}

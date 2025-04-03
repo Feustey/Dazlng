@@ -1,0 +1,27 @@
+{
+  "title": "About Dazling",
+  "sections": [
+    {
+      "title": "Our Mission",
+      "content": "Dazling is an innovative platform that aims to revolutionize how users interact with online services.",
+      "items": [
+        "Simplify user experience",
+        "Promote technological innovation",
+        "Ensure data security"
+      ]
+    },
+    {
+      "title": "Our Story",
+      "content": "Founded in 2024, Dazling was born from a simple vision: making technology accessible to everyone."
+    },
+    {
+      "title": "Our Values",
+      "items": [
+        "Continuous innovation",
+        "Customer satisfaction",
+        "Transparency",
+        "Security first"
+      ]
+    }
+  ]
+}

@@ -1,19 +1,37 @@
-import { ReactNode } from "react";
+"use client";
 
-// Puisque le middleware gère la locale, nous n'en avons pas besoin ici
-// mais le layout dans [locale] en aura besoin.
+import { Inter } from "next/font/google";
+import { ThemeProvider } from "next-themes";
+import { Toaster } from "sonner";
+import { LanguageProvider } from "./contexts/LanguageContext";
+import { Navigation } from "./components/Navigation";
+import "./globals.css";
 
-type Props = {
-  children: ReactNode;
-};
+const inter = Inter({ subsets: ["latin"] });
 
-// Le layout racine définit simplement la structure HTML de base.
-// Le layout dans `app/[locale]/layout.tsx` s'occupera du reste (y compris la langue).
-export default function RootLayout({ children }: Props) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    // La langue sera définie dans le layout enfant spécifique à la locale
-    <html>
-      <body>{children}</body>
+    <html lang="fr" suppressHydrationWarning>
+      <body className={inter.className}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <LanguageProvider>
+            <div className="min-h-screen bg-background">
+              <Navigation />
+              <main className="pt-16">{children}</main>
+            </div>
+            <Toaster position="top-right" richColors />
+          </LanguageProvider>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

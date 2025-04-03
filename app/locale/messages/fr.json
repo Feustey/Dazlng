@@ -1,0 +1,14 @@
+{
+  "title": "Messages",
+  "searchPlaceholder": "Rechercher dans les messages...",
+  "sendButton": "Envoyer",
+  "inputPlaceholder": "Écrivez votre message...",
+  "errors": {
+    "loadFailed": "Échec du chargement des messages",
+    "sendFailed": "Échec de l'envoi du message"
+  },
+  "pagination": {
+    "loadMore": "Charger plus de messages",
+    "noMore": "Plus de messages à charger"
+  }
+}

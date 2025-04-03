@@ -1,0 +1,53 @@
+{
+  "hero": {
+    "title": "Discover the Lightning Network",
+    "subtitle": "A fast, secure, and cost-effective payment solution for Bitcoin",
+    "cta": "Get Started"
+  },
+  "features": {
+    "title": "Key Features",
+    "items": [
+      {
+        "title": "Instant Payments",
+        "description": "Make transactions in seconds with minimal fees",
+        "icon": "zap"
+      },
+      {
+        "title": "Maximum Security",
+        "description": "Protect your funds with Bitcoin technology",
+        "icon": "shield"
+      },
+      {
+        "title": "Global",
+        "description": "Access the network from anywhere in the world",
+        "icon": "globe"
+      },
+      {
+        "title": "Community Support",
+        "description": "An active community to help you",
+        "icon": "message"
+      }
+    ]
+  },
+  "stats": {
+    "title": "Key Numbers",
+    "items": [
+      {
+        "label": "Active Channels",
+        "value": "50,000+"
+      },
+      {
+        "label": "Total Capacity",
+        "value": "1,000+ BTC"
+      },
+      {
+        "label": "Transactions/day",
+        "value": "1M+"
+      },
+      {
+        "label": "Users",
+        "value": "100K+"
+      }
+    ]
+  }
+}

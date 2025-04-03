@@ -1,0 +1,13 @@
+{
+  "title": "Assistant IA",
+  "description": "Posez vos questions à l'assistant IA qui vous aidera à comprendre le réseau Lightning.",
+  "inputPlaceholder": "Écrivez votre question...",
+  "sendButton": "Envoyer",
+  "thinking": "L'assistant réfléchit...",
+  "errors": {
+    "loadFailed": "Échec du chargement de l'assistant",
+    "sendFailed": "Échec de l'envoi du message",
+    "timeout": "Délai d'attente dépassé"
+  },
+  "maxLength": 500
+}

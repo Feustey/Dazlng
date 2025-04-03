@@ -1,0 +1,53 @@
+{
+  "hero": {
+    "title": "Découvrez le Réseau Lightning",
+    "subtitle": "Une solution de paiement rapide, sécurisée et économique pour Bitcoin",
+    "cta": "Commencer maintenant"
+  },
+  "features": {
+    "title": "Fonctionnalités principales",
+    "items": [
+      {
+        "title": "Paiements instantanés",
+        "description": "Effectuez des transactions en quelques secondes avec des frais minimes",
+        "icon": "zap"
+      },
+      {
+        "title": "Sécurité maximale",
+        "description": "Protection de vos fonds avec la technologie Bitcoin",
+        "icon": "shield"
+      },
+      {
+        "title": "Global",
+        "description": "Accédez au réseau depuis n'importe où dans le monde",
+        "icon": "globe"
+      },
+      {
+        "title": "Support communautaire",
+        "description": "Une communauté active pour vous aider",
+        "icon": "message"
+      }
+    ]
+  },
+  "stats": {
+    "title": "Chiffres clés",
+    "items": [
+      {
+        "label": "Canaux actifs",
+        "value": "50,000+"
+      },
+      {
+        "label": "Capacité totale",
+        "value": "1,000+ BTC"
+      },
+      {
+        "label": "Transactions/jour",
+        "value": "1M+"
+      },
+      {
+        "label": "Utilisateurs",
+        "value": "100K+"
+      }
+    ]
+  }
+}
