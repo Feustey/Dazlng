@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
+    "postinstall": "prisma generate",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx",
     "clean": "rm -rf .next node_modules/.cache && find app -name '*-back*' -delete && find app -name '*.bak' -delete",
