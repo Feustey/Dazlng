@@ -46,12 +46,6 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-[build.processing]
-  skip_processing = false
-
-[build.cache]
-  clear = false
-
 [functions]
   node_bundler = "esbuild"
   included_files = ["public/**"]
@@ -71,7 +65,21 @@
   runtime = "nodejs18.x"
   timeout = 30
 
+[build.processing]
+  skip_processing = false
+
+[build.cache]
+  clear = false
+
 [dev]
   framework = "next"
   targetPort = 3000
   port = 8888
+
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/server"
+  status = 200
+
+[build.environment.NEXT_PUBLIC_RUNTIME_CONFIG]
+  NEXT_PUBLIC_API_URL = "https://api.dazlng.com"
