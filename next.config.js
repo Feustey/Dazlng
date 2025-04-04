@@ -90,6 +90,7 @@ const nextConfig = {
     "clsx",
     "tailwind-merge",
     "tailwindcss-animate",
+    "recharts",
   ],
   async headers() {
     return [
