@@ -32,7 +32,7 @@ const Header = () => {
     typeof params.locale === "string" ? params.locale : "fr";
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 dark:bg-background/95 dark:border-border">
       <div className="container flex h-14 items-center">
         <Link
           href={`/${currentLocale}`}
@@ -44,25 +44,25 @@ const Header = () => {
           <div className="flex items-center space-x-4">
             <Link
               href={`/${currentLocale}/channels`}
-              className="text-sm font-medium transition-colors hover:text-foreground/80"
+              className="text-sm font-medium transition-colors hover:text-foreground/80 dark:text-foreground/90 dark:hover:text-foreground"
             >
               {t("channels")}
             </Link>
             <Link
               href={`/${currentLocale}/network`}
-              className="text-sm font-medium transition-colors hover:text-foreground/80"
+              className="text-sm font-medium transition-colors hover:text-foreground/80 dark:text-foreground/90 dark:hover:text-foreground"
             >
               {t("network")}
             </Link>
             <Link
               href={`/${currentLocale}/review`}
-              className="text-sm font-medium transition-colors hover:text-foreground/80"
+              className="text-sm font-medium transition-colors hover:text-foreground/80 dark:text-foreground/90 dark:hover:text-foreground"
             >
               {t("review")}
             </Link>
             <Link
               href={`/${currentLocale}/daz-ia`}
-              className="text-sm font-medium transition-colors hover:text-foreground/80"
+              className="text-sm font-medium transition-colors hover:text-foreground/80 dark:text-foreground/90 dark:hover:text-foreground"
             >
               {t("dazIA")}
             </Link>

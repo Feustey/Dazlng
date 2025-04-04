@@ -1,7 +1,7 @@
 {
   "name": "DazLng",
   "short_name": "DazLng",
-  "description": "Monitor and manage your Lightning Network node",
+  "description": "Gérez vos nœuds Lightning Network en toute simplicité",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -14,7 +14,9 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#6a5bf9",
+  "theme_color": "#ffffff",
   "background_color": "#ffffff",
-  "display": "standalone"
-} 
+  "display": "standalone",
+  "start_url": "/",
+  "orientation": "portrait"
+}

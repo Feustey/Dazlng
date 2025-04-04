@@ -204,21 +204,13 @@
     }
   },
   "footer": {
-    "about": "À propos",
     "description": "DazLng est une plateforme de gestion de nœuds Lightning Network qui vous aide à gérer votre nœud et vos canaux efficacement.",
-    "links": "Liens",
-    "help": "Aide",
-    "privacy": "Confidentialité",
-    "terms": "Conditions",
-    "contact": "Contact",
-    "rights": "Tous droits réservés.",
-    "daznode": "Obtenez votre nœud !",
     "links": {
       "help": "Aide",
       "about": "À propos",
-      "terms": "Conditions",
-      "getNode": "Obtenez votre nœud !"
-    }
+      "getNode": "Obtenir votre nœud !"
+    },
+    "rights": "Tous droits réservés."
   },
   "daz-ia": {
     "title": "DazIA DazLng",
@@ -277,6 +269,36 @@
   },
   "About": {
     "title": "À propos de DazLng",
+    "description": "DazLng est une plateforme innovante de gestion de nœuds Lightning Network, conçue pour simplifier et optimiser votre expérience sur le réseau.",
+    "features": {
+      "title": "Fonctionnalités",
+      "learning": "Guide d'apprentissage",
+      "transactions": "Suivi des transactions",
+      "operations": "Opérations Lightning",
+      "metrics": "Métriques avancées",
+      "nwc": "Nostr Wallet Connect"
+    },
+    "security": {
+      "title": "Sécurité",
+      "protection": "Protection avancée",
+      "protectionDesc": "Sécurité renforcée pour protéger vos fonds et vos données",
+      "sessions": "Gestion des sessions",
+      "sessionsDesc": "Contrôle total sur vos sessions actives",
+      "validation": "Validation multi-niveaux",
+      "validationDesc": "Processus de validation rigoureux pour toutes les transactions",
+      "headers": "En-têtes sécurisés",
+      "headersDesc": "Protection contre les attaques web courantes"
+    },
+    "team": {
+      "title": "Notre équipe",
+      "description": "Une équipe passionnée de développeurs et d'experts Lightning Network dédiés à votre succès."
+    },
+    "contact": {
+      "title": "Contactez-nous",
+      "email": "Email",
+      "twitter": "Twitter",
+      "github": "GitHub"
+    },
     "sections": [
       {
         "title": "Notre Mission",
@@ -295,17 +317,6 @@
         "content": "Notre équipe est composée d'experts passionnés par Bitcoin et le réseau Lightning, déterminés à construire l'avenir des paiements décentralisés."
       }
     ],
-    "security": {
-      "title": "Sécurité Renforcée",
-      "protection": "Protection contre les attaques",
-      "protectionDesc": "Protection contre les attaques par force brute et rate limiting intelligent par route",
-      "sessions": "Sessions sécurisées",
-      "sessionsDesc": "Sessions sécurisées avec expiration et régénération automatique des identifiants",
-      "validation": "Validation des entrées",
-      "validationDesc": "Validation stricte des entrées et protection contre les injections",
-      "headers": "Headers de sécurité",
-      "headersDesc": "Headers de sécurité configurés pour la protection CSRF et XSS"
-    },
     "cta": {
       "title": "Optimisez votre nœud Lightning",
       "subtitle": "Découvrez la puissance de DazIA pour votre nœud",

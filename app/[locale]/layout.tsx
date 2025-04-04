@@ -7,6 +7,7 @@ import Header from "@/app/components/Header";
 import { Footer } from "@/app/components/Footer";
 import { Suspense } from "react";
 import { siteConfig } from "@/app/config/site";
+import ClientLayout from "@/app/ClientLayout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -73,22 +74,24 @@ export default async function LocaleLayout({
   }
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <body className={inter.className}>
         <NextIntlClientProvider messages={messages} locale={locale}>
-          <div className="min-h-screen flex flex-col">
-            <Suspense fallback={<div className="h-16 bg-background" />}>
-              <Header />
-            </Suspense>
-            <main className="flex-1">
-              <Suspense fallback={<div className="h-screen bg-background" />}>
-                {children}
+          <ClientLayout>
+            <div className="min-h-screen flex flex-col">
+              <Suspense fallback={<div className="h-16 bg-background" />}>
+                <Header />
               </Suspense>
-            </main>
-            <Suspense fallback={<div className="h-16 bg-background" />}>
-              <Footer />
-            </Suspense>
-          </div>
+              <main className="flex-1">
+                <Suspense fallback={<div className="h-screen bg-background" />}>
+                  {children}
+                </Suspense>
+              </main>
+              <Suspense fallback={<div className="h-16 bg-background" />}>
+                <Footer />
+              </Suspense>
+            </div>
+          </ClientLayout>
         </NextIntlClientProvider>
       </body>
     </html>

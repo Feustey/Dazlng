@@ -36,7 +36,7 @@ export default function AboutPage() {
               <div>
                 <h3 className="font-medium">{t("features.learning")}</h3>
                 <p className="text-sm text-muted-foreground">
-                  Apprenez à votre rythme avec notre guide interactif
+                  {t("Home.features.learning.description")}
                 </p>
               </div>
             </div>
@@ -45,7 +45,7 @@ export default function AboutPage() {
               <div>
                 <h3 className="font-medium">{t("features.transactions")}</h3>
                 <p className="text-sm text-muted-foreground">
-                  Visualisez et analysez vos transactions en temps réel
+                  {t("Home.features.transactions.description")}
                 </p>
               </div>
             </div>
@@ -54,7 +54,7 @@ export default function AboutPage() {
               <div>
                 <h3 className="font-medium">{t("features.operations")}</h3>
                 <p className="text-sm text-muted-foreground">
-                  Suivez toutes vos opérations Lightning Network
+                  {t("Home.features.operations.description")}
                 </p>
               </div>
             </div>
@@ -63,7 +63,7 @@ export default function AboutPage() {
               <div>
                 <h3 className="font-medium">{t("features.metrics")}</h3>
                 <p className="text-sm text-muted-foreground">
-                  Surveillez les performances de votre nœud
+                  {t("Home.features.metrics.description")}
                 </p>
               </div>
             </div>
@@ -72,7 +72,7 @@ export default function AboutPage() {
               <div>
                 <h3 className="font-medium">{t("features.nwc")}</h3>
                 <p className="text-sm text-muted-foreground">
-                  Connectez-vous facilement avec Nostr Wallet Connect
+                  {t("Home.features.nwc.description")}
                 </p>
               </div>
             </div>
@@ -135,23 +135,40 @@ export default function AboutPage() {
             <Button
               variant="outline"
               className="flex items-center justify-center space-x-2"
+              asChild
             >
-              <MailIcon className="h-4 w-4" />
-              <span>{t("contact.email")}</span>
+              <a href="mailto:contact@dazlng.com">
+                <MailIcon className="h-4 w-4" />
+                <span>{t("contact.email")}</span>
+              </a>
             </Button>
             <Button
               variant="outline"
               className="flex items-center justify-center space-x-2"
+              asChild
             >
-              <TwitterIcon className="h-4 w-4" />
-              <span>{t("contact.twitter")}</span>
+              <a
+                href="https://twitter.com/DazLng"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <TwitterIcon className="h-4 w-4" />
+                <span>{t("contact.twitter")}</span>
+              </a>
             </Button>
             <Button
               variant="outline"
               className="flex items-center justify-center space-x-2"
+              asChild
             >
-              <GithubIcon className="h-4 w-4" />
-              <span>{t("contact.github")}</span>
+              <a
+                href="https://github.com/Feustey/Dazlng"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <GithubIcon className="h-4 w-4" />
+                <span>{t("contact.github")}</span>
+              </a>
             </Button>
           </div>
         </Card>

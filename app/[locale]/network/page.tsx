@@ -28,30 +28,9 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-import { getNetworkStats } from "@/app/services/network.service";
 import { formatNumber, formatSats } from "@/app/utils/format";
 import dynamic from "next/dynamic";
-
-interface NetworkData {
-  timestamp: string;
-  totalNodes: number;
-  activeNodes: number;
-  totalChannels: number;
-  activeChannels: number;
-  totalCapacity: number;
-  averageChannelCapacity: number;
-  averageNodeCapacity: number;
-  networkHealth: number;
-}
-
-interface CentralityData {
-  nodeId: string;
-  alias: string;
-  betweenness: number;
-  closeness: number;
-  degree: number;
-  eigenvector: number;
-}
+import { NetworkStats } from "@/app/types/network";
 
 // Chargement dynamique des graphiques
 const DynamicCapacityChart = dynamic(
@@ -84,9 +63,59 @@ const DynamicRecentChannels = dynamic(
   }
 );
 
-export default async function NetworkPage() {
-  const stats = await getNetworkStats();
+export default function NetworkPage() {
   const t = useTranslations("Network");
+  const [stats, setStats] = useState<NetworkStats | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await fetch("/api/network/stats");
+        if (!response.ok) {
+          throw new Error("Failed to fetch network stats");
+        }
+        const data = await response.json();
+        setStats(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[...Array(4)].map((_, i) => (
+            <Skeleton key={i} className="h-[100px] w-full" />
+          ))}
+        </div>
+        <Skeleton className="h-[400px] w-full mt-8" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>{t("error.title")}</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
+  if (!stats) {
+    return null;
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">

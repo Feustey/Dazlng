@@ -4,6 +4,18 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Card } from "@/app/components/ui/card";
 import { useLanguage } from "@/app/contexts/LanguageContext";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
+import { Loader2 } from "lucide-react";
 
 interface NodeDetails {
   pubkey: string;
@@ -20,6 +32,8 @@ interface NodeDetails {
   }>;
 }
 
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
+
 export default function NodePage() {
   const { pubkey } = useParams();
   const { language } = useLanguage();
@@ -33,12 +47,14 @@ export default function NodePage() {
         setLoading(true);
         const response = await fetch(`/api/node/${pubkey}`);
         if (!response.ok) {
-          throw new Error("Node not found");
+          throw new Error("Nœud non trouvé");
         }
         const data = await response.json();
         setNodeDetails(data);
       } catch (error) {
-        setError(error instanceof Error ? error.message : "An error occurred");
+        setError(
+          error instanceof Error ? error.message : "Une erreur est survenue"
+        );
       } finally {
         setLoading(false);
       }
@@ -61,15 +77,50 @@ export default function NodePage() {
 
   const formatSats = (sats: number) => {
     if (sats >= 100000000) {
-      return `${(sats / 100000000).toFixed(1)} BTC`;
+      return `${(sats / 100000000).toFixed(2)} BTC`;
     }
     return `${formatNumber(sats)} sats`;
+  };
+
+  const prepareChannelData = () => {
+    if (!nodeDetails?.channelsList) return [];
+    return nodeDetails.channelsList
+      .sort((a, b) => b.capacity - a.capacity)
+      .slice(0, 5)
+      .map((channel) => ({
+        name: channel.remoteAlias.slice(0, 10) + "...",
+        capacity: channel.capacity,
+      }));
+  };
+
+  const prepareCapacityDistribution = () => {
+    if (!nodeDetails?.channelsList) return [];
+    const totalCapacity = nodeDetails.capacity;
+    const otherChannelsCapacity = nodeDetails.channelsList
+      .slice(5)
+      .reduce((acc, channel) => acc + channel.capacity, 0);
+
+    const data = nodeDetails.channelsList.slice(0, 5).map((channel) => ({
+      name: channel.remoteAlias.slice(0, 10) + "...",
+      value: (channel.capacity / totalCapacity) * 100,
+    }));
+
+    if (otherChannelsCapacity > 0) {
+      data.push({
+        name: "Autres",
+        value: (otherChannelsCapacity / totalCapacity) * 100,
+      });
+    }
+
+    return data;
   };
 
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center">Chargement des détails du nœud...</div>
+        <div className="flex items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </div>
       </div>
     );
   }
@@ -88,16 +139,20 @@ export default function NodePage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">{nodeDetails.alias}</h1>
-        <p className="text-muted-foreground mb-8 font-mono">
-          {nodeDetails.pubkey}
-        </p>
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">{nodeDetails.alias}</h1>
+          <p className="text-muted-foreground font-mono">
+            {nodeDetails.pubkey}
+          </p>
+        </div>
 
         <div className="grid md:grid-cols-2 gap-6 mb-8">
           <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Statistiques</h2>
-            <div className="space-y-4">
+            <h2 className="text-xl font-semibold mb-6">
+              Statistiques Générales
+            </h2>
+            <div className="grid grid-cols-2 gap-6">
               <div>
                 <div className="text-sm text-muted-foreground">
                   Capacité Totale
@@ -118,7 +173,7 @@ export default function NodePage() {
                 <div className="text-sm text-muted-foreground">
                   Première Vue
                 </div>
-                <div className="text-2xl font-bold">
+                <div className="text-lg font-medium">
                   {new Date(nodeDetails.firstSeen).toLocaleDateString()}
                 </div>
               </div>
@@ -126,7 +181,7 @@ export default function NodePage() {
                 <div className="text-sm text-muted-foreground">
                   Dernière Mise à Jour
                 </div>
-                <div className="text-2xl font-bold">
+                <div className="text-lg font-medium">
                   {new Date(nodeDetails.updated).toLocaleDateString()}
                 </div>
               </div>
@@ -134,26 +189,87 @@ export default function NodePage() {
           </Card>
 
           <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Canaux</h2>
-            <div className="space-y-4">
-              {nodeDetails.channelsList.map((channel, index) => (
-                <div key={index} className="border-b pb-4 last:border-b-0">
-                  <div className="font-semibold">{channel.remoteAlias}</div>
-                  <div className="text-sm text-muted-foreground font-mono mb-2">
-                    {channel.remotePubkey}
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>Capacité: {formatSats(channel.capacity)}</span>
-                    <span>
-                      Mis à jour:{" "}
-                      {new Date(channel.lastUpdate).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
-              ))}
+            <h2 className="text-xl font-semibold mb-6">
+              Distribution de la Capacité
+            </h2>
+            <div className="h-[250px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={prepareCapacityDistribution()}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    label={({ name, value }) =>
+                      `${name} (${value.toFixed(1)}%)`
+                    }
+                  >
+                    {prepareCapacityDistribution().map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
           </Card>
         </div>
+
+        <Card className="p-6 mb-8">
+          <h2 className="text-xl font-semibold mb-6">
+            Top 5 Canaux par Capacité
+          </h2>
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={prepareChannelData()}>
+                <XAxis dataKey="name" />
+                <YAxis tickFormatter={(value) => formatSats(value)} />
+                <Tooltip
+                  formatter={(value: number) => [formatSats(value), "Capacité"]}
+                />
+                <Bar dataKey="capacity" fill="#8884d8">
+                  {prepareChannelData().map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+
+        <Card className="p-6">
+          <h2 className="text-xl font-semibold mb-6">Liste des Canaux</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="text-left">
+                  <th className="pb-4">Alias</th>
+                  <th className="pb-4">Capacité</th>
+                  <th className="pb-4">Dernière Mise à Jour</th>
+                </tr>
+              </thead>
+              <tbody>
+                {nodeDetails.channelsList.map((channel, index) => (
+                  <tr key={index} className="border-t">
+                    <td className="py-4">{channel.remoteAlias}</td>
+                    <td className="py-4">{formatSats(channel.capacity)}</td>
+                    <td className="py-4">
+                      {new Date(channel.lastUpdate).toLocaleDateString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
       </div>
     </div>
   );

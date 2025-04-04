@@ -172,21 +172,13 @@
     }
   },
   "footer": {
-    "about": "About",
     "description": "DazLng is a Lightning Network node management platform that helps you manage your node and channels efficiently.",
-    "links": "Links",
-    "help": "Help",
-    "privacy": "Privacy",
-    "terms": "Terms",
-    "contact": "Contact",
-    "rights": "All rights reserved.",
-    "daznode": "Get your own node!",
     "links": {
       "help": "Help",
       "about": "About",
-      "terms": "Terms",
       "getNode": "Get your own node!"
-    }
+    },
+    "rights": "All rights reserved."
   },
   "Settings": {
     "title": "Settings",
@@ -275,56 +267,35 @@
   },
   "About": {
     "title": "About DazLng",
-    "sections": [
-      {
-        "title": "Our Mission",
-        "content": "DazLng is your partner in optimizing your Lightning Network node. Our platform combines artificial intelligence and data analysis to maximize your node's profitability."
-      },
-      {
-        "title": "Features",
-        "items": [
-          "Real-time node performance analysis",
-          "Interactive data visualization",
-          "AI-powered personalized recommendations",
-          "Nostr Wallet Connect (NWC) integration",
-          "Multi-currency and multi-language support"
-        ]
-      },
-      {
-        "title": "Lightning Payments",
-        "items": [
-          "Native Alby integration via NWC",
-          "Automated and secure payments",
-          "Simplified invoice management",
-          "Real-time transaction tracking"
-        ]
-      }
-    ],
-    "security": {
-      "title": "Enhanced Security",
-      "protection": "Attack Protection",
-      "protectionDesc": "Protection against brute force attacks and intelligent rate limiting by route",
-      "sessions": "Secure Sessions",
-      "sessionsDesc": "Secure sessions with expiration and automatic credential regeneration",
-      "validation": "Input Validation",
-      "validationDesc": "Strict input validation and protection against injections",
-      "headers": "Security Headers",
-      "headersDesc": "Configured security headers for CSRF and XSS protection"
+    "description": "DazLng is an innovative Lightning Network node management platform, designed to simplify and optimize your network experience.",
+    "features": {
+      "title": "Features",
+      "learning": "Learning Guide",
+      "transactions": "Transaction Tracking",
+      "operations": "Lightning Operations",
+      "metrics": "Advanced Metrics",
+      "nwc": "Nostr Wallet Connect"
     },
-    "cta": {
-      "title": "Optimize your Lightning node",
-      "subtitle": "Discover the power of DazIA for your node",
-      "oneShot": "One-time Analysis",
-      "yearly": "Yearly Subscription",
-      "bestValue": "Best Value",
-      "features": [
-        "Complete node analysis",
-        "Personalized recommendations",
-        "Channel optimization",
-        "Priority support"
-      ],
-      "unlimitedAccess": "Unlimited access to all features",
-      "button": "Get Started"
+    "security": {
+      "title": "Security",
+      "protection": "Advanced Protection",
+      "protectionDesc": "Enhanced security to protect your funds and data",
+      "sessions": "Session Management",
+      "sessionsDesc": "Full control over your active sessions",
+      "validation": "Multi-level Validation",
+      "validationDesc": "Rigorous validation process for all transactions",
+      "headers": "Secure Headers",
+      "headersDesc": "Protection against common web attacks"
+    },
+    "team": {
+      "title": "Our Team",
+      "description": "A passionate team of developers and Lightning Network experts dedicated to your success."
+    },
+    "contact": {
+      "title": "Contact Us",
+      "email": "Email",
+      "twitter": "Twitter",
+      "github": "GitHub"
     }
   },
   "daznode": {

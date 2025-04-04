@@ -32,7 +32,10 @@ export function SettingsMenu() {
           <Settings className="h-5 w-5" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent
+        align="end"
+        className="bg-background border shadow-lg"
+      >
         <div className="px-2 py-1.5 text-sm font-semibold">
           {t("language.label")}
         </div>
