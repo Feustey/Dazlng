@@ -1,18 +1,17 @@
 [build]
-  command = "npm install && npm run build"
   publish = ".next"
+  command = "npm run build"
 
 [build.environment]
   NEXT_USE_NETLIFY_EDGE = "true"
-  NODE_VERSION = "22"
-  NEXT_PUBLIC_API_URL = "/api"
+  NODE_VERSION = "18"
+  NEXT_PUBLIC_API_URL = "https://api.dazlng.com"
   NEXT_TELEMETRY_DISABLED = "1"
   NODE_ENV = "production"
   NEXT_IGNORE_ESLINT = "1"
   NEXT_IGNORE_TYPE_CHECKS = "1"
   NODE_OPTIONS = "--max_old_space_size=4096"
-  NEXT_FONT_OPTIMIZATION = "true"
-  NEXT_FONT_LOADER = "true"
+  PRISMA_GENERATE_DATAPROXY = "true"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
@@ -23,6 +22,9 @@
     X-Frame-Options = "DENY"
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
 
 [[headers]]
   for = "/fonts/*"

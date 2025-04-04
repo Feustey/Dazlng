@@ -38,7 +38,13 @@
     "totalChannels": "Total Channels",
     "capacityPerChannel": "{amount} per channel",
     "totalCapacity": "Total Capacity",
-    "lastUpdate": "Last update: {date}"
+    "lastUpdate": "Last update: {date}",
+    "daznodePromo": {
+      "title": "🚀 Daznode Launch Offer!",
+      "description": "Get your pre-configured Lightning node for only 400,000 sats instead of 500,000 sats.",
+      "limitedOffer": "Limited to the first 10 orders",
+      "button": "Get the offer"
+    }
   },
   "NotFound": {
     "title": "Page not found",
@@ -103,46 +109,41 @@
     }
   },
   "Network": {
-    "title": "Network Analysis",
-    "tabs": {
-      "overview": "Overview",
-      "centrality": "Centrality"
-    },
-    "charts": {
-      "nodes": {
-        "title": "Nodes Evolution",
-        "total": "Total",
-        "active": "Active"
-      },
-      "capacity": {
-        "title": "Capacity Evolution",
-        "total": "Total",
-        "averageChannel": "Average per channel",
-        "averageNode": "Average per node"
-      }
-    },
-    "centrality": {
-      "title": "Centrality Metrics",
-      "alias": "Alias",
-      "betweenness": "Betweenness",
-      "closeness": "Closeness",
-      "degree": "Degree",
-      "eigenvector": "Eigenvector"
-    },
+    "title": "Lightning Network",
+    "totalNodes": "Total Nodes",
+    "totalChannels": "Total Channels",
+    "totalCapacity": "Total Capacity",
+    "avgChannelsPerNode": "Channels per Node",
+    "capacityHistory": "Capacity Evolution",
+    "nodesByCountry": "Distribution by Country",
+    "topNodes": "Top Nodes",
+    "channels": "channels",
+    "recentChannels": "Recent Channels",
+    "channelId": "Channel ID",
+    "capacity": "Capacity",
+    "status": "Status",
+    "lastUpdate": "Last Update",
     "error": {
       "title": "Error",
-      "description": "An error occurred while loading the data"
+      "fetchFailed": "Failed to fetch network data"
     }
   },
   "footer": {
     "about": "About",
-    "description": "DazLng is a Lightning Network node management platform.",
+    "description": "DazLng is a Lightning Network node management platform that helps you manage your node and channels efficiently.",
     "links": "Links",
     "help": "Help",
     "privacy": "Privacy",
     "terms": "Terms",
     "contact": "Contact",
-    "rights": "All rights reserved"
+    "rights": "All rights reserved.",
+    "daznode": "Get your own node!",
+    "links": {
+      "help": "Help",
+      "about": "About",
+      "terms": "Terms",
+      "getNode": "Get your own node!"
+    }
   },
   "Settings": {
     "title": "Settings",
@@ -207,5 +208,172 @@
     "stats": "Statistics",
     "recentActivity": "Recent Activity",
     "noData": "No data available"
+  },
+  "Help": {
+    "title": "Help Center",
+    "faq": [
+      {
+        "question": "What is DazLng?",
+        "answer": "DazLng is a Lightning Network node management platform that helps you monitor and optimize your node's performance."
+      },
+      {
+        "question": "How do I get started?",
+        "answer": "To get started, simply create an account and connect your Lightning Network node. Our platform will guide you through the setup process."
+      },
+      {
+        "question": "What features are available?",
+        "answer": "DazLng offers various features including node monitoring, channel management, network analysis, and AI-powered recommendations through DazIA."
+      },
+      {
+        "question": "How does DazIA work?",
+        "answer": "DazIA is our AI assistant that analyzes your node's data and provides personalized recommendations to optimize your Lightning Network operations."
+      }
+    ]
+  },
+  "About": {
+    "title": "About DazLng",
+    "sections": [
+      {
+        "title": "Our Mission",
+        "content": "DazLng was born from the desire to simplify Lightning Network node management. Our mission is to make the Lightning network more accessible and efficient for everyone."
+      },
+      {
+        "title": "Our Technology",
+        "content": "We use advanced algorithms and artificial intelligence to optimize your Lightning channels management and maximize your revenue."
+      },
+      {
+        "title": "Our Vision",
+        "content": "We aspire to become the reference platform for Lightning Network node management, offering innovative tools and an exceptional user experience."
+      },
+      {
+        "title": "Our Team",
+        "content": "Our team consists of experts passionate about Bitcoin and the Lightning network, determined to build the future of decentralized payments."
+      }
+    ],
+    "cta": {
+      "title": "Optimize your Lightning node",
+      "subtitle": "Discover the power of DazIA for your node",
+      "oneShot": "One-time Analysis",
+      "yearly": "Yearly Subscription",
+      "bestValue": "Best Value",
+      "features": [
+        "Complete node analysis",
+        "Personalized recommendations",
+        "Channel optimization",
+        "Priority support"
+      ],
+      "unlimitedAccess": "Unlimited access to all features",
+      "button": "Get Started"
+    }
+  },
+  "daznode": {
+    "title": "Get Your Own Lightning Node!",
+    "description": "Start your Lightning Network journey with a pre-configured Raspberry Pi 5 node. Ready to use, secure, and supported.",
+    "features": {
+      "preconfigured": "Pre-configured Node",
+      "preconfiguredDesc": "Your node comes fully configured and ready to use on a Raspberry Pi 5",
+      "balance": "Initial Balance",
+      "balanceDesc": "Start with 50,000 sats already loaded on your node",
+      "support": "Expert Support",
+      "supportDesc": "2 weeks of dedicated support to help you get started",
+      "delivery": "Fast Delivery",
+      "deliveryDesc": "Get your node within 10 days"
+    },
+    "specsTitle": "Technical Specifications",
+    "specs": {
+      "hardware": "Hardware",
+      "hardwareDesc": "Raspberry Pi 5 with 8GB RAM, 1TB SSD, and custom cooling solution",
+      "software": "Software",
+      "softwareDesc": "Latest LND implementation with our custom management interface",
+      "security": "Security",
+      "securityDesc": "Hardened Linux configuration with encrypted storage and secure boot"
+    },
+    "orderTitle": "Ready to Join the Lightning Network?",
+    "orderDescription": "Get your pre-configured node with everything you need to start",
+    "price": "500,000 sats",
+    "priceDescription": "One-time payment includes hardware, setup, and support",
+    "orderButton": "Order Your Node"
+  },
+  "help": {
+    "title": "Help Center",
+    "contact": {
+      "title": "Need Help?",
+      "description": "Our team is available 24/7 to support you in your Lightning Network journey.",
+      "email": "support@dazlng.com",
+      "phone": "+33 1 23 45 67 89",
+      "chat": "Telegram Chat",
+      "button": "Contact Support"
+    },
+    "sections": {
+      "daznode": {
+        "title": "Daznode Service",
+        "delivery": {
+          "question": "How does Daznode delivery work?",
+          "answer": "Your Daznode is delivered within 10 business days after payment confirmation. We'll send you a tracking email with the tracking number. The package is insured and requires a signature upon delivery."
+        },
+        "package": {
+          "question": "What's included in the Daznode package?",
+          "answer": "Your Daznode package includes: a Raspberry Pi 5 (8GB RAM), 1TB SSD, custom cooling solution, secure case, quick installation guide, and all necessary cables. The node comes pre-configured with LND software and 50,000 sats pre-loaded."
+        },
+        "installation": {
+          "question": "How do I install my Daznode?",
+          "answer": "Installation is simple thanks to our plug-and-play configuration: 1) Connect your Daznode to the Internet via Ethernet, 2) Plug in the power supply, 3) Access the web interface via the provided address, 4) Follow the initial setup wizard. Our team is available for video call guidance if needed."
+        }
+      },
+      "support": {
+        "title": "Technical Support",
+        "included": {
+          "question": "What support is included with my Daznode?",
+          "answer": "You get 2 weeks of dedicated support after receiving your node. This includes: installation assistance, channel configuration, parameter optimization, and technical troubleshooting. Support is available via email, chat, or video call."
+        },
+        "channels": {
+          "question": "How do I manage my Lightning channels?",
+          "answer": "Our intuitive interface makes channel management easy. We guide you through creating your first channels and advise on the best network connection strategies. The included DazIA Premium subscription provides optimization recommendations."
+        },
+        "security": {
+          "question": "How do I secure my node?",
+          "answer": "Your Daznode comes with hardened Linux configuration and encrypted storage. We help you set up backups and secure your keys. A comprehensive security guide is provided."
+        }
+      },
+      "subscription": {
+        "title": "Subscription & Services",
+        "premium": {
+          "question": "What's included in the DazIA Premium subscription?",
+          "answer": "The one-year DazIA Premium subscription includes: personalized network analysis, channel optimization recommendations, real-time alerts, weekly performance reports, and priority technical support access."
+        },
+        "renewal": {
+          "question": "How do I renew my subscription?",
+          "answer": "One month before your Premium subscription expires, you'll receive an email with renewal options. Renewal can be done directly from your dashboard with Lightning payment."
+        },
+        "upgrade": {
+          "question": "Can I upgrade my node?",
+          "answer": "Yes, we offer hardware and software upgrade options. Our team advises on the best options for your needs and can perform upgrades remotely or guide you through the process."
+        }
+      }
+    }
+  },
+  "Auth": {
+    "signInWithLightning": "Lightning Node Sign In",
+    "signInDescription": "Easily and securely sign in with your lightning node. Simply sign the unique message below with your node.",
+    "howToSign": "How to sign messages?",
+    "copy": "Copy message",
+    "copied": "Copied!",
+    "messageCopied": "Message copied to clipboard",
+    "pastePubkey": "Paste your public key here",
+    "pasteSignature": "Paste your signature here",
+    "signIn": "Sign in",
+    "signingIn": "Signing in...",
+    "signInSuccess": "Successfully signed in!",
+    "timeRemaining": "Remaining time",
+    "error": {
+      "invalidSignature": "Invalid signature",
+      "expired": "Message expired",
+      "unknown": "An error occurred",
+      "copyFailed": "Failed to copy message",
+      "missingFields": "Please fill in all fields",
+      "invalidMessage": "Invalid message format",
+      "invalidPubkey": "Invalid public key",
+      "invalidFormat": "Invalid signature format"
+    }
   }
 }

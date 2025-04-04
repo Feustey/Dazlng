@@ -124,6 +124,16 @@
     all: unset;
   }
 
+  .logo-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .logo-container svg {
+    height: 40px;
+    width: auto;
+  }
+
   .navbar {
     display: flex;
     align-items: center;

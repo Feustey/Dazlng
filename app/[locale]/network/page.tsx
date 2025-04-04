@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useTranslations } from "next-intl";
 import {
   Card,
@@ -25,7 +25,12 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  BarChart,
+  Bar,
 } from "recharts";
+import { getNetworkStats } from "@/app/services/network.service";
+import { formatNumber, formatSats } from "@/app/utils/format";
+import dynamic from "next/dynamic";
 
 interface NetworkData {
   timestamp: string;
@@ -48,229 +53,110 @@ interface CentralityData {
   eigenvector: number;
 }
 
-export default function NetworkPage() {
+// Chargement dynamique des graphiques
+const DynamicCapacityChart = dynamic(
+  () => import("@/app/components/charts/CapacityChart"),
+  {
+    loading: () => <Skeleton className="h-[400px] w-full" />,
+    ssr: false,
+  }
+);
+
+const DynamicCountryChart = dynamic(
+  () => import("@/app/components/charts/CountryChart"),
+  {
+    loading: () => <Skeleton className="h-[300px] w-full" />,
+    ssr: false,
+  }
+);
+
+const DynamicTopNodes = dynamic(
+  () => import("@/app/components/network/TopNodes"),
+  {
+    loading: () => <Skeleton className="h-[300px] w-full" />,
+  }
+);
+
+const DynamicRecentChannels = dynamic(
+  () => import("@/app/components/network/RecentChannels"),
+  {
+    loading: () => <Skeleton className="h-[300px] w-full" />,
+  }
+);
+
+export default async function NetworkPage() {
+  const stats = await getNetworkStats();
   const t = useTranslations("Network");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [historicalData, setHistoricalData] = useState<NetworkData[]>([]);
-  const [centralityData, setCentralityData] = useState<CentralityData[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [historicalResponse, centralityResponse] = await Promise.all([
-          fetch("/api/network/history"),
-          fetch("/api/network/centralities"),
-        ]);
-
-        if (!historicalResponse.ok || !centralityResponse.ok) {
-          throw new Error("Failed to fetch network data");
-        }
-
-        const [historicalData, centralityData] = await Promise.all([
-          historicalResponse.json(),
-          centralityResponse.json(),
-        ]);
-
-        setHistoricalData(historicalData);
-        setCentralityData(centralityData);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "An error occurred");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="container mx-auto p-4 space-y-4">
-        <h1 className="text-2xl font-bold mb-6">{t("title")}</h1>
-        <div className="grid grid-cols-1 gap-4">
-          <Card>
-            <CardHeader>
-              <Skeleton className="h-4 w-1/2" />
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-[400px] w-full" />
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="container mx-auto p-4">
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>{t("error.title")}</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      </div>
-    );
-  }
-
-  const formatNumber = (num: number) => {
-    return new Intl.NumberFormat().format(num);
-  };
-
-  const formatCapacity = (sats: number) => {
-    const btc = sats / 100000000;
-    return `${btc.toFixed(2)} BTC`;
-  };
-
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleString();
-  };
 
   return (
-    <div className="container mx-auto p-4 space-y-4">
-      <h1 className="text-2xl font-bold mb-6">{t("title")}</h1>
+    <div className="container mx-auto px-4 py-8">
+      {/* En-tête avec les statistiques principales */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <Card className="p-6">
+          <h3 className="text-sm font-medium text-muted-foreground mb-2">
+            {t("totalNodes")}
+          </h3>
+          <p className="text-2xl font-bold">{formatNumber(stats.totalNodes)}</p>
+        </Card>
+        <Card className="p-6">
+          <h3 className="text-sm font-medium text-muted-foreground mb-2">
+            {t("totalChannels")}
+          </h3>
+          <p className="text-2xl font-bold">
+            {formatNumber(stats.totalChannels)}
+          </p>
+        </Card>
+        <Card className="p-6">
+          <h3 className="text-sm font-medium text-muted-foreground mb-2">
+            {t("totalCapacity")}
+          </h3>
+          <p className="text-2xl font-bold">
+            {formatSats(stats.totalCapacity)}
+          </p>
+        </Card>
+        <Card className="p-6">
+          <h3 className="text-sm font-medium text-muted-foreground mb-2">
+            {t("avgChannelsPerNode")}
+          </h3>
+          <p className="text-2xl font-bold">
+            {formatNumber(stats.avgChannelsPerNode)}
+          </p>
+        </Card>
+      </div>
 
-      <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="overview">{t("tabs.overview")}</TabsTrigger>
-          <TabsTrigger value="centrality">{t("tabs.centrality")}</TabsTrigger>
-        </TabsList>
+      {/* Graphique de l'historique de la capacité */}
+      <Card className="p-6 mb-8">
+        <h2 className="text-xl font-bold mb-4">{t("capacityHistory")}</h2>
+        <Suspense fallback={<Skeleton className="h-[400px] w-full" />}>
+          <DynamicCapacityChart data={stats.capacityHistory} />
+        </Suspense>
+      </Card>
 
-        <TabsContent value="overview" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("charts.nodes.title")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[400px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={historicalData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis
-                      dataKey="timestamp"
-                      tickFormatter={formatDate}
-                      angle={-45}
-                      textAnchor="end"
-                      height={60}
-                    />
-                    <YAxis />
-                    <Tooltip
-                      labelFormatter={formatDate}
-                      formatter={(value: number) => formatNumber(value)}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="totalNodes"
-                      name={t("charts.nodes.total")}
-                      stroke="#8884d8"
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="activeNodes"
-                      name={t("charts.nodes.active")}
-                      stroke="#82ca9d"
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Distribution par pays */}
+        <Card className="p-6">
+          <h2 className="text-xl font-bold mb-4">{t("nodesByCountry")}</h2>
+          <Suspense fallback={<Skeleton className="h-[300px] w-full" />}>
+            <DynamicCountryChart data={stats.nodesByCountry} />
+          </Suspense>
+        </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("charts.capacity.title")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[400px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={historicalData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis
-                      dataKey="timestamp"
-                      tickFormatter={formatDate}
-                      angle={-45}
-                      textAnchor="end"
-                      height={60}
-                    />
-                    <YAxis />
-                    <Tooltip
-                      labelFormatter={formatDate}
-                      formatter={(value: number) => formatCapacity(value)}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="totalCapacity"
-                      name={t("charts.capacity.total")}
-                      stroke="#8884d8"
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="averageChannelCapacity"
-                      name={t("charts.capacity.averageChannel")}
-                      stroke="#82ca9d"
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="averageNodeCapacity"
-                      name={t("charts.capacity.averageNode")}
-                      stroke="#ffc658"
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+        {/* Top Nodes */}
+        <Card className="p-6">
+          <h2 className="text-xl font-bold mb-4">{t("topNodes")}</h2>
+          <Suspense fallback={<Skeleton className="h-[300px] w-full" />}>
+            <DynamicTopNodes nodes={stats.topNodes} />
+          </Suspense>
+        </Card>
+      </div>
 
-        <TabsContent value="centrality" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("centrality.title")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr>
-                      <th className="text-left p-2">{t("centrality.alias")}</th>
-                      <th className="text-right p-2">
-                        {t("centrality.betweenness")}
-                      </th>
-                      <th className="text-right p-2">
-                        {t("centrality.closeness")}
-                      </th>
-                      <th className="text-right p-2">
-                        {t("centrality.degree")}
-                      </th>
-                      <th className="text-right p-2">
-                        {t("centrality.eigenvector")}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {centralityData.map((node) => (
-                      <tr key={node.nodeId} className="border-t">
-                        <td className="p-2">{node.alias}</td>
-                        <td className="text-right p-2">
-                          {node.betweenness.toFixed(4)}
-                        </td>
-                        <td className="text-right p-2">
-                          {node.closeness.toFixed(4)}
-                        </td>
-                        <td className="text-right p-2">{node.degree}</td>
-                        <td className="text-right p-2">
-                          {node.eigenvector.toFixed(4)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+      {/* Canaux récents */}
+      <Card className="p-6 mt-8">
+        <h2 className="text-xl font-bold mb-4">{t("recentChannels")}</h2>
+        <Suspense fallback={<Skeleton className="h-[300px] w-full" />}>
+          <DynamicRecentChannels channels={stats.recentChannels} />
+        </Suspense>
+      </Card>
     </div>
   );
 }

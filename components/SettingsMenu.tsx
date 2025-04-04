@@ -1,0 +1,68 @@
+import { useTranslations } from "next-intl";
+import { useTheme } from "next-themes";
+import { useRouter, usePathname } from "next/navigation";
+import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@ui/dropdown-menu";
+import { Button } from "@ui/button";
+import { Switch } from "@ui/switch";
+import { Settings } from "lucide-react";
+
+export function SettingsMenu() {
+  const t = useTranslations("Header");
+  const { theme, setTheme } = useTheme();
+  const router = useRouter();
+  const pathname = usePathname();
+  const [currency, setCurrency] = useState<"btc" | "sats">("sats");
+
+  const currentLocale = pathname?.split("/")[1] || "fr";
+  const newLocale = currentLocale === "fr" ? "en" : "fr";
+
+  const handleLanguageChange = () => {
+    const newPath = pathname?.replace(`/${currentLocale}`, `/${newLocale}`);
+    router.push(newPath || "/");
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon">
+          <Settings className="h-5 w-5" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-56 sm:w-64">
+        <DropdownMenuLabel className="font-normal">
+          <p className="text-sm font-medium leading-none">{t("settings")}</p>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem className="flex items-center justify-between cursor-default py-3">
+          <span className="text-sm sm:text-base">{t("language")}</span>
+          <Switch
+            checked={currentLocale === "en"}
+            onCheckedChange={handleLanguageChange}
+          />
+        </DropdownMenuItem>
+        <DropdownMenuItem className="flex items-center justify-between cursor-default py-3">
+          <span className="text-sm sm:text-base">{t("theme")}</span>
+          <Switch
+            checked={theme === "dark"}
+            onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
+          />
+        </DropdownMenuItem>
+        <DropdownMenuItem className="flex items-center justify-between cursor-default py-3">
+          <span className="text-sm sm:text-base">{t("currency")}</span>
+          <Switch
+            checked={currency === "btc"}
+            onCheckedChange={(checked) => setCurrency(checked ? "btc" : "sats")}
+          />
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}

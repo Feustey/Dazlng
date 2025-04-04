@@ -2,6 +2,8 @@
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { useParams } from "next/navigation";
+import fr from "@/messages/fr.json";
+import en from "@/messages/en.json";
 
 type Language = "fr" | "en";
 
@@ -11,26 +13,9 @@ interface LanguageContextType {
   t: (key: string) => string;
 }
 
-// Dictionnaires de traduction simplifiés
-const translations: Record<Language, Record<string, string>> = {
-  fr: {
-    "header.home": "Accueil",
-    "header.actions": "Actions",
-    "header.messages": "Messages",
-    "header.settings": "Paramètres",
-    "settings.darkMode": "Mode sombre",
-    "settings.language": "Langue",
-    "settings.currency": "Devise",
-  },
-  en: {
-    "header.home": "Home",
-    "header.actions": "Actions",
-    "header.messages": "Messages",
-    "header.settings": "Settings",
-    "settings.darkMode": "Dark Mode",
-    "settings.language": "Language",
-    "settings.currency": "Currency",
-  },
+const translations = {
+  fr,
+  en,
 };
 
 const LanguageContext = createContext<LanguageContextType>({
@@ -48,7 +33,18 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [language, setLanguage] = useState<Language>(currentLocale as Language);
 
   const t = (key: string): string => {
-    return translations[language][key] || key;
+    const keys = key.split(".");
+    let value: any = translations[language];
+
+    for (const k of keys) {
+      if (value && typeof value === "object" && k in value) {
+        value = value[k];
+      } else {
+        return key;
+      }
+    }
+
+    return typeof value === "string" ? value : key;
   };
 
   return (

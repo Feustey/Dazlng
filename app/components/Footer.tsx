@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/app/contexts/LanguageContext";
+import SocialLinks from "./SocialLinks";
 
 export function Footer() {
   const { language: currentLocale, t } = useLanguage();
@@ -11,62 +12,38 @@ export function Footer() {
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="font-semibold mb-4">{t("footer.about")}</h3>
             <p className="text-muted-foreground">{t("footer.description")}</p>
           </div>
           <div>
-            <h3 className="font-semibold mb-4">{t("footer.links")}</h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   href={`/${currentLocale}/help`}
-                  className="text-muted-foreground hover:text-primary"
+                  className="text-orange-500 hover:text-blue-500 transition-colors"
                 >
                   {t("footer.help")}
                 </Link>
               </li>
               <li>
                 <Link
-                  href={`/${currentLocale}/privacy`}
-                  className="text-muted-foreground hover:text-primary"
+                  href={`/${currentLocale}/about`}
+                  className="text-orange-500 hover:text-blue-500 transition-colors"
                 >
-                  {t("footer.privacy")}
+                  {t("footer.about")}
                 </Link>
               </li>
               <li>
                 <Link
-                  href={`/${currentLocale}/terms`}
-                  className="text-muted-foreground hover:text-primary"
+                  href={`/${currentLocale}/daznode`}
+                  className="text-orange-500 hover:text-blue-500 transition-colors font-bold"
                 >
-                  {t("footer.terms")}
+                  {t("footer.daznode")}
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <h3 className="font-semibold mb-4">{t("footer.contact")}</h3>
-            <ul className="space-y-2">
-              <li>
-                <a
-                  href="https://github.com/dazlng"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary"
-                >
-                  GitHub
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://twitter.com/dazlng"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary"
-                >
-                  Twitter
-                </a>
-              </li>
-            </ul>
+            <SocialLinks />
           </div>
         </div>
         <div className="mt-8 pt-8 border-t text-center text-muted-foreground">

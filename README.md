@@ -19,7 +19,7 @@ DazLng est un tableau de bord intelligent propulsé par l'IA, conçu pour optimi
 - **Bot IA Premium** :
   - Recommandations personnalisées en one-shot (10,000 sats)
   - Abonnement annuel avec accès complet (100,000 sats)
-  - Paiement sécurisé via Alby Wallet
+  - Intégration Nostr Wallet Connect (NWC) avec Alby
   - Mode développement avec simulation de paiement
 
 ## 🛠️ Technologies Utilisées
@@ -32,7 +32,10 @@ DazLng est un tableau de bord intelligent propulsé par l'IA, conçu pour optimi
 - **API** : API MCP pour les données Lightning Network
 - **Base de données** : MongoDB pour le stockage des recommandations
 - **i18n** : next-intl pour l'internationalisation
-- **Paiements** : Intégration Alby Wallet pour Lightning Network
+- **Paiements** :
+  - Intégration Nostr Wallet Connect (NWC)
+  - Support Alby Wallet
+  - Paiements Lightning Network natifs
 - **Animations** : Framer Motion pour les interactions
 
 ## 📦 Installation
@@ -64,14 +67,26 @@ yarn dev
 
 ## 🔧 Configuration
 
-1. Créez un fichier `.env` à la racine du projet
+1. Créez un fichier `.env.local` à la racine du projet
 2. Ajoutez vos variables d'environnement :
 
 ```env
-# Configuration requise
-MCP_API_URL=https://mcp-c544a464bb52.herokuapp.com
-NODE_PUBKEY=votre_clé_publique
-MONGODB_URI=votre_uri_mongodb
+# Configuration MongoDB
+MONGODB_URI="votre_uri_mongodb"
+
+# Configuration MCP
+MCP_API_URL="https://dazlng-mcp.herokuapp.com"
+NODE_PUBKEY="votre_clé_publique"
+
+# Configuration Alby
+ALBY_WEBHOOK_SECRET="votre_secret_webhook"
+
+# Configuration SMTP
+SMTP_HOST="smtp.gmail.com"
+SMTP_PORT=587
+SMTP_USER="votre_email@gmail.com"
+SMTP_PASS="votre_mot_de_passe_app"
+SMTP_FROM="DazLng <votre_email@gmail.com>"
 ```
 
 ## 📊 Architecture
@@ -86,27 +101,49 @@ app/
 │   └── layout.tsx   # Layout principal
 ├── components/      # Composants React réutilisables
 │   ├── ui/          # Composants UI de base
-│   ├── AlbyQRCode/  # Composant de paiement Lightning
-│   └── ...          # Autres composants
+│   ├── NWCConnect/  # Composant de connexion NWC
+│   └── ...         # Autres composants
 ├── lib/            # Fonctions utilitaires
+│   ├── nwc.ts      # Gestionnaire de connexion NWC
+│   └── ...         # Autres utilitaires
 └── messages/       # Fichiers de traduction
     ├── en.json
     └── fr.json
 ```
 
-### Convention d'importation
+### Intégration NWC (Nostr Wallet Connect)
 
-Pour assurer la cohérence, utilisez toujours des chemins relatifs :
+Pour utiliser NWC dans votre application :
+
+1. Importez le composant NWCConnect :
 
 ```typescript
-// ✅ Importations correctes
-import { Button } from "../../../components/ui/button";
-import { useSettings } from "../../../contexts/SettingsContext";
-import { cn } from "../../../lib/utils";
+import NWCConnect from "@/components/NWCConnect";
+```
 
-// ❌ Importations à éviter (alias)
-import { Button } from "@components/ui/button";
-import { useSettings } from "@contexts/SettingsContext";
+2. Utilisez le composant dans votre page :
+
+```typescript
+function PaymentPage() {
+  const handleConnect = (connector: NWCConnector) => {
+    // Gérer la connexion NWC
+  };
+
+  return <NWCConnect onConnect={handleConnect} />;
+}
+```
+
+3. Utilisez les méthodes du connecteur :
+
+```typescript
+// Obtenir le solde
+const balance = await connector.getBalance();
+
+// Créer une facture
+const invoice = await connector.createInvoice(amount, description);
+
+// Effectuer un paiement
+await connector.makePayment(invoice);
 ```
 
 ## Règles de développement

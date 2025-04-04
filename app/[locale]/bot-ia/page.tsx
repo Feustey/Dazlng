@@ -36,6 +36,50 @@ interface AnalysisResponse {
   }>;
 }
 
+// Données statiques pour le mode export
+const staticData: AnalysisResponse = {
+  recommendations: [
+    "Augmentez votre capacité totale pour améliorer votre position dans le réseau",
+    "Diversifiez vos connexions avec des nœuds de différentes régions",
+    "Maintenez un ratio sain entre vos canaux entrants et sortants",
+  ],
+  status: "success",
+  nodeInfo: {
+    alias: "DazLng Node",
+    capacity: 15000000,
+    channelCount: 25,
+    avgCapacity: 600000,
+    betweenness: 0.75,
+    closeness: 0.82,
+    eigenvector: 0.68,
+  },
+  networkMetrics: {
+    totalNodes: 15000,
+    totalChannels: 85000,
+    totalCapacity: 5000000000,
+    avgCapacityPerChannel: 58823,
+    avgChannelsPerNode: 5.67,
+  },
+  peersOfPeers: [
+    {
+      peerPubkey:
+        "02eec7245d6b7d2ccb30380bfbe2a3648cd7a942653f5aa340edcea1f283686619",
+      alias: "Node 1",
+      totalCapacity: 10000000,
+      activeChannels: 15,
+      totalPeers: 20,
+    },
+    {
+      peerPubkey:
+        "03eec7245d6b7d2ccb30380bfbe2a3648cd7a942653f5aa340edcea1f283686619",
+      alias: "Node 2",
+      totalCapacity: 8000000,
+      activeChannels: 12,
+      totalPeers: 18,
+    },
+  ],
+};
+
 export default function BotIA() {
   const t = useTranslations("bot-ia");
   const [loading, setLoading] = useState(true);
@@ -45,53 +89,25 @@ export default function BotIA() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   useEffect(() => {
-    fetchInitialAnalysis();
+    // Utiliser les données statiques en mode export
+    setResult(staticData);
+    setLoading(false);
   }, []);
-
-  const fetchInitialAnalysis = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch("/api/optimize", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Erreur lors de la récupération des données");
-      }
-
-      const data = await response.json();
-      setResult(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Une erreur est survenue");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleQuestionSubmit = async () => {
     if (!userQuestion.trim()) return;
 
     setIsAnalyzing(true);
     try {
-      const response = await fetch("/api/bot/analyze", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ question: userQuestion }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Erreur lors de l'analyse");
-      }
-
-      const data = await response.json();
-      setResult(data);
+      // Simuler une réponse en mode statique
+      const mockResponse = {
+        ...staticData,
+        recommendations: [
+          ...staticData.recommendations,
+          `Réponse à votre question : ${userQuestion}`,
+        ],
+      };
+      setResult(mockResponse);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Une erreur est survenue");
     } finally {

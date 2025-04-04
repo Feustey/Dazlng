@@ -68,7 +68,13 @@
     "totalChannels": "Canaux Totaux",
     "capacityPerChannel": "{amount} par canal",
     "totalCapacity": "Capacité Totale",
-    "lastUpdate": "Dernière mise à jour: {date}"
+    "lastUpdate": "Dernière mise à jour: {date}",
+    "daznodePromo": {
+      "title": "🚀 Offre de Lancement Daznode !",
+      "description": "Obtenez votre nœud Lightning pré-configuré pour seulement 400 000 sats au lieu de 500 000 sats.",
+      "limitedOffer": "Offre limitée aux 10 premières commandes",
+      "button": "Profiter de l'offre"
+    }
   },
   "NotFound": {
     "title": "Page non trouvée",
@@ -133,46 +139,41 @@
     }
   },
   "Network": {
-    "title": "Analyse du Réseau",
-    "tabs": {
-      "overview": "Vue d'ensemble",
-      "centrality": "Centralité"
-    },
-    "charts": {
-      "nodes": {
-        "title": "Évolution des Nœuds",
-        "total": "Total",
-        "active": "Actifs"
-      },
-      "capacity": {
-        "title": "Évolution de la Capacité",
-        "total": "Totale",
-        "averageChannel": "Moyenne par canal",
-        "averageNode": "Moyenne par nœud"
-      }
-    },
-    "centrality": {
-      "title": "Métriques de Centralité",
-      "alias": "Alias",
-      "betweenness": "Betweenness",
-      "closeness": "Closeness",
-      "degree": "Degree",
-      "eigenvector": "Eigenvector"
-    },
+    "title": "Réseau Lightning",
+    "totalNodes": "Nombre total de nœuds",
+    "totalChannels": "Nombre total de canaux",
+    "totalCapacity": "Capacité totale",
+    "avgChannelsPerNode": "Canaux par nœud",
+    "capacityHistory": "Évolution de la capacité",
+    "nodesByCountry": "Distribution par pays",
+    "topNodes": "Top des nœuds",
+    "channels": "canaux",
+    "recentChannels": "Canaux récents",
+    "channelId": "ID du canal",
+    "capacity": "Capacité",
+    "status": "Statut",
+    "lastUpdate": "Dernière mise à jour",
     "error": {
       "title": "Erreur",
-      "description": "Une erreur est survenue lors du chargement des données"
+      "fetchFailed": "Impossible de récupérer les données du réseau"
     }
   },
   "footer": {
     "about": "À propos",
-    "description": "DazLng est une plateforme de gestion de nœuds Lightning Network.",
+    "description": "DazLng est une plateforme de gestion de nœuds Lightning Network qui vous aide à gérer votre nœud et vos canaux efficacement.",
     "links": "Liens",
     "help": "Aide",
     "privacy": "Confidentialité",
     "terms": "Conditions",
     "contact": "Contact",
-    "rights": "Tous droits réservés"
+    "rights": "Tous droits réservés.",
+    "daznode": "Obtenez votre nœud !",
+    "links": {
+      "help": "Aide",
+      "about": "À propos",
+      "terms": "Conditions",
+      "getNode": "Obtenez votre nœud !"
+    }
   },
   "daz-ia": {
     "title": "DazIA DazLng",
@@ -206,6 +207,193 @@
       "title": "Paiement via Alby Wallet",
       "scan": "Scannez le QR code pour payer",
       "processing": "Traitement en cours..."
+    }
+  },
+  "Help": {
+    "title": "Centre d'aide",
+    "faq": [
+      {
+        "question": "Qu'est-ce que DazLng ?",
+        "answer": "DazLng est une plateforme de gestion de nœuds Lightning Network qui vous aide à surveiller et optimiser les performances de votre nœud."
+      },
+      {
+        "question": "Comment commencer ?",
+        "answer": "Pour commencer, créez simplement un compte et connectez votre nœud Lightning Network. Notre plateforme vous guidera tout au long du processus de configuration."
+      },
+      {
+        "question": "Quelles fonctionnalités sont disponibles ?",
+        "answer": "DazLng propose diverses fonctionnalités, notamment la surveillance des nœuds, la gestion des canaux, l'analyse du réseau et des recommandations basées sur l'IA via DazIA."
+      },
+      {
+        "question": "Comment fonctionne DazIA ?",
+        "answer": "DazIA est notre assistant IA qui analyse les données de votre nœud et fournit des recommandations personnalisées pour optimiser vos opérations sur le réseau Lightning."
+      }
+    ]
+  },
+  "About": {
+    "title": "À propos de DazLng",
+    "sections": [
+      {
+        "title": "Notre Mission",
+        "content": "DazLng est né de la volonté de simplifier la gestion des nœuds Lightning Network. Notre mission est de rendre le réseau Lightning plus accessible et plus efficace pour tous."
+      },
+      {
+        "title": "Notre Technologie",
+        "content": "Nous utilisons des algorithmes avancés et l'intelligence artificielle pour optimiser la gestion de vos canaux Lightning et maximiser vos revenus."
+      },
+      {
+        "title": "Notre Vision",
+        "content": "Nous aspirons à devenir la plateforme de référence pour la gestion des nœuds Lightning Network, en offrant des outils innovants et une expérience utilisateur exceptionnelle."
+      },
+      {
+        "title": "Notre Équipe",
+        "content": "Notre équipe est composée d'experts passionnés par Bitcoin et le réseau Lightning, déterminés à construire l'avenir des paiements décentralisés."
+      }
+    ],
+    "cta": {
+      "title": "Optimisez votre nœud Lightning",
+      "subtitle": "Découvrez la puissance de DazIA pour votre nœud",
+      "oneShot": "Analyse Ponctuelle",
+      "yearly": "Abonnement Annuel",
+      "bestValue": "Meilleure offre",
+      "features": [
+        "Analyse complète de votre nœud",
+        "Recommandations personnalisées",
+        "Optimisation des canaux",
+        "Support prioritaire"
+      ],
+      "unlimitedAccess": "Accès illimité à toutes les fonctionnalités",
+      "button": "Commencer maintenant"
+    }
+  },
+  "Daznode": {
+    "title": "Obtenez Votre Propre Nœud Lightning !",
+    "description": "Commencez votre aventure sur le Lightning Network avec un nœud Raspberry Pi 5 pré-configuré. Prêt à l'emploi, sécurisé et accompagné.",
+    "promotion": "Offre spéciale : 1 an d'abonnement DazIA Premium inclus !",
+    "features": {
+      "preconfigured": "Nœud Pré-configuré",
+      "preconfiguredDesc": "Votre nœud est entièrement configuré et prêt à l'emploi sur un Raspberry Pi 5",
+      "balance": "Solde Initial",
+      "balanceDesc": "Démarrez avec 50 000 sats déjà chargés sur votre nœud",
+      "support": "Support Expert",
+      "supportDesc": "2 semaines de support dédié pour vous aider à démarrer",
+      "delivery": "Livraison Rapide",
+      "deliveryDesc": "Recevez votre nœud sous 10 jours",
+      "subscription": "Abonnement Premium",
+      "subscriptionDesc": "1 an d'abonnement DazIA Premium offert (valeur : 100 000 sats)"
+    },
+    "specsTitle": "Spécifications Techniques",
+    "specs": {
+      "hardware": "Matériel",
+      "hardwareDesc": "Raspberry Pi 5 avec 8 Go de RAM, SSD 1 To et solution de refroidissement personnalisée",
+      "software": "Logiciel",
+      "softwareDesc": "Dernière implémentation LND avec notre interface de gestion personnalisée",
+      "security": "Sécurité",
+      "securityDesc": "Configuration Linux renforcée avec stockage chiffré et démarrage sécurisé"
+    },
+    "orderTitle": "Prêt à Rejoindre le Lightning Network ?",
+    "orderDescription": "Obtenez votre nœud pré-configuré avec tout ce dont vous avez besoin pour commencer",
+    "price": "500 000 sats",
+    "priceDescription": "Paiement unique incluant le matériel, la configuration, le support et 1 an d'abonnement Premium",
+    "orderButton": "Commander Votre Nœud",
+    "payment": {
+      "title": "Paiement via Alby Wallet",
+      "scan": "Scannez le QR code pour payer",
+      "processing": "Traitement en cours..."
+    },
+    "shipping": {
+      "title": "Informations de livraison",
+      "name": "Nom complet",
+      "address": "Adresse",
+      "city": "Ville",
+      "zipCode": "Code postal",
+      "country": "Pays",
+      "phone": "Téléphone",
+      "email": "Email",
+      "submit": "Confirmer la commande",
+      "success": "Commande confirmée ! Nous vous contacterons bientôt pour la livraison."
+    }
+  },
+  "help": {
+    "title": "Centre d'Aide",
+    "contact": {
+      "title": "Besoin d'aide ?",
+      "description": "Notre équipe est disponible 7j/7 pour vous accompagner dans votre aventure Lightning Network.",
+      "email": "support@dazlng.com",
+      "phone": "+33 1 23 45 67 89",
+      "chat": "Chat Telegram",
+      "button": "Contacter le Support"
+    },
+    "sections": {
+      "daznode": {
+        "title": "Service Daznode",
+        "delivery": {
+          "question": "Comment se déroule la livraison du Daznode ?",
+          "answer": "La livraison de votre Daznode est effectuée sous 10 jours ouvrés après confirmation de votre paiement. Nous vous envoyons un email de suivi avec le numéro de tracking. Le colis est assuré et nécessite une signature à la réception."
+        },
+        "package": {
+          "question": "Que contient le package Daznode ?",
+          "answer": "Votre package Daznode comprend : un Raspberry Pi 5 (8GB RAM), un SSD 1To, une solution de refroidissement personnalisée, un boîtier sécurisé, un guide d'installation rapide, et tous les câbles nécessaires. Le nœud est pré-configuré avec le logiciel LND et 50 000 sats pré-chargés."
+        },
+        "installation": {
+          "question": "Comment installer mon Daznode ?",
+          "answer": "L'installation est simple grâce à notre configuration plug-and-play : 1) Connectez votre Daznode à Internet via Ethernet, 2) Branchez l'alimentation, 3) Accédez à l'interface web via l'adresse fournie, 4) Suivez l'assistant de configuration initial. Notre équipe est disponible pour vous guider par visioconférence si nécessaire."
+        }
+      },
+      "support": {
+        "title": "Support Technique",
+        "included": {
+          "question": "Quel support est inclus avec mon Daznode ?",
+          "answer": "Vous bénéficiez de 2 semaines de support dédié après la réception de votre nœud. Cela inclut : assistance à l'installation, configuration des canaux, optimisation des paramètres, et résolution des problèmes techniques. Le support est disponible par email, chat ou visioconférence."
+        },
+        "channels": {
+          "question": "Comment gérer mes canaux Lightning ?",
+          "answer": "Notre interface intuitive vous permet de gérer vos canaux facilement. Nous vous guidons dans la création de vos premiers canaux et vous conseillons sur les meilleures stratégies de connexion au réseau. L'abonnement DazIA Premium inclus vous fournit des recommandations d'optimisation."
+        },
+        "security": {
+          "question": "Comment sécuriser mon nœud ?",
+          "answer": "Votre Daznode est livré avec une configuration Linux renforcée et un stockage chiffré. Nous vous accompagnons dans la mise en place des sauvegardes et la sécurisation de vos clés. Un guide complet de sécurité est fourni."
+        }
+      },
+      "subscription": {
+        "title": "Abonnement et Services",
+        "premium": {
+          "question": "Que comprend l'abonnement DazIA Premium inclus ?",
+          "answer": "L'abonnement d'un an à DazIA Premium inclut : analyses personnalisées de votre réseau, recommandations d'optimisation des canaux, alertes en temps réel, rapports hebdomadaires de performance, et accès prioritaire au support technique."
+        },
+        "renewal": {
+          "question": "Comment renouveler mon abonnement ?",
+          "answer": "Un mois avant l'expiration de votre abonnement Premium, vous recevrez un email avec les options de renouvellement. Le renouvellement peut se faire directement depuis votre tableau de bord avec un paiement Lightning."
+        },
+        "upgrade": {
+          "question": "Puis-je upgrader mon nœud ?",
+          "answer": "Oui, nous proposons des options d'upgrade matériel et logiciel. Notre équipe vous conseille sur les meilleures options selon vos besoins et peut effectuer les mises à niveau à distance ou vous guider dans le processus."
+        }
+      }
+    }
+  },
+  "Auth": {
+    "signInWithLightning": "Connexion avec Lightning",
+    "signInDescription": "Connectez-vous facilement et en toute sécurité avec votre nœud Lightning. Signez simplement le message unique ci-dessous avec votre nœud.",
+    "howToSign": "Comment signer les messages ?",
+    "copy": "Copier le message",
+    "copied": "Message copié !",
+    "messageCopied": "Message copié dans le presse-papiers",
+    "pastePubkey": "Collez votre clé publique ici",
+    "pasteSignature": "Collez votre signature ici",
+    "signIn": "Se connecter",
+    "signingIn": "Connexion en cours...",
+    "signInSuccess": "Connexion réussie !",
+    "timeRemaining": "Temps restant",
+    "error": {
+      "invalidSignature": "Signature invalide",
+      "expired": "Message expiré",
+      "unknown": "Une erreur est survenue",
+      "copyFailed": "Impossible de copier le message",
+      "missingFields": "Veuillez remplir tous les champs",
+      "invalidMessage": "Format de message invalide",
+      "invalidPubkey": "Clé publique invalide",
+      "invalidFormat": "Format de signature invalide"
     }
   }
 }

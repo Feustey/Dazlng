@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { headers } from "next/headers";
 import { connectToDatabase } from "@/app/lib/db";
 import { Session } from "@/app/lib/models/Session";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const sessionId = cookies().get("session_id")?.value;
+    const headersList = headers();
+    const sessionId = headersList.get("x-session-id");
 
     if (!sessionId) {
       return NextResponse.json({ error: "Non authentifié" }, { status: 401 });

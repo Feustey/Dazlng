@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://dazlng.com
+
+# Sitemaps
+Sitemap: https://dazlng.com/sitemap.xml 

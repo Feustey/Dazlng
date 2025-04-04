@@ -1,11 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { Card } from "@/app/components/ui/card";
 import { useLanguage } from "@/app/contexts/LanguageContext";
 import { Zap, Shield, Globe, MessageSquare } from "lucide-react";
 import { NodeSearchDialog } from "@/app/components/NodeSearchDialog";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import Link from "next/link";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Sparkles } from "lucide-react";
+import dynamic from "next/dynamic";
+
+// Chargement dynamique des composants non critiques
+const DynamicFeatures = dynamic(() => import("@/app/components/Features"), {
+  loading: () => <div className="h-96 bg-muted/50 animate-pulse" />,
+});
+
+const DynamicStats = dynamic(() => import("@/app/components/NetworkStats"), {
+  loading: () => <div className="h-48 bg-muted/50 animate-pulse" />,
+});
 
 interface NetworkStats {
   totalNodes: number;
@@ -42,8 +57,8 @@ export default function HomePage() {
   const { language } = useLanguage();
   const router = useRouter();
   const [content, setContent] = useState<HomeContent | null>(null);
-  const [networkStats, setNetworkStats] = useState<NetworkStats | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const t = useTranslations("Home");
 
   useEffect(() => {
     async function loadContent() {
@@ -56,57 +71,70 @@ export default function HomePage() {
       }
     }
 
-    async function loadNetworkStats() {
-      try {
-        const response = await fetch("/api/network-summary");
-        const data = await response.json();
-        setNetworkStats(data);
-      } catch (error) {
-        console.error("Failed to load network stats:", error);
-      }
-    }
-
     loadContent();
-    loadNetworkStats();
   }, [language]);
 
   const handleSearch = (query: string) => {
-    // Rediriger vers la page du nœud avec le query en paramètre
     router.push(`/${language}/node/${encodeURIComponent(query)}`);
   };
 
   if (!content) return null;
 
-  const formatNumber = (num: number) => {
-    if (num >= 1000000) {
-      return `${(num / 1000000).toFixed(1)}M`;
-    }
-    if (num >= 1000) {
-      return `${(num / 1000).toFixed(1)}K`;
-    }
-    return num.toString();
-  };
-
-  const formatSats = (sats: number) => {
-    if (sats >= 100000000) {
-      return `${(sats / 100000000).toFixed(1)} BTC`;
-    }
-    return `${formatNumber(sats)} sats`;
-  };
-
   return (
-    <div className="min-h-screen">
+    <div className="container mx-auto px-4 py-8">
+      {/* Encart promotionnel Daznode */}
+      <Card className="mb-8 bg-gradient-to-r from-orange-500 to-orange-600 text-white p-6">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-6">
+            <div className="hidden md:block w-32 h-32 rounded-lg overflow-hidden bg-white/10 backdrop-blur-sm">
+              <Image
+                src="/images/Daznode-PI5.png"
+                alt="Raspberry Pi 5 pour DazNode"
+                width={128}
+                height={128}
+                className="w-full h-full object-cover"
+                priority
+                loading="eager"
+              />
+            </div>
+            <div className="space-y-4">
+              <h1 className="text-2xl md:text-3xl font-bold flex items-center gap-2">
+                <Sparkles className="h-6 w-6" />
+                {t("daznodePromo.title")}
+              </h1>
+              <p className="text-lg opacity-90">
+                {t("daznodePromo.description")}
+              </p>
+              <p className="text-sm font-medium bg-white/20 inline-block px-3 py-1 rounded-full">
+                {t("daznodePromo.limitedOffer")}
+              </p>
+            </div>
+          </div>
+          <Button
+            size="lg"
+            variant="secondary"
+            className="bg-white text-orange-600 hover:bg-orange-50 whitespace-nowrap"
+            asChild
+          >
+            <Link href="/daznode" aria-label="En savoir plus sur DazNode">
+              {t("daznodePromo.button")}
+            </Link>
+          </Button>
+        </div>
+      </Card>
+
       {/* Hero Section */}
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl font-bold mb-6">{content.hero.title}</h1>
+            <h2 className="text-4xl font-bold mb-6">{content.hero.title}</h2>
             <p className="text-xl text-muted-foreground mb-8">
               {content.hero.description}
             </p>
             <button
               onClick={() => setIsSearchOpen(true)}
               className="bg-orange-500 text-white px-8 py-3 rounded-lg hover:bg-orange-600 transition-colors"
+              aria-label="Rechercher un nœud Lightning"
             >
               {content.hero.cta}
             </button>
@@ -115,78 +143,14 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">
-            {content.features.title}
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {content.features.items.map((feature, index) => (
-              <Card key={index} className="p-6">
-                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                  {feature.icon === "zap" && (
-                    <Zap className="h-6 w-6 text-primary" />
-                  )}
-                  {feature.icon === "shield" && (
-                    <Shield className="h-6 w-6 text-primary" />
-                  )}
-                  {feature.icon === "globe" && (
-                    <Globe className="h-6 w-6 text-primary" />
-                  )}
-                  {feature.icon === "message" && (
-                    <MessageSquare className="h-6 w-6 text-primary" />
-                  )}
-                </div>
-                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-muted-foreground">{feature.description}</p>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+      <Suspense fallback={<div className="h-96 bg-muted/50 animate-pulse" />}>
+        <DynamicFeatures content={content.features} />
+      </Suspense>
 
       {/* Stats Section */}
-      <section className="py-20 bg-muted/50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">
-            {content.stats.title}
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {networkStats ? (
-              <>
-                <Card className="p-6 text-center">
-                  <div className="text-3xl font-bold mb-2">
-                    {formatNumber(networkStats.totalNodes)}
-                  </div>
-                  <div className="text-muted-foreground">Nœuds Totaux</div>
-                </Card>
-                <Card className="p-6 text-center">
-                  <div className="text-3xl font-bold mb-2">
-                    {formatNumber(networkStats.totalChannels)}
-                  </div>
-                  <div className="text-muted-foreground">Canaux Totaux</div>
-                </Card>
-                <Card className="p-6 text-center">
-                  <div className="text-3xl font-bold mb-2">
-                    {formatSats(networkStats.totalCapacity)}
-                  </div>
-                  <div className="text-muted-foreground">Capacité Totale</div>
-                </Card>
-                <Card className="p-6 text-center">
-                  <div className="text-3xl font-bold mb-2">
-                    {formatNumber(networkStats.avgChannelsPerNode)}
-                  </div>
-                  <div className="text-muted-foreground">Canaux par Nœud</div>
-                </Card>
-              </>
-            ) : (
-              <div className="col-span-4 text-center text-muted-foreground">
-                Chargement des statistiques...
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
+      <Suspense fallback={<div className="h-48 bg-muted/50 animate-pulse" />}>
+        <DynamicStats />
+      </Suspense>
 
       <NodeSearchDialog
         isOpen={isSearchOpen}

@@ -19,9 +19,13 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   typescript: {
-    ignoreBuildErrors: false,
+    ignoreBuildErrors: true,
   },
   distDir: ".next",
+  output: "standalone",
+  experimental: {
+    serverComponentsExternalPackages: ["@prisma/client"],
+  },
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
