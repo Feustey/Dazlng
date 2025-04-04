@@ -1,54 +1,13 @@
 import { PrismaClient } from "@prisma/client";
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
-};
+declare global {
+  var prisma: PrismaClient | undefined;
+}
 
-const prismaClientSingleton = () => {
-  const url = process.env.MONGODB_URI;
-  console.log("Tentative de connexion à MongoDB...");
-  console.log(
-    "URL de connexion MongoDB:",
-    url ? url.replace(/\/\/[^:]+:[^@]+@/, "//***:***@") : "non définie"
-  );
-
-  if (!url) {
-    console.error(
-      "ERREUR: L'URL de connexion MongoDB n'est pas définie dans les variables d'environnement"
-    );
-    throw new Error("L'URL de connexion MongoDB n'est pas définie");
-  }
-
-  try {
-    const client = new PrismaClient({
-      log: ["query", "error", "warn", "info"],
-      datasources: {
-        db: {
-          url: url,
-        },
-      },
-    });
-
-    // Test immédiat de la connexion
-    client
-      .$connect()
-      .then(() => console.log("Connexion à MongoDB établie avec succès"))
-      .catch((error) => {
-        console.error("ERREUR lors de la connexion initiale:", error);
-        throw error;
-      });
-
-    return client;
-  } catch (error) {
-    console.error("ERREUR lors de la création du client Prisma:", error);
-    throw error;
-  }
-};
-
-export const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
+export const prisma = globalThis.prisma || new PrismaClient();
 
 if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
+  globalThis.prisma = prisma;
 }
 
 // Fonction pour tester la connexion
