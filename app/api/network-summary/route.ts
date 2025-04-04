@@ -1,5 +1,7 @@
+"use server";
+
+import { getNetworkSummary } from "@/app/services/network.service";
 import { NextResponse } from "next/server";
-import mcpService from "@/app/lib/mcpService";
 import { mockNetworkSummary } from "@/app/lib/mockData";
 
 // Activer le mode développement pour utiliser les données fictives
@@ -7,14 +9,13 @@ const USE_MOCK_DATA = process.env.NODE_ENV === "development";
 
 export async function GET() {
   try {
-    // Tentez d'abord d'obtenir les données réelles
-    const summary = await mcpService.getNetworkSummary();
+    const summary = await getNetworkSummary();
     console.log(
       "API network-summary route: résumé réseau récupéré avec succès"
     );
     return NextResponse.json(summary);
   } catch (error) {
-    console.error("Erreur lors de la récupération du résumé du réseau:", error);
+    console.error("Error fetching network summary:", error);
 
     // Si mode développement, retournez des données fictives
     if (USE_MOCK_DATA) {

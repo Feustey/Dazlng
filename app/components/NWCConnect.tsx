@@ -3,7 +3,7 @@
 import * as React from "react";
 
 import { useState } from "react";
-import { NWCConnector } from "@/lib/nwc";
+import { NWCConnector } from "../lib/nwc";
 
 interface NWCConnectProps {
   onConnect: (connector: NWCConnector) => void;

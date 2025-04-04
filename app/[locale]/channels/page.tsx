@@ -4,8 +4,9 @@ import { Card } from "@/app/components/ui/card";
 import { useTranslations } from "next-intl";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
-import { Search, ChevronDown, TrendingDown } from "lucide-react";
-import { useState } from "react";
+import { Search, ChevronDown, TrendingDown, TrendingUp } from "lucide-react";
+import { useState, useEffect } from "react";
+import { NetworkStats } from "@/app/types/network";
 
 interface Node {
   pubkey: string;
@@ -24,26 +25,27 @@ export default function ChannelsPage() {
   const [searchResults, setSearchResults] = useState<Node[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [networkStats, setNetworkStats] = useState<NetworkStats | null>(null);
 
-  const stats = {
-    nodes: {
-      count: 11516,
-      change: -1.98,
-    },
-    channels: {
-      count: 42698,
-      change: -4.8,
-    },
-    capacity: {
-      btc: 4342.3,
-      usd: 358630639.6,
-      change: -8,
-    },
-    countdown: {
-      blocks: 988484,
-      percentage: 1.2,
-    },
-  };
+  useEffect(() => {
+    const fetchNetworkStats = async () => {
+      try {
+        const response = await fetch("/api/network/stats");
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        const data = await response.json();
+        setNetworkStats(data);
+      } catch (err) {
+        console.error("Erreur lors de la récupération des statistiques:", err);
+        setError("Impossible de charger les statistiques du réseau.");
+      }
+    };
+
+    fetchNetworkStats();
+    const interval = setInterval(fetchNetworkStats, 300000); // Rafraîchir toutes les 5 minutes
+    return () => clearInterval(interval);
+  }, []);
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
@@ -134,12 +136,21 @@ export default function ChannelsPage() {
             <h2 className="text-lg font-semibold mb-4">Number of Nodes</h2>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold">
-                {stats.nodes.count.toLocaleString()}
+                {networkStats?.totalNodes.toLocaleString() || "..."}
               </span>
-              <div className="flex items-center text-red-500">
-                <TrendingDown className="h-4 w-4" />
-                <span>{stats.nodes.change}%</span>
-              </div>
+              {networkStats && networkStats.topNodes.length > 0 && (
+                <div className="flex items-center text-green-500">
+                  <TrendingUp className="h-4 w-4" />
+                  <span>
+                    +
+                    {(
+                      (networkStats.topNodes.length / networkStats.totalNodes) *
+                      100
+                    ).toFixed(1)}
+                    %
+                  </span>
+                </div>
+              )}
             </div>
             <Button variant="ghost" className="mt-4">
               <ChevronDown className="h-4 w-4" />
@@ -152,12 +163,22 @@ export default function ChannelsPage() {
             <h2 className="text-lg font-semibold mb-4">Number of Channels</h2>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold">
-                {stats.channels.count.toLocaleString()}
+                {networkStats?.totalChannels.toLocaleString() || "..."}
               </span>
-              <div className="flex items-center text-red-500">
-                <TrendingDown className="h-4 w-4" />
-                <span>{stats.channels.change}%</span>
-              </div>
+              {networkStats && networkStats.recentChannels.length > 0 && (
+                <div className="flex items-center text-green-500">
+                  <TrendingUp className="h-4 w-4" />
+                  <span>
+                    +
+                    {(
+                      (networkStats.recentChannels.length /
+                        networkStats.totalChannels) *
+                      100
+                    ).toFixed(1)}
+                    %
+                  </span>
+                </div>
+              )}
             </div>
             <Button variant="ghost" className="mt-4">
               <ChevronDown className="h-4 w-4" />
@@ -171,15 +192,31 @@ export default function ChannelsPage() {
             <div className="flex flex-col">
               <div className="flex items-baseline gap-2">
                 <span className="text-3xl font-bold">
-                  {stats.capacity.btc.toLocaleString()} BTC
+                  {networkStats?.totalCapacity
+                    ? (networkStats.totalCapacity / 100000000).toFixed(2)
+                    : "..."}{" "}
+                  BTC
                 </span>
-                <div className="flex items-center text-red-500">
-                  <TrendingDown className="h-4 w-4" />
-                  <span>{stats.capacity.change}%</span>
-                </div>
+                {networkStats && networkStats.capacityHistory.length > 0 && (
+                  <div className="flex items-center text-green-500">
+                    <TrendingUp className="h-4 w-4" />
+                    <span>
+                      +
+                      {(
+                        (networkStats.capacityHistory[0].value /
+                          networkStats.totalCapacity) *
+                        100
+                      ).toFixed(1)}
+                      %
+                    </span>
+                  </div>
+                )}
               </div>
               <span className="text-muted-foreground">
-                ${stats.capacity.usd.toLocaleString()}
+                $
+                {networkStats?.totalCapacity
+                  ? (networkStats.totalCapacity * 0.00004).toLocaleString()
+                  : "..."}
               </span>
             </div>
             <Button variant="ghost" className="mt-4">
@@ -190,13 +227,17 @@ export default function ChannelsPage() {
 
         <Card className="p-6">
           <div className="flex flex-col">
-            <h2 className="text-lg font-semibold mb-4">Node Countdown</h2>
+            <h2 className="text-lg font-semibold mb-4">Average Channel Size</h2>
             <div className="flex flex-col">
               <span className="text-3xl font-bold">
-                {stats.countdown.blocks.toLocaleString()}
+                {networkStats?.avgCapacityPerChannel
+                  ? (networkStats.avgCapacityPerChannel / 100000000).toFixed(4)
+                  : "..."}{" "}
+                BTC
               </span>
               <span className="text-muted-foreground">
-                {stats.countdown.percentage}%
+                {networkStats?.avgChannelsPerNode.toFixed(1) || "..."}{" "}
+                channels/node
               </span>
             </div>
             <Button variant="ghost" className="mt-4">

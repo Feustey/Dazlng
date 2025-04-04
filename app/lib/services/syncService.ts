@@ -40,10 +40,39 @@ export class SyncService {
       const nodes = await mcpService.getAllNodes();
 
       for (const node of nodes) {
+        const nodeData = {
+          pubkey: node.pubkey,
+          alias: node.alias,
+          platform: node.platform,
+          version: node.version,
+          color: "#000000",
+          address: "",
+          total_fees: 0,
+          avg_fee_rate_ppm: 0,
+          total_capacity: node.total_capacity,
+          total_volume: 0,
+          active_channels: node.active_channels,
+          total_peers: node.total_peers,
+          uptime: node.uptime,
+          opened_channel_count: 0,
+          closed_channel_count: 0,
+          pending_channel_count: 0,
+          avg_capacity: 0,
+          avg_fee_rate: 0,
+          avg_base_fee_rate: 0,
+          betweenness_rank: 0,
+          eigenvector_rank: 0,
+          closeness_rank: 0,
+          weighted_betweenness_rank: 0,
+          weighted_closeness_rank: 0,
+          weighted_eigenvector_rank: 0,
+          last_update: new Date().toISOString(),
+        };
+
         await prisma.node.upsert({
           where: { pubkey: node.pubkey },
-          create: node,
-          update: node,
+          create: nodeData,
+          update: nodeData,
         });
       }
 
@@ -57,30 +86,55 @@ export class SyncService {
   async syncPeersOfPeers(): Promise<void> {
     try {
       await connectToDatabase();
-      const nodes = await prisma.node.findMany();
+      const nodes = await mcpService.getAllNodes();
 
       for (const node of nodes) {
         const { peers_of_peers } = await mcpService.getPeersOfPeers(
           node.pubkey
         );
 
-        await prisma.peerOfPeer.deleteMany({
-          where: { nodePubkey: node.pubkey },
+        const peersData = peers_of_peers.map((peer) => ({
+          nodePubkey: node.pubkey,
+          peerPubkey: peer.peerPubkey,
+          alias: peer.alias,
+          platform: "",
+          version: "",
+          color: "#000000",
+          address: "",
+          total_fees: 0,
+          avg_fee_rate_ppm: 0,
+          total_capacity: peer.total_capacity,
+          total_volume: 0,
+          active_channels: peer.active_channels,
+          total_peers: peer.total_peers,
+          uptime: 0,
+          opened_channel_count: 0,
+          closed_channel_count: 0,
+          pending_channel_count: 0,
+          avg_capacity: 0,
+          avg_fee_rate: 0,
+          avg_base_fee_rate: 0,
+          betweenness_rank: 0,
+          eigenvector_rank: 0,
+          closeness_rank: 0,
+          weighted_betweenness_rank: 0,
+          weighted_closeness_rank: 0,
+          weighted_eigenvector_rank: 0,
+          last_update: new Date().toISOString(),
+        }));
+
+        await prisma.peerOfPeer.createMany({
+          data: peersData,
+          skipDuplicates: true,
         });
-        if (peers_of_peers.length > 0) {
-          const peersToInsert = peers_of_peers.map((peer) => ({
-            ...peer,
-            nodePubkey: node.pubkey,
-          }));
-          await prisma.peerOfPeer.createMany({
-            data: peersToInsert,
-          });
-        }
       }
 
-      console.log("Pairs synchronisés avec succès");
+      console.log("Pairs de pairs synchronisés");
     } catch (error) {
-      console.error("Erreur lors de la synchronisation des pairs:", error);
+      console.error(
+        "Erreur lors de la synchronisation des pairs de pairs:",
+        error
+      );
       throw error;
     }
   }

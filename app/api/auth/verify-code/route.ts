@@ -6,15 +6,11 @@ import { VerificationCode } from "@/app/lib/models/VerificationCode";
 import { Session } from "@/app/lib/models/Session";
 import { SESSION_CONFIG, getSessionExpiry } from "@/app/config/session";
 import { rateLimit } from "@/app/middleware/rateLimit";
-import {
-  dynamic,
-  runtime,
-  errorResponse,
-  successResponse,
-} from "@/app/api/config";
+import { dynamic, errorResponse, successResponse } from "@/app/api/config";
 import { NextRequest } from "next/server";
 
-export { dynamic, runtime };
+export { dynamic };
+export const runtime = "edge" as const;
 
 // Configuration spécifique pour le rate limiting de la vérification
 const verifyCodeRateLimit = {

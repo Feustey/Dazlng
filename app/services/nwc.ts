@@ -1,5 +1,57 @@
 import NDK from "@nostr-dev-kit/ndk";
-import { NWC } from "@nostr/wallet-connect";
+
+interface NWCResponse {
+  result: any;
+  error?: string;
+}
+
+interface NWCRequest {
+  method: string;
+  params: Record<string, any>;
+}
+
+class NWC {
+  private ndk: NDK;
+  private walletPubkey: string;
+  private secret: string;
+  private eventHandlers: Map<string, ((data: any) => void)[]> = new Map();
+
+  constructor(config: { ndk: NDK; walletPubkey: string; secret: string }) {
+    this.ndk = config.ndk;
+    this.walletPubkey = config.walletPubkey;
+    this.secret = config.secret;
+  }
+
+  async connect(): Promise<void> {
+    // Implémentation de la connexion
+  }
+
+  async disconnect(): Promise<void> {
+    // Implémentation de la déconnexion
+  }
+
+  async request(request: NWCRequest): Promise<NWCResponse> {
+    // Implémentation de la requête
+    return { result: null };
+  }
+
+  on(event: string, callback: (data: any) => void): void {
+    if (!this.eventHandlers.has(event)) {
+      this.eventHandlers.set(event, []);
+    }
+    this.eventHandlers.get(event)?.push(callback);
+  }
+
+  off(event: string, callback: (data: any) => void): void {
+    const handlers = this.eventHandlers.get(event);
+    if (handlers) {
+      const index = handlers.indexOf(callback);
+      if (index > -1) {
+        handlers.splice(index, 1);
+      }
+    }
+  }
+}
 
 export interface NWCConfig {
   relayUrl: string;
@@ -37,7 +89,6 @@ export class NWCService {
   async disconnect(): Promise<void> {
     try {
       await this.nwc.disconnect();
-      await this.ndk.disconnect();
     } catch (error) {
       console.error("Erreur de déconnexion NWC:", error);
       throw error;

@@ -1,7 +1,20 @@
 "use client";
 
 import { NDKNip07Signer } from "@nostr-dev-kit/ndk";
-import { WebLNProvider } from "@webbtc/webln-types";
+
+interface WebLNBalance {
+  balance: number;
+}
+
+interface WebLNInvoice {
+  paymentRequest: string;
+}
+
+interface WebLNProvider {
+  getBalance(): Promise<WebLNBalance>;
+  sendPayment(paymentRequest: string): Promise<void>;
+  makeInvoice(args: { amount: number; memo?: string }): Promise<WebLNInvoice>;
+}
 
 export class NWCConnector {
   private connectionString: string;
@@ -23,10 +36,13 @@ export class NWCConnector {
         throw new Error("Secret manquant dans la chaîne de connexion NWC");
       }
 
-      // TODO: Implémenter la logique de connexion NWC
-      console.log("Connexion NWC établie avec le pubkey:", pubkey);
-
-      return true;
+      if (typeof window !== "undefined" && "webln" in window) {
+        this.webln = (window as any).webln as WebLNProvider;
+        console.log("Connexion NWC établie avec le pubkey:", pubkey);
+        return true;
+      } else {
+        throw new Error("WebLN non disponible dans le navigateur");
+      }
     } catch (error) {
       console.error("Erreur lors de la connexion NWC:", error);
       throw error;
@@ -38,9 +54,8 @@ export class NWCConnector {
       if (!this.webln) {
         throw new Error("Non connecté à NWC");
       }
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const response = await this.webln!.getBalance();
-      return response.balance || 0;
+      const response = await this.webln.getBalance();
+      return response.balance;
     } catch (error) {
       console.error("Erreur lors de la récupération du solde:", error);
       throw error;
@@ -52,8 +67,7 @@ export class NWCConnector {
       if (!this.webln) {
         throw new Error("Non connecté à NWC");
       }
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      await this.webln!.sendPayment(invoice);
+      await this.webln.sendPayment(invoice);
     } catch (error) {
       console.error("Erreur lors du paiement:", error);
       throw error;
@@ -65,12 +79,10 @@ export class NWCConnector {
       if (!this.webln) {
         throw new Error("Non connecté à NWC");
       }
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const response = await this.webln!.makeInvoice({
+      const response = await this.webln.makeInvoice({
         amount,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        description: description || "",
-      } as any);
+        memo: description || "",
+      });
       return response.paymentRequest;
     } catch (error) {
       console.error("Erreur lors de la création de la facture:", error);

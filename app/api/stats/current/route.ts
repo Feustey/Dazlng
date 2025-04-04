@@ -1,5 +1,7 @@
+"use server";
+
+import { getCurrentStats } from "@/app/services/network.service";
 import { NextResponse } from "next/server";
-import mcpService from "@/app/lib/mcpService";
 import { mockNetworkStats } from "@/app/lib/mockData";
 
 // Activer le mode développement pour utiliser les données fictives
@@ -8,16 +10,13 @@ const USE_MOCK_DATA = process.env.NODE_ENV === "development";
 export async function GET() {
   try {
     // Tentez d'abord d'obtenir les données réelles
-    const stats = await mcpService.getCurrentStats();
+    const stats = await getCurrentStats();
     console.log(
       "API stats/current route: statistiques actuelles récupérées avec succès"
     );
     return NextResponse.json(stats);
   } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des statistiques actuelles:",
-      error
-    );
+    console.error("Error fetching current stats:", error);
 
     // Si mode développement, retournez des données fictives
     if (USE_MOCK_DATA) {
@@ -28,15 +27,9 @@ export async function GET() {
     }
 
     // Sinon, retournez une erreur
-    return new NextResponse(
-      JSON.stringify({
-        message: "Erreur lors de la récupération des statistiques actuelles",
-        error: error instanceof Error ? error.message : String(error),
-      }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
+    return NextResponse.json(
+      { error: "Failed to fetch current stats" },
+      { status: 500 }
     );
   }
 }

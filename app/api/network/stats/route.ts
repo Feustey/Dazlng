@@ -1,5 +1,7 @@
-import { NextResponse } from "next/server";
+"use server";
+
 import { getNetworkStats } from "@/app/services/network.service";
+import { NextResponse } from "next/server";
 
 export async function GET() {
   try {

@@ -5,12 +5,12 @@ import { withAccelerate } from "@prisma/extension-accelerate";
 
 declare global {
   // eslint-disable-next-line no-var
-  var prisma: PrismaClient | undefined;
+  var prisma: ReturnType<typeof prismaClientSingleton> | undefined;
 }
 
 // Configuration optimisée du pool de connexions avec IP statiques
 const prismaClientSingleton = () => {
-  return new PrismaClient({
+  const client = new PrismaClient({
     // Configuration du timeout du pool de connexions (20 secondes)
     // Cela permet d'attendre plus longtemps une connexion disponible en cas de charge élevée
     datasources: {
@@ -19,7 +19,9 @@ const prismaClientSingleton = () => {
         url: process.env.DATABASE_URL + "?pool_timeout=20&connection_limit=10",
       },
     },
-  }).$extends(withAccelerate());
+  });
+
+  return client.$extends(withAccelerate());
 };
 
 export const prisma = globalThis.prisma ?? prismaClientSingleton();
@@ -64,7 +66,7 @@ export async function monitorConnectionPool() {
 
 export async function invalidateCache(tags: string[]) {
   try {
-    await prisma.$accelerate.invalidate({ tags });
+    await (prisma as any).$accelerate.invalidate({ tags });
     console.log(`Cache invalidé pour les tags: ${tags.join(", ")}`);
   } catch (error) {
     if (error instanceof Error && "code" in error && error.code === "P6003") {
@@ -80,7 +82,7 @@ export async function invalidateCache(tags: string[]) {
 
 export async function invalidateAllCache() {
   try {
-    await prisma.$accelerate.invalidateAll();
+    await (prisma as any).$accelerate.invalidateAll();
     console.log("Cache global invalidé");
   } catch (error) {
     if (error instanceof Error && "code" in error && error.code === "P6003") {

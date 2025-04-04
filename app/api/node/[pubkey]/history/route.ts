@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { connectToDatabase } from "@/app/lib/db";
 import { prisma } from "@/app/lib/db";
+
+export const runtime = "edge";
 
 export async function GET(
   request: Request,
@@ -8,7 +9,7 @@ export async function GET(
 ) {
   try {
     // Utiliser Prisma pour récupérer l'historique
-    const nodeHistory = await prisma.node.findMany({
+    const nodeHistory = await (prisma as any).node.findMany({
       where: {
         pubkey: params.pubkey,
       },

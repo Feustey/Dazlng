@@ -1,21 +1,26 @@
-import { NextResponse } from "next/server";
-import mcpService from "@/app/lib/mcpService";
+"use server";
 
-export async function GET() {
+import { getPeersOfPeers } from "@/app/services/network.service";
+import { NextResponse } from "next/server";
+
+export async function GET(request: Request) {
   try {
-    const nodePubkey = process.env.NODE_PUBKEY;
+    const url = new URL(request.url);
+    const nodePubkey = url.searchParams.get("nodePubkey");
+
     if (!nodePubkey) {
-      throw new Error(
-        "NODE_PUBKEY non défini dans les variables d'environnement"
+      return NextResponse.json(
+        { error: "Node pubkey is required" },
+        { status: 400 }
       );
     }
 
-    const peersData = await mcpService.getPeersOfPeers(nodePubkey);
+    const peersData = await getPeersOfPeers(nodePubkey);
     return NextResponse.json(peersData);
   } catch (error) {
-    console.error("Erreur lors de la récupération des pairs:", error);
+    console.error("Error fetching peers:", error);
     return NextResponse.json(
-      { error: "Erreur lors de la récupération des pairs" },
+      { error: "Failed to fetch peers" },
       { status: 500 }
     );
   }

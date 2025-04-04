@@ -1,5 +1,7 @@
+"use server";
+
+import { getAllNodes } from "@/app/services/network.service";
 import { NextResponse } from "next/server";
-import mcpService from "../../lib/mcpService";
 import { mockNodes } from "../../lib/mockData";
 
 // Activer le mode développement pour utiliser les données fictives
@@ -8,11 +10,11 @@ const USE_MOCK_DATA = process.env.NODE_ENV === "development";
 export async function GET() {
   try {
     // Tentez d'abord d'obtenir les données réelles
-    const nodes = await mcpService.getAllNodes();
+    const nodes = await getAllNodes();
     console.log(`API nodes route: ${nodes.length} nodes récupérés avec succès`);
     return NextResponse.json(nodes);
   } catch (error) {
-    console.error("Erreur lors de la récupération des nœuds:", error);
+    console.error("Error fetching nodes:", error);
 
     // Si mode développement, retournez des données fictives
     if (USE_MOCK_DATA) {

@@ -1,14 +1,7 @@
 import { prisma } from "../prisma";
+import type { RateLimit as PrismaRateLimit } from "@prisma/client";
 
-export interface RateLimitData {
-  id: string;
-  ip: string;
-  route: string;
-  count: number;
-  resetAt: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
+export type RateLimitData = PrismaRateLimit;
 
 export class RateLimit {
   static async create(
@@ -23,12 +16,12 @@ export class RateLimit {
     ip: string,
     route: string
   ): Promise<RateLimitData | null> {
-    return prisma.rateLimit.findFirst({
-      where: {
-        ip,
-        route,
-      },
-    });
+    const result = await prisma.$queryRaw<RateLimitData[]>`
+      SELECT * FROM "RateLimit"
+      WHERE ip = ${ip} AND route = ${route}
+      LIMIT 1
+    `;
+    return result[0] || null;
   }
 
   static async update(

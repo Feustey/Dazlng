@@ -1,14 +1,10 @@
 import { randomInt } from "crypto";
 import { connectToDatabase } from "@/app/lib/db";
 import { VerificationCode } from "@/app/lib/models/VerificationCode";
-import {
-  dynamic,
-  runtime,
-  errorResponse,
-  successResponse,
-} from "@/app/api/config";
+import { dynamic, errorResponse, successResponse } from "@/app/api/config";
 
-export { dynamic, runtime };
+export { dynamic };
+export const runtime = "edge" as const;
 
 export async function POST(request: Request) {
   try {

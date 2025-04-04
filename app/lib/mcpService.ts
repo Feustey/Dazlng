@@ -95,41 +95,22 @@ const FALLBACK_NODE_ALIAS = "feustey";
 const mcpService = {
   async getAllNodes(): Promise<Node[]> {
     try {
-      // Utilisation d'une transaction pour garantir la cohérence des données
-      const { data: nodes, info } = await prisma.$transaction(
-        async (tx: PrismaClient) => {
-          return tx.node
-            .findMany({
-              select: {
-                pubkey: true,
-                alias: true,
-                platform: true,
-                version: true,
-                total_capacity: true,
-                active_channels: true,
-                total_peers: true,
-                uptime: true,
-              },
-              orderBy: {
-                total_capacity: "desc",
-              },
-              cacheStrategy: {
-                swr: 60, // 1 minute de SWR pour des données fraîches
-                ttl: 300, // 5 minutes de TTL car les nœuds changent fréquemment
-                tags: ["all_nodes"],
-              },
-            })
-            .withAccelerateInfo();
+      // Utilisation de Prisma pour récupérer les nœuds
+      const nodes = await prisma.node.findMany({
+        select: {
+          pubkey: true,
+          alias: true,
+          platform: true,
+          version: true,
+          total_capacity: true,
+          active_channels: true,
+          total_peers: true,
+          uptime: true,
         },
-        {
-          timeout: 10000, // 10 secondes de timeout pour la transaction
-          maxWait: 5000, // 5 secondes d'attente maximale pour une connexion
-        }
-      );
-
-      console.log("Cache status:", info.cacheStatus);
-      console.log("Region:", info.region);
-      console.log("Request ID:", info.requestId);
+        orderBy: {
+          total_capacity: "desc",
+        },
+      });
 
       return nodes;
     } catch (error) {
@@ -167,37 +148,48 @@ const mcpService = {
 
   async getCurrentStats(): Promise<NodeStats> {
     try {
-      // Utilisation d'une transaction pour les statistiques en temps réel
-      const { data: stats, info } = await prisma.$transaction(
-        async (tx: PrismaClient) => {
-          return tx.node
-            .findFirst({
-              orderBy: {
-                timestamp: "desc",
-              },
-              include: {
-                _count: {
-                  select: {
-                    active_channels: true,
-                  },
-                },
-              },
-              cacheStrategy: {
-                swr: 30, // 30 secondes de SWR pour des stats en temps réel
-                ttl: 60, // 1 minute de TTL car les stats changent très fréquemment
-                tags: ["current_stats"],
-              },
-            })
-            .withAccelerateInfo();
+      const stats = await prisma.node.findFirst({
+        orderBy: {
+          timestamp: "desc",
         },
-        {
-          timeout: 5000, // 5 secondes de timeout pour les stats en temps réel
-          maxWait: 2000, // 2 secondes d'attente maximale
-        }
-      );
+        select: {
+          pubkey: true,
+          alias: true,
+          color: true,
+          platform: true,
+          version: true,
+          address: true,
+          total_fees: true,
+          avg_fee_rate_ppm: true,
+          total_capacity: true,
+          active_channels: true,
+          total_volume: true,
+          total_peers: true,
+          uptime: true,
+          opened_channel_count: true,
+          closed_channel_count: true,
+          pending_channel_count: true,
+          avg_capacity: true,
+          avg_fee_rate: true,
+          avg_base_fee_rate: true,
+          betweenness_rank: true,
+          eigenvector_rank: true,
+          closeness_rank: true,
+          weighted_betweenness_rank: true,
+          weighted_closeness_rank: true,
+          weighted_eigenvector_rank: true,
+          timestamp: true,
+        },
+      });
 
-      console.log("Cache status:", info.cacheStatus);
-      return stats;
+      if (!stats) {
+        throw new Error("Aucune statistique trouvée");
+      }
+
+      return {
+        ...stats,
+        last_update: stats.timestamp.toISOString(),
+      };
     } catch (error) {
       console.error("Erreur lors de la récupération des statistiques:", error);
       throw error;
@@ -206,35 +198,25 @@ const mcpService = {
 
   async getHistoricalData(): Promise<HistoricalData[]> {
     try {
-      const { data, info } = await prisma.history
-        .findMany({
-          orderBy: {
-            date: "asc",
-          },
-          select: {
-            date: true,
-            marketCap: true,
-            volume: true,
-          },
-          cacheStrategy: {
-            swr: 900, // 15 minutes de SWR car l'historique change rarement
-            ttl: 3600, // 1 heure de TTL car c'est de l'historique
-            tags: ["historical_data"],
-          },
-        })
-        .withAccelerateInfo();
+      const history = await prisma.history.findMany({
+        orderBy: {
+          date: "asc",
+        },
+        select: {
+          date: true,
+          marketCap: true,
+          volume: true,
+        },
+      });
 
-      console.log("Cache status:", info.cacheStatus);
-      return data.map(
-        (item: { date: Date; marketCap: number; volume: number }) => ({
-          timestamp: item.date.toISOString(),
-          total_fees: 0,
-          total_capacity: item.marketCap,
-          active_channels: 0,
-          total_peers: 0,
-          total_volume: item.volume,
-        })
-      );
+      return history.map((item) => ({
+        timestamp: item.date.toISOString(),
+        total_fees: 0,
+        total_capacity: item.marketCap,
+        active_channels: 0,
+        total_peers: 0,
+        total_volume: item.volume,
+      }));
     } catch (error) {
       console.error(
         "Erreur lors de la récupération des données historiques:",

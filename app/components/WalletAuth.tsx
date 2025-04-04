@@ -1,18 +1,13 @@
 "use client";
 
 import * as React from "react";
-
+import { WebLNProvider } from "@webbtc/webln-types";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 declare global {
   interface Window {
-    webln?: {
-      enabled: boolean;
-      enable: () => Promise<void>;
-      getInfo: () => Promise<{ node: { pubkey: string } }>;
-      signMessage: (message: string) => Promise<{ signature: string }>;
-    };
+    webln?: WebLNProvider;
   }
 }
 
@@ -29,12 +24,23 @@ export default function WalletAuth() {
           return;
         }
 
-        if (!window.webln.enabled) {
+        try {
           await window.webln.enable();
+        } catch (error) {
+          setError("Veuillez autoriser l'accès à votre portefeuille Alby");
+          return;
         }
 
         const { node } = await window.webln.getInfo();
         const message = "Authentification DazLng " + new Date().toISOString();
+
+        if (!window.webln.signMessage) {
+          setError(
+            "Votre portefeuille ne supporte pas la signature de messages"
+          );
+          return;
+        }
+
         const { signature } = await window.webln.signMessage(message);
 
         // Vérifier si l'utilisateur a déjà payé

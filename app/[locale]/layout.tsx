@@ -61,6 +61,7 @@ export const metadata = {
 type LocaleLayoutProps = {
   children: React.ReactNode;
   params: { locale: string };
+  app: any;
 };
 
 export default async function LocaleLayout({
