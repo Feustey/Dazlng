@@ -1,0 +1,68 @@
+{
+  "hero": {
+    "title": "Explorez le Réseau Lightning",
+    "description": "Découvrez et analysez le réseau Lightning Bitcoin en temps réel. Visualisez les nœuds, les canaux et les statistiques du réseau.",
+    "cta": "Commencer l'exploration"
+  },
+  "features": {
+    "title": "Fonctionnalités",
+    "items": [
+      {
+        "title": "Analyse en Temps Réel",
+        "description": "Suivez l'évolution du réseau Lightning avec des mises à jour en temps réel des nœuds et des canaux.",
+        "icon": "zap"
+      },
+      {
+        "title": "Sécurité Maximale",
+        "description": "Accédez aux données du réseau de manière sécurisée sans compromettre votre vie privée.",
+        "icon": "shield"
+      },
+      {
+        "title": "Vue Globale",
+        "description": "Visualisez la distribution mondiale des nœuds et l'interconnexion du réseau.",
+        "icon": "globe"
+      },
+      {
+        "title": "Support Communautaire",
+        "description": "Rejoignez une communauté active et participez à l'amélioration du réseau.",
+        "icon": "message"
+      }
+    ]
+  },
+  "stats": {
+    "title": "Statistiques du Réseau",
+    "items": [
+      {
+        "value": "15K+",
+        "label": "Nœuds Totaux"
+      },
+      {
+        "value": "75K+",
+        "label": "Canaux Totaux"
+      },
+      {
+        "value": "5000+",
+        "label": "BTC en Capacité"
+      },
+      {
+        "value": "5",
+        "label": "Canaux par Nœud"
+      }
+    ]
+  },
+  "search": {
+    "title": "Rechercher un nœud",
+    "placeholder": "Entrez un pubkey ou un alias...",
+    "help": "Recherchez un nœud Lightning par son pubkey ou son alias pour voir ses détails et ses canaux."
+  },
+  "footer": {
+    "about": "À propos",
+    "description": "DazLng est un explorateur de réseau Lightning Bitcoin qui vous permet de visualiser et d'analyser le réseau en temps réel.",
+    "links": "Liens utiles",
+    "help": "Aide",
+    "privacy": "Confidentialité",
+    "terms": "Conditions d'utilisation",
+    "contact": "Contact",
+    "rights": "Tous droits réservés."
+  }
+}

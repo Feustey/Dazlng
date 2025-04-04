@@ -299,6 +299,85 @@ const mcpService = {
     }
     return response.json();
   },
+
+  async analyzeQuestion(
+    question: string,
+    nodePubkey: string
+  ): Promise<string[]> {
+    try {
+      // Récupérer les données du nœud
+      const nodeInfo = await this.getNodeInfo(nodePubkey);
+      const networkMetrics = await this.getNetworkSummary();
+      const peersOfPeers = await this.getPeersOfPeers(nodePubkey);
+
+      // Analyser la question et générer des recommandations
+      const recommendations: string[] = [];
+
+      // Exemple d'analyse basée sur les mots-clés
+      if (question.toLowerCase().includes("frais")) {
+        if (nodeInfo.feeRates.average < 100) {
+          recommendations.push(
+            "Vos frais sont relativement bas. Vous pourriez les augmenter légèrement pour maximiser vos revenus."
+          );
+        } else if (nodeInfo.feeRates.average > 1000) {
+          recommendations.push(
+            "Vos frais sont élevés. Envisagez de les réduire pour attirer plus de trafic."
+          );
+        }
+      }
+
+      if (question.toLowerCase().includes("canaux")) {
+        if (nodeInfo.channelStats.active < nodeInfo.channelStats.opened * 0.8) {
+          recommendations.push(
+            "Vous avez plusieurs canaux inactifs. Envisagez de les fermer ou de les réactiver."
+          );
+        }
+        if (nodeInfo.channelStats.opened < 10) {
+          recommendations.push(
+            "Votre nombre de canaux est faible. Envisagez d'ouvrir plus de canaux pour augmenter votre présence sur le réseau."
+          );
+        }
+      }
+
+      if (question.toLowerCase().includes("capacité")) {
+        const avgCapacity =
+          nodeInfo.financialMetrics.totalCapacity /
+          nodeInfo.channelStats.opened;
+        if (avgCapacity < 1000000) {
+          recommendations.push(
+            "Votre capacité moyenne par canal est faible. Envisagez d'augmenter la taille de vos canaux."
+          );
+        }
+      }
+
+      if (question.toLowerCase().includes("réseau")) {
+        if (nodeInfo.centralities?.betweenness < 0.1) {
+          recommendations.push(
+            "Votre centralité dans le réseau est faible. Envisagez de vous connecter à des nœuds plus centraux."
+          );
+        }
+      }
+
+      // Recommandations par défaut si aucune correspondance
+      if (recommendations.length === 0) {
+        recommendations.push("Basé sur l'analyse de votre nœud :");
+        recommendations.push(
+          `- Vous avez ${nodeInfo.channelStats.opened} canaux ouverts dont ${nodeInfo.channelStats.active} actifs`
+        );
+        recommendations.push(
+          `- Votre capacité totale est de ${nodeInfo.financialMetrics.totalCapacity} sats`
+        );
+        recommendations.push(
+          `- Vos frais moyens sont de ${nodeInfo.feeRates.average} ppm`
+        );
+      }
+
+      return recommendations;
+    } catch (error) {
+      console.error("Erreur lors de l'analyse de la question:", error);
+      throw error;
+    }
+  },
 };
 
 export default mcpService;

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
+import { useParams } from "next/navigation";
 
 type Language = "fr" | "en";
 
@@ -41,7 +42,10 @@ const LanguageContext = createContext<LanguageContextType>({
 export const useLanguage = () => useContext(LanguageContext);
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  const [language, setLanguage] = useState<Language>("fr");
+  const params = useParams();
+  const currentLocale =
+    typeof params.locale === "string" ? params.locale : "fr";
+  const [language, setLanguage] = useState<Language>(currentLocale as Language);
 
   const t = (key: string): string => {
     return translations[language][key] || key;

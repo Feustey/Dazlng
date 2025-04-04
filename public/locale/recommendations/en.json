@@ -1,0 +1,44 @@
+{
+  "title": "Your Personalized Recommendations",
+  "subtitle": "Based on your Lightning node analysis",
+  "intro": "Here are 3 key recommendations to optimize your Lightning node and maximize your earnings. For unlimited access to all our analyses and features, consider our yearly subscription.",
+  "recommendations": [
+    {
+      "title": "Fee Optimization",
+      "description": "Our analysis shows you could increase your earnings by 15-20% by adjusting your routing fees based on market conditions.",
+      "details": "Your node's current fees are slightly suboptimal compared to market conditions. We recommend increasing base fees by 10% and adjusting variable fees based on transaction volume.",
+      "impact": "Estimated impact: +15-20% monthly earnings"
+    },
+    {
+      "title": "Channel Expansion",
+      "description": "Your node has significant expansion potential. We've identified 3 strategic nodes for new channels.",
+      "details": "Network analysis shows you could benefit from channels with high-activity but low-connectivity nodes. These connections could generate significant routing traffic.",
+      "impact": "Estimated impact: +25-30% routing capacity"
+    },
+    {
+      "title": "Liquidity Management",
+      "description": "Your node shows a liquidity imbalance that limits its efficiency. We propose a rebalancing strategy.",
+      "details": "Liquidity is concentrated on certain channels, creating bottlenecks. Periodic rebalancing could significantly improve routing performance.",
+      "impact": "Estimated impact: +20% routing efficiency"
+    }
+  ],
+  "upgrade": {
+    "title": "Unlock your node's full potential",
+    "description": "With our yearly subscription, you'll benefit from:",
+    "features": [
+      "Daily updated recommendations",
+      "Complete analysis of all your channels",
+      "Real-time alerts for market opportunities",
+      "Priority support for implementation",
+      "Detailed weekly reports",
+      "API access for integration with your tools"
+    ],
+    "cta": "Upgrade to yearly subscription",
+    "price": "100,000 sats / year"
+  },
+  "feedback": {
+    "title": "Your feedback matters",
+    "description": "Share your experience with our recommendations to help us improve our services.",
+    "button": "Give feedback"
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "hero": {
+    "title": "Explore the Lightning Network",
+    "description": "Discover and analyze the Bitcoin Lightning Network in real-time. Visualize nodes, channels, and network statistics.",
+    "cta": "Start Exploring"
+  },
+  "features": {
+    "title": "Features",
+    "items": [
+      {
+        "title": "Real-time Analysis",
+        "description": "Track Lightning Network evolution with real-time updates of nodes and channels.",
+        "icon": "zap"
+      },
+      {
+        "title": "Maximum Security",
+        "description": "Access network data securely without compromising your privacy.",
+        "icon": "shield"
+      },
+      {
+        "title": "Global View",
+        "description": "Visualize the worldwide distribution of nodes and network interconnection.",
+        "icon": "globe"
+      },
+      {
+        "title": "Community Support",
+        "description": "Join an active community and participate in network improvement.",
+        "icon": "message"
+      }
+    ]
+  },
+  "stats": {
+    "title": "Network Statistics",
+    "items": [
+      {
+        "value": "15K+",
+        "label": "Total Nodes"
+      },
+      {
+        "value": "75K+",
+        "label": "Total Channels"
+      },
+      {
+        "value": "5000+",
+        "label": "BTC Capacity"
+      },
+      {
+        "value": "5",
+        "label": "Channels per Node"
+      }
+    ]
+  },
+  "search": {
+    "title": "Search for a node",
+    "placeholder": "Enter a pubkey or alias...",
+    "help": "Search for a Lightning node by its pubkey or alias to view its details and channels."
+  },
+  "footer": {
+    "about": "About",
+    "description": "DazLng is a Bitcoin Lightning Network explorer that allows you to visualize and analyze the network in real-time.",
+    "links": "Useful Links",
+    "help": "Help",
+    "privacy": "Privacy",
+    "terms": "Terms of Service",
+    "contact": "Contact",
+    "rights": "All rights reserved."
+  }
+}

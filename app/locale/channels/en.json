@@ -1,26 +1,27 @@
 {
-  "title": "Lightning Channels",
-  "stats": {
-    "opened": "Opened Channels",
-    "active": "Active Channels",
-    "closed": "Closed Channels",
-    "pending": "Pending Channels"
-  },
-  "metrics": {
-    "capacity": "Total Capacity",
-    "volume": "Total Volume",
-    "fees": "Total Fees"
-  },
-  "errors": {
-    "loadFailed": "Failed to load data",
-    "noData": "No data available"
-  },
-  "tabs": {
-    "overview": "Overview",
-    "analytics": "Analytics"
-  },
-  "charts": {
-    "capacity": "Capacity Evolution",
-    "channels": "Active Channels Evolution"
-  }
+  "title": "Channels",
+  "description": "Manage your communication channels",
+  "createChannel": "Create Channel",
+  "joinChannel": "Join Channel",
+  "searchChannels": "Search channels...",
+  "noChannels": "No channels found",
+  "createNewChannel": "Create New Channel",
+  "channelName": "Channel Name",
+  "channelDescription": "Channel Description",
+  "channelType": "Channel Type",
+  "public": "Public",
+  "private": "Private",
+  "create": "Create",
+  "cancel": "Cancel",
+  "members": "Members",
+  "online": "Online",
+  "offline": "Offline",
+  "leaveChannel": "Leave Channel",
+  "deleteChannel": "Delete Channel",
+  "editChannel": "Edit Channel",
+  "save": "Save",
+  "delete": "Delete",
+  "confirmDelete": "Are you sure you want to delete this channel?",
+  "yes": "Yes",
+  "no": "No"
 }

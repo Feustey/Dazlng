@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Layout from "@components/Layout";
+import ClientLayout from "@components/ClientLayout";
 
 export const metadata: Metadata = {
   title: "Bot IA - Dazling",
@@ -11,5 +11,5 @@ export default function BotIALayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <Layout>{children}</Layout>;
+  return <ClientLayout>{children}</ClientLayout>;
 }

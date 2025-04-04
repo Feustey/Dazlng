@@ -1,26 +1,27 @@
 {
-  "title": "Canaux Lightning",
-  "stats": {
-    "opened": "Canaux ouverts",
-    "active": "Canaux actifs",
-    "closed": "Canaux fermés",
-    "pending": "Canaux en attente"
-  },
-  "metrics": {
-    "capacity": "Capacité totale",
-    "volume": "Volume total",
-    "fees": "Frais totaux"
-  },
-  "errors": {
-    "loadFailed": "Échec du chargement des données",
-    "noData": "Aucune donnée disponible"
-  },
-  "tabs": {
-    "overview": "Vue d'ensemble",
-    "analytics": "Analytiques"
-  },
-  "charts": {
-    "capacity": "Évolution de la capacité",
-    "channels": "Évolution des canaux actifs"
-  }
+  "title": "Canaux",
+  "description": "Gérez vos canaux de communication",
+  "createChannel": "Créer un canal",
+  "joinChannel": "Rejoindre un canal",
+  "searchChannels": "Rechercher des canaux...",
+  "noChannels": "Aucun canal trouvé",
+  "createNewChannel": "Créer un nouveau canal",
+  "channelName": "Nom du canal",
+  "channelDescription": "Description du canal",
+  "channelType": "Type de canal",
+  "public": "Public",
+  "private": "Privé",
+  "create": "Créer",
+  "cancel": "Annuler",
+  "members": "Membres",
+  "online": "En ligne",
+  "offline": "Hors ligne",
+  "leaveChannel": "Quitter le canal",
+  "deleteChannel": "Supprimer le canal",
+  "editChannel": "Modifier le canal",
+  "save": "Enregistrer",
+  "delete": "Supprimer",
+  "confirmDelete": "Êtes-vous sûr de vouloir supprimer ce canal ?",
+  "yes": "Oui",
+  "no": "Non"
 }

@@ -1,0 +1,36 @@
+{
+  "title": "AI Assistant",
+  "description": "Ask questions to the AI assistant who will help you understand and optimize your Lightning node",
+  "inputPlaceholder": "Write your question...",
+  "sendButton": "Send",
+  "thinking": "The assistant is thinking...",
+  "errors": {
+    "loadFailed": "Failed to load assistant",
+    "sendFailed": "Failed to send message",
+    "timeout": "Request timeout"
+  },
+  "maxLength": 500,
+  "nodeInfo": {
+    "title": "Node Information",
+    "alias": "Alias",
+    "capacity": "Total Capacity",
+    "channels": "Number of Channels",
+    "avgCapacity": "Average Capacity",
+    "betweenness": "Centrality"
+  },
+  "networkMetrics": {
+    "title": "Network Metrics",
+    "nodes": "Number of Nodes",
+    "channels": "Number of Channels",
+    "capacity": "Total Capacity"
+  },
+  "peersOfPeers": {
+    "title": "Peers of Peers",
+    "capacity": "Capacity",
+    "channels": "Active Channels",
+    "peers": "Number of Peers"
+  },
+  "recommendations": {
+    "title": "Recommendations"
+  }
+}

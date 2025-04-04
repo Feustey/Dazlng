@@ -16,6 +16,11 @@ DazLng est un tableau de bord intelligent propulsé par l'IA, conçu pour optimi
   - Volume total des transactions
   - Statistiques réseau et temps de fonctionnement
 - **Recommandations Intelligentes** : Conseils basés sur l'analyse des données pour optimiser votre nœud
+- **Bot IA Premium** :
+  - Recommandations personnalisées en one-shot (10,000 sats)
+  - Abonnement annuel avec accès complet (100,000 sats)
+  - Paiement sécurisé via Alby Wallet
+  - Mode développement avec simulation de paiement
 
 ## 🛠️ Technologies Utilisées
 
@@ -27,6 +32,8 @@ DazLng est un tableau de bord intelligent propulsé par l'IA, conçu pour optimi
 - **API** : API MCP pour les données Lightning Network
 - **Base de données** : MongoDB pour le stockage des recommandations
 - **i18n** : next-intl pour l'internationalisation
+- **Paiements** : Intégration Alby Wallet pour Lightning Network
+- **Animations** : Framer Motion pour les interactions
 
 ## 📦 Installation
 
@@ -75,9 +82,11 @@ MONGODB_URI=votre_uri_mongodb
 app/
 ├── [locale]/        # Routes localisées (fr, en)
 │   ├── @app/        # Routes parallèles
+│   ├── bot-ia/      # Page de tarification du bot IA
 │   └── layout.tsx   # Layout principal
 ├── components/      # Composants React réutilisables
 │   ├── ui/          # Composants UI de base
+│   ├── AlbyQRCode/  # Composant de paiement Lightning
 │   └── ...          # Autres composants
 ├── lib/            # Fonctions utilitaires
 └── messages/       # Fichiers de traduction

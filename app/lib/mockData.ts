@@ -115,11 +115,11 @@ export const mockPeers = {
 
 // Données fictives pour les statistiques actuelles du réseau
 export const mockNetworkStats = {
-  total_nodes: 15000,
-  total_channels: 75000,
-  total_capacity: 5000,
-  avg_capacity_per_channel: 0.066,
-  avg_channels_per_node: 5,
+  totalNodes: 15000,
+  totalChannels: 75000,
+  totalCapacity: 5000000000000, // 5000 BTC en sats
+  avgCapacityPerChannel: 66666666, // ~0.66 BTC en sats
+  avgChannelsPerNode: 5,
   timestamp: new Date().toISOString(),
 };
 
@@ -137,20 +137,19 @@ export const mockHistoricalData = {
 
 // Données fictives pour le résumé du réseau
 export const mockNetworkSummary = {
-  total_nodes: 15000,
-  active_nodes: 14500,
-  total_channels: 75000,
-  active_channels: 72000,
-  total_capacity: 5000,
-  avg_capacity: 0.066,
-  avg_fee_rate: 1,
-  avg_base_fee: 1,
-  network_growth: {
+  totalNodes: 15000,
+  totalChannels: 75000,
+  totalCapacity: 5000000000000, // 5000 BTC en sats
+  avgCapacityPerChannel: 66666666, // ~0.66 BTC en sats
+  avgChannelsPerNode: 5,
+  activeNodes: 14500,
+  activeChannels: 72000,
+  networkGrowth: {
     nodes: 150,
     channels: 750,
-    capacity: 50,
+    capacity: 50000000000, // 50 BTC en sats
   },
-  top_nodes: [
+  topNodes: [
     {
       pubkey:
         "02778f4a4eb3a2344b9fd8ee72e7ec5f03f803e5f5273e2e1a2af508910cf2b12b",

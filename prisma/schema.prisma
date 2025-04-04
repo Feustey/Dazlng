@@ -87,4 +87,17 @@ model Node {
   createdAt               DateTime @default(now())
   updatedAt               DateTime @updatedAt
   peersOfPeers           PeerOfPeer[]
+}
+
+model User {
+  id                  String    @id @default(cuid())
+  email               String?   @unique
+  name                String?
+  pubkey              String?   @unique
+  subscriptionStatus  String    @default("inactive")
+  subscriptionTier    String    @default("none")
+  subscriptionStartDate DateTime?
+  subscriptionEndDate   DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
 } 

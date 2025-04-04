@@ -14,7 +14,7 @@
     "channels": "Canaux",
     "network": "Réseau",
     "review": "Avis",
-    "botIA": "Bot IA",
+    "dazIA": "DazIA",
     "currency": "Devise",
     "btc": "BTC",
     "sats": "SATS",
@@ -31,8 +31,8 @@
     "language": {
       "label": "Langue",
       "options": {
-        "en": "Anglais",
-        "fr": "Français"
+        "fr": "Français",
+        "en": "English"
       }
     },
     "theme": {
@@ -45,7 +45,16 @@
     },
     "save": "Enregistrer les modifications",
     "success": "Paramètres enregistrés avec succès",
-    "error": "Erreur lors de l'enregistrement des paramètres"
+    "error": "Erreur lors de l'enregistrement des paramètres",
+    "logout": "Déconnexion"
+  },
+  "Dashboard": {
+    "title": "Tableau de bord",
+    "welcome": "Bienvenue sur votre tableau de bord",
+    "overview": "Vue d'ensemble",
+    "stats": "Statistiques",
+    "recentActivity": "Activité récente",
+    "noData": "Aucune donnée disponible"
   },
   "HomePage": {
     "welcome": "Bienvenue sur DazLng",
@@ -165,9 +174,9 @@
     "contact": "Contact",
     "rights": "Tous droits réservés"
   },
-  "bot-ia": {
-    "title": "Bot IA DazLng",
-    "description": "Optimisez vos investissements avec notre bot IA intelligent",
+  "daz-ia": {
+    "title": "DazIA DazLng",
+    "description": "Optimisez vos investissements avec notre IA intelligente",
     "one-shot": {
       "title": "Recommandations One-Shot",
       "price": "10,000 sats",

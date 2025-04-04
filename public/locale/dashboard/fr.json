@@ -1,0 +1,57 @@
+{
+  "title": "Tableau de bord de votre nœud Lightning",
+  "subtitle": "Surveillez et optimisez les performances de votre nœud en temps réel",
+  "metrics": {
+    "channels": "Canaux totaux",
+    "activeChannels": "{count} canaux actifs",
+    "capacity": "Capacité totale",
+    "fees": "Frais totaux",
+    "averageFee": "Frais moyens: {fee} BTC",
+    "network": {
+      "nodes": "Nœuds du réseau",
+      "channels": "{count} canaux",
+      "capacity": "Capacité totale",
+      "avgCapacity": "Moyenne: {capacity} BTC/canal",
+      "centrality": "Centralité",
+      "rank": "Rang: {rank}"
+    }
+  },
+  "charts": {
+    "fees": {
+      "title": "Évolution des frais sur 7 jours",
+      "tooltip": {
+        "fees": "Frais (BTC)"
+      }
+    },
+    "capacity": {
+      "title": "Évolution de la capacité sur 7 jours",
+      "tooltip": {
+        "capacity": "Capacité (BTC)"
+      }
+    }
+  },
+  "peers": {
+    "title": "Pairs de pairs",
+    "capacity": "Capacité",
+    "channels": "Canaux actifs",
+    "peers": "Pairs"
+  },
+  "recommendations": {
+    "title": "Recommandations d'optimisation",
+    "0": {
+      "title": "Optimisation des frais",
+      "description": "Ajustez les frais de vos canaux les plus actifs pour maximiser vos revenus",
+      "impact": "Impact estimé: +15% de revenus"
+    },
+    "1": {
+      "title": "Expansion du réseau",
+      "description": "Ouvrez de nouveaux canaux avec des nœuds à forte activité",
+      "impact": "Impact estimé: +25% de capacité"
+    },
+    "2": {
+      "title": "Gestion de la liquidité",
+      "description": "Rééquilibrez vos canaux pour optimiser la liquidité disponible",
+      "impact": "Impact estimé: +20% d'efficacité"
+    }
+  }
+}

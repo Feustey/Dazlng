@@ -1,44 +1,46 @@
 import { NextResponse } from "next/server";
-import mcpService from "@/app/lib/mcpService";
+import { cookies } from "next/headers";
+import { connectToDatabase } from "@/app/lib/db";
+import { Session } from "@/app/lib/models/Session";
 
 export async function GET() {
   try {
-    // Récupérer les données historiques via l'API MCP
-    const historicalData = await mcpService.getHistoricalData();
+    const sessionId = cookies().get("session_id")?.value;
 
-    // Formater les données pour correspondre à l'interface HistoricalData
-    const formattedData = historicalData.map((record) => ({
-      timestamp: record.timestamp,
-      total_fees: record.total_fees,
-      total_capacity: record.total_capacity,
-      active_channels: record.active_channels,
-      total_peers: record.total_peers,
-      total_volume: record.total_volume,
+    if (!sessionId) {
+      return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+    }
+
+    await connectToDatabase();
+
+    const session = await Session.findOne({
+      sessionId,
+      expiresAt: { $gt: new Date() },
+    });
+
+    if (!session) {
+      return NextResponse.json({ error: "Session expirée" }, { status: 401 });
+    }
+
+    // Données historiques de démonstration
+    const mockHistoricalData = Array.from({ length: 30 }, (_, i) => ({
+      timestamp: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString(),
+      total_fees: 150000 - i * 1000,
+      total_capacity: 15000000 - i * 100000,
+      active_channels: 23 - Math.floor(i / 5),
+      total_peers: 15 - Math.floor(i / 7),
+      total_volume: 5000000 - i * 50000,
     }));
 
-    return NextResponse.json(formattedData);
+    return NextResponse.json(mockHistoricalData);
   } catch (error) {
     console.error(
       "Erreur lors de la récupération des données historiques:",
       error
     );
-
-    // Déterminer le statut HTTP en fonction du type d'erreur
-    let statusCode = 500;
-    let errorMessage = "Erreur lors de la récupération des données historiques";
-
-    if (error instanceof Error) {
-      // Vérifier si c'est une erreur de service indisponible
-      if (
-        error.message.includes("503") ||
-        error.message.includes("indisponible")
-      ) {
-        statusCode = 503;
-        errorMessage =
-          "Le service externe est temporairement indisponible. Veuillez réessayer plus tard.";
-      }
-    }
-
-    return NextResponse.json({ error: errorMessage }, { status: statusCode });
+    return NextResponse.json(
+      { error: "Erreur interne du serveur" },
+      { status: 500 }
+    );
   }
 }

@@ -4,12 +4,12 @@ import { getRequestConfig } from "next-intl/server";
 const locales = ["en", "fr"] as const;
 type Locale = (typeof locales)[number];
 
-async function importMessages(locale: string, section: string) {
+async function importMessages(locale: string) {
   try {
-    return (await import(`./app/locale/${section}/${locale}.json`)).default;
+    return (await import(`./messages/${locale}.json`)).default;
   } catch (error) {
-    console.error(`Failed to load ${locale} messages for ${section}:`, error);
-    return (await import(`./app/locale/${section}/en.json`)).default;
+    console.error(`Failed to load ${locale} messages:`, error);
+    return (await import(`./messages/en.json`)).default;
   }
 }
 
@@ -18,22 +18,7 @@ export default getRequestConfig(async ({ locale }) => {
     locales.includes(locale as Locale) ? locale : "en"
   ) as Locale;
 
-  const sections = [
-    "home",
-    "bot-ia",
-    "messages",
-    "settings",
-    "channels",
-    "review",
-    "help",
-    "about",
-  ] as const;
-
-  const messages = await Promise.all(
-    sections.map(async (section) => ({
-      [section]: await importMessages(currentLocale, section),
-    }))
-  ).then((results) => results.reduce((acc, curr) => ({ ...acc, ...curr }), {}));
+  const messages = await importMessages(currentLocale);
 
   return {
     messages,

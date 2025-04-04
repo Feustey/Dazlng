@@ -14,7 +14,7 @@
     "channels": "Channels",
     "network": "Network",
     "review": "Review",
-    "botIA": "AI Bot",
+    "dazIA": "DazIA",
     "currency": "Currency",
     "btc": "BTC",
     "sats": "SATS",
@@ -149,8 +149,8 @@
     "language": {
       "label": "Language",
       "options": {
-        "en": "English",
-        "fr": "French"
+        "fr": "French",
+        "en": "English"
       }
     },
     "theme": {
@@ -163,11 +163,12 @@
     },
     "save": "Save changes",
     "success": "Settings saved successfully",
-    "error": "Failed to save settings"
+    "error": "Failed to save settings",
+    "logout": "Logout"
   },
-  "bot-ia": {
-    "title": "DazLng AI Bot",
-    "description": "Optimize your investments with our intelligent AI bot",
+  "daz-ia": {
+    "title": "DazLng DazIA",
+    "description": "Optimize your investments with our intelligent AI",
     "one-shot": {
       "title": "One-Shot Recommendations",
       "price": "10,000 sats",
@@ -198,5 +199,13 @@
       "scan": "Scan QR code to pay",
       "processing": "Processing..."
     }
+  },
+  "Dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome to your dashboard",
+    "overview": "Overview",
+    "stats": "Statistics",
+    "recentActivity": "Recent Activity",
+    "noData": "No data available"
   }
 }
