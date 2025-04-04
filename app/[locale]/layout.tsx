@@ -1,7 +1,6 @@
 import { Inter } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
-import { getMessages } from "@/app/lib/get-messages";
 import { Viewport } from "next";
 import Header from "@/app/components/Header";
 import { Footer } from "@/app/components/Footer";
@@ -62,40 +61,39 @@ export const metadata = {
 type LocaleLayoutProps = {
   children: React.ReactNode;
   params: { locale: string };
-  app: React.ReactNode;
 };
 
 export default async function LocaleLayout({
   children,
   params: { locale },
-  app,
 }: LocaleLayoutProps) {
-  let messages;
-  try {
-    messages = await getMessages(locale);
-  } catch (_error) {
-    notFound();
-  }
+  const { getMessages } = await import("@/app/lib/get-messages");
+  const messages = await getMessages(locale);
 
   return (
     <html lang={locale} suppressHydrationWarning>
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="canonical" href={siteConfig.url} />
+        <link rel="alternate" href={`${siteConfig.url}/en`} hrefLang="en" />
+        <link rel="alternate" href={`${siteConfig.url}/fr`} hrefLang="fr" />
+      </head>
       <body className={inter.className}>
         <NextIntlClientProvider messages={messages} locale={locale}>
-          <ClientLayout>
-            <div className="min-h-screen flex flex-col">
-              <Suspense fallback={<div className="h-16 bg-background" />}>
-                <Header />
+          <div className="min-h-screen flex flex-col">
+            <Suspense fallback={<div className="h-16 bg-background" />}>
+              <Header />
+            </Suspense>
+            <main className="flex-1">
+              <Suspense fallback={<div className="h-screen bg-background" />}>
+                {children}
               </Suspense>
-              <main className="flex-1">
-                <Suspense fallback={<div className="h-screen bg-background" />}>
-                  {children}
-                </Suspense>
-              </main>
-              <Suspense fallback={<div className="h-16 bg-background" />}>
-                <Footer />
-              </Suspense>
-            </div>
-          </ClientLayout>
+            </main>
+            <Suspense fallback={<div className="h-16 bg-background" />}>
+              <Footer />
+            </Suspense>
+          </div>
         </NextIntlClientProvider>
       </body>
     </html>

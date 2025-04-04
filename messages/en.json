@@ -406,5 +406,11 @@
       "invalidPubkey": "Invalid public key",
       "invalidFormat": "Invalid signature format"
     }
+  },
+  "Learn": {
+    "title": "Learn",
+    "guide": "Guide",
+    "lightning": "Lightning Network",
+    "visualization": "Visualization"
   }
 }

@@ -3,7 +3,7 @@
 import * as React from "react";
 
 import { useParams } from "next/navigation";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 import en from "@/messages/en.json";
 import fr from "@/messages/fr.json";
@@ -40,7 +40,12 @@ export const LanguageProvider = ({
   const params = useParams();
   const currentLocale =
     typeof params.locale === "string" ? params.locale : "fr";
-  const [language, setLanguage] = useState<Language>(currentLocale as Language);
+  const [language, setLanguage] = useState<Language>("fr");
+
+  // Utiliser useEffect pour mettre à jour la langue après le montage du composant
+  useEffect(() => {
+    setLanguage(currentLocale as Language);
+  }, [currentLocale]);
 
   const t = (key: string): string => {
     const keys = key.split(".");

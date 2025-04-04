@@ -13,6 +13,10 @@ const metadata: Metadata = {
     ],
   },
   manifest: "/site.webmanifest",
+  metadataBase: new URL("https://dazlng.inoval.io"),
+  alternates: {
+    canonical: "https://dazlng.inoval.io",
+  },
 };
 
 export default metadata;

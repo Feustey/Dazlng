@@ -14,6 +14,7 @@ import {
   UsersIcon,
   Sparkles,
 } from "lucide-react";
+import Image from "next/image";
 
 export default function HomePage() {
   const t = useTranslations("Home");
@@ -142,7 +143,16 @@ export default function HomePage() {
                 </Button>
               </div>
               <div className="flex-shrink-0">
-                <div className="w-48 h-48 bg-gradient-to-br from-orange-500 to-blue-500 rounded-full opacity-20" />
+                <div className="w-48 h-48 bg-gradient-to-br from-orange-500 to-blue-500 rounded-full opacity-20 relative">
+                  <Image
+                    src="/images/dazbox.png"
+                    alt="Dazlng Box"
+                    width={120}
+                    height={120}
+                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 object-contain"
+                    priority
+                  />
+                </div>
               </div>
             </div>
           </Card>

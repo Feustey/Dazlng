@@ -159,8 +159,8 @@ export default function DaznodePage() {
           <div className="lg:flex-1">
             <div className="relative aspect-square max-w-[500px] mx-auto">
               <Image
-                src="/images/Daznode-PI5.png"
-                alt="Raspberry Pi 5"
+                src="/images/dazbox.png"
+                alt="Dazlng Box"
                 width={500}
                 height={500}
                 className="rounded-lg shadow-2xl object-cover"

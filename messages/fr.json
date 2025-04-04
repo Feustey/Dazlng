@@ -461,5 +461,44 @@
       "invalidPubkey": "Clé publique invalide",
       "invalidFormat": "Format de signature invalide"
     }
+  },
+  "Learn": {
+    "title": "Apprentissage",
+    "guide": "Guide",
+    "lightning": "Lightning Network",
+    "visualization": "Visualisation"
+  },
+  "Learning": {
+    "title": "Guide d'apprentissage",
+    "duration": "Durée",
+    "minutes": "minutes",
+    "completed": "Terminé",
+    "markComplete": "Marquer comme terminé",
+    "steps": {
+      "basics": {
+        "title": "Les bases du Lightning Network",
+        "content": "Découvrez les concepts fondamentaux du Lightning Network, son fonctionnement et ses avantages. Apprenez comment les nœuds communiquent entre eux et comment les transactions sont traitées."
+      },
+      "channels": {
+        "title": "Gestion des canaux",
+        "content": "Apprenez à créer et gérer des canaux de paiement. Comprenez les concepts de capacité, de liquidité et d'équilibrage des canaux pour optimiser votre réseau."
+      },
+      "transactions": {
+        "title": "Transactions et paiements",
+        "content": "Maîtrisez les différents types de transactions, les frais de routage et les meilleures pratiques pour effectuer des paiements efficaces sur le réseau Lightning."
+      }
+    }
+  },
+  "Transactions": {
+    "title": "Visualisation des transactions",
+    "selectTimeRange": "Sélectionner une période",
+    "last24Hours": "Dernières 24 heures",
+    "last7Days": "7 derniers jours",
+    "last30Days": "30 derniers jours",
+    "totalIncoming": "Total entrant",
+    "totalOutgoing": "Total sortant",
+    "averageAmount": "Montant moyen",
+    "transactionCount": "Nombre de transactions",
+    "transactionHistory": "Historique des transactions"
   }
 }

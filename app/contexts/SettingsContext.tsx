@@ -2,7 +2,8 @@
 
 import * as React from "react";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 
 interface SettingsContextType {
   language: string;
@@ -31,8 +32,17 @@ export const SettingsProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const params = useParams();
+  const currentLocale =
+    typeof params.locale === "string" ? params.locale : "fr";
+
   const [language, setLanguage] = useState("fr");
   const [currency, setCurrency] = useState("btc");
+
+  // Utiliser useEffect pour mettre à jour la langue après le montage du composant
+  useEffect(() => {
+    setLanguage(currentLocale);
+  }, [currentLocale]);
 
   return (
     <SettingsContext.Provider
