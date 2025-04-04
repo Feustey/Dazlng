@@ -1,162 +1,156 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
-import { Card } from "@/app/components/ui/card";
-import { useLanguage } from "@/app/contexts/LanguageContext";
-import { Zap, Shield, Globe, MessageSquare } from "lucide-react";
-import { NodeSearchDialog } from "@/app/components/NodeSearchDialog";
-import { useRouter } from "next/navigation";
+import React from "react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
-import dynamic from "next/dynamic";
-
-// Chargement dynamique des composants non critiques
-const DynamicFeatures = dynamic(() => import("@/app/components/Features"), {
-  loading: () => <div className="h-96 bg-muted/50 animate-pulse" />,
-});
-
-const DynamicStats = dynamic(() => import("@/app/components/NetworkStats"), {
-  loading: () => <div className="h-48 bg-muted/50 animate-pulse" />,
-});
-
-interface NetworkStats {
-  totalNodes: number;
-  totalChannels: number;
-  totalCapacity: number;
-  avgCapacityPerChannel: number;
-  avgChannelsPerNode: number;
-}
-
-interface HomeContent {
-  hero: {
-    title: string;
-    description: string;
-    cta: string;
-  };
-  features: {
-    title: string;
-    items: Array<{
-      title: string;
-      description: string;
-      icon: string;
-    }>;
-  };
-  stats: {
-    title: string;
-    items: Array<{
-      value: string;
-      label: string;
-    }>;
-  };
-}
+import { Button } from "@/app/components/ui/button";
+import { Card } from "@/app/components/ui/card";
+import {
+  BookOpenIcon,
+  BarChartIcon,
+  ZapIcon,
+  ShieldIcon,
+  RocketIcon,
+  UsersIcon,
+} from "lucide-react";
 
 export default function HomePage() {
-  const { language } = useLanguage();
-  const router = useRouter();
-  const [content, setContent] = useState<HomeContent | null>(null);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const t = useTranslations("Home");
 
-  useEffect(() => {
-    async function loadContent() {
-      try {
-        const response = await fetch(`/locale/home/${language}.json`);
-        const data = await response.json();
-        setContent(data);
-      } catch (error) {
-        console.error("Failed to load content:", error);
-      }
-    }
+  const features = [
+    {
+      id: "learning",
+      icon: <BookOpenIcon className="h-8 w-8" />,
+      title: t("features.learning.title"),
+      description: t("features.learning.description"),
+    },
+    {
+      id: "transactions",
+      icon: <BarChartIcon className="h-8 w-8" />,
+      title: t("features.transactions.title"),
+      description: t("features.transactions.description"),
+    },
+    {
+      id: "operations",
+      icon: <ZapIcon className="h-8 w-8" />,
+      title: t("features.operations.title"),
+      description: t("features.operations.description"),
+    },
+    {
+      id: "metrics",
+      icon: <BarChartIcon className="h-8 w-8" />,
+      title: t("features.metrics.title"),
+      description: t("features.metrics.description"),
+    },
+    {
+      id: "nwc",
+      icon: <ZapIcon className="h-8 w-8" />,
+      title: t("features.nwc.title"),
+      description: t("features.nwc.description"),
+    },
+  ];
 
-    loadContent();
-  }, [language]);
-
-  const handleSearch = (query: string) => {
-    router.push(`/${language}/node/${encodeURIComponent(query)}`);
-  };
-
-  if (!content) return null;
+  const benefits = [
+    {
+      id: "simplicity",
+      icon: <RocketIcon className="h-6 w-6" />,
+      title: t("benefits.items.simplicity"),
+    },
+    {
+      id: "security",
+      icon: <ShieldIcon className="h-6 w-6" />,
+      title: t("benefits.items.security"),
+    },
+    {
+      id: "performance",
+      icon: <ZapIcon className="h-6 w-6" />,
+      title: t("benefits.items.performance"),
+    },
+    {
+      id: "support",
+      icon: <UsersIcon className="h-6 w-6" />,
+      title: t("benefits.items.support"),
+    },
+    {
+      id: "community",
+      icon: <UsersIcon className="h-6 w-6" />,
+      title: t("benefits.items.community"),
+    },
+  ];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Encart promotionnel Daznode */}
-      <Card className="mb-8 bg-gradient-to-r from-orange-500 to-orange-600 text-white p-6">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-6">
-            <div className="hidden md:block w-32 h-32 rounded-lg overflow-hidden bg-white/10 backdrop-blur-sm">
-              <Image
-                src="/images/Daznode-PI5.png"
-                alt="Raspberry Pi 5 pour DazNode"
-                width={128}
-                height={128}
-                className="w-full h-full object-cover"
-                priority
-                loading="eager"
-              />
-            </div>
-            <div className="space-y-4">
-              <h1 className="text-2xl md:text-3xl font-bold flex items-center gap-2">
-                <Sparkles className="h-6 w-6" />
-                {t("daznodePromo.title")}
-              </h1>
-              <p className="text-lg opacity-90">
-                {t("daznodePromo.description")}
-              </p>
-              <p className="text-sm font-medium bg-white/20 inline-block px-3 py-1 rounded-full">
-                {t("daznodePromo.limitedOffer")}
-              </p>
-            </div>
-          </div>
-          <Button
-            size="lg"
-            variant="secondary"
-            className="bg-white text-orange-600 hover:bg-orange-50 whitespace-nowrap"
-            asChild
-          >
-            <Link href="/daznode" aria-label="En savoir plus sur DazNode">
-              {t("daznodePromo.button")}
-            </Link>
-          </Button>
-        </div>
-      </Card>
-
+    <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="py-20">
+      <section className="bg-gradient-to-b from-primary/10 to-background py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-4xl font-bold mb-6">{content.hero.title}</h2>
+            <h1 className="text-5xl font-bold mb-6">{t("hero.title")}</h1>
             <p className="text-xl text-muted-foreground mb-8">
-              {content.hero.description}
+              {t("hero.subtitle")}
             </p>
-            <button
-              onClick={() => setIsSearchOpen(true)}
-              className="bg-orange-500 text-white px-8 py-3 rounded-lg hover:bg-orange-600 transition-colors"
-              aria-label="Rechercher un nœud Lightning"
-            >
-              {content.hero.cta}
-            </button>
+            <Button size="lg" asChild>
+              <Link href="/learn">{t("hero.cta")}</Link>
+            </Button>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <Suspense fallback={<div className="h-96 bg-muted/50 animate-pulse" />}>
-        <DynamicFeatures content={content.features} />
-      </Suspense>
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">
+            {t("features.title")}
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature) => (
+              <Card
+                key={feature.id}
+                className="p-6 hover:shadow-lg transition-shadow"
+              >
+                <div className="flex flex-col items-center text-center">
+                  <div className="mb-4 text-primary">{feature.icon}</div>
+                  <h3 className="text-xl font-semibold mb-2">
+                    {feature.title}
+                  </h3>
+                  <p className="text-muted-foreground">{feature.description}</p>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
 
-      {/* Stats Section */}
-      <Suspense fallback={<div className="h-48 bg-muted/50 animate-pulse" />}>
-        <DynamicStats />
-      </Suspense>
+      {/* Benefits Section */}
+      <section className="bg-muted/50 py-20">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">
+            {t("benefits.title")}
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {benefits.map((benefit) => (
+              <div key={benefit.id} className="flex items-center space-x-4">
+                <div className="text-primary">{benefit.icon}</div>
+                <span className="text-lg">{benefit.title}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-      <NodeSearchDialog
-        isOpen={isSearchOpen}
-        onClose={() => setIsSearchOpen(false)}
-        onSearch={handleSearch}
-      />
+      {/* CTA Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-3xl font-bold mb-4">{t("cta.title")}</h2>
+            <p className="text-xl text-muted-foreground mb-8">
+              {t("cta.description")}
+            </p>
+            <Button size="lg" asChild>
+              <Link href="/register">{t("cta.button")}</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

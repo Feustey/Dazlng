@@ -13,51 +13,29 @@ export { dynamic, runtime };
 
 export async function POST(request: Request) {
   try {
-    console.log("Début de la requête send-code");
     const { email } = await request.json();
 
     if (!email) {
-      console.error("Email manquant dans la requête");
       return errorResponse("Email is required", 400);
     }
 
-    console.log("Tentative de connexion à la base de données...");
-    // Connexion à la base de données
-    await connectToDatabase();
-    console.log("Connexion à la base de données réussie");
-
     // Générer un code à 6 chiffres
     const code = randomInt(100000, 999999).toString();
-    console.log("Code généré:", code);
 
-    // Stocker le code avec une expiration de 10 minutes
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+    await connectToDatabase();
 
-    // Supprimer les anciens codes pour cet email
-    console.log("Suppression des anciens codes pour", email);
-    await VerificationCode.deleteMany({ email });
-
-    // Créer un nouveau code de vérification
-    console.log("Création du nouveau code de vérification");
+    // Sauvegarder le code dans la base de données
     await VerificationCode.create({
       email,
       code,
-      expiresAt,
+      expiresAt: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes
     });
 
-    // TODO: En production, envoyez un vrai email
-    console.log(`Code de vérification pour ${email}: ${code}`);
-
-    return successResponse({ success: true });
+    // TODO: Envoyer l'email avec le code
+    // Pour l'instant, on retourne le code dans la réponse
+    return successResponse({ message: "Verification code sent", code });
   } catch (error) {
-    console.error(
-      "Erreur détaillée lors de l'envoi du code de vérification:",
-      error
-    );
-    if (error instanceof Error) {
-      console.error("Message d'erreur:", error.message);
-      console.error("Stack trace:", error.stack);
-    }
+    console.error("Error sending verification code:", error);
     return errorResponse("Failed to send verification code");
   }
 }

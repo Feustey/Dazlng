@@ -28,7 +28,7 @@ export async function GET() {
 
     return successResponse({ isAuthenticated: !!session });
   } catch (error) {
-    console.error("Erreur lors de la vérification de la session:", error);
-    return errorResponse("Erreur lors de la vérification de la session");
+    console.error("Error checking session:", error);
+    return errorResponse("Failed to check session");
   }
 }

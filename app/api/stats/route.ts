@@ -6,36 +6,17 @@ export { dynamic, runtime };
 
 export async function GET() {
   try {
-    console.log("Début de la requête GET /api/stats");
+    const stats = await prisma.$queryRaw`
+      SELECT 
+        COUNT(*) as total_nodes,
+        SUM(CASE WHEN status = 'online' THEN 1 ELSE 0 END) as online_nodes,
+        AVG(capacity) as avg_capacity
+      FROM nodes
+    `;
 
-    // Récupération des statistiques
-    const stats = await prisma.history.findMany({
-      orderBy: {
-        date: "desc",
-      },
-      take: 1,
-    });
-
-    if (!stats || stats.length === 0) {
-      return errorResponse("Aucune statistique disponible", 404);
-    }
-
-    // Retourner les données directement depuis le modèle History
-    const currentStats = stats[0];
-    return successResponse({
-      id: currentStats.id,
-      date: currentStats.date,
-      price: currentStats.price,
-      volume: currentStats.volume,
-      marketCap: currentStats.marketCap,
-      createdAt: currentStats.createdAt,
-      updatedAt: currentStats.updatedAt,
-    });
+    return successResponse(stats);
   } catch (error) {
-    console.error("Erreur lors de la récupération des statistiques:", error);
-    return errorResponse(
-      "Erreur lors de la récupération des statistiques",
-      503
-    );
+    console.error("Error fetching stats:", error);
+    return errorResponse("Failed to fetch stats");
   }
 }

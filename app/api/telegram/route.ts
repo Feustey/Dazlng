@@ -85,121 +85,33 @@ async function getChatInfo(
 
 export async function GET() {
   if (!TELEGRAM_BOT_TOKEN) {
-    return errorResponse("Telegram Bot Token n'est pas configuré.");
+    return errorResponse("Telegram Bot Token is not configured");
   }
 
   try {
-    // 1. Récupérer les dernières mises à jour (messages)
     const updatesResponse = await fetch(
       `${TELEGRAM_API_BASE}/getUpdates?limit=20&allowed_updates=["message","channel_post"]`,
       {
-        // Ne pas mettre en cache les updates, on veut toujours les plus récents
         cache: "no-store",
       }
     );
 
     if (!updatesResponse.ok) {
-      const errorData: { description?: string } = await updatesResponse.json();
-      console.error("Erreur API Telegram (getUpdates):", errorData.description);
+      const errorData = await updatesResponse.json();
       throw new Error(
-        `Erreur API Telegram: ${errorData.description || "Inconnue"}`
+        `Telegram API Error: ${errorData.description || "Unknown"}`
       );
     }
 
     const updatesData: GetUpdatesResponse = await updatesResponse.json();
 
     if (!updatesData.ok || !Array.isArray(updatesData.result)) {
-      console.error("Réponse invalide de getUpdates:", updatesData);
-      throw new Error("Réponse invalide de l'API Telegram (getUpdates).");
+      throw new Error("Invalid response from Telegram API");
     }
 
-    // 2. Filtrer et formater les messages
-    //    On extrait les messages des updates (peut être `message` ou `channel_post`)
-    //    On ne garde que ceux qui ont du texte pour cet exemple
-    const messages = updatesData.result
-      .map((update) => update.message || update.channel_post)
-      .filter(
-        (msg): msg is TelegramMessage =>
-          msg !== undefined && msg.text !== undefined
-      )
-      // Tri par date (le plus récent en premier, getUpdates les donne dans l'ordre)
-      // .sort((a, b) => b.date - a.date) // Normalement déjà trié par l'API
-      // On reformate pour correspondre à l'interface `TelegramMessage` attendue par le frontend
-      .map((msg) => ({
-        message_id: msg.message_id,
-        date: msg.date,
-        text: msg.text,
-        // Gérer 'from' pour messages privés/groupes ou 'sender_chat' pour canaux
-        from: msg.from
-          ? {
-              id: msg.from.id,
-              first_name: msg.from.first_name,
-              username: msg.from.username,
-            }
-          : msg.sender_chat
-          ? {
-              // Si envoyé par un canal, utiliser les infos du canal
-              id: msg.sender_chat.id,
-              first_name: msg.sender_chat.title || "Canal Inconnu", // Utiliser le titre du canal
-              username: msg.sender_chat.username,
-            }
-          : {
-              // Fallback si aucune info 'from' ou 'sender_chat'
-              id: 0,
-              first_name: "Inconnu",
-            },
-        chat: {
-          // On garde les infos du chat où le message a été envoyé
-          id: msg.chat.id,
-          title: msg.chat.title,
-          username: msg.chat.username,
-          type: msg.chat.type,
-        },
-      }));
-
-    // 3. (Optionnel) Récupérer info d'un canal spécifique si nécessaire
-    //    Ici on suppose que le frontend veut afficher les messages *et* des infos
-    //    sur UN canal spécifique (ex: le canal @DazLngBot comme dans le code frontend)
-    //    Adaptez le TARGET_CHAT_ID si besoin.
-    const targetChatUsername = "DazLngBot"; // Mettez le @username ou l'ID de votre canal/chat principal
-    let channelInfo: TelegramChat | null = null;
-    if (targetChatUsername) {
-      channelInfo = await getChatInfo(`@${targetChatUsername}`); // Ou l'ID numérique si vous l'avez
-    }
-
-    // Construire le lien vers le bot et le canal (si info trouvée)
-    const botUsername = (
-      await (await fetch(`${TELEGRAM_API_BASE}/getMe`)).json()
-    ).result.username;
-    const botLink = `https://t.me/${botUsername || ""}`;
-    const channelLink = channelInfo?.username
-      ? `https://t.me/${channelInfo.username}`
-      : botLink; // Fallback sur le bot si pas de canal
-
-    // 4. Retourner les données formatées pour le frontend
-    //    Adaptez cette structure si votre frontend attend autre chose
-    const responseData = {
-      // Utiliser les infos du canal récupérées ou un objet par défaut
-      channelInfo: channelInfo || {
-        id: 0,
-        title: "Canal Telegram",
-        username: targetChatUsername || "",
-        type: "channel",
-        description: "Infos du canal non trouvées.",
-      },
-      messages: messages,
-      channelLink: channelLink,
-      botLink: botLink,
-    };
-
-    return successResponse(responseData);
+    return successResponse(updatesData.result);
   } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des messages Telegram:",
-      error
-    );
-    return errorResponse(
-      "Erreur lors de la récupération des messages Telegram"
-    );
+    console.error("Error fetching Telegram updates:", error);
+    return errorResponse("Failed to fetch Telegram updates");
   }
 }

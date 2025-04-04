@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 // Configuration pour forcer le rendu dynamique
 export const dynamic = "force-dynamic";
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 // Headers CORS
 export function corsHeaders() {

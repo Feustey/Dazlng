@@ -1,0 +1,179 @@
+{
+  "Home": {
+    "hero": {
+      "title": "Gérez votre nœud Lightning Network en toute simplicité",
+      "subtitle": "Une interface intuitive pour apprendre, visualiser et optimiser vos opérations Lightning",
+      "cta": "Commencer maintenant"
+    },
+    "features": {
+      "title": "Fonctionnalités principales",
+      "learning": {
+        "title": "Guide d'apprentissage interactif",
+        "description": "Apprenez à votre rythme avec notre guide étape par étape sur Lightning Network"
+      },
+      "transactions": {
+        "title": "Visualisation des transactions",
+        "description": "Suivez vos transactions en temps réel avec des graphiques détaillés"
+      },
+      "operations": {
+        "title": "Suivi des opérations",
+        "description": "Gérez et surveillez toutes vos opérations Lightning Network"
+      },
+      "metrics": {
+        "title": "Métriques avancées",
+        "description": "Analysez les performances de votre nœud avec des métriques détaillées"
+      },
+      "nwc": {
+        "title": "Nostr Wallet Connect",
+        "description": "Connectez-vous facilement avec votre portefeuille Nostr"
+      }
+    },
+    "benefits": {
+      "title": "Pourquoi choisir DazLng ?",
+      "items": {
+        "simplicity": "Interface intuitive et facile à utiliser",
+        "security": "Sécurité maximale pour vos opérations",
+        "performance": "Optimisation automatique des performances",
+        "support": "Support technique réactif",
+        "community": "Communauté active et bienveillante"
+      }
+    },
+    "cta": {
+      "title": "Prêt à commencer ?",
+      "description": "Rejoignez la communauté Lightning Network dès aujourd'hui",
+      "button": "Créer un compte"
+    }
+  },
+  "Learn": {
+    "title": "Apprentissage",
+    "guide": "Guide",
+    "visualization": "Visualisation"
+  },
+  "Dashboard": {
+    "title": "Tableau de bord",
+    "operations": "Opérations",
+    "metrics": "Métriques"
+  },
+  "About": {
+    "title": "À propos de DazLng",
+    "description": "DazLng est une application complète de gestion des nœuds Lightning Network, conçue pour simplifier l'utilisation et le déploiement de nœuds Lightning.",
+    "features": {
+      "title": "Fonctionnalités principales",
+      "learning": "Guide d'apprentissage interactif",
+      "transactions": "Visualisation des transactions en temps réel",
+      "operations": "Suivi des opérations",
+      "metrics": "Métriques détaillées des nœuds",
+      "nwc": "Intégration complète de Nostr Wallet Connect"
+    },
+    "team": {
+      "title": "Notre équipe",
+      "description": "Nous sommes une équipe passionnée de développeurs et d'experts en Bitcoin, dédiés à la création d'outils innovants pour l'écosystème Lightning Network."
+    },
+    "contact": {
+      "title": "Contact",
+      "email": "Email",
+      "twitter": "Twitter",
+      "github": "GitHub"
+    }
+  },
+  "Help": {
+    "title": "Centre d'aide",
+    "search": "Rechercher une aide",
+    "categories": {
+      "getting_started": "Premiers pas",
+      "learning": "Guide d'apprentissage",
+      "transactions": "Transactions",
+      "operations": "Opérations",
+      "metrics": "Métriques",
+      "nwc": "Nostr Wallet Connect"
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "what_is_lightning": "Qu'est-ce que Lightning Network ?",
+      "how_to_start": "Comment commencer avec DazLng ?",
+      "how_to_connect": "Comment connecter mon portefeuille ?",
+      "how_to_transact": "Comment effectuer des transactions ?",
+      "how_to_track": "Comment suivre mes opérations ?",
+      "how_to_metrics": "Comment interpréter les métriques ?"
+    },
+    "support": {
+      "title": "Support",
+      "description": "Besoin d'aide supplémentaire ? Notre équipe de support est là pour vous aider.",
+      "contact": "Contacter le support"
+    }
+  },
+  "Learning": {
+    "title": "Guide d'apprentissage Lightning Network",
+    "duration": "Durée",
+    "minutes": "minutes",
+    "completed": "Terminé",
+    "markComplete": "Marquer comme terminé",
+    "steps": {
+      "basics": {
+        "title": "Les bases de Lightning Network",
+        "content": "Découvrez les concepts fondamentaux de Lightning Network, son fonctionnement et ses avantages."
+      },
+      "channels": {
+        "title": "Gestion des canaux",
+        "content": "Apprenez à ouvrir, gérer et fermer des canaux de paiement Lightning."
+      },
+      "transactions": {
+        "title": "Transactions et paiements",
+        "content": "Comprenez comment effectuer des transactions rapides et peu coûteuses sur le réseau Lightning."
+      }
+    }
+  },
+  "Transactions": {
+    "title": "Visualisation des transactions",
+    "selectTimeRange": "Sélectionner la période",
+    "last24Hours": "Dernières 24 heures",
+    "last7Days": "7 derniers jours",
+    "last30Days": "30 derniers jours",
+    "channelStats": "Statistiques des canaux",
+    "totalIncoming": "Total entrant",
+    "totalOutgoing": "Total sortant",
+    "averageAmount": "Montant moyen",
+    "transactionCount": "Nombre de transactions",
+    "transactionHistory": "Historique des transactions",
+    "amount": "Montant"
+  },
+  "Operations": {
+    "title": "Suivi des opérations",
+    "activeOperations": "Opérations en cours",
+    "completedOperations": "Opérations terminées",
+    "started": "Démarré",
+    "completed": "Terminé",
+    "duration": "Durée",
+    "cancel": "Annuler",
+    "types": {
+      "channel_open": "Ouverture de canal",
+      "channel_close": "Fermeture de canal",
+      "payment": "Paiement",
+      "invoice": "Facture"
+    },
+    "status": {
+      "pending": "En attente",
+      "processing": "En cours",
+      "completed": "Terminé",
+      "failed": "Échoué"
+    }
+  },
+  "Metrics": {
+    "title": "Métriques du nœud",
+    "uptime": "Temps de fonctionnement",
+    "activeChannels": "Canaux actifs",
+    "totalCapacity": "Capacité totale",
+    "successRate": "Taux de réussite",
+    "overview": "Vue d'ensemble",
+    "channels": "Canaux",
+    "transactions": "Transactions",
+    "capacityDistribution": "Distribution de la capacité",
+    "incoming": "Entrant",
+    "outgoing": "Sortant",
+    "networkRank": "Rang réseau",
+    "channelMetrics": "Métriques des canaux",
+    "localBalance": "Solde local",
+    "remoteBalance": "Solde distant",
+    "transactionMetrics": "Métriques des transactions"
+  }
+}

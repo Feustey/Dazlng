@@ -49,24 +49,10 @@ const USE_MOCK_DATA = process.env.NODE_ENV === "development";
 
 export async function GET() {
   try {
-    // Tentez d'abord d'obtenir les données réelles
-    const centralites = await mcpService.getCentralities();
-    console.log("API centralities route: centralités récupérées avec succès");
-    return successResponse(centralites);
+    const centralities = await mcpService.getCentralities();
+    return successResponse(centralities);
   } catch (error) {
-    console.error("Erreur lors de la récupération des centralités:", error);
-
-    // Si mode développement, retournez des données fictives
-    if (USE_MOCK_DATA) {
-      console.log(
-        "API centralities route: utilisation des données fictives (mode développement)"
-      );
-      return successResponse(mockCentralities);
-    }
-
-    // Sinon, retournez une erreur
-    return errorResponse(
-      "Erreur lors de la récupération des centralités du réseau"
-    );
+    console.error("Error fetching centralities:", error);
+    return errorResponse("Failed to fetch centralities");
   }
 }

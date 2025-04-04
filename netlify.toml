@@ -13,6 +13,9 @@
   NODE_OPTIONS = "--max_old_space_size=4096"
   PRISMA_GENERATE_DATAPROXY = "true"
   NEXT_PUBLIC_RUNTIME_CONFIG = "{\"NEXT_PUBLIC_API_URL\":\"https://api.dazlng.com\"}"
+  NEXT_PUBLIC_ENABLE_NWC = "true"
+  NEXT_PUBLIC_ENABLE_TESTNET = "true"
+  NEXT_PUBLIC_ENABLE_METRICS = "true"
 
 [build.processing]
   skip_processing = false
@@ -32,6 +35,7 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
     Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://api.dazlng.com wss://*;"
 
 [[headers]]
   for = "/fonts/*"
@@ -56,12 +60,12 @@
 [functions]
   node_bundler = "esbuild"
   included_files = ["public/**"]
-  external_node_modules = ["@prisma/client"]
+  external_node_modules = ["@prisma/client", "@nostr/wallet-connect"]
 
 [functions.server]
   included_files = ["public/**/*", ".next/static/**/*"]
   node_bundler = "esbuild"
-  external_node_modules = ["@prisma/client"]
+  external_node_modules = ["@prisma/client", "@nostr/wallet-connect"]
 
 [functions.update-data]
   schedule = "0 0 * * *"
@@ -72,7 +76,21 @@
   runtime = "nodejs18.x"
   timeout = 30
 
+[functions.metrics]
+  schedule = "*/5 * * * *"
+  runtime = "nodejs18.x"
+  timeout = 30
+
+[functions.nwc-handler]
+  runtime = "nodejs18.x"
+  timeout = 30
+
 [[redirects]]
   from = "/*"
   to = "/.netlify/functions/server"
+  status = 200
+
+[[redirects]]
+  from = "/api/nwc/*"
+  to = "/.netlify/functions/nwc-handler"
   status = 200
