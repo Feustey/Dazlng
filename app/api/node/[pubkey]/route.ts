@@ -1,5 +1,13 @@
 import { NextResponse } from "next/server";
 import { getNodeDetails } from "@/app/lib/mcp";
+import {
+  dynamic,
+  runtime,
+  errorResponse,
+  successResponse,
+} from "@/app/api/config";
+
+export { dynamic, runtime };
 
 export async function GET(
   request: Request,
@@ -7,12 +15,9 @@ export async function GET(
 ) {
   try {
     const nodeDetails = await getNodeDetails(params.pubkey);
-    return NextResponse.json(nodeDetails);
+    return successResponse(nodeDetails);
   } catch (error) {
     console.error("Error fetching node details:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch node details" },
-      { status: 500 }
-    );
+    return errorResponse("Failed to fetch node details");
   }
 }

@@ -1,5 +1,13 @@
 import { NextResponse } from "next/server";
 import telegramService from "@/app/lib/telegramService";
+import {
+  dynamic,
+  runtime,
+  errorResponse,
+  successResponse,
+} from "@/app/api/config";
+
+export { dynamic, runtime };
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_API_BASE = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
@@ -77,10 +85,7 @@ async function getChatInfo(
 
 export async function GET() {
   if (!TELEGRAM_BOT_TOKEN) {
-    return NextResponse.json(
-      { error: "Telegram Bot Token n'est pas configuré." },
-      { status: 500 }
-    );
+    return errorResponse("Telegram Bot Token n'est pas configuré.");
   }
 
   try {
@@ -187,13 +192,14 @@ export async function GET() {
       botLink: botLink,
     };
 
-    return NextResponse.json(responseData);
+    return successResponse(responseData);
   } catch (error) {
-    console.error("Erreur dans l'API Route /api/telegram:", error);
-    const errorMessage =
-      error instanceof Error
-        ? error.message
-        : "Une erreur interne est survenue.";
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+    console.error(
+      "Erreur lors de la récupération des messages Telegram:",
+      error
+    );
+    return errorResponse(
+      "Erreur lors de la récupération des messages Telegram"
+    );
   }
 }

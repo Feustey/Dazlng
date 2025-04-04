@@ -2,6 +2,14 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { connectToDatabase } from "@/app/lib/db";
 import { Session } from "@/app/lib/models/Session";
+import {
+  dynamic,
+  runtime,
+  errorResponse,
+  successResponse,
+} from "@/app/api/config";
+
+export { dynamic, runtime };
 
 export async function GET(request: Request) {
   try {
@@ -9,7 +17,7 @@ export async function GET(request: Request) {
     const sessionId = headersList.get("x-session-id");
 
     if (!sessionId) {
-      return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+      return errorResponse("Non authentifié", 401);
     }
 
     await connectToDatabase();
@@ -20,7 +28,7 @@ export async function GET(request: Request) {
     });
 
     if (!session) {
-      return NextResponse.json({ error: "Session expirée" }, { status: 401 });
+      return errorResponse("Session expirée", 401);
     }
 
     // Données de démonstration pour le tableau de bord
@@ -52,12 +60,9 @@ export async function GET(request: Request) {
       },
     };
 
-    return NextResponse.json(mockData);
+    return successResponse(mockData);
   } catch (error) {
     console.error("Erreur lors de la récupération des données:", error);
-    return NextResponse.json(
-      { error: "Erreur interne du serveur" },
-      { status: 500 }
-    );
+    return errorResponse("Erreur interne du serveur");
   }
 }

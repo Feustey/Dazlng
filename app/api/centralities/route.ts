@@ -1,5 +1,13 @@
 import { NextResponse } from "next/server";
 import mcpService from "@/app/lib/mcpService";
+import {
+  dynamic,
+  runtime,
+  errorResponse,
+  successResponse,
+} from "@/app/api/config";
+
+export { dynamic, runtime };
 
 // Données fictives pour le développement
 const mockCentralities = {
@@ -44,7 +52,7 @@ export async function GET() {
     // Tentez d'abord d'obtenir les données réelles
     const centralites = await mcpService.getCentralities();
     console.log("API centralities route: centralités récupérées avec succès");
-    return NextResponse.json(centralites);
+    return successResponse(centralites);
   } catch (error) {
     console.error("Erreur lors de la récupération des centralités:", error);
 
@@ -53,19 +61,12 @@ export async function GET() {
       console.log(
         "API centralities route: utilisation des données fictives (mode développement)"
       );
-      return NextResponse.json(mockCentralities);
+      return successResponse(mockCentralities);
     }
 
     // Sinon, retournez une erreur
-    return new NextResponse(
-      JSON.stringify({
-        message: "Erreur lors de la récupération des centralités du réseau",
-        error: error instanceof Error ? error.message : String(error),
-      }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
+    return errorResponse(
+      "Erreur lors de la récupération des centralités du réseau"
     );
   }
 }

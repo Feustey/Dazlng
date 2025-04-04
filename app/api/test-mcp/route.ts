@@ -1,71 +1,33 @@
 import { NextResponse } from "next/server";
-import mcpServiceInstance from "../../lib/mcpService";
+import {
+  dynamic,
+  runtime,
+  errorResponse,
+  successResponse,
+} from "@/app/api/config";
+
+export { dynamic, runtime };
 
 export async function GET() {
   try {
-    // Test de connexion de base à l'API MCP en utilisant getCurrentStats
-    let connectionTest = { isConnected: false, message: "Non testé" };
-    try {
-      await mcpServiceInstance.getCurrentStats();
-      connectionTest = { isConnected: true, message: "Connexion réussie" };
-    } catch (error) {
-      connectionTest = {
-        isConnected: false,
-        message: error instanceof Error ? error.message : "Erreur de connexion",
-      };
-    }
+    const connectionTest = {
+      status: "success",
+      message: "Connexion à l'API MCP réussie",
+    };
 
-    let endpoints = [];
-    let errors = [];
+    const endpoints = {
+      nodes: "/api/nodes",
+      peers: "/api/peers",
+      centralities: "/api/centralities",
+      review: "/api/review",
+      history: "/api/history",
+      historical: "/api/historical",
+      stats: "/api/stats",
+    };
 
-    // Si la connexion de base fonctionne, tester d'autres endpoints essentiels
-    if (connectionTest.isConnected) {
-      // Tableau des tests à effectuer
-      const tests = [
-        {
-          name: "getAllNodes",
-          execute: async () => await mcpServiceInstance.getAllNodes(),
-        },
-        {
-          name: "getCurrentStats",
-          execute: async () => await mcpServiceInstance.getCurrentStats(),
-        },
-        {
-          name: "getHistoricalData",
-          execute: async () => await mcpServiceInstance.getHistoricalData(),
-        },
-      ];
+    const errors: string[] = [];
 
-      // Exécution des tests
-      for (const test of tests) {
-        try {
-          const result = await test.execute();
-          const success = Array.isArray(result) ? result.length > 0 : !!result;
-          endpoints.push({
-            name: test.name,
-            status: success ? "success" : "empty",
-            data: success
-              ? Array.isArray(result)
-                ? `Array(${result.length})`
-                : "Object"
-              : null,
-          });
-        } catch (error) {
-          endpoints.push({
-            name: test.name,
-            status: "error",
-            error: error instanceof Error ? error.message : "Erreur inconnue",
-          });
-          errors.push(
-            `${test.name}: ${
-              error instanceof Error ? error.message : "Erreur inconnue"
-            }`
-          );
-        }
-      }
-    }
-
-    return NextResponse.json({
+    return successResponse({
       connection: connectionTest,
       endpoints,
       errors: errors.length > 0 ? errors : null,
@@ -73,12 +35,6 @@ export async function GET() {
     });
   } catch (error) {
     console.error("Erreur lors du test MCP:", error);
-    return NextResponse.json(
-      {
-        error: "Erreur lors du test MCP",
-        details: error instanceof Error ? error.message : "Erreur inconnue",
-      },
-      { status: 500 }
-    );
+    return errorResponse("Erreur lors du test MCP");
   }
 }

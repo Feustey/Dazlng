@@ -3,6 +3,14 @@ import { cookies } from "next/headers";
 import { sign } from "jsonwebtoken";
 import secp256k1 from "secp256k1";
 import { createHash } from "crypto";
+import {
+  dynamic,
+  runtime,
+  errorResponse,
+  successResponse,
+} from "@/app/api/config";
+
+export { dynamic, runtime };
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 
@@ -12,7 +20,7 @@ export async function POST(request: Request) {
 
     // Vérifier que le message commence par notre préfixe
     if (!message.startsWith("lnplus-login-")) {
-      return NextResponse.json({ error: "invalidMessage" }, { status: 400 });
+      return errorResponse("invalidMessage", 400);
     }
 
     try {
@@ -27,7 +35,7 @@ export async function POST(request: Request) {
 
       // Vérifier que la clé publique est valide
       if (!secp256k1.publicKeyVerify(pubkeyBuffer)) {
-        return NextResponse.json({ error: "invalidPubkey" }, { status: 400 });
+        return errorResponse("invalidPubkey", 400);
       }
 
       // Vérifier la signature
@@ -38,10 +46,7 @@ export async function POST(request: Request) {
       );
 
       if (!isValid) {
-        return NextResponse.json(
-          { error: "invalidSignature" },
-          { status: 400 }
-        );
+        return errorResponse("invalidSignature", 400);
       }
 
       // Créer un JWT avec la clé publique comme identifiant
@@ -62,13 +67,13 @@ export async function POST(request: Request) {
         path: "/",
       });
 
-      return NextResponse.json({ success: true });
+      return successResponse({ success: true });
     } catch (signatureError) {
       console.error("Error verifying signature:", signatureError);
-      return NextResponse.json({ error: "invalidFormat" }, { status: 400 });
+      return errorResponse("invalidFormat", 400);
     }
   } catch (error) {
     console.error("Error processing request:", error);
-    return NextResponse.json({ error: "unknown" }, { status: 500 });
+    return errorResponse("unknown");
   }
 }

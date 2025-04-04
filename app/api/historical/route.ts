@@ -2,13 +2,21 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { connectToDatabase } from "@/app/lib/db";
 import { Session } from "@/app/lib/models/Session";
+import {
+  dynamic,
+  runtime,
+  errorResponse,
+  successResponse,
+} from "@/app/api/config";
+
+export { dynamic, runtime };
 
 export async function GET() {
   try {
     const sessionId = cookies().get("session_id")?.value;
 
     if (!sessionId) {
-      return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+      return errorResponse("Non authentifié", 401);
     }
 
     await connectToDatabase();
@@ -19,7 +27,7 @@ export async function GET() {
     });
 
     if (!session) {
-      return NextResponse.json({ error: "Session expirée" }, { status: 401 });
+      return errorResponse("Session expirée", 401);
     }
 
     // Données historiques de démonstration
@@ -32,15 +40,12 @@ export async function GET() {
       total_volume: 5000000 - i * 50000,
     }));
 
-    return NextResponse.json(mockHistoricalData);
+    return successResponse(mockHistoricalData);
   } catch (error) {
     console.error(
       "Erreur lors de la récupération des données historiques:",
       error
     );
-    return NextResponse.json(
-      { error: "Erreur interne du serveur" },
-      { status: 500 }
-    );
+    return errorResponse("Erreur interne du serveur");
   }
 }

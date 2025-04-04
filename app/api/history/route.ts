@@ -1,5 +1,13 @@
 import { NextResponse } from "next/server";
 import { prisma, testConnection } from "../../lib/prisma";
+import {
+  dynamic,
+  runtime,
+  errorResponse,
+  successResponse,
+} from "@/app/api/config";
+
+export { dynamic, runtime };
 
 export async function GET() {
   try {
@@ -9,10 +17,7 @@ export async function GET() {
     const isConnected = await testConnection();
     if (!isConnected) {
       console.error("Échec de la connexion à la base de données");
-      return NextResponse.json(
-        { error: "Impossible de se connecter à la base de données" },
-        { status: 500 }
-      );
+      return errorResponse("Impossible de se connecter à la base de données");
     }
 
     console.log("Récupération de l'historique...");
@@ -24,7 +29,7 @@ export async function GET() {
     });
 
     console.log(`${history.length} entrées d'historique récupérées`);
-    return NextResponse.json(history);
+    return successResponse(history);
   } catch (error) {
     console.error("Erreur lors de la récupération de l'historique:", error);
 
@@ -32,19 +37,12 @@ export async function GET() {
     if (error instanceof Error) {
       console.error("Message d'erreur:", error.message);
       if (error.message.includes("empty database name")) {
-        return NextResponse.json(
-          {
-            error:
-              "Erreur de configuration de la base de données. Vérifiez l'URL de connexion MongoDB.",
-          },
-          { status: 500 }
+        return errorResponse(
+          "Erreur de configuration de la base de données. Vérifiez l'URL de connexion MongoDB."
         );
       }
     }
 
-    return NextResponse.json(
-      { error: "Erreur lors de la récupération de l'historique" },
-      { status: 500 }
-    );
+    return errorResponse("Erreur lors de la récupération de l'historique");
   }
 }

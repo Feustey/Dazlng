@@ -1,5 +1,13 @@
 import { NextResponse } from "next/server";
 import mcpService from "@/app/lib/mcpService";
+import {
+  dynamic,
+  runtime,
+  errorResponse,
+  successResponse,
+} from "@/app/api/config";
+
+export { dynamic, runtime };
 
 export async function POST(request: Request) {
   try {
@@ -21,7 +29,7 @@ export async function POST(request: Request) {
         mcpService.analyzeQuestion(question, nodePubkey),
       ]);
 
-    return NextResponse.json({
+    return successResponse({
       status: "success",
       nodeInfo,
       networkMetrics,
@@ -30,9 +38,6 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error("Erreur lors de l'analyse:", error);
-    return NextResponse.json(
-      { error: "Erreur lors de l'analyse de la question" },
-      { status: 500 }
-    );
+    return errorResponse("Erreur lors de l'analyse de la question");
   }
 }

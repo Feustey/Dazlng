@@ -2,6 +2,14 @@ import { NextResponse } from "next/server";
 import { randomInt } from "crypto";
 import { connectToDatabase } from "@/app/lib/db";
 import { VerificationCode } from "@/app/lib/models/VerificationCode";
+import {
+  dynamic,
+  runtime,
+  errorResponse,
+  successResponse,
+} from "@/app/api/config";
+
+export { dynamic, runtime };
 
 export async function POST(request: Request) {
   try {
@@ -10,7 +18,7 @@ export async function POST(request: Request) {
 
     if (!email) {
       console.error("Email manquant dans la requête");
-      return NextResponse.json({ error: "Email is required" }, { status: 400 });
+      return errorResponse("Email is required", 400);
     }
 
     console.log("Tentative de connexion à la base de données...");
@@ -40,7 +48,7 @@ export async function POST(request: Request) {
     // TODO: En production, envoyez un vrai email
     console.log(`Code de vérification pour ${email}: ${code}`);
 
-    return NextResponse.json({ success: true });
+    return successResponse({ success: true });
   } catch (error) {
     console.error(
       "Erreur détaillée lors de l'envoi du code de vérification:",
@@ -50,9 +58,6 @@ export async function POST(request: Request) {
       console.error("Message d'erreur:", error.message);
       console.error("Stack trace:", error.stack);
     }
-    return NextResponse.json(
-      { error: "Failed to send verification code" },
-      { status: 500 }
-    );
+    return errorResponse("Failed to send verification code");
   }
 }

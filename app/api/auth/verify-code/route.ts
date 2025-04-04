@@ -4,16 +4,21 @@ import { randomBytes } from "crypto";
 import { connectToDatabase } from "@/app/lib/db";
 import { VerificationCode } from "@/app/lib/models/VerificationCode";
 import { Session } from "@/app/lib/models/Session";
+import {
+  dynamic,
+  runtime,
+  errorResponse,
+  successResponse,
+} from "@/app/api/config";
+
+export { dynamic, runtime };
 
 export async function POST(request: Request) {
   try {
     const { email, code } = await request.json();
 
     if (!email || !code) {
-      return NextResponse.json(
-        { error: "Email and code are required" },
-        { status: 400 }
-      );
+      return errorResponse("Email and code are required", 400);
     }
 
     // Connexion à la base de données
@@ -26,17 +31,14 @@ export async function POST(request: Request) {
     });
 
     if (!verificationCode) {
-      return NextResponse.json(
-        { error: "No verification code found or code has expired" },
-        { status: 400 }
+      return errorResponse(
+        "No verification code found or code has expired",
+        400
       );
     }
 
     if (verificationCode.code !== code) {
-      return NextResponse.json(
-        { error: "Invalid verification code" },
-        { status: 400 }
-      );
+      return errorResponse("Invalid verification code", 400);
     }
 
     // Code valide, supprimer le code de vérification
@@ -61,12 +63,9 @@ export async function POST(request: Request) {
       path: "/",
     });
 
-    return NextResponse.json({ success: true });
+    return successResponse({ success: true });
   } catch (error) {
     console.error("Error verifying code:", error);
-    return NextResponse.json(
-      { error: "Failed to verify code" },
-      { status: 500 }
-    );
+    return errorResponse("Failed to verify code");
   }
 }
