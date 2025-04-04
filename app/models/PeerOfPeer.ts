@@ -1,33 +1,13 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const peerOfPeerSchema = new mongoose.Schema({
-  nodePubkey: { type: String, required: true },
-  peerPubkey: { type: String, required: true },
-  alias: { type: String, required: true },
-  platform: { type: String, required: true },
-  version: { type: String, required: true },
-  total_fees: { type: Number, required: true },
-  avg_fee_rate_ppm: { type: Number, required: true },
-  total_capacity: { type: Number, required: true },
-  active_channels: { type: Number, required: true },
-  total_volume: { type: Number, required: true },
-  total_peers: { type: Number, required: true },
-  uptime: { type: Number, required: true },
-  opened_channel_count: { type: Number, required: true },
-  color: { type: String, required: true },
-  address: { type: String, required: true },
-  closed_channel_count: { type: Number, required: true },
-  pending_channel_count: { type: Number, required: true },
-  avg_capacity: { type: Number, required: true },
-  avg_fee_rate: { type: Number, required: true },
-  avg_base_fee_rate: { type: Number, required: true },
-  betweenness_rank: { type: Number, required: true },
-  eigenvector_rank: { type: Number, required: true },
-  closeness_rank: { type: Number, required: true },
-  weighted_betweenness_rank: { type: Number, required: true },
-  weighted_closeness_rank: { type: Number, required: true },
-  weighted_eigenvector_rank: { type: Number, required: true },
-  timestamp: { type: Date, default: Date.now }
+  nodePubkey: String,
+  peerPubkey: String,
+  alias: String,
+  total_capacity: Number,
+  active_channels: Number,
+  total_peers: Number,
+  timestamp: { type: Date, default: Date.now },
 });
 
 // Index pour les requêtes fréquentes
@@ -35,7 +15,8 @@ peerOfPeerSchema.index({ nodePubkey: 1 });
 peerOfPeerSchema.index({ peerPubkey: 1 });
 peerOfPeerSchema.index({ timestamp: -1 });
 
-const PeerOfPeer = mongoose.models.PeerOfPeer || mongoose.model('PeerOfPeer', peerOfPeerSchema);
+const PeerOfPeer =
+  mongoose.models.PeerOfPeer || mongoose.model("PeerOfPeer", peerOfPeerSchema);
 
 export interface IPeerOfPeer {
   _id?: string;
@@ -68,4 +49,4 @@ export interface IPeerOfPeer {
   timestamp: Date;
 }
 
-export default PeerOfPeer; 
+export default PeerOfPeer;

@@ -1,3 +1,6 @@
+import { connectToDatabase } from "./mongodb";
+import mongoose from "mongoose";
+
 interface Node {
   pubkey: string;
   alias: string;
@@ -65,7 +68,9 @@ interface NetworkSummaryData {
   totalNodes: number;
   totalChannels: number;
   totalCapacity: number;
-  // ... autres métriques de résumé réseau
+  avgCapacityPerChannel: number;
+  avgChannelsPerNode: number;
+  timestamp: string;
 }
 
 interface OptimizationResult {
@@ -81,85 +86,193 @@ interface NodeInfo {
   // ...
 }
 
+// Constante pour l'alias du nœud de secours
+const FALLBACK_NODE_ALIAS = "feustey";
+
 const mcpService = {
   async getAllNodes(): Promise<Node[]> {
-    const response = await fetch(`${process.env.MCP_API_URL}/nodes`);
-    if (!response.ok) {
-      throw new Error("Erreur lors de la récupération des nœuds");
+    try {
+      const response = await fetch(`${process.env.MCP_API_URL}/nodes`);
+      if (!response.ok) {
+        throw new Error("Erreur lors de la récupération des nœuds");
+      }
+      return response.json();
+    } catch (error) {
+      console.warn(
+        "MCP indisponible, utilisation des données de secours:",
+        error
+      );
+      const db = await connectToDatabase();
+      // Récupérer uniquement le nœud feustey
+      const node = await db
+        .model("Node")
+        .findOne({ alias: FALLBACK_NODE_ALIAS });
+      return node ? [node] : [];
     }
-    return response.json();
   },
 
   async getPeersOfPeers(
     nodePubkey: string
   ): Promise<{ peers_of_peers: PeerOfPeer[] }> {
-    const response = await fetch(
-      `${process.env.MCP_API_URL}/node/${nodePubkey}/peers`
-    );
-    if (!response.ok) {
-      throw new Error("Erreur lors de la récupération des pairs");
+    try {
+      const response = await fetch(
+        `${process.env.MCP_API_URL}/node/${nodePubkey}/peers`
+      );
+      if (!response.ok) {
+        throw new Error("Erreur lors de la récupération des pairs");
+      }
+      return response.json();
+    } catch (error) {
+      console.warn(
+        "MCP indisponible, utilisation des données de secours:",
+        error
+      );
+      const db = await connectToDatabase();
+      // Récupérer les pairs du nœud feustey
+      const peers = await db
+        .model("PeerOfPeer")
+        .find({ nodePubkey: process.env.NODE_PUBKEY });
+      return { peers_of_peers: peers };
     }
-    return response.json();
   },
 
   async getCurrentStats(): Promise<NodeStats> {
-    const nodePubkey = process.env.NODE_PUBKEY;
-    if (!nodePubkey) {
-      throw new Error(
-        "NODE_PUBKEY non défini dans les variables d'environnement"
-      );
-    }
+    try {
+      const nodePubkey = process.env.NODE_PUBKEY;
+      if (!nodePubkey) {
+        throw new Error(
+          "NODE_PUBKEY non défini dans les variables d'environnement"
+        );
+      }
 
-    const response = await fetch(
-      `${process.env.MCP_API_URL}/node/${nodePubkey}/stats`
-    );
-    if (!response.ok) {
-      throw new Error(
-        "Erreur lors de la récupération des statistiques actuelles"
+      const response = await fetch(
+        `${process.env.MCP_API_URL}/node/${nodePubkey}/stats`
       );
+      if (!response.ok) {
+        throw new Error(
+          "Erreur lors de la récupération des statistiques actuelles"
+        );
+      }
+      return response.json();
+    } catch (error) {
+      console.warn(
+        "MCP indisponible, utilisation des données de secours:",
+        error
+      );
+      const db = await connectToDatabase();
+      // Récupérer les stats du nœud feustey
+      const stats = await db
+        .model("NodeStats")
+        .findOne({ alias: FALLBACK_NODE_ALIAS })
+        .sort({ timestamp: -1 });
+      if (!stats) {
+        throw new Error("Aucune donnée de secours disponible");
+      }
+      return stats;
     }
-    return response.json();
   },
 
   async getHistoricalData(): Promise<HistoricalData[]> {
-    const nodePubkey = process.env.NODE_PUBKEY;
-    if (!nodePubkey) {
-      throw new Error(
-        "NODE_PUBKEY non défini dans les variables d'environnement"
-      );
-    }
+    try {
+      const nodePubkey = process.env.NODE_PUBKEY;
+      if (!nodePubkey) {
+        throw new Error(
+          "NODE_PUBKEY non défini dans les variables d'environnement"
+        );
+      }
 
-    const response = await fetch(
-      `${process.env.MCP_API_URL}/node/${nodePubkey}/history`
-    );
-    if (!response.ok) {
-      throw new Error("Erreur lors de la récupération des données historiques");
+      const response = await fetch(
+        `${process.env.MCP_API_URL}/node/${nodePubkey}/history`
+      );
+      if (!response.ok) {
+        throw new Error(
+          "Erreur lors de la récupération des données historiques"
+        );
+      }
+      return response.json();
+    } catch (error) {
+      console.warn(
+        "MCP indisponible, utilisation des données de secours:",
+        error
+      );
+      const db = await connectToDatabase();
+      // Récupérer l'historique du nœud feustey
+      const history = await db
+        .model("HistoricalData")
+        .find({ alias: FALLBACK_NODE_ALIAS })
+        .sort({ timestamp: -1 })
+        .limit(30); // Limite aux 30 dernières entrées
+      return history;
     }
-    return response.json();
   },
 
   async getCentralities(): Promise<CentralityData> {
-    const nodePubkey = process.env.NODE_PUBKEY;
-    if (!nodePubkey) {
-      throw new Error("NODE_PUBKEY non défini");
-    }
-    const response = await fetch(
-      `${process.env.MCP_API_URL}/node/${nodePubkey}/centralities`
-    );
-    if (!response.ok) {
-      throw new Error(
-        "Erreur lors de la récupération des données de centralité"
+    try {
+      const nodePubkey = process.env.NODE_PUBKEY;
+      if (!nodePubkey) {
+        throw new Error("NODE_PUBKEY non défini");
+      }
+      const response = await fetch(
+        `${process.env.MCP_API_URL}/node/${nodePubkey}/centralities`
       );
+      if (!response.ok) {
+        throw new Error(
+          "Erreur lors de la récupération des données de centralité"
+        );
+      }
+      return response.json();
+    } catch (error) {
+      console.warn(
+        "MCP indisponible, utilisation des données de secours:",
+        error
+      );
+      const db = await connectToDatabase();
+      // Récupérer les centralités du nœud feustey
+      const centralities = await db
+        .model("CentralityData")
+        .findOne({ alias: FALLBACK_NODE_ALIAS })
+        .sort({ timestamp: -1 });
+      if (!centralities) {
+        throw new Error("Aucune donnée de centralité de secours disponible");
+      }
+      return centralities;
     }
-    return response.json();
   },
 
   async getNetworkSummary(): Promise<NetworkSummaryData> {
-    const response = await fetch(`${process.env.MCP_API_URL}/network/summary`);
-    if (!response.ok) {
-      throw new Error("Erreur lors de la récupération du résumé réseau");
+    try {
+      const response = await fetch(
+        `${process.env.MCP_API_URL}/network/summary`
+      );
+      if (!response.ok) {
+        throw new Error("Erreur lors de la récupération du résumé réseau");
+      }
+      return response.json();
+    } catch (error) {
+      console.warn(
+        "MCP indisponible, utilisation des données de secours:",
+        error
+      );
+      const db = await connectToDatabase();
+      // Créer un résumé réseau basé sur les données du nœud feustey
+      const nodeStats = await db
+        .model("NodeStats")
+        .findOne({ alias: FALLBACK_NODE_ALIAS })
+        .sort({ timestamp: -1 });
+      if (!nodeStats) {
+        throw new Error("Aucune donnée de secours disponible");
+      }
+
+      // Créer un résumé réseau minimal basé sur les données du nœud
+      return {
+        totalNodes: 1,
+        totalChannels: nodeStats.active_channels || 0,
+        totalCapacity: nodeStats.total_capacity || 0,
+        avgCapacityPerChannel: nodeStats.avg_capacity || 0,
+        avgChannelsPerNode: nodeStats.active_channels || 0,
+        timestamp: new Date().toISOString(),
+      };
     }
-    return response.json();
   },
 
   async optimizeNode(nodePubkey: string): Promise<OptimizationResult> {
