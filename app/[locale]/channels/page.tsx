@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 import { Search, ChevronDown, TrendingDown } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface Node {
   pubkey: string;

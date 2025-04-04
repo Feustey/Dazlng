@@ -1,4 +1,13 @@
+// Ce fichier est conservé pour des raisons de compatibilité
+// mais les modèles ont été migrés vers Prisma
+
+import { prisma } from "../lib/db";
+
+// Les modèles Mongoose ont été remplacés par des modèles Prisma
+// Ce fichier est conservé pour des raisons de compatibilité
+
 import mongoose from "mongoose";
+
 import type { MongoNode } from "./Node";
 
 const nodeSchema = new mongoose.Schema<MongoNode>({

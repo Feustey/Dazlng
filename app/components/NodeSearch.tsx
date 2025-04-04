@@ -1,7 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import * as React from "react";
+
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { useEffect, useState } from "react";
+
 import { useNode } from "@/app/contexts/NodeContext";
 
 interface Node {

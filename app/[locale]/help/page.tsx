@@ -10,7 +10,6 @@ import {
   BookOpenIcon,
   BarChartIcon,
   ZapIcon,
-  HelpCircleIcon,
   MailIcon,
 } from "lucide-react";
 import {

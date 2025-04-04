@@ -1,6 +1,8 @@
-'use client';
+"use client";
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import * as React from "react";
+
+import { createContext, useContext, useState } from "react";
 
 interface SettingsContextType {
   language: string;
@@ -10,21 +12,33 @@ interface SettingsContextType {
 }
 
 const SettingsContext = createContext<SettingsContextType>({
-  language: 'fr',
-  setLanguage: () => {},
-  currency: 'btc',
-  setCurrency: () => {},
+  language: "fr",
+  setLanguage: () => {
+    // Cette méthode est implémentée dans le SettingsProvider
+    console.warn("setLanguage called before provider initialization");
+  },
+  currency: "btc",
+  setCurrency: () => {
+    // Cette méthode est implémentée dans le SettingsProvider
+    console.warn("setCurrency called before provider initialization");
+  },
 });
 
 export const useSettings = () => useContext(SettingsContext);
 
-export const SettingsProvider = ({ children }: { children: ReactNode }) => {
-  const [language, setLanguage] = useState('fr');
-  const [currency, setCurrency] = useState('btc');
+export const SettingsProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [language, setLanguage] = useState("fr");
+  const [currency, setCurrency] = useState("btc");
 
   return (
-    <SettingsContext.Provider value={{ language, setLanguage, currency, setCurrency }}>
+    <SettingsContext.Provider
+      value={{ language, setLanguage, currency, setCurrency }}
+    >
       {children}
     </SettingsContext.Provider>
   );
-}; 
+};

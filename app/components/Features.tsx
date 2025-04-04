@@ -1,5 +1,10 @@
+"use client";
+
+import * as React from "react";
+
+import { Globe, MessageSquare, Shield, Zap } from "lucide-react";
+
 import { Card } from "@/app/components/ui/card";
-import { Zap, Shield, Globe, MessageSquare } from "lucide-react";
 
 interface Feature {
   title: string;

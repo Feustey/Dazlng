@@ -56,7 +56,7 @@ export default function BotPage() {
         setContent(data);
       } catch (error) {
         console.error("Error loading bot content:", error);
-        toast.error(content?.errors.loadFailed || "Failed to load bot");
+        toast.error("Failed to load bot");
       }
     }
 

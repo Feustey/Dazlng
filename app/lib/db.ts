@@ -1,7 +1,10 @@
+"use client";
+
 import { PrismaClient } from "@prisma/client";
 import { withAccelerate } from "@prisma/extension-accelerate";
 
 declare global {
+  // eslint-disable-next-line no-var
   var prisma: PrismaClient | undefined;
 }
 
@@ -49,13 +52,13 @@ export async function monitorConnectionPool() {
     const result = await prisma.$queryRaw`
       SELECT count(*) as active_connections 
       FROM pg_stat_activity 
-      WHERE state = 'active'
+      WHERE state = 'active';
     `;
-    console.log("Connexions actives:", result[0].active_connections);
-    return result[0].active_connections;
+    console.log("État du pool de connexions:", result);
+    return result;
   } catch (error) {
     console.error("Erreur lors de la surveillance du pool:", error);
-    return null;
+    throw error;
   }
 }
 

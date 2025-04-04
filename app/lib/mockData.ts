@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Données fictives pour le développement et les tests
  * À utiliser quand l'API MCP n'est pas disponible

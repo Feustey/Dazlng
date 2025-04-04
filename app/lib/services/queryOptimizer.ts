@@ -1,25 +1,23 @@
-import { connectToDatabase } from "../mongodb";
-import Node from "../../models/Node";
-import PeerOfPeer from "../../models/PeerOfPeer";
-import { Document } from "mongoose";
+import { prisma } from "../db";
+import { connectToDatabase } from "../db";
 
 interface CacheEntry<T> {
   data: T;
   timestamp: number;
 }
 
-interface NodeDocument extends Document {
+interface NodeDocument {
   pubkey: string;
   alias: string;
   platform: string;
   version: string;
   total_capacity: number;
-  active_channel_count: number;
+  active_channels: number;
   total_peers: number;
   uptime: number;
 }
 
-interface PeerOfPeerDocument extends Document {
+interface PeerOfPeerDocument {
   peerPubkey: string;
   alias: string;
   total_capacity: number;
@@ -66,11 +64,19 @@ export class QueryOptimizer {
 
     try {
       await connectToDatabase();
-      const node = await Node.findOne({ pubkey })
-        .select(
-          "pubkey alias platform version total_capacity active_channel_count total_peers uptime"
-        )
-        .lean();
+      const node = await prisma.node.findUnique({
+        where: { pubkey },
+        select: {
+          pubkey: true,
+          alias: true,
+          platform: true,
+          version: true,
+          total_capacity: true,
+          active_channels: true,
+          total_peers: true,
+          uptime: true,
+        },
+      });
 
       if (node) {
         this.queryCache.set(cacheKey, {
@@ -98,13 +104,18 @@ export class QueryOptimizer {
 
     try {
       await connectToDatabase();
-      const nodes = await Node.find()
-        .sort({ total_capacity: -1 })
-        .limit(limit)
-        .select(
-          "pubkey alias total_capacity active_channel_count total_peers uptime"
-        )
-        .lean();
+      const nodes = await prisma.node.findMany({
+        orderBy: { total_capacity: "desc" },
+        take: limit,
+        select: {
+          pubkey: true,
+          alias: true,
+          total_capacity: true,
+          active_channels: true,
+          total_peers: true,
+          uptime: true,
+        },
+      });
 
       this.queryCache.set(cacheKey, {
         data: nodes as NodeDocument[],
@@ -132,11 +143,18 @@ export class QueryOptimizer {
 
     try {
       await connectToDatabase();
-      const peers = await PeerOfPeer.find({ nodePubkey })
-        .sort({ timestamp: -1 })
-        .limit(50)
-        .select("peerPubkey alias total_capacity active_channels total_peers")
-        .lean();
+      const peers = await prisma.peerOfPeer.findMany({
+        where: { nodePubkey },
+        orderBy: { timestamp: "desc" },
+        take: 50,
+        select: {
+          peerPubkey: true,
+          alias: true,
+          total_capacity: true,
+          active_channels: true,
+          total_peers: true,
+        },
+      });
 
       this.queryCache.set(cacheKey, {
         data: peers as PeerOfPeerDocument[],

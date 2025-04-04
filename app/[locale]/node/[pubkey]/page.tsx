@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Card } from "@/app/components/ui/card";
-import { useLanguage } from "@/app/contexts/LanguageContext";
 import {
   BarChart,
   Bar,
@@ -36,7 +35,6 @@ const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
 
 export default function NodePage() {
   const { pubkey } = useParams();
-  const { language } = useLanguage();
   const [nodeDetails, setNodeDetails] = useState<NodeDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

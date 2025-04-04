@@ -1,6 +1,30 @@
 import { NetworkStats, NetworkNode, NetworkChannel } from "@/app/types/network";
 import { prisma } from "@/app/lib/db";
 
+interface MCPData {
+  node_count: number;
+  channel_count: number;
+  total_capacity: number;
+  avg_capacity: number;
+  avg_fee_rate: number;
+  timestamp: string;
+}
+
+interface PrismaNode {
+  pubkey: string;
+  alias: string;
+  total_capacity: number;
+  active_channel_count: number;
+  total_peers: number;
+}
+
+interface PrismaChannel {
+  remote_pubkey: string;
+  remote_alias: string;
+  capacity: number;
+  last_update: string;
+}
+
 export async function getNetworkStats(): Promise<NetworkStats> {
   try {
     // Essayer d'abord MCP
@@ -95,42 +119,41 @@ async function getNetworkStatsFromPrisma(): Promise<NetworkStats> {
   };
 }
 
-function transformMCPData(mcpData: any): NetworkStats {
+function transformMCPData(mcpData: MCPData): NetworkStats {
   return {
-    totalNodes: mcpData.node_count || 0,
-    totalChannels: mcpData.channel_count || 0,
-    totalCapacity: mcpData.total_capacity || 0,
-    avgCapacityPerChannel: mcpData.avg_capacity_per_channel || 0,
-    avgChannelsPerNode: mcpData.avg_channels_per_node || 0,
-    lastUpdate: new Date(mcpData.latest_update || Date.now()),
-    topNodes: [], // À remplir avec des données supplémentaires de MCP si disponible
-    recentChannels: [], // À remplir avec des données supplémentaires de MCP si disponible
-    nodesByCountry: {}, // À remplir avec des données supplémentaires de MCP si disponible
-    capacityHistory: [], // À remplir avec des données supplémentaires de MCP si disponible
+    totalNodes: mcpData.node_count,
+    totalChannels: mcpData.channel_count,
+    totalCapacity: mcpData.total_capacity,
+    avgCapacityPerChannel: mcpData.avg_capacity,
+    avgChannelsPerNode: mcpData.channel_count / mcpData.node_count,
+    lastUpdate: new Date(mcpData.timestamp),
+    topNodes: [],
+    recentChannels: [],
+    nodesByCountry: {},
+    capacityHistory: [],
   };
 }
 
-function transformPrismaNode(node: any): NetworkNode {
+function transformPrismaNode(node: PrismaNode): NetworkNode {
   return {
     publicKey: node.pubkey,
     alias: node.alias,
-    color: node.color,
-    addresses: [node.address],
-    lastUpdate: node.updatedAt,
+    color: "#000000",
+    addresses: [],
+    lastUpdate: new Date(),
     capacity: node.total_capacity,
-    channelCount: node.active_channels,
-    avgChannelSize: node.avg_capacity,
-    platform: node.platform,
+    channelCount: node.active_channel_count,
+    avgChannelSize: node.total_capacity / node.active_channel_count,
   };
 }
 
-function transformPrismaChannel(node: any): NetworkChannel {
+function transformPrismaChannel(channel: PrismaChannel): NetworkChannel {
   return {
-    channelId: node.pubkey,
-    node1Pub: node.pubkey,
-    node2Pub: "",
-    capacity: node.total_capacity,
-    lastUpdate: node.updatedAt,
+    channelId: channel.remote_pubkey,
+    node1Pub: "",
+    node2Pub: channel.remote_pubkey,
+    capacity: channel.capacity,
+    lastUpdate: new Date(channel.last_update),
     status: "active",
   };
 }

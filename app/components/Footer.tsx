@@ -1,7 +1,9 @@
 "use client";
 
+import * as React from "react";
+
 import Link from "next/link";
-import { useTranslations, useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { HelpCircle, Info, Zap } from "lucide-react";
 import SocialLinks from "./SocialLinks";
 

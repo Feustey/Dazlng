@@ -1,7 +1,6 @@
-import { connectToDatabase } from "../mongodb";
-import Node from "../../models/Node";
-import PeerOfPeer from "../../models/PeerOfPeer";
+import { prisma } from "../db";
 import mcpService from "../mcpService";
+import { connectToDatabase } from "../db";
 
 export class SyncService {
   private static instance: SyncService;
@@ -41,9 +40,10 @@ export class SyncService {
       const nodes = await mcpService.getAllNodes();
 
       for (const node of nodes) {
-        await Node.findOneAndUpdate({ pubkey: node.pubkey }, node, {
-          upsert: true,
-          new: true,
+        await prisma.node.upsert({
+          where: { pubkey: node.pubkey },
+          create: node,
+          update: node,
         });
       }
 
@@ -57,20 +57,24 @@ export class SyncService {
   async syncPeersOfPeers(): Promise<void> {
     try {
       await connectToDatabase();
-      const nodes = await Node.find();
+      const nodes = await prisma.node.findMany();
 
       for (const node of nodes) {
         const { peers_of_peers } = await mcpService.getPeersOfPeers(
           node.pubkey
         );
 
-        await PeerOfPeer.deleteMany({ nodePubkey: node.pubkey });
+        await prisma.peerOfPeer.deleteMany({
+          where: { nodePubkey: node.pubkey },
+        });
         if (peers_of_peers.length > 0) {
           const peersToInsert = peers_of_peers.map((peer) => ({
             ...peer,
             nodePubkey: node.pubkey,
           }));
-          await PeerOfPeer.insertMany(peersToInsert);
+          await prisma.peerOfPeer.createMany({
+            data: peersToInsert,
+          });
         }
       }
 

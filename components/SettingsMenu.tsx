@@ -1,7 +1,10 @@
+import { useRouter, usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
-import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
+import { Settings } from "lucide-react";
+
+import { Button } from "@ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,9 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@ui/dropdown-menu";
-import { Button } from "@ui/button";
 import { Switch } from "@ui/switch";
-import { Settings } from "lucide-react";
 
 export function SettingsMenu() {
   const t = useTranslations("Header");

@@ -58,7 +58,7 @@ export default function SettingsPage() {
         setContent(data);
       } catch (error) {
         console.error("Error loading settings content:", error);
-        toast.error(content?.error || "Failed to load settings");
+        toast.error("Failed to load settings");
       }
     }
 

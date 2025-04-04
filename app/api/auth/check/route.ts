@@ -16,19 +16,23 @@ export async function GET() {
     const sessionId = cookies().get("session_id")?.value;
 
     if (!sessionId) {
-      return successResponse({ isAuthenticated: false });
+      return errorResponse("Non authentifié", 401);
     }
 
     await connectToDatabase();
 
     const session = await Session.findOne({
       sessionId,
-      expiresAt: { $gt: new Date() },
+      expiresAt: { gt: new Date() },
     });
 
-    return successResponse({ isAuthenticated: !!session });
+    if (!session) {
+      return errorResponse("Session expirée", 401);
+    }
+
+    return successResponse({ authenticated: true });
   } catch (error) {
-    console.error("Error checking session:", error);
-    return errorResponse("Failed to check session");
+    console.error("Erreur lors de la vérification de la session:", error);
+    return errorResponse("Erreur interne du serveur");
   }
 }

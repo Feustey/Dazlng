@@ -1,6 +1,12 @@
 "use client";
 
+import * as React from "react";
+
+import { Search } from "lucide-react";
 import { useState } from "react";
+
+import { useLanguage } from "@/app/contexts/LanguageContext";
+import { Button } from "@/app/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,9 +14,6 @@ import {
   DialogTitle,
 } from "@/app/components/ui/dialog";
 import { Input } from "@/app/components/ui/input";
-import { Button } from "@/app/components/ui/button";
-import { Search } from "lucide-react";
-import { useLanguage } from "@/app/contexts/LanguageContext";
 
 interface NodeSearchDialogProps {
   isOpen: boolean;

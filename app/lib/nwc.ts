@@ -1,3 +1,5 @@
+"use client";
+
 import { NDKNip07Signer } from "@nostr-dev-kit/ndk";
 import { WebLNProvider } from "@webbtc/webln-types";
 
@@ -36,7 +38,8 @@ export class NWCConnector {
       if (!this.webln) {
         throw new Error("Non connecté à NWC");
       }
-      const response = await this.webln.getBalance();
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const response = await this.webln!.getBalance();
       return response.balance || 0;
     } catch (error) {
       console.error("Erreur lors de la récupération du solde:", error);
@@ -49,22 +52,25 @@ export class NWCConnector {
       if (!this.webln) {
         throw new Error("Non connecté à NWC");
       }
-      await this.webln.sendPayment(invoice);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      await this.webln!.sendPayment(invoice);
     } catch (error) {
       console.error("Erreur lors du paiement:", error);
       throw error;
     }
   }
 
-  async createInvoice(amount: number, description: string): Promise<string> {
+  async createInvoice(amount: number, description?: string): Promise<string> {
     try {
       if (!this.webln) {
         throw new Error("Non connecté à NWC");
       }
-      const response = await this.webln.makeInvoice({
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const response = await this.webln!.makeInvoice({
         amount,
-        defaultDescription: description,
-      });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        description: description || "",
+      } as any);
       return response.paymentRequest;
     } catch (error) {
       console.error("Erreur lors de la création de la facture:", error);

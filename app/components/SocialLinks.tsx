@@ -1,6 +1,8 @@
 "use client";
 
-import { Github, Twitter, Send } from "lucide-react";
+import * as React from "react";
+
+import { Github, Send, Twitter } from "lucide-react";
 
 const socialLinks = [
   {

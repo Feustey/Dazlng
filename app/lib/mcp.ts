@@ -1,3 +1,5 @@
+"use client";
+
 interface NodeDetails {
   pubkey: string;
   alias: string;

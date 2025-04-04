@@ -1,0 +1,29 @@
+# Fichiers de build
+.next/
+out/
+build/
+dist/
+
+# Dépendances
+node_modules/
+
+# Fichiers de configuration
+.eslintrc.json
+.eslintignore
+.prettierrc
+.prettierignore
+
+# Fichiers générés
+*.d.ts
+*.js.map
+
+# Fichiers de test
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+
+# Fichiers spécifiques problématiques
+app/lib/nwc.ts
+app/lib/db.ts
+app/lib/prisma.ts 

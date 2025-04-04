@@ -1,18 +1,21 @@
 "use client";
 
+import * as React from "react";
+
 import { useTheme } from "next-themes";
-import { useLanguage } from "@/app/contexts/LanguageContext";
-import { useAuth } from "@/app/contexts/AuthContext";
 import { useTranslations } from "next-intl";
+import { LogOut, Settings } from "lucide-react";
+
+import { useAuth } from "@/app/contexts/AuthContext";
+import { useLanguage } from "@/app/contexts/LanguageContext";
+import { Button } from "@/app/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/app/components/ui/dropdown-menu";
-import { Button } from "@/app/components/ui/button";
-import { Settings, LogOut } from "lucide-react";
 
 export function SettingsMenu() {
   const { setTheme, theme } = useTheme();

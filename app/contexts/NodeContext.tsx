@@ -1,6 +1,8 @@
-'use client';
+"use client";
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import * as React from "react";
+
+import { createContext, useContext, useState } from "react";
 
 interface Node {
   pubkey: string;
@@ -15,12 +17,15 @@ interface NodeContextType {
 
 const NodeContext = createContext<NodeContextType>({
   selectedNode: null,
-  setSelectedNode: () => {},
+  setSelectedNode: () => {
+    // Cette méthode est implémentée dans le NodeProvider
+    console.warn("setSelectedNode called before provider initialization");
+  },
 });
 
 export const useNode = () => useContext(NodeContext);
 
-export const NodeProvider = ({ children }: { children: ReactNode }) => {
+export const NodeProvider = ({ children }: { children: React.ReactNode }) => {
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
 
   return (
@@ -28,4 +33,4 @@ export const NodeProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </NodeContext.Provider>
   );
-}; 
+};

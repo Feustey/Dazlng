@@ -1,7 +1,5 @@
-import { connectToDatabase } from "../mongodb";
-import Node from "../../models/Node";
-import PeerOfPeer from "../../models/PeerOfPeer";
-import History from "../../models/History";
+import { connectToDatabase } from "../db";
+import { prisma } from "../db";
 
 export class CleanupService {
   private static instance: CleanupService;
@@ -27,11 +25,13 @@ export class CleanupService {
       const cutoffDate = new Date();
       cutoffDate.setDate(cutoffDate.getDate() - this.NODE_RETENTION_DAYS);
 
-      const result = await Node.deleteMany({
-        timestamp: { $lt: cutoffDate },
+      const result = await prisma.node.deleteMany({
+        where: {
+          timestamp: { lt: cutoffDate },
+        },
       });
 
-      console.log(`Nœuds nettoyés: ${result.deletedCount}`);
+      console.log(`Nœuds nettoyés: ${result.count}`);
     } catch (error) {
       console.error("Erreur lors du nettoyage des nœuds:", error);
       throw error;
@@ -44,11 +44,13 @@ export class CleanupService {
       const cutoffDate = new Date();
       cutoffDate.setDate(cutoffDate.getDate() - this.PEER_RETENTION_DAYS);
 
-      const result = await PeerOfPeer.deleteMany({
-        timestamp: { $lt: cutoffDate },
+      const result = await prisma.peerOfPeer.deleteMany({
+        where: {
+          timestamp: { lt: cutoffDate },
+        },
       });
 
-      console.log(`Pairs nettoyés: ${result.deletedCount}`);
+      console.log(`Pairs nettoyés: ${result.count}`);
     } catch (error) {
       console.error("Erreur lors du nettoyage des pairs:", error);
       throw error;
@@ -61,11 +63,13 @@ export class CleanupService {
       const cutoffDate = new Date();
       cutoffDate.setDate(cutoffDate.getDate() - this.HISTORY_RETENTION_DAYS);
 
-      const result = await History.deleteMany({
-        date: { $lt: cutoffDate },
+      const result = await prisma.history.deleteMany({
+        where: {
+          date: { lt: cutoffDate },
+        },
       });
 
-      console.log(`Historique nettoyé: ${result.deletedCount}`);
+      console.log(`Historique nettoyé: ${result.count}`);
     } catch (error) {
       console.error("Erreur lors du nettoyage de l'historique:", error);
       throw error;

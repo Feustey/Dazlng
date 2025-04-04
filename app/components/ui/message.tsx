@@ -1,9 +1,10 @@
 "use client";
 
-import { Card } from "./card";
-import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import { formatDistanceToNow } from "date-fns";
 import { fr, enUS } from "date-fns/locale";
+
+import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
+import { Card } from "./card";
 
 interface MessageProps {
   content: string;

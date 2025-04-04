@@ -1,5 +1,3 @@
-import Layout from "@components/Layout";
-
 export default async function ActionsPage() {
   return (
     <div className="container mx-auto px-4 py-8">

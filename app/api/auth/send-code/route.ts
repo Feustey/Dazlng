@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 import { randomInt } from "crypto";
 import { connectToDatabase } from "@/app/lib/db";
 import { VerificationCode } from "@/app/lib/models/VerificationCode";

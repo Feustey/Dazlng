@@ -9,7 +9,7 @@ import { Card } from "@/app/components/ui/card";
 export default function RecommendationsPage() {
   const t = useTranslations("recommendations");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error] = useState<string | null>(null);
 
   useEffect(() => {
     // Simuler le chargement des données

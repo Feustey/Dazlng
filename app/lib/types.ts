@@ -1,3 +1,5 @@
+"use client";
+
 export interface NodeInfo {
   last_update: number;
   pub_key: string;

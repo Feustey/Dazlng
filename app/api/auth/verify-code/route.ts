@@ -12,6 +12,7 @@ import {
   errorResponse,
   successResponse,
 } from "@/app/api/config";
+import { NextRequest } from "next/server";
 
 export { dynamic, runtime };
 
@@ -25,9 +26,9 @@ const verifyCodeRateLimit = {
 export async function POST(request: Request) {
   try {
     // Appliquer le rate limiting
-    const rateLimitResponse = await rateLimit(request, verifyCodeRateLimit);
-    if (rateLimitResponse) {
-      return rateLimitResponse;
+    const rateLimitResult = await rateLimit(request as NextRequest);
+    if (rateLimitResult instanceof NextResponse) {
+      return rateLimitResult;
     }
 
     const { email, code } = await request.json();

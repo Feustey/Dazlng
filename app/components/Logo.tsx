@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import * as React from "react";
 import { Squada_One } from "next/font/google";
 
 const squadaOne = Squada_One({

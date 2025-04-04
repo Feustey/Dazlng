@@ -1,51 +1,45 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+
+interface ConnectionStatus {
+  status: string;
+  message?: string;
+  error?: string;
+}
+
+interface NodeStatus {
+  nodes: Array<{
+    id: string;
+    status: string;
+  }>;
+  status?: number;
+  data?: string;
+  message?: string;
+  error?: string;
+}
+
+interface SystemInfo {
+  version: string;
+  uptime: number;
+  memory: {
+    used: number;
+    total: number;
+  };
+  message?: string;
+  error?: string;
+}
 
 export default function TestApiPage() {
-  const [connectionStatus, setConnectionStatus] = useState<any>(null);
+  const [connectionStatus, setConnectionStatus] =
+    useState<ConnectionStatus | null>(null);
   const [loading, setLoading] = useState(false);
-  const [nodesStatus, setNodesStatus] = useState<any>(null);
+  const [nodesStatus, setNodesStatus] = useState<NodeStatus | null>(null);
   const [nodesLoading, setNodesLoading] = useState(false);
-  const [systemInfo, setSystemInfo] = useState<any>(null);
+  const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null);
   const [systemInfoLoading, setSystemInfoLoading] = useState(false);
 
-  async function testConnection() {
-    setLoading(true);
-    try {
-      const response = await fetch("/api/test-mcp-connection");
-      const data = await response.json();
-      setConnectionStatus(data);
-    } catch (error) {
-      setConnectionStatus({
-        message: "Erreur de connexion au serveur",
-        error: error instanceof Error ? error.message : String(error),
-      });
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function testNodesEndpoint() {
-    setNodesLoading(true);
-    try {
-      const response = await fetch("/api/nodes");
-      const data = await response.json();
-      setNodesStatus({
-        status: response.status,
-        data: Array.isArray(data) ? `${data.length} nœuds trouvés` : data,
-      });
-    } catch (error) {
-      setNodesStatus({
-        message: "Erreur lors de la récupération des nœuds",
-        error: error instanceof Error ? error.message : String(error),
-      });
-    } finally {
-      setNodesLoading(false);
-    }
-  }
-
-  async function fetchSystemInfo() {
+  const fetchSystemInfo = useCallback(async () => {
     setSystemInfoLoading(true);
     try {
       const response = await fetch("/api/system-info");
@@ -53,17 +47,58 @@ export default function TestApiPage() {
       setSystemInfo(data);
     } catch (error) {
       setSystemInfo({
+        version: "unknown",
+        uptime: 0,
+        memory: { used: 0, total: 0 },
         message: "Erreur lors de la récupération des informations système",
         error: error instanceof Error ? error.message : String(error),
       });
     } finally {
       setSystemInfoLoading(false);
     }
-  }
+  }, []);
+
+  const testConnection = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/test-mcp-connection");
+      const data = await response.json();
+      setConnectionStatus(data);
+    } catch (error) {
+      setConnectionStatus({
+        status: "error",
+        message: "Erreur de connexion au serveur",
+        error: error instanceof Error ? error.message : String(error),
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const testNodesEndpoint = useCallback(async () => {
+    setNodesLoading(true);
+    try {
+      const response = await fetch("/api/nodes");
+      const data = await response.json();
+      setNodesStatus({
+        nodes: [],
+        status: response.status,
+        data: Array.isArray(data) ? `${data.length} nœuds trouvés` : data,
+      });
+    } catch (error) {
+      setNodesStatus({
+        nodes: [],
+        message: "Erreur lors de la récupération des nœuds",
+        error: error instanceof Error ? error.message : String(error),
+      });
+    } finally {
+      setNodesLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     fetchSystemInfo();
-  }, []);
+  }, [fetchSystemInfo]);
 
   return (
     <div className="container mx-auto p-4">

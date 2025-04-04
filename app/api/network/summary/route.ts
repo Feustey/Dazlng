@@ -16,7 +16,7 @@ export async function GET(request: Request) {
 
     const session = await Session.findOne({
       sessionId,
-      expiresAt: { $gt: new Date() },
+      expiresAt: { gt: new Date() },
     });
 
     if (!session) {

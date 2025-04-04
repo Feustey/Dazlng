@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { connectToDatabase } from "@/app/lib/db";
-import { Session } from "@/app/lib/models/Session";
+import { prisma } from "@/app/lib/db";
 import {
   dynamic,
   runtime,
@@ -22,9 +22,11 @@ export async function GET(request: Request) {
 
     await connectToDatabase();
 
-    const session = await Session.findOne({
-      sessionId,
-      expiresAt: { $gt: new Date() },
+    const session = await prisma.session.findFirst({
+      where: {
+        sessionId,
+        expiresAt: { gt: new Date() },
+      },
     });
 
     if (!session) {

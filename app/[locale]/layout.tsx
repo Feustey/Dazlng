@@ -59,17 +59,21 @@ export const metadata = {
   manifest: `${siteConfig.url}/site.webmanifest`,
 };
 
+type LocaleLayoutProps = {
+  children: React.ReactNode;
+  params: { locale: string };
+  app: React.ReactNode;
+};
+
 export default async function LocaleLayout({
   children,
   params: { locale },
-}: {
-  children: React.ReactNode;
-  params: { locale: string };
-}) {
+  app,
+}: LocaleLayoutProps) {
   let messages;
   try {
     messages = await getMessages(locale);
-  } catch (error) {
+  } catch (_error) {
     notFound();
   }
 

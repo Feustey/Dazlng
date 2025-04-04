@@ -45,7 +45,7 @@ export const TransactionVisualizer: React.FC = () => {
   React.useEffect(() => {
     // Ici, nous utiliserions normalement une API pour récupérer les données réelles
     setTransactions(mockData);
-  }, [timeRange]);
+  }, [timeRange, mockData]);
 
   const stats = {
     totalIncoming: transactions

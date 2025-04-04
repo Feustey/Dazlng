@@ -1,17 +1,16 @@
 "use client";
 
-import React from "react";
+import * as React from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 import {
-  Zap as ZapIcon,
   Activity as ActivityIcon,
-  Network as NetworkIcon,
-  Star as StarIcon,
-  Bot as BotIcon,
+  BookOpen as LearnIcon,
   HelpCircle as HelpIcon,
   Settings as SettingsIcon,
+  Star as StarIcon,
+  Zap as ZapIcon,
 } from "lucide-react";
 import { Logo } from "./Logo";
 import { SettingsMenu } from "@/components/SettingsMenu";
@@ -19,9 +18,8 @@ import { useAuth } from "@/app/contexts/AuthContext";
 
 const menuItems = [
   { key: "channels", href: "/channels", Icon: ActivityIcon },
-  { key: "network", href: "/network", Icon: NetworkIcon },
+  { key: "learn", href: "/learn", Icon: LearnIcon },
   { key: "review", href: "/review", Icon: StarIcon },
-  { key: "dazIA", href: "/daz-ia", Icon: BotIcon },
 ];
 
 const Header = () => {
@@ -49,22 +47,16 @@ const Header = () => {
               {t("channels")}
             </Link>
             <Link
-              href={`/${currentLocale}/network`}
+              href={`/${currentLocale}/learn`}
               className="text-sm font-medium transition-colors hover:text-foreground/80 dark:text-foreground/90 dark:hover:text-foreground"
             >
-              {t("network")}
+              {t("learn")}
             </Link>
             <Link
               href={`/${currentLocale}/review`}
               className="text-sm font-medium transition-colors hover:text-foreground/80 dark:text-foreground/90 dark:hover:text-foreground"
             >
               {t("review")}
-            </Link>
-            <Link
-              href={`/${currentLocale}/daz-ia`}
-              className="text-sm font-medium transition-colors hover:text-foreground/80 dark:text-foreground/90 dark:hover:text-foreground"
-            >
-              {t("dazIA")}
             </Link>
           </div>
           <div className="flex items-center space-x-2">

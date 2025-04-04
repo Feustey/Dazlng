@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { RateLimit } from "../lib/models/RateLimit";
 
 const WINDOW_SIZE = 60 * 1000; // 1 minute

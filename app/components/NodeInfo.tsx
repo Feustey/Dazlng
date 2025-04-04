@@ -1,11 +1,14 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import * as React from "react";
+
+import { useEffect, useState } from "react";
+
+import { useSettings } from "@/app/contexts/SettingsContext";
 import { NodeInfo as NodeInfoType } from "@/app/lib/types";
 import { fetchNodeInfo, saveNodeHistory } from "@/app/lib/services/nodeService";
-import { Card } from "@/app/components/ui/card";
 import { formatBitcoin } from "@/app/lib/utils";
-import { useSettings } from "@/app/contexts/SettingsContext";
+import { Card } from "@/app/components/ui/card";
 
 interface NodeInfoProps {
   pubkey: string;

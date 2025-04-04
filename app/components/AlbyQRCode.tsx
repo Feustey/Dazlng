@@ -1,3 +1,7 @@
+"use client";
+
+import * as React from "react";
+
 import { QRCodeSVG } from "qrcode.react";
 
 interface AlbyQRCodeProps {

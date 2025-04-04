@@ -1,5 +1,8 @@
+"use client";
+
+import { PrismaClient } from "@prisma/client";
+
 import { prisma } from "./db";
-import { PrismaClient, Prisma } from "@prisma/client";
 
 interface Node {
   pubkey: string;

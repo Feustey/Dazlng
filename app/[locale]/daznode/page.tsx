@@ -87,14 +87,6 @@ export default function DaznodePage() {
     setShowPayment(true);
   };
 
-  const handlePaymentSuccess = () => {
-    setPaymentStatus("success");
-    setTimeout(() => {
-      setShowPayment(false);
-      setShowShipping(true);
-    }, 1000);
-  };
-
   const handleShippingSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsProcessing(true);

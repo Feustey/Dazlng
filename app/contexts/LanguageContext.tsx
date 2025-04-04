@@ -1,9 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import * as React from "react";
+
 import { useParams } from "next/navigation";
-import fr from "@/messages/fr.json";
+import { createContext, useContext, useState } from "react";
+
 import en from "@/messages/en.json";
+import fr from "@/messages/fr.json";
 
 type Language = "fr" | "en";
 
@@ -20,13 +23,20 @@ const translations = {
 
 const LanguageContext = createContext<LanguageContextType>({
   language: "fr",
-  setLanguage: () => {},
+  setLanguage: () => {
+    // Cette méthode est implémentée dans le LanguageProvider
+    console.warn("setLanguage called before provider initialization");
+  },
   t: (key: string) => key,
 });
 
 export const useLanguage = () => useContext(LanguageContext);
 
-export const LanguageProvider = ({ children }: { children: ReactNode }) => {
+export const LanguageProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const params = useParams();
   const currentLocale =
     typeof params.locale === "string" ? params.locale : "fr";
