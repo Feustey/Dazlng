@@ -1,7 +1,7 @@
 {
   "Header": {
     "title": "DazLng",
-    "searchPlaceholder": "Rechercher un nœud...",
+    "searchPlaceholder": "Rechercher...",
     "settings": "Paramètres",
     "language": "Langue",
     "theme": "Thème",
@@ -17,7 +17,35 @@
     "botIA": "Bot IA",
     "currency": "Devise",
     "btc": "BTC",
-    "sats": "SATS"
+    "sats": "SATS",
+    "hydro": "Hydro",
+    "magma": "Magma",
+    "stats": "Stats",
+    "pricing": "Tarifs",
+    "shop": "Boutique",
+    "credits": "Crédits",
+    "login": "Connexion"
+  },
+  "Settings": {
+    "title": "Paramètres",
+    "language": {
+      "label": "Langue",
+      "options": {
+        "en": "Anglais",
+        "fr": "Français"
+      }
+    },
+    "theme": {
+      "label": "Thème",
+      "options": {
+        "light": "Clair",
+        "dark": "Sombre",
+        "system": "Système"
+      }
+    },
+    "save": "Enregistrer les modifications",
+    "success": "Paramètres enregistrés avec succès",
+    "error": "Erreur lors de l'enregistrement des paramètres"
   },
   "HomePage": {
     "welcome": "Bienvenue sur DazLng",
@@ -37,5 +65,138 @@
     "title": "Page non trouvée",
     "description": "La page que vous recherchez n'existe pas.",
     "backToHome": "Retour à l'accueil"
+  },
+  "Login": {
+    "title": "Inscription ou Connexion",
+    "emailLabel": "Email",
+    "emailDescription": "Nous vous enverrons un code à usage unique.",
+    "emailPlaceholder": "Votre email",
+    "getCode": "Obtenir le code",
+    "sending": "Envoi en cours...",
+    "orContinueWith": "Ou continuer avec",
+    "loginWithGoogle": "Connexion avec Google",
+    "loginWithNode": "Connexion avec Node"
+  },
+  "Verify": {
+    "title": "Entrez votre code",
+    "description": "Vérifiez votre email pour obtenir le code.",
+    "codeLabel": "Code à usage unique :",
+    "noCode": "Vous n'avez pas reçu de code ?",
+    "resend": "Renvoyer",
+    "verifying": "Vérification en cours..."
+  },
+  "channels": {
+    "title": "Canaux",
+    "createChannel": "Créer un canal",
+    "searchChannels": "Rechercher des canaux...",
+    "noChannels": "Aucun canal trouvé. Créez un nouveau canal pour commencer."
+  },
+  "Review": {
+    "title": "Aperçu du Réseau",
+    "nodes": {
+      "title": "Nœuds",
+      "total": "Total",
+      "active": "Actifs"
+    },
+    "channels": {
+      "title": "Canaux",
+      "total": "Total",
+      "active": "Actifs"
+    },
+    "capacity": {
+      "title": "Capacité",
+      "total": "Totale",
+      "averageChannel": "Moyenne par canal",
+      "averageNode": "Moyenne par nœud"
+    },
+    "health": {
+      "title": "Santé du Réseau",
+      "score": "Score",
+      "lastUpdated": "Dernière mise à jour"
+    },
+    "error": {
+      "title": "Erreur",
+      "description": "Une erreur est survenue lors du chargement des données"
+    },
+    "noData": {
+      "title": "Aucune donnée",
+      "description": "Aucune donnée n'est disponible pour le moment"
+    }
+  },
+  "Network": {
+    "title": "Analyse du Réseau",
+    "tabs": {
+      "overview": "Vue d'ensemble",
+      "centrality": "Centralité"
+    },
+    "charts": {
+      "nodes": {
+        "title": "Évolution des Nœuds",
+        "total": "Total",
+        "active": "Actifs"
+      },
+      "capacity": {
+        "title": "Évolution de la Capacité",
+        "total": "Totale",
+        "averageChannel": "Moyenne par canal",
+        "averageNode": "Moyenne par nœud"
+      }
+    },
+    "centrality": {
+      "title": "Métriques de Centralité",
+      "alias": "Alias",
+      "betweenness": "Betweenness",
+      "closeness": "Closeness",
+      "degree": "Degree",
+      "eigenvector": "Eigenvector"
+    },
+    "error": {
+      "title": "Erreur",
+      "description": "Une erreur est survenue lors du chargement des données"
+    }
+  },
+  "footer": {
+    "about": "À propos",
+    "description": "DazLng est une plateforme de gestion de nœuds Lightning Network.",
+    "links": "Liens",
+    "help": "Aide",
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "contact": "Contact",
+    "rights": "Tous droits réservés"
+  },
+  "bot-ia": {
+    "title": "Bot IA DazLng",
+    "description": "Optimisez vos investissements avec notre bot IA intelligent",
+    "one-shot": {
+      "title": "Recommandations One-Shot",
+      "price": "10,000 sats",
+      "features": [
+        "Analyse personnalisée de votre portefeuille",
+        "Recommandations basées sur l'IA",
+        "Rapport détaillé en 3 leviers d'action",
+        "Accès unique"
+      ],
+      "cta": "Obtenir mes recommandations"
+    },
+    "yearly": {
+      "title": "Abonnement Annuel Premium",
+      "price": "100,000 sats",
+      "features": [
+        "Toutes les fonctionnalités One-Shot",
+        "Mises à jour continues des recommandations",
+        "Support prioritaire",
+        "Accès à l'ensemble des outils d'analyse",
+        "Alertes personnalisées",
+        "Rapports hebdomadaires"
+      ],
+      "cta": "S'abonner maintenant",
+      "highlight": "Économisez 20% avec l'abonnement annuel"
+    },
+    "payment": {
+      "title": "Paiement via Alby Wallet",
+      "scan": "Scannez le QR code pour payer",
+      "processing": "Traitement en cours..."
+    }
   }
 }
