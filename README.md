@@ -21,6 +21,13 @@ DazLng est un tableau de bord intelligent propulsé par l'IA, conçu pour optimi
   - Abonnement annuel avec accès complet (100,000 sats)
   - Intégration Nostr Wallet Connect (NWC) avec Alby
   - Mode développement avec simulation de paiement
+- **Sécurité Renforcée** :
+  - Protection contre les attaques par force brute
+  - Rate limiting intelligent par route
+  - Sessions sécurisées avec expiration
+  - Validation stricte des entrées
+  - Headers de sécurité configurés
+  - Protection CSRF et XSS
 
 ## 🛠️ Technologies Utilisées
 
@@ -30,13 +37,18 @@ DazLng est un tableau de bord intelligent propulsé par l'IA, conçu pour optimi
 - **État** : React Hooks
 - **Types** : TypeScript
 - **API** : API MCP pour les données Lightning Network
-- **Base de données** : MongoDB pour le stockage des recommandations
+- **Base de données** : PostgreSQL avec Prisma
 - **i18n** : next-intl pour l'internationalisation
 - **Paiements** :
   - Intégration Nostr Wallet Connect (NWC)
   - Support Alby Wallet
   - Paiements Lightning Network natifs
 - **Animations** : Framer Motion pour les interactions
+- **Sécurité** :
+  - Rate limiting personnalisé
+  - Sessions sécurisées
+  - Validation des données
+  - Protection contre les attaques
 
 ## 📦 Installation
 
@@ -71,8 +83,9 @@ yarn dev
 2. Ajoutez vos variables d'environnement :
 
 ```env
-# Configuration MongoDB
-MONGODB_URI="votre_uri_mongodb"
+# Configuration PostgreSQL
+DATABASE_URL="votre_url_postgresql"
+DIRECT_URL="votre_url_direct_postgresql"
 
 # Configuration MCP
 MCP_API_URL="https://dazlng-mcp.herokuapp.com"
@@ -80,6 +93,9 @@ NODE_PUBKEY="votre_clé_publique"
 
 # Configuration Alby
 ALBY_WEBHOOK_SECRET="votre_secret_webhook"
+
+# Configuration JWT
+JWT_SECRET="votre_secret_jwt"
 
 # Configuration SMTP
 SMTP_HOST="smtp.gmail.com"
@@ -98,104 +114,43 @@ app/
 ├── [locale]/        # Routes localisées (fr, en)
 │   ├── @app/        # Routes parallèles
 │   ├── bot-ia/      # Page de tarification du bot IA
-│   └── layout.tsx   # Layout principal
-├── components/      # Composants React réutilisables
-│   ├── ui/          # Composants UI de base
-│   ├── NWCConnect/  # Composant de connexion NWC
-│   └── ...         # Autres composants
-├── lib/            # Fonctions utilitaires
-│   ├── nwc.ts      # Gestionnaire de connexion NWC
-│   └── ...         # Autres utilitaires
-└── messages/       # Fichiers de traduction
-    ├── en.json
-    └── fr.json
+├── api/             # Routes API
+├── components/      # Composants React
+├── config/          # Configuration
+├── contexts/        # Contextes React
+├── lib/             # Utilitaires et modèles
+├── middleware/      # Middlewares (rate limiting, etc.)
+├── models/          # Modèles Prisma
+├── styles/          # Styles globaux
+└── types/           # Types TypeScript
 ```
 
-### Intégration NWC (Nostr Wallet Connect)
+### Sécurité
 
-Pour utiliser NWC dans votre application :
+- **Rate Limiting** :
 
-1. Importez le composant NWCConnect :
+  - Limite de 100 requêtes par 15 minutes par IP
+  - Limite de 5 tentatives par 15 minutes pour la vérification
+  - Nettoyage automatique des anciennes entrées
 
-```typescript
-import NWCConnect from "@/components/NWCConnect";
-```
+- **Sessions** :
 
-2. Utilisez le composant dans votre page :
+  - Durée de vie de 24 heures
+  - Cookies sécurisés (httpOnly, secure, sameSite)
+  - Expiration automatique
+  - Régénération des identifiants
 
-```typescript
-function PaymentPage() {
-  const handleConnect = (connector: NWCConnector) => {
-    // Gérer la connexion NWC
-  };
+- **Validation** :
 
-  return <NWCConnect onConnect={handleConnect} />;
-}
-```
+  - Validation stricte des entrées
+  - Protection contre les injections
+  - Sanitization des données
 
-3. Utilisez les méthodes du connecteur :
-
-```typescript
-// Obtenir le solde
-const balance = await connector.getBalance();
-
-// Créer une facture
-const invoice = await connector.createInvoice(amount, description);
-
-// Effectuer un paiement
-await connector.makePayment(invoice);
-```
-
-## Règles de développement
-
-1. **Structure du code** :
-
-   - Tous les composants UI doivent être dans `/app/components/ui`
-   - Les composants spécifiques aux pages dans leurs dossiers respectifs
-   - Les traductions dans `/app/messages/{locale}.json`
-
-2. **CSS et styling** :
-
-   - Utiliser les classes Tailwind CSS
-   - Définir les styles globaux dans `app/globals.css`
-
-3. **Internationalisation** :
-
-   - Utiliser le hook `useTranslations` de next-intl
-   - Toujours définir les traductions en français et en anglais
-   - Structurer les traductions de manière logique
-
-4. **Routes et Navigation** :
-   - Utiliser le système de routes de Next.js App Router
-   - Respecter la structure des routes localisées avec [locale]
-   - Gérer correctement les routes parallèles avec @folder
-
-## Développement
-
-```bash
-# Installation des dépendances
-npm install
-
-# Démarrage du serveur de développement
-npm run dev
-
-# Build pour la production
-npm run build
-
-# Démarrage en mode production
-npm start
-```
-
-## Dépendances principales
-
-- Next.js 14.2
-- React 18
-- TypeScript 5
-- Tailwind CSS
-- next-intl
-- next-themes
-- heroicons
-- shadcn/ui
+- **Headers de Sécurité** :
+  - CSP configuré
+  - HSTS activé
+  - Protection XSS et CSRF
+  - Politique de permissions restrictive
 
 ## 🤝 Contribution
 

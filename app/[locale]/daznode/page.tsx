@@ -166,10 +166,13 @@ export default function DaznodePage() {
           </div>
           <div className="lg:flex-1">
             <div className="relative aspect-square max-w-[500px] mx-auto">
-              <img
-                src="/images/raspberry-pi-5-box.jpg"
+              <Image
+                src="/images/Daznode-PI5.png"
                 alt="Raspberry Pi 5"
-                className="rounded-lg shadow-2xl w-full h-full object-cover"
+                width={500}
+                height={500}
+                className="rounded-lg shadow-2xl object-cover"
+                priority
               />
               <div className="absolute -bottom-3 -right-3 bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-medium">
                 {t("limitedOffer")}

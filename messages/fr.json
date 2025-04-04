@@ -61,6 +61,36 @@
     "description": "Gérez vos nœuds Lightning Network."
   },
   "Home": {
+    "welcome": "Bienvenue sur DazLng",
+    "description": "Gérez vos nœuds Lightning Network.",
+    "hero": {
+      "title": "Gérez vos nœuds Lightning Network en toute simplicité",
+      "subtitle": "Optimisez vos performances et maximisez vos revenus avec DazLng",
+      "cta": "Commencer maintenant"
+    },
+    "features": {
+      "title": "Fonctionnalités principales",
+      "learning": {
+        "title": "Guide d'apprentissage",
+        "description": "Apprenez à gérer efficacement votre nœud avec nos guides détaillés"
+      },
+      "transactions": {
+        "title": "Visualisation des transactions",
+        "description": "Suivez vos transactions en temps réel avec des graphiques intuitifs"
+      },
+      "operations": {
+        "title": "Opérations Lightning",
+        "description": "Gérez vos canaux et vos paiements en toute simplicité"
+      },
+      "metrics": {
+        "title": "Métriques avancées",
+        "description": "Analysez les performances de votre nœud avec des métriques détaillées"
+      },
+      "nwc": {
+        "title": "Nostr Wallet Connect",
+        "description": "Connectez-vous facilement avec votre portefeuille Nostr"
+      }
+    },
     "searchPlaceholder": "Rechercher un nœud...",
     "searchButton": "Rechercher",
     "totalNodes": "Nœuds Totaux",
@@ -74,12 +104,27 @@
       "description": "Obtenez votre nœud Lightning pré-configuré pour seulement 400 000 sats au lieu de 500 000 sats.",
       "limitedOffer": "Offre limitée aux 10 premières commandes",
       "button": "Profiter de l'offre"
+    },
+    "benefits": {
+      "title": "Pourquoi choisir DazLng ?",
+      "items": {
+        "simplicity": "Interface simple et intuitive",
+        "security": "Sécurité renforcée",
+        "performance": "Performance optimisée",
+        "support": "Support réactif",
+        "community": "Communauté active"
+      }
+    },
+    "cta": {
+      "title": "Prêt à commencer ?",
+      "description": "Rejoignez DazLng et optimisez votre présence sur le réseau Lightning",
+      "button": "Créer un compte"
     }
   },
   "NotFound": {
     "title": "Page non trouvée",
-    "description": "La page que vous recherchez n'existe pas.",
-    "backToHome": "Retour à l'accueil"
+    "description": "Désolé, la page que vous recherchez n'existe pas.",
+    "back": "Retour à l'accueil"
   },
   "Login": {
     "title": "Inscription ou Connexion",
@@ -250,6 +295,17 @@
         "content": "Notre équipe est composée d'experts passionnés par Bitcoin et le réseau Lightning, déterminés à construire l'avenir des paiements décentralisés."
       }
     ],
+    "security": {
+      "title": "Sécurité Renforcée",
+      "protection": "Protection contre les attaques",
+      "protectionDesc": "Protection contre les attaques par force brute et rate limiting intelligent par route",
+      "sessions": "Sessions sécurisées",
+      "sessionsDesc": "Sessions sécurisées avec expiration et régénération automatique des identifiants",
+      "validation": "Validation des entrées",
+      "validationDesc": "Validation stricte des entrées et protection contre les injections",
+      "headers": "Headers de sécurité",
+      "headersDesc": "Headers de sécurité configurés pour la protection CSRF et XSS"
+    },
     "cta": {
       "title": "Optimisez votre nœud Lightning",
       "subtitle": "Découvrez la puissance de DazIA pour votre nœud",

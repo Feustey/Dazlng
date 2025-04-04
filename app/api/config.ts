@@ -14,20 +14,17 @@ export function corsHeaders() {
 }
 
 // Réponses d'erreur standardisées
-export function errorResponse(message: string, status: number = 500) {
-  return NextResponse.json(
-    { error: message },
-    {
-      status,
-      headers: corsHeaders(),
-    }
-  );
-}
+export const errorResponse = (message: string, status = 500) => {
+  return new Response(JSON.stringify({ error: message }), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  });
+};
 
 // Réponses de succès standardisées
-export function successResponse(data: any, status: number = 200) {
-  return NextResponse.json(data, {
-    status,
-    headers: corsHeaders(),
+export const successResponse = (data: any) => {
+  return new Response(JSON.stringify(data), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
   });
-}
+};

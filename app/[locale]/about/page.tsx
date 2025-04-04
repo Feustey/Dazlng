@@ -12,6 +12,10 @@ import {
   MailIcon,
   TwitterIcon,
   GithubIcon,
+  ShieldIcon,
+  LockIcon,
+  ShieldCheckIcon,
+  ShieldAlertIcon,
 } from "lucide-react";
 
 export default function AboutPage() {
@@ -69,6 +73,48 @@ export default function AboutPage() {
                 <h3 className="font-medium">{t("features.nwc")}</h3>
                 <p className="text-sm text-muted-foreground">
                   Connectez-vous facilement avec Nostr Wallet Connect
+                </p>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6 mb-8">
+          <h2 className="text-2xl font-semibold mb-4">{t("security.title")}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex items-start space-x-3">
+              <ShieldIcon className="h-6 w-6 text-primary mt-1" />
+              <div>
+                <h3 className="font-medium">{t("security.protection")}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {t("security.protectionDesc")}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start space-x-3">
+              <LockIcon className="h-6 w-6 text-primary mt-1" />
+              <div>
+                <h3 className="font-medium">{t("security.sessions")}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {t("security.sessionsDesc")}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start space-x-3">
+              <ShieldCheckIcon className="h-6 w-6 text-primary mt-1" />
+              <div>
+                <h3 className="font-medium">{t("security.validation")}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {t("security.validationDesc")}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start space-x-3">
+              <ShieldAlertIcon className="h-6 w-6 text-primary mt-1" />
+              <div>
+                <h3 className="font-medium">{t("security.headers")}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {t("security.headersDesc")}
                 </p>
               </div>
             </div>

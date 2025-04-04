@@ -4,6 +4,8 @@ import { randomBytes } from "crypto";
 import { connectToDatabase } from "@/app/lib/db";
 import { VerificationCode } from "@/app/lib/models/VerificationCode";
 import { Session } from "@/app/lib/models/Session";
+import { SESSION_CONFIG, getSessionExpiry } from "@/app/config/session";
+import { rateLimit } from "@/app/middleware/rateLimit";
 import {
   dynamic,
   runtime,
@@ -13,8 +15,21 @@ import {
 
 export { dynamic, runtime };
 
+// Configuration spécifique pour le rate limiting de la vérification
+const verifyCodeRateLimit = {
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // 5 tentatives par fenêtre
+  keyPrefix: "verify-code",
+};
+
 export async function POST(request: Request) {
   try {
+    // Appliquer le rate limiting
+    const rateLimitResponse = await rateLimit(request, verifyCodeRateLimit);
+    if (rateLimitResponse) {
+      return rateLimitResponse;
+    }
+
     const { email, code } = await request.json();
 
     if (!email || !code) {
@@ -27,7 +42,9 @@ export async function POST(request: Request) {
     // Rechercher le code de vérification
     const verificationCode = await VerificationCode.findOne({
       email,
-      expiresAt: { $gt: new Date() },
+      expiresAt: {
+        gt: new Date(),
+      },
     });
 
     if (!verificationCode) {
@@ -42,11 +59,13 @@ export async function POST(request: Request) {
     }
 
     // Code valide, supprimer le code de vérification
-    await VerificationCode.deleteOne({ _id: verificationCode._id });
+    await VerificationCode.deleteOne({
+      id: verificationCode.id,
+    });
 
-    // Créer une session
+    // Créer une session avec la nouvelle configuration
     const sessionId = randomBytes(32).toString("hex");
-    const sessionExpiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 jours
+    const sessionExpiresAt = getSessionExpiry();
 
     await Session.create({
       sessionId,
@@ -54,13 +73,10 @@ export async function POST(request: Request) {
       expiresAt: sessionExpiresAt,
     });
 
-    // Définir le cookie de session
+    // Définir le cookie de session avec les nouvelles options de sécurité
     cookies().set("session_id", sessionId, {
+      ...SESSION_CONFIG.cookieOptions,
       expires: sessionExpiresAt,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
     });
 
     return successResponse({ success: true });

@@ -29,36 +29,39 @@ const Header = () => {
   const params = useParams();
   const { isAuthenticated } = useAuth();
   const currentLocale =
-    typeof params.locale === "string" ? params.locale : "en";
+    typeof params.locale === "string" ? params.locale : "fr";
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center">
-        <Link href="/" className="flex items-center space-x-2">
+        <Link
+          href={`/${currentLocale}`}
+          className="flex items-center space-x-2"
+        >
           <Logo className="h-8 w-auto" />
         </Link>
         <nav className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
           <div className="flex items-center space-x-4">
             <Link
-              href="/channels"
+              href={`/${currentLocale}/channels`}
               className="text-sm font-medium transition-colors hover:text-foreground/80"
             >
               {t("channels")}
             </Link>
             <Link
-              href="/network"
+              href={`/${currentLocale}/network`}
               className="text-sm font-medium transition-colors hover:text-foreground/80"
             >
               {t("network")}
             </Link>
             <Link
-              href="/review"
+              href={`/${currentLocale}/review`}
               className="text-sm font-medium transition-colors hover:text-foreground/80"
             >
               {t("review")}
             </Link>
             <Link
-              href="/daz-ia"
+              href={`/${currentLocale}/daz-ia`}
               className="text-sm font-medium transition-colors hover:text-foreground/80"
             >
               {t("dazIA")}

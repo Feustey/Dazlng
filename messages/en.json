@@ -44,12 +44,55 @@
       "description": "Get your pre-configured Lightning node for only 400,000 sats instead of 500,000 sats.",
       "limitedOffer": "Limited to the first 10 orders",
       "button": "Get the offer"
+    },
+    "hero": {
+      "title": "Manage your Lightning Network nodes with ease",
+      "subtitle": "Optimize your performance and maximize your revenue with DazLng",
+      "cta": "Get started"
+    },
+    "features": {
+      "title": "Key Features",
+      "learning": {
+        "title": "Learning Guide",
+        "description": "Learn to manage your node effectively with our detailed guides"
+      },
+      "transactions": {
+        "title": "Transaction Visualization",
+        "description": "Track your transactions in real-time with intuitive graphs"
+      },
+      "operations": {
+        "title": "Lightning Operations",
+        "description": "Manage your channels and payments with ease"
+      },
+      "metrics": {
+        "title": "Advanced Metrics",
+        "description": "Analyze your node's performance with detailed metrics"
+      },
+      "nwc": {
+        "title": "Nostr Wallet Connect",
+        "description": "Connect easily with your Nostr wallet"
+      }
+    },
+    "benefits": {
+      "title": "Why choose DazLng?",
+      "items": {
+        "simplicity": "Simple and intuitive interface",
+        "security": "Enhanced security",
+        "performance": "Optimized performance",
+        "support": "Responsive support",
+        "community": "Active community"
+      }
+    },
+    "cta": {
+      "title": "Ready to get started?",
+      "description": "Join DazLng and optimize your presence on the Lightning Network",
+      "button": "Create account"
     }
   },
   "NotFound": {
     "title": "Page not found",
-    "description": "The page you are looking for does not exist.",
-    "backToHome": "Back to home"
+    "description": "Sorry, the page you are looking for does not exist.",
+    "back": "Back to home"
   },
   "Login": {
     "title": "Sign Up or Log In",
@@ -235,21 +278,39 @@
     "sections": [
       {
         "title": "Our Mission",
-        "content": "DazLng was born from the desire to simplify Lightning Network node management. Our mission is to make the Lightning network more accessible and efficient for everyone."
+        "content": "DazLng is your partner in optimizing your Lightning Network node. Our platform combines artificial intelligence and data analysis to maximize your node's profitability."
       },
       {
-        "title": "Our Technology",
-        "content": "We use advanced algorithms and artificial intelligence to optimize your Lightning channels management and maximize your revenue."
+        "title": "Features",
+        "items": [
+          "Real-time node performance analysis",
+          "Interactive data visualization",
+          "AI-powered personalized recommendations",
+          "Nostr Wallet Connect (NWC) integration",
+          "Multi-currency and multi-language support"
+        ]
       },
       {
-        "title": "Our Vision",
-        "content": "We aspire to become the reference platform for Lightning Network node management, offering innovative tools and an exceptional user experience."
-      },
-      {
-        "title": "Our Team",
-        "content": "Our team consists of experts passionate about Bitcoin and the Lightning network, determined to build the future of decentralized payments."
+        "title": "Lightning Payments",
+        "items": [
+          "Native Alby integration via NWC",
+          "Automated and secure payments",
+          "Simplified invoice management",
+          "Real-time transaction tracking"
+        ]
       }
     ],
+    "security": {
+      "title": "Enhanced Security",
+      "protection": "Attack Protection",
+      "protectionDesc": "Protection against brute force attacks and intelligent rate limiting by route",
+      "sessions": "Secure Sessions",
+      "sessionsDesc": "Secure sessions with expiration and automatic credential regeneration",
+      "validation": "Input Validation",
+      "validationDesc": "Strict input validation and protection against injections",
+      "headers": "Security Headers",
+      "headersDesc": "Configured security headers for CSRF and XSS protection"
+    },
     "cta": {
       "title": "Optimize your Lightning node",
       "subtitle": "Discover the power of DazIA for your node",

@@ -12,6 +12,7 @@ import {
   ShieldIcon,
   RocketIcon,
   UsersIcon,
+  Sparkles,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -117,6 +118,34 @@ export default function HomePage() {
               </Card>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* DazLng Box Promo Section */}
+      <section className="py-10 bg-gradient-to-r from-orange-500/10 to-blue-500/10">
+        <div className="container mx-auto px-4">
+          <Card className="p-8 border-2 border-orange-500/20">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-4">
+                  <Sparkles className="h-6 w-6 text-orange-500" />
+                  <h3 className="text-2xl font-bold text-orange-500">
+                    {t("daznodePromo.title")}
+                  </h3>
+                </div>
+                <p className="text-lg mb-4">{t("daznodePromo.description")}</p>
+                <p className="text-sm text-muted-foreground mb-6">
+                  {t("daznodePromo.limitedOffer")}
+                </p>
+                <Button size="lg" variant="default" asChild>
+                  <Link href="/daznode">{t("daznodePromo.button")}</Link>
+                </Button>
+              </div>
+              <div className="flex-shrink-0">
+                <div className="w-48 h-48 bg-gradient-to-br from-orange-500 to-blue-500 rounded-full opacity-20" />
+              </div>
+            </div>
+          </Card>
         </div>
       </section>
 

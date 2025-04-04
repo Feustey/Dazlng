@@ -1,22 +1,26 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/app/lib/prisma";
-import { dynamic, runtime, errorResponse, successResponse } from "../config";
+import { prisma } from "@/lib/prisma";
 
-export { dynamic, runtime };
+export const runtime = "nodejs";
 
 export async function GET() {
   try {
     const stats = await prisma.$queryRaw`
       SELECT 
-        COUNT(*) as total_nodes,
-        SUM(CASE WHEN status = 'online' THEN 1 ELSE 0 END) as online_nodes,
-        AVG(capacity) as avg_capacity
-      FROM nodes
+        COUNT(*) as total_transactions,
+        SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as successful_transactions,
+        SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) as failed_transactions,
+        AVG(CASE WHEN status = 'completed' THEN amount ELSE NULL END) as average_amount,
+        SUM(CASE WHEN status = 'completed' THEN amount ELSE 0 END) as total_volume
+      FROM transactions
     `;
 
-    return successResponse(stats);
+    return NextResponse.json(stats[0]);
   } catch (error) {
     console.error("Error fetching stats:", error);
-    return errorResponse("Failed to fetch stats");
+    return NextResponse.json(
+      { error: "Failed to fetch statistics" },
+      { status: 500 }
+    );
   }
 }

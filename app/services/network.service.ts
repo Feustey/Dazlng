@@ -1,5 +1,5 @@
-import { NetworkStats } from "@/app/types/network";
-import { connectToDatabase } from "@/app/lib/mongodb";
+import { NetworkStats, NetworkNode, NetworkChannel } from "@/app/types/network";
+import { prisma } from "@/app/lib/db";
 
 export async function getNetworkStats(): Promise<NetworkStats> {
   try {
@@ -16,61 +16,82 @@ export async function getNetworkStats(): Promise<NetworkStats> {
       return transformMCPData(mcpData);
     }
 
-    // Si MCP échoue, utiliser MongoDB
-    return await getNetworkStatsFromMongoDB();
+    // Si MCP échoue, utiliser Prisma
+    return await getNetworkStatsFromPrisma();
   } catch (error) {
     console.error("Error fetching network stats:", error);
-    // En dernier recours, utiliser MongoDB
-    return await getNetworkStatsFromMongoDB();
+    // En dernier recours, utiliser Prisma
+    return await getNetworkStatsFromPrisma();
   }
 }
 
-async function getNetworkStatsFromMongoDB(): Promise<NetworkStats> {
-  const { db } = await connectToDatabase();
+async function getNetworkStatsFromPrisma(): Promise<NetworkStats> {
+  const [summary, nodes, capacityHistory] = await Promise.all([
+    prisma.networkSummary.findFirst({
+      orderBy: { timestamp: "desc" },
+      cacheStrategy: {
+        swr: 60,
+        ttl: 300,
+        tags: ["network_summary"],
+      },
+    }),
+    prisma.node.findMany({
+      orderBy: { total_capacity: "desc" },
+      take: 20,
+      include: {
+        _count: {
+          select: {
+            active_channels: true,
+          },
+        },
+      },
+      cacheStrategy: {
+        swr: 60,
+        ttl: 300,
+        tags: ["top_nodes"],
+      },
+    }),
+    prisma.history.findMany({
+      orderBy: { date: "desc" },
+      take: 30,
+      cacheStrategy: {
+        swr: 300,
+        ttl: 900,
+        tags: ["capacity_history"],
+      },
+    }),
+  ]);
 
-  const [stats, topNodes, recentChannels, countryStats, capacityHistory] =
-    await Promise.all([
-      db.collection("network_stats").findOne({}, { sort: { lastUpdate: -1 } }),
-      db
-        .collection("nodes")
-        .find({}, { sort: { capacity: -1 }, limit: 10 })
-        .toArray(),
-      db
-        .collection("channels")
-        .find({}, { sort: { lastUpdate: -1 }, limit: 20 })
-        .toArray(),
-      db
-        .collection("nodes")
-        .aggregate([{ $group: { _id: "$country", count: { $sum: 1 } } }])
-        .toArray(),
-      db
-        .collection("capacity_history")
-        .find(
-          {},
-          {
-            sort: { date: -1 },
-            limit: 30,
-          }
-        )
-        .toArray(),
-    ]);
+  const topNodes = nodes.slice(0, 10);
+  const recentChannels = nodes.slice(10);
+
+  const countryStats = nodes.reduce(
+    (acc: Record<string, number>, node: { platform?: string }) => {
+      const platform = node.platform || "unknown";
+      acc[platform] = (acc[platform] || 0) + 1;
+      return acc;
+    },
+    {}
+  );
 
   return {
-    totalNodes: stats?.totalNodes || 0,
-    totalChannels: stats?.totalChannels || 0,
-    totalCapacity: stats?.totalCapacity || 0,
-    avgCapacityPerChannel: stats?.avgCapacityPerChannel || 0,
-    avgChannelsPerNode: stats?.avgChannelsPerNode || 0,
-    lastUpdate: stats?.lastUpdate || new Date(),
-    topNodes: topNodes.map(transformMongoNode),
-    recentChannels: recentChannels.map(transformMongoChannel),
-    nodesByCountry: Object.fromEntries(
-      countryStats.map((stat) => [stat._id || "unknown", stat.count])
+    totalNodes: summary?.totalNodes || 0,
+    totalChannels: summary?.totalChannels || 0,
+    totalCapacity: summary?.totalCapacity || 0,
+    avgCapacityPerChannel: summary?.avgChannelSize || 0,
+    avgChannelsPerNode: summary?.totalChannels
+      ? summary.totalChannels / summary.totalNodes
+      : 0,
+    lastUpdate: summary?.timestamp || new Date(),
+    topNodes: topNodes.map(transformPrismaNode),
+    recentChannels: recentChannels.map(transformPrismaChannel),
+    nodesByCountry: countryStats,
+    capacityHistory: capacityHistory.map(
+      (h: { date: Date; marketCap: number }) => ({
+        date: h.date,
+        value: h.marketCap,
+      })
     ),
-    capacityHistory: capacityHistory.map((h) => ({
-      date: h.date,
-      value: h.value,
-    })),
   };
 }
 
@@ -89,30 +110,27 @@ function transformMCPData(mcpData: any): NetworkStats {
   };
 }
 
-function transformMongoNode(node: any): NetworkNode {
+function transformPrismaNode(node: any): NetworkNode {
   return {
-    publicKey: node.publicKey,
+    publicKey: node.pubkey,
     alias: node.alias,
     color: node.color,
-    addresses: node.addresses || [],
-    lastUpdate: node.lastUpdate,
-    capacity: node.capacity,
-    channelCount: node.channelCount,
-    avgChannelSize: node.avgChannelSize,
-    city: node.city,
-    country: node.country,
-    isp: node.isp,
+    addresses: [node.address],
+    lastUpdate: node.updatedAt,
+    capacity: node.total_capacity,
+    channelCount: node.active_channels,
+    avgChannelSize: node.avg_capacity,
     platform: node.platform,
   };
 }
 
-function transformMongoChannel(channel: any): NetworkChannel {
+function transformPrismaChannel(node: any): NetworkChannel {
   return {
-    channelId: channel.channelId,
-    node1Pub: channel.node1Pub,
-    node2Pub: channel.node2Pub,
-    capacity: channel.capacity,
-    lastUpdate: channel.lastUpdate,
-    status: channel.status,
+    channelId: node.pubkey,
+    node1Pub: node.pubkey,
+    node2Pub: "",
+    capacity: node.total_capacity,
+    lastUpdate: node.updatedAt,
+    status: "active",
   };
 }

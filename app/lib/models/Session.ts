@@ -1,30 +1,30 @@
-import mongoose from "mongoose";
+import { prisma } from "../db";
 
-const sessionSchema = new mongoose.Schema({
-  sessionId: {
-    type: String,
-    required: true,
-    unique: true,
-    index: true,
+export const Session = {
+  create: async (data: {
+    sessionId: string;
+    email: string;
+    expiresAt: Date;
+  }) => {
+    return prisma.session.create({
+      data,
+    });
   },
-  email: {
-    type: String,
-    required: true,
-    index: true,
-  },
-  expiresAt: {
-    type: Date,
-    required: true,
-    index: true,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
 
-// Supprimer automatiquement les sessions expirées
-sessionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+  findOne: async (where: {
+    sessionId: string;
+    expiresAt?: {
+      gt: Date;
+    };
+  }) => {
+    return prisma.session.findFirst({
+      where,
+    });
+  },
 
-export const Session =
-  mongoose.models.Session || mongoose.model("Session", sessionSchema);
+  deleteOne: async (where: { sessionId: string }) => {
+    return prisma.session.delete({
+      where,
+    });
+  },
+};

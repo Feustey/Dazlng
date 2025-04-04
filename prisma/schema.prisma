@@ -1,27 +1,28 @@
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["mongoDb"]
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model History {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @default(cuid())
   date      DateTime @default(now())
   price     Float
   volume    Float
   marketCap Float
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@map("history")
+  @@index([date])
 }
 
 model PeerOfPeer {
-  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  id              String   @id @default(cuid())
   nodePubkey      String
   peerPubkey      String
   alias           String
@@ -53,11 +54,12 @@ model PeerOfPeer {
   updatedAt       DateTime @updatedAt
   node            Node     @relation(fields: [nodePubkey], references: [pubkey])
 
-  @@map("peer_of_peer")
+  @@index([nodePubkey])
+  @@index([timestamp])
 }
 
 model Node {
-  id                      String   @id @default(auto()) @map("_id") @db.ObjectId
+  id                      String   @id @default(cuid())
   pubkey                  String   @unique
   alias                   String
   platform                String
@@ -87,17 +89,117 @@ model Node {
   createdAt               DateTime @default(now())
   updatedAt               DateTime @updatedAt
   peersOfPeers           PeerOfPeer[]
+
+  @@index([timestamp])
 }
 
 model User {
-  id                  String    @id @default(auto()) @map("_id") @db.ObjectId
-  email               String?   @unique
-  name                String?
-  pubkey              String?   @unique
-  subscriptionStatus  String    @default("inactive")
-  subscriptionTier    String    @default("none")
-  subscriptionStartDate DateTime?
-  subscriptionEndDate   DateTime?
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String
+  role      String   @default("user")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+}
+
+model Transaction {
+  id        String   @id @default(cuid())
+  amount    Float
+  status    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  sessionId String   @unique
+  email     String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([sessionId])
+  @@index([email])
+  @@index([expiresAt])
+}
+
+model VerificationCode {
+  id        String   @id @default(cuid())
+  email     String
+  code      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([expiresAt])
+}
+
+model CentralityData {
+  id        String   @id @default(cuid())
+  nodePubkey String
+  metric    String
+  value     Float
+  timestamp DateTime @default(now())
+
+  @@index([nodePubkey])
+  @@index([metric])
+  @@index([timestamp])
+}
+
+model Recommendation {
+  id        String   @id @default(cuid())
+  nodePubkey String
+  type      String
+  content   String
+  priority  Int
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([nodePubkey])
+  @@index([type])
+  @@index([status])
+}
+
+model NetworkSummary {
+  id              String   @id @default(cuid())
+  totalNodes      Int
+  totalChannels   Int
+  totalCapacity   Float
+  avgChannelSize  Float
+  medianFeeRate   Float
+  timestamp       DateTime @default(now())
+
+  @@index([timestamp])
+}
+
+model NodeStats {
+  id              String   @id @default(cuid())
+  nodePubkey      String
+  channelCount    Int
+  capacity        Float
+  feeRate         Float
+  uptime          Float
+  timestamp       DateTime @default(now())
+
+  @@index([nodePubkey])
+  @@index([timestamp])
+}
+
+model RateLimit {
+  id        String   @id @default(cuid())
+  ip        String
+  route     String
+  count     Int      @default(0)
+  resetAt   DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([ip, route])
+  @@index([resetAt])
 } 
