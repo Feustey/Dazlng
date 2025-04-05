@@ -30,6 +30,10 @@ import NodePerformance from "./NodePerformance";
 import NodeGeneralInfo from "./NodeGeneralInfo";
 import ChannelList from "./ChannelList";
 
+interface NodeDetailsProps {
+  nodeId: string;
+}
+
 interface Channel {
   id: string;
   remoteNodeId: string;
@@ -68,7 +72,7 @@ interface NodeStats {
   performance?: PerformanceStats;
 }
 
-export default function NodeDetails() {
+export default function NodeDetails({ nodeId }: NodeDetailsProps) {
   const [stats, setStats] = useState<NodeStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -76,8 +80,8 @@ export default function NodeDetails() {
   useEffect(() => {
     const fetchNodeStats = async () => {
       try {
-        // Simuler des données pour le nœud Feustey
-        // Dans une implémentation réelle, vous feriez un appel API
+        // Simuler des données pour le nœud spécifié
+        // Dans une implémentation réelle, vous feriez un appel API avec nodeId
         const mockStats: NodeStats = {
           totalCapacity: 125000000,
           channelCount: 42,
@@ -90,8 +94,7 @@ export default function NodeDetails() {
           youngestChannel: "1 jour",
           averageChannelAge: "6 mois",
           medianChannelAge: "4 mois",
-          address:
-            "02778f4a4eb3a2344b9fd8ee72e7ec5f03f803e5f5273e2e1a2af508910cf2b12b",
+          address: nodeId,
           channelsRank: 1250,
           capacityRank: 980,
           channels: Array.from({ length: 10 }).map((_, i) => ({
@@ -127,7 +130,7 @@ export default function NodeDetails() {
     };
 
     fetchNodeStats();
-  }, []);
+  }, [nodeId]);
 
   if (isLoading) {
     return (
