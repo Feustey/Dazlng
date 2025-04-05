@@ -70,6 +70,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" suppressHydrationWarning>
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="canonical" href={siteConfig.url} />
+        <link rel="alternate" href={`${siteConfig.url}/en`} hrefLang="en" />
+        <link rel="alternate" href={`${siteConfig.url}/fr`} hrefLang="fr" />
+      </head>
       <body className={inter.className}>
         <ClientLayout>{children}</ClientLayout>
       </body>

@@ -90,8 +90,13 @@ export default function HomePage() {
             <p className="text-xl text-muted-foreground mb-8">
               {t("hero.subtitle")}
             </p>
-            <Button size="lg" asChild>
-              <Link href="/learn">{t("hero.cta")}</Link>
+            <Button
+              size="lg"
+              variant="orange"
+              className="text-lg px-8 py-6"
+              asChild
+            >
+              <Link href="/daznode">{t("hero.cta")}</Link>
             </Button>
           </div>
         </div>

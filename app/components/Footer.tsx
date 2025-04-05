@@ -17,9 +17,6 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* À propos */}
           <div className="md:col-span-2">
-            <h3 className="text-lg font-semibold mb-4 text-foreground dark:text-foreground/90">
-              DazLng
-            </h3>
             <p className="text-muted-foreground dark:text-muted-foreground/90 max-w-md">
               {t("description")}
             </p>
@@ -27,26 +24,20 @@ export function Footer() {
 
           {/* Liens rapides */}
           <div>
-            <ul className="space-y-3">
-              <li>
-                <Link
-                  href={`/${locale}/help`}
-                  className="flex items-center gap-2 text-orange-500 hover:text-blue-500 transition-colors dark:text-orange-400 dark:hover:text-blue-400"
-                >
-                  <HelpCircle className="h-4 w-4" />
-                  <span className="text-sm">{t("links.help")}</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={`/${locale}/about`}
-                  className="flex items-center gap-2 text-orange-500 hover:text-blue-500 transition-colors dark:text-orange-400 dark:hover:text-blue-400"
-                >
-                  <Info className="h-4 w-4" />
-                  <span className="text-sm">{t("links.about")}</span>
-                </Link>
-              </li>
-            </ul>
+            <Link
+              href={`/${locale}/help`}
+              className="flex items-center gap-2 text-orange-500 hover:text-blue-500 transition-colors dark:text-orange-400 dark:hover:text-blue-400"
+            >
+              <HelpCircle className="h-4 w-4" />
+              <span className="text-sm">{t("links.help")}</span>
+            </Link>
+            <Link
+              href={`/${locale}/about`}
+              className="flex items-center gap-2 text-orange-500 hover:text-blue-500 transition-colors dark:text-orange-400 dark:hover:text-blue-400"
+            >
+              <Info className="h-4 w-4" />
+              <span className="text-sm">{t("links.about")}</span>
+            </Link>
           </div>
 
           {/* Réseaux sociaux et CTA */}

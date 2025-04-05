@@ -9,9 +9,20 @@ import {
   ToastViewport,
 } from "./toast";
 import { useToast } from "../../hooks/use-toast";
+import { useEffect } from "react";
 
 export function Toaster() {
-  const { toasts } = useToast();
+  const { toasts, dismiss } = useToast();
+
+  // Nettoyer les toasts lors du démontage du composant
+  useEffect(() => {
+    return () => {
+      // Dismiss all toasts when component unmounts
+      toasts.forEach((toast) => {
+        dismiss(toast.id);
+      });
+    };
+  }, [toasts, dismiss]);
 
   return (
     <ToastProvider>

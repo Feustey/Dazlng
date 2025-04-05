@@ -9,11 +9,11 @@ const squadaOne = Squada_One({
   display: "swap",
 });
 
-interface LogoProps {
+interface SimpleLogoProps {
   className?: string;
 }
 
-export const Logo: React.FC<LogoProps> = ({ className = "" }) => {
+export const SimpleLogo: React.FC<SimpleLogoProps> = ({ className = "" }) => {
   return (
     <div className="logo-container">
       <svg
@@ -25,22 +25,20 @@ export const Logo: React.FC<LogoProps> = ({ className = "" }) => {
           <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop
               offset="0%"
-              style={{ stopColor: "var(--blue-500)", stopOpacity: 1 }}
+              style={{ stopColor: "#3b82f6", stopOpacity: 1 }}
             />
             <stop
               offset="100%"
-              style={{ stopColor: "var(--green-500)", stopOpacity: 1 }}
+              style={{ stopColor: "#22c55e", stopOpacity: 1 }}
             />
           </linearGradient>
         </defs>
 
-        {/* Élément éclair stylisé */}
         <path
           d="M50 80 L80 50 L110 80 L90 80 L110 110 L80 110 Z"
-          fill="var(--orange-500)"
+          fill="#f97316"
         />
 
-        {/* Texte avec dégradé */}
         <text
           x="130"
           y="100"

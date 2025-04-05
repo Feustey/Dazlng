@@ -23,7 +23,9 @@
     "pricing": "Tarifs",
     "shop": "Boutique",
     "credits": "Crédits",
-    "login": "Connexion"
+    "login": "Connexion",
+    "profile": "Mon profil",
+    "logout": "Déconnexion"
   },
   "Settings": {
     "title": "Paramètres",
@@ -65,7 +67,7 @@
     "hero": {
       "title": "Gérez vos nœuds Lightning Network en toute simplicité",
       "subtitle": "Optimisez vos performances et maximisez vos revenus avec DazLng",
-      "cta": "Commencer maintenant"
+      "cta": "Obtenez votre Dazbox !"
     },
     "features": {
       "title": "Fonctionnalités principales",
@@ -363,9 +365,19 @@
     "priceDescription": "Paiement unique incluant le matériel, la configuration, le support et 1 an d'abonnement Premium",
     "orderButton": "Commander Votre Nœud",
     "payment": {
-      "title": "Paiement via Alby Wallet",
+      "title": "Paiement via Lightning Network",
       "scan": "Scannez le QR code pour payer",
-      "processing": "Traitement en cours..."
+      "processing": "Traitement du paiement...",
+      "amount": "Montant à payer : {amount} sats",
+      "invoice": "Facture Lightning",
+      "copy": "Copier la facture",
+      "copied": "Copié !",
+      "success": "Paiement réussi !",
+      "error": "Échec du paiement. Veuillez réessayer.",
+      "close": "Fermer",
+      "expiry": "La facture expire dans {minutes} minutes",
+      "waitingPayment": "En attente du paiement...",
+      "checkingPayment": "Vérification du statut du paiement..."
     },
     "shipping": {
       "title": "Informations de livraison",
@@ -477,15 +489,27 @@
     "steps": {
       "basics": {
         "title": "Les bases du Lightning Network",
-        "content": "Découvrez les concepts fondamentaux du Lightning Network, son fonctionnement et ses avantages. Apprenez comment les nœuds communiquent entre eux et comment les transactions sont traitées."
+        "content": "Apprenez les fondamentaux du Lightning Network, son fonctionnement, ses avantages et les concepts de base."
       },
       "channels": {
         "title": "Gestion des canaux",
-        "content": "Apprenez à créer et gérer des canaux de paiement. Comprenez les concepts de capacité, de liquidité et d'équilibrage des canaux pour optimiser votre réseau."
+        "content": "Comprenez comment créer, gérer et optimiser vos canaux Lightning pour une efficacité maximale."
       },
       "transactions": {
-        "title": "Transactions et paiements",
-        "content": "Maîtrisez les différents types de transactions, les frais de routage et les meilleures pratiques pour effectuer des paiements efficaces sur le réseau Lightning."
+        "title": "Traitement des transactions",
+        "content": "Maîtrisez l'art du traitement des transactions via votre nœud Lightning Network."
+      },
+      "bitcoinLightningNetwork": {
+        "title": "Qu'est-ce que le Bitcoin Lightning Network ?",
+        "content": "Le Bitcoin Lightning Network est un protocole de paiement de seconde couche qui fonctionne sur la blockchain Bitcoin. Il permet des transactions rapides et à faible coût en créant des canaux de paiement entre les utilisateurs."
+      },
+      "howItWorks": {
+        "title": "Comment Fonctionne le Lightning Network ?",
+        "content": "Le réseau utilise des contrats intelligents pour permettre des transactions sécurisées et instantanées. Les utilisateurs peuvent ouvrir un canal de paiement, effectuer plusieurs transactions et fermer le canal, le tout sans enregistrer chaque transaction sur la blockchain principale."
+      },
+      "whyParticipate": {
+        "title": "Pourquoi Participer au Lightning Network ?",
+        "content": "Participer au Lightning Network offre des avantages tels que des frais réduits, des transactions rapides et la possibilité de contribuer à la décentralisation du réseau Bitcoin."
       }
     }
   },
@@ -500,5 +524,29 @@
     "averageAmount": "Montant moyen",
     "transactionCount": "Nombre de transactions",
     "transactionHistory": "Historique des transactions"
+  },
+  "Profile": {
+    "title": "Profil",
+    "name": "Nom",
+    "bio": "Bio",
+    "pronouns": "Pronoms",
+    "organization": "Organisation",
+    "location": "Localisation",
+    "displayLocalTime": "Afficher l'heure locale",
+    "website": "Site web",
+    "twitter": "Twitter",
+    "linkedin": "LinkedIn",
+    "email": "Email",
+    "save": "Enregistrer",
+    "saving": "Enregistrement...",
+    "success": {
+      "title": "Succès",
+      "description": "Votre profil a été mis à jour avec succès"
+    },
+    "error": {
+      "title": "Erreur",
+      "description": "Échec de la mise à jour du profil",
+      "invalidEmail": "Veuillez entrer une adresse email valide"
+    }
   }
 }

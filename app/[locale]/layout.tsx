@@ -7,6 +7,8 @@ import { Footer } from "@/app/components/Footer";
 import { Suspense } from "react";
 import { siteConfig } from "@/app/config/site";
 import ClientLayout from "@/app/ClientLayout";
+import { initializeServer } from "@/app/lib/server-init";
+import ClientInitializer from "@/app/components/ClientInitializer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -71,32 +73,32 @@ export default async function LocaleLayout({
   const { getMessages } = await import("@/app/lib/get-messages");
   const messages = await getMessages(locale);
 
+  // Initialiser le serveur au démarrage
+  if (typeof window === "undefined") {
+    try {
+      await initializeServer();
+      console.log("Serveur initialisé avec succès");
+    } catch (error) {
+      console.error("Erreur lors de l'initialisation du serveur:", error);
+    }
+  }
+
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="canonical" href={siteConfig.url} />
-        <link rel="alternate" href={`${siteConfig.url}/en`} hrefLang="en" />
-        <link rel="alternate" href={`${siteConfig.url}/fr`} hrefLang="fr" />
-      </head>
-      <body className={inter.className}>
-        <NextIntlClientProvider messages={messages} locale={locale}>
-          <div className="min-h-screen flex flex-col">
-            <Suspense fallback={<div className="h-16 bg-background" />}>
-              <Header />
-            </Suspense>
-            <main className="flex-1">
-              <Suspense fallback={<div className="h-screen bg-background" />}>
-                {children}
-              </Suspense>
-            </main>
-            <Suspense fallback={<div className="h-16 bg-background" />}>
-              <Footer />
-            </Suspense>
-          </div>
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <NextIntlClientProvider messages={messages} locale={locale}>
+      <ClientInitializer />
+      <div className="min-h-screen flex flex-col">
+        <Suspense fallback={<div className="h-16 bg-background" />}>
+          <Header />
+        </Suspense>
+        <main className="flex-1">
+          <Suspense fallback={<div className="h-screen bg-background" />}>
+            {children}
+          </Suspense>
+        </main>
+        <Suspense fallback={<div className="h-16 bg-background" />}>
+          <Footer />
+        </Suspense>
+      </div>
+    </NextIntlClientProvider>
   );
 }

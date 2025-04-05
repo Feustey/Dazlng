@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Logo } from "@/app/components/Logo";
+import { SimpleLogo } from "@/app/components/SimpleLogo";
 import { useTranslations } from "next-intl";
 
 export default function VerifyPage() {
@@ -147,7 +147,7 @@ export default function VerifyPage() {
               </svg>
             </Link>
             <div className="flex-grow flex justify-center">
-              <Logo className="h-12" />
+              <SimpleLogo className="h-12" />
             </div>
           </div>
           <h1 className="text-3xl font-bold mb-2">{t("title")}</h1>

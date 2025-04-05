@@ -157,18 +157,21 @@ export default function DaznodePage() {
             </div>
           </div>
           <div className="lg:flex-1">
-            <div className="relative aspect-square max-w-[500px] mx-auto">
+            <div className="relative aspect-square max-w-[400px] mx-auto">
               <Image
-                src="/images/dazbox.png"
+                src="/images/Daznode-PI5.png"
                 alt="Dazlng Box"
-                width={500}
-                height={500}
+                width={400}
+                height={400}
                 className="rounded-lg shadow-2xl object-cover"
                 priority
               />
-              <div className="absolute -bottom-3 -right-3 bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-medium">
+              <OrangeButton
+                className="absolute -bottom-3 -right-3 px-4 py-2 rounded-full text-sm font-medium"
+                onClick={() => setShowPayment(true)}
+              >
                 {t("limitedOffer")}
-              </div>
+              </OrangeButton>
             </div>
           </div>
         </div>
@@ -207,7 +210,7 @@ export default function DaznodePage() {
           </div>
         </div>
 
-        <Card className="max-w-2xl mx-auto">
+        <Card className="max-w-2xl mx-auto mb-12">
           <CardHeader>
             <CardTitle>{t("orderTitle")}</CardTitle>
             <CardDescription>{t("orderDescription")}</CardDescription>

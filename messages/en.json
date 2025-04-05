@@ -23,7 +23,10 @@
     "pricing": "Pricing",
     "shop": "Shop",
     "credits": "Credits",
-    "login": "Login"
+    "login": "Login",
+    "profile": "My Profile",
+    "logout": "Logout",
+    "myNode": "My Node"
   },
   "HomePage": {
     "welcome": "Welcome to DazLng",
@@ -47,7 +50,7 @@
     "hero": {
       "title": "Manage your Lightning Network nodes with ease",
       "subtitle": "Optimize your performance and maximize your revenue with DazLng",
-      "cta": "Get started"
+      "cta": "Get your Dazbox!"
     },
     "features": {
       "title": "Key Features",
@@ -323,7 +326,22 @@
     "orderDescription": "Get your pre-configured node with everything you need to start",
     "price": "500,000 sats",
     "priceDescription": "One-time payment includes hardware, setup, and support",
-    "orderButton": "Order Your Node"
+    "orderButton": "Order Your Node",
+    "payment": {
+      "title": "Payment via Lightning Network",
+      "scan": "Scan the QR code to pay",
+      "processing": "Processing payment...",
+      "amount": "Amount to pay: {amount} sats",
+      "invoice": "Lightning invoice",
+      "copy": "Copy invoice",
+      "copied": "Copied!",
+      "success": "Payment successful!",
+      "error": "Payment failed. Please try again.",
+      "close": "Close",
+      "expiry": "Invoice expires in {minutes} minutes",
+      "waitingPayment": "Waiting for payment...",
+      "checkingPayment": "Checking payment status..."
+    }
   },
   "help": {
     "title": "Help Center",
@@ -412,5 +430,68 @@
     "guide": "Guide",
     "lightning": "Lightning Network",
     "visualization": "Visualization"
+  },
+  "Learning": {
+    "title": "Learning Guide",
+    "duration": "Duration",
+    "minutes": "minutes",
+    "completed": "Completed",
+    "markComplete": "Mark as Complete",
+    "steps": {
+      "basics": {
+        "title": "Lightning Network Basics",
+        "content": "Learn the fundamentals of the Lightning Network, including how it works, its benefits, and basic concepts."
+      },
+      "channels": {
+        "title": "Channel Management",
+        "content": "Understand how to create, manage, and optimize your Lightning channels for maximum efficiency."
+      },
+      "transactions": {
+        "title": "Transaction Processing",
+        "content": "Master the art of processing transactions through your Lightning Network node."
+      }
+    }
+  },
+  "Profile": {
+    "title": "Profile",
+    "name": "Name",
+    "bio": "Bio",
+    "pronouns": "Pronouns",
+    "organization": "Organization",
+    "location": "Location",
+    "displayLocalTime": "Display local time",
+    "website": "Website",
+    "twitter": "Twitter",
+    "linkedin": "LinkedIn",
+    "email": "Email",
+    "save": "Save",
+    "saving": "Saving...",
+    "success": {
+      "title": "Success",
+      "description": "Your profile has been updated successfully"
+    },
+    "error": {
+      "title": "Error",
+      "description": "Failed to update profile",
+      "invalidEmail": "Please enter a valid email address"
+    }
+  },
+  "Node": {
+    "lightning": "Lightning",
+    "spendingBalance": "Spending Balance",
+    "receiveLimit": "Receive Limit",
+    "onChainBalance": "On-Chain Balance",
+    "channels": "Channels",
+    "peer": "Peer",
+    "type": "Type",
+    "status": "Status",
+    "capacity": "Capacity",
+    "reserve": "Reserve",
+    "spending": "Spending",
+    "receiving": "Receiving",
+    "actions": "Actions",
+    "viewFundingTransaction": "View Funding Transaction",
+    "viewNodeOnAmboss": "View Node on amboss.space",
+    "closeChannel": "Close Channel"
   }
 }

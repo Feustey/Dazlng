@@ -7,6 +7,7 @@ import { Input } from "@/app/components/ui/input";
 import { Search, ChevronDown, TrendingDown, TrendingUp } from "lucide-react";
 import { useState, useEffect } from "react";
 import { NetworkStats } from "@/app/types/network";
+import { searchNodes } from "@/app/lib/api-client";
 
 interface Node {
   pubkey: string;
@@ -24,11 +25,13 @@ export default function ChannelsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Node[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isStatsLoading, setIsStatsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [networkStats, setNetworkStats] = useState<NetworkStats | null>(null);
 
   useEffect(() => {
     const fetchNetworkStats = async () => {
+      setIsStatsLoading(true);
       try {
         const response = await fetch("/api/network/stats");
         if (!response.ok) {
@@ -39,6 +42,8 @@ export default function ChannelsPage() {
       } catch (err) {
         console.error("Erreur lors de la récupération des statistiques:", err);
         setError("Impossible de charger les statistiques du réseau.");
+      } finally {
+        setIsStatsLoading(false);
       }
     };
 
@@ -48,24 +53,35 @@ export default function ChannelsPage() {
   }, []);
 
   const handleSearch = async () => {
-    if (!searchQuery.trim()) return;
+    if (!searchQuery.trim()) {
+      setError("Veuillez entrer un terme de recherche");
+      return;
+    }
+
+    if (searchQuery.length < 3) {
+      setError("La recherche doit contenir au moins 3 caractères");
+      return;
+    }
 
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await fetch(
-        `/api/nodes/search?q=${encodeURIComponent(searchQuery)}`
-      );
-      if (!response.ok) {
-        throw new Error(`Erreur HTTP: ${response.status}`);
+      const data = await searchNodes(searchQuery);
+
+      if (Array.isArray(data) && data.length === 0) {
+        setError("Aucun résultat trouvé pour votre recherche");
+        setSearchResults([]);
+      } else {
+        setSearchResults(Array.isArray(data) ? data : []);
+        setError(null);
       }
-      const data = await response.json();
-      setSearchResults(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Erreur lors de la recherche:", err);
       setError(
-        "Impossible de charger les résultats. Veuillez réessayer plus tard."
+        err instanceof Error
+          ? err.message
+          : "Impossible de charger les résultats. Veuillez réessayer plus tard."
       );
       setSearchResults([]);
     } finally {
@@ -136,21 +152,27 @@ export default function ChannelsPage() {
             <h2 className="text-lg font-semibold mb-4">Number of Nodes</h2>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold">
-                {networkStats?.totalNodes.toLocaleString() || "..."}
+                {isStatsLoading
+                  ? "..."
+                  : (networkStats?.totalNodes?.toLocaleString() ?? "N/A")}
               </span>
-              {networkStats && networkStats.topNodes.length > 0 && (
-                <div className="flex items-center text-green-500">
-                  <TrendingUp className="h-4 w-4" />
-                  <span>
-                    +
-                    {(
-                      (networkStats.topNodes.length / networkStats.totalNodes) *
-                      100
-                    ).toFixed(1)}
-                    %
-                  </span>
-                </div>
-              )}
+              {!isStatsLoading &&
+                networkStats?.topNodes &&
+                networkStats.totalNodes &&
+                networkStats.topNodes.length > 0 && (
+                  <div className="flex items-center text-green-500">
+                    <TrendingUp className="h-4 w-4" />
+                    <span>
+                      +
+                      {(
+                        (networkStats.topNodes.length /
+                          networkStats.totalNodes) *
+                        100
+                      ).toFixed(1)}
+                      %
+                    </span>
+                  </div>
+                )}
             </div>
             <Button variant="ghost" className="mt-4">
               <ChevronDown className="h-4 w-4" />
@@ -163,22 +185,27 @@ export default function ChannelsPage() {
             <h2 className="text-lg font-semibold mb-4">Number of Channels</h2>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold">
-                {networkStats?.totalChannels.toLocaleString() || "..."}
+                {isStatsLoading
+                  ? "..."
+                  : (networkStats?.totalChannels?.toLocaleString() ?? "N/A")}
               </span>
-              {networkStats && networkStats.recentChannels.length > 0 && (
-                <div className="flex items-center text-green-500">
-                  <TrendingUp className="h-4 w-4" />
-                  <span>
-                    +
-                    {(
-                      (networkStats.recentChannels.length /
-                        networkStats.totalChannels) *
-                      100
-                    ).toFixed(1)}
-                    %
-                  </span>
-                </div>
-              )}
+              {!isStatsLoading &&
+                networkStats?.recentChannels &&
+                networkStats.totalChannels &&
+                networkStats.recentChannels.length > 0 && (
+                  <div className="flex items-center text-green-500">
+                    <TrendingUp className="h-4 w-4" />
+                    <span>
+                      +
+                      {(
+                        (networkStats.recentChannels.length /
+                          networkStats.totalChannels) *
+                        100
+                      ).toFixed(1)}
+                      %
+                    </span>
+                  </div>
+                )}
             </div>
             <Button variant="ghost" className="mt-4">
               <ChevronDown className="h-4 w-4" />
@@ -192,25 +219,29 @@ export default function ChannelsPage() {
             <div className="flex flex-col">
               <div className="flex items-baseline gap-2">
                 <span className="text-3xl font-bold">
-                  {networkStats?.totalCapacity
-                    ? (networkStats.totalCapacity / 100000000).toFixed(2)
-                    : "..."}{" "}
+                  {isStatsLoading
+                    ? "..."
+                    : networkStats?.totalCapacity
+                      ? (networkStats.totalCapacity / 100000000).toFixed(2)
+                      : "N/A"}{" "}
                   BTC
                 </span>
-                {networkStats && networkStats.capacityHistory.length > 0 && (
-                  <div className="flex items-center text-green-500">
-                    <TrendingUp className="h-4 w-4" />
-                    <span>
-                      +
-                      {(
-                        (networkStats.capacityHistory[0].value /
-                          networkStats.totalCapacity) *
-                        100
-                      ).toFixed(1)}
-                      %
-                    </span>
-                  </div>
-                )}
+                {!isStatsLoading &&
+                  networkStats?.capacityHistory &&
+                  networkStats.capacityHistory.length > 0 && (
+                    <div className="flex items-center text-green-500">
+                      <TrendingUp className="h-4 w-4" />
+                      <span>
+                        +
+                        {(
+                          (networkStats.capacityHistory[0].value /
+                            networkStats.totalCapacity) *
+                          100
+                        ).toFixed(1)}
+                        %
+                      </span>
+                    </div>
+                  )}
               </div>
               <span className="text-muted-foreground">
                 $
@@ -230,13 +261,21 @@ export default function ChannelsPage() {
             <h2 className="text-lg font-semibold mb-4">Average Channel Size</h2>
             <div className="flex flex-col">
               <span className="text-3xl font-bold">
-                {networkStats?.avgCapacityPerChannel
-                  ? (networkStats.avgCapacityPerChannel / 100000000).toFixed(4)
-                  : "..."}{" "}
+                {isStatsLoading
+                  ? "..."
+                  : networkStats?.avgCapacityPerChannel
+                    ? (networkStats.avgCapacityPerChannel / 100000000).toFixed(
+                        4
+                      )
+                    : "N/A"}{" "}
                 BTC
               </span>
               <span className="text-muted-foreground">
-                {networkStats?.avgChannelsPerNode.toFixed(1) || "..."}{" "}
+                {isStatsLoading
+                  ? "..."
+                  : networkStats?.avgChannelsPerNode
+                    ? networkStats.avgChannelsPerNode.toFixed(1)
+                    : "N/A"}{" "}
                 channels/node
               </span>
             </div>

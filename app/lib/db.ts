@@ -1,5 +1,3 @@
-"use client";
-
 import { PrismaClient } from "@prisma/client";
 import { withAccelerate } from "@prisma/extension-accelerate";
 
@@ -8,17 +6,9 @@ declare global {
   var prisma: ReturnType<typeof prismaClientSingleton> | undefined;
 }
 
-// Configuration optimisée du pool de connexions avec IP statiques
 const prismaClientSingleton = () => {
   const client = new PrismaClient({
-    // Configuration du timeout du pool de connexions (20 secondes)
-    // Cela permet d'attendre plus longtemps une connexion disponible en cas de charge élevée
-    datasources: {
-      db: {
-        // Utilisation des IP statiques de Prisma Accelerate
-        url: process.env.DATABASE_URL + "?pool_timeout=20&connection_limit=10",
-      },
-    },
+    log: ["error", "warn", "info"],
   });
 
   return client.$extends(withAccelerate());
@@ -28,23 +18,57 @@ export const prisma = globalThis.prisma ?? prismaClientSingleton();
 
 if (process.env.NODE_ENV !== "production") globalThis.prisma = prisma;
 
+let isConnected = false;
+
 export async function connectToDatabase() {
+  if (isConnected) {
+    console.log("Déjà connecté à la base de données");
+    return;
+  }
+
   try {
     await prisma.$connect();
-    console.log(
-      "Connecté à la base de données avec Prisma Accelerate (IP statiques)"
-    );
+    isConnected = true;
+    console.log("Connecté à la base de données avec Prisma Accelerate");
 
     // Configuration des limites de requêtes
     await prisma.$executeRaw`
-      SET statement_timeout = '10s';  -- Timeout global de 10 secondes
-      SET idle_in_transaction_session_timeout = '15s';  -- Timeout des transactions de 15 secondes
+      SET statement_timeout = '30s';
+      SET idle_in_transaction_session_timeout = '30s';
+      SET lock_timeout = '10s';
     `;
 
     console.log("Configuration du pool de connexions terminée");
   } catch (error) {
     console.error("Erreur de connexion à la base de données:", error);
+    isConnected = false;
     throw error;
+  }
+}
+
+export async function disconnectFromDatabase() {
+  if (!isConnected) {
+    return;
+  }
+
+  try {
+    await prisma.$disconnect();
+    isConnected = false;
+    console.log("Déconnecté de la base de données");
+  } catch (error) {
+    console.error("Erreur lors de la déconnexion:", error);
+    throw error;
+  }
+}
+
+// Fonction pour vérifier l'état de la connexion
+export async function checkDatabaseConnection() {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    return true;
+  } catch (error) {
+    console.error("Erreur lors de la vérification de la connexion:", error);
+    return false;
   }
 }
 

@@ -2,13 +2,18 @@
 
 import * as React from "react";
 
-import { Github, Send, Twitter } from "lucide-react";
+import { Github, Send, Twitter, MessageCircle } from "lucide-react";
 
 const socialLinks = [
   {
     name: "GitHub",
     url: "https://github.com/Feustey/Dazlng",
     icon: Github,
+  },
+  {
+    name: "Discord",
+    url: "https://discord.gg/8SZ7g9xDfK",
+    icon: MessageCircle,
   },
   {
     name: "Twitter",
