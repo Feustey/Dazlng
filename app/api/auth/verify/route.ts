@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { verifyToken } from "../../../lib/auth";
-import { runtime, errorResponse, successResponse } from "@/app/api/config";
+import { errorResponse, successResponse } from "@/app/api/config";
 
-export { runtime };
+export const runtime = "edge";
 
 export async function POST(request: Request) {
   try {

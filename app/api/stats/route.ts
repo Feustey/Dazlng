@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/app/lib/db";
+import prisma from "@/app/lib/db";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 interface Stats {
   total_nodes: number;

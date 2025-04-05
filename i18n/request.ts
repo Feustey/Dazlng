@@ -1,6 +1,7 @@
 import { getRequestConfig } from "next-intl/server";
-import { locales, defaultLocale, type Locale } from "../i18n.config";
+import { locales, defaultLocale } from "../i18n.config";
 import type { GetRequestConfigParams, RequestConfig } from "next-intl/server";
+import type { Locale } from "../i18n.config.base";
 
 export default getRequestConfig(
   async (params: GetRequestConfigParams): Promise<RequestConfig> => {
@@ -12,8 +13,6 @@ export default getRequestConfig(
 
     return {
       messages: (await import(`../messages/${validLocale}.json`)).default,
-      timeZone: "Europe/Paris",
-      now: new Date(),
       locale: validLocale,
     };
   }

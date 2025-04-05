@@ -1,135 +1,147 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Card } from "@components/ui/card";
-import { Button } from "@components/ui/button";
-import { useLanguage } from "@contexts/LanguageContext";
-import { toast } from "sonner";
-
-interface SettingsContent {
-  title: string;
-  language: {
-    label: string;
-    options: {
-      en: string;
-      fr: string;
-    };
-  };
-  theme: {
-    label: string;
-    options: {
-      light: string;
-      dark: string;
-      system: string;
-    };
-  };
-  save: string;
-  success: string;
-  error: string;
-}
-
-interface Settings {
-  language: string;
-  theme: string;
-}
-
-const STORAGE_KEY = "app_settings";
+import { useState } from "react";
+import { useAuth } from "@/app/hooks/useAuth";
+import { useAlert } from "@/app/contexts/AlertContext";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function SettingsPage() {
-  const { language, setLanguage } = useLanguage();
-  const [theme, setTheme] = useState("system");
-  const [content, setContent] = useState<SettingsContent | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
+  const { user, logout } = useAuth();
+  const { showAlert } = useAlert();
+  const [name, setName] = useState(user?.name || "");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    // Charger les paramètres sauvegardés
-    const savedSettings = localStorage.getItem(STORAGE_KEY);
-    if (savedSettings) {
-      const settings: Settings = JSON.parse(savedSettings);
-      setTheme(settings.theme);
-    }
+  const handleUpdateProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
 
-    // Charger le contenu traduit
-    async function fetchContent() {
-      try {
-        const response = await fetch(`/locale/settings/${language}.json`);
-        if (!response.ok) throw new Error("Failed to load content");
-        const data = await response.json();
-        setContent(data);
-      } catch (error) {
-        console.error("Error loading settings content:", error);
-        toast.error("Failed to load settings");
-      }
-    }
-
-    fetchContent();
-  }, [language]);
-
-  const handleSave = async () => {
-    setIsSaving(true);
     try {
-      const settings: Settings = { language, theme };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
-      toast.success(content?.success || "Settings saved successfully");
-    } catch (error) {
-      console.error("Error saving settings:", error);
-      toast.error(content?.error || "Failed to save settings");
+      const response = await fetch("/api/user/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de la mise à jour du profil");
+      }
+
+      showAlert("success", "Profil mis à jour avec succès");
+    } catch (error: any) {
+      showAlert("error", error.message);
     } finally {
-      setIsSaving(false);
+      setLoading(false);
     }
   };
 
-  if (!content) return <div>Chargement...</div>;
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const response = await fetch("/api/user/password", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          currentPassword,
+          newPassword,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de la mise à jour du mot de passe");
+      }
+
+      showAlert("success", "Mot de passe mis à jour avec succès");
+      setCurrentPassword("");
+      setNewPassword("");
+    } catch (error: any) {
+      showAlert("error", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">{content.title}</h1>
+      <h1 className="text-3xl font-bold mb-8">Paramètres</h1>
 
-      <Card className="p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">{content.language.label}</h2>
-        <div className="flex gap-4">
-          <Button
-            variant={language === "en" ? "default" : "outline"}
-            onClick={() => setLanguage("en")}
-          >
-            {content.language.options.en}
-          </Button>
-          <Button
-            variant={language === "fr" ? "default" : "outline"}
-            onClick={() => setLanguage("fr")}
-          >
-            {content.language.options.fr}
-          </Button>
-        </div>
-      </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <Card className="p-6">
+          <h2 className="text-xl font-semibold mb-6">Profil</h2>
+          <form onSubmit={handleUpdateProfile} className="space-y-4">
+            <div>
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                value={user?.email || ""}
+                disabled
+                className="bg-gray-100"
+              />
+            </div>
 
-      <Card className="p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">{content.theme.label}</h2>
-        <div className="flex gap-4">
-          <Button
-            variant={theme === "light" ? "default" : "outline"}
-            onClick={() => setTheme("light")}
-          >
-            {content.theme.options.light}
-          </Button>
-          <Button
-            variant={theme === "dark" ? "default" : "outline"}
-            onClick={() => setTheme("dark")}
-          >
-            {content.theme.options.dark}
-          </Button>
-          <Button
-            variant={theme === "system" ? "default" : "outline"}
-            onClick={() => setTheme("system")}
-          >
-            {content.theme.options.system}
-          </Button>
-        </div>
-      </Card>
+            <div>
+              <Label htmlFor="name">Nom</Label>
+              <Input
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
 
-      <Button className="w-full" onClick={handleSave} disabled={isSaving}>
-        {isSaving ? "Enregistrement..." : content.save}
-      </Button>
+            <Button type="submit" disabled={loading}>
+              {loading ? "Mise à jour..." : "Mettre à jour le profil"}
+            </Button>
+          </form>
+        </Card>
+
+        <Card className="p-6">
+          <h2 className="text-xl font-semibold mb-6">Sécurité</h2>
+          <form onSubmit={handleUpdatePassword} className="space-y-4">
+            <div>
+              <Label htmlFor="currentPassword">Mot de passe actuel</Label>
+              <Input
+                id="currentPassword"
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="newPassword">Nouveau mot de passe</Label>
+              <Input
+                id="newPassword"
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </div>
+
+            <Button type="submit" disabled={loading}>
+              {loading ? "Mise à jour..." : "Mettre à jour le mot de passe"}
+            </Button>
+          </form>
+
+          <div className="mt-8 pt-6 border-t">
+            <h3 className="text-lg font-semibold mb-4">Danger Zone</h3>
+            <Button variant="destructive" onClick={logout} className="w-full">
+              Se déconnecter
+            </Button>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 }

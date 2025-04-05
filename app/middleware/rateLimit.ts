@@ -14,47 +14,56 @@ export async function rateLimit(request: NextRequest) {
     await RateLimit.cleanup();
 
     // Find or create rate limit record
-    let rateLimit = await RateLimit.findByIpAndRoute(ip, route);
+    let rateLimit = await RateLimit.findOne({ ip, route });
     const now = new Date();
 
     if (!rateLimit) {
+      // Create new rate limit record
       rateLimit = await RateLimit.create({
         ip,
         route,
         count: 1,
         resetAt: new Date(now.getTime() + WINDOW_SIZE),
       });
-    } else {
-      if (now > rateLimit.resetAt) {
-        // Reset if window has passed
-        rateLimit = await RateLimit.update(rateLimit.id, {
-          count: 1,
-          resetAt: new Date(now.getTime() + WINDOW_SIZE),
-        });
-      } else if (rateLimit.count >= MAX_REQUESTS) {
-        // Rate limit exceeded
-        return new NextResponse(
-          JSON.stringify({
-            error: "Too many requests",
-            message: "Please try again later",
-          }),
-          {
-            status: 429,
-            headers: {
-              "Content-Type": "application/json",
-              "Retry-After": Math.ceil(
-                (rateLimit.resetAt.getTime() - now.getTime()) / 1000
-              ).toString(),
-            },
-          }
-        );
-      } else {
-        // Increment count
-        rateLimit = await RateLimit.update(rateLimit.id, {
-          count: rateLimit.count + 1,
-        });
-      }
+      return NextResponse.next();
     }
+
+    // Check if rate limit has expired
+    if (now > rateLimit.resetAt) {
+      // Reset rate limit
+      rateLimit = await RateLimit.update(rateLimit.id, {
+        count: 1,
+        resetAt: new Date(now.getTime() + WINDOW_SIZE),
+      });
+      return NextResponse.next();
+    }
+
+    // Check if rate limit has been exceeded
+    if (rateLimit.count >= MAX_REQUESTS) {
+      return new NextResponse(
+        JSON.stringify({
+          error: "Too many requests",
+          message: "Please try again later",
+          retryAfter: Math.ceil(
+            (rateLimit.resetAt.getTime() - now.getTime()) / 1000
+          ),
+        }),
+        {
+          status: 429,
+          headers: {
+            "Content-Type": "application/json",
+            "Retry-After": Math.ceil(
+              (rateLimit.resetAt.getTime() - now.getTime()) / 1000
+            ).toString(),
+          },
+        }
+      );
+    }
+
+    // Increment rate limit count
+    await RateLimit.update(rateLimit.id, {
+      count: rateLimit.count + 1,
+    });
 
     return NextResponse.next();
   } catch (error) {

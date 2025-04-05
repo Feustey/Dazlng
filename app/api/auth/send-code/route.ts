@@ -1,36 +1,47 @@
-import { randomInt } from "crypto";
-import { connectToDatabase } from "@/app/lib/db";
+import { NextResponse } from "next/server";
+import prisma from "@/app/lib/db";
+import { dynamic } from "@/app/api/config";
 import { VerificationCode } from "@/app/lib/models/VerificationCode";
-import { dynamic, errorResponse, successResponse } from "@/app/api/config";
+import { sendVerificationEmail } from "@/app/lib/email";
 
 export { dynamic };
-export const runtime = "edge" as const;
+export const runtime = "edge";
 
 export async function POST(request: Request) {
   try {
+    await prisma.$connect();
+
     const { email } = await request.json();
 
     if (!email) {
-      return errorResponse("Email is required", 400);
+      return NextResponse.json(
+        { status: "error", message: "Email requis" },
+        { status: 400 }
+      );
     }
 
-    // Générer un code à 6 chiffres
-    const code = randomInt(100000, 999999).toString();
+    // Générer un code de vérification à 6 chiffres
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
 
-    await connectToDatabase();
-
-    // Sauvegarder le code dans la base de données
+    // Créer un nouveau code de vérification
     await VerificationCode.create({
       email,
       code,
       expiresAt: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes
     });
 
-    // TODO: Envoyer l'email avec le code
-    // Pour l'instant, on retourne le code dans la réponse
-    return successResponse({ message: "Verification code sent", code });
+    // Envoyer l'email de vérification
+    await sendVerificationEmail(email, code);
+
+    return NextResponse.json({
+      status: "success",
+      message: "Code de vérification envoyé",
+    });
   } catch (error) {
-    console.error("Error sending verification code:", error);
-    return errorResponse("Failed to send verification code");
+    console.error("Erreur lors de l'envoi du code:", error);
+    return NextResponse.json(
+      { status: "error", message: "Erreur lors de l'envoi du code" },
+      { status: 500 }
+    );
   }
 }

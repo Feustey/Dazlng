@@ -1,22 +1,29 @@
 "use client";
 
 import { PrismaClient } from "@prisma/client";
+import { withAccelerate } from "@prisma/extension-accelerate";
+
+type PrismaClientWithAccelerate = ReturnType<typeof prismaClientSingleton>;
+
+declare global {
+  var prisma: PrismaClientWithAccelerate | undefined;
+}
 
 const prismaClientSingleton = () => {
-  return new PrismaClient();
+  return new PrismaClient({
+    datasources: {
+      db: {
+        url: process.env.PRISMA_ACCELERATE_URL,
+      },
+    },
+  }).$extends(withAccelerate());
 };
 
-type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>;
+const prisma = globalThis.prisma ?? prismaClientSingleton();
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClientSingleton | undefined;
-};
+export default prisma;
 
-export const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-}
+if (process.env.NODE_ENV !== "production") globalThis.prisma = prisma;
 
 // Fonction pour tester la connexion
 export async function testConnection() {

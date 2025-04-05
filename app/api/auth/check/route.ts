@@ -1,34 +1,39 @@
-import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { connectToDatabase } from "@/app/lib/db";
-import { Session } from "@/app/lib/models/Session";
-import { dynamic, errorResponse, successResponse } from "@/app/api/config";
+import { NextRequest, NextResponse } from "next/server";
+import { getSession, getUserByEmail } from "@/app/lib/prisma-auth";
 
-export { dynamic };
-export const runtime = "edge" as const;
-
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const sessionId = cookies().get("session_id")?.value;
+    const sessionId = request.cookies.get("sessionId")?.value;
 
     if (!sessionId) {
-      return errorResponse("Non authentifié", 401);
+      return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
     }
 
-    await connectToDatabase();
+    const session = await getSession(sessionId);
+    if (!session || session.expiresAt < new Date()) {
+      return NextResponse.json({ error: "Session expirée" }, { status: 401 });
+    }
 
-    const session = await Session.findOne({
-      sessionId,
-      expiresAt: { gt: new Date() },
+    const user = await getUserByEmail(session.email);
+    if (!user) {
+      return NextResponse.json(
+        { error: "Utilisateur non trouvé" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      user: {
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
     });
-
-    if (!session) {
-      return errorResponse("Session expirée", 401);
-    }
-
-    return successResponse({ authenticated: true });
-  } catch (error) {
-    console.error("Erreur lors de la vérification de la session:", error);
-    return errorResponse("Erreur interne du serveur");
+  } catch (error: any) {
+    console.error("Erreur de vérification d'authentification:", error);
+    return NextResponse.json(
+      { error: error.message || "Erreur serveur" },
+      { status: 500 }
+    );
   }
 }

@@ -1,84 +1,67 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { randomBytes } from "crypto";
-import { connectToDatabase } from "@/app/lib/db";
-import { VerificationCode } from "@/app/lib/models/VerificationCode";
+import prisma from "@/app/lib/db";
+import { dynamic } from "@/app/api/config";
+import { generateToken } from "@/app/lib/auth";
 import { Session } from "@/app/lib/models/Session";
-import { SESSION_CONFIG, getSessionExpiry } from "@/app/config/session";
-import { rateLimit } from "@/app/middleware/rateLimit";
-import { dynamic, errorResponse, successResponse } from "@/app/api/config";
-import { NextRequest } from "next/server";
+import { VerificationCode } from "@/app/lib/models/VerificationCode";
 
 export { dynamic };
-export const runtime = "edge" as const;
+export const runtime = "edge";
 
 // Configuration spécifique pour le rate limiting de la vérification
 const verifyCodeRateLimit = {
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // 5 tentatives par fenêtre
-  keyPrefix: "verify-code",
+  maxAttempts: 5,
 };
 
 export async function POST(request: Request) {
   try {
-    // Appliquer le rate limiting
-    const rateLimitResult = await rateLimit(request as NextRequest);
-    if (rateLimitResult instanceof NextResponse) {
-      return rateLimitResult;
-    }
+    await prisma.$connect();
 
     const { email, code } = await request.json();
 
     if (!email || !code) {
-      return errorResponse("Email and code are required", 400);
-    }
-
-    // Connexion à la base de données
-    await connectToDatabase();
-
-    // Rechercher le code de vérification
-    const verificationCode = await VerificationCode.findOne({
-      email,
-      expiresAt: {
-        gt: new Date(),
-      },
-    });
-
-    if (!verificationCode) {
-      return errorResponse(
-        "No verification code found or code has expired",
-        400
+      return NextResponse.json(
+        { status: "error", message: "Email et code requis" },
+        { status: 400 }
       );
     }
 
-    if (verificationCode.code !== code) {
-      return errorResponse("Invalid verification code", 400);
+    const verificationCode = await VerificationCode.findOne({
+      email,
+      code,
+      expiresAt: { gt: new Date() },
+    });
+
+    if (!verificationCode) {
+      return NextResponse.json(
+        { status: "error", message: "Code invalide ou expiré" },
+        { status: 400 }
+      );
     }
 
-    // Code valide, supprimer le code de vérification
-    await VerificationCode.deleteOne({
-      id: verificationCode.id,
-    });
+    const token = generateToken(email);
 
-    // Créer une session avec la nouvelle configuration
-    const sessionId = randomBytes(32).toString("hex");
-    const sessionExpiresAt = getSessionExpiry();
-
+    // Créer une nouvelle session
     await Session.create({
-      sessionId,
       email,
-      expiresAt: sessionExpiresAt,
+      sessionId: token,
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 heures
     });
 
-    // Définir le cookie de session avec les nouvelles options de sécurité
-    cookies().set("session_id", sessionId, {
-      ...SESSION_CONFIG.cookieOptions,
-      expires: sessionExpiresAt,
-    });
+    // Supprimer le code de vérification utilisé
+    await VerificationCode.deleteOne({ id: verificationCode.id });
 
-    return successResponse({ success: true });
+    return NextResponse.json({
+      status: "success",
+      message: "Code vérifié avec succès",
+      token,
+    });
   } catch (error) {
-    console.error("Error verifying code:", error);
-    return errorResponse("Failed to verify code");
+    console.error("Erreur lors de la vérification du code:", error);
+    return NextResponse.json(
+      { status: "error", message: "Erreur lors de la vérification du code" },
+      { status: 500 }
+    );
   }
 }

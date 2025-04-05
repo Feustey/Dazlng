@@ -7,7 +7,7 @@ interface Channel {
   id: string;
   remoteNodeId: string;
   capacity: number;
-  age: string;
+  age: number;
 }
 
 interface ChannelMapProps {
@@ -107,8 +107,10 @@ export default function ChannelMap({ channels = [] }: ChannelMapProps) {
 
   return (
     <Card className="p-6">
-      <h3 className="text-xl font-bold mb-4 text-gray-800">Carte des Canaux</h3>
-      <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg overflow-hidden">
+      <h3 className="text-xl font-bold mb-4 text-foreground">
+        Carte des Canaux
+      </h3>
+      <div className="h-96 bg-muted rounded-lg overflow-hidden">
         <canvas
           ref={canvasRef}
           className="w-full h-full"

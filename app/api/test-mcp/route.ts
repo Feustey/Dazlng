@@ -1,12 +1,8 @@
 import { NextResponse } from "next/server";
-import {
-  dynamic,
-  runtime,
-  errorResponse,
-  successResponse,
-} from "@/app/api/config";
+import { dynamic, errorResponse, successResponse } from "@/app/api/config";
 
-export { dynamic, runtime };
+export const runtime = "edge";
+export { dynamic };
 
 export async function GET() {
   try {

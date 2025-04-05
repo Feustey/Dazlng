@@ -1,14 +1,14 @@
 import { Inter } from "next/font/google";
+import { siteConfig } from "../config/metadata";
+import { Metadata, Viewport } from "next";
+import ClientLayout from "../ClientLayout";
+import "../globals.css";
+import Navigation from "@/app/components/Navigation";
 import { NextIntlClientProvider } from "next-intl";
+import { locales } from "@/i18n.config";
+import { ThemeProvider } from "@/app/components/ThemeProvider";
 import { notFound } from "next/navigation";
-import { Viewport } from "next";
-import Header from "@/app/components/Header";
-import { Footer } from "@/app/components/Footer";
-import { Suspense } from "react";
-import { siteConfig } from "@/app/config/site";
-import ClientLayout from "@/app/ClientLayout";
-import { initializeServer } from "@/app/lib/server-init";
-import ClientInitializer from "@/app/components/ClientInitializer";
+import { Locale } from "@/i18n.config.base";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,20 +16,20 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  userScalable: false,
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "white" },
     { media: "(prefers-color-scheme: dark)", color: "black" },
   ],
 };
 
-export const metadata = {
+export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
   title: {
     default: siteConfig.name,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
-  keywords: ["Lightning Network", "Bitcoin", "Node Management", "DazLng"],
+  keywords: siteConfig.keywords,
   authors: [
     {
       name: "DazLng",
@@ -40,65 +40,70 @@ export const metadata = {
   openGraph: {
     type: "website",
     locale: "fr_FR",
+    alternateLocale: "en_US",
     url: siteConfig.url,
     title: siteConfig.name,
     description: siteConfig.description,
     siteName: siteConfig.name,
+    images: [
+      {
+        url: siteConfig.ogImage,
+        width: 1200,
+        height: 630,
+        alt: siteConfig.name,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
     images: [siteConfig.ogImage],
-    creator: "@dazlng",
+    creator: "@DazLng",
   },
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon-16x16.png",
     apple: "/apple-touch-icon.png",
   },
-  manifest: `${siteConfig.url}/site.webmanifest`,
+  manifest: "/site.webmanifest",
 };
 
-type LocaleLayoutProps = {
-  children: React.ReactNode;
-  params: { locale: string };
-  app: any;
-};
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
+
+async function getMessages(locale: string) {
+  try {
+    return (await import(`@/messages/${locale}.json`)).default;
+  } catch (error) {
+    notFound();
+  }
+}
 
 export default async function LocaleLayout({
   children,
   params: { locale },
-}: LocaleLayoutProps) {
-  const { getMessages } = await import("@/app/lib/get-messages");
+}: {
+  children: React.ReactNode;
+  params: { locale: Locale };
+}) {
+  if (!locales.includes(locale)) notFound();
+
   const messages = await getMessages(locale);
 
-  // Initialiser le serveur au démarrage
-  if (typeof window === "undefined") {
-    try {
-      await initializeServer();
-      console.log("Serveur initialisé avec succès");
-    } catch (error) {
-      console.error("Erreur lors de l'initialisation du serveur:", error);
-    }
-  }
-
   return (
-    <NextIntlClientProvider messages={messages} locale={locale}>
-      <ClientInitializer />
-      <div className="min-h-screen flex flex-col">
-        <Suspense fallback={<div className="h-16 bg-background" />}>
-          <Header />
-        </Suspense>
-        <main className="flex-1">
-          <Suspense fallback={<div className="h-screen bg-background" />}>
-            {children}
-          </Suspense>
-        </main>
-        <Suspense fallback={<div className="h-16 bg-background" />}>
-          <Footer />
-        </Suspense>
-      </div>
-    </NextIntlClientProvider>
+    <html lang={locale} suppressHydrationWarning>
+      <body className={inter.className}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <NextIntlClientProvider messages={messages} locale={locale}>
+            <ClientLayout>
+              <Navigation />
+              <main className="min-h-screen">{children}</main>
+            </ClientLayout>
+          </NextIntlClientProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

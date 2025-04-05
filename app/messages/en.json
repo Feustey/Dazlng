@@ -1,0 +1,40 @@
+{
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password?",
+    "verificationCode": "Verification Code",
+    "sendCode": "Send Code",
+    "verify": "Verify",
+    "resendCode": "Resend Code"
+  },
+  "dashboard": {
+    "welcome": "Welcome to your dashboard",
+    "nodes": "Your Nodes",
+    "addNode": "Add Node",
+    "noNodes": "You don't have any nodes yet",
+    "nodeDetails": "Node Details",
+    "capacity": "Capacity",
+    "channels": "Channels",
+    "age": "Age",
+    "rank": "Rank"
+  },
+  "errors": {
+    "invalidEmail": "Invalid email",
+    "invalidPassword": "Invalid password",
+    "passwordsDontMatch": "Passwords don't match",
+    "invalidCode": "Invalid code",
+    "codeExpired": "Code has expired",
+    "serverError": "Server error",
+    "networkError": "Network error"
+  }
+}

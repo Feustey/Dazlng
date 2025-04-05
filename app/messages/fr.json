@@ -1,0 +1,40 @@
+{
+  "navigation": {
+    "home": "Accueil",
+    "dashboard": "Tableau de bord",
+    "settings": "Paramètres",
+    "logout": "Déconnexion"
+  },
+  "auth": {
+    "login": "Connexion",
+    "register": "Inscription",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "verificationCode": "Code de vérification",
+    "sendCode": "Envoyer le code",
+    "verify": "Vérifier",
+    "resendCode": "Renvoyer le code"
+  },
+  "dashboard": {
+    "welcome": "Bienvenue sur votre tableau de bord",
+    "nodes": "Vos nœuds",
+    "addNode": "Ajouter un nœud",
+    "noNodes": "Vous n'avez pas encore de nœuds",
+    "nodeDetails": "Détails du nœud",
+    "capacity": "Capacité",
+    "channels": "Canaux",
+    "age": "Âge",
+    "rank": "Rang"
+  },
+  "errors": {
+    "invalidEmail": "Email invalide",
+    "invalidPassword": "Mot de passe invalide",
+    "passwordsDontMatch": "Les mots de passe ne correspondent pas",
+    "invalidCode": "Code invalide",
+    "codeExpired": "Le code a expiré",
+    "serverError": "Erreur serveur",
+    "networkError": "Erreur réseau"
+  }
+}

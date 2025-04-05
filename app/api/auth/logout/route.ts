@@ -1,25 +1,27 @@
-import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { connectToDatabase } from "@/app/lib/db";
-import { Session } from "@/app/lib/models/Session";
+import { NextRequest, NextResponse } from "next/server";
+import { deleteSession } from "@/app/lib/prisma-auth";
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
-    const sessionId = cookies().get("session_id")?.value;
+    const sessionId = request.cookies.get("sessionId")?.value;
 
     if (sessionId) {
-      await connectToDatabase();
-      await Session.deleteOne({ sessionId });
+      await deleteSession(sessionId);
     }
 
-    // Supprimer le cookie de session
-    cookies().delete("session_id");
+    const response = NextResponse.json(
+      { message: "Déconnexion réussie" },
+      { status: 200 }
+    );
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
+    // Supprimer le cookie de session
+    response.cookies.delete("sessionId");
+
+    return response;
+  } catch (error: any) {
     console.error("Erreur lors de la déconnexion:", error);
     return NextResponse.json(
-      { error: "Erreur lors de la déconnexion" },
+      { error: error.message || "Erreur serveur" },
       { status: 500 }
     );
   }

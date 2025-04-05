@@ -9,6 +9,7 @@ export const VerificationCode = {
 
   findOne: async (where: {
     email: string;
+    code?: string;
     expiresAt?: {
       gt: Date;
     };

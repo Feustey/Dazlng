@@ -1,27 +1,29 @@
 import { getRequestConfig } from "next-intl/server";
+import { locales, defaultLocale } from "./i18n.config.base";
 
-// Can be imported from a shared config
-const locales = ["en", "fr"] as const;
-type Locale = (typeof locales)[number];
-
-async function importMessages(locale: string) {
-  try {
-    return (await import(`./messages/${locale}.json`)).default;
-  } catch (error) {
-    console.error(`Failed to load ${locale} messages:`, error);
-    return (await import(`./messages/en.json`)).default;
-  }
-}
+export { locales, defaultLocale } from "./i18n.config.base";
 
 export default getRequestConfig(async ({ locale }) => {
-  const currentLocale = (
-    locales.includes(locale as Locale) ? locale : "en"
-  ) as Locale;
+  // Ensure we have a valid locale
+  const currentLocale = locales.includes(locale as any)
+    ? locale
+    : defaultLocale;
 
-  const messages = await importMessages(currentLocale);
+  let messages;
+  try {
+    messages = (await import(`./messages/${currentLocale}.json`)).default;
+  } catch (error) {
+    console.error(
+      `Failed to load messages for locale ${currentLocale}:`,
+      error
+    );
+    messages = {};
+  }
 
   return {
     messages,
-    locale: currentLocale,
+    timeZone: "Europe/Paris",
+    now: new Date(),
+    locale: currentLocale as string,
   };
 });

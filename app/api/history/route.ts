@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/app/lib/db";
+import prisma from "@/app/lib/db";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 export async function GET() {
   try {
-    const history = await (prisma as any).history.findMany({
+    const history = await prisma.history.findMany({
       orderBy: {
         date: "desc",
       },

@@ -1,6 +1,5 @@
 "use client";
 
-import { ThemeProvider } from "next-themes";
 import { SettingsProvider } from "./contexts/SettingsContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -30,22 +29,14 @@ export default function ClientLayout({
 
   return (
     <>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-        storageKey="dazlng-theme"
-      >
-        <SettingsProvider>
-          <LanguageProvider>
-            <AuthProvider>
-              {children}
-              <Toaster />
-            </AuthProvider>
-          </LanguageProvider>
-        </SettingsProvider>
-      </ThemeProvider>
+      <SettingsProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            {children}
+            <Toaster />
+          </AuthProvider>
+        </LanguageProvider>
+      </SettingsProvider>
     </>
   );
 }
