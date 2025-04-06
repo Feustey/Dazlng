@@ -12,15 +12,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { User, Settings, LogOut } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { usePathname } from "next/navigation";
+import { useTranslations, useLocale } from "next-intl";
 
 export default function UserMenu() {
   const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations("navigation");
-  const pathname = usePathname();
-  const locale = pathname.split("/")[1];
+  const locale = useLocale();
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
