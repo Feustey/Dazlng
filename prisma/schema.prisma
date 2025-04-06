@@ -11,9 +11,9 @@ datasource db {
 model History {
   id        String   @id @default(cuid())
   date      DateTime @default(now())
-  price     Float    @db.Decimal(20, 8)
-  volume    Float    @db.Decimal(20, 8)
-  marketCap Float    @db.Decimal(20, 8)
+  price     Decimal  @db.Decimal(20, 8)
+  volume    Decimal  @db.Decimal(20, 8)
+  marketCap Decimal  @db.Decimal(20, 8)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -28,21 +28,21 @@ model PeerOfPeer {
   alias           String
   platform        String
   version         String
-  total_fees      Float    @db.Decimal(20, 8)
-  avg_fee_rate_ppm Float   @db.Decimal(10, 2)
-  total_capacity  Float    @db.Decimal(20, 8)
+  total_fees      Decimal  @db.Decimal(20, 8)
+  avg_fee_rate_ppm Decimal @db.Decimal(10, 2)
+  total_capacity  Decimal  @db.Decimal(20, 8)
   active_channels Int
-  total_volume    Float    @db.Decimal(20, 8)
+  total_volume    Decimal  @db.Decimal(20, 8)
   total_peers     Int
-  uptime          Float    @db.Decimal(10, 2)
+  uptime          Decimal  @db.Decimal(10, 2)
   opened_channel_count Int
   color           String
   address         String
   closed_channel_count Int
   pending_channel_count Int
-  avg_capacity    Float    @db.Decimal(20, 8)
-  avg_fee_rate    Float    @db.Decimal(10, 2)
-  avg_base_fee_rate Float  @db.Decimal(10, 2)
+  avg_capacity    Decimal  @db.Decimal(20, 8)
+  avg_fee_rate    Decimal  @db.Decimal(10, 2)
+  avg_base_fee_rate Decimal @db.Decimal(10, 2)
   betweenness_rank Int
   eigenvector_rank Int
   closeness_rank  Int
@@ -68,21 +68,21 @@ model Node {
   alias                   String
   platform                String
   version                 String
-  total_fees              Float    @db.Decimal(20, 8)
-  avg_fee_rate_ppm        Float    @db.Decimal(10, 2)
-  total_capacity          Float    @db.Decimal(20, 8)
+  total_fees              Decimal  @db.Decimal(20, 8)
+  avg_fee_rate_ppm        Decimal  @db.Decimal(10, 2)
+  total_capacity          Decimal  @db.Decimal(20, 8)
   active_channels         Int
-  total_volume            Float    @db.Decimal(20, 8)
+  total_volume            Decimal  @db.Decimal(20, 8)
   total_peers             Int
-  uptime                  Float    @db.Decimal(10, 2)
+  uptime                  Decimal  @db.Decimal(10, 2)
   opened_channel_count    Int
   color                   String
   address                 String
   closed_channel_count    Int
   pending_channel_count   Int
-  avg_capacity            Float    @db.Decimal(20, 8)
-  avg_fee_rate            Float    @db.Decimal(10, 2)
-  avg_base_fee_rate       Float    @db.Decimal(10, 2)
+  avg_capacity            Decimal  @db.Decimal(20, 8)
+  avg_fee_rate            Decimal  @db.Decimal(10, 2)
+  avg_base_fee_rate       Decimal  @db.Decimal(10, 2)
   betweenness_rank        Int
   eigenvector_rank        Int
   closeness_rank          Int
@@ -125,7 +125,7 @@ model User {
 
 model Transaction {
   id        String   @id @default(cuid())
-  amount    Float
+  amount    Decimal  @db.Decimal(20, 8)
   status    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -162,7 +162,7 @@ model CentralityData {
   id        String   @id @default(cuid())
   nodePubkey String
   metric    String
-  value     Float
+  value     Decimal  @db.Decimal(20, 8)
   timestamp DateTime @default(now())
 
   @@index([nodePubkey])
@@ -189,9 +189,9 @@ model NetworkSummary {
   id              String   @id @default(cuid())
   totalNodes      Int
   totalChannels   Int
-  totalCapacity   Float    @db.Decimal(20, 8)
-  avgChannelSize  Float    @db.Decimal(20, 8)
-  medianFeeRate   Float    @db.Decimal(10, 2)
+  totalCapacity   Decimal  @db.Decimal(20, 8)
+  avgChannelSize  Decimal  @db.Decimal(20, 8)
+  medianFeeRate   Decimal  @db.Decimal(10, 2)
   timestamp       DateTime @default(now())
 
   @@index([timestamp])
@@ -203,9 +203,9 @@ model NodeStats {
   id              String   @id @default(cuid())
   nodePubkey      String
   channelCount    Int
-  capacity        Float    @db.Decimal(20, 8)
-  feeRate         Float    @db.Decimal(10, 2)
-  uptime          Float    @db.Decimal(10, 2)
+  capacity        Decimal  @db.Decimal(20, 8)
+  feeRate         Decimal  @db.Decimal(10, 2)
+  uptime          Decimal  @db.Decimal(10, 2)
   timestamp       DateTime @default(now())
 
   @@index([nodePubkey])
