@@ -23,15 +23,15 @@ export const SimpleLogo: React.FC<SimpleLogoProps> = ({ className = "" }) => {
           strokeWidth="2"
         />
         <path
-          d="M30 50 L45 65 L70 35"
-          fill="none"
+          d="M35 30 L50 50 L35 70 L65 50 Z"
+          fill="currentColor"
           stroke="currentColor"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
       </svg>
-      <span className="ml-2 text-xl font-bold">DazLng</span>
+      <span className="ml-2 text-xl font-bold">Daznode</span>
     </div>
   );
 };
