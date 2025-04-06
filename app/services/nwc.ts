@@ -10,6 +10,15 @@ interface NWCRequest {
   params: Record<string, any>;
 }
 
+interface Channel {
+  id: string;
+  state: string;
+  capacity: number;
+  local_balance: number;
+  remote_balance: number;
+  remote_pubkey: string;
+}
+
 class NWC {
   private ndk: NDK;
   private walletPubkey: string;
@@ -139,14 +148,18 @@ export class NWCService {
     }
   }
 
-  async getChannels(): Promise<any[]> {
+  async getChannels(): Promise<Channel[]> {
     try {
       const response = await this.nwc.request({
         method: "list_channels",
         params: {},
       });
-      return response.result as any[];
-    } catch (error) {
+      return response.result as Channel[];
+    } catch (err) {
+      const error =
+        err instanceof Error
+          ? err
+          : new Error("Une erreur inconnue s'est produite");
       console.error("Erreur lors de la récupération des canaux:", error);
       throw error;
     }

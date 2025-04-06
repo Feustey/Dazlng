@@ -1,17 +1,17 @@
 {
   "title": "Help Center",
-  "faqItems": [
-    {
-      "question": "What is DazLng?",
-      "answer": "DazLng is a Lightning Network node manager that allows you to easily monitor and manage your Bitcoin node. It provides an intuitive interface to manage your payment channels, monitor your activity, and interact with the Lightning Network."
-    },
-    {
-      "question": "How do I set up my Lightning node with DazLng?",
-      "answer": "To set up your Lightning node with DazLng, you first need to install a Lightning node (like LND, c-lightning, or Eclair) on your server. Then, log in to DazLng and follow the setup wizard that will guide you through the process of connecting to your node."
-    },
-    {
-      "question": "What are the system requirements for running a Lightning node?",
-      "answer": "To run a Lightning node, you'll need a server with at least 4GB of RAM, 100GB of disk space, and a stable internet connection. The server must also be able to run a full Bitcoin node or connect to a remote Bitcoin node."
-    }
-  ]
+  "description": "Find answers to your questions about using DazNode",
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "questions": [
+      {
+        "question": "What is DazNode?",
+        "answer": "DazNode is a Lightning Network node manager that allows you to easily monitor and manage your Bitcoin node. It provides an intuitive interface to manage your payment channels, monitor your performance, and optimize your earnings."
+      },
+      {
+        "question": "How do I set up my Lightning node with DazNode?",
+        "answer": "To set up your Lightning node with DazNode, you first need to install a Lightning node (like LND, c-lightning, or Eclair) on your server. Then, log in to DazNode and follow the setup wizard that will guide you through the process of connecting to your node."
+      }
+    ]
+  }
 }

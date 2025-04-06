@@ -1,60 +1,47 @@
-import { CleanupService } from "app/lib/services";
-import { connectToDatabase } from "app/lib";
-import { Node, PeerOfPeer, History } from "app/models";
+import { CleanupService } from "../../app/lib/services/cleanupService";
+import { PrismaClient } from "@prisma/client";
 
-// Mock des dépendances
-jest.mock("app/lib");
-jest.mock("app/models");
+jest.mock("@prisma/client", () => {
+  const mockPrismaClient = {
+    node: {
+      deleteMany: jest.fn(),
+    },
+    peerOfPeer: {
+      deleteMany: jest.fn(),
+    },
+    capacityHistory: {
+      deleteMany: jest.fn(),
+    },
+  };
+  return {
+    PrismaClient: jest.fn(() => mockPrismaClient),
+  };
+});
 
 describe("CleanupService", () => {
   let cleanupService: CleanupService;
+  let mockPrisma: jest.Mocked<PrismaClient>;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    cleanupService = CleanupService.getInstance();
-
-    // Configuration des mocks Mongoose
-    const mockNodeDelete = {
-      exec: jest.fn().mockResolvedValue({ deletedCount: 5 }),
-    };
-    (Node.deleteMany as jest.Mock).mockReturnValue(mockNodeDelete);
-
-    const mockPeerDelete = {
-      exec: jest.fn().mockResolvedValue({ deletedCount: 3 }),
-    };
-    (PeerOfPeer.deleteMany as jest.Mock).mockReturnValue(mockPeerDelete);
-
-    const mockHistoryDelete = {
-      exec: jest.fn().mockResolvedValue({ deletedCount: 10 }),
-    };
-    (History.deleteMany as jest.Mock).mockReturnValue(mockHistoryDelete);
-  });
-
-  describe("getInstance", () => {
-    it("devrait retourner la même instance", () => {
-      const instance1 = CleanupService.getInstance();
-      const instance2 = CleanupService.getInstance();
-      expect(instance1).toBe(instance2);
-    });
+    cleanupService = new CleanupService();
+    mockPrisma = new PrismaClient() as jest.Mocked<PrismaClient>;
   });
 
   describe("cleanupNodes", () => {
     it("devrait nettoyer les nœuds plus vieux que NODE_RETENTION_DAYS", async () => {
+      const mockDeleteMany = jest.fn().mockResolvedValue({ count: 5 });
+      mockPrisma.node.deleteMany = mockDeleteMany;
+
       await cleanupService["cleanupNodes"]();
 
-      expect(connectToDatabase).toHaveBeenCalled();
-      expect(Node.deleteMany).toHaveBeenCalledWith(
-        expect.objectContaining({
-          timestamp: expect.any(Object),
-        })
-      );
+      expect(mockDeleteMany).toHaveBeenCalled();
+      const whereClause = mockDeleteMany.mock.calls[0][0].where;
+      expect(whereClause.createdAt.lt).toBeInstanceOf(Date);
     });
 
     it("devrait gérer les erreurs de nettoyage des nœuds", async () => {
-      const mockNodeDeleteError = {
-        exec: jest.fn().mockRejectedValue(new Error("DB Error")),
-      };
-      (Node.deleteMany as jest.Mock).mockReturnValue(mockNodeDeleteError);
+      mockPrisma.node.deleteMany.mockRejectedValue(new Error("DB Error"));
 
       await expect(cleanupService["cleanupNodes"]()).rejects.toThrow(
         "DB Error"
@@ -64,21 +51,18 @@ describe("CleanupService", () => {
 
   describe("cleanupPeersOfPeers", () => {
     it("devrait nettoyer les pairs plus vieux que PEER_RETENTION_DAYS", async () => {
+      const mockDeleteMany = jest.fn().mockResolvedValue({ count: 3 });
+      mockPrisma.peerOfPeer.deleteMany = mockDeleteMany;
+
       await cleanupService["cleanupPeersOfPeers"]();
 
-      expect(connectToDatabase).toHaveBeenCalled();
-      expect(PeerOfPeer.deleteMany).toHaveBeenCalledWith(
-        expect.objectContaining({
-          timestamp: expect.any(Object),
-        })
-      );
+      expect(mockDeleteMany).toHaveBeenCalled();
+      const whereClause = mockDeleteMany.mock.calls[0][0].where;
+      expect(whereClause.createdAt.lt).toBeInstanceOf(Date);
     });
 
     it("devrait gérer les erreurs de nettoyage des pairs", async () => {
-      const mockPeerDeleteError = {
-        exec: jest.fn().mockRejectedValue(new Error("DB Error")),
-      };
-      (PeerOfPeer.deleteMany as jest.Mock).mockReturnValue(mockPeerDeleteError);
+      mockPrisma.peerOfPeer.deleteMany.mockRejectedValue(new Error("DB Error"));
 
       await expect(cleanupService["cleanupPeersOfPeers"]()).rejects.toThrow(
         "DB Error"
@@ -88,21 +72,20 @@ describe("CleanupService", () => {
 
   describe("cleanupHistory", () => {
     it("devrait nettoyer l'historique plus vieux que HISTORY_RETENTION_DAYS", async () => {
+      const mockDeleteMany = jest.fn().mockResolvedValue({ count: 10 });
+      mockPrisma.capacityHistory.deleteMany = mockDeleteMany;
+
       await cleanupService["cleanupHistory"]();
 
-      expect(connectToDatabase).toHaveBeenCalled();
-      expect(History.deleteMany).toHaveBeenCalledWith(
-        expect.objectContaining({
-          date: expect.any(Object),
-        })
-      );
+      expect(mockDeleteMany).toHaveBeenCalled();
+      const whereClause = mockDeleteMany.mock.calls[0][0].where;
+      expect(whereClause.timestamp.lt).toBeInstanceOf(Date);
     });
 
     it("devrait gérer les erreurs de nettoyage de l'historique", async () => {
-      const mockHistoryDeleteError = {
-        exec: jest.fn().mockRejectedValue(new Error("DB Error")),
-      };
-      (History.deleteMany as jest.Mock).mockReturnValue(mockHistoryDeleteError);
+      mockPrisma.capacityHistory.deleteMany.mockRejectedValue(
+        new Error("DB Error")
+      );
 
       await expect(cleanupService["cleanupHistory"]()).rejects.toThrow(
         "DB Error"
@@ -112,24 +95,26 @@ describe("CleanupService", () => {
 
   describe("performCleanup", () => {
     it("devrait effectuer un nettoyage complet", async () => {
+      const mockNodeDelete = jest.fn().mockResolvedValue({ count: 5 });
+      const mockPeerDelete = jest.fn().mockResolvedValue({ count: 3 });
+      const mockHistoryDelete = jest.fn().mockResolvedValue({ count: 10 });
+
+      mockPrisma.node.deleteMany = mockNodeDelete;
+      mockPrisma.peerOfPeer.deleteMany = mockPeerDelete;
+      mockPrisma.capacityHistory.deleteMany = mockHistoryDelete;
+
       await cleanupService.performCleanup();
 
-      expect(Node.deleteMany).toHaveBeenCalled();
-      expect(PeerOfPeer.deleteMany).toHaveBeenCalled();
-      expect(History.deleteMany).toHaveBeenCalled();
-    });
-
-    it("ne devrait pas lancer un nouveau nettoyage si un est en cours", async () => {
-      cleanupService["isCleaning"] = true;
-      await cleanupService.performCleanup();
-      expect(Node.deleteMany).not.toHaveBeenCalled();
+      expect(mockNodeDelete).toHaveBeenCalled();
+      expect(mockPeerDelete).toHaveBeenCalled();
+      expect(mockHistoryDelete).toHaveBeenCalled();
     });
   });
 
   describe("startPeriodicCleanup", () => {
     it("devrait démarrer le nettoyage périodique", () => {
       jest.useFakeTimers();
-      cleanupService.startPeriodicCleanup();
+      cleanupService.startPeriodicCleanup(1);
       expect(setInterval).toHaveBeenCalled();
       jest.useRealTimers();
     });

@@ -10,7 +10,7 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
       defaultTheme="system"
       enableSystem
       disableTransitionOnChange
-      storageKey="dazlng-theme"
+      storageKey="daznode-theme"
       {...props}
     >
       {children}

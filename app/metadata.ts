@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 const metadata: Metadata = {
-  title: "DazLng - Lightning Node Manager",
-  description: "Monitor and manage your Lightning Network node",
+  title: "DazNode - Lightning Node Manager",
+  description: "Gérez et surveillez votre nœud Lightning Network avec DazNode",
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
@@ -13,9 +13,9 @@ const metadata: Metadata = {
     ],
   },
   manifest: "/site.webmanifest",
-  metadataBase: new URL("https://dazlng.inoval.io"),
+  metadataBase: new URL("https://dazno.de"),
   alternates: {
-    canonical: "https://dazlng.inoval.io",
+    canonical: "https://dazno.de",
   },
 };
 

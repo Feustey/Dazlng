@@ -12,15 +12,17 @@ const prisma = new PrismaClient();
 export async function createUser(
   email: string,
   password: string,
-  name?: string
+  name: string,
+  nodePubkey: string
 ) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   return prisma.user.create({
     data: {
       email,
-      password: hashedPassword,
       name,
+      nodePubkey,
+      password: hashedPassword,
     },
   });
 }

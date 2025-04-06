@@ -1,16 +1,15 @@
-import { Inter } from "next/font/google";
-import { siteConfig } from "../config/metadata";
+import { metadata as siteConfig } from "../config/metadata";
 import { Metadata, Viewport } from "next";
 import ClientLayout from "../ClientLayout";
 import "../globals.css";
 import Navigation from "@/app/components/Navigation";
+import { Footer } from "@/app/components/Footer";
 import { NextIntlClientProvider } from "next-intl";
-import { locales } from "@/i18n.config";
-import { ThemeProvider } from "@/app/components/ThemeProvider";
-import { notFound } from "next/navigation";
+import { locales, defaultLocale } from "@/i18n.config";
+import { notFound, redirect } from "next/navigation";
 import { Locale } from "@/i18n.config.base";
-
-const inter = Inter({ subsets: ["latin"] });
+import { headers } from "next/headers";
+import { checkDatabaseConnection } from "@/app/lib/db";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -32,11 +31,11 @@ export const metadata: Metadata = {
   keywords: siteConfig.keywords,
   authors: [
     {
-      name: "DazLng",
+      name: "DazNode",
       url: siteConfig.url,
     },
   ],
-  creator: "DazLng",
+  creator: "DazNode",
   openGraph: {
     type: "website",
     locale: "fr_FR",
@@ -59,7 +58,7 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
     images: [siteConfig.ogImage],
-    creator: "@DazLng",
+    creator: "@DazNode",
   },
   icons: {
     icon: "/favicon.ico",
@@ -75,35 +74,133 @@ export function generateStaticParams() {
 
 async function getMessages(locale: string) {
   try {
-    return (await import(`@/messages/${locale}.json`)).default;
+    console.log(`Loading messages for locale: ${locale}`);
+
+    // Charger les messages de base
+    const baseMessages = await import(`../../messages/${locale}.json`);
+    console.log("Base messages loaded");
+
+    // Charger les messages spécifiques aux sections
+    const sectionMessages = {
+      home: await import(`../../public/locale/home/${locale}.json`).catch(
+        (e) => {
+          console.warn(`Failed to load home messages: ${e.message}`);
+          return { default: {} };
+        }
+      ),
+      about: await import(`../../public/locale/about/${locale}.json`).catch(
+        (e) => {
+          console.warn(`Failed to load about messages: ${e.message}`);
+          return { default: {} };
+        }
+      ),
+      recommendations: await import(
+        `../../public/locale/recommendations/${locale}.json`
+      ).catch((e) => {
+        console.warn(`Failed to load recommendations messages: ${e.message}`);
+        return { default: {} };
+      }),
+      dashboard: await import(
+        `../../public/locale/dashboard/${locale}.json`
+      ).catch((e) => {
+        console.warn(`Failed to load dashboard messages: ${e.message}`);
+        return { default: {} };
+      }),
+      auth: await import(`../../public/locale/auth/${locale}.json`).catch(
+        (e) => {
+          console.warn(`Failed to load auth messages: ${e.message}`);
+          return { default: {} };
+        }
+      ),
+      botIa: await import(`../../public/locale/bot-ia/${locale}.json`).catch(
+        (e) => {
+          console.warn(`Failed to load bot-ia messages: ${e.message}`);
+          return { default: {} };
+        }
+      ),
+    };
+
+    // Fusionner tous les messages
+    const messages = {
+      ...baseMessages.default,
+      ...sectionMessages.home.default,
+      ...sectionMessages.about.default,
+      ...sectionMessages.recommendations.default,
+      ...sectionMessages.dashboard.default,
+      ...sectionMessages.auth.default,
+      ...sectionMessages.botIa.default,
+    };
+
+    console.log("All messages loaded successfully");
+    return messages;
   } catch (error) {
-    notFound();
+    console.error("Error loading messages:", error);
+    throw error; // Propager l'erreur au lieu de notFound()
   }
 }
 
 export default async function LocaleLayout({
   children,
   params: { locale },
+  app,
 }: {
   children: React.ReactNode;
   params: { locale: Locale };
+  app: React.ReactNode;
 }) {
-  if (!locales.includes(locale)) notFound();
+  try {
+    // Vérifier la connexion à la base de données
+    const isConnected = await checkDatabaseConnection();
+    if (!isConnected) {
+      console.error("Database connection failed");
+      throw new Error("Database connection failed");
+    }
 
-  const messages = await getMessages(locale);
+    if (!locales.includes(locale)) {
+      const headersList = headers();
+      const pathname = headersList.get("x-pathname") || "";
+      redirect(`/${defaultLocale}${pathname}`);
+    }
 
-  return (
-    <html lang={locale} suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    const messages = await getMessages(locale);
+    if (!messages) {
+      throw new Error("Failed to load messages");
+    }
+
+    return (
+      <html lang={locale} suppressHydrationWarning>
+        <body className="font-sans antialiased">
           <NextIntlClientProvider messages={messages} locale={locale}>
             <ClientLayout>
-              <Navigation />
-              <main className="min-h-screen">{children}</main>
+              <div className="flex min-h-screen flex-col">
+                <Navigation />
+                <main className="flex-1 pt-16">
+                  <div className="flex-1">{children}</div>
+                  {app}
+                </main>
+                <Footer />
+              </div>
             </ClientLayout>
           </NextIntlClientProvider>
-        </ThemeProvider>
-      </body>
-    </html>
-  );
+        </body>
+      </html>
+    );
+  } catch (error) {
+    console.error("Layout error:", error);
+    // Afficher une page d'erreur au lieu de crasher
+    return (
+      <html lang={locale} suppressHydrationWarning>
+        <body className="font-sans antialiased">
+          <div className="flex min-h-screen items-center justify-center">
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-red-600">
+                Une erreur est survenue
+              </h1>
+              <p className="mt-2 text-gray-600">Veuillez réessayer plus tard</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    );
+  }
 }

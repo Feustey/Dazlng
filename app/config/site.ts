@@ -1,10 +1,10 @@
 export const siteConfig = {
-  name: "DazLng",
-  description: "DazLng - Plateforme de gestion de nœuds Lightning",
-  url: "https://dazlng.com",
-  ogImage: "https://dazlng.com/og.jpg",
+  name: "DazNode",
+  description: "DazNode - Plateforme de gestion de nœuds Lightning",
+  url: "https://dazno.de",
+  ogImage: "https://dazno.de/og.png",
   links: {
-    twitter: "https://twitter.com/dazlng",
-    github: "https://github.com/dazlng",
+    twitter: "https://twitter.com/daznode",
+    github: "https://github.com/daznode",
   },
 };

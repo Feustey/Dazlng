@@ -1,6 +1,6 @@
 {
-  "name": "DazLng",
-  "short_name": "DazLng",
+  "name": "DazNode",
+  "short_name": "DazNode",
   "description": "Gérez vos nœuds Lightning Network en toute simplicité",
   "icons": [
     {
@@ -14,9 +14,9 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#ffffff",
+  "theme_color": "#000000",
   "background_color": "#ffffff",
   "display": "standalone",
-  "start_url": "/",
-  "scope": "/"
+  "start_url": "https://dazno.de",
+  "scope": "https://dazno.de"
 }

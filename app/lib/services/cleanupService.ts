@@ -1,111 +1,100 @@
-import { connectToDatabase } from "../db";
-import { prisma } from "../db";
+import { PrismaClient } from "@prisma/client";
 
 export class CleanupService {
-  private static instance: CleanupService;
-  private isCleaning = false;
-
-  private readonly CLEANUP_INTERVAL = 24 * 60 * 60 * 1000; // 24 heures
   private readonly NODE_RETENTION_DAYS = 30;
   private readonly PEER_RETENTION_DAYS = 7;
   private readonly HISTORY_RETENTION_DAYS = 90;
+  private cleanupInterval: NodeJS.Timeout | null = null;
+  private prisma: PrismaClient;
 
-  private constructor() {}
-
-  static getInstance(): CleanupService {
-    if (!CleanupService.instance) {
-      CleanupService.instance = new CleanupService();
-    }
-    return CleanupService.instance;
+  constructor() {
+    this.prisma = new PrismaClient();
   }
 
   private async cleanupNodes(): Promise<void> {
     try {
-      await connectToDatabase();
       const cutoffDate = new Date();
       cutoffDate.setDate(cutoffDate.getDate() - this.NODE_RETENTION_DAYS);
 
-      const result = await prisma.node.deleteMany({
+      await this.prisma.node.deleteMany({
         where: {
-          timestamp: { lt: cutoffDate },
+          createdAt: {
+            lt: cutoffDate,
+          },
         },
       });
-
-      console.log(`Nœuds nettoyés: ${result.count}`);
     } catch (error) {
-      console.error("Erreur lors du nettoyage des nœuds:", error);
-      throw error;
+      console.error("Error cleaning up nodes:", error);
+      throw new Error("DB Error");
     }
   }
 
   private async cleanupPeersOfPeers(): Promise<void> {
     try {
-      await connectToDatabase();
       const cutoffDate = new Date();
       cutoffDate.setDate(cutoffDate.getDate() - this.PEER_RETENTION_DAYS);
 
-      const result = await prisma.peerOfPeer.deleteMany({
+      await this.prisma.peerOfPeer.deleteMany({
         where: {
-          timestamp: { lt: cutoffDate },
+          createdAt: {
+            lt: cutoffDate,
+          },
         },
       });
-
-      console.log(`Pairs nettoyés: ${result.count}`);
     } catch (error) {
-      console.error("Erreur lors du nettoyage des pairs:", error);
-      throw error;
+      console.error("Error cleaning up peers:", error);
+      throw new Error("DB Error");
     }
   }
 
   private async cleanupHistory(): Promise<void> {
     try {
-      await connectToDatabase();
       const cutoffDate = new Date();
       cutoffDate.setDate(cutoffDate.getDate() - this.HISTORY_RETENTION_DAYS);
 
-      const result = await prisma.history.deleteMany({
+      await this.prisma.capacityHistory.deleteMany({
         where: {
-          date: { lt: cutoffDate },
+          timestamp: {
+            lt: cutoffDate,
+          },
         },
       });
-
-      console.log(`Historique nettoyé: ${result.count}`);
     } catch (error) {
-      console.error("Erreur lors du nettoyage de l'historique:", error);
-      throw error;
+      console.error("Error cleaning up history:", error);
+      throw new Error("DB Error");
     }
   }
 
-  async performCleanup(): Promise<void> {
-    if (this.isCleaning) {
-      console.log("Nettoyage déjà en cours");
-      return;
-    }
-
-    this.isCleaning = true;
+  public async performCleanup(): Promise<void> {
     try {
       await this.cleanupNodes();
       await this.cleanupPeersOfPeers();
       await this.cleanupHistory();
-      console.log("Nettoyage terminé avec succès");
     } catch (error) {
-      console.error("Erreur lors du nettoyage:", error);
+      console.error("Error during cleanup:", error);
       throw error;
-    } finally {
-      this.isCleaning = false;
     }
   }
 
-  startPeriodicCleanup(): void {
-    console.log("Démarrage du nettoyage périodique");
-    setInterval(() => {
-      this.performCleanup().catch((error) => {
-        console.error("Erreur lors du nettoyage périodique:", error);
-      });
-    }, this.CLEANUP_INTERVAL);
+  public startPeriodicCleanup(intervalMinutes: number = 60): void {
+    if (this.cleanupInterval) {
+      return;
+    }
+
+    this.cleanupInterval = setInterval(
+      () => {
+        this.performCleanup().catch((error) => {
+          console.error("Error in periodic cleanup:", error);
+        });
+      },
+      intervalMinutes * 60 * 1000
+    );
   }
 
-  stopPeriodicCleanup(): void {
-    console.log("Nettoyage périodique arrêté");
+  public stopPeriodicCleanup(): void {
+    if (this.cleanupInterval) {
+      clearInterval(this.cleanupInterval);
+      this.cleanupInterval = null;
+    }
   }
 }

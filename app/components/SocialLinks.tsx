@@ -7,7 +7,7 @@ import { Github, Send, Twitter, MessageCircle } from "lucide-react";
 const socialLinks = [
   {
     name: "GitHub",
-    url: "https://github.com/Feustey/Dazlng",
+    url: "https://github.com/Feustey/DazNode",
     icon: Github,
   },
   {
@@ -17,12 +17,12 @@ const socialLinks = [
   },
   {
     name: "Twitter",
-    url: "https://twitter.com/dazlng",
+    url: "https://twitter.com/daznode",
     icon: Twitter,
   },
   {
     name: "Telegram",
-    url: "https://t.me/dazlng",
+    url: "https://t.me/daznode",
     icon: Send,
   },
 ];

@@ -6,8 +6,9 @@ export const SESSION_CONFIG = {
   cookieOptions: {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict" as const,
+    sameSite: "lax" as const,
     path: "/",
+    domain: process.env.NODE_ENV === "production" ? ".dazno.de" : undefined,
   },
 
   // Durée de vie du code de vérification (5 minutes)

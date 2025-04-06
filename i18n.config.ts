@@ -10,7 +10,14 @@ export default getRequestConfig(async ({ locale }) => {
 
   let messages;
   try {
-    messages = (await import(`./messages/${currentLocale}.json`)).default;
+    // Charger les messages de manière dynamique
+    const messagesModule = await import(`./messages/${currentLocale}.json`);
+    messages = messagesModule.default;
+
+    if (!messages || typeof messages !== "object") {
+      console.error(`Invalid messages format for locale ${currentLocale}`);
+      messages = {};
+    }
   } catch (error) {
     console.error(
       `Failed to load messages for locale ${currentLocale}:`,
@@ -22,5 +29,7 @@ export default getRequestConfig(async ({ locale }) => {
   return {
     messages,
     locale: currentLocale,
+    timeZone: "Europe/Paris",
+    now: new Date(),
   };
 });

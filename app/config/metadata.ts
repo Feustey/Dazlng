@@ -1,25 +1,22 @@
-export const siteConfig = {
-  name: "DazLng",
-  description:
-    "Explorez et analysez le réseau Lightning avec DazLng - Votre outil de visualisation et d'analyse du réseau Lightning Bitcoin",
-  url: "https://dazlng.com",
-  ogImage: "/images/og-image.png",
+export type SiteConfig = typeof metadata;
+
+export const metadata = {
+  name: "DazNode",
+  description: "Explorateur de réseau Lightning Bitcoin",
+  url: "https://dazno.de",
+  ogImage: "https://dazno.de/og.jpg",
   links: {
-    twitter: "https://twitter.com/DazLng",
-    github: "https://github.com/DazLng",
+    twitter: "https://twitter.com/daznode",
+    github: "https://github.com/daznode",
   },
+  creator: "DazNode",
   keywords: [
-    "Lightning Network",
     "Bitcoin",
-    "Node Explorer",
+    "Lightning Network",
+    "Node Management",
     "Network Analysis",
-    "Cryptocurrency",
-    "Blockchain",
-    "Payment Channels",
-    "Network Visualization",
-    "Bitcoin Lightning",
-    "DazLng",
+    "DazNode",
   ],
 };
 
-export type SiteConfig = typeof siteConfig;
+export const siteConfig = metadata;

@@ -20,6 +20,7 @@ export function SettingsMenu() {
   const { theme, setTheme } = useTheme();
   const router = useRouter();
   const pathname = usePathname();
+  const locale = pathname.split("/")[1];
   const [currency, setCurrency] = useState<"btc" | "sats">("sats");
 
   const currentLocale = pathname?.split("/")[1] || "fr";
@@ -27,7 +28,7 @@ export function SettingsMenu() {
 
   const handleLanguageChange = () => {
     const newPath = pathname?.replace(`/${currentLocale}`, `/${newLocale}`);
-    router.push(newPath || "/");
+    router.push(newPath ? `/${locale}${newPath}` : `/${locale}`);
   };
 
   return (

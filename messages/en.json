@@ -178,7 +178,8 @@
     "links": {
       "help": "Help",
       "about": "About",
-      "getNode": "Get your own node!"
+      "getNode": "Get your own node!",
+      "contact": "Contact"
     },
     "rights": "All rights reserved."
   },
@@ -493,5 +494,42 @@
     "viewFundingTransaction": "View Funding Transaction",
     "viewNodeOnAmboss": "View Node on amboss.space",
     "closeChannel": "Close Channel"
+  },
+  "Contact": {
+    "title": "Contact Us",
+    "description": "Connect with us for inquiries, support, or collaboration opportunities.",
+    "email": {
+      "title": "Email",
+      "address": "dazlng@proton.me"
+    },
+    "form": {
+      "firstName": "First Name*",
+      "lastName": "Last Name*",
+      "email": "Email*",
+      "companyName": "Company Name",
+      "jobTitle": "Job Title",
+      "companyPhone": "Phone",
+      "companyWebsite": "Website",
+      "interest": "Subject*",
+      "message": "Message*",
+      "submit": "Send",
+      "sending": "Sending...",
+      "success": "Message sent successfully! We will get back to you as soon as possible.",
+      "error": {
+        "default": "An error occurred while sending the message.",
+        "requiredFields": "Please fill in all required fields.",
+        "invalidEmail": "Please enter a valid email address.",
+        "requiredMessage": "Please enter your message."
+      },
+      "selectSubject": "Select a subject",
+      "messagePlaceholder": "How can we help you?",
+      "interests": {
+        "general": "General Inquiry",
+        "support": "Technical Support",
+        "partnership": "Partnership",
+        "business": "Business",
+        "other": "Other"
+      }
+    }
   }
 }

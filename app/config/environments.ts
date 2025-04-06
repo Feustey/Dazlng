@@ -3,7 +3,7 @@ export const environments = {
     baseUrl: "http://localhost:3000",
   },
   production: {
-    baseUrl: "https://dazlng.inoval.io",
+    baseUrl: "https://dazno.de",
   },
 } as const;
 

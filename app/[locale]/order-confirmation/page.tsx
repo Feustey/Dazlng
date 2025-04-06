@@ -4,11 +4,13 @@ import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function OrderConfirmationPage() {
   const t = useTranslations("daznode");
   const router = useRouter();
+  const pathname = usePathname();
+  const locale = pathname.split("/")[1];
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -52,7 +54,7 @@ export default function OrderConfirmationPage() {
             <div className="flex justify-center pt-4">
               <Button
                 size="lg"
-                onClick={() => router.push("/dashboard")}
+                onClick={() => router.push(`/${locale}/dashboard`)}
                 className="w-full md:w-auto"
               >
                 Accéder à mon tableau de bord

@@ -6,22 +6,18 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { Footer } from "@components/Footer";
-import Header from "@components/Header";
+import Navigation from "@components/Navigation";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
-const Layout = ({ children }: LayoutProps) => {
+export function Layout({ children }: LayoutProps) {
   return (
-    <div className="flex min-h-screen flex-col">
-      <div className="flex-1 flex flex-col">
-        <Header />
-        <main className="flex-1 p-6">{children}</main>
-      </div>
+    <div className="flex flex-col min-h-screen">
+      <Navigation />
+      <main className="flex-grow">{children}</main>
       <Footer />
     </div>
   );
-};
-
-export default Layout;
+}

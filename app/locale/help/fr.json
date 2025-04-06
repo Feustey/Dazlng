@@ -1,17 +1,17 @@
 {
   "title": "Centre d'aide",
-  "faqItems": [
-    {
-      "question": "Qu'est-ce que DazLng ?",
-      "answer": "DazLng est un gestionnaire de nœud Lightning Network qui vous permet de surveiller et gérer facilement votre nœud Bitcoin. Il offre une interface intuitive pour gérer vos canaux de paiement, surveiller votre activité et interagir avec le réseau Lightning."
-    },
-    {
-      "question": "Comment configurer mon nœud Lightning avec DazLng ?",
-      "answer": "Pour configurer votre nœud Lightning avec DazLng, vous devez d'abord installer un nœud Lightning (comme LND, c-lightning ou Eclair) sur votre serveur. Ensuite, connectez-vous à DazLng et suivez l'assistant de configuration qui vous guidera à travers le processus de connexion à votre nœud."
-    },
-    {
-      "question": "Quelles sont les exigences système pour exécuter un nœud Lightning ?",
-      "answer": "Pour exécuter un nœud Lightning, vous aurez besoin d'un serveur avec au moins 4GB de RAM, 100GB d'espace disque et une connexion Internet stable. Le serveur doit également être capable d'exécuter un nœud Bitcoin complet ou de se connecter à un nœud Bitcoin distant."
-    }
-  ]
+  "description": "Trouvez des réponses à vos questions sur l'utilisation de DazNode",
+  "faq": {
+    "title": "Questions fréquentes",
+    "questions": [
+      {
+        "question": "Qu'est-ce que DazNode ?",
+        "answer": "DazNode est un gestionnaire de nœud Lightning Network qui vous permet de surveiller et gérer facilement votre nœud Bitcoin. Il offre une interface intuitive pour gérer vos canaux de paiement, surveiller vos performances et optimiser vos revenus."
+      },
+      {
+        "question": "Comment configurer mon nœud Lightning avec DazNode ?",
+        "answer": "Pour configurer votre nœud Lightning avec DazNode, vous devez d'abord installer un nœud Lightning (comme LND, c-lightning ou Eclair) sur votre serveur. Ensuite, connectez-vous à DazNode et suivez l'assistant de configuration qui vous guidera à travers le processus de connexion à votre nœud."
+      }
+    ]
+  }
 }

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ClientLayout from "@components/ClientLayout";
+import ClientLayout from "@/app/ClientLayout";
 
 export const metadata: Metadata = {
   title: "Bot IA - Dazling",

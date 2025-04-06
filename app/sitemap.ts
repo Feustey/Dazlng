@@ -5,6 +5,8 @@ export default async function sitemap() {
     (route) => ({
       url: `${siteConfig.url}${route}`,
       lastModified: new Date().toISOString().split("T")[0],
+      changeFrequency: "daily",
+      priority: route === "" ? 1 : 0.8,
     })
   );
 
@@ -13,10 +15,14 @@ export default async function sitemap() {
     {
       url: `${route.url}/fr`,
       lastModified: route.lastModified,
+      changeFrequency: route.changeFrequency,
+      priority: route.priority,
     },
     {
       url: `${route.url}/en`,
       lastModified: route.lastModified,
+      changeFrequency: route.changeFrequency,
+      priority: route.priority,
     },
   ]);
 

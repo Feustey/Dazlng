@@ -1,73 +1,54 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
-import { RateLimit } from "../lib/models/RateLimit";
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/app/lib/db";
 
 const WINDOW_SIZE = 60 * 1000; // 1 minute
-const MAX_REQUESTS = 100; // 100 requests per minute
+const MAX_REQUESTS = 100; // 100 requêtes par minute
 
-export async function rateLimit(request: NextRequest) {
-  const ip = request.ip || "unknown";
-  const route = request.nextUrl.pathname;
+export async function rateLimit(req: NextRequest) {
+  const ip = req.ip || "unknown";
+  const route = req.nextUrl.pathname;
 
   try {
-    // Cleanup expired rate limits
-    await RateLimit.cleanup();
-
-    // Find or create rate limit record
-    let rateLimit = await RateLimit.findOne({ ip, route });
     const now = new Date();
+    const windowStart = new Date(now.getTime() - WINDOW_SIZE);
 
-    if (!rateLimit) {
-      // Create new rate limit record
-      rateLimit = await RateLimit.create({
+    // Récupérer ou créer l'entrée de rate limit
+    let rateLimit = await prisma.rateLimit.findFirst({
+      where: {
         ip,
         route,
-        count: 1,
-        resetAt: new Date(now.getTime() + WINDOW_SIZE),
-      });
-      return NextResponse.next();
-    }
-
-    // Check if rate limit has expired
-    if (now > rateLimit.resetAt) {
-      // Reset rate limit
-      rateLimit = await RateLimit.update(rateLimit.id, {
-        count: 1,
-        resetAt: new Date(now.getTime() + WINDOW_SIZE),
-      });
-      return NextResponse.next();
-    }
-
-    // Check if rate limit has been exceeded
-    if (rateLimit.count >= MAX_REQUESTS) {
-      return new NextResponse(
-        JSON.stringify({
-          error: "Too many requests",
-          message: "Please try again later",
-          retryAfter: Math.ceil(
-            (rateLimit.resetAt.getTime() - now.getTime()) / 1000
-          ),
-        }),
-        {
-          status: 429,
-          headers: {
-            "Content-Type": "application/json",
-            "Retry-After": Math.ceil(
-              (rateLimit.resetAt.getTime() - now.getTime()) / 1000
-            ).toString(),
-          },
-        }
-      );
-    }
-
-    // Increment rate limit count
-    await RateLimit.update(rateLimit.id, {
-      count: rateLimit.count + 1,
+        resetAt: {
+          gt: now,
+        },
+      },
     });
 
-    return NextResponse.next();
+    if (!rateLimit) {
+      rateLimit = await prisma.rateLimit.create({
+        data: {
+          ip,
+          route,
+          count: 1,
+          resetAt: new Date(now.getTime() + WINDOW_SIZE),
+        },
+      });
+      return true;
+    }
+
+    // Vérifier si on a dépassé la limite
+    if (rateLimit.count >= MAX_REQUESTS) {
+      return false;
+    }
+
+    // Incrémenter le compteur
+    await prisma.rateLimit.update({
+      where: { id: rateLimit.id },
+      data: { count: rateLimit.count + 1 },
+    });
+
+    return true;
   } catch (error) {
     console.error("Rate limit error:", error);
-    return NextResponse.next();
+    return true; // En cas d'erreur, on laisse passer la requête
   }
 }

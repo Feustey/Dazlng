@@ -205,11 +205,12 @@
     }
   },
   "footer": {
-    "description": "DazLng est une plateforme de gestion de nœuds Lightning Network qui vous aide à gérer votre nœud et vos canaux efficacement.",
+    "description": "DazLng est votre plateforme de gestion de nœuds Lightning Network. Optimisez vos performances et maximisez vos revenus.",
     "links": {
       "help": "Aide",
       "about": "À propos",
-      "getNode": "Obtenir votre nœud !"
+      "contact": "Contact",
+      "getNode": "Obtenir un nœud"
     },
     "rights": "Tous droits réservés."
   },
@@ -335,49 +336,40 @@
     }
   },
   "Daznode": {
-    "title": "Obtenez Votre Propre Nœud Lightning !",
-    "description": "Commencez votre aventure sur le Lightning Network avec un nœud Raspberry Pi 5 pré-configuré. Prêt à l'emploi, sécurisé et accompagné.",
-    "promotion": "Offre spéciale : 1 an d'abonnement DazIA Premium inclus !",
+    "title": "Daznode - Votre Nœud Lightning Pré-configuré",
+    "description": "Un nœud Lightning Network prêt à l'emploi pour gérer vos canaux et vos transactions.",
+    "orderTitle": "Commandez votre Daznode",
+    "orderDescription": "Obtenez votre nœud Lightning pré-configuré et commencez à participer au réseau dès aujourd'hui",
+    "price": "400,000 sats",
+    "priceDescription": "Paiement unique incluant le matériel, la configuration et 2 semaines de support dédié",
+    "orderButton": "Commander maintenant",
     "features": {
-      "preconfigured": "Nœud Pré-configuré",
-      "preconfiguredDesc": "Votre nœud est entièrement configuré et prêt à l'emploi sur un Raspberry Pi 5",
-      "balance": "Solde Initial",
-      "balanceDesc": "Démarrez avec 50 000 sats déjà chargés sur votre nœud",
-      "support": "Support Expert",
-      "supportDesc": "2 semaines de support dédié pour vous aider à démarrer",
-      "delivery": "Livraison Rapide",
-      "deliveryDesc": "Recevez votre nœud sous 10 jours",
-      "subscription": "Abonnement Premium",
-      "subscriptionDesc": "1 an d'abonnement DazIA Premium offert (valeur : 100 000 sats)"
+      "preconfigured": "Pré-configuré et prêt à l'emploi",
+      "preconfiguredDesc": "Votre nœud est déjà configuré avec les meilleures pratiques de sécurité et de performance",
+      "balance": "Équilibre optimal",
+      "balanceDesc": "Configuration optimisée pour maximiser vos revenus de routing",
+      "support": "Support technique dédié",
+      "supportDesc": "Accès à notre équipe de support pour toute question technique",
+      "delivery": "Livraison rapide",
+      "deliveryDesc": "Livraison sous 3-5 jours ouvrés dans le monde entier",
+      "subscription": "Abonnement flexible",
+      "subscriptionDesc": "Choisissez entre un paiement unique ou un abonnement mensuel"
     },
-    "specsTitle": "Spécifications Techniques",
     "specs": {
-      "hardware": "Matériel",
-      "hardwareDesc": "Raspberry Pi 5 avec 8 Go de RAM, SSD 1 To et solution de refroidissement personnalisée",
-      "software": "Logiciel",
-      "softwareDesc": "Dernière implémentation LND avec notre interface de gestion personnalisée",
-      "security": "Sécurité",
-      "securityDesc": "Configuration Linux renforcée avec stockage chiffré et démarrage sécurisé"
+      "hardware": "Matériel robuste",
+      "hardwareDesc": "Raspberry Pi 4 avec 8GB RAM et stockage SSD",
+      "software": "Logiciel à jour",
+      "softwareDesc": "Core Lightning, Bitcoin Core et outils de monitoring",
+      "security": "Sécurité renforcée",
+      "securityDesc": "Protection contre les attaques et sauvegardes automatiques"
     },
-    "orderTitle": "Prêt à Rejoindre le Lightning Network ?",
-    "orderDescription": "Obtenez votre nœud pré-configuré avec tout ce dont vous avez besoin pour commencer",
-    "price": "500 000 sats",
-    "priceDescription": "Paiement unique incluant le matériel, la configuration, le support et 1 an d'abonnement Premium",
-    "orderButton": "Commander Votre Nœud",
-    "payment": {
-      "title": "Paiement via Lightning Network",
-      "scan": "Scannez le QR code pour payer",
-      "processing": "Traitement du paiement...",
-      "amount": "Montant à payer : {amount} sats",
-      "invoice": "Facture Lightning",
-      "copy": "Copier la facture",
-      "copied": "Copié !",
-      "success": "Paiement réussi !",
-      "error": "Échec du paiement. Veuillez réessayer.",
-      "close": "Fermer",
-      "expiry": "La facture expire dans {minutes} minutes",
-      "waitingPayment": "En attente du paiement...",
-      "checkingPayment": "Vérification du statut du paiement..."
+    "pricing": {
+      "title": "Tarification",
+      "oneTime": "Paiement unique",
+      "monthly": "Abonnement mensuel",
+      "price": "400,000 sats",
+      "monthlyPrice": "50,000 sats/mois",
+      "cta": "Commander maintenant"
     },
     "shipping": {
       "title": "Informations de livraison",
@@ -388,8 +380,14 @@
       "country": "Pays",
       "phone": "Téléphone",
       "email": "Email",
-      "submit": "Confirmer la commande",
-      "success": "Commande confirmée ! Nous vous contacterons bientôt pour la livraison."
+      "submit": "Confirmer la commande"
+    },
+    "payment": {
+      "title": "Paiement",
+      "description": "Scannez le QR code avec votre portefeuille pour effectuer le paiement",
+      "processing": "Traitement en cours...",
+      "success": "Paiement réussi !",
+      "error": "Erreur lors du paiement"
     }
   },
   "help": {
@@ -403,8 +401,27 @@
       "button": "Contacter le Support"
     },
     "sections": {
+      "gettingStarted": {
+        "title": "Premiers pas",
+        "description": "Tout ce dont vous avez besoin pour bien démarrer avec DazLng",
+        "items": {
+          "setup": {
+            "title": "Configuration initiale",
+            "description": "Guide étape par étape pour configurer votre compte et connecter votre nœud"
+          },
+          "basics": {
+            "title": "Les bases",
+            "description": "Comprendre les fonctionnalités essentielles de DazLng"
+          },
+          "security": {
+            "title": "Sécurité",
+            "description": "Meilleures pratiques pour sécuriser votre nœud et vos transactions"
+          }
+        }
+      },
       "daznode": {
         "title": "Service Daznode",
+        "description": "Tout sur notre solution de nœud Lightning pré-configuré",
         "delivery": {
           "question": "Comment se déroule la livraison du Daznode ?",
           "answer": "La livraison de votre Daznode est effectuée sous 10 jours ouvrés après confirmation de votre paiement. Nous vous envoyons un email de suivi avec le numéro de tracking. Le colis est assuré et nécessite une signature à la réception."
@@ -418,8 +435,25 @@
           "answer": "L'installation est simple grâce à notre configuration plug-and-play : 1) Connectez votre Daznode à Internet via Ethernet, 2) Branchez l'alimentation, 3) Accédez à l'interface web via l'adresse fournie, 4) Suivez l'assistant de configuration initial. Notre équipe est disponible pour vous guider par visioconférence si nécessaire."
         }
       },
+      "dazia": {
+        "title": "DazIA",
+        "description": "Comprendre et utiliser notre assistant IA",
+        "features": {
+          "question": "Quelles sont les fonctionnalités de DazIA ?",
+          "answer": "DazIA offre une analyse complète de votre nœud, des recommandations personnalisées pour l'optimisation des canaux, des alertes en temps réel, et des rapports détaillés sur les performances de votre nœud."
+        },
+        "plans": {
+          "question": "Quels sont les différents plans disponibles ?",
+          "answer": "Nous proposons deux plans : le plan One-Shot pour une analyse ponctuelle (10,000 sats) et l'abonnement Premium annuel (100,000 sats) pour un accès illimité à toutes les fonctionnalités."
+        },
+        "usage": {
+          "question": "Comment utiliser DazIA efficacement ?",
+          "answer": "Pour tirer le meilleur parti de DazIA, commencez par connecter votre nœud et laissez l'IA analyser vos données. Suivez ensuite les recommandations personnalisées et consultez régulièrement vos rapports de performance."
+        }
+      },
       "support": {
         "title": "Support Technique",
+        "description": "Assistance et dépannage",
         "included": {
           "question": "Quel support est inclus avec mon Daznode ?",
           "answer": "Vous bénéficiez de 2 semaines de support dédié après la réception de votre nœud. Cela inclut : assistance à l'installation, configuration des canaux, optimisation des paramètres, et résolution des problèmes techniques. Le support est disponible par email, chat ou visioconférence."
@@ -435,6 +469,7 @@
       },
       "subscription": {
         "title": "Abonnement et Services",
+        "description": "Gérer votre abonnement et vos services",
         "premium": {
           "question": "Que comprend l'abonnement DazIA Premium inclus ?",
           "answer": "L'abonnement d'un an à DazIA Premium inclut : analyses personnalisées de votre réseau, recommandations d'optimisation des canaux, alertes en temps réel, rapports hebdomadaires de performance, et accès prioritaire au support technique."
@@ -446,6 +481,22 @@
         "upgrade": {
           "question": "Puis-je upgrader mon nœud ?",
           "answer": "Oui, nous proposons des options d'upgrade matériel et logiciel. Notre équipe vous conseille sur les meilleures options selon vos besoins et peut effectuer les mises à niveau à distance ou vous guider dans le processus."
+        }
+      },
+      "troubleshooting": {
+        "title": "Dépannage",
+        "description": "Solutions aux problèmes courants",
+        "connection": {
+          "question": "Problèmes de connexion ?",
+          "answer": "Vérifiez votre connexion Internet, redémarrez votre nœud si nécessaire, et assurez-vous que tous les ports requis sont ouverts. Notre guide de dépannage détaillé peut vous aider à résoudre la plupart des problèmes de connexion."
+        },
+        "sync": {
+          "question": "Problèmes de synchronisation ?",
+          "answer": "La synchronisation initiale peut prendre plusieurs heures. Assurez-vous d'avoir suffisamment d'espace disque et une connexion Internet stable. Consultez notre guide de synchronisation pour plus de détails."
+        },
+        "channels": {
+          "question": "Problèmes avec les canaux ?",
+          "answer": "Les problèmes de canaux peuvent être liés à la liquidité, aux pairs déconnectés ou aux paramètres de routage. Notre outil de diagnostic automatique peut vous aider à identifier et résoudre ces problèmes."
         }
       }
     }
@@ -463,6 +514,8 @@
     "signingIn": "Connexion en cours...",
     "signInSuccess": "Connexion réussie !",
     "timeRemaining": "Temps restant",
+    "nodePubkey": "Clé publique de votre nœud Lightning",
+    "nodePubkeyHelp": "Entrez la clé publique de votre nœud Lightning (commence par 03...)",
     "error": {
       "invalidSignature": "Signature invalide",
       "expired": "Message expiré",
@@ -547,6 +600,43 @@
       "title": "Erreur",
       "description": "Échec de la mise à jour du profil",
       "invalidEmail": "Veuillez entrer une adresse email valide"
+    }
+  },
+  "Contact": {
+    "title": "Contactez-nous",
+    "description": "Prenez contact avec nous pour toute question, support ou opportunité de collaboration.",
+    "email": {
+      "title": "Email",
+      "address": "dazlng@proton.me"
+    },
+    "form": {
+      "firstName": "Prénom*",
+      "lastName": "Nom*",
+      "email": "Email*",
+      "companyName": "Nom de l'entreprise",
+      "jobTitle": "Poste",
+      "companyPhone": "Téléphone",
+      "companyWebsite": "Site web",
+      "interest": "Sujet*",
+      "message": "Message*",
+      "submit": "Envoyer",
+      "sending": "Envoi en cours...",
+      "success": "Message envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.",
+      "error": {
+        "default": "Une erreur est survenue lors de l'envoi du message.",
+        "requiredFields": "Veuillez remplir tous les champs obligatoires.",
+        "invalidEmail": "Veuillez entrer une adresse email valide.",
+        "requiredMessage": "Veuillez entrer votre message."
+      },
+      "selectSubject": "Sélectionnez un sujet",
+      "messagePlaceholder": "Comment pouvons-nous vous aider ?",
+      "interests": {
+        "general": "Demande générale",
+        "support": "Support technique",
+        "partnership": "Partenariat",
+        "business": "Business",
+        "other": "Autre"
+      }
     }
   }
 }

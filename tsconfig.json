@@ -33,7 +33,8 @@
       "@api/*": ["./app/api/*"],
       "@models/*": ["./app/models/*"],
       "@config/*": ["./app/config/*"],
-      "@locale/*": ["./app/locale/*"]
+      "@locale/*": ["./app/locale/*"],
+      "@messages/*": ["./messages/*"]
     },
     "baseUrl": "."
   },

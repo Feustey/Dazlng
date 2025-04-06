@@ -4,11 +4,13 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import AlbyQRCode from "@/app/components/AlbyQRCode";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function DazIAPage() {
   const t = useTranslations("daz-ia");
   const router = useRouter();
+  const pathname = usePathname();
+  const locale = pathname.split("/")[1];
   const [selectedPlan, setSelectedPlan] = useState<
     "one-shot" | "yearly" | null
   >(null);
@@ -28,7 +30,9 @@ export default function DazIAPage() {
         setPaymentStatus("success");
         // Redirection vers la page de succès après 1 seconde
         setTimeout(() => {
-          router.push("/dashboard");
+          router.push(
+            `/${locale}${plan === "yearly" ? "/dashboard" : "/recommendations"}`
+          );
         }, 1000);
       }, 2000);
     }

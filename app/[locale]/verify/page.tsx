@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
 import { SimpleLogo } from "@/app/components/SimpleLogo";
 import { useTranslations } from "next-intl";
@@ -11,6 +11,8 @@ export default function VerifyPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
+  const pathname = usePathname();
+  const locale = pathname.split("/")[1];
 
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
@@ -19,9 +21,9 @@ export default function VerifyPage() {
 
   useEffect(() => {
     if (!email) {
-      router.push("/login");
+      router.push(`/${locale}/login`);
     }
-  }, [email, router]);
+  }, [email, router, locale]);
 
   const handleInputChange = (index: number, value: string) => {
     if (value.length <= 1) {
@@ -73,7 +75,7 @@ export default function VerifyPage() {
       }
 
       // Redirection après vérification réussie
-      router.push("/");
+      router.push(`/${locale}`);
     } catch (error) {
       console.error("Error verifying code:", error);
       setError(

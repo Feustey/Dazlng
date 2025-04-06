@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { hash } from "bcryptjs";
 import {
   createUser,
   verifyUser,
@@ -7,16 +8,18 @@ import {
   validatePassword,
   createVerificationCode,
 } from "@/app/lib/prisma-auth";
+import { SESSION_CONFIG } from "@/app/config/session";
 
 export async function POST(request: NextRequest) {
   try {
-    const { action, email, password, code, name } = await request.json();
+    const { action, email, password, code, name, nodePubkey } =
+      await request.json();
 
     switch (action) {
       case "register":
-        if (!email || !password) {
+        if (!email || !password || !name || !nodePubkey) {
           return NextResponse.json(
-            { error: "Email et mot de passe requis" },
+            { error: "Tous les champs sont requis" },
             { status: 400 }
           );
         }
@@ -29,7 +32,15 @@ export async function POST(request: NextRequest) {
           );
         }
 
-        await createUser(email, password, name);
+        const existingNode = await getUserByEmail(nodePubkey);
+        if (existingNode) {
+          return NextResponse.json(
+            { error: "Ce nœud Lightning est déjà associé à un compte" },
+            { status: 400 }
+          );
+        }
+
+        await createUser(email, password, name, nodePubkey);
         await createVerificationCode(email);
 
         return NextResponse.json(
@@ -48,10 +59,18 @@ export async function POST(request: NextRequest) {
         await verifyUser(email, code);
         const session = await createSession(email);
 
-        return NextResponse.json(
+        const verifyResponse = NextResponse.json(
           { sessionId: session.sessionId },
           { status: 200 }
         );
+
+        verifyResponse.cookies.set(
+          "sessionId",
+          session.sessionId,
+          SESSION_CONFIG.cookieOptions
+        );
+
+        return verifyResponse;
 
       case "login":
         if (!email || !password) {
@@ -78,10 +97,18 @@ export async function POST(request: NextRequest) {
         }
 
         const loginSession = await createSession(email);
-        return NextResponse.json(
+        const loginResponse = NextResponse.json(
           { sessionId: loginSession.sessionId },
           { status: 200 }
         );
+
+        loginResponse.cookies.set(
+          "sessionId",
+          loginSession.sessionId,
+          SESSION_CONFIG.cookieOptions
+        );
+
+        return loginResponse;
 
       default:
         return NextResponse.json(

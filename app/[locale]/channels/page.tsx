@@ -40,7 +40,14 @@ export default function ChannelsPage() {
         const data = await response.json();
         setNetworkStats(data);
       } catch (err) {
-        console.error("Erreur lors de la récupération des statistiques:", err);
+        const error =
+          err instanceof Error
+            ? err
+            : new Error("Une erreur inconnue s'est produite");
+        console.error(
+          "Erreur lors de la récupération des statistiques:",
+          error
+        );
         setError("Impossible de charger les statistiques du réseau.");
       } finally {
         setIsStatsLoading(false);
@@ -77,11 +84,14 @@ export default function ChannelsPage() {
         setError(null);
       }
     } catch (err) {
-      console.error("Erreur lors de la recherche:", err);
-      setError(
+      const error =
         err instanceof Error
-          ? err.message
-          : "Impossible de charger les résultats. Veuillez réessayer plus tard."
+          ? err
+          : new Error("Une erreur inconnue s'est produite");
+      console.error("Erreur lors de la recherche:", error);
+      setError(
+        error.message ||
+          "Impossible de charger les résultats. Veuillez réessayer plus tard."
       );
       setSearchResults([]);
     } finally {
@@ -222,7 +232,9 @@ export default function ChannelsPage() {
                   {isStatsLoading
                     ? "..."
                     : networkStats?.totalCapacity
-                      ? (networkStats.totalCapacity / 100000000).toFixed(2)
+                      ? (
+                          Number(networkStats.totalCapacity) / 100000000
+                        ).toFixed(2)
                       : "N/A"}{" "}
                   BTC
                 </span>
@@ -235,7 +247,7 @@ export default function ChannelsPage() {
                         +
                         {(
                           (networkStats.capacityHistory[0].value /
-                            networkStats.totalCapacity) *
+                            Number(networkStats.totalCapacity)) *
                           100
                         ).toFixed(1)}
                         %
@@ -246,7 +258,9 @@ export default function ChannelsPage() {
               <span className="text-muted-foreground">
                 $
                 {networkStats?.totalCapacity
-                  ? (networkStats.totalCapacity * 0.00004).toLocaleString()
+                  ? (
+                      Number(networkStats.totalCapacity) * 0.00004
+                    ).toLocaleString()
                   : "..."}
               </span>
             </div>

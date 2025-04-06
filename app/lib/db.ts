@@ -18,7 +18,11 @@ export const checkDatabaseConnection = async () => {
   try {
     await prisma.$connect();
     return true;
-  } catch (error) {
+  } catch (err) {
+    const error =
+      err instanceof Error
+        ? err
+        : new Error("Une erreur inconnue s'est produite");
     console.error("Erreur de connexion à la base de données:", error);
     return false;
   }
@@ -29,7 +33,11 @@ export const connectToDatabase = async () => {
   try {
     await prisma.$connect();
     return prisma;
-  } catch (error) {
+  } catch (err) {
+    const error =
+      err instanceof Error
+        ? err
+        : new Error("Une erreur inconnue s'est produite");
     console.error("Erreur de connexion à la base de données:", error);
     throw error;
   }

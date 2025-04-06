@@ -5,7 +5,7 @@
 
 [build.environment]
   NODE_VERSION = "18.x"
-  NEXT_PUBLIC_API_URL = "https://api.dazlng.com"
+  NEXT_PUBLIC_API_URL = "https://api.dazno.de"
   NEXT_TELEMETRY_DISABLED = "1"
   NEXT_SHARP_PATH = "./node_modules/sharp"
   NODE_ENV = "production"
@@ -13,7 +13,7 @@
   NEXT_IGNORE_TYPE_CHECKS = "1"
   NODE_OPTIONS = "--max_old_space_size=4096"
   PRISMA_GENERATE_DATAPROXY = "true"
-  NEXT_PUBLIC_RUNTIME_CONFIG = "{\"NEXT_PUBLIC_API_URL\":\"https://api.dazlng.com\"}"
+  NEXT_PUBLIC_RUNTIME_CONFIG = "{\"NEXT_PUBLIC_API_URL\":\"https://api.dazno.de\"}"
   NEXT_PUBLIC_ENABLE_NWC = "true"
   NEXT_PUBLIC_ENABLE_TESTNET = "true"
   NEXT_PUBLIC_ENABLE_METRICS = "true"
@@ -50,7 +50,7 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
     Strict-Transport-Security = "max-age=31536000; includeSubDomains"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://api.dazlng.com https://mcp-c544a464bb52.herokuapp.com;"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://api.dazno.de https://mcp-c544a464bb52.herokuapp.com;"
 
 [[headers]]
   for = "/fonts/*"

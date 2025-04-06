@@ -28,6 +28,28 @@
     "age": "Âge",
     "rank": "Rang"
   },
+  "network": {
+    "title": "Réseau",
+    "welcome": "Bienvenue dans votre réseau",
+    "stats": {
+      "title": "Statistiques du réseau",
+      "totalNodes": "Nombre total de nœuds",
+      "activeChannels": "Canaux actifs",
+      "totalCapacity": "Capacité totale",
+      "averageAge": "Âge moyen des nœuds"
+    },
+    "actions": {
+      "addNode": "Ajouter un nœud",
+      "viewDetails": "Voir les détails",
+      "manageChannels": "Gérer les canaux"
+    },
+    "filters": {
+      "title": "Filtres",
+      "capacity": "Capacité",
+      "age": "Âge",
+      "status": "Statut"
+    }
+  },
   "errors": {
     "invalidEmail": "Email invalide",
     "invalidPassword": "Mot de passe invalide",
@@ -36,5 +58,13 @@
     "codeExpired": "Le code a expiré",
     "serverError": "Erreur serveur",
     "networkError": "Erreur réseau"
+  },
+  "footer": {
+    "links": {
+      "help": "Aide",
+      "about": "À propos",
+      "contact": "Contact",
+      "getNode": "Obtenir un nœud"
+    }
   }
 }

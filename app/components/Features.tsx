@@ -1,51 +1,92 @@
 "use client";
 
 import * as React from "react";
+import { useTranslations } from "next-intl";
+import {
+  BookOpen,
+  LineChart,
+  Zap,
+  BarChart,
+  Wallet,
+  Shield,
+} from "lucide-react";
 
-import { Globe, MessageSquare, Shield, Zap } from "lucide-react";
+export function Features() {
+  const t = useTranslations("Home");
 
-import { Card } from "@/app/components/ui/card";
+  const features = [
+    {
+      icon: BookOpen,
+      title: t("features.learning.title"),
+      description: t("features.learning.description"),
+      color: "text-primary-600 dark:text-primary-400",
+      bgColor: "bg-primary-50 dark:bg-primary-950",
+    },
+    {
+      icon: LineChart,
+      title: t("features.transactions.title"),
+      description: t("features.transactions.description"),
+      color: "text-secondary-600 dark:text-secondary-400",
+      bgColor: "bg-secondary-50 dark:bg-secondary-950",
+    },
+    {
+      icon: Zap,
+      title: t("features.operations.title"),
+      description: t("features.operations.description"),
+      color: "text-accent-600 dark:text-accent-400",
+      bgColor: "bg-accent-50 dark:bg-accent-950",
+    },
+    {
+      icon: BarChart,
+      title: t("features.metrics.title"),
+      description: t("features.metrics.description"),
+      color: "text-primary-600 dark:text-primary-400",
+      bgColor: "bg-primary-50 dark:bg-primary-950",
+    },
+    {
+      icon: Wallet,
+      title: t("features.nwc.title"),
+      description: t("features.nwc.description"),
+      color: "text-secondary-600 dark:text-secondary-400",
+      bgColor: "bg-secondary-50 dark:bg-secondary-950",
+    },
+    {
+      icon: Shield,
+      title: "Sécurité Avancée",
+      description: "Protection maximale de vos fonds et de vos données",
+      color: "text-accent-600 dark:text-accent-400",
+      bgColor: "bg-accent-50 dark:bg-accent-950",
+    },
+  ];
 
-interface Feature {
-  title: string;
-  description: string;
-  icon: string;
-}
-
-interface FeaturesProps {
-  content: {
-    title: string;
-    items: Feature[];
-  };
-}
-
-export default function Features({ content }: FeaturesProps) {
   return (
-    <section className="py-20">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-12">
-          {content.title}
-        </h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {content.items.map((feature, index) => (
-            <Card key={index} className="p-6">
-              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                {feature.icon === "zap" && (
-                  <Zap className="h-6 w-6 text-primary" />
-                )}
-                {feature.icon === "shield" && (
-                  <Shield className="h-6 w-6 text-primary" />
-                )}
-                {feature.icon === "globe" && (
-                  <Globe className="h-6 w-6 text-primary" />
-                )}
-                {feature.icon === "message" && (
-                  <MessageSquare className="h-6 w-6 text-primary" />
-                )}
+    <section className="py-20 bg-muted/50">
+      <div className="container">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary-600 to-secondary-600 dark:from-primary-400 dark:to-secondary-400 text-transparent bg-clip-text">
+            {t("features.title")}
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Découvrez toutes les fonctionnalités qui font de DazLng la meilleure
+            plateforme de gestion de nœuds Lightning Network
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {features.map((feature, index) => (
+            <div
+              key={index}
+              className="bg-card rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-fade-in"
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
+              <div
+                className={`w-12 h-12 rounded-lg ${feature.bgColor} ${feature.color} flex items-center justify-center mb-4`}
+              >
+                <feature.icon className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
               <p className="text-muted-foreground">{feature.description}</p>
-            </Card>
+            </div>
           ))}
         </div>
       </div>

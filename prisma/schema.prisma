@@ -6,19 +6,19 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("PRISMA_ACCELERATE_URL")
-  directUrl = env("DIRECT_URL")
 }
 
 model History {
   id        String   @id @default(cuid())
   date      DateTime @default(now())
-  price     Float
-  volume    Float
-  marketCap Float
+  price     Float    @db.Decimal(20, 8)
+  volume    Float    @db.Decimal(20, 8)
+  marketCap Float    @db.Decimal(20, 8)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([date])
+  @@index([marketCap])
 }
 
 model PeerOfPeer {
@@ -28,21 +28,21 @@ model PeerOfPeer {
   alias           String
   platform        String
   version         String
-  total_fees      Float
-  avg_fee_rate_ppm Float
-  total_capacity  Float
+  total_fees      Float    @db.Decimal(20, 8)
+  avg_fee_rate_ppm Float   @db.Decimal(10, 2)
+  total_capacity  Float    @db.Decimal(20, 8)
   active_channels Int
-  total_volume    Float
+  total_volume    Float    @db.Decimal(20, 8)
   total_peers     Int
-  uptime          Float
+  uptime          Float    @db.Decimal(10, 2)
   opened_channel_count Int
   color           String
   address         String
   closed_channel_count Int
   pending_channel_count Int
-  avg_capacity    Float
-  avg_fee_rate    Float
-  avg_base_fee_rate Float
+  avg_capacity    Float    @db.Decimal(20, 8)
+  avg_fee_rate    Float    @db.Decimal(10, 2)
+  avg_base_fee_rate Float  @db.Decimal(10, 2)
   betweenness_rank Int
   eigenvector_rank Int
   closeness_rank  Int
@@ -56,6 +56,10 @@ model PeerOfPeer {
 
   @@index([nodePubkey])
   @@index([timestamp])
+  @@index([peerPubkey])
+  @@index([platform])
+  @@index([total_capacity])
+  @@index([active_channels])
 }
 
 model Node {
@@ -64,21 +68,21 @@ model Node {
   alias                   String
   platform                String
   version                 String
-  total_fees              Float
-  avg_fee_rate_ppm        Float
-  total_capacity          Float
+  total_fees              Float    @db.Decimal(20, 8)
+  avg_fee_rate_ppm        Float    @db.Decimal(10, 2)
+  total_capacity          Float    @db.Decimal(20, 8)
   active_channels         Int
-  total_volume            Float
+  total_volume            Float    @db.Decimal(20, 8)
   total_peers             Int
-  uptime                  Float
+  uptime                  Float    @db.Decimal(10, 2)
   opened_channel_count    Int
   color                   String
   address                 String
   closed_channel_count    Int
   pending_channel_count   Int
-  avg_capacity            Float
-  avg_fee_rate            Float
-  avg_base_fee_rate       Float
+  avg_capacity            Float    @db.Decimal(20, 8)
+  avg_fee_rate            Float    @db.Decimal(10, 2)
+  avg_base_fee_rate       Float    @db.Decimal(10, 2)
   betweenness_rank        Int
   eigenvector_rank        Int
   closeness_rank          Int
@@ -91,6 +95,12 @@ model Node {
   peersOfPeers           PeerOfPeer[]
 
   @@index([timestamp])
+  @@index([platform])
+  @@index([total_capacity])
+  @@index([active_channels])
+  @@index([betweenness_rank])
+  @@index([eigenvector_rank])
+  @@index([closeness_rank])
 }
 
 model User {
@@ -103,6 +113,10 @@ model User {
   subscriptionTier      String?
   subscriptionStartDate DateTime?
   subscriptionEndDate   DateTime?
+  emailVerified         DateTime?
+  image                 String?
+  nodePubkey            String?   @unique
+  sessions              Session[]
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 
@@ -126,6 +140,7 @@ model Session {
   email     String
   expiresAt DateTime
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [email], references: [email])
 
   @@index([sessionId])
   @@index([email])
@@ -174,25 +189,29 @@ model NetworkSummary {
   id              String   @id @default(cuid())
   totalNodes      Int
   totalChannels   Int
-  totalCapacity   Float
-  avgChannelSize  Float
-  medianFeeRate   Float
+  totalCapacity   Float    @db.Decimal(20, 8)
+  avgChannelSize  Float    @db.Decimal(20, 8)
+  medianFeeRate   Float    @db.Decimal(10, 2)
   timestamp       DateTime @default(now())
 
   @@index([timestamp])
+  @@index([totalCapacity])
+  @@index([avgChannelSize])
 }
 
 model NodeStats {
   id              String   @id @default(cuid())
   nodePubkey      String
   channelCount    Int
-  capacity        Float
-  feeRate         Float
-  uptime          Float
+  capacity        Float    @db.Decimal(20, 8)
+  feeRate         Float    @db.Decimal(10, 2)
+  uptime          Float    @db.Decimal(10, 2)
   timestamp       DateTime @default(now())
 
   @@index([nodePubkey])
   @@index([timestamp])
+  @@index([capacity])
+  @@index([channelCount])
 }
 
 model RateLimit {
@@ -206,4 +225,19 @@ model RateLimit {
 
   @@index([ip, route])
   @@index([resetAt])
+}
+
+model Contact {
+  id            String   @id @default(cuid())
+  firstName     String
+  lastName      String
+  email         String
+  companyName   String?
+  jobTitle      String?
+  companyPhone  String?
+  companyWebsite String?
+  interest      String
+  message       String   @db.Text
+  createdAt     DateTime @default(now())
+  status        String   @default("new") // new, read, replied
 } 

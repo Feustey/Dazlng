@@ -10,13 +10,7 @@ declare global {
 }
 
 const prismaClientSingleton = () => {
-  return new PrismaClient({
-    datasources: {
-      db: {
-        url: process.env.PRISMA_ACCELERATE_URL,
-      },
-    },
-  }).$extends(withAccelerate());
+  return new PrismaClient().$extends(withAccelerate());
 };
 
 const prisma = globalThis.prisma ?? prismaClientSingleton();
