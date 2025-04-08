@@ -92,7 +92,8 @@ export default async function LocaleLayout({
     const isConnected = await connectToDatabase();
     if (!isConnected) {
       console.error("Database connection failed");
-      throw new Error("Database connection failed");
+      // Au lieu de lancer une erreur, nous continuons sans la base de données
+      console.warn("Continuing without database connection");
     }
 
     // Vérifier la validité de la locale de manière asynchrone

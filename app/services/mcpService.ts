@@ -6,6 +6,7 @@ import {
   OptimizationResult,
   NodeInfo,
 } from "../types/mcpService";
+import type { NetworkStats } from "../types/node";
 
 // Types pour MCP
 interface McpClient {
@@ -66,6 +67,13 @@ interface NotificationPayload {
   message: string;
 }
 
+interface NodeResponse {
+  pubkey: string;
+  alias: string;
+  capacity: number;
+  // Ajoutez d'autres propriétés selon vos besoins
+}
+
 export class McpService {
   private static instance: McpService;
   private client: McpClient;
@@ -89,8 +97,18 @@ export class McpService {
   }
 
   // Méthodes pour interagir avec les nœuds
-  async getNodeInfo(nodeId: string) {
-    return await this.client.getNodeInfo();
+  async getNodeInfo(nodeId: string): Promise<NodeInfo> {
+    try {
+      const response = await fetch(
+        `${this.baseUrl}/api/mcp?action=getNodeInfo&pubkey=${nodeId}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch node info");
+      }
+      return await response.json();
+    } catch (error) {
+      throw new Error(`Failed to get node info: ${error}`);
+    }
   }
 
   async getNodeChannels(nodeId: string) {
@@ -188,6 +206,20 @@ export class McpService {
   // Récupérer l'historique des transactions
   async getHistoricalData() {
     return await this.client.getHistoricalData();
+  }
+
+  async getNetworkStats(): Promise<NetworkStats> {
+    try {
+      const response = await fetch(
+        `${this.baseUrl}/api/mcp?action=getCurrentStats`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch network stats");
+      }
+      return await response.json();
+    } catch (error) {
+      throw new Error(`Failed to get network stats: ${error}`);
+    }
   }
 }
 

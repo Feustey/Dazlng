@@ -96,6 +96,15 @@ export default function WalletAuth() {
     checkWallet();
   }, [router, locale]);
 
+  useEffect(() => {
+    if (error) {
+      // Gérer l'erreur
+    }
+    if (isLoading) {
+      // Gérer le chargement
+    }
+  }, [error, isLoading]);
+
   if (isLoading) {
     console.log("Affichage du loader");
     return (

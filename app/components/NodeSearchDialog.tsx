@@ -31,6 +31,9 @@ export function NodeSearchDialog({
 }: NodeSearchDialogProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const { t } = useLanguage();
+  const _useRouter = useRouter();
+  const _useLocale = useLocale();
+  const _motion = motion;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
