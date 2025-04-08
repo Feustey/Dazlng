@@ -15,11 +15,7 @@
 
 [functions]
   node_bundler = "esbuild"
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+  external_node_modules = []
 
 [build.processing]
   skip_processing = false
@@ -38,11 +34,8 @@
 [build.processing.images]
   compress = true
 
-[functions]
-  external_node_modules = []
-
-[functions."app/api/*"]
-  external_node_modules = []
-
-[functions."app/api/auth/*"]
-  external_node_modules = []
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = true
