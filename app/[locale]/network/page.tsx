@@ -2,18 +2,58 @@
 
 import { useTranslations } from "next-intl";
 import { useState, useMemo, useEffect } from "react";
-import { Card } from "@/app/components/ui/card";
-import { Button } from "@/app/components/ui/button";
-import { Input } from "@/app/components/ui/input";
-import { Select } from "@/app/components/ui/select";
-import { NodeList } from "@/app/components/NodeList";
-import { NetworkCharts } from "@/app/components/NetworkCharts";
-import { networkService } from "@/app/services/networkService";
-import { Node } from "@/app/types/network";
+import { Card } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
+import { Select } from "../../components/ui/select";
+import { NodeList } from "../../components/NodeList";
+import { NetworkCharts } from "../../components/NetworkCharts";
+import NetworkMovers from "../../components/NetworkMovers";
+import { networkService } from "../../services/networkService";
+import { NetworkNode, Node as NetworkNodeType } from "../../types/network";
+
+interface Node {
+  id: string;
+  name: string;
+  capacity: string;
+  channels: number;
+  age: string;
+  status: "active" | "inactive";
+}
+
+function transformNetworkNode(node: NetworkNode): Node {
+  return {
+    id: node.publicKey,
+    name: node.alias,
+    capacity: node.capacity.toString(),
+    channels: node.channelCount,
+    age: "N/A", // À implémenter si nécessaire
+    status: "active", // À implémenter si nécessaire
+  };
+}
+
+function transformToNetworkNodeType(node: NetworkNode): NetworkNodeType {
+  return {
+    id: node.publicKey,
+    publicKey: node.publicKey,
+    name: node.alias,
+    alias: node.alias,
+    color: node.color,
+    addresses: node.addresses,
+    lastUpdate: node.lastUpdate,
+    capacity: node.capacity,
+    channelCount: node.channelCount,
+    avgChannelSize: node.avgChannelSize,
+    channels: [],
+    age: 0,
+    status: "active",
+  };
+}
 
 export default function NetworkPage() {
   const t = useTranslations("Network");
   const [nodes, setNodes] = useState<Node[]>([]);
+  const [networkNodes, setNetworkNodes] = useState<NetworkNodeType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [networkStats, setNetworkStats] = useState({
@@ -37,7 +77,8 @@ export default function NetworkPage() {
           networkService.getNodes(),
           networkService.getNetworkStats(),
         ]);
-        setNodes(nodesData);
+        setNodes(nodesData.map(transformNetworkNode));
+        setNetworkNodes(nodesData.map(transformToNetworkNodeType));
         setNetworkStats(statsData);
         setError(null);
       } catch (err) {
@@ -60,7 +101,11 @@ export default function NetworkPage() {
       ) {
         return false;
       }
-      if (filters.age && parseInt(node.age) < parseInt(filters.age)) {
+      if (
+        filters.age &&
+        node.age !== "N/A" &&
+        parseInt(node.age) < parseInt(filters.age)
+      ) {
         return false;
       }
       if (filters.status !== "all" && node.status !== filters.status) {
@@ -143,7 +188,12 @@ export default function NetworkPage() {
       </div>
 
       {/* Graphiques */}
-      <NetworkCharts nodes={nodes} />
+      <NetworkCharts nodes={networkNodes} />
+
+      {/* Big Movers */}
+      <div className="mt-8">
+        <NetworkMovers />
+      </div>
 
       {/* Filtres */}
       <Card className="p-4 mb-8">

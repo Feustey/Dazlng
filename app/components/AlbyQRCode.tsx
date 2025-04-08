@@ -4,32 +4,17 @@ import * as React from "react";
 
 import { QRCodeSVG } from "qrcode.react";
 
-interface AlbyQRCodeProps {
+export interface AlbyQRCodeProps {
   amount: number;
-  plan: string;
+  memo?: string;
 }
 
-export default function AlbyQRCode({ amount, plan }: AlbyQRCodeProps) {
-  // Format: lightning:<invoice>?amount=<amount>&label=<plan>
-  const invoice = `lnbc${amount}sats1p${plan
-    .toLowerCase()
-    .replace(/\s+/g, "")}`;
-  const qrValue = `lightning:${invoice}?amount=${amount}&label=${encodeURIComponent(
-    plan
-  )}`;
+export default function AlbyQRCode({ amount, memo }: AlbyQRCodeProps) {
+  const albyUrl = `bitcoin:${process.env.NEXT_PUBLIC_ALBY_LIGHTNING_ADDRESS}?amount=${amount}${memo ? `&memo=${encodeURIComponent(memo)}` : ""}`;
 
   return (
-    <div className="flex flex-col items-center">
-      <QRCodeSVG
-        value={qrValue}
-        size={256}
-        level="H"
-        includeMargin
-        className="bg-white p-4 rounded-lg"
-      />
-      <div className="mt-4 text-sm text-gray-400 break-all text-center">
-        {invoice}
-      </div>
+    <div className="bg-white p-4 rounded-lg">
+      <QRCodeSVG value={albyUrl} size={256} />
     </div>
   );
 }

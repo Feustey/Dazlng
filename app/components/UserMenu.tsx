@@ -2,17 +2,18 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useAuth } from "@/app/hooks/useAuth";
-import { Button } from "@/components/ui/button";
+import { useAuth } from "../hooks/useAuth";
+import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "./ui/dropdown-menu";
 import { User, Settings, LogOut } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 
 export default function UserMenu() {
   const { user, logout } = useAuth();

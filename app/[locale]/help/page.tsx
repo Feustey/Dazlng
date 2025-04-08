@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { Card } from "@/app/components/ui/card";
-import { Input } from "@/app/components/ui/input";
-import { Button } from "@/app/components/ui/button";
+import { motion } from "framer-motion";
+import { Card } from "../../components/ui/card";
+import { Input } from "../../components/ui/input";
+import { Button } from "../../components/ui/button";
 import {
   SearchIcon,
   BookOpenIcon,
@@ -31,52 +32,96 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/app/components/ui/accordion";
+} from "../../components/ui/accordion";
+
+// Types pour les catégories et les FAQ
+type CategoryId =
+  | "getting_started"
+  | "learning"
+  | "transactions"
+  | "operations"
+  | "metrics"
+  | "nwc";
+
+interface Category {
+  id: CategoryId;
+  icon: React.ReactNode;
+  color: string;
+  bgColor: string;
+}
+
+interface FaqItem {
+  id: string;
+  icon: React.ReactNode;
+  question: string;
+  answer: string;
+}
 
 export default function HelpPage() {
   const t = useTranslations("Help");
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeSection, setActiveSection] = useState<CategoryId | "">("");
 
-  const categories = [
+  // Références pour les sections
+  const sectionRefs = {
+    getting_started: useRef<HTMLDivElement>(null),
+    learning: useRef<HTMLDivElement>(null),
+    transactions: useRef<HTMLDivElement>(null),
+    operations: useRef<HTMLDivElement>(null),
+    metrics: useRef<HTMLDivElement>(null),
+    nwc: useRef<HTMLDivElement>(null),
+  };
+
+  const categories: Category[] = [
     {
       id: "getting_started",
       icon: <BookOpenIcon className="h-5 w-5" />,
-      color: "text-primary",
-      bgColor: "bg-primary/10",
+      color: "text-primary-600 dark:text-primary-400",
+      bgColor: "bg-primary-50 dark:bg-primary-950",
     },
     {
       id: "learning",
       icon: <BitcoinIcon className="h-5 w-5" />,
-      color: "text-secondary",
-      bgColor: "bg-secondary/10",
+      color: "text-secondary-600 dark:text-secondary-400",
+      bgColor: "bg-secondary-50 dark:bg-secondary-950",
     },
     {
       id: "transactions",
       icon: <BarChartIcon className="h-5 w-5" />,
-      color: "text-accent",
-      bgColor: "bg-accent/10",
+      color: "text-accent-600 dark:text-accent-400",
+      bgColor: "bg-accent-50 dark:bg-accent-950",
     },
     {
       id: "operations",
       icon: <ZapIcon className="h-5 w-5" />,
-      color: "text-primary",
-      bgColor: "bg-primary/10",
+      color: "text-primary-600 dark:text-primary-400",
+      bgColor: "bg-primary-50 dark:bg-primary-950",
     },
     {
       id: "metrics",
       icon: <NetworkIcon className="h-5 w-5" />,
-      color: "text-secondary",
-      bgColor: "bg-secondary/10",
+      color: "text-secondary-600 dark:text-secondary-400",
+      bgColor: "bg-secondary-50 dark:bg-secondary-950",
     },
     {
       id: "nwc",
       icon: <WalletIcon className="h-5 w-5" />,
-      color: "text-accent",
-      bgColor: "bg-accent/10",
+      color: "text-accent-600 dark:text-accent-400",
+      bgColor: "bg-accent-50 dark:bg-accent-950",
     },
   ];
 
-  const faqItems = [
+  // Grouper les FAQ par catégorie
+  const faqByCategory: Record<CategoryId, string[]> = {
+    getting_started: ["what_is_lightning", "how_to_start", "why_bitcoin"],
+    learning: ["how_to_transact", "keysend", "channel_close"],
+    transactions: ["security", "backup_channels", "peers_connection"],
+    operations: ["technical", "profitable_node", "channel_management"],
+    metrics: ["node_monitoring", "sync_time", "tor_only"],
+    nwc: ["how_to_connect"],
+  };
+
+  const faqItems: FaqItem[] = [
     {
       id: "what_is_lightning",
       icon: <ZapIcon className="h-5 w-5" />,
@@ -86,7 +131,7 @@ export default function HelpPage() {
     {
       id: "why_bitcoin",
       icon: <BitcoinIcon className="h-5 w-5" />,
-      question: "Pourquoi Bitcoin et pas les autres cryptomonnaies ?",
+      question: t("faq.why_bitcoin"),
       answer: `Bitcoin est la seule cryptomonnaie véritablement décentralisée et sécurisée. Son réseau est maintenu par des milliers de nœuds indépendants, sa sécurité est prouvée par plus de 14 ans d'opération, et son approvisionnement est fixé à 21 millions d'unités. Les autres "cryptomonnaies" sont soit des copies de Bitcoin avec des compromis sur la sécurité, soit des projets centralisés déguisés en décentralisés. Bitcoin est l'argent le plus dur jamais créé.`,
     },
     {
@@ -127,7 +172,7 @@ Le réseau Lightning utilise le routage onion pour protéger la vie privée des 
     {
       id: "security",
       icon: <ShieldIcon className="h-5 w-5" />,
-      question: "Comment mes fonds sont-ils sécurisés ?",
+      question: t("faq.security"),
       answer: `DazLng utilise plusieurs couches de sécurité pour protéger vos fonds :
 1. Toutes les transactions sont signées cryptographiquement
 2. Les clés privées ne quittent jamais votre appareil
@@ -140,7 +185,7 @@ Le réseau Lightning utilise le routage onion pour protéger la vie privée des 
     {
       id: "technical",
       icon: <CodeIcon className="h-5 w-5" />,
-      question: "Aspects techniques avancés",
+      question: t("faq.technical"),
       answer: `Pour les utilisateurs techniques, DazLng offre :
 - API RESTful pour l'intégration avec d'autres services
 - Support des plugins Lightning (comme CLN)
@@ -154,7 +199,7 @@ Le code source est open-source et disponible sur GitHub.`,
     {
       id: "profitable_node",
       icon: <BitcoinIcon className="h-5 w-5" />,
-      question: "Comment gérer un nœud Lightning rentable ?",
+      question: t("faq.profitable_node"),
       answer: `Pour optimiser la rentabilité de votre nœud Lightning :
 1. Ouvrez des canaux avec des nœuds bien positionnés dans le réseau
 2. Maintenez un bon équilibre de liquidité (pas trop, pas trop peu)
@@ -167,7 +212,7 @@ La rentabilité n'est pas garantie, mais ces stratégies augmentent vos chances 
     {
       id: "channel_management",
       icon: <NetworkIcon className="h-5 w-5" />,
-      question: "Comment gérer efficacement mes canaux ?",
+      question: t("faq.channel_management"),
       answer: `Une bonne gestion des canaux est essentielle :
 1. Diversifiez vos canaux entre différents nœuds pour réduire les risques
 2. Maintenez un ratio équilibré entre les fonds entrants et sortants
@@ -180,7 +225,7 @@ N'oubliez pas de toujours avoir une réserve de fonds pour les frais de fermetur
     {
       id: "backup_channels",
       icon: <LockIcon className="h-5 w-5" />,
-      question: "Comment sauvegarder mes canaux Lightning ?",
+      question: t("faq.backup_channels"),
       answer: `La sauvegarde des canaux est cruciale pour la sécurité de vos fonds :
 1. Exportez régulièrement votre fichier de sauvegarde de canaux
 2. Stockez les sauvegardes dans plusieurs emplacements sécurisés
@@ -193,7 +238,7 @@ En cas de perte d'accès à votre nœud, une bonne sauvegarde vous permettra de 
     {
       id: "peers_connection",
       icon: <UsersIcon className="h-5 w-5" />,
-      question: "Je n'ai pas de pairs (peers), que faire ?",
+      question: t("faq.peers_connection"),
       answer: `Si votre nœud n'a pas de pairs, voici comment résoudre le problème :
 1. Vérifiez votre connexion Internet et les paramètres de pare-feu
 2. Assurez-vous que le port Lightning (9735 par défaut) est ouvert
@@ -268,73 +313,156 @@ Pour éviter ces pertes, planifiez toujours une réserve de fonds pour les frais
 
 Une bonne surveillance vous permet de détecter et résoudre les problèmes avant qu'ils n'affectent vos opérations.`,
     },
+    {
+      id: "daznode_setup",
+      icon: <ServerIcon className="h-5 w-5" />,
+      question: "Comment configurer correctement mon Daznode ?",
+      answer: `La configuration initiale de votre Daznode est cruciale pour son bon fonctionnement :
+
+1. Synchronisation du réseau :
+   - La synchronisation complète de Bitcoin Core peut prendre 1 à 3 jours
+   - Assurez-vous d'avoir une connexion Internet stable
+   - Vérifiez régulièrement l'avancement de la synchronisation
+
+2. Installation d'Umbrel :
+   - Umbrel est préinstallé avec les applications de base
+   - Changez immédiatement les mots de passe par défaut
+   - Configurez les paramètres de sécurité dès le premier démarrage
+
+3. Configuration de la sécurité :
+   - Modifiez tous les mots de passe par défaut
+   - Activez l'authentification à deux facteurs si disponible
+   - Configurez un pare-feu approprié
+   - Sauvegardez régulièrement vos clés de récupération
+
+4. Optimisation des performances :
+   - Ajustez les paramètres de mémoire selon votre matériel
+   - Configurez les sauvegardes automatiques
+   - Activez le monitoring des ressources
+
+5. Vérifications post-installation :
+   - Testez la connectivité du réseau
+   - Vérifiez l'état de tous les services
+   - Validez les sauvegardes
+   - Testez la restauration des données
+
+Une configuration soignée au démarrage évitera bien des problèmes par la suite.`,
+    },
   ];
 
+  // Fonction pour naviguer vers une section
+  const scrollToSection = (sectionId: CategoryId) => {
+    setActiveSection(sectionId);
+    sectionRefs[sectionId].current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
+  // Filtrer les FAQ en fonction de la recherche
+  const filteredFaqItems = faqItems.filter(
+    (item) =>
+      item.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.answer.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <div className="min-h-screen bg-background pt-24 pb-12">
-      <div className="container mx-auto px-4">
-        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-          {t("title")}
-        </h1>
-        <p className="text-muted-foreground mb-8">{t("description")}</p>
+    <div className="min-h-screen bg-gradient-to-b from-primary-50 via-background to-secondary-50 dark:from-primary-950 dark:via-background dark:to-secondary-950">
+      <div className="container mx-auto px-4 py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="max-w-4xl mx-auto"
+        >
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary-600 via-secondary-600 to-accent-600 dark:from-primary-400 dark:via-secondary-400 dark:to-accent-400 text-transparent bg-clip-text">
+            {t("title")}
+          </h1>
 
-        {/* Search Bar */}
-        <div className="relative mb-12">
-          <Input
-            type="text"
-            placeholder={t("search_placeholder")}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10"
-          />
-          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-        </div>
+          <p className="text-lg text-muted-foreground mb-8">
+            {t("description")}
+          </p>
 
-        {/* Categories Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {categories.map((category) => (
-            <Card
-              key={category.id}
-              className="p-6 hover:shadow-md transition-shadow cursor-pointer"
-            >
-              <div className="flex items-start space-x-4">
-                <div className={`p-3 rounded-lg ${category.bgColor}`}>
-                  <div className={category.color}>{category.icon}</div>
+          <div className="relative mb-8">
+            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
+            <Input
+              type="text"
+              placeholder={t("searchPlaceholder")}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 py-6 text-lg"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12">
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => scrollToSection(category.id)}
+                className={`flex flex-col items-center justify-center p-4 rounded-lg transition-all ${
+                  activeSection === category.id
+                    ? "bg-primary/20 dark:bg-primary/30"
+                    : "bg-muted/30 hover:bg-muted/50"
+                }`}
+              >
+                <div
+                  className={`p-3 rounded-full mb-2 ${category.bgColor} ${category.color}`}
+                >
+                  {category.icon}
                 </div>
-                <div>
-                  <h3 className="font-semibold text-lg text-foreground">
-                    {t(`categories.${category.id}`)}
-                  </h3>
-                  <p className="text-muted-foreground text-sm">
-                    {t(`categories.${category.id}_desc`)}
-                  </p>
-                </div>
-              </div>
-            </Card>
-          ))}
-        </div>
-
-        {/* FAQ Section */}
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-foreground mb-4">
-            {t("faq.title")}
-          </h2>
-          <Accordion type="single" collapsible className="space-y-2">
-            {faqItems.map((item) => (
-              <AccordionItem key={item.id} value={item.id}>
-                <AccordionTrigger className="text-foreground">
-                  <div className="flex items-center space-x-2">
-                    <div className="text-primary">{item.icon}</div>
-                    <span>{item.question}</span>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
-                  {item.answer}
-                </AccordionContent>
-              </AccordionItem>
+                <span className="text-sm font-medium">
+                  {t(`categories.${category.id}`)}
+                </span>
+              </button>
             ))}
-          </Accordion>
-        </div>
+          </div>
+
+          <div className="space-y-8">
+            {categories.map((category) => (
+              <div
+                key={category.id}
+                ref={sectionRefs[category.id]}
+                className="scroll-mt-24"
+              >
+                <div className="flex items-center mb-6">
+                  <div
+                    className={`p-2 rounded-lg mr-3 ${category.bgColor} ${category.color}`}
+                  >
+                    {category.icon}
+                  </div>
+                  <h2 className="text-2xl font-semibold">
+                    {t(`categories.${category.id}`)}
+                  </h2>
+                </div>
+
+                <Accordion type="single" collapsible className="w-full">
+                  {faqByCategory[category.id].map((faqId) => {
+                    const faq = faqItems.find((item) => item.id === faqId);
+                    if (!faq) return null;
+
+                    return (
+                      <AccordionItem key={faqId} value={faqId}>
+                        <AccordionTrigger className="text-left">
+                          <div className="flex items-center">
+                            <div className={`mr-3 ${category.color}`}>
+                              {faq.icon}
+                            </div>
+                            <span>{faq.question}</span>
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <div className="pl-10 text-muted-foreground">
+                            {faq.answer}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    );
+                  })}
+                </Accordion>
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </div>
   );

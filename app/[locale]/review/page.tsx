@@ -7,9 +7,9 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/app/components/ui/card";
-import { Skeleton } from "@/app/components/ui/skeleton";
-import { Alert, AlertDescription, AlertTitle } from "@/app/components/ui/alert";
+} from "../../components/ui/card";
+import { Skeleton } from "../../components/ui/skeleton";
+import { Alert, AlertDescription, AlertTitle } from "../../components/ui/alert";
 import { AlertCircle } from "lucide-react";
 
 interface NetworkSummary {

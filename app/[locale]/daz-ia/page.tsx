@@ -3,8 +3,10 @@
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import AlbyQRCode from "@/app/components/AlbyQRCode";
+import AlbyQRCode from "../../components/AlbyQRCode";
 import { useRouter, usePathname } from "next/navigation";
+import { Tabs } from "../../components/Tabs";
+import { RecommendationsContent } from "../../components/RecommendationsContent";
 
 export default function DazIAPage() {
   const t = useTranslations("daz-ia");
@@ -30,9 +32,7 @@ export default function DazIAPage() {
         setPaymentStatus("success");
         // Redirection vers la page de succès après 1 seconde
         setTimeout(() => {
-          router.push(
-            `/${locale}${plan === "yearly" ? "/dashboard" : "/recommendations"}`
-          );
+          router.push(`/${locale}/dashboard`);
         }, 1000);
       }, 2000);
     }
@@ -42,14 +42,11 @@ export default function DazIAPage() {
     return plan === "one-shot" ? 10000 : 100000;
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold mb-4">{t("title")}</h1>
-          <p className="text-xl text-gray-300">{t("description")}</p>
-        </div>
-
+  const tabs = [
+    {
+      id: "plans",
+      label: t("tabs.plans"),
+      content: (
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {/* Plan One-Shot */}
           <motion.div
@@ -122,52 +119,48 @@ export default function DazIAPage() {
             </ul>
             <button
               onClick={() => handlePlanSelection("yearly")}
-              className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-6 rounded-lg transition duration-200"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200"
             >
               {t("yearly.cta")}
             </button>
           </motion.div>
         </div>
+      ),
+    },
+    {
+      id: "recommendations",
+      label: t("tabs.recommendations"),
+      content: <RecommendationsContent />,
+    },
+  ];
 
-        {/* Modal de paiement */}
-        {selectedPlan && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-            <div className="bg-gray-800 rounded-2xl p-8 max-w-md w-full">
-              <h3 className="text-2xl font-bold mb-4">{t("payment.title")}</h3>
-              {process.env.NODE_ENV === "development" ? (
-                <div className="text-center mb-6">
-                  <p className="text-yellow-500 mb-2">Mode développement</p>
-                  <p className="text-gray-300">
-                    Le paiement sera simulé automatiquement
-                  </p>
-                </div>
-              ) : (
-                <p className="text-gray-300 mb-6">{t("payment.scan")}</p>
-              )}
-              <div className="bg-white p-4 rounded-lg mb-6">
-                <AlbyQRCode
-                  amount={getPlanAmount(selectedPlan)}
-                  plan={
-                    selectedPlan === "one-shot"
-                      ? t("one-shot.title")
-                      : t("yearly.title")
-                  }
-                />
-              </div>
-              {isProcessing && (
-                <div className="text-center">
-                  {paymentStatus === "pending" && (
-                    <div className="text-gray-300">
-                      {process.env.NODE_ENV === "development"
-                        ? "Simulation du paiement en cours..."
-                        : t("payment.processing")}
-                    </div>
-                  )}
-                  {paymentStatus === "success" && (
-                    <div className="text-green-500">
-                      Paiement réussi ! Redirection...
-                    </div>
-                  )}
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <h1 className="text-4xl font-bold mb-4">{t("title")}</h1>
+          <p className="text-xl text-gray-300">{t("description")}</p>
+        </div>
+
+        <Tabs tabs={tabs} defaultTab="plans" />
+
+        {isProcessing && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-gray-800 p-8 rounded-lg text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
+              <p className="text-white">
+                {paymentStatus === "pending"
+                  ? t("processing")
+                  : paymentStatus === "success"
+                    ? t("success")
+                    : t("error")}
+              </p>
+              {paymentStatus === "success" && (
+                <div className="mt-4">
+                  <AlbyQRCode
+                    amount={getPlanAmount(selectedPlan!)}
+                    memo={`Daz-IA ${selectedPlan === "yearly" ? "Yearly" : "One-Shot"}`}
+                  />
                 </div>
               )}
             </div>

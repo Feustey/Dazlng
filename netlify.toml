@@ -1,22 +1,23 @@
 [build]
   command = "npm run build"
   publish = ".next"
-  functions = "netlify/functions"
 
 [build.environment]
-  NODE_VERSION = "18.x"
-  NEXT_PUBLIC_API_URL = "https://api.dazno.de"
-  NEXT_TELEMETRY_DISABLED = "1"
-  NEXT_SHARP_PATH = "./node_modules/sharp"
-  NODE_ENV = "production"
-  NEXT_IGNORE_ESLINT = "1"
-  NEXT_IGNORE_TYPE_CHECKS = "1"
-  NODE_OPTIONS = "--max_old_space_size=4096"
-  PRISMA_GENERATE_DATAPROXY = "true"
-  NEXT_PUBLIC_RUNTIME_CONFIG = "{\"NEXT_PUBLIC_API_URL\":\"https://api.dazno.de\"}"
-  NEXT_PUBLIC_ENABLE_NWC = "true"
-  NEXT_PUBLIC_ENABLE_TESTNET = "true"
-  NEXT_PUBLIC_ENABLE_METRICS = "true"
+  NEXT_PUBLIC_API_URL = "https://api.dazlng.com"
+  NEXT_PUBLIC_APP_URL = "https://dazlng.com"
+  NODE_VERSION = "20.11.1"
+  NPM_VERSION = "10.2.4"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[functions]
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
 
 [build.processing]
   skip_processing = false
@@ -35,71 +36,15 @@
 [build.processing.images]
   compress = true
 
-[build.cache]
-  clear = false
-
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
-
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "DENY"
-    X-XSS-Protection = "1; mode=block"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
-    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://api.dazno.de https://mcp-c544a464bb52.herokuapp.com;"
-
-[[headers]]
-  for = "/fonts/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-  for = "/_next/static/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-  for = "/_next/static/css/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-  for = "/_next/static/media/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+[build.environment]
+  NEXT_TELEMETRY_DISABLED = "1"
+  NODE_ENV = "production"
 
 [functions]
-  node_bundler = "esbuild"
-  external_node_modules = ["@prisma/client"]
+  external_node_modules = []
 
-[functions.server]
-  included_files = ["public/**/*", ".next/static/**/*"]
-  node_bundler = "esbuild"
-  external_node_modules = ["@prisma/client"]
+[functions."app/api/*"]
+  external_node_modules = []
 
-[functions.update-data]
-  schedule = "0 0 * * *"
-  runtime = "nodejs18.x"
-  timeout = 30
-
-[functions.import-historical]
-  runtime = "nodejs18.x"
-  timeout = 30
-
-[functions.metrics]
-  schedule = "*/5 * * * *"
-  runtime = "nodejs18.x"
-  timeout = 30
-
-[functions.nwc-handler]
-  runtime = "nodejs18.x"
-  timeout = 30
-
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
+[functions."app/api/auth/*"]
+  external_node_modules = []

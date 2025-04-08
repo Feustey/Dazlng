@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
-import { SimpleLogo } from "@/app/components/SimpleLogo";
+import { SimpleLogo } from "../../components/SimpleLogo";
 import { useTranslations } from "next-intl";
 
 export default function VerifyPage() {

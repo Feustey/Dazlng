@@ -1,8 +1,8 @@
 "use server";
 
-import { getCurrentStats } from "@/app/services/network.service";
+import { getCurrentStats } from "../../../services/network.service";
 import { NextResponse } from "next/server";
-import { mockNetworkStats } from "@/app/lib/mockData";
+import { mockNetworkStats } from "../../../lib/mockData";
 
 // Activer le mode développement pour utiliser les données fictives
 const USE_MOCK_DATA = process.env.NODE_ENV === "development";

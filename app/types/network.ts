@@ -26,6 +26,18 @@ export interface NetworkNode {
   isp?: string;
   /** Plateforme d'exécution du nœud */
   platform?: string;
+  /** Rang de betweenness du nœud */
+  betweennessRank?: number;
+  /** Rang d'eigenvector du nœud */
+  eigenvectorRank?: number;
+  /** Rang de closeness du nœud */
+  closenessRank?: number;
+  /** Taux de frais moyen du nœud */
+  avgFeeRate?: number;
+  /** Temps de fonctionnement du nœud */
+  uptime?: number;
+  /** Rang du nœud dans une liste triée */
+  rank?: number;
 }
 
 /**
@@ -75,4 +87,20 @@ export interface NetworkStats {
   avgCapacityPerChannel?: number;
   /** Nombre moyen de canaux par nœud */
   avgChannelsPerNode?: number;
+}
+
+/**
+ * Type étendu de NetworkNode avec des propriétés supplémentaires pour l'interface utilisateur
+ */
+export interface Node extends NetworkNode {
+  /** Identifiant unique du nœud */
+  id: string;
+  /** Nom du nœud */
+  name: string;
+  /** Liste des canaux du nœud */
+  channels: NetworkChannel[];
+  /** Âge du nœud en jours */
+  age: number;
+  /** Statut du nœud */
+  status: "active" | "inactive" | "closed";
 }

@@ -1,222 +1,125 @@
-"use client";
+import type {
+  Node,
+  NetworkSummary,
+  NetworkStats,
+  Centralities,
+  NodeCentrality,
+  CentralityNode,
+  NetworkSummaryData,
+  HistoricalData,
+} from "../types/node";
+import type {
+  NodeStats,
+  PeerOfPeer,
+  CentralityData,
+  OptimizationResult,
+  NodeInfo,
+} from "../types/mcpService";
 
-import { PrismaClient } from "@prisma/client";
-
-import { prisma } from "./db";
-
-interface Node {
-  pubkey: string;
-  alias: string;
-  platform: string;
-  version: string;
-  total_capacity: number;
-  active_channels: number;
-  total_peers: number;
-  uptime: number;
+// Types d'erreurs personnalisés
+export class McpError extends Error {
+  constructor(
+    message: string,
+    public code: string,
+    public status: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = "McpError";
+  }
 }
 
-interface PeerOfPeer {
-  peerPubkey: string;
-  alias: string;
-  total_capacity: number;
-  active_channels: number;
-  total_peers: number;
+export class NodeNotFoundError extends McpError {
+  constructor(pubkey: string) {
+    super(`Node with pubkey ${pubkey} not found`, "NODE_NOT_FOUND", 404);
+  }
 }
 
-interface NodeStats {
-  pubkey: string;
-  alias: string;
-  color: string;
-  platform: string;
-  version: string;
-  address: string;
-  total_fees: number;
-  avg_fee_rate_ppm: number;
-  total_capacity: number;
-  active_channels: number;
-  total_volume: number;
-  total_peers: number;
-  uptime: number;
-  opened_channel_count: number;
-  closed_channel_count: number;
-  pending_channel_count: number;
-  avg_capacity: number;
-  avg_fee_rate: number;
-  avg_base_fee_rate: number;
-  betweenness_rank: number;
-  eigenvector_rank: number;
-  closeness_rank: number;
-  weighted_betweenness_rank: number;
-  weighted_closeness_rank: number;
-  weighted_eigenvector_rank: number;
-  last_update: string;
+export class DatabaseError extends McpError {
+  constructor(message: string, details?: any) {
+    super(message, "DATABASE_ERROR", 500, details);
+  }
 }
 
-interface HistoricalData {
-  timestamp: string;
-  total_fees: number;
-  total_capacity: number;
-  active_channels: number;
-  total_peers: number;
-  total_volume: number;
+export class OptimizationError extends McpError {
+  constructor(message: string, details?: any) {
+    super(message, "OPTIMIZATION_ERROR", 400, details);
+  }
 }
 
-interface CentralityData {
-  betweenness: number;
-  closeness: number;
-  eigenvector: number;
-}
+export class McpService {
+  private static instance: McpService;
+  private baseUrl: string;
 
-interface NetworkSummaryData {
-  totalNodes: number;
-  totalChannels: number;
-  totalCapacity: number;
-  avgCapacityPerChannel: number;
-  avgChannelsPerNode: number;
-  timestamp: string;
-}
+  private constructor() {
+    this.baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
+  }
 
-interface OptimizationResult {
-  status: string;
-  message?: string;
-  // ... autres détails
-}
+  public static getInstance(): McpService {
+    if (!McpService.instance) {
+      McpService.instance = new McpService();
+    }
+    return McpService.instance;
+  }
 
-interface NodeInfo {
-  // ... structure des informations du noeud (peut-être similaire à Node ou NodeStats ?)
-  pubkey: string;
-  alias: string;
-  // ...
-}
-
-// Constante pour l'alias du nœud de secours
-const FALLBACK_NODE_ALIAS = "feustey";
-
-const mcpService = {
   async getAllNodes(): Promise<Node[]> {
     try {
-      // Utilisation de Prisma pour récupérer les nœuds
-      const nodes = await prisma.node.findMany({
-        select: {
-          pubkey: true,
-          alias: true,
-          platform: true,
-          version: true,
-          total_capacity: true,
-          active_channels: true,
-          total_peers: true,
-          uptime: true,
-        },
-        orderBy: {
-          total_capacity: "desc",
-        },
-      });
-
-      return nodes;
+      const response = await fetch(
+        `${this.baseUrl}/api/mcp?action=getAllNodes`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch nodes");
+      }
+      const data = await response.json();
+      return data.nodes;
     } catch (error) {
       console.error("Erreur lors de la récupération des nœuds:", error);
       throw error;
     }
-  },
+  }
 
-  async getPeersOfPeers(
-    nodePubkey: string
-  ): Promise<{ peers_of_peers: PeerOfPeer[] }> {
+  async getPeersOfPeers(pubkey: string): Promise<PeerOfPeer[]> {
     try {
-      const peers = await prisma.peerOfPeer.findMany({
-        where: {
-          nodePubkey: nodePubkey,
-        },
-        select: {
-          peerPubkey: true,
-          alias: true,
-          total_capacity: true,
-          active_channels: true,
-          total_peers: true,
-        },
-        orderBy: {
-          total_capacity: "desc",
-        },
-        cacheStrategy: { swr: 60, ttl: 300 },
-      });
-      return { peers_of_peers: peers };
+      const response = await fetch(
+        `${this.baseUrl}/api/mcp?action=getPeersOfPeers&pubkey=${pubkey}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch peers");
+      }
+      const data = await response.json();
+      return data.peers;
     } catch (error) {
       console.error("Erreur lors de la récupération des pairs:", error);
       throw error;
     }
-  },
+  }
 
-  async getCurrentStats(): Promise<NodeStats> {
+  async getCurrentStats(): Promise<NetworkStats> {
     try {
-      const stats = await prisma.node.findFirst({
-        orderBy: {
-          timestamp: "desc",
-        },
-        select: {
-          pubkey: true,
-          alias: true,
-          color: true,
-          platform: true,
-          version: true,
-          address: true,
-          total_fees: true,
-          avg_fee_rate_ppm: true,
-          total_capacity: true,
-          active_channels: true,
-          total_volume: true,
-          total_peers: true,
-          uptime: true,
-          opened_channel_count: true,
-          closed_channel_count: true,
-          pending_channel_count: true,
-          avg_capacity: true,
-          avg_fee_rate: true,
-          avg_base_fee_rate: true,
-          betweenness_rank: true,
-          eigenvector_rank: true,
-          closeness_rank: true,
-          weighted_betweenness_rank: true,
-          weighted_closeness_rank: true,
-          weighted_eigenvector_rank: true,
-          timestamp: true,
-        },
-      });
-
-      if (!stats) {
-        throw new Error("Aucune statistique trouvée");
+      const response = await fetch(
+        `${this.baseUrl}/api/mcp?action=getCurrentStats`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch stats");
       }
-
-      return {
-        ...stats,
-        last_update: stats.timestamp.toISOString(),
-      };
+      const data = await response.json();
+      return data.stats;
     } catch (error) {
       console.error("Erreur lors de la récupération des statistiques:", error);
       throw error;
     }
-  },
+  }
 
-  async getHistoricalData(): Promise<HistoricalData[]> {
+  async getHistoricalData(): Promise<HistoricalData> {
     try {
-      const history = await prisma.history.findMany({
-        orderBy: {
-          date: "asc",
-        },
-        select: {
-          date: true,
-          marketCap: true,
-          volume: true,
-        },
-      });
-
-      return history.map((item) => ({
-        timestamp: item.date.toISOString(),
-        total_fees: 0,
-        total_capacity: item.marketCap,
-        active_channels: 0,
-        total_peers: 0,
-        total_volume: item.volume,
-      }));
+      const response = await fetch(
+        `${this.baseUrl}/api/mcp?action=getHistoricalData`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch historical data");
+      }
+      const data = await response.json();
+      return data.data;
     } catch (error) {
       console.error(
         "Erreur lors de la récupération des données historiques:",
@@ -224,59 +127,34 @@ const mcpService = {
       );
       throw error;
     }
-  },
+  }
 
-  async getCentralities(): Promise<CentralityData> {
+  async getCentralities(): Promise<Centralities> {
     try {
-      const data = await prisma.centralityData.findFirst({
-        orderBy: {
-          timestamp: "desc",
-        },
-        select: {
-          value: true,
-        },
-        cacheStrategy: { swr: 300, ttl: 900 }, // Cache de 15 minutes avec revalidation de 5 minutes
-      });
-      if (!data) {
-        throw new Error("Aucune donnée de centralité trouvée");
+      const response = await fetch(
+        `${this.baseUrl}/api/mcp?action=getCentralities`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch centralities");
       }
-      return {
-        betweenness: data.value,
-        closeness: data.value,
-        eigenvector: data.value,
-      };
+      const data = await response.json();
+      return data.centralities;
     } catch (error) {
-      console.error("Erreur lors de la récupération des centralités:", error);
+      console.error("Error fetching centralities:", error);
       throw error;
     }
-  },
+  }
 
   async getNetworkSummary(): Promise<NetworkSummaryData> {
     try {
-      const summary = await prisma.networkSummary.findFirst({
-        orderBy: {
-          timestamp: "desc",
-        },
-        select: {
-          totalNodes: true,
-          totalChannels: true,
-          totalCapacity: true,
-          avgChannelSize: true,
-          timestamp: true,
-        },
-        cacheStrategy: { swr: 60, ttl: 300 }, // Cache de 5 minutes avec revalidation de 1 minute
-      });
-      if (!summary) {
-        throw new Error("Aucun résumé du réseau trouvé");
+      const response = await fetch(
+        `${this.baseUrl}/api/mcp?action=getNetworkSummary`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch network summary");
       }
-      return {
-        totalNodes: summary.totalNodes,
-        totalChannels: summary.totalChannels,
-        totalCapacity: summary.totalCapacity,
-        avgCapacityPerChannel: summary.avgChannelSize,
-        avgChannelsPerNode: summary.totalChannels / summary.totalNodes,
-        timestamp: summary.timestamp.toISOString(),
-      };
+      const data = await response.json();
+      return data.summary;
     } catch (error) {
       console.error(
         "Erreur lors de la récupération du résumé du réseau:",
@@ -284,40 +162,38 @@ const mcpService = {
       );
       throw error;
     }
-  },
+  }
 
   async optimizeNode(nodePubkey: string): Promise<OptimizationResult> {
     try {
-      // Logique d'optimisation à implémenter
-      return {
-        status: "success",
-        message: "Optimisation réussie",
-      };
-    } catch (error) {
-      console.error("Erreur lors de l'optimisation du nœud:", error);
-      throw error;
+      const response = await fetch(
+        `${this.baseUrl}/api/mcp?action=optimizeNode&pubkey=${nodePubkey}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to optimize node");
+      }
+      const data = await response.json();
+      return data.result;
+    } catch (error: unknown) {
+      if (error instanceof McpError) {
+        throw error;
+      }
+      throw new OptimizationError("Erreur lors de l'optimisation du nœud", {
+        originalError: error instanceof Error ? error.message : String(error),
+      });
     }
-  },
+  }
 
   async getNodeInfo(nodePubkey: string): Promise<NodeInfo> {
     try {
-      const node = await prisma.node.findUnique({
-        where: {
-          pubkey: nodePubkey,
-        },
-        select: {
-          pubkey: true,
-          alias: true,
-        },
-        cacheStrategy: { swr: 60, ttl: 300 }, // Cache de 5 minutes avec revalidation de 1 minute
-      });
-      if (!node) {
-        throw new Error("Nœud non trouvé");
+      const response = await fetch(
+        `${this.baseUrl}/api/mcp?action=getNodeInfo&pubkey=${nodePubkey}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch node info");
       }
-      return {
-        pubkey: node.pubkey,
-        alias: node.alias,
-      };
+      const data = await response.json();
+      return data.info;
     } catch (error) {
       console.error(
         "Erreur lors de la récupération des informations du nœud:",
@@ -325,20 +201,71 @@ const mcpService = {
       );
       throw error;
     }
-  },
+  }
 
   async analyzeQuestion(
     question: string,
     nodePubkey: string
-  ): Promise<string[]> {
+  ): Promise<{
+    answers: string[];
+    confidence: number;
+    relatedTopics: string[];
+  }> {
     try {
-      // Logique d'analyse à implémenter
-      return ["Réponse 1", "Réponse 2"];
+      const response = await fetch(
+        `${this.baseUrl}/api/mcp?action=analyzeQuestion&question=${encodeURIComponent(question)}&pubkey=${nodePubkey}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to analyze question");
+      }
+      const data = await response.json();
+      return data.analysis;
+    } catch (error: unknown) {
+      if (error instanceof McpError) {
+        throw error;
+      }
+      throw new McpError(
+        "Erreur lors de l'analyse de la question",
+        "ANALYSIS_ERROR",
+        500,
+        {
+          originalError: error instanceof Error ? error.message : String(error),
+        }
+      );
+    }
+  }
+
+  async getNodeCentrality(pubkey: string): Promise<NodeCentrality> {
+    try {
+      const response = await fetch(
+        `${this.baseUrl}/api/mcp?action=getNodeCentrality&pubkey=${pubkey}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch node centrality");
+      }
+      const data = await response.json();
+      return data.centrality;
     } catch (error) {
-      console.error("Erreur lors de l'analyse de la question:", error);
+      console.error("Error fetching node centrality:", error);
       throw error;
     }
-  },
-};
+  }
 
-export default mcpService;
+  async getNodeStats(pubkey: string): Promise<NodeStats> {
+    try {
+      const response = await fetch(
+        `${this.baseUrl}/api/mcp?action=getNodeStats&pubkey=${pubkey}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch node stats");
+      }
+      const data = await response.json();
+      return data.stats;
+    } catch (error) {
+      console.error("Error fetching node stats:", error);
+      throw error;
+    }
+  }
+}
+
+export default McpService.getInstance();

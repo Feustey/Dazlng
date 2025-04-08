@@ -6,6 +6,24 @@ export interface Node {
   last_update: number;
 }
 
+export interface NetworkSummaryData {
+  totalNodes: number;
+  totalChannels: number;
+  totalCapacity: number;
+  avgCapacityPerChannel: number;
+  avgChannelsPerNode: number;
+  timestamp: string;
+}
+
+export interface NetworkStats {
+  total_nodes: number;
+  total_channels: number;
+  total_capacity: number;
+  avg_capacity_per_channel: number;
+  avg_channels_per_node: number;
+  timestamp: string;
+}
+
 export interface NetworkSummary {
   total_nodes: number;
   active_nodes: number;
@@ -26,15 +44,6 @@ export interface NetworkSummary {
     capacity: number;
     channels: number;
   }[];
-  timestamp: string;
-}
-
-export interface NetworkStats {
-  total_nodes: number;
-  total_channels: number;
-  total_capacity: number;
-  avg_capacity_per_channel: number;
-  avg_channels_per_node: number;
   timestamp: string;
 }
 

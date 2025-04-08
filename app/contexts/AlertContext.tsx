@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useCallback } from "react";
-import Alert from "@/app/components/Alert";
+import Alert from "../components/Alert";
 
 interface AlertContextType {
   showAlert: (

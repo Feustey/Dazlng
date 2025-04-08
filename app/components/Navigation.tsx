@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { Menu, X } from "lucide-react";
 import { SimpleLogo } from "./SimpleLogo";
-import { useAuth } from "@/app/hooks/useAuth";
+import { useAuth } from "../hooks/useAuth";
 import UserMenu from "./UserMenu";
 
 export default function Navigation() {
@@ -29,6 +29,18 @@ export default function Navigation() {
         {/* Navigation Desktop */}
         <nav className="hidden md:flex items-center space-x-8">
           <Link
+            href={`/${locale}/daznode`}
+            className="text-foreground hover:text-primary transition-colors"
+          >
+            Daznode
+          </Link>
+          <Link
+            href={`/${locale}/network`}
+            className="text-foreground hover:text-primary transition-colors"
+          >
+            Network
+          </Link>
+          <Link
             href={`/${locale}/channels`}
             className="text-foreground hover:text-primary transition-colors"
           >
@@ -41,16 +53,10 @@ export default function Navigation() {
             Daz-IA
           </Link>
           <Link
-            href={`/${locale}/daznode`}
+            href={`/${locale}/learn`}
             className="text-foreground hover:text-primary transition-colors"
           >
-            Daznode
-          </Link>
-          <Link
-            href={`/${locale}/network`}
-            className="text-foreground hover:text-primary transition-colors"
-          >
-            Network
+            {t("learn")}
           </Link>
           {isAuthenticated ? (
             <UserMenu />
@@ -82,6 +88,20 @@ export default function Navigation() {
         <div className="md:hidden absolute top-16 left-0 right-0 bg-background border-b border-border">
           <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
             <Link
+              href={`/${locale}/daznode`}
+              className="text-foreground hover:text-primary transition-colors py-2"
+              onClick={toggleMenu}
+            >
+              Daznode
+            </Link>
+            <Link
+              href={`/${locale}/network`}
+              className="text-foreground hover:text-primary transition-colors py-2"
+              onClick={toggleMenu}
+            >
+              Network
+            </Link>
+            <Link
               href={`/${locale}/channels`}
               className="text-foreground hover:text-primary transition-colors py-2"
               onClick={toggleMenu}
@@ -96,18 +116,11 @@ export default function Navigation() {
               Daz-IA
             </Link>
             <Link
-              href={`/${locale}/daznode`}
+              href={`/${locale}/learn`}
               className="text-foreground hover:text-primary transition-colors py-2"
               onClick={toggleMenu}
             >
-              Daznode
-            </Link>
-            <Link
-              href={`/${locale}/network`}
-              className="text-foreground hover:text-primary transition-colors py-2"
-              onClick={toggleMenu}
-            >
-              Network
+              {t("learn")}
             </Link>
             {isAuthenticated ? (
               <div className="py-2">

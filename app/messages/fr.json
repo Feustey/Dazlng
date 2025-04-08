@@ -1,70 +1,675 @@
 {
-  "navigation": {
-    "home": "Accueil",
-    "dashboard": "Tableau de bord",
+  "Header": {
+    "title": "DazLng",
+    "searchPlaceholder": "Rechercher...",
     "settings": "Paramètres",
+    "language": "Langue",
+    "theme": "Thème",
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Système",
+    "help": "Aide",
+    "messages": "Messages",
+    "dashboard": "Tableau de bord",
+    "channels": "Canaux",
+    "learn": "Étudie",
+    "review": "Avis",
+    "currency": "Devise",
+    "btc": "BTC",
+    "sats": "SATS",
+    "hydro": "Hydro",
+    "magma": "Magma",
+    "stats": "Stats",
+    "pricing": "Tarifs",
+    "shop": "Boutique",
+    "credits": "Crédits",
+    "login": "Connexion",
+    "profile": "Mon profil",
     "logout": "Déconnexion"
   },
-  "auth": {
-    "login": "Connexion",
-    "register": "Inscription",
-    "email": "Email",
-    "password": "Mot de passe",
-    "confirmPassword": "Confirmer le mot de passe",
-    "forgotPassword": "Mot de passe oublié ?",
-    "verificationCode": "Code de vérification",
-    "sendCode": "Envoyer le code",
-    "verify": "Vérifier",
-    "resendCode": "Renvoyer le code"
+  "Settings": {
+    "title": "Paramètres",
+    "language": {
+      "label": "Langue",
+      "options": {
+        "fr": "Français",
+        "en": "English"
+      }
+    },
+    "theme": {
+      "label": "Thème",
+      "options": {
+        "light": "Clair",
+        "dark": "Sombre",
+        "system": "Système"
+      }
+    },
+    "save": "Enregistrer les modifications",
+    "success": "Paramètres enregistrés avec succès",
+    "error": "Erreur lors de l'enregistrement des paramètres",
+    "logout": "Déconnexion"
   },
-  "dashboard": {
+  "Dashboard": {
+    "title": "Tableau de bord",
     "welcome": "Bienvenue sur votre tableau de bord",
-    "nodes": "Vos nœuds",
-    "addNode": "Ajouter un nœud",
-    "noNodes": "Vous n'avez pas encore de nœuds",
-    "nodeDetails": "Détails du nœud",
-    "capacity": "Capacité",
-    "channels": "Canaux",
-    "age": "Âge",
-    "rank": "Rang"
+    "overview": "Vue d'ensemble",
+    "stats": "Statistiques",
+    "recentActivity": "Activité récente",
+    "noData": "Aucune donnée disponible"
   },
-  "network": {
-    "title": "Réseau",
-    "welcome": "Bienvenue dans votre réseau",
-    "stats": {
-      "title": "Statistiques du réseau",
-      "totalNodes": "Nombre total de nœuds",
-      "activeChannels": "Canaux actifs",
-      "totalCapacity": "Capacité totale",
-      "averageAge": "Âge moyen des nœuds"
+  "HomePage": {
+    "welcome": "Bienvenue sur DazLng",
+    "description": "Gérez vos nœuds Lightning Network."
+  },
+  "Home": {
+    "welcome": "Bienvenue sur DazLng",
+    "description": "Gérez vos nœuds Lightning Network.",
+    "hero": {
+      "title": "Gérez vos nœuds Lightning Network en toute simplicité",
+      "subtitle": "Optimisez vos performances et votre rentabilité avec Daznode",
+      "cta": "Obtenez votre Dazbox !"
     },
-    "actions": {
-      "addNode": "Ajouter un nœud",
-      "viewDetails": "Voir les détails",
-      "manageChannels": "Gérer les canaux"
+    "features": {
+      "title": "Fonctionnalités principales",
+      "learning": {
+        "title": "Guide d'apprentissage",
+        "description": "Apprenez à gérer efficacement votre nœud avec nos guides détaillés"
+      },
+      "transactions": {
+        "title": "Visualisation des transactions",
+        "description": "Suivez vos transactions en temps réel avec des graphiques intuitifs"
+      },
+      "operations": {
+        "title": "Opérations Lightning",
+        "description": "Gérez vos canaux et vos paiements en toute simplicité"
+      },
+      "metrics": {
+        "title": "Métriques avancées",
+        "description": "Analysez les performances de votre nœud avec des métriques détaillées"
+      },
+      "nwc": {
+        "title": "Nostr Wallet Connect",
+        "description": "Connectez-vous facilement avec votre portefeuille Nostr"
+      }
     },
-    "filters": {
-      "title": "Filtres",
-      "capacity": "Capacité",
-      "age": "Âge",
-      "status": "Statut"
+    "searchPlaceholder": "Rechercher un nœud...",
+    "searchButton": "Rechercher",
+    "totalNodes": "Nœuds Totaux",
+    "channelsPerNode": "{count} canaux par nœud",
+    "totalChannels": "Canaux Totaux",
+    "capacityPerChannel": "{amount} par canal",
+    "totalCapacity": "Capacité Totale",
+    "lastUpdate": "Dernière mise à jour: {date}",
+    "daznodePromo": {
+      "title": "🚀 Offre de Lancement Daznode !",
+      "description": "Obtenez votre nœud Lightning pré-configuré pour seulement 400 000 sats au lieu de 500 000 sats.",
+      "limitedOffer": "Offre limitée aux 10 premières commandes",
+      "button": "Profiter de l'offre"
+    },
+    "benefits": {
+      "title": "Pourquoi choisir DazLng ?",
+      "items": {
+        "simplicity": "Interface simple et intuitive",
+        "security": "Sécurité renforcée",
+        "performance": "Performance optimisée",
+        "support": "Support réactif",
+        "community": "Communauté active"
+      }
+    },
+    "cta": {
+      "title": "Prêt à commencer ?",
+      "description": "Rejoignez DazLng et optimisez votre présence sur le réseau Lightning",
+      "button": "Créer un compte"
     }
   },
-  "errors": {
-    "invalidEmail": "Email invalide",
-    "invalidPassword": "Mot de passe invalide",
-    "passwordsDontMatch": "Les mots de passe ne correspondent pas",
-    "invalidCode": "Code invalide",
-    "codeExpired": "Le code a expiré",
-    "serverError": "Erreur serveur",
-    "networkError": "Erreur réseau"
+  "NotFound": {
+    "title": "Page non trouvée",
+    "description": "Désolé, la page que vous recherchez n'existe pas.",
+    "back": "Retour à l'accueil"
+  },
+  "Login": {
+    "title": "Inscription ou Connexion",
+    "emailLabel": "Email",
+    "emailDescription": "Nous vous enverrons un code à usage unique.",
+    "emailPlaceholder": "Votre email",
+    "getCode": "Obtenir le code",
+    "sending": "Envoi en cours...",
+    "orContinueWith": "Ou continuer avec",
+    "loginWithGoogle": "Connexion avec Google",
+    "loginWithNode": "Connexion avec Node"
+  },
+  "Verify": {
+    "title": "Entrez votre code",
+    "description": "Vérifiez votre email pour obtenir le code.",
+    "codeLabel": "Code à usage unique :",
+    "noCode": "Vous n'avez pas reçu de code ?",
+    "resend": "Renvoyer",
+    "verifying": "Vérification en cours..."
+  },
+  "channels": {
+    "title": "Canaux",
+    "createChannel": "Créer un canal",
+    "searchChannels": "Rechercher des canaux...",
+    "noChannels": "Aucun canal trouvé. Créez un nouveau canal pour commencer."
+  },
+  "Review": {
+    "title": "Aperçu du Réseau",
+    "nodes": {
+      "title": "Nœuds",
+      "total": "Total",
+      "active": "Actifs"
+    },
+    "channels": {
+      "title": "Canaux",
+      "total": "Total",
+      "active": "Actifs"
+    },
+    "capacity": {
+      "title": "Capacité",
+      "total": "Totale",
+      "averageChannel": "Moyenne par canal",
+      "averageNode": "Moyenne par nœud"
+    },
+    "health": {
+      "title": "Santé du Réseau",
+      "score": "Score",
+      "lastUpdated": "Dernière mise à jour"
+    },
+    "error": {
+      "title": "Erreur",
+      "description": "Une erreur est survenue lors du chargement des données"
+    },
+    "noData": {
+      "title": "Aucune donnée",
+      "description": "Aucune donnée n'est disponible pour le moment"
+    }
+  },
+  "Network": {
+    "title": "Réseau Lightning",
+    "totalNodes": "Nombre total de nœuds",
+    "totalChannels": "Nombre total de canaux",
+    "totalCapacity": "Capacité totale",
+    "avgChannelsPerNode": "Canaux par nœud",
+    "capacityHistory": "Évolution de la capacité",
+    "nodesByCountry": "Distribution par pays",
+    "topNodes": "Top des nœuds",
+    "channels": "canaux",
+    "recentChannels": "Canaux récents",
+    "channelId": "ID du canal",
+    "capacity": "Capacité",
+    "status": "Statut",
+    "lastUpdate": "Dernière mise à jour",
+    "error": {
+      "title": "Erreur",
+      "fetchFailed": "Impossible de récupérer les données du réseau"
+    }
   },
   "footer": {
+    "description": "DazLng est votre plateforme de gestion de nœuds Lightning Network. Optimisez vos performances et maximisez vos revenus.",
     "links": {
       "help": "Aide",
       "about": "À propos",
       "contact": "Contact",
       "getNode": "Obtenir un nœud"
+    },
+    "rights": "Tous droits réservés."
+  },
+  "daz-ia": {
+    "title": "Daz-IA",
+    "description": "Découvrez la puissance de l'intelligence artificielle avec Daz-IA",
+    "tabs": {
+      "plans": "Plans",
+      "recommendations": "Recommandations"
+    },
+    "one-shot": {
+      "title": "One-Shot",
+      "price": "10 000 sats",
+      "features": [
+        "Accès à Daz-IA pendant 24h",
+        "Recommandations personnalisées",
+        "Support prioritaire",
+        "Accès à toutes les fonctionnalités"
+      ],
+      "cta": "Choisir One-Shot"
+    },
+    "yearly": {
+      "title": "Annuel",
+      "price": "100 000 sats",
+      "highlight": "Meilleure offre",
+      "features": [
+        "Accès à Daz-IA pendant 1 an",
+        "Recommandations personnalisées",
+        "Support prioritaire 24/7",
+        "Accès à toutes les fonctionnalités",
+        "Mises à jour gratuites"
+      ],
+      "cta": "Choisir Annuel"
+    },
+    "processing": "Traitement en cours...",
+    "success": "Paiement réussi !",
+    "error": "Une erreur est survenue"
+  },
+  "recommendations": {
+    "title": "Recommandations",
+    "subtitle": "Découvrez nos recommandations personnalisées",
+    "intro": "Basées sur votre profil et vos préférences, voici les meilleures suggestions pour vous :",
+    "cards": {
+      "title": "Recommandation {index}",
+      "description": "Description de la recommandation {index}",
+      "details": "Détails de la recommandation {index}",
+      "impact": "Impact estimé : {impact}%"
+    },
+    "upgrade": {
+      "title": "Passez à la version premium",
+      "description": "Débloquez toutes les recommandations et fonctionnalités avancées"
+    }
+  },
+  "Help": {
+    "title": "Centre d'aide",
+    "searchPlaceholder": "Rechercher dans l'aide...",
+    "categories": {
+      "getting_started": "Premiers pas",
+      "learning": "Apprentissage",
+      "transactions": "Transactions",
+      "operations": "Opérations",
+      "metrics": "Métriques",
+      "nwc": "Nostr Wallet Connect"
+    },
+    "faq": {
+      "what_is_lightning": "Qu'est-ce que Lightning Network ?",
+      "how_to_start": "Comment commencer avec DazLng ?",
+      "how_to_connect": "Comment connecter mon portefeuille ?",
+      "how_to_transact": "Comment effectuer des transactions ?"
+    }
+  },
+  "About": {
+    "title": "À propos de DazLng",
+    "description": "DazLng est une plateforme innovante de gestion de nœuds Lightning Network, conçue pour simplifier et optimiser votre expérience sur le réseau.",
+    "features": {
+      "title": "Fonctionnalités",
+      "learning": "Guide d'apprentissage",
+      "transactions": "Suivi des transactions",
+      "operations": "Opérations Lightning",
+      "metrics": "Métriques avancées",
+      "nwc": "Nostr Wallet Connect"
+    },
+    "security": {
+      "title": "Sécurité",
+      "protection": "Protection avancée",
+      "protectionDesc": "Sécurité renforcée pour protéger vos fonds et vos données",
+      "sessions": "Gestion des sessions",
+      "sessionsDesc": "Contrôle total sur vos sessions actives",
+      "validation": "Validation multi-niveaux",
+      "validationDesc": "Processus de validation rigoureux pour toutes les transactions",
+      "headers": "En-têtes sécurisés",
+      "headersDesc": "Protection contre les attaques web courantes"
+    },
+    "team": {
+      "title": "Notre équipe",
+      "description": "Une équipe passionnée de développeurs et d'experts Lightning Network dédiés à votre succès."
+    },
+    "contact": {
+      "title": "Contactez-nous",
+      "email": "Email",
+      "twitter": "Twitter",
+      "github": "GitHub"
+    },
+    "sections": [
+      {
+        "title": "Notre Mission",
+        "content": "DazLng est né de la volonté de simplifier la gestion des nœuds Lightning Network. Notre mission est de rendre le réseau Lightning plus accessible et plus efficace pour tous."
+      },
+      {
+        "title": "Notre Technologie",
+        "content": "Nous utilisons des algorithmes avancés et l'intelligence artificielle pour optimiser la gestion de vos canaux Lightning et maximiser vos revenus."
+      },
+      {
+        "title": "Notre Vision",
+        "content": "Nous aspirons à devenir la plateforme de référence pour la gestion des nœuds Lightning Network, en offrant des outils innovants et une expérience utilisateur exceptionnelle."
+      },
+      {
+        "title": "Notre Équipe",
+        "content": "Notre équipe est composée d'experts passionnés par Bitcoin et le réseau Lightning, déterminés à construire l'avenir des paiements décentralisés."
+      }
+    ],
+    "cta": {
+      "title": "Optimisez votre nœud Lightning",
+      "subtitle": "Découvrez la puissance de DazIA pour votre nœud",
+      "oneShot": "Analyse Ponctuelle",
+      "yearly": "Abonnement Annuel",
+      "bestValue": "Meilleure offre",
+      "features": [
+        "Analyse complète de votre nœud",
+        "Recommandations personnalisées",
+        "Optimisation des canaux",
+        "Support prioritaire"
+      ],
+      "unlimitedAccess": "Accès illimité à toutes les fonctionnalités",
+      "button": "Commencer maintenant"
+    }
+  },
+  "Daznode": {
+    "title": "Daznode - Votre Nœud Lightning Pré-configuré",
+    "description": "Un nœud Lightning Network prêt à l'emploi pour gérer vos canaux et vos transactions.",
+    "orderTitle": "Commandez votre Daznode",
+    "orderDescription": "Obtenez votre nœud Lightning pré-configuré et commencez à participer au réseau dès aujourd'hui",
+    "price": "400,000 sats",
+    "priceDescription": "Paiement unique incluant le matériel, la configuration et 2 semaines de support dédié",
+    "orderButton": "Commander maintenant",
+    "features": {
+      "preconfigured": "Pré-configuré et prêt à l'emploi",
+      "preconfiguredDesc": "Votre nœud est déjà configuré avec les meilleures pratiques de sécurité et de performance",
+      "balance": "Équilibre optimal",
+      "balanceDesc": "Configuration optimisée pour maximiser vos revenus de routing",
+      "support": "Support technique dédié",
+      "supportDesc": "Accès à notre équipe de support pour toute question technique",
+      "delivery": "Livraison rapide",
+      "deliveryDesc": "Livraison sous 3-5 jours ouvrés dans le monde entier",
+      "subscription": "Abonnement flexible",
+      "subscriptionDesc": "Choisissez entre un paiement unique ou un abonnement mensuel"
+    },
+    "specs": {
+      "hardware": "Matériel robuste",
+      "hardwareDesc": "Raspberry Pi 4 avec 8GB RAM et stockage SSD",
+      "software": "Logiciel à jour",
+      "softwareDesc": "Core Lightning, Bitcoin Core et outils de monitoring",
+      "security": "Sécurité renforcée",
+      "securityDesc": "Protection contre les attaques et sauvegardes automatiques"
+    },
+    "pricing": {
+      "title": "Tarification",
+      "oneTime": "Paiement unique",
+      "monthly": "Abonnement mensuel",
+      "price": "400,000 sats",
+      "monthlyPrice": "50,000 sats/mois",
+      "cta": "Commander maintenant"
+    },
+    "shipping": {
+      "title": "Informations de livraison",
+      "name": "Nom complet",
+      "address": "Adresse",
+      "city": "Ville",
+      "zipCode": "Code postal",
+      "country": "Pays",
+      "phone": "Téléphone",
+      "email": "Email",
+      "submit": "Confirmer la commande"
+    },
+    "payment": {
+      "title": "Paiement",
+      "description": "Scannez le QR code avec votre portefeuille pour effectuer le paiement",
+      "processing": "Traitement en cours...",
+      "success": "Paiement réussi !",
+      "error": "Erreur lors du paiement"
+    }
+  },
+  "help": {
+    "title": "Centre d'Aide",
+    "contact": {
+      "title": "Besoin d'aide ?",
+      "description": "Notre équipe est disponible 7j/7 pour vous accompagner dans votre aventure Lightning Network.",
+      "email": "support@dazlng.com",
+      "phone": "+33 1 23 45 67 89",
+      "chat": "Chat Telegram",
+      "button": "Contacter le Support"
+    },
+    "sections": {
+      "gettingStarted": {
+        "title": "Premiers pas",
+        "description": "Tout ce dont vous avez besoin pour bien démarrer avec DazLng",
+        "items": {
+          "setup": {
+            "title": "Configuration initiale",
+            "description": "Guide étape par étape pour configurer votre compte et connecter votre nœud"
+          },
+          "basics": {
+            "title": "Les bases",
+            "description": "Comprendre les fonctionnalités essentielles de DazLng"
+          },
+          "security": {
+            "title": "Sécurité",
+            "description": "Meilleures pratiques pour sécuriser votre nœud et vos transactions"
+          }
+        }
+      },
+      "daznode": {
+        "title": "Service Daznode",
+        "description": "Tout sur notre solution de nœud Lightning pré-configuré",
+        "delivery": {
+          "question": "Comment se déroule la livraison du Daznode ?",
+          "answer": "La livraison de votre Daznode est effectuée sous 10 jours ouvrés après confirmation de votre paiement. Nous vous envoyons un email de suivi avec le numéro de tracking. Le colis est assuré et nécessite une signature à la réception."
+        },
+        "package": {
+          "question": "Que contient le package Daznode ?",
+          "answer": "Votre package Daznode comprend : un Raspberry Pi 5 (8GB RAM), un SSD 1To, une solution de refroidissement personnalisée, un boîtier sécurisé, un guide d'installation rapide, et tous les câbles nécessaires. Le nœud est pré-configuré avec le logiciel LND et 50 000 sats pré-chargés."
+        },
+        "installation": {
+          "question": "Comment installer mon Daznode ?",
+          "answer": "L'installation est simple grâce à notre configuration plug-and-play : 1) Connectez votre Daznode à Internet via Ethernet, 2) Branchez l'alimentation, 3) Accédez à l'interface web via l'adresse fournie, 4) Suivez l'assistant de configuration initial. Notre équipe est disponible pour vous guider par visioconférence si nécessaire."
+        }
+      },
+      "dazia": {
+        "title": "DazIA",
+        "description": "Comprendre et utiliser notre assistant IA",
+        "features": {
+          "question": "Quelles sont les fonctionnalités de DazIA ?",
+          "answer": "DazIA offre une analyse complète de votre nœud, des recommandations personnalisées pour l'optimisation des canaux, des alertes en temps réel, et des rapports détaillés sur les performances de votre nœud."
+        },
+        "plans": {
+          "question": "Quels sont les différents plans disponibles ?",
+          "answer": "Nous proposons deux plans : le plan One-Shot pour une analyse ponctuelle (10,000 sats) et l'abonnement Premium annuel (100,000 sats) pour un accès illimité à toutes les fonctionnalités."
+        },
+        "usage": {
+          "question": "Comment utiliser DazIA efficacement ?",
+          "answer": "Pour tirer le meilleur parti de DazIA, commencez par connecter votre nœud et laissez l'IA analyser vos données. Suivez ensuite les recommandations personnalisées et consultez régulièrement vos rapports de performance."
+        }
+      },
+      "support": {
+        "title": "Support Technique",
+        "description": "Assistance et dépannage",
+        "included": {
+          "question": "Quel support est inclus avec mon Daznode ?",
+          "answer": "Vous bénéficiez de 2 semaines de support dédié après la réception de votre nœud. Cela inclut : assistance à l'installation, configuration des canaux, optimisation des paramètres, et résolution des problèmes techniques. Le support est disponible par email, chat ou visioconférence."
+        },
+        "channels": {
+          "question": "Comment gérer mes canaux Lightning ?",
+          "answer": "Notre interface intuitive vous permet de gérer vos canaux facilement. Nous vous guidons dans la création de vos premiers canaux et vous conseillons sur les meilleures stratégies de connexion au réseau. L'abonnement DazIA Premium inclus vous fournit des recommandations d'optimisation."
+        },
+        "security": {
+          "question": "Comment sécuriser mon nœud ?",
+          "answer": "Votre Daznode est livré avec une configuration Linux renforcée et un stockage chiffré. Nous vous accompagnons dans la mise en place des sauvegardes et la sécurisation de vos clés. Un guide complet de sécurité est fourni."
+        }
+      },
+      "subscription": {
+        "title": "Abonnement et Services",
+        "description": "Gérer votre abonnement et vos services",
+        "premium": {
+          "question": "Que comprend l'abonnement DazIA Premium inclus ?",
+          "answer": "L'abonnement d'un an à DazIA Premium inclut : analyses personnalisées de votre réseau, recommandations d'optimisation des canaux, alertes en temps réel, rapports hebdomadaires de performance, et accès prioritaire au support technique."
+        },
+        "renewal": {
+          "question": "Comment renouveler mon abonnement ?",
+          "answer": "Un mois avant l'expiration de votre abonnement Premium, vous recevrez un email avec les options de renouvellement. Le renouvellement peut se faire directement depuis votre tableau de bord avec un paiement Lightning."
+        },
+        "upgrade": {
+          "question": "Puis-je upgrader mon nœud ?",
+          "answer": "Oui, nous proposons des options d'upgrade matériel et logiciel. Notre équipe vous conseille sur les meilleures options selon vos besoins et peut effectuer les mises à niveau à distance ou vous guider dans le processus."
+        }
+      },
+      "troubleshooting": {
+        "title": "Dépannage",
+        "description": "Solutions aux problèmes courants",
+        "connection": {
+          "question": "Problèmes de connexion ?",
+          "answer": "Vérifiez votre connexion Internet, redémarrez votre nœud si nécessaire, et assurez-vous que tous les ports requis sont ouverts. Notre guide de dépannage détaillé peut vous aider à résoudre la plupart des problèmes de connexion."
+        },
+        "sync": {
+          "question": "Problèmes de synchronisation ?",
+          "answer": "La synchronisation initiale peut prendre plusieurs heures. Assurez-vous d'avoir suffisamment d'espace disque et une connexion Internet stable. Consultez notre guide de synchronisation pour plus de détails."
+        },
+        "channels": {
+          "question": "Problèmes avec les canaux ?",
+          "answer": "Les problèmes de canaux peuvent être liés à la liquidité, aux pairs déconnectés ou aux paramètres de routage. Notre outil de diagnostic automatique peut vous aider à identifier et résoudre ces problèmes."
+        }
+      }
+    }
+  },
+  "Auth": {
+    "signInWithLightning": "Connexion avec Lightning",
+    "signInDescription": "Connectez-vous facilement et en toute sécurité avec votre nœud Lightning. Signez simplement le message unique ci-dessous avec votre nœud.",
+    "howToSign": "Comment signer les messages ?",
+    "copy": "Copier le message",
+    "copied": "Message copié !",
+    "messageCopied": "Message copié dans le presse-papiers",
+    "pastePubkey": "Collez votre clé publique ici",
+    "pasteSignature": "Collez votre signature ici",
+    "signIn": "Se connecter",
+    "signingIn": "Connexion en cours...",
+    "signInSuccess": "Connexion réussie !",
+    "timeRemaining": "Temps restant",
+    "nodePubkey": "Clé publique de votre nœud Lightning",
+    "nodePubkeyHelp": "Entrez la clé publique de votre nœud Lightning (commence par 03...)",
+    "error": {
+      "invalidSignature": "Signature invalide",
+      "expired": "Message expiré",
+      "unknown": "Une erreur est survenue",
+      "copyFailed": "Impossible de copier le message",
+      "missingFields": "Veuillez remplir tous les champs",
+      "invalidMessage": "Format de message invalide",
+      "invalidPubkey": "Clé publique invalide",
+      "invalidFormat": "Format de signature invalide"
+    }
+  },
+  "Learn": {
+    "title": "Apprentissage",
+    "guide": "Guide",
+    "lightning": "Lightning Network",
+    "visualization": "Visualisation"
+  },
+  "Learning": {
+    "title": "Guide d'apprentissage",
+    "duration": "Durée",
+    "minutes": "minutes",
+    "completed": "Terminé",
+    "markComplete": "Marquer comme terminé",
+    "steps": {
+      "basics": {
+        "title": "Les bases",
+        "content": "Découvrez les concepts fondamentaux du réseau Lightning et comment il fonctionne."
+      },
+      "channels": {
+        "title": "Gestion des canaux",
+        "content": "Apprenez à créer et gérer vos canaux de paiement Lightning."
+      },
+      "transactions": {
+        "title": "Transactions",
+        "content": "Comprenez comment effectuer et suivre vos transactions sur le réseau Lightning."
+      }
+    }
+  },
+  "Transactions": {
+    "title": "Visualisation des transactions",
+    "selectTimeRange": "Sélectionner une période",
+    "last24Hours": "Dernières 24 heures",
+    "last7Days": "7 derniers jours",
+    "last30Days": "30 derniers jours",
+    "totalIncoming": "Total entrant",
+    "totalOutgoing": "Total sortant",
+    "averageAmount": "Montant moyen",
+    "transactionCount": "Nombre de transactions",
+    "transactionHistory": "Historique des transactions",
+    "history": "Historique des transactions",
+    "comparison": "Bitcoin vs Lightning",
+    "insights": "Analyses et tendances",
+    "learnMore": "En savoir plus",
+    "comparisonTitle": "Bitcoin vs Lightning Network",
+    "comparisonDesc": "Comparaison des caractéristiques clés entre les transactions sur la blockchain Bitcoin principale et le Lightning Network.",
+    "performanceMetrics": "Métriques de performance",
+    "bitcoinAdvantages": "Avantages de Bitcoin",
+    "bitcoinSecurity": "Sécurité maximale et consensus global",
+    "lightningAdvantages": "Avantages du Lightning Network",
+    "lightningSpeed": "Transactions instantanées et frais minimes",
+    "usagePieTitle": "Utilisations courantes du Lightning Network",
+    "insightsTitle": "Analyses et tendances",
+    "insightsDesc": "Explorez les tendances et statistiques de vos transactions Lightning Network.",
+    "growthMetrics": "Métriques de croissance",
+    "learnMoreTitle": "En savoir plus sur les transactions",
+    "learnMoreDesc": "Ressources pour approfondir votre compréhension des transactions Bitcoin et Lightning.",
+    "resourceTitle": "Ressources recommandées",
+    "resourceDesc": "Documentation et tutoriels pour mieux comprendre les transactions"
+  },
+  "Profile": {
+    "title": "Profil",
+    "name": "Nom",
+    "bio": "Bio",
+    "pronouns": "Pronoms",
+    "organization": "Organisation",
+    "location": "Localisation",
+    "displayLocalTime": "Afficher l'heure locale",
+    "website": "Site web",
+    "twitter": "Twitter",
+    "linkedin": "LinkedIn",
+    "email": "Email",
+    "save": "Enregistrer",
+    "saving": "Enregistrement...",
+    "success": {
+      "title": "Succès",
+      "description": "Votre profil a été mis à jour avec succès"
+    },
+    "error": {
+      "title": "Erreur",
+      "description": "Échec de la mise à jour du profil",
+      "invalidEmail": "Veuillez entrer une adresse email valide"
+    }
+  },
+  "Contact": {
+    "title": "Contactez-nous",
+    "description": "Prenez contact avec nous pour toute question, support ou opportunité de collaboration.",
+    "email": {
+      "title": "Email",
+      "address": "dazlng@proton.me"
+    },
+    "form": {
+      "firstName": "Prénom*",
+      "lastName": "Nom*",
+      "email": "Email*",
+      "companyName": "Nom de l'entreprise",
+      "jobTitle": "Poste",
+      "companyPhone": "Téléphone",
+      "companyWebsite": "Site web",
+      "interest": "Sujet*",
+      "message": "Message*",
+      "submit": "Envoyer",
+      "sending": "Envoi en cours...",
+      "success": "Message envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.",
+      "error": {
+        "default": "Une erreur est survenue lors de l'envoi du message.",
+        "requiredFields": "Veuillez remplir tous les champs obligatoires.",
+        "invalidEmail": "Veuillez entrer une adresse email valide.",
+        "requiredMessage": "Veuillez entrer votre message."
+      },
+      "selectSubject": "Sélectionnez un sujet",
+      "messagePlaceholder": "Comment pouvons-nous vous aider ?",
+      "interests": {
+        "general": "Demande générale",
+        "support": "Support technique",
+        "partnership": "Partenariat",
+        "business": "Business",
+        "other": "Autre"
+      }
+    }
+  },
+  "Checkout": {
+    "redirecting": "Redirection...",
+    "Delivery": {
+      "title": "Informations de livraison",
+      "name": "Nom complet",
+      "address": "Adresse",
+      "city": "Ville",
+      "zipCode": "Code postal",
+      "country": "Pays",
+      "phone": "Téléphone",
+      "continue": "Continuer vers le paiement"
     }
   }
 }

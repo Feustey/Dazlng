@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
+import { Card } from "./ui/card";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 import { ArrowUpDown } from "lucide-react";
 
 interface Channel {

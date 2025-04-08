@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { NextResponse } from "next/server";
-import mcpService from "@/app/lib/mcpService";
-import { mockNetworkStats } from "@/app/lib/mockData";
+import mcpService from "../../lib/mcpService";
+import { mockNetworkStats } from "../../lib/mockData";
 
 // Activer le mode développement pour utiliser les données fictives
 const devMode = process.env.DEV_MODE === "true";

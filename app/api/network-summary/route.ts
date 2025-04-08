@@ -1,8 +1,6 @@
-"use server";
-
-import { getNetworkSummary } from "@/app/services/network.service";
+import { getNetworkSummary } from "../../services/network.service";
 import { NextResponse } from "next/server";
-import { mockNetworkSummary } from "@/app/lib/mockData";
+import { mockNetworkSummary } from "../../lib/mockData";
 
 // Activer le mode développement pour utiliser les données fictives
 const USE_MOCK_DATA = process.env.NODE_ENV === "development";

@@ -1,40 +1,561 @@
 {
-  "navigation": {
-    "home": "Home",
-    "dashboard": "Dashboard",
+  "Header": {
+    "title": "DazLng",
+    "searchPlaceholder": "Search...",
     "settings": "Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "help": "Help",
+    "messages": "Messages",
+    "dashboard": "Dashboard",
+    "channels": "Channels",
+    "learn": "Learn",
+    "review": "Review",
+    "currency": "Currency",
+    "btc": "BTC",
+    "sats": "SATS",
+    "hydro": "Hydro",
+    "magma": "Magma",
+    "stats": "Stats",
+    "pricing": "Pricing",
+    "shop": "Shop",
+    "credits": "Credits",
+    "login": "Login",
+    "profile": "My Profile",
+    "logout": "Logout",
+    "myNode": "My Node"
+  },
+  "HomePage": {
+    "welcome": "Welcome to DazLng",
+    "description": "Manage your Lightning Network nodes."
+  },
+  "Home": {
+    "searchPlaceholder": "Search for a node...",
+    "searchButton": "Search",
+    "totalNodes": "Total Nodes",
+    "channelsPerNode": "{count} channels per node",
+    "totalChannels": "Total Channels",
+    "capacityPerChannel": "{amount} per channel",
+    "totalCapacity": "Total Capacity",
+    "lastUpdate": "Last update: {date}",
+    "daznodePromo": {
+      "title": "🚀 Daznode Launch Offer!",
+      "description": "Get your pre-configured Lightning node for only 400,000 sats instead of 500,000 sats.",
+      "limitedOffer": "Limited to the first 10 orders",
+      "button": "Get the offer"
+    },
+    "hero": {
+      "title": "Manage your Lightning Network nodes with ease",
+      "subtitle": "Optimize your performance and your profitability with Daznode",
+      "cta": "Get your Dazbox!"
+    },
+    "features": {
+      "title": "Key Features",
+      "learning": {
+        "title": "Learning Guide",
+        "description": "Learn to manage your node effectively with our detailed guides"
+      },
+      "transactions": {
+        "title": "Transaction Visualization",
+        "description": "Track your transactions in real-time with intuitive graphs"
+      },
+      "operations": {
+        "title": "Lightning Operations",
+        "description": "Manage your channels and payments with ease"
+      },
+      "metrics": {
+        "title": "Advanced Metrics",
+        "description": "Analyze your node's performance with detailed metrics"
+      },
+      "nwc": {
+        "title": "Nostr Wallet Connect",
+        "description": "Connect easily with your Nostr wallet"
+      }
+    },
+    "benefits": {
+      "title": "Why choose DazLng?",
+      "items": {
+        "simplicity": "Simple and intuitive interface",
+        "security": "Enhanced security",
+        "performance": "Optimized performance",
+        "support": "Responsive support",
+        "community": "Active community"
+      }
+    },
+    "cta": {
+      "title": "Ready to get started?",
+      "description": "Join DazLng and optimize your presence on the Lightning Network",
+      "button": "Create account"
+    }
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "description": "Sorry, the page you are looking for does not exist.",
+    "back": "Back to home"
+  },
+  "Login": {
+    "title": "Sign Up or Log In",
+    "emailLabel": "Email",
+    "emailDescription": "We'll email you a one time code.",
+    "emailPlaceholder": "Your email",
+    "getCode": "Get Code",
+    "sending": "Sending...",
+    "orContinueWith": "Or continue with",
+    "loginWithGoogle": "Login with Google",
+    "loginWithNode": "Login with Node"
+  },
+  "Verify": {
+    "title": "Enter your code",
+    "description": "Check your email for the code.",
+    "codeLabel": "One time password code:",
+    "noCode": "Didn't get a code?",
+    "resend": "Resend",
+    "verifying": "Verifying..."
+  },
+  "channels": {
+    "title": "Channels",
+    "createChannel": "Create Channel",
+    "searchChannels": "Search channels...",
+    "noChannels": "No channels found. Create a new channel to get started."
+  },
+  "Review": {
+    "title": "Network Overview",
+    "nodes": {
+      "title": "Nodes",
+      "total": "Total",
+      "active": "Active"
+    },
+    "channels": {
+      "title": "Channels",
+      "total": "Total",
+      "active": "Active"
+    },
+    "capacity": {
+      "title": "Capacity",
+      "total": "Total",
+      "averageChannel": "Average per channel",
+      "averageNode": "Average per node"
+    },
+    "health": {
+      "title": "Network Health",
+      "score": "Score",
+      "lastUpdated": "Last updated"
+    },
+    "error": {
+      "title": "Error",
+      "description": "An error occurred while loading the data"
+    },
+    "noData": {
+      "title": "No Data",
+      "description": "No data is available at the moment"
+    }
+  },
+  "Network": {
+    "title": "Lightning Network",
+    "totalNodes": "Total Nodes",
+    "totalChannels": "Total Channels",
+    "totalCapacity": "Total Capacity",
+    "avgChannelsPerNode": "Channels per Node",
+    "capacityHistory": "Capacity Evolution",
+    "nodesByCountry": "Distribution by Country",
+    "topNodes": "Top Nodes",
+    "channels": "channels",
+    "recentChannels": "Recent Channels",
+    "channelId": "Channel ID",
+    "capacity": "Capacity",
+    "status": "Status",
+    "lastUpdate": "Last Update",
+    "error": {
+      "title": "Error",
+      "fetchFailed": "Failed to fetch network data"
+    }
+  },
+  "footer": {
+    "description": "DazLng is a Lightning Network node management platform that helps you manage your node and channels efficiently.",
+    "links": {
+      "help": "Help",
+      "about": "About",
+      "getNode": "Get your own node!",
+      "contact": "Contact"
+    },
+    "rights": "All rights reserved."
+  },
+  "Settings": {
+    "title": "Settings",
+    "language": {
+      "label": "Language",
+      "options": {
+        "fr": "French",
+        "en": "English"
+      }
+    },
+    "theme": {
+      "label": "Theme",
+      "options": {
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+      }
+    },
+    "save": "Save changes",
+    "success": "Settings saved successfully",
+    "error": "Failed to save settings",
     "logout": "Logout"
   },
-  "auth": {
-    "login": "Login",
-    "register": "Register",
-    "email": "Email",
-    "password": "Password",
-    "confirmPassword": "Confirm Password",
-    "forgotPassword": "Forgot Password?",
-    "verificationCode": "Verification Code",
-    "sendCode": "Send Code",
-    "verify": "Verify",
-    "resendCode": "Resend Code"
+  "daz-ia": {
+    "title": "Daz-IA",
+    "description": "Discover the power of artificial intelligence with Daz-IA",
+    "tabs": {
+      "plans": "Plans",
+      "recommendations": "Recommendations"
+    },
+    "one-shot": {
+      "title": "One-Shot",
+      "price": "10,000 sats",
+      "features": [
+        "Access to Daz-IA for 24h",
+        "Personalized recommendations",
+        "Priority support",
+        "Access to all features"
+      ],
+      "cta": "Choose One-Shot"
+    },
+    "yearly": {
+      "title": "Yearly",
+      "price": "100,000 sats",
+      "highlight": "Best value",
+      "features": [
+        "Access to Daz-IA for 1 year",
+        "Personalized recommendations",
+        "24/7 priority support",
+        "Access to all features",
+        "Free updates"
+      ],
+      "cta": "Choose Yearly"
+    },
+    "processing": "Processing...",
+    "success": "Payment successful!",
+    "error": "An error occurred"
   },
-  "dashboard": {
+  "recommendations": {
+    "title": "Recommendations",
+    "subtitle": "Discover our personalized recommendations",
+    "intro": "Based on your profile and preferences, here are the best suggestions for you:",
+    "cards": {
+      "title": "Recommendation {index}",
+      "description": "Description of recommendation {index}",
+      "details": "Details of recommendation {index}",
+      "impact": "Estimated impact: {impact}%"
+    },
+    "upgrade": {
+      "title": "Upgrade to premium",
+      "description": "Unlock all recommendations and advanced features"
+    }
+  },
+  "Dashboard": {
+    "title": "Dashboard",
     "welcome": "Welcome to your dashboard",
-    "nodes": "Your Nodes",
-    "addNode": "Add Node",
-    "noNodes": "You don't have any nodes yet",
-    "nodeDetails": "Node Details",
-    "capacity": "Capacity",
-    "channels": "Channels",
-    "age": "Age",
-    "rank": "Rank"
+    "overview": "Overview",
+    "stats": "Statistics",
+    "recentActivity": "Recent Activity",
+    "noData": "No data available"
   },
-  "errors": {
-    "invalidEmail": "Invalid email",
-    "invalidPassword": "Invalid password",
-    "passwordsDontMatch": "Passwords don't match",
-    "invalidCode": "Invalid code",
-    "codeExpired": "Code has expired",
-    "serverError": "Server error",
-    "networkError": "Network error"
+  "Help": {
+    "title": "Help Center",
+    "searchPlaceholder": "Search help...",
+    "categories": {
+      "getting_started": "Getting Started",
+      "learning": "Learning",
+      "transactions": "Transactions",
+      "operations": "Operations",
+      "metrics": "Metrics",
+      "nwc": "Nostr Wallet Connect"
+    },
+    "faq": {
+      "what_is_lightning": "What is Lightning Network?",
+      "how_to_start": "How to start with DazLng?",
+      "how_to_connect": "How to connect my wallet?",
+      "how_to_transact": "How to make transactions?"
+    }
+  },
+  "About": {
+    "title": "About DazLng",
+    "description": "DazLng is an innovative Lightning Network node management platform, designed to simplify and optimize your network experience.",
+    "features": {
+      "title": "Features",
+      "learning": "Learning Guide",
+      "transactions": "Transaction Tracking",
+      "operations": "Lightning Operations",
+      "metrics": "Advanced Metrics",
+      "nwc": "Nostr Wallet Connect"
+    },
+    "security": {
+      "title": "Security",
+      "protection": "Advanced Protection",
+      "protectionDesc": "Enhanced security to protect your funds and data",
+      "sessions": "Session Management",
+      "sessionsDesc": "Full control over your active sessions",
+      "validation": "Multi-level Validation",
+      "validationDesc": "Rigorous validation process for all transactions",
+      "headers": "Secure Headers",
+      "headersDesc": "Protection against common web attacks"
+    },
+    "team": {
+      "title": "Our Team",
+      "description": "A passionate team of developers and Lightning Network experts dedicated to your success."
+    },
+    "contact": {
+      "title": "Contact Us",
+      "email": "Email",
+      "twitter": "Twitter",
+      "github": "GitHub"
+    }
+  },
+  "daznode": {
+    "title": "Get Your Own Lightning Node!",
+    "description": "Start your Lightning Network journey with a pre-configured Raspberry Pi 5 node. Ready to use, secure, and supported.",
+    "features": {
+      "preconfigured": "Pre-configured Node",
+      "preconfiguredDesc": "Your node comes fully configured and ready to use on a Raspberry Pi 5",
+      "balance": "Initial Balance",
+      "balanceDesc": "Start with 50,000 sats already loaded on your node",
+      "support": "Expert Support",
+      "supportDesc": "2 weeks of dedicated support to help you get started",
+      "delivery": "Fast Delivery",
+      "deliveryDesc": "Get your node within 10 days"
+    },
+    "specsTitle": "Technical Specifications",
+    "specs": {
+      "hardware": "Hardware",
+      "hardwareDesc": "Raspberry Pi 5 with 8GB RAM, 1TB SSD, and custom cooling solution",
+      "software": "Software",
+      "softwareDesc": "Latest LND implementation with our custom management interface",
+      "security": "Security",
+      "securityDesc": "Hardened Linux configuration with encrypted storage and secure boot"
+    },
+    "orderTitle": "Ready to Join the Lightning Network?",
+    "orderDescription": "Get your pre-configured node with everything you need to start",
+    "price": "500,000 sats",
+    "priceDescription": "One-time payment includes hardware, setup, and support",
+    "orderButton": "Order Your Node",
+    "payment": {
+      "title": "Payment via Lightning Network",
+      "scan": "Scan the QR code to pay",
+      "processing": "Processing payment...",
+      "amount": "Amount to pay: {amount} sats",
+      "invoice": "Lightning invoice",
+      "copy": "Copy invoice",
+      "copied": "Copied!",
+      "success": "Payment successful!",
+      "error": "Payment failed. Please try again.",
+      "close": "Close",
+      "expiry": "Invoice expires in {minutes} minutes",
+      "waitingPayment": "Waiting for payment...",
+      "checkingPayment": "Checking payment status..."
+    }
+  },
+  "help": {
+    "title": "Help Center",
+    "contact": {
+      "title": "Need Help?",
+      "description": "Our team is available 24/7 to support you in your Lightning Network journey.",
+      "email": "support@dazlng.com",
+      "phone": "+33 1 23 45 67 89",
+      "chat": "Telegram Chat",
+      "button": "Contact Support"
+    },
+    "sections": {
+      "daznode": {
+        "title": "Daznode Service",
+        "delivery": {
+          "question": "How does Daznode delivery work?",
+          "answer": "Your Daznode is delivered within 10 business days after payment confirmation. We'll send you a tracking email with the tracking number. The package is insured and requires a signature upon delivery."
+        },
+        "package": {
+          "question": "What's included in the Daznode package?",
+          "answer": "Your Daznode package includes: a Raspberry Pi 5 (8GB RAM), 1TB SSD, custom cooling solution, secure case, quick installation guide, and all necessary cables. The node comes pre-configured with LND software and 50,000 sats pre-loaded."
+        },
+        "installation": {
+          "question": "How do I install my Daznode?",
+          "answer": "Installation is simple thanks to our plug-and-play configuration: 1) Connect your Daznode to the Internet via Ethernet, 2) Plug in the power supply, 3) Access the web interface via the provided address, 4) Follow the initial setup wizard. Our team is available for video call guidance if needed."
+        }
+      },
+      "support": {
+        "title": "Technical Support",
+        "included": {
+          "question": "What support is included with my Daznode?",
+          "answer": "You get 2 weeks of dedicated support after receiving your node. This includes: installation assistance, channel configuration, parameter optimization, and technical troubleshooting. Support is available via email, chat, or video call."
+        },
+        "channels": {
+          "question": "How do I manage my Lightning channels?",
+          "answer": "Our intuitive interface makes channel management easy. We guide you through creating your first channels and advise on the best network connection strategies. The included DazIA Premium subscription provides optimization recommendations."
+        },
+        "security": {
+          "question": "How do I secure my node?",
+          "answer": "Your Daznode comes with hardened Linux configuration and encrypted storage. We help you set up backups and secure your keys. A comprehensive security guide is provided."
+        }
+      },
+      "subscription": {
+        "title": "Subscription & Services",
+        "premium": {
+          "question": "What's included in the DazIA Premium subscription?",
+          "answer": "The one-year DazIA Premium subscription includes: personalized network analysis, channel optimization recommendations, real-time alerts, weekly performance reports, and priority technical support access."
+        },
+        "renewal": {
+          "question": "How do I renew my subscription?",
+          "answer": "One month before your Premium subscription expires, you'll receive an email with renewal options. Renewal can be done directly from your dashboard with Lightning payment."
+        },
+        "upgrade": {
+          "question": "Can I upgrade my node?",
+          "answer": "Yes, we offer hardware and software upgrade options. Our team advises on the best options for your needs and can perform upgrades remotely or guide you through the process."
+        }
+      }
+    }
+  },
+  "Auth": {
+    "signInWithLightning": "Lightning Node Sign In",
+    "signInDescription": "Easily and securely sign in with your lightning node. Simply sign the unique message below with your node.",
+    "howToSign": "How to sign messages?",
+    "copy": "Copy message",
+    "copied": "Copied!",
+    "messageCopied": "Message copied to clipboard",
+    "pastePubkey": "Paste your public key here",
+    "pasteSignature": "Paste your signature here",
+    "signIn": "Sign in",
+    "signingIn": "Signing in...",
+    "signInSuccess": "Successfully signed in!",
+    "timeRemaining": "Remaining time",
+    "error": {
+      "invalidSignature": "Invalid signature",
+      "expired": "Message expired",
+      "unknown": "An error occurred",
+      "copyFailed": "Failed to copy message",
+      "missingFields": "Please fill in all fields",
+      "invalidMessage": "Invalid message format",
+      "invalidPubkey": "Invalid public key",
+      "invalidFormat": "Invalid signature format"
+    }
+  },
+  "Learn": {
+    "title": "Learn",
+    "guide": "Guide",
+    "lightning": "Lightning Network",
+    "visualization": "Visualization"
+  },
+  "Learning": {
+    "title": "Learning Guide",
+    "duration": "Duration",
+    "minutes": "minutes",
+    "completed": "Completed",
+    "markComplete": "Mark as Complete",
+    "steps": {
+      "basics": {
+        "title": "Lightning Network Basics",
+        "content": "Learn the fundamentals of the Lightning Network, including how it works, its benefits, and basic concepts."
+      },
+      "channels": {
+        "title": "Channel Management",
+        "content": "Understand how to create, manage, and optimize your Lightning channels for maximum efficiency."
+      },
+      "transactions": {
+        "title": "Transaction Processing",
+        "content": "Master the art of processing transactions through your Lightning Network node."
+      }
+    }
+  },
+  "Profile": {
+    "title": "Profile",
+    "name": "Name",
+    "bio": "Bio",
+    "pronouns": "Pronouns",
+    "organization": "Organization",
+    "location": "Location",
+    "displayLocalTime": "Display local time",
+    "website": "Website",
+    "twitter": "Twitter",
+    "linkedin": "LinkedIn",
+    "email": "Email",
+    "save": "Save",
+    "saving": "Saving...",
+    "success": {
+      "title": "Success",
+      "description": "Your profile has been updated successfully"
+    },
+    "error": {
+      "title": "Error",
+      "description": "Failed to update profile",
+      "invalidEmail": "Please enter a valid email address"
+    }
+  },
+  "Node": {
+    "lightning": "Lightning",
+    "spendingBalance": "Spending Balance",
+    "receiveLimit": "Receive Limit",
+    "onChainBalance": "On-Chain Balance",
+    "channels": "Channels",
+    "peer": "Peer",
+    "type": "Type",
+    "status": "Status",
+    "capacity": "Capacity",
+    "reserve": "Reserve",
+    "spending": "Spending",
+    "receiving": "Receiving",
+    "actions": "Actions",
+    "viewFundingTransaction": "View Funding Transaction",
+    "viewNodeOnAmboss": "View Node on amboss.space",
+    "closeChannel": "Close Channel"
+  },
+  "Contact": {
+    "title": "Contact Us",
+    "description": "Connect with us for inquiries, support, or collaboration opportunities.",
+    "email": {
+      "title": "Email",
+      "address": "dazlng@proton.me"
+    },
+    "form": {
+      "firstName": "First Name*",
+      "lastName": "Last Name*",
+      "email": "Email*",
+      "companyName": "Company Name",
+      "jobTitle": "Job Title",
+      "companyPhone": "Phone",
+      "companyWebsite": "Website",
+      "interest": "Subject*",
+      "message": "Message*",
+      "submit": "Send",
+      "sending": "Sending...",
+      "success": "Message sent successfully! We will get back to you as soon as possible.",
+      "error": {
+        "default": "An error occurred while sending the message.",
+        "requiredFields": "Please fill in all required fields.",
+        "invalidEmail": "Please enter a valid email address.",
+        "requiredMessage": "Please enter your message."
+      },
+      "selectSubject": "Select a subject",
+      "messagePlaceholder": "How can we help you?",
+      "interests": {
+        "general": "General Inquiry",
+        "support": "Technical Support",
+        "partnership": "Partnership",
+        "business": "Business",
+        "other": "Other"
+      }
+    }
+  },
+  "Checkout": {
+    "redirecting": "Redirecting...",
+    "Delivery": {
+      "title": "Delivery Information",
+      "name": "Full Name",
+      "address": "Address",
+      "city": "City",
+      "zipCode": "Zip Code",
+      "country": "Country",
+      "phone": "Phone",
+      "continue": "Continue to Payment"
+    }
   }
 }

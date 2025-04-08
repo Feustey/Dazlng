@@ -37,7 +37,7 @@ DazLng est un tableau de bord intelligent propulsé par l'IA, conçu pour optimi
 - **État** : React Hooks
 - **Types** : TypeScript
 - **API** : API MCP pour les données Lightning Network
-- **Base de données** : PostgreSQL avec Prisma
+- **Base de données** : PostgreSQL
 - **i18n** : next-intl pour l'internationalisation
 - **Paiements** :
   - Intégration Nostr Wallet Connect (NWC)
@@ -120,7 +120,6 @@ app/
 ├── contexts/        # Contextes React
 ├── lib/             # Utilitaires et modèles
 ├── middleware/      # Middlewares (rate limiting, etc.)
-├── models/          # Modèles Prisma
 ├── styles/          # Styles globaux
 └── types/           # Types TypeScript
 ```

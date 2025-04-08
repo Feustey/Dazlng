@@ -1,30 +1,24 @@
 module.exports = {
-  preset: "ts-jest",
   testEnvironment: "jsdom",
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.mjs"],
   moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/app/$1",
-    "^@/components/(.*)$": "<rootDir>/app/components/$1",
-    "^@/lib/(.*)$": "<rootDir>/app/lib/$1",
-    "^@/models/(.*)$": "<rootDir>/app/models/$1",
-    "^@/services/(.*)$": "<rootDir>/app/services/$1",
-    "^@/utils/(.*)$": "<rootDir>/app/utils/$1",
-    "^@prisma/client$": "<rootDir>/node_modules/@prisma/client",
-    "\\.(css|less|scss|sass)$": "identity-obj-proxy",
+    "^@/(.*)$": "<rootDir>/$1",
+    "\\.(css|less|sass|scss)$": "identity-obj-proxy",
+    "\\.(gif|ttf|eot|svg|png)$": "<rootDir>/test/__mocks__/fileMock.js",
   },
-  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
-  testMatch: ["**/__tests__/**/*.ts?(x)", "**/?(*.)+(spec|test).ts?(x)"],
   transform: {
-    "^.+\\.(ts|tsx)$": "babel-jest",
+    "^.+\\.(js|jsx|ts|tsx)$": ["babel-jest", { presets: ["next/babel"] }],
   },
-  extensionsToTreatAsEsm: [".ts", ".tsx"],
-  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
-  globals: {
-    "ts-jest": {
-      useESM: true,
-      tsconfig: "tsconfig.json",
-    },
-  },
-  testEnvironmentOptions: {
-    customExportConditions: [""],
-  },
+  testMatch: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
+  collectCoverageFrom: [
+    "**/*.{js,jsx,ts,tsx}",
+    "!**/*.d.ts",
+    "!**/node_modules/**",
+  ],
+  testPathIgnorePatterns: ["/node_modules/", "/.next/"],
+  transformIgnorePatterns: [
+    "/node_modules/",
+    "^.+\\.module\\.(css|sass|scss)$",
+  ],
+  moduleFileExtensions: ["js", "jsx", "ts", "tsx", "json", "node"],
 };

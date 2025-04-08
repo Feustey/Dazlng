@@ -2,15 +2,15 @@
 
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import Image from "next/image";
 import { Bitcoin, Shield, Zap, Clock, Cloud, Server } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import AlbyQRCode from "@/app/components/AlbyQRCode";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
+import AlbyQRCode from "../../components/AlbyQRCode";
 import { useRouter, usePathname } from "next/navigation";
 
 interface ShippingInfo {
@@ -160,7 +160,7 @@ export default function DaznodePage() {
       >
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/daznode-hero.jpg"
+            src="/images/Daznode-PI5.png"
             alt="Daznode"
             layout="fill"
             objectFit="cover"
@@ -177,6 +177,7 @@ export default function DaznodePage() {
             size="lg"
             variant="default"
             className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-6 text-xl"
+            onClick={() => router.push(`/${locale}/checkout`)}
           >
             {t("orderButton")}
           </Button>
@@ -378,7 +379,7 @@ export default function DaznodePage() {
             <Button
               size="lg"
               className="w-full bg-orange-500 hover:bg-orange-600 text-white"
-              onClick={handleOrder}
+              onClick={() => router.push(`/${locale}/checkout`)}
             >
               Commander maintenant
             </Button>
@@ -423,7 +424,7 @@ export default function DaznodePage() {
               {t("payment.scan")}
             </p>
             <div className="bg-white p-4 rounded-lg mb-6">
-              <AlbyQRCode amount={400000} plan="Daznode" />
+              <AlbyQRCode amount={400000} />
             </div>
             {isProcessing && (
               <div className="text-center">

@@ -1,5 +1,26 @@
 # À propos de DazLng
 
+DazLng est une application web qui permet de visualiser et d'analyser le réseau Lightning de Bitcoin.
+
+## Technologies utilisées
+
+- Next.js 14 avec App Router
+- TypeScript
+- Tailwind CSS
+- PostgreSQL pour une gestion sécurisée des données
+- API REST
+- Tests unitaires avec Jest
+- CI/CD avec GitHub Actions
+
+## Fonctionnalités
+
+- Visualisation du réseau Lightning en temps réel
+- Analyse des métriques du réseau
+- Interface utilisateur moderne et responsive
+- Support multilingue (français, anglais)
+- Authentification sécurisée
+- API REST documentée
+
 ## Sécurité
 
 DazLng accorde une importance primordiale à la sécurité de ses utilisateurs et de leurs données. Voici un aperçu détaillé des mesures de sécurité mises en place :
@@ -8,7 +29,7 @@ DazLng accorde une importance primordiale à la sécurité de ses utilisateurs e
 
 - **Base de données** :
 
-  - Utilisation de PostgreSQL avec Prisma pour une gestion sécurisée des données
+  - Utilisation de PostgreSQL pour une gestion sécurisée des données
   - Chiffrement des données sensibles
   - Sauvegardes régulières
   - Indexation optimisée pour les performances

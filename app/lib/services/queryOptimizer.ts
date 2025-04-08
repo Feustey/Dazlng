@@ -1,5 +1,4 @@
-import { prisma } from "../db";
-import { connectToDatabase } from "../db";
+import { MongoClient } from "mongodb";
 
 interface CacheEntry<T> {
   data: T;
@@ -25,12 +24,21 @@ interface PeerOfPeerDocument {
   total_peers: number;
 }
 
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  throw new Error("La variable d'environnement MONGODB_URI est requise");
+}
+
 export class QueryOptimizer {
   private static instance: QueryOptimizer;
   private queryCache: Map<string, CacheEntry<unknown>> = new Map();
   private readonly CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+  private client: MongoClient;
 
-  private constructor() {}
+  private constructor() {
+    this.client = new MongoClient(MONGODB_URI as string);
+  }
 
   static getInstance(): QueryOptimizer {
     if (!QueryOptimizer.instance) {
@@ -50,6 +58,17 @@ export class QueryOptimizer {
     return Date.now() - timestamp < this.CACHE_TTL;
   }
 
+  private async connect() {
+    if (!this.client.connect) {
+      await this.client.connect();
+    }
+    return this.client.db();
+  }
+
+  private async disconnect() {
+    await this.client.close();
+  }
+
   async getNodeWithOptimizedQuery(
     pubkey: string
   ): Promise<NodeDocument | null> {
@@ -63,32 +82,49 @@ export class QueryOptimizer {
     }
 
     try {
-      await connectToDatabase();
-      const node = await prisma.node.findUnique({
-        where: { pubkey },
-        select: {
-          pubkey: true,
-          alias: true,
-          platform: true,
-          version: true,
-          total_capacity: true,
-          active_channels: true,
-          total_peers: true,
-          uptime: true,
-        },
-      });
+      const db = await this.connect();
+      const node = await db.collection("nodes").findOne(
+        { pubkey },
+        {
+          projection: {
+            pubkey: 1,
+            alias: 1,
+            platform: 1,
+            version: 1,
+            total_capacity: 1,
+            active_channels: 1,
+            total_peers: 1,
+            uptime: 1,
+          },
+        }
+      );
 
       if (node) {
+        const nodeDocument: NodeDocument = {
+          pubkey: node.pubkey,
+          alias: node.alias,
+          platform: node.platform,
+          version: node.version,
+          total_capacity: Number(node.total_capacity),
+          active_channels: node.active_channels,
+          total_peers: node.total_peers,
+          uptime: Number(node.uptime),
+        };
+
         this.queryCache.set(cacheKey, {
-          data: node as NodeDocument,
+          data: nodeDocument,
           timestamp: Date.now(),
         });
+
+        return nodeDocument;
       }
 
-      return node as NodeDocument;
+      return null;
     } catch (error) {
       console.error("Erreur lors de la récupération du nœud:", error);
       throw error;
+    } finally {
+      await this.disconnect();
     }
   }
 
@@ -103,29 +139,48 @@ export class QueryOptimizer {
     }
 
     try {
-      await connectToDatabase();
-      const nodes = await prisma.node.findMany({
-        orderBy: { total_capacity: "desc" },
-        take: limit,
-        select: {
-          pubkey: true,
-          alias: true,
-          total_capacity: true,
-          active_channels: true,
-          total_peers: true,
-          uptime: true,
-        },
-      });
+      const db = await this.connect();
+      const nodes = await db
+        .collection("nodes")
+        .find(
+          {},
+          {
+            projection: {
+              pubkey: 1,
+              alias: 1,
+              total_capacity: 1,
+              active_channels: 1,
+              total_peers: 1,
+              uptime: 1,
+            },
+          }
+        )
+        .sort({ total_capacity: -1 })
+        .limit(limit)
+        .toArray();
+
+      const nodeDocuments: NodeDocument[] = nodes.map((node) => ({
+        pubkey: node.pubkey,
+        alias: node.alias,
+        platform: node.platform || "",
+        version: node.version || "",
+        total_capacity: Number(node.total_capacity),
+        active_channels: node.active_channels,
+        total_peers: node.total_peers,
+        uptime: Number(node.uptime),
+      }));
 
       this.queryCache.set(cacheKey, {
-        data: nodes as NodeDocument[],
+        data: nodeDocuments,
         timestamp: Date.now(),
       });
 
-      return nodes as NodeDocument[];
+      return nodeDocuments;
     } catch (error) {
       console.error("Erreur lors de la récupération des top nœuds:", error);
       throw error;
+    } finally {
+      await this.disconnect();
     }
   }
 
@@ -142,29 +197,44 @@ export class QueryOptimizer {
     }
 
     try {
-      await connectToDatabase();
-      const peers = await prisma.peerOfPeer.findMany({
-        where: { nodePubkey },
-        orderBy: { timestamp: "desc" },
-        take: 50,
-        select: {
-          peerPubkey: true,
-          alias: true,
-          total_capacity: true,
-          active_channels: true,
-          total_peers: true,
-        },
-      });
+      const db = await this.connect();
+      const peers = await db
+        .collection("peers")
+        .find(
+          { nodePubkey },
+          {
+            projection: {
+              peerPubkey: 1,
+              alias: 1,
+              total_capacity: 1,
+              active_channels: 1,
+              total_peers: 1,
+            },
+          }
+        )
+        .sort({ timestamp: -1 })
+        .limit(50)
+        .toArray();
+
+      const peerDocuments: PeerOfPeerDocument[] = peers.map((peer) => ({
+        peerPubkey: peer.peerPubkey,
+        alias: peer.alias,
+        total_capacity: Number(peer.total_capacity),
+        active_channels: peer.active_channels,
+        total_peers: peer.total_peers,
+      }));
 
       this.queryCache.set(cacheKey, {
-        data: peers as PeerOfPeerDocument[],
+        data: peerDocuments,
         timestamp: Date.now(),
       });
 
-      return peers as PeerOfPeerDocument[];
+      return peerDocuments;
     } catch (error) {
       console.error("Erreur lors de la récupération des pairs:", error);
       throw error;
+    } finally {
+      await this.disconnect();
     }
   }
 
@@ -173,3 +243,5 @@ export class QueryOptimizer {
     console.log("Cache vidé");
   }
 }
+
+export default QueryOptimizer.getInstance();

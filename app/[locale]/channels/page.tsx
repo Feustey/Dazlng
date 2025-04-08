@@ -1,13 +1,14 @@
 "use client";
 
-import { Card } from "@/app/components/ui/card";
+import { Card } from "../../components/ui/card";
 import { useTranslations } from "next-intl";
-import { Button } from "@/app/components/ui/button";
-import { Input } from "@/app/components/ui/input";
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
 import { Search, ChevronDown, TrendingDown, TrendingUp } from "lucide-react";
 import { useState, useEffect } from "react";
-import { NetworkStats } from "@/app/types/network";
-import { searchNodes } from "@/app/lib/api-client";
+import { NetworkStats } from "../../types/network";
+import { searchNodes } from "../../lib/api-client";
+import BigPlayers from "../../components/BigPlayers";
 
 interface Node {
   pubkey: string;
@@ -100,10 +101,15 @@ export default function ChannelsPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-8">
-        Lightning Network Search and Analysis Engine
-      </h1>
+    <div className="container mx-auto p-6 space-y-8">
+      <div className="flex flex-col gap-2">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary-600 via-secondary-600 to-accent-600 text-transparent bg-clip-text">
+          Canaux Lightning
+        </h1>
+        <p className="text-muted-foreground">
+          Gérez vos canaux et explorez le réseau Lightning
+        </p>
+      </div>
 
       <div className="relative mb-8">
         <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
@@ -298,6 +304,10 @@ export default function ChannelsPage() {
             </Button>
           </div>
         </Card>
+      </div>
+
+      <div className="mt-8">
+        <BigPlayers />
       </div>
     </div>
   );

@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import {
   LineChart,
   Line,
@@ -7,7 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { formatSats } from "@/app/utils/format";
+import { formatSats } from "../../utils/format";
 
 interface CapacityChartProps {
   data: Array<{

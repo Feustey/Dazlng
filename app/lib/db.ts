@@ -1,47 +1,18 @@
-import { PrismaClient } from "@prisma/client";
-import { withAccelerate } from "@prisma/extension-accelerate";
+import mongoose from "mongoose";
+import { connectToDatabase } from "./mongodb";
 
-const prismaClientSingleton = () => {
-  return new PrismaClient().$extends(withAccelerate());
-};
+export { connectToDatabase };
 
-declare global {
-  var prisma: ReturnType<typeof prismaClientSingleton> | undefined;
+export async function getDb() {
+  const conn = await connectToDatabase();
+  return conn.db;
 }
 
-const prisma = globalThis.prisma ?? prismaClientSingleton();
+export async function closeDb() {
+  await mongoose.connection.close();
+}
 
-if (process.env.NODE_ENV !== "production") globalThis.prisma = prisma;
-
-// Fonction pour vérifier la connexion à la base de données
-export const checkDatabaseConnection = async () => {
-  try {
-    await prisma.$connect();
-    return true;
-  } catch (err) {
-    const error =
-      err instanceof Error
-        ? err
-        : new Error("Une erreur inconnue s'est produite");
-    console.error("Erreur de connexion à la base de données:", error);
-    return false;
-  }
+export default {
+  getDb,
+  closeDb,
 };
-
-// Fonction pour se connecter à la base de données
-export const connectToDatabase = async () => {
-  try {
-    await prisma.$connect();
-    return prisma;
-  } catch (err) {
-    const error =
-      err instanceof Error
-        ? err
-        : new Error("Une erreur inconnue s'est produite");
-    console.error("Erreur de connexion à la base de données:", error);
-    throw error;
-  }
-};
-
-export { prisma };
-export default prisma;

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import mcpService from "@/app/lib/mcpService";
-import { dynamic, errorResponse, successResponse } from "@/app/api/config";
+import mcpService from "../../../lib/mcpService";
+import { dynamic, errorResponse, successResponse } from "../../../api/config";
 
 export const runtime = "edge";
 export { dynamic };

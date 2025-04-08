@@ -17,6 +17,6 @@
   "theme_color": "#000000",
   "background_color": "#ffffff",
   "display": "standalone",
-  "start_url": "https://dazno.de",
-  "scope": "https://dazno.de"
+  "start_url": "/",
+  "scope": "/"
 }

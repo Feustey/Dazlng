@@ -3,8 +3,8 @@
 import * as React from "react";
 
 import { useEffect, useState } from "react";
-import { Card } from "@/app/components/ui/card";
-import { formatNumber, formatSats } from "@/app/utils/format";
+import { Card } from "./ui/card";
+import { formatNumber, formatSats } from "../utils/format";
 
 interface NetworkStats {
   totalNodes: number;

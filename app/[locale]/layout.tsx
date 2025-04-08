@@ -1,15 +1,15 @@
-import { metadata as siteConfig } from "../config/metadata";
 import { Metadata, Viewport } from "next";
 import ClientLayout from "../ClientLayout";
 import "../globals.css";
-import Navigation from "@/app/components/Navigation";
-import { Footer } from "@/app/components/Footer";
+import Navigation from "../components/Navigation";
+import { Footer } from "../components/Footer";
 import { NextIntlClientProvider } from "next-intl";
-import { locales, defaultLocale } from "@/i18n.config";
-import { notFound, redirect } from "next/navigation";
-import { Locale } from "@/i18n.config.base";
+import { locales, defaultLocale } from "../i18n.config";
+import { redirect } from "next/navigation";
+import { Locale } from "../i18n.config.base";
 import { headers } from "next/headers";
-import { checkDatabaseConnection } from "@/app/lib/db";
+import { connectToDatabase } from "../lib/mongodb";
+import { Inter } from "next/font/google";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -22,17 +22,17 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
+  metadataBase: new URL("https://dazno.de"),
   title: {
-    default: siteConfig.name,
-    template: `%s | ${siteConfig.name}`,
+    default: "DazNode - Lightning Node Manager",
+    template: `%s | DazNode`,
   },
-  description: siteConfig.description,
-  keywords: siteConfig.keywords,
+  description: "Gérez et surveillez votre nœud Lightning Network avec DazNode",
+  keywords: ["Lightning Network", "Bitcoin", "Node Management", "DazNode"],
   authors: [
     {
       name: "DazNode",
-      url: siteConfig.url,
+      url: "https://dazno.de",
     },
   ],
   creator: "DazNode",
@@ -40,24 +40,26 @@ export const metadata: Metadata = {
     type: "website",
     locale: "fr_FR",
     alternateLocale: "en_US",
-    url: siteConfig.url,
-    title: siteConfig.name,
-    description: siteConfig.description,
-    siteName: siteConfig.name,
+    url: "https://dazno.de",
+    title: "DazNode - Lightning Node Manager",
+    description:
+      "Gérez et surveillez votre nœud Lightning Network avec DazNode",
+    siteName: "DazNode",
     images: [
       {
-        url: siteConfig.ogImage,
+        url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: siteConfig.name,
+        alt: "DazNode",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: siteConfig.name,
-    description: siteConfig.description,
-    images: [siteConfig.ogImage],
+    title: "DazNode - Lightning Node Manager",
+    description:
+      "Gérez et surveillez votre nœud Lightning Network avec DazNode",
+    images: ["/og-image.png"],
     creator: "@DazNode",
   },
   icons: {
@@ -72,100 +74,42 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-async function getMessages(locale: string) {
-  try {
-    console.log(`Loading messages for locale: ${locale}`);
-
-    // Charger les messages de base
-    const baseMessages = await import(`../../messages/${locale}.json`);
-    console.log("Base messages loaded");
-
-    // Charger les messages spécifiques aux sections
-    const sectionMessages = {
-      home: await import(`../../public/locale/home/${locale}.json`).catch(
-        (e) => {
-          console.warn(`Failed to load home messages: ${e.message}`);
-          return { default: {} };
-        }
-      ),
-      about: await import(`../../public/locale/about/${locale}.json`).catch(
-        (e) => {
-          console.warn(`Failed to load about messages: ${e.message}`);
-          return { default: {} };
-        }
-      ),
-      recommendations: await import(
-        `../../public/locale/recommendations/${locale}.json`
-      ).catch((e) => {
-        console.warn(`Failed to load recommendations messages: ${e.message}`);
-        return { default: {} };
-      }),
-      dashboard: await import(
-        `../../public/locale/dashboard/${locale}.json`
-      ).catch((e) => {
-        console.warn(`Failed to load dashboard messages: ${e.message}`);
-        return { default: {} };
-      }),
-      auth: await import(`../../public/locale/auth/${locale}.json`).catch(
-        (e) => {
-          console.warn(`Failed to load auth messages: ${e.message}`);
-          return { default: {} };
-        }
-      ),
-      botIa: await import(`../../public/locale/bot-ia/${locale}.json`).catch(
-        (e) => {
-          console.warn(`Failed to load bot-ia messages: ${e.message}`);
-          return { default: {} };
-        }
-      ),
-    };
-
-    // Fusionner tous les messages
-    const messages = {
-      ...baseMessages.default,
-      ...sectionMessages.home.default,
-      ...sectionMessages.about.default,
-      ...sectionMessages.recommendations.default,
-      ...sectionMessages.dashboard.default,
-      ...sectionMessages.auth.default,
-      ...sectionMessages.botIa.default,
-    };
-
-    console.log("All messages loaded successfully");
-    return messages;
-  } catch (error) {
-    console.error("Error loading messages:", error);
-    throw error; // Propager l'erreur au lieu de notFound()
-  }
+interface LayoutProps {
+  children: React.ReactNode;
+  params: {
+    locale: Locale;
+  };
+  app: React.ReactNode;
 }
 
 export default async function LocaleLayout({
   children,
   params: { locale },
   app,
-}: {
-  children: React.ReactNode;
-  params: { locale: Locale };
-  app: React.ReactNode;
-}) {
+}: LayoutProps) {
   try {
     // Vérifier la connexion à la base de données
-    const isConnected = await checkDatabaseConnection();
+    const isConnected = await connectToDatabase();
     if (!isConnected) {
       console.error("Database connection failed");
       throw new Error("Database connection failed");
     }
 
-    if (!locales.includes(locale)) {
-      const headersList = headers();
+    // Vérifier la validité de la locale de manière asynchrone
+    const validLocales = await Promise.resolve(locales);
+    if (!validLocales.includes(locale)) {
+      const headersList = await headers();
       const pathname = headersList.get("x-pathname") || "";
       redirect(`/${defaultLocale}${pathname}`);
     }
 
-    const messages = await getMessages(locale);
-    if (!messages) {
-      throw new Error("Failed to load messages");
-    }
+    // Charger les messages de manière asynchrone
+    const messages = await import(`../messages/${locale}.json`)
+      .then((module) => module.default)
+      .catch((error) => {
+        console.error(`Failed to load messages for locale ${locale}:`, error);
+        return {};
+      });
 
     return (
       <html lang={locale} suppressHydrationWarning>
@@ -187,7 +131,6 @@ export default async function LocaleLayout({
     );
   } catch (error) {
     console.error("Layout error:", error);
-    // Afficher une page d'erreur au lieu de crasher
     return (
       <html lang={locale} suppressHydrationWarning>
         <body className="font-sans antialiased">

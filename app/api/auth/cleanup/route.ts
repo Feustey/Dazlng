@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/app/lib/db";
+import { connectToDatabase } from "../../../lib/mongodb";
+import mongoose from "mongoose";
 
 export async function POST() {
   try {
+    const db = await connectToDatabase();
     // Supprimer toutes les sessions expirées
-    await prisma.session.deleteMany({
-      where: {
-        expiresAt: {
-          lt: new Date(),
-        },
+    await db.collection("sessions").deleteMany({
+      expiresAt: {
+        $lt: new Date(),
       },
     });
 

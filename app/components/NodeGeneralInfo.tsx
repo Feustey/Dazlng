@@ -1,6 +1,6 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
+import { Card } from "./ui/card";
 import { Clock, MapPin, ArrowUpRight, ArrowDownRight } from "lucide-react";
 
 interface GeneralInfo {

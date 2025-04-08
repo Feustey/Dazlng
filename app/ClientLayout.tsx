@@ -3,7 +3,7 @@
 import { SettingsProvider } from "./contexts/SettingsContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { AuthProvider } from "./contexts/AuthContext";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "./components/ui/toaster";
 import { useEffect, useState } from "react";
 
 export default function ClientLayout({

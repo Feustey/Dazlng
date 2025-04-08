@@ -1,41 +1,27 @@
 import { NextResponse } from "next/server";
-import prisma from "@/app/lib/db";
+import { dynamic, errorResponse, successResponse } from "../../api/config";
 
-export const runtime = "nodejs";
+export const runtime = "edge";
+export { dynamic };
 
 export async function GET() {
   try {
-    const history = await prisma.history.findMany({
-      orderBy: {
-        date: "desc",
-      },
-      take: 100,
-      select: {
-        date: true,
-        price: true,
-        volume: true,
-        marketCap: true,
-      },
-    });
-
-    return NextResponse.json({
-      status: "success",
-      data: history,
-    });
-  } catch (error) {
-    console.error("Erreur lors de la récupération de l'historique:", error);
-
-    // Retourner des données fictives en cas d'erreur pour éviter les erreurs en production
-    const mockHistory = Array.from({ length: 7 }, (_, i) => ({
-      date: new Date(Date.now() - i * 86400000),
-      price: 50000 - i * 1000,
-      volume: 1000000 - i * 50000,
-      marketCap: 1000000000 - i * 10000000,
+    // Données historiques de démonstration
+    const mockHistoricalData = Array.from({ length: 30 }, (_, i) => ({
+      timestamp: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString(),
+      total_fees: 150000 - i * 1000,
+      total_capacity: 15000000 - i * 100000,
+      active_channels: 23 - Math.floor(i / 5),
+      total_peers: 15 - Math.floor(i / 7),
+      total_volume: 5000000 - i * 50000,
     }));
 
-    return NextResponse.json({
-      status: "success",
-      data: mockHistory,
-    });
+    return successResponse(mockHistoricalData);
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération des données historiques:",
+      error
+    );
+    return errorResponse("Erreur interne du serveur");
   }
 }

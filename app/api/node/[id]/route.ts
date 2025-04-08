@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { fetchNodeInfo } from "@/app/lib/services/nodeService";
+import { fetchNodeInfo } from "../../../lib/services/nodeService";
 
 export async function GET(
   request: NextRequest,

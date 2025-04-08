@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { useAlert } from "@/app/hooks/useAlert";
+import { useTranslations } from "next-intl";
+import { useAlert } from "../hooks/useAlert";
 
 interface ApiErrorProps {
   error: Error | null;

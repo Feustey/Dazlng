@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl";
-import { formatSats } from "@/app/utils/format";
+import { formatSats } from "../../utils/format";
 
 interface NetworkChannel {
   channelId: string;
@@ -41,8 +41,8 @@ export default function RecentChannels({ channels }: RecentChannelsProps) {
                     channel.status === "active"
                       ? "bg-green-500/10 text-green-500"
                       : channel.status === "inactive"
-                      ? "bg-orange-500/10 text-orange-500"
-                      : "bg-red-500/10 text-red-500"
+                        ? "bg-orange-500/10 text-orange-500"
+                        : "bg-red-500/10 text-red-500"
                   }`}
                 >
                   {channel.status}

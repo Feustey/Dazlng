@@ -1,21 +1,24 @@
 "use client";
 
 import * as React from "react";
-
-import { useTheme } from "next-themes";
-import { useTranslations } from "next-intl";
-import { LogOut, Settings } from "lucide-react";
-
-import { useAuth } from "@/app/contexts/AuthContext";
-import { useLanguage } from "@/app/contexts/LanguageContext";
-import { Button } from "@/app/components/ui/button";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
+import { Settings, LogOut, Globe, Moon, Sun } from "lucide-react";
+import { motion } from "framer-motion";
+import { useAuth } from "../contexts/AuthContext";
+import { useLanguage } from "../contexts/LanguageContext";
+import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/app/components/ui/dropdown-menu";
+} from "./ui/dropdown-menu";
+import { useTheme } from "next-themes";
+import { useTranslations } from "next-intl";
 
 export function SettingsMenu() {
   const { setTheme, theme } = useTheme();

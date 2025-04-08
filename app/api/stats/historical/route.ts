@@ -1,6 +1,4 @@
-"use server";
-
-import { getHistoricalData } from "@/app/services/network.service";
+import { getHistoricalData } from "../../../services/network.service";
 import { NextResponse } from "next/server";
 import { mockHistoricalData } from "../../../lib/mockData";
 

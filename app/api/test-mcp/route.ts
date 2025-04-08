@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { dynamic, errorResponse, successResponse } from "@/app/api/config";
+import { dynamic, errorResponse, successResponse } from "../../api/config";
 
 export const runtime = "edge";
 export { dynamic };
@@ -16,8 +16,7 @@ export async function GET() {
       peers: "/api/peers",
       centralities: "/api/centralities",
       review: "/api/review",
-      history: "/api/history",
-      historical: "/api/historical",
+      history: "/api/historical",
       stats: "/api/stats",
     };
 

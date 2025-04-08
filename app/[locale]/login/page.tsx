@@ -3,18 +3,23 @@
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/app/contexts/AuthContext";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "../../contexts/AuthContext";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
+import { Button } from "../../components/ui/button";
+import { useToast } from "../../components/ui/use-toast";
 
 export default function LoginPage() {
   const t = useTranslations("Auth");
   const router = useRouter();
   const { login } = useAuth();
-  const { toast } = useToast();
+  const { addToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [message] = useState("Connexion test en local");
   const [pubkey, setPubkey] = useState("");
@@ -29,22 +34,20 @@ export default function LoginPage() {
       await new Promise((resolve) => setTimeout(resolve, 5000));
 
       // Simuler une connexion réussie
-      await login({
-        email: "test@example.com",
-        pubkey: pubkey || "test_pubkey",
-        nostrAccount: "test_nostr_account",
-        newsletterSubscription: false,
-      });
+      const email = "test@example.com";
+      const password = pubkey || "test_pubkey";
+      await login(email, password);
 
-      toast({
+      addToast({
         title: t("signInSuccess"),
+        description: t("welcomeBack"),
       });
 
       router.push("/");
     } catch (error) {
-      toast({
+      addToast({
         title: t("error.unknown"),
-        variant: "destructive",
+        type: "error",
       });
     } finally {
       setIsLoading(false);

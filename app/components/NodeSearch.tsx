@@ -1,11 +1,15 @@
 "use client";
 
 import * as React from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
+import { Search } from "lucide-react";
+import { motion } from "framer-motion";
+import { useNode } from "../contexts/NodeContext";
 
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
-
-import { useNode } from "@/app/contexts/NodeContext";
+import { useEffect } from "react";
 
 interface Node {
   pubkey: string;

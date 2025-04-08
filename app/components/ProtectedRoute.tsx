@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/app/hooks/useAuth";
+import { useRouter, usePathname } from "next/navigation";
 import { useLocale } from "next-intl";
-import { isPublicRoute } from "@/app/config/protected-routes";
+import { useAuth } from "../hooks/useAuth";
+import { isPublicRoute } from "../config/protected-routes";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;

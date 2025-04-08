@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import type { ToastActionElement, ToastProps } from "@/app/components/ui/toast";
+import type { ToastActionElement, ToastProps } from "../components/ui/toast";
 
 const TOAST_LIMIT = 1;
 const TOAST_REMOVE_DELAY = 5000;
@@ -182,10 +182,9 @@ function useToast() {
       if (index > -1) {
         listeners.splice(index, 1);
       }
-      // Nettoyer les timeouts lors du démontage du hook
       clearAllTimeouts();
     };
-  }, [state]);
+  }, []);
 
   return {
     ...state,

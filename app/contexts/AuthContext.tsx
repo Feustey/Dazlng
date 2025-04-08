@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 
 interface User {
   email: string;
@@ -21,53 +27,119 @@ interface User {
   social4?: string;
 }
 
-interface AuthContextType {
+export interface AuthContextType {
+  user: any | null;
   isAuthenticated: boolean;
-  user: User | null;
-  login: (userData: User) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string) => Promise<void>;
+  verify: (email: string, code: string) => Promise<void>;
   logout: () => void;
   updateUser: (userData: Partial<User>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<any | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
 
-  useEffect(() => {
-    // Vérifier si l'utilisateur est déjà connecté
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+  const login = async (email: string, password: string) => {
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Erreur de connexion");
+      }
+
+      const data = await response.json();
+      setUser(data.user);
       setIsAuthenticated(true);
+    } catch (error) {
+      throw error;
     }
-  }, []);
+  };
 
-  const login = async (userData: User) => {
-    // En production, nous ferions une requête API ici
-    setUser(userData);
-    setIsAuthenticated(true);
-    localStorage.setItem("user", JSON.stringify(userData));
+  const register = async (email: string, password: string) => {
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Erreur d'inscription");
+      }
+
+      const data = await response.json();
+      setUser(data.user);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const verify = async (email: string, code: string) => {
+    try {
+      const response = await fetch("/api/auth/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, code }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Erreur de vérification");
+      }
+
+      const data = await response.json();
+      setUser(data.user);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const updateUser = async (userData: Partial<User>) => {
+    try {
+      const response = await fetch("/api/auth/update", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Erreur de mise à jour");
+      }
+
+      const data = await response.json();
+      setUser({ ...user, ...data.user });
+    } catch (error) {
+      throw error;
+    }
   };
 
   const logout = () => {
     setUser(null);
     setIsAuthenticated(false);
-    localStorage.removeItem("user");
-  };
-
-  const updateUser = async (userData: Partial<User>) => {
-    if (!user) return;
-
-    const updatedUser = { ...user, ...userData };
-    setUser(updatedUser);
-    localStorage.setItem("user", JSON.stringify(updatedUser));
   };
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, user, login, logout, updateUser }}
+      value={{
+        user,
+        isAuthenticated,
+        login,
+        register,
+        verify,
+        logout,
+        updateUser,
+      }}
     >
       {children}
     </AuthContext.Provider>

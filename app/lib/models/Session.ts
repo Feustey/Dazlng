@@ -1,30 +1,22 @@
-import { prisma } from "../db";
+import mongoose from "mongoose";
 
-export const Session = {
-  create: async (data: {
-    sessionId: string;
-    email: string;
-    expiresAt: Date;
-  }) => {
-    return prisma.session.create({
-      data,
-    });
+const sessionSchema = new mongoose.Schema({
+  userId: {
+    type: String,
+    required: true,
   },
+  token: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    expires: 24 * 60 * 60, // Expire après 24 heures
+  },
+});
 
-  findOne: async (where: {
-    sessionId: string;
-    expiresAt?: {
-      gt: Date;
-    };
-  }) => {
-    return prisma.session.findFirst({
-      where,
-    });
-  },
+export const Session =
+  mongoose.models.Session || mongoose.model("Session", sessionSchema);
 
-  deleteOne: async (where: { sessionId: string }) => {
-    return prisma.session.delete({
-      where,
-    });
-  },
-};
+export default Session;

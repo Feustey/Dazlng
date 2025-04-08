@@ -1,6 +1,6 @@
-import { signMessage, verifySignature } from "../../app/lib/auth";
-import { createJWT, verifyJWT } from "../../app/lib/jwt";
-import { hashPassword, comparePasswords } from "../../app/lib/password";
+import { signMessage, verifySignature } from "@app/lib/auth";
+import { createJWT, verifyJWT } from "@app/lib/jwt";
+import { hashPassword, comparePasswords } from "@app/lib/password";
 import { generateKeyPairSync } from "crypto";
 
 describe("Authentication Tests", () => {

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { Card } from "@/app/components/ui/card";
+import { Card } from "../../../components/ui/card";
 import {
   BarChart,
   Bar,

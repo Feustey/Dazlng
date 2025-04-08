@@ -1,16 +1,17 @@
 "use client";
 
-import { useEffect } from "react";
-import { useApi } from "@/app/hooks/useApi";
-import { useAlert } from "@/app/hooks/useAlert";
-import { Card } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Loading from "@/app/components/Loading";
-import ApiError from "@/app/components/ApiError";
-import ChannelMap from "@/app/components/ChannelMap";
-import NodePerformance from "@/app/components/NodePerformance";
-import NodeGeneralInfo from "@/app/components/NodeGeneralInfo";
-import ChannelList from "@/app/components/ChannelList";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useApi } from "../hooks/useApi";
+import { useAlert } from "../hooks/useAlert";
+import { Card } from "./ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import Loading from "./Loading";
+import ApiError from "./ApiError";
+import ChannelMap from "./ChannelMap";
+import NodePerformance from "./NodePerformance";
+import NodeGeneralInfo from "./NodeGeneralInfo";
+import ChannelList from "./ChannelList";
 
 interface Channel {
   id: string;

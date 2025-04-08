@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { connectToDatabase } from "../app/lib";
-import { Node } from "../app/models";
+import { Node } from "../app/models/mongoose-models";
 
 async function migrateDatabase() {
   try {

@@ -1,12 +1,6 @@
 import { useTranslations } from "next-intl";
-import { formatSats } from "@/app/utils/format";
-
-interface NetworkNode {
-  publicKey: string;
-  alias: string;
-  channelCount: number;
-  capacity: number;
-}
+import { formatSats } from "../../utils/format";
+import { NetworkNode } from "../../types/network";
 
 interface TopNodesProps {
   nodes: NetworkNode[];

@@ -1,6 +1,6 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
+import { Card } from "./ui/card";
 import { BarChart3, Zap, DollarSign, TrendingUp } from "lucide-react";
 
 interface PerformanceStats {

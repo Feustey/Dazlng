@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../components/ui/select";
-import { useAlert } from "@/app/contexts/AlertContext";
+import { useAlert } from "../contexts/AlertContext";
 import { motion } from "framer-motion";
 
 interface ContactFormData {

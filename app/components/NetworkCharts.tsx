@@ -1,5 +1,5 @@
-import { Card } from "@/app/components/ui/card";
-import { Node } from "@/app/types/network";
+import { Card } from "./ui/card";
+import { Node } from "../types/network";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -37,7 +37,7 @@ export function NetworkCharts({ nodes }: NetworkChartsProps) {
     datasets: [
       {
         label: "Capacité (BTC)",
-        data: nodes.map((node) => parseFloat(node.capacity)),
+        data: nodes.map((node) => parseFloat(node.capacity.toString())),
         backgroundColor: "rgba(53, 162, 235, 0.5)",
       },
     ],
@@ -90,17 +90,11 @@ export function NetworkCharts({ nodes }: NetworkChartsProps) {
       {
         label: "Nombre de nœuds",
         data: [
-          nodes.filter((node) => parseInt(node.age) < 1).length,
-          nodes.filter(
-            (node) => parseInt(node.age) >= 1 && parseInt(node.age) < 3
-          ).length,
-          nodes.filter(
-            (node) => parseInt(node.age) >= 3 && parseInt(node.age) < 6
-          ).length,
-          nodes.filter(
-            (node) => parseInt(node.age) >= 6 && parseInt(node.age) < 12
-          ).length,
-          nodes.filter((node) => parseInt(node.age) >= 12).length,
+          nodes.filter((node) => node.age < 1).length,
+          nodes.filter((node) => node.age >= 1 && node.age < 3).length,
+          nodes.filter((node) => node.age >= 3 && node.age < 6).length,
+          nodes.filter((node) => node.age >= 6 && node.age < 12).length,
+          nodes.filter((node) => node.age >= 12).length,
         ],
         backgroundColor: "rgba(153, 102, 255, 0.5)",
       },
@@ -113,8 +107,8 @@ export function NetworkCharts({ nodes }: NetworkChartsProps) {
       {
         label: "Nœuds",
         data: nodes.map((node) => ({
-          x: parseFloat(node.capacity),
-          y: node.channels,
+          x: parseFloat(node.capacity.toString()),
+          y: node.channels.length,
         })),
         backgroundColor: "rgba(255, 159, 64, 0.5)",
       },

@@ -5,7 +5,7 @@ type LogLevel = "info" | "warn" | "error" | "debug";
 interface LogContext {
   request?: NextRequest;
   userId?: string;
-  [key: string]: any;
+  [key: string]: NextRequest | string | undefined;
 }
 
 class Logger {

@@ -1,19 +1,22 @@
 "use client";
 
 import * as React from "react";
-
-import { Search } from "lucide-react";
 import { useState } from "react";
-
-import { useLanguage } from "@/app/contexts/LanguageContext";
-import { Button } from "@/app/components/ui/button";
+import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
+import { Search } from "lucide-react";
+import { motion } from "framer-motion";
+import { useLanguage } from "../contexts/LanguageContext";
+import { Button } from "./ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/app/components/ui/dialog";
-import { Input } from "@/app/components/ui/input";
+  DialogTrigger,
+} from "./ui/dialog";
+import { Input } from "./ui/input";
 
 interface NodeSearchDialogProps {
   isOpen: boolean;

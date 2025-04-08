@@ -1,54 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/app/lib/db";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
-const WINDOW_SIZE = 60 * 1000; // 1 minute
-const MAX_REQUESTS = 100; // 100 requêtes par minute
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL || "",
+  token: process.env.UPSTASH_REDIS_REST_TOKEN || "",
+});
 
-export async function rateLimit(req: NextRequest) {
-  const ip = req.ip || "unknown";
-  const route = req.nextUrl.pathname;
+const ratelimit = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(10, "10 s"),
+});
 
-  try {
-    const now = new Date();
-    const windowStart = new Date(now.getTime() - WINDOW_SIZE);
+export async function middleware(request: NextRequest) {
+  const ip = request.ip ?? "127.0.0.1";
+  const _windowStart = Date.now();
 
-    // Récupérer ou créer l'entrée de rate limit
-    let rateLimit = await prisma.rateLimit.findFirst({
-      where: {
-        ip,
-        route,
-        resetAt: {
-          gt: now,
-        },
+  const { success, limit, reset, remaining } = await ratelimit.limit(ip);
+
+  if (!success) {
+    return new NextResponse("Too Many Requests", {
+      status: 429,
+      headers: {
+        "X-RateLimit-Limit": limit.toString(),
+        "X-RateLimit-Remaining": remaining.toString(),
+        "X-RateLimit-Reset": reset.toString(),
       },
     });
-
-    if (!rateLimit) {
-      rateLimit = await prisma.rateLimit.create({
-        data: {
-          ip,
-          route,
-          count: 1,
-          resetAt: new Date(now.getTime() + WINDOW_SIZE),
-        },
-      });
-      return true;
-    }
-
-    // Vérifier si on a dépassé la limite
-    if (rateLimit.count >= MAX_REQUESTS) {
-      return false;
-    }
-
-    // Incrémenter le compteur
-    await prisma.rateLimit.update({
-      where: { id: rateLimit.id },
-      data: { count: rateLimit.count + 1 },
-    });
-
-    return true;
-  } catch (error) {
-    console.error("Rate limit error:", error);
-    return true; // En cas d'erreur, on laisse passer la requête
   }
+
+  return NextResponse.next();
 }

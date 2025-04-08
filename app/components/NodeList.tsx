@@ -1,5 +1,5 @@
-import { Card } from "@/app/components/ui/card";
-import { Button } from "@/app/components/ui/button";
+import { Card } from "./ui/card";
+import { Button } from "./ui/button";
 import { useTranslations } from "next-intl";
 
 interface Node {

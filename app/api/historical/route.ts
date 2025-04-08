@@ -1,31 +1,11 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { connectToDatabase } from "@/app/lib/db";
-import { Session } from "@/app/lib/models/Session";
-import { dynamic, errorResponse, successResponse } from "@/app/api/config";
+import { dynamic, errorResponse, successResponse } from "../../api/config";
 
 export const runtime = "edge";
 export { dynamic };
 
 export async function GET() {
   try {
-    const sessionId = cookies().get("session_id")?.value;
-
-    if (!sessionId) {
-      return errorResponse("Non authentifié", 401);
-    }
-
-    await connectToDatabase();
-
-    const session = await Session.findOne({
-      sessionId,
-      expiresAt: { gt: new Date() },
-    });
-
-    if (!session) {
-      return errorResponse("Session expirée", 401);
-    }
-
     // Données historiques de démonstration
     const mockHistoricalData = Array.from({ length: 30 }, (_, i) => ({
       timestamp: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString(),

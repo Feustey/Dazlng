@@ -3,16 +3,16 @@
 import { useState, ChangeEvent, useCallback } from "react";
 import { Line } from "react-chartjs-2";
 
-import { Badge } from "@/app/components/ui/badge";
-import { Button } from "@/app/components/ui/button";
+import { Badge } from "../components/ui/badge";
+import { Button } from "../components/ui/button";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/app/components/ui/card";
-import { Chart } from "@/app/components/ui/chart";
-import { FormInput } from "@/app/components/ui/form-input";
+} from "../components/ui/card";
+import { Chart } from "../components/ui/chart";
+import { FormInput } from "../components/ui/form-input";
 import { useLanguage } from "../contexts/LanguageContext";
 
 export default function TestPage() {
