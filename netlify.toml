@@ -7,6 +7,8 @@
   NEXT_PUBLIC_APP_URL = "https://dazlng.com"
   NODE_VERSION = "20.11.1"
   NPM_VERSION = "10.2.4"
+  NEXT_TELEMETRY_DISABLED = "1"
+  NODE_ENV = "production"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
@@ -35,10 +37,6 @@
 
 [build.processing.images]
   compress = true
-
-[build.environment]
-  NEXT_TELEMETRY_DISABLED = "1"
-  NODE_ENV = "production"
 
 [functions]
   external_node_modules = []
