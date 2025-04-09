@@ -1,18 +1,20 @@
-import { getHistoricalData } from "../../../services/network.service";
 import { NextResponse } from "next/server";
+import { getHistoricalStats } from "../../../services/network.service";
 import { mockHistoricalData } from "../../../lib/mockData";
-
-// Activer le mode développement pour utiliser les données fictives
-const USE_MOCK_DATA = process.env.NODE_ENV === "development";
 
 export async function GET() {
   try {
-    const historicalData = await getHistoricalData();
-    return NextResponse.json(historicalData);
+    // En développement, utiliser les données simulées
+    if (process.env.NODE_ENV === "development") {
+      return NextResponse.json(mockHistoricalData);
+    }
+
+    const stats = await getHistoricalStats();
+    return NextResponse.json(stats);
   } catch (error) {
-    console.error("Error fetching historical data:", error);
+    console.error("Error fetching historical stats:", error);
     return NextResponse.json(
-      { error: "Failed to fetch historical data" },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }

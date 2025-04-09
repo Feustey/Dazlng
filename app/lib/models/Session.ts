@@ -1,22 +1,31 @@
 import mongoose from "mongoose";
 
+export interface ISession {
+  sessionId: string;
+  userId: string;
+  expiresAt: Date;
+  createdAt: Date;
+}
+
 const sessionSchema = new mongoose.Schema({
+  sessionId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   userId: {
     type: String,
     required: true,
   },
-  token: {
-    type: String,
+  expiresAt: {
+    type: Date,
     required: true,
   },
   createdAt: {
     type: Date,
     default: Date.now,
-    expires: 24 * 60 * 60, // Expire après 24 heures
   },
 });
 
 export const Session =
   mongoose.models.Session || mongoose.model("Session", sessionSchema);
-
-export default Session;

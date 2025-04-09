@@ -3,8 +3,8 @@
   publish = ".next"
 
 [build.environment]
-  NEXT_PUBLIC_API_URL = "https://api.dazlng.com"
-  NEXT_PUBLIC_APP_URL = "https://dazlng.com"
+  NEXT_PUBLIC_API_URL = "https://api.dazno.de"
+  NEXT_PUBLIC_APP_URL = "https://dazno.de"
   NODE_VERSION = "20.11.1"
   NPM_VERSION = "10.2.4"
   NEXT_TELEMETRY_DISABLED = "1"

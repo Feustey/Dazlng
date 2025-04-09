@@ -1,49 +1,60 @@
 import { NextResponse } from "next/server";
-import { headers } from "next/headers";
-import { connectToDatabase } from "../../../lib/db";
-import { Session } from "../../../lib/models/Session";
+import { getDb } from "../../../lib/db";
+import { ISession } from "../../../lib/models/Session";
+import { WithId, Document } from "mongodb";
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
-    const headersList = headers();
-    const sessionId = headersList.get("x-session-id");
-
-    if (!sessionId) {
-      return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+    const db = await getDb();
+    if (!db) {
+      throw new Error("Database connection failed");
     }
 
-    await connectToDatabase();
+    // Récupérer les statistiques du réseau
+    const [nodes, sessionsDoc] = await Promise.all([
+      db
+        .collection("nodes")
+        .aggregate([
+          {
+            $group: {
+              _id: null,
+              totalNodes: { $sum: 1 },
+              onlineNodes: {
+                $sum: {
+                  $cond: [{ $eq: ["$status", "online"] }, 1, 0],
+                },
+              },
+              totalPeers: { $sum: "$peers" },
+              averageBlockHeight: { $avg: "$blockHeight" },
+            },
+          },
+        ])
+        .toArray(),
+      db.collection("sessions").find({}).toArray(),
+    ]);
 
-    const session = await Session.findOne({
-      sessionId,
-      expiresAt: { gt: new Date() },
-    });
+    const sessions = sessionsDoc.map((doc: WithId<Document>) => ({
+      sessionId: doc.sessionId,
+      userId: doc.userId,
+      expiresAt: doc.expiresAt,
+      createdAt: doc.createdAt,
+    })) as ISession[];
 
-    if (!session) {
-      return NextResponse.json({ error: "Session expirée" }, { status: 401 });
-    }
-
-    // Données de démonstration pour le résumé du réseau
-    const mockNetworkData = {
-      totalNodes: 15000,
-      totalChannels: 85000,
-      totalCapacity: 5000000000,
-      avgCapacityPerChannel: 58823,
-      avgChannelsPerNode: 5.67,
-      activeNodes: 12000,
-      activeChannels: 75000,
-      networkGrowth: {
-        nodes: 150,
-        channels: 850,
-        capacity: 50000000,
-      },
+    const networkStats = nodes[0] || {
+      totalNodes: 0,
+      onlineNodes: 0,
+      totalPeers: 0,
+      averageBlockHeight: 0,
     };
 
-    return NextResponse.json(mockNetworkData);
+    return NextResponse.json({
+      ...networkStats,
+      activeSessions: sessions.length,
+    });
   } catch (error) {
-    console.error("Erreur lors de la récupération du résumé du réseau:", error);
+    console.error("Error fetching network summary:", error);
     return NextResponse.json(
-      { error: "Erreur interne du serveur" },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }

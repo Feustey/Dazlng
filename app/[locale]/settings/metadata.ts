@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Paramètres - Dazlng",
+  title: "Paramètres - Daznode",
   description:
-    "Gérez vos préférences et personnalisez votre expérience sur Dazlng. Configuration de votre nœud Lightning, notifications et sécurité.",
+    "Gérez vos préférences et personnalisez votre expérience sur Daznode. Configuration de votre nœud Lightning, notifications et sécurité.",
 };

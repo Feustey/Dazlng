@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
 import mcpService from "../../../lib/mcpService";
-import { dynamic, errorResponse, successResponse } from "../../../api/config";
+import { NextResponse } from "next/server";
+import { dynamic, errorResponse, successResponse } from "../../config";
 
 export const runtime = "edge";
 export { dynamic };
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
         mcpService.getNodeInfo(nodePubkey),
         mcpService.getNetworkSummary(),
         mcpService.getPeersOfPeers(nodePubkey),
-        mcpService.analyzeQuestion(question, nodePubkey),
+        mcpService.analyzeQuestion(question),
       ]);
 
     return successResponse({

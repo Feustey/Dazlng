@@ -5,9 +5,9 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 
 import { useSettings } from "../contexts/SettingsContext";
-import { NodeInfo as NodeInfoType } from "../lib/types";
-import { fetchNodeInfo, saveNodeHistory } from "../lib/services/nodeService";
-import { formatBitcoin } from "../lib/utils";
+import { NodeInfo as NodeInfoType } from "@/app/lib/types";
+import { fetchNodeInfo, saveNodeHistory } from "@/app/lib/services/nodeService";
+import { formatBitcoin } from "@/app/lib/utils";
 import { Card } from "./ui/card";
 
 interface NodeInfoProps {
@@ -23,8 +23,10 @@ export function NodeInfoDisplay({ pubkey }: NodeInfoProps) {
     const fetchData = async () => {
       try {
         const data = await fetchNodeInfo(pubkey);
-        setNodeInfo(data);
-        saveNodeHistory(data);
+        if (data) {
+          setNodeInfo(data);
+          saveNodeHistory(data);
+        }
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Une erreur est survenue"
@@ -76,9 +78,7 @@ export function NodeInfoDisplay({ pubkey }: NodeInfoProps) {
           </div>
           <div>
             <p className="text-sm text-muted-foreground">Capacité Totale</p>
-            <p className="font-medium">
-              {formatBitcoin(nodeInfo.capacity, currency === "btc")}
-            </p>
+            <p className="font-medium">{formatBitcoin(nodeInfo.capacity)}</p>
           </div>
           <div>
             <p className="text-sm text-muted-foreground">Nombre de Canaux</p>

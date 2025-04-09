@@ -67,8 +67,8 @@ export function Features() {
             {t("features.title")}
           </h2>
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
-            Découvrez toutes les fonctionnalités qui font de DazLng la meilleure
-            plateforme de gestion de nœuds Lightning Network
+            Découvrez toutes les fonctionnalités qui font de Daznode la
+            meilleure plateforme de gestion de nœuds Lightning Network
           </p>
         </div>
 

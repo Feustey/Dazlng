@@ -1,5 +1,3 @@
-"use client";
-
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -7,13 +5,18 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatBitcoin(sats: number, asBtc: boolean = false): string {
-  if (asBtc) {
-    return `₿ ${(sats / 100000000).toFixed(8)}`;
-  }
-  return `${new Intl.NumberFormat().format(sats)} sats`;
+export function formatBitcoin(amount: number): string {
+  return new Intl.NumberFormat("fr-FR", {
+    style: "currency",
+    currency: "XBT",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 8,
+  }).format(amount);
 }
 
-export function formatNumber(num: number): string {
-  return new Intl.NumberFormat().format(num);
+export function formatNumber(number: number): string {
+  return new Intl.NumberFormat("fr-FR", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(number);
 }

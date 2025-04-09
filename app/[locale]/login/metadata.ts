@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Connexion - Dazlng",
+  title: "Connexion | Daznode",
   description:
-    "Connectez-vous à votre compte Dazlng en utilisant votre nœud Lightning Network pour une authentification sécurisée et sans mot de passe.",
+    "Connectez-vous à votre compte Daznode pour accéder à toutes vos fonctionnalités.",
 };

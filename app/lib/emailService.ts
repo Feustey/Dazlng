@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { EmailTemplate } from "../components/email-template";
+import WelcomeEmailTemplate from "../components/emails/WelcomeEmailTemplate";
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
@@ -55,14 +56,28 @@ export class EmailService {
   }
 
   async sendWelcomeEmail(to: string, firstName: string) {
-    return this.sendEmail({
-      to,
-      firstName,
-      subject: "Bienvenue sur Daznode !",
-      message: `Nous sommes ravis de vous accueillir sur Daznode. Notre plateforme vous permet d'optimiser votre nœud Lightning Network et de maximiser vos revenus.
+    try {
+      const dashboardUrl = `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`;
+      const { data, error } = await this.resend.emails.send({
+        from: "DazNode <bienvenue@daznode.com>",
+        to: [to],
+        subject: "Bienvenue sur DazNode !",
+        react: WelcomeEmailTemplate({
+          firstName,
+          dashboardUrl,
+        }),
+      });
 
-Commencez dès maintenant à explorer vos statistiques et à optimiser votre nœud !`,
-    });
+      if (error) {
+        console.error("Erreur lors de l'envoi de l'email de bienvenue:", error);
+        throw error;
+      }
+
+      return data;
+    } catch (error) {
+      console.error("Erreur lors de l'envoi de l'email de bienvenue:", error);
+      throw error;
+    }
   }
 
   async sendOptimizationReport(

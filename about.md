@@ -1,6 +1,6 @@
-# À propos de DazLng
+# À propos de Daznode
 
-DazLng est une application web qui permet de visualiser et d'analyser le réseau Lightning de Bitcoin.
+Daznode est une application web qui permet de visualiser et d'analyser le réseau Lightning de Bitcoin.
 
 ## Technologies utilisées
 
@@ -23,7 +23,7 @@ DazLng est une application web qui permet de visualiser et d'analyser le réseau
 
 ## Sécurité
 
-DazLng accorde une importance primordiale à la sécurité de ses utilisateurs et de leurs données. Voici un aperçu détaillé des mesures de sécurité mises en place :
+Daznode accorde une importance primordiale à la sécurité de ses utilisateurs et de leurs données. Voici un aperçu détaillé des mesures de sécurité mises en place :
 
 ### 🔒 Protection des Données
 
@@ -112,6 +112,6 @@ DazLng accorde une importance primordiale à la sécurité de ses utilisateurs e
 
 Pour toute question concernant la sécurité ou signaler une vulnérabilité, contactez-nous à :
 
-- Email : security@dazlng.com
+- Email : security@dazno.de
 - Nostr : npub1...
-- GitHub : [Issues](https://github.com/votre-username/DazLng/issues)
+- GitHub : [Issues](https://github.com/votre-username/Daznode/issues)

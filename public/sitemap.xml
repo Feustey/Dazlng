@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <!-- Page d'accueil -->
+  <url>
+    <loc>https://dazno.de</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en"/>
+  </url>
+
+  <!-- À propos -->
+  <url>
+    <loc>https://dazno.de/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/about"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/about"/>
+  </url>
+
+  <!-- Aide -->
+  <url>
+    <loc>https://dazno.de/help</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/help"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/help"/>
+  </url>
+
+  <!-- Réseau -->
+  <url>
+    <loc>https://dazno.de/network</loc>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/network"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/network"/>
+  </url>
+
+  <!-- Canaux -->
+  <url>
+    <loc>https://dazno.de/channels</loc>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/channels"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/channels"/>
+  </url>
+
+  <!-- Assistant IA -->
+  <url>
+    <loc>https://dazno.de/daz-ia</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/daz-ia"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/daz-ia"/>
+  </url>
+
+  <!-- Apprendre -->
+  <url>
+    <loc>https://dazno.de/learn</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/learn"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/learn"/>
+  </url>
+</urlset> 

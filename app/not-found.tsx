@@ -1,8 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { useParams } from "next/navigation";
 
 export default async function NotFound() {
   const t = await getTranslations("NotFound");
+  const params = useParams();
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4 sm:px-6 lg:px-8">
@@ -34,7 +38,7 @@ export default async function NotFound() {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
-            href="/"
+            href={`/${params.locale}`}
             className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
           >
             <svg
@@ -53,7 +57,7 @@ export default async function NotFound() {
           </Link>
 
           <Link
-            href="/contact"
+            href={`/${params.locale}/contact`}
             className="inline-flex items-center justify-center px-5 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors"
           >
             <svg

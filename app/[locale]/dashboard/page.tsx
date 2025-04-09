@@ -1,13 +1,8 @@
-import { Metadata } from "next";
+"use client";
+
 import DashboardStats from "../../components/DashboardStats";
 import ChannelPerformance from "../../components/ChannelPerformance";
 import ActiveChannels from "../../components/ActiveChannels";
-
-export const metadata: Metadata = {
-  title: "Tableau de Bord | DazLng",
-  description:
-    "Gérez vos nœuds Lightning Network et suivez leurs performances en temps réel.",
-};
 
 export default function DashboardPage() {
   return (

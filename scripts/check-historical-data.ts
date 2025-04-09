@@ -3,7 +3,7 @@ import { connect } from "mongoose";
 import { Node } from "../app/models/mongoose-models";
 
 const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb://localhost:27017/dazlng";
+  process.env.MONGODB_URI || "mongodb://localhost:27017/daznode";
 const PUBKEY = process.env.PUBKEY;
 
 async function checkHistoricalData() {

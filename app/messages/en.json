@@ -1,6 +1,6 @@
 {
   "Header": {
-    "title": "DazLng",
+    "title": "Daznode",
     "searchPlaceholder": "Search...",
     "settings": "Settings",
     "language": "Language",
@@ -29,7 +29,7 @@
     "myNode": "My Node"
   },
   "HomePage": {
-    "welcome": "Welcome to DazLng",
+    "welcome": "Welcome to Daznode",
     "description": "Manage your Lightning Network nodes."
   },
   "Home": {
@@ -76,7 +76,7 @@
       }
     },
     "benefits": {
-      "title": "Why choose DazLng?",
+      "title": "Why choose Daznode?",
       "items": {
         "simplicity": "Simple and intuitive interface",
         "security": "Enhanced security",
@@ -87,7 +87,7 @@
     },
     "cta": {
       "title": "Ready to get started?",
-      "description": "Join DazLng and optimize your presence on the Lightning Network",
+      "description": "Join Daznode and optimize your presence on the Lightning Network",
       "button": "Create account"
     }
   },
@@ -174,7 +174,7 @@
     }
   },
   "footer": {
-    "description": "DazLng is a Lightning Network node management platform that helps you manage your node and channels efficiently.",
+    "description": "Daznode is a Lightning Network node management platform that helps you manage your node and channels efficiently.",
     "links": {
       "help": "Help",
       "about": "About",
@@ -276,14 +276,14 @@
     },
     "faq": {
       "what_is_lightning": "What is Lightning Network?",
-      "how_to_start": "How to start with DazLng?",
+      "how_to_start": "How to start with Daznode?",
       "how_to_connect": "How to connect my wallet?",
       "how_to_transact": "How to make transactions?"
     }
   },
   "About": {
-    "title": "About DazLng",
-    "description": "DazLng is an innovative Lightning Network node management platform, designed to simplify and optimize your network experience.",
+    "title": "About Daznode",
+    "description": "Daznode is an innovative Lightning Network node management platform, designed to simplify and optimize your network experience.",
     "features": {
       "title": "Features",
       "learning": "Learning Guide",
@@ -309,7 +309,7 @@
     },
     "contact": {
       "title": "Contact Us",
-      "email": "Email",
+      "email": "support@dazno.de",
       "twitter": "Twitter",
       "github": "GitHub"
     }
@@ -362,7 +362,7 @@
     "contact": {
       "title": "Need Help?",
       "description": "Our team is available 24/7 to support you in your Lightning Network journey.",
-      "email": "support@dazlng.com",
+      "email": "support@dazno.de",
       "phone": "+33 1 23 45 67 89",
       "chat": "Telegram Chat",
       "button": "Contact Support"
@@ -513,7 +513,7 @@
     "description": "Connect with us for inquiries, support, or collaboration opportunities.",
     "email": {
       "title": "Email",
-      "address": "dazlng@proton.me"
+      "address": "daznode@proton.me"
     },
     "form": {
       "firstName": "First Name*",

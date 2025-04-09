@@ -1,63 +1,39 @@
-import mongoose from "mongoose";
+import { MongoClient } from "mongodb";
 
-interface MongooseCache {
-  conn: mongoose.Connection | null;
-  promise: Promise<mongoose.Connection | null> | null;
+if (!process.env.MONGODB_URI) {
+  throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
 }
 
-interface GlobalWithMongoose extends Global {
-  mongoose: MongooseCache | undefined;
-}
+const uri = process.env.MONGODB_URI;
+const options = {};
 
-declare const global: GlobalWithMongoose;
+let client;
+let clientPromise: Promise<MongoClient>;
 
-const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb://localhost:27017/dazlng";
+if (process.env.NODE_ENV === "development") {
+  // In development mode, use a global variable so that the value
+  // is preserved across module reloads caused by HMR (Hot Module Replacement).
+  let globalWithMongo = global as typeof globalThis & {
+    _mongoClientPromise?: Promise<MongoClient>;
+  };
 
-if (!MONGODB_URI) {
-  throw new Error("La variable d'environnement MONGODB_URI est requise");
-}
-
-const cached: MongooseCache = global.mongoose || { conn: null, promise: null };
-
-if (!global.mongoose) {
-  global.mongoose = cached;
-}
-
-export async function connectToDatabase(): Promise<mongoose.Connection> {
-  try {
-    if (cached.conn) {
-      console.log("Utilisation de la connexion MongoDB existante");
-      return cached.conn;
-    }
-
-    if (!cached.promise) {
-      console.log("Tentative de connexion à MongoDB...");
-      const opts = {
-        bufferCommands: false,
-      };
-
-      cached.promise = mongoose
-        .connect(MONGODB_URI!, opts)
-        .then((mongoose) => {
-          console.log("Connexion à MongoDB établie avec succès");
-          cached.conn = mongoose.connection;
-          return mongoose.connection;
-        })
-        .catch((error) => {
-          console.error("Erreur de connexion à MongoDB:", error);
-          cached.promise = null;
-          throw error;
-        });
-    }
-
-    const connection = await cached.promise;
-    if (!connection) {
-      throw new Error("Impossible d'établir la connexion à MongoDB");
-    }
-    return connection;
-  } catch (error) {
-    console.error("Erreur lors de la connexion à MongoDB:", error);
-    throw error;
+  if (!globalWithMongo._mongoClientPromise) {
+    client = new MongoClient(uri, options);
+    globalWithMongo._mongoClientPromise = client.connect();
   }
+  clientPromise = globalWithMongo._mongoClientPromise;
+} else {
+  // In production mode, it's best to not use a global variable.
+  client = new MongoClient(uri, options);
+  clientPromise = client.connect();
 }
+
+export async function connectToDatabase() {
+  const client = await clientPromise;
+  const db = client.db(process.env.MONGODB_DB);
+  return db;
+}
+
+// Export a module-scoped MongoClient promise. By doing this in a
+// separate module, the client can be shared across functions.
+export default clientPromise;

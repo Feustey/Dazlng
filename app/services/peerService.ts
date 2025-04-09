@@ -1,4 +1,5 @@
 import { PeerOfPeer } from "../types/peer";
+import { CentralityData } from "../types/mcpService";
 import { mcpService } from "./mcpService";
 
 export class PeerService {
@@ -59,16 +60,17 @@ export class PeerService {
   }
 
   // Récupérer les données de centralité d'un nœud
-  async getCentralityData(nodeId: string): Promise<any> {
+  async getCentralityData(nodeId: string): Promise<CentralityData> {
     try {
       // Utiliser MCP pour récupérer les données de centralité
       const nodeInfo = await mcpService.getNodeInfo(nodeId);
+      const stats = await mcpService.getNodeStats(nodeId);
 
       return {
-        betweenness: nodeInfo.betweennessRank || 0,
-        eigenvector: nodeInfo.eigenvectorRank || 0,
-        closeness: nodeInfo.closenessRank || 0,
-        timestamp: new Date(nodeInfo.timestamp),
+        betweenness: stats?.betweenness || 0,
+        closeness: stats?.closeness || 0,
+        degree: stats?.numberOfChannels || 0,
+        eigenvector: stats?.eigenvector || 0,
       };
     } catch (error) {
       console.error("Error fetching centrality data from MCP:", error);

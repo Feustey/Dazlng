@@ -1,7 +1,7 @@
 import { NetworkStats, NetworkNode, NetworkChannel } from "../types/network";
 import { MongoClient, Document } from "mongodb";
 import { Schema, model } from "mongoose";
-import { connectToDatabase } from "../lib/mongodb";
+import { connectToDatabase } from "@/app/lib/db";
 import Node from "../models/Node";
 import History from "../models/History";
 
@@ -357,8 +357,100 @@ export async function getPeersOfPeers(pubkey: string) {
   }
 }
 
-export async function getCurrentStats(): Promise<NetworkStatsDTO> {
-  return networkService.getNetworkStats();
+interface NetworkStatsBase {
+  _id: null;
+  totalNodes: number;
+  onlineNodes: number;
+  totalPeers: number;
+  averageBlockHeight: number;
+}
+
+interface NetworkStatsResponse {
+  totalNodes: number;
+  onlineNodes: number;
+  totalPeers: number;
+  averageBlockHeight: number;
+  activeSessions: number;
+}
+
+interface HistoricalStatsResponse {
+  timestamp: Date;
+  totalNodes: number;
+  onlineNodes: number;
+  totalPeers: number;
+  averageBlockHeight: number;
+}
+
+export async function getCurrentStats(): Promise<NetworkStatsResponse> {
+  const { db } = await connectToDatabase();
+  if (!db) {
+    throw new Error("Database connection failed");
+  }
+
+  const [nodes, sessions] = await Promise.all([
+    db
+      .collection("nodes")
+      .aggregate<NetworkStatsBase>([
+        {
+          $group: {
+            _id: null,
+            totalNodes: { $sum: 1 },
+            onlineNodes: {
+              $sum: {
+                $cond: [{ $eq: ["$status", "online"] }, 1, 0],
+              },
+            },
+            totalPeers: { $sum: "$peers" },
+            averageBlockHeight: { $avg: "$blockHeight" },
+          },
+        },
+      ])
+      .toArray(),
+    db.collection("sessions").countDocuments(),
+  ]);
+
+  const networkStats = nodes[0] || {
+    _id: null,
+    totalNodes: 0,
+    onlineNodes: 0,
+    totalPeers: 0,
+    averageBlockHeight: 0,
+  };
+
+  const { _id, ...stats } = networkStats;
+
+  return {
+    ...stats,
+    activeSessions: sessions,
+  };
+}
+
+export async function getHistoricalStats(
+  days: number = 30
+): Promise<HistoricalStatsResponse[]> {
+  const { db } = await connectToDatabase();
+  if (!db) {
+    throw new Error("Database connection failed");
+  }
+
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - days);
+
+  const stats = await db
+    .collection("network_stats")
+    .find({
+      timestamp: { $gte: startDate },
+    })
+    .sort({ timestamp: 1 })
+    .toArray();
+
+  return stats.map((stat) => ({
+    timestamp: stat.timestamp,
+    totalNodes: stat.totalNodes,
+    onlineNodes: stat.onlineNodes,
+    totalPeers: stat.totalPeers,
+    averageBlockHeight: stat.averageBlockHeight,
+  }));
 }
 
 export async function getHistoricalData() {

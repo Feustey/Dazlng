@@ -1,14 +1,13 @@
 import { inferAsyncReturnType } from "@trpc/server";
 import { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
-import { CreateNextContextOptions } from "@trpc/server/adapters/next";
-import { Session } from "next-auth";
+import { auth } from "@/auth";
 
-export const createContext = async (_opts: CreateNextContextOptions) => {
+export async function createTRPCContext(opts: FetchCreateContextFnOptions) {
+  const session = await auth();
   return {
-    session: null,
+    req: opts.req,
+    session,
   };
-};
+}
 
-export type Context = {
-  session: Session | null;
-};
+export type Context = inferAsyncReturnType<typeof createTRPCContext>;

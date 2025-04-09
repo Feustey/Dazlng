@@ -5,7 +5,13 @@ import { useState, useMemo, useEffect } from "react";
 import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
-import { Select } from "../../components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../components/ui/select";
 import { NodeList } from "../../components/NodeList";
 import { NetworkCharts } from "../../components/NetworkCharts";
 import NetworkMovers from "../../components/NetworkMovers";
@@ -139,7 +145,9 @@ export default function NetworkPage() {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center">Chargement...</div>
+        <div className="flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        </div>
       </div>
     );
   }
@@ -147,40 +155,40 @@ export default function NetworkPage() {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center text-red-500">{error}</div>
+        <div className="text-center text-red-500 animate-shake">{error}</div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 animate-fade-in">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">{t("title")}</h1>
-        <Button variant="default">{t("actions.addNode")}</Button>
+        <h1 className="text-3xl font-bold gradient-text">{t("title")}</h1>
+        <Button className="btn-gradient">{t("actions.addNode")}</Button>
       </div>
 
       {/* Statistiques */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <Card className="p-4">
-          <h3 className="text-lg font-semibold mb-2">
+        <Card className="card-glass p-6 animate-slide-up">
+          <h3 className="text-lg font-semibold mb-2 text-gradient">
             {t("stats.totalNodes")}
           </h3>
           <p className="text-2xl">{networkStats.totalNodes}</p>
         </Card>
-        <Card className="p-4">
-          <h3 className="text-lg font-semibold mb-2">
+        <Card className="card-glass p-6 animate-slide-up [animation-delay:100ms]">
+          <h3 className="text-lg font-semibold mb-2 text-gradient">
             {t("stats.activeChannels")}
           </h3>
           <p className="text-2xl">{networkStats.totalChannels}</p>
         </Card>
-        <Card className="p-4">
-          <h3 className="text-lg font-semibold mb-2">
+        <Card className="card-glass p-6 animate-slide-up [animation-delay:200ms]">
+          <h3 className="text-lg font-semibold mb-2 text-gradient">
             {t("stats.totalCapacity")}
           </h3>
           <p className="text-2xl">{networkStats.totalCapacity}</p>
         </Card>
-        <Card className="p-4">
-          <h3 className="text-lg font-semibold mb-2">
+        <Card className="card-glass p-6 animate-slide-up [animation-delay:300ms]">
+          <h3 className="text-lg font-semibold mb-2 text-gradient">
             Taille moyenne des canaux
           </h3>
           <p className="text-2xl">{networkStats.avgChannelSize}</p>
@@ -188,24 +196,26 @@ export default function NetworkPage() {
       </div>
 
       {/* Graphiques */}
-      <NetworkCharts nodes={networkNodes} />
+      <div className="animate-fade-in [animation-delay:400ms]">
+        <NetworkCharts nodes={networkNodes} />
+      </div>
 
       {/* Big Movers */}
-      <div className="mt-8">
+      <div className="mt-8 animate-fade-in [animation-delay:500ms]">
         <NetworkMovers />
       </div>
 
       {/* Filtres */}
-      <Card className="p-4 mb-8">
-        <h2 className="text-xl font-semibold mb-4">{t("filters.title")}</h2>
+      <Card className="card-glass p-6 mb-8 animate-slide-up [animation-delay:600ms]">
+        <h2 className="text-xl font-semibold mb-4 gradient-text">
+          {t("filters.title")}
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1">
-              {t("filters.capacity")}
-            </label>
             <Input
               type="number"
-              placeholder="Capacité minimale"
+              placeholder={t("filters.capacity")}
+              className="w-full bg-card/50 backdrop-blur-sm border-accent/20"
               value={filters.capacity}
               onChange={(e) =>
                 setFilters({ ...filters, capacity: e.target.value })
@@ -213,40 +223,46 @@ export default function NetworkPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">
-              {t("filters.age")}
-            </label>
             <Input
               type="number"
-              placeholder="Âge minimum"
+              placeholder={t("filters.age")}
+              className="w-full bg-card/50 backdrop-blur-sm border-accent/20"
               value={filters.age}
               onChange={(e) => setFilters({ ...filters, age: e.target.value })}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">
-              {t("filters.status")}
-            </label>
             <Select
               value={filters.status}
               onValueChange={(value) =>
                 setFilters({ ...filters, status: value })
               }
             >
-              <option value="all">Tous</option>
-              <option value="active">Actif</option>
-              <option value="inactive">Inactif</option>
+              <SelectTrigger className="w-full bg-card/50 backdrop-blur-sm border-accent/20">
+                <SelectValue placeholder={t("filters.status.all")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t("filters.status.all")}</SelectItem>
+                <SelectItem value="active">
+                  {t("filters.status.active")}
+                </SelectItem>
+                <SelectItem value="inactive">
+                  {t("filters.status.inactive")}
+                </SelectItem>
+              </SelectContent>
             </Select>
           </div>
         </div>
       </Card>
 
       {/* Liste des nœuds */}
-      <NodeList
-        nodes={filteredNodes}
-        onViewDetails={handleViewDetails}
-        onManageChannels={handleManageChannels}
-      />
+      <div className="animate-fade-in [animation-delay:700ms]">
+        <NodeList
+          nodes={filteredNodes}
+          onViewDetails={handleViewDetails}
+          onManageChannels={handleManageChannels}
+        />
+      </div>
     </div>
   );
 }

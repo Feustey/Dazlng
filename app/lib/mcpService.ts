@@ -47,9 +47,20 @@ export class OptimizationError extends McpError {
   }
 }
 
+interface AnalysisResult {
+  confidence: number;
+  category: string;
+  keywords: string[];
+  suggestedResponse: string;
+  relatedTopics: string[];
+}
+
 export class McpService {
   private static instance: McpService;
   private baseUrl: string;
+  private nodeInfo: NodeInfo | null = null;
+  private lastUpdate: number = 0;
+  private readonly UPDATE_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
   private constructor() {
     this.baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
@@ -203,36 +214,20 @@ export class McpService {
     }
   }
 
-  async analyzeQuestion(
-    question: string,
-    nodePubkey: string
-  ): Promise<{
-    answers: string[];
-    confidence: number;
-    relatedTopics: string[];
-  }> {
-    try {
-      const response = await fetch(
-        `${this.baseUrl}/api/mcp?action=analyzeQuestion&question=${encodeURIComponent(question)}&pubkey=${nodePubkey}`
-      );
-      if (!response.ok) {
-        throw new Error("Failed to analyze question");
-      }
-      const data = await response.json();
-      return data.analysis;
-    } catch (error: unknown) {
-      if (error instanceof McpError) {
-        throw error;
-      }
-      throw new McpError(
-        "Erreur lors de l'analyse de la question",
-        "ANALYSIS_ERROR",
-        500,
-        {
-          originalError: error instanceof Error ? error.message : String(error),
-        }
-      );
-    }
+  async analyzeQuestion(question: string): Promise<AnalysisResult> {
+    await this.updateNodeInfo();
+
+    // Dans une implémentation réelle, cela utiliserait un modèle de langage
+    // pour analyser la question et générer une réponse appropriée
+
+    // Pour le moment, retournons une réponse simulée
+    return {
+      confidence: 0.85,
+      category: "technical",
+      keywords: ["lightning", "network", "node"],
+      suggestedResponse: "Voici une réponse détaillée à votre question...",
+      relatedTopics: ["Lightning Network", "Nodes", "Channels"],
+    };
   }
 
   async getNodeCentrality(pubkey: string): Promise<NodeCentrality> {
@@ -265,6 +260,42 @@ export class McpService {
       console.error("Error fetching node stats:", error);
       throw error;
     }
+  }
+
+  /**
+   * Met à jour les informations du nœud si nécessaire
+   */
+  private async updateNodeInfo(): Promise<void> {
+    const now = Date.now();
+    if (now - this.lastUpdate > this.UPDATE_INTERVAL) {
+      try {
+        // Dans une implémentation réelle, cela récupérerait les informations du nœud
+        this.nodeInfo = {
+          lastUpdate: now.toString(),
+          pubkey: process.env.NODE_PUBKEY || "",
+          alias: "DazNode",
+          addresses: [],
+          color: "#000000",
+          features: {},
+        };
+        this.lastUpdate = now;
+      } catch (error) {
+        console.error(
+          "Erreur lors de la mise à jour des informations du nœud:",
+          error
+        );
+      }
+    }
+  }
+
+  /**
+   * Génère une réponse à une question
+   * @param question Question à laquelle répondre
+   * @returns Réponse générée
+   */
+  async generateResponse(question: string): Promise<string> {
+    const analysis = await this.analyzeQuestion(question);
+    return analysis.suggestedResponse;
   }
 }
 

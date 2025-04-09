@@ -1,25 +1,19 @@
 import { NextResponse } from "next/server";
-import { getSessionFromCookie } from "../../../lib/edge-auth";
+import { getSession } from "../../../lib/edge-auth";
+import { type NextRequest } from "next/server";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const session = await getSessionFromCookie();
-
+    const session = await getSession(request);
     if (!session) {
-      return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
-
-    return NextResponse.json({
-      user: {
-        email: session.email,
-        expiresAt: session.expiresAt,
-      },
-    });
+    return NextResponse.json(session);
   } catch (error) {
-    console.error(
-      "Erreur lors de la vérification de l'authentification:",
-      error
+    console.error("Error checking session:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
     );
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }

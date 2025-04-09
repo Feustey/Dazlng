@@ -149,34 +149,35 @@ export default function DaznodePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-black">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <motion.section
         ref={heroRef}
         initial="hidden"
         animate="visible"
         variants={fadeInUp}
-        className="relative h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-black text-white"
+        className="relative h-screen flex items-center justify-center bg-gradient-to-b from-background to-background/50 text-foreground"
       >
         <div className="absolute inset-0 z-0">
           <Image
             src="/images/Daznode-PI5.png"
             alt="Daznode"
-            layout="fill"
-            objectFit="cover"
-            className="opacity-30"
+            fill
+            className="opacity-20 object-cover animate-fade-in"
+            priority
           />
         </div>
         <div className="container mx-auto px-4 z-10 text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">{t("title")}</h1>
-          <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 gradient-text animate-slide-up">
+            {t("title")}
+          </h1>
+          <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto animate-slide-up [animation-delay:200ms]">
             Votre nœud Bitcoin & Lightning Network personnel, pré-configuré et
             prêt à l'emploi
           </p>
           <Button
             size="lg"
-            variant="default"
-            className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-6 text-xl"
+            className="btn-gradient px-8 py-6 text-xl animate-slide-up [animation-delay:400ms]"
             onClick={() => router.push(`/${locale}/checkout`)}
           >
             {t("orderButton")}
@@ -191,402 +192,157 @@ export default function DaznodePage() {
         whileInView="visible"
         variants={fadeInUp}
         viewport={{ once: true }}
-        className="bg-gradient-to-r from-orange-500 to-red-600 py-16 text-white"
+        className="bg-gradient-to-r from-primary/20 to-accent/20 backdrop-blur-xl py-16 text-foreground border-y border-accent/10"
       >
         <div className="container mx-auto px-4 text-center">
-          <div className="inline-block bg-white/10 rounded-full px-6 py-2 mb-4">
+          <div className="inline-block bg-card/50 backdrop-blur-sm rounded-full px-6 py-2 mb-4 border border-accent/20">
             🚀 Offre de Lancement
           </div>
-          <h2 className="text-4xl font-bold mb-4">
-            400,000 sats au lieu de 500,000 sats
+          <h2 className="text-4xl font-bold mb-4 gradient-text">
+            {t("promoTitle")}
           </h2>
-          <p className="text-xl mb-6">
-            Offre exclusive réservée aux 10 premiers clients !
+          <p className="text-xl text-muted-foreground">
+            {t("promoDescription")}
           </p>
-          <div className="flex justify-center gap-4">
-            <div className="bg-white/20 rounded-lg px-6 py-3">
-              <span className="font-bold text-2xl">7</span>
-              <span className="block text-sm">commandes restantes</span>
-            </div>
-          </div>
         </div>
       </motion.section>
 
-      {/* Features Grid */}
-      <motion.section
-        ref={featuresRef}
-        initial="hidden"
-        whileInView="visible"
-        variants={fadeInUp}
-        viewport={{ once: true }}
-        className="py-24 bg-white dark:bg-gray-900"
-      >
+      {/* Features Section */}
+      <section className="py-24">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center text-gray-900 dark:text-white mb-16">
-            Pourquoi choisir Daznode ?
+          <h2 className="text-4xl font-bold text-center mb-16 gradient-text">
+            {t("featuresTitle")}
           </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
               <motion.div
-                key={index}
-                whileHover={{ scale: 1.05 }}
-                className="bg-gray-50 dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700 shadow-lg"
+                key={feature.title}
+                initial="hidden"
+                whileInView="visible"
+                variants={fadeInUp}
+                viewport={{ once: true }}
+                className="card-glass p-8 rounded-xl"
+                style={{ animationDelay: `${index * 100}ms` }}
               >
-                {feature.icon}
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300">
-                  {feature.description}
-                </p>
+                <div className="flex flex-col items-center text-center">
+                  {feature.icon}
+                  <h3 className="text-xl font-semibold mb-4 text-gradient">
+                    {feature.title}
+                  </h3>
+                  <p className="text-muted-foreground">{feature.description}</p>
+                </div>
               </motion.div>
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
 
-      {/* Product Showcase */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        variants={fadeInUp}
-        viewport={{ once: true }}
-        className="py-24 bg-gradient-to-b from-gray-50 to-white dark:from-black dark:to-gray-900 overflow-hidden"
-      >
+      {/* Specs Section */}
+      <section className="py-24 bg-gradient-to-b from-background/50 to-background border-y border-accent/10">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row items-center gap-12">
-            <div className="lg:w-1/2">
-              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">
-                Un concentré de puissance dans un format compact
-              </h2>
-              <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
-                La Dazbox est conçue pour allier performance et élégance. Son
-                boîtier en aluminium avec ventilation optimisée assure une
-                dissipation thermique parfaite pour un fonctionnement 24/7.
-              </p>
-              <ul className="space-y-4 text-gray-600 dark:text-gray-300">
-                <li className="flex items-center">
-                  <span className="text-orange-500 mr-2">⚡</span>
-                  Design compact et élégant
-                </li>
-                <li className="flex items-center">
-                  <span className="text-orange-500 mr-2">⚡</span>
-                  Ventilation optimisée
-                </li>
-                <li className="flex items-center">
-                  <span className="text-orange-500 mr-2">⚡</span>
-                  Installation plug & play
-                </li>
-              </ul>
-            </div>
-            <div className="lg:w-1/2 relative">
-              <div className="relative aspect-square max-w-[500px] mx-auto">
-                <Image
-                  src="/images/Daznode-PI5.png"
-                  alt="Dazbox"
-                  width={500}
-                  height={500}
-                  className="rounded-2xl shadow-2xl transform hover:scale-105 transition-transform duration-300"
-                  priority
-                />
-                <div className="absolute -bottom-4 -right-4 bg-orange-500 text-white px-6 py-3 rounded-full text-sm font-medium transform rotate-3">
-                  Nouvelle génération
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </motion.section>
-
-      {/* Technical Specs */}
-      <motion.section
-        ref={specsRef}
-        initial="hidden"
-        whileInView="visible"
-        variants={fadeInUp}
-        viewport={{ once: true }}
-        className="py-24 bg-gray-50 dark:bg-black"
-      >
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center text-gray-900 dark:text-white mb-16">
-            Spécifications Techniques
+          <h2 className="text-4xl font-bold text-center mb-16 gradient-text">
+            {t("specsTitle")}
           </h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {specs.map((spec, index) => (
               <motion.div
-                key={index}
-                whileHover={{ scale: 1.05 }}
-                className="bg-white dark:bg-gray-900 rounded-xl p-8 shadow-lg"
+                key={spec.title}
+                initial="hidden"
+                whileInView="visible"
+                variants={fadeInUp}
+                viewport={{ once: true }}
+                className="card-glass p-8 rounded-xl"
+                style={{ animationDelay: `${index * 100}ms` }}
               >
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                <h3 className="text-xl font-semibold mb-4 text-gradient">
                   {spec.title}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300">
-                  {spec.description}
-                </p>
+                <p className="text-muted-foreground">{spec.description}</p>
               </motion.div>
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
 
-      {/* Call to Action */}
-      <motion.section
-        ref={pricingRef}
-        initial="hidden"
-        whileInView="visible"
-        variants={fadeInUp}
-        viewport={{ once: true }}
-        className="py-24 bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-black"
-      >
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-8">
-            Commandez votre Daznode
-          </h2>
-          <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-2xl p-8 border border-gray-200 dark:border-gray-700 shadow-xl">
-            <div className="text-5xl font-bold text-orange-500 mb-4">
-              400,000 sats
-            </div>
-            <div className="text-lg text-gray-500 dark:text-gray-300 line-through mb-6">
-              500,000 sats
-            </div>
-            <ul className="text-left text-gray-600 dark:text-gray-300 mb-8 space-y-4">
-              <li className="flex items-center">
-                <span className="text-green-500 mr-2">✓</span>
-                Raspberry Pi 5 (8GB RAM)
-              </li>
-              <li className="flex items-center">
-                <span className="text-green-500 mr-2">✓</span>
-                SSD 1To pré-configuré avec UmbrelOS
-              </li>
-              <li className="flex items-center">
-                <span className="text-green-500 mr-2">✓</span>
-                50,000 sats pré-chargés pour vos premiers canaux
-              </li>
-              <li className="flex items-center">
-                <span className="text-green-500 mr-2">✓</span>2 semaines de
-                support dédié
-              </li>
-              <li className="flex items-center">
-                <span className="text-green-500 mr-2">✓</span>1 an d'abonnement
-                DazIA Premium offert
-              </li>
-              <li className="flex items-center">
-                <span className="text-green-500 mr-2">✓</span>
-                Livraison gratuite en France
-              </li>
-            </ul>
-            <Button
-              size="lg"
-              className="w-full bg-orange-500 hover:bg-orange-600 text-white"
-              onClick={() => router.push(`/${locale}/checkout`)}
-            >
-              Commander maintenant
-            </Button>
-          </div>
-        </div>
-      </motion.section>
-
-      {/* Payment Modal */}
-      {showPayment && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setShowPayment(false);
-            }
-          }}
-        >
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full relative">
-            <button
-              onClick={() => setShowPayment(false)}
-              className="absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              {t("payment.title")}
-            </h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
-              {t("payment.scan")}
-            </p>
-            <div className="bg-white p-4 rounded-lg mb-6">
-              <AlbyQRCode amount={400000} />
-            </div>
-            {isProcessing && (
-              <div className="text-center">
-                {paymentStatus === "pending" && (
-                  <div className="text-gray-600 dark:text-gray-300">
-                    {t("payment.processing")}
-                  </div>
-                )}
-                {paymentStatus === "success" && (
-                  <div className="text-green-500">{t("payment.success")}</div>
-                )}
+      {/* Shipping Form Modal */}
+      {showShipping && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-xl flex items-center justify-center z-50">
+          <Card className="card-glass w-full max-w-lg mx-4 animate-fade-in">
+            <form onSubmit={handleShippingSubmit} className="p-6 space-y-4">
+              <h2 className="text-2xl font-bold mb-6 gradient-text">
+                {t("shippingTitle")}
+              </h2>
+              {Object.entries(shippingInfo).map(([key, value]) => (
+                <div key={key}>
+                  <Label htmlFor={key} className="text-muted-foreground">
+                    {t(`shipping.${key}`)}
+                  </Label>
+                  <Input
+                    id={key}
+                    type={key === "email" ? "email" : "text"}
+                    required
+                    value={value}
+                    onChange={(e) =>
+                      setShippingInfo({
+                        ...shippingInfo,
+                        [key]: e.target.value,
+                      })
+                    }
+                    className="w-full bg-card/50 backdrop-blur-sm border-accent/20"
+                  />
+                </div>
+              ))}
+              <div className="flex justify-end space-x-4 mt-6">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowShipping(false)}
+                  className="hover:bg-accent/20"
+                >
+                  {t("cancel")}
+                </Button>
+                <Button
+                  type="submit"
+                  className="btn-gradient"
+                  disabled={isProcessing}
+                >
+                  {isProcessing ? t("processing") : t("submit")}
+                </Button>
               </div>
-            )}
-            <Button
-              size="lg"
-              className="w-full bg-orange-500 hover:bg-orange-600 text-white mt-4"
-              onClick={() => setShowShipping(true)}
-            >
-              Continuer vers la livraison
-            </Button>
-          </div>
+            </form>
+          </Card>
         </div>
       )}
 
-      {/* Shipping Modal */}
-      {showShipping && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setShowShipping(false);
-            }
-          }}
-        >
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full relative">
-            <button
-              onClick={() => setShowShipping(false)}
-              className="absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              {t("shipping.title")}
-            </h3>
-            <form onSubmit={handleShippingSubmit} className="space-y-4">
-              <div>
-                <Label htmlFor="name">{t("shipping.name")}</Label>
-                <Input
-                  id="name"
-                  value={shippingInfo.name}
-                  onChange={(e) =>
-                    setShippingInfo({ ...shippingInfo, name: e.target.value })
-                  }
-                  required
-                  className="mt-1"
+      {/* Payment Modal */}
+      {showPayment && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-xl flex items-center justify-center z-50">
+          <Card className="card-glass w-full max-w-md mx-4 animate-fade-in">
+            <div className="p-6 space-y-4">
+              <h2 className="text-2xl font-bold mb-6 gradient-text">
+                {t("paymentTitle")}
+              </h2>
+              <div className="flex justify-center">
+                <AlbyQRCode
+                  value="lnbc100u1p3xn9vxpp5xv3j8n4k2p3xn9vxpp5xv3j8n4k2p3xn9vxpp5xv3j8n4k2"
+                  amount={100000}
+                  memo="Daznode Payment"
                 />
               </div>
-              <div>
-                <Label htmlFor="address">{t("shipping.address")}</Label>
-                <Input
-                  id="address"
-                  value={shippingInfo.address}
-                  onChange={(e) =>
-                    setShippingInfo({
-                      ...shippingInfo,
-                      address: e.target.value,
-                    })
-                  }
-                  required
-                  className="mt-1"
-                />
+              <div className="text-center mt-4">
+                <p className="text-muted-foreground">{t("scanQR")}</p>
               </div>
-              <div>
-                <Label htmlFor="city">{t("shipping.city")}</Label>
-                <Input
-                  id="city"
-                  value={shippingInfo.city}
-                  onChange={(e) =>
-                    setShippingInfo({ ...shippingInfo, city: e.target.value })
-                  }
-                  required
-                  className="mt-1"
-                />
+              <div className="flex justify-end space-x-4 mt-6">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowPayment(false)}
+                  className="hover:bg-accent/20"
+                >
+                  {t("cancel")}
+                </Button>
               </div>
-              <div>
-                <Label htmlFor="zipCode">{t("shipping.zipCode")}</Label>
-                <Input
-                  id="zipCode"
-                  value={shippingInfo.zipCode}
-                  onChange={(e) =>
-                    setShippingInfo({
-                      ...shippingInfo,
-                      zipCode: e.target.value,
-                    })
-                  }
-                  required
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <Label htmlFor="country">{t("shipping.country")}</Label>
-                <Input
-                  id="country"
-                  value={shippingInfo.country}
-                  onChange={(e) =>
-                    setShippingInfo({
-                      ...shippingInfo,
-                      country: e.target.value,
-                    })
-                  }
-                  required
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <Label htmlFor="phone">{t("shipping.phone")}</Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  value={shippingInfo.phone}
-                  onChange={(e) =>
-                    setShippingInfo({ ...shippingInfo, phone: e.target.value })
-                  }
-                  required
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <Label htmlFor="email">{t("shipping.email")}</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={shippingInfo.email}
-                  onChange={(e) =>
-                    setShippingInfo({ ...shippingInfo, email: e.target.value })
-                  }
-                  required
-                  className="mt-1"
-                />
-              </div>
-              <Button
-                type="submit"
-                className="w-full bg-orange-500 hover:bg-orange-600 text-white mt-6"
-                disabled={isProcessing}
-              >
-                {isProcessing ? "Traitement en cours..." : t("shipping.submit")}
-              </Button>
-            </form>
-          </div>
+            </div>
+          </Card>
         </div>
       )}
     </div>

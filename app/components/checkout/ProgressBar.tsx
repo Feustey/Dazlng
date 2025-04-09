@@ -1,67 +1,66 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { cn } from "../../lib/utils";
 
 const steps = [
-  { name: "Authentification", path: "/auth" },
-  { name: "Livraison", path: "/checkout/delivery" },
-  { name: "Paiement", path: "/checkout/payment" },
-  { name: "Confirmation", path: "/checkout/confirmation" },
+  { id: "delivery", label: "Livraison", path: "/checkout/delivery" },
+  { id: "payment", label: "Paiement", path: "/checkout/payment" },
+  { id: "confirmation", label: "Confirmation", path: "/checkout/confirmation" },
 ];
 
 export default function ProgressBar() {
   const pathname = usePathname();
   const currentStepIndex = steps.findIndex((step) =>
-    pathname?.includes(step.path)
+    pathname.startsWith(step.path)
   );
 
   return (
-    <div className="w-full py-4">
-      <div className="flex justify-between">
-        {steps.map((step, index) => {
-          const isCompleted = index < currentStepIndex;
-          const isCurrent = index === currentStepIndex;
-
-          return (
-            <div key={step.path} className="flex flex-col items-center flex-1">
-              <div className="relative w-full">
-                <div
-                  className="absolute inset-0 flex items-center"
-                  aria-hidden="true"
-                >
-                  <div
-                    className={`h-0.5 w-full ${isCompleted ? "bg-indigo-600" : "bg-gray-200"}`}
-                  />
-                </div>
-                <div
-                  className={`relative flex justify-center items-center w-8 h-8 rounded-full ${
-                    isCompleted
-                      ? "bg-indigo-600"
-                      : isCurrent
-                        ? "bg-indigo-600"
-                        : "bg-gray-200"
-                  }`}
-                >
-                  <span
-                    className={`text-sm font-medium ${
-                      isCompleted || isCurrent ? "text-white" : "text-gray-500"
-                    }`}
-                  >
-                    {index + 1}
-                  </span>
-                </div>
-              </div>
-              <span
-                className={`mt-2 text-sm font-medium ${
-                  isCurrent ? "text-indigo-600" : "text-gray-500"
-                }`}
+    <nav aria-label="Progress">
+      <ol role="list" className="flex items-center">
+        {steps.map((step, index) => (
+          <li
+            key={step.id}
+            className={cn(
+              "relative",
+              index !== steps.length - 1 && "pr-8 sm:pr-20",
+              index !== 0 && "pl-8 sm:pl-20"
+            )}
+          >
+            <div className="flex items-center">
+              <div
+                className={cn(
+                  "h-8 w-8 rounded-full flex items-center justify-center",
+                  index <= currentStepIndex
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground"
+                )}
               >
-                {step.name}
-              </span>
+                <span className="text-sm font-medium">{index + 1}</span>
+              </div>
+              {index !== steps.length - 1 && (
+                <div
+                  className={cn(
+                    "absolute top-4 w-full h-0.5",
+                    index < currentStepIndex ? "bg-primary" : "bg-muted"
+                  )}
+                  style={{ right: "1rem" }}
+                />
+              )}
             </div>
-          );
-        })}
-      </div>
-    </div>
+            <span
+              className={cn(
+                "mt-2 block text-sm font-medium",
+                index <= currentStepIndex
+                  ? "text-foreground"
+                  : "text-muted-foreground"
+              )}
+            >
+              {step.label}
+            </span>
+          </li>
+        ))}
+      </ol>
+    </nav>
   );
 }

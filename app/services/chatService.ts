@@ -1,4 +1,4 @@
-import { router, publicProcedure } from "../lib/trpc/trpc";
+import { router, publicProcedure } from "@/app/lib/trpc/trpc";
 import { z } from "zod";
 
 const messageSchema = z.object({

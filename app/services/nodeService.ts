@@ -1,30 +1,52 @@
-import { NetworkNode, NetworkChannel, NetworkStats } from "../types/network";
+import {
+  Node,
+  NetworkNode,
+  NetworkChannel,
+  NetworkStats,
+} from "../types/network";
+import { NodeInfo } from "../types/mcpService";
 import { mcpService } from "./mcpService";
 
 export class NodeService {
   // Récupérer tous les nœuds
-  async getNodes(): Promise<NetworkNode[]> {
+  async getNodes(): Promise<Node[]> {
     try {
-      // Utiliser MCP pour récupérer les nœuds
-      const nodes = await mcpService.getNodeInfo("all");
+      const response = await fetch(`${process.env.MCP_API_URL}/nodes`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch nodes");
+      }
+      const nodes: NodeInfo[] = await response.json();
 
-      // Transformer les données MCP en format attendu par notre interface
-      return nodes.map((node: any) => ({
-        publicKey: node.id,
-        alias: node.name || "Unknown",
-        color: node.color || "#000000",
-        addresses: node.addresses || [],
-        lastUpdate: new Date(node.timestamp),
-        capacity: node.capacity || 0,
-        channelCount: node.channels || 0,
-        avgChannelSize: node.channels > 0 ? node.capacity / node.channels : 0,
-        city: node.city,
-        country: node.country,
-        isp: node.isp,
-        platform: node.platform || undefined,
-      }));
+      // Récupérer les statistiques des nœuds pour obtenir les informations de capacité
+      const nodeStats = await Promise.all(
+        nodes.map((node) => mcpService.getNodeStats(node.pubkey))
+      );
+
+      return nodes.map((nodeInfo, index) => {
+        const stats = nodeStats[index] || {
+          totalCapacity: 0,
+          numberOfChannels: 0,
+          averageChannelSize: 0,
+        };
+
+        return {
+          publicKey: nodeInfo.pubkey,
+          id: nodeInfo.pubkey,
+          name: nodeInfo.alias,
+          alias: nodeInfo.alias,
+          color: nodeInfo.color,
+          addresses: nodeInfo.addresses,
+          lastUpdate: new Date(nodeInfo.lastUpdate),
+          capacity: stats.totalCapacity,
+          channelCount: stats.numberOfChannels,
+          avgChannelSize: stats.averageChannelSize,
+          channels: [],
+          age: this.calculateAge(new Date(nodeInfo.lastUpdate)),
+          status: "active" as const,
+        };
+      });
     } catch (error) {
-      console.error("Error fetching nodes from MCP:", error);
+      console.error("Error fetching nodes:", error);
       throw error;
     }
   }
@@ -32,28 +54,30 @@ export class NodeService {
   // Récupérer les détails d'un nœud
   async getNodeDetails(pubkey: string): Promise<NetworkNode | null> {
     try {
-      const node = await mcpService.getNodeInfo(pubkey);
+      const nodeInfo = await mcpService.getNodeInfo(pubkey);
+      if (!nodeInfo) return null;
 
-      if (!node) return null;
+      // Récupérer les statistiques du nœud
+      const stats = await mcpService.getNodeStats(pubkey);
 
       return {
-        publicKey: node.id,
-        alias: node.name || "Unknown",
-        color: node.color || "#000000",
-        addresses: node.addresses || [],
-        lastUpdate: new Date(node.timestamp),
-        capacity: node.capacity || 0,
-        channelCount: node.channels || 0,
-        avgChannelSize: node.channels > 0 ? node.capacity / node.channels : 0,
-        city: node.city,
-        country: node.country,
-        isp: node.isp,
-        platform: node.platform || undefined,
-        betweennessRank: node.betweennessRank,
-        eigenvectorRank: node.eigenvectorRank,
-        closenessRank: node.closenessRank,
-        avgFeeRate: node.avgFeeRate,
-        uptime: node.uptime,
+        publicKey: nodeInfo.pubkey,
+        alias: nodeInfo.alias,
+        color: nodeInfo.color,
+        addresses: nodeInfo.addresses,
+        lastUpdate: new Date(nodeInfo.lastUpdate),
+        capacity: stats?.totalCapacity || 0,
+        channelCount: stats?.numberOfChannels || 0,
+        avgChannelSize: stats?.averageChannelSize || 0,
+        city: undefined,
+        country: undefined,
+        isp: undefined,
+        platform: undefined,
+        betweennessRank: undefined,
+        eigenvectorRank: undefined,
+        closenessRank: undefined,
+        avgFeeRate: undefined,
+        uptime: stats?.uptime,
       };
     } catch (error) {
       console.error("Error fetching node details from MCP:", error);
@@ -146,19 +170,22 @@ export class NodeService {
     }
   }
 
-  // Fonction utilitaire pour calculer l'âge d'un nœud
-  calculateAge(createdAt: Date): string {
+  // Fonction utilitaire pour calculer l'âge d'un nœud en jours
+  calculateAge(createdAt: Date): number {
     const now = new Date();
     const diffTime = Math.abs(now.getTime() - createdAt.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  }
 
-    if (diffDays < 30) {
-      return `${diffDays} jours`;
-    } else if (diffDays < 365) {
-      const months = Math.floor(diffDays / 30);
+  // Fonction utilitaire pour formater l'âge en texte lisible
+  formatAge(days: number): string {
+    if (days < 30) {
+      return `${days} jours`;
+    } else if (days < 365) {
+      const months = Math.floor(days / 30);
       return `${months} mois`;
     } else {
-      const years = Math.floor(diffDays / 365);
+      const years = Math.floor(days / 365);
       return `${years} an${years > 1 ? "s" : ""}`;
     }
   }

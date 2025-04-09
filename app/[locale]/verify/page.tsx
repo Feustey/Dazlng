@@ -133,7 +133,10 @@ export default function VerifyPage() {
       <div className="w-full max-w-md p-8 bg-white rounded-3xl shadow-lg">
         <div className="flex flex-col items-center mb-8">
           <div className="w-full flex items-center mb-8">
-            <Link href="/login" className="text-gray-600 hover:text-gray-900">
+            <Link
+              href={`/${locale}/login`}
+              className="text-gray-600 hover:text-gray-900"
+            >
               <svg
                 className="h-6 w-6"
                 fill="none"

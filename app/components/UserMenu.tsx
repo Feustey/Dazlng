@@ -1,54 +1,64 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { useAuth } from "../hooks/useAuth";
-import { Button } from "./ui/button";
+import { useSession, signOut } from "next-auth/react";
+import { useParams } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { User, Settings, LogOut } from "lucide-react";
-import { useTranslations, useLocale } from "next-intl";
-import { useRouter } from "next/navigation";
+import { Button } from "./ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { useTranslations } from "next-intl";
+import Link from "next/link";
 
-export default function UserMenu() {
-  const { user, logout } = useAuth();
-  const [isOpen, setIsOpen] = useState(false);
-  const t = useTranslations("navigation");
-  const locale = useLocale();
+export function UserMenu() {
+  const { data: session } = useSession();
+  const params = useParams();
+  const t = useTranslations("UserMenu");
+
+  if (!session) {
+    return null;
+  }
 
   return (
-    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+    <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <User className="h-5 w-5" />
+          <Avatar className="h-8 w-8">
+            <AvatarFallback>{session.user.pubkey.slice(0, 2)}</AvatarFallback>
+          </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
-        <div className="flex items-center justify-start gap-2 p-2">
-          <div className="flex flex-col space-y-1 leading-none">
-            <p className="font-medium">{user?.name || t("user")}</p>
-            <p className="text-sm text-muted-foreground">{user?.email}</p>
+        <DropdownMenuLabel className="font-normal">
+          <div className="flex flex-col space-y-1">
+            <p className="text-sm font-medium leading-none">
+              {session.user.pubkey}
+            </p>
+            {session.user.lightningAddress && (
+              <p className="text-xs leading-none text-muted-foreground">
+                {session.user.lightningAddress}
+              </p>
+            )}
           </div>
-        </div>
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href={`/${locale}/settings`} className="flex items-center">
-            <Settings className="mr-2 h-4 w-4" />
-            <span>{t("settings")}</span>
-          </Link>
+          <Link href={`/${params.locale}/profile`}>{t("profile")}</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href={`/${params.locale}/settings`}>{t("settings")}</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          className="flex items-center text-destructive"
-          onClick={logout}
+          className="text-red-600"
+          onClick={() => signOut({ callbackUrl: `/${params.locale}` })}
         >
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>{t("logout")}</span>
+          {t("signOut")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

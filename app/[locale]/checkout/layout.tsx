@@ -1,7 +1,9 @@
 "use client";
 
+import { Metadata } from "next";
+import { getMessages } from "../../lib/get-messages";
 import { useTranslations } from "next-intl";
-import ProgressBar from "@/components/checkout/ProgressBar";
+import ProgressBar from "../../components/checkout/ProgressBar";
 
 export default function CheckoutLayout({
   children,

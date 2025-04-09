@@ -1,87 +1,50 @@
 "use client";
 
-import * as React from "react";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
-import { Settings, LogOut, Globe, Moon, Sun } from "lucide-react";
-import { motion } from "framer-motion";
-import { useAuth } from "../contexts/AuthContext";
-import { useLanguage } from "../contexts/LanguageContext";
-import { Button } from "./ui/button";
+import { useTheme } from "next-themes";
+import { useLanguage } from "../hooks/useLanguage";
+import { useAuth } from "../hooks/useAuth";
+import { useTranslations } from "next-intl";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { useTheme } from "next-themes";
-import { useTranslations } from "next-intl";
+import { Button } from "./ui/button";
+import { Settings } from "lucide-react";
 
-export function SettingsMenu() {
+export default function SettingsMenu() {
   const { setTheme, theme } = useTheme();
   const { language: currentLocale, setLanguage } = useLanguage();
-  const { isAuthenticated, logout } = useAuth();
+  const { user, logout } = useAuth();
   const t = useTranslations("Settings");
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="w-9 px-0"
-          aria-label={t("title")}
-        >
-          <Settings className="h-5 w-5" />
+        <Button variant="ghost" size="icon">
+          <Settings className="h-[1.2rem] w-[1.2rem]" />
+          <span className="sr-only">Paramètres</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align="end"
-        className="bg-background border shadow-lg"
-      >
-        <div className="px-2 py-1.5 text-sm font-semibold">
-          {t("language.label")}
-        </div>
-        <DropdownMenuItem onClick={() => setLanguage("fr")}>
-          <span className={currentLocale === "fr" ? "font-bold" : ""}>
-            {t("language.options.fr")}
-          </span>
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setLanguage("en")}>
-          <span className={currentLocale === "en" ? "font-bold" : ""}>
-            {t("language.options.en")}
-          </span>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <div className="px-2 py-1.5 text-sm font-semibold">
-          {t("theme.label")}
-        </div>
+      <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setTheme("light")}>
-          <span className={theme === "light" ? "font-bold" : ""}>
-            {t("theme.options.light")}
-          </span>
+          {t("theme.light")}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("dark")}>
-          <span className={theme === "dark" ? "font-bold" : ""}>
-            {t("theme.options.dark")}
-          </span>
+          {t("theme.dark")}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")}>
-          <span className={theme === "system" ? "font-bold" : ""}>
-            {t("theme.options.system")}
-          </span>
+          {t("theme.system")}
         </DropdownMenuItem>
-        {isAuthenticated && (
-          <>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={logout} className="text-red-600">
-              <LogOut className="mr-2 h-4 w-4" />
-              {t("logout")}
-            </DropdownMenuItem>
-          </>
+        <DropdownMenuItem onClick={() => setLanguage("fr")}>
+          {t("language.french")}
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setLanguage("en")}>
+          {t("language.english")}
+        </DropdownMenuItem>
+        {user && (
+          <DropdownMenuItem onClick={logout}>{t("logout")}</DropdownMenuItem>
         )}
       </DropdownMenuContent>
     </DropdownMenu>

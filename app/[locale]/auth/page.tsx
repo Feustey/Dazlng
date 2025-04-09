@@ -4,9 +4,9 @@ import { Card } from "../../components/ui/card";
 import { Shield, Zap, Users } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Rejoignez DazLng | La plateforme de gestion Lightning Network",
+  title: "Rejoignez Daznode | La plateforme de gestion Lightning Network",
   description:
-    "Optimisez votre présence sur le réseau Lightning avec DazLng. Inscription simple et rapide pour accéder à des outils puissants de gestion de nœuds.",
+    "Optimisez votre présence sur le réseau Lightning avec Daznode. Inscription simple et rapide pour accéder à des outils puissants de gestion de nœuds.",
 };
 
 export default function AuthPage() {
@@ -20,7 +20,7 @@ export default function AuthPage() {
       <div className="w-full max-w-md space-y-8 relative z-10">
         <div className="text-center">
           <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-primary-600 via-secondary-600 to-accent-600 dark:from-primary-400 dark:via-secondary-400 dark:to-accent-400 text-transparent bg-clip-text">
-            DazLng
+            Daznode
           </h1>
           <p className="mt-3 text-xl md:text-2xl text-muted-foreground">
             Votre passerelle vers l'excellence Lightning

@@ -3,7 +3,7 @@
 import React, { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { Card } from "../../components/ui/card";
+import { Card, CardTitle } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
 import {
@@ -76,38 +76,38 @@ export default function HelpPage() {
     {
       id: "getting_started",
       icon: <BookOpenIcon className="h-5 w-5" />,
-      color: "text-primary-600 dark:text-primary-400",
-      bgColor: "bg-primary-50 dark:bg-primary-950",
+      color: "text-primary",
+      bgColor: "bg-primary/10",
     },
     {
       id: "learning",
       icon: <BitcoinIcon className="h-5 w-5" />,
-      color: "text-secondary-600 dark:text-secondary-400",
-      bgColor: "bg-secondary-50 dark:bg-secondary-950",
+      color: "text-secondary",
+      bgColor: "bg-secondary/10",
     },
     {
       id: "transactions",
       icon: <BarChartIcon className="h-5 w-5" />,
-      color: "text-accent-600 dark:text-accent-400",
-      bgColor: "bg-accent-50 dark:bg-accent-950",
+      color: "text-accent",
+      bgColor: "bg-accent/10",
     },
     {
       id: "operations",
       icon: <ZapIcon className="h-5 w-5" />,
-      color: "text-primary-600 dark:text-primary-400",
-      bgColor: "bg-primary-50 dark:bg-primary-950",
+      color: "text-primary",
+      bgColor: "bg-primary/10",
     },
     {
       id: "metrics",
       icon: <NetworkIcon className="h-5 w-5" />,
-      color: "text-secondary-600 dark:text-secondary-400",
-      bgColor: "bg-secondary-50 dark:bg-secondary-950",
+      color: "text-secondary",
+      bgColor: "bg-secondary/10",
     },
     {
       id: "nwc",
       icon: <WalletIcon className="h-5 w-5" />,
-      color: "text-accent-600 dark:text-accent-400",
-      bgColor: "bg-accent-50 dark:bg-accent-950",
+      color: "text-accent",
+      bgColor: "bg-accent/10",
     },
   ];
 
@@ -138,7 +138,7 @@ export default function HelpPage() {
       id: "how_to_start",
       icon: <BookOpenIcon className="h-5 w-5" />,
       question: t("faq.how_to_start"),
-      answer: `Pour commencer avec DazLng, suivez ces étapes :
+      answer: `Pour commencer avec Daznode, suivez ces étapes :
 1. Créez un compte en utilisant votre clé publique Nostr
 2. Connectez votre portefeuille Bitcoin (nous recommandons Phoenix ou Blixt)
 3. Suivez notre guide d'apprentissage pour comprendre les bases de Lightning
@@ -150,224 +150,180 @@ N'oubliez pas : "Not your keys, not your coins" - Gardez toujours le contrôle d
       id: "how_to_connect",
       icon: <WalletIcon className="h-5 w-5" />,
       question: t("faq.how_to_connect"),
-      answer: `Nostr Wallet Connect (NWC) est un protocole open-source qui permet une connexion sécurisée entre votre portefeuille et DazLng. Le processus est simple :
-1. Scannez le QR code avec votre portefeuille compatible NWC
-2. Autorisez la connexion dans votre portefeuille
-3. Votre portefeuille est maintenant connecté de manière sécurisée
+      answer: `Pour connecter votre portefeuille à Daznode :
+1. Ouvrez votre portefeuille Lightning (Phoenix ou Blixt)
+2. Allez dans les paramètres et recherchez "Nostr Wallet Connect"
+3. Scannez le QR code affiché sur Daznode
+4. Confirmez la connexion dans votre portefeuille
 
-La sécurité est garantie par des signatures cryptographiques et des clés privées qui ne quittent jamais votre appareil.`,
+Votre portefeuille est maintenant connecté et prêt à être utilisé avec Daznode.`,
     },
     {
       id: "how_to_transact",
       icon: <BarChartIcon className="h-5 w-5" />,
       question: t("faq.how_to_transact"),
-      answer: `Les transactions Lightning sont des transferts de valeur qui se produisent à travers un réseau de canaux de paiement. Voici comment ça marche :
-1. Créez ou utilisez un canal existant avec un nœud partenaire
-2. Envoyez ou recevez des satoshis via le canal
-3. Les transactions sont validées par le réseau Lightning
-4. Les frais sont minimes (quelques satoshis) comparés aux frais on-chain
+      answer: `Pour effectuer une transaction Lightning :
+1. Assurez-vous d'avoir des fonds dans votre portefeuille
+2. Cliquez sur "Envoyer" ou "Recevoir" selon votre besoin
+3. Entrez le montant et l'adresse Lightning ou le QR code
+4. Confirmez la transaction
 
-Le réseau Lightning utilise le routage onion pour protéger la vie privée des utilisateurs.`,
+Les transactions sont instantanées et les frais sont minimes.`,
+    },
+    {
+      id: "keysend",
+      icon: <ZapIcon className="h-5 w-5" />,
+      question: t("faq.keysend"),
+      answer: `Keysend est une fonctionnalité Lightning qui permet d'envoyer des paiements sans facture préalable. C'est comme un virement direct en Bitcoin. L'expéditeur a besoin uniquement de l'ID public du destinataire. C'est plus simple et plus rapide que les factures Lightning traditionnelles.`,
+    },
+    {
+      id: "channel_close",
+      icon: <NetworkIcon className="h-5 w-5" />,
+      question: t("faq.channel_close"),
+      answer: `Pour fermer un canal Lightning :
+1. Allez dans la section "Canaux"
+2. Sélectionnez le canal que vous souhaitez fermer
+3. Cliquez sur "Fermer le canal"
+4. Choisissez entre une fermeture coopérative (recommandée) ou unilatérale
+5. Confirmez la fermeture
+
+Les fonds seront disponibles sur votre adresse Bitcoin après la confirmation de la transaction.`,
     },
     {
       id: "security",
       icon: <ShieldIcon className="h-5 w-5" />,
       question: t("faq.security"),
-      answer: `DazLng utilise plusieurs couches de sécurité pour protéger vos fonds :
-1. Toutes les transactions sont signées cryptographiquement
-2. Les clés privées ne quittent jamais votre appareil
-3. Les canaux Lightning sont protégés par des contrats intelligents
-4. Le réseau utilise le routage onion pour la confidentialité
-5. Les sauvegardes sont chiffrées et stockées de manière sécurisée
+      answer: `La sécurité de votre nœud Lightning est cruciale :
+1. Gardez toujours une sauvegarde de vos clés privées
+2. Utilisez un mot de passe fort pour votre portefeuille
+3. Activez l'authentification à deux facteurs si disponible
+4. Surveillez régulièrement l'activité de votre nœud
+5. Maintenez votre logiciel à jour
 
-"Trust, but verify" - Vous pouvez vérifier toutes les transactions sur la blockchain Bitcoin.`,
-    },
-    {
-      id: "technical",
-      icon: <CodeIcon className="h-5 w-5" />,
-      question: t("faq.technical"),
-      answer: `Pour les utilisateurs techniques, DazLng offre :
-- API RESTful pour l'intégration avec d'autres services
-- Support des plugins Lightning (comme CLN)
-- Monitoring en temps réel des métriques du nœud
-- Configuration avancée des paramètres de routage
-- Support des tests et des canaux privés
-- Intégration avec les outils de développement Bitcoin
-
-Le code source est open-source et disponible sur GitHub.`,
-    },
-    {
-      id: "profitable_node",
-      icon: <BitcoinIcon className="h-5 w-5" />,
-      question: t("faq.profitable_node"),
-      answer: `Pour optimiser la rentabilité de votre nœud Lightning :
-1. Ouvrez des canaux avec des nœuds bien positionnés dans le réseau
-2. Maintenez un bon équilibre de liquidité (pas trop, pas trop peu)
-3. Ajustez vos frais de routage en fonction de l'activité du réseau
-4. Surveillez les métriques de performance de vos canaux
-5. Évitez les canaux avec des nœuds inactifs ou peu fiables
-
-La rentabilité n'est pas garantie, mais ces stratégies augmentent vos chances de générer des revenus.`,
-    },
-    {
-      id: "channel_management",
-      icon: <NetworkIcon className="h-5 w-5" />,
-      question: t("faq.channel_management"),
-      answer: `Une bonne gestion des canaux est essentielle :
-1. Diversifiez vos canaux entre différents nœuds pour réduire les risques
-2. Maintenez un ratio équilibré entre les fonds entrants et sortants
-3. Surveillez régulièrement l'état de vos canaux (actifs, inactifs, en attente)
-4. Fermez les canaux non rentables ou problématiques
-5. Ouvrez de nouveaux canaux stratégiquement pour améliorer votre position dans le réseau
-
-N'oubliez pas de toujours avoir une réserve de fonds pour les frais de fermeture de canaux.`,
+En cas de doute, contactez notre support.`,
     },
     {
       id: "backup_channels",
-      icon: <LockIcon className="h-5 w-5" />,
+      icon: <ServerIcon className="h-5 w-5" />,
       question: t("faq.backup_channels"),
-      answer: `La sauvegarde des canaux est cruciale pour la sécurité de vos fonds :
-1. Exportez régulièrement votre fichier de sauvegarde de canaux
-2. Stockez les sauvegardes dans plusieurs emplacements sécurisés
-3. Utilisez le chiffrement pour protéger vos sauvegardes
-4. Testez périodiquement la restauration de vos sauvegardes
-5. Conservez une copie de vos clés privées de manière sécurisée
+      answer: `Pour sauvegarder vos canaux Lightning :
+1. Exportez régulièrement votre fichier de canaux
+2. Stockez la sauvegarde dans un endroit sûr
+3. En cas de perte d'accès, utilisez la sauvegarde pour restaurer vos canaux
+4. Vérifiez que tous les canaux sont correctement restaurés
 
-En cas de perte d'accès à votre nœud, une bonne sauvegarde vous permettra de récupérer vos fonds.`,
+Nous recommandons de faire une sauvegarde hebdomadaire.`,
     },
     {
       id: "peers_connection",
       icon: <UsersIcon className="h-5 w-5" />,
       question: t("faq.peers_connection"),
-      answer: `Si votre nœud n'a pas de pairs, voici comment résoudre le problème :
-1. Vérifiez votre connexion Internet et les paramètres de pare-feu
-2. Assurez-vous que le port Lightning (9735 par défaut) est ouvert
-3. Utilisez des nœuds publics connus pour établir des connexions
-4. Rejoignez des communautés Lightning pour trouver des pairs fiables
-5. Vérifiez les logs de votre nœud pour identifier d'éventuelles erreurs
+      answer: `Pour vous connecter à d'autres nœuds :
+1. Obtenez l'adresse publique du nœud
+2. Ouvrez un canal avec ce nœud
+3. Définissez la capacité du canal
+4. Confirmez l'ouverture du canal
 
-Un nœud sans pairs ne peut pas participer au réseau Lightning.`,
+Plus vous avez de connexions, plus votre nœud est robuste.`,
     },
     {
-      id: "tor_only",
-      icon: <GlobeIcon className="h-5 w-5" />,
-      question: "Comment passer en mode Tor uniquement ?",
-      answer: `Pour passer votre nœud en mode Tor uniquement :
-1. Assurez-vous que Tor est correctement installé et configuré
-2. Modifiez les paramètres de votre nœud pour désactiver les connexions directes
-3. Configurez les proxies Tor pour toutes les connexions sortantes
-4. Redémarrez votre nœud pour appliquer les changements
-5. Vérifiez que toutes les connexions passent bien par Tor
+      id: "technical",
+      icon: <CodeIcon className="h-5 w-5" />,
+      question: t("faq.technical"),
+      answer: `Les exigences techniques pour Daznode :
+1. Une connexion Internet stable
+2. Au moins 1 Go de RAM
+3. 100 Go d'espace disque
+4. Un processeur récent
+5. Une connexion Tor (recommandée)
 
-Le mode Tor uniquement améliore la confidentialité mais peut affecter les performances.`,
+Nous fournissons une image Docker prête à l'emploi.`,
     },
     {
-      id: "sync_time",
-      icon: <ServerIcon className="h-5 w-5" />,
-      question: "Combien de temps faut-il pour synchroniser Bitcoin Core ?",
-      answer: `Le temps de synchronisation de Bitcoin Core dépend de plusieurs facteurs :
-1. La vitesse de votre connexion Internet
-2. La puissance de votre matériel (CPU, RAM, stockage)
-3. La méthode de synchronisation (blockchain complète ou pruned)
-4. Le nombre de connexions peers
+      id: "profitable_node",
+      icon: <BarChartIcon className="h-5 w-5" />,
+      question: t("faq.profitable_node"),
+      answer: `Pour rendre votre nœud profitable :
+1. Ouvrez des canaux avec une capacité suffisante
+2. Fixez des frais de routage compétitifs
+3. Maintenez une bonne liquidité
+4. Surveillez les métriques de performance
+5. Ajustez les paramètres selon l'activité
 
-En général, avec une bonne connexion et un matériel récent, la synchronisation complète prend 1 à 3 jours. Avec un nœud pruned, cela peut prendre 12 à 24 heures.`,
+La rentabilité dépend de nombreux facteurs, notamment la taille du réseau et la concurrence.`,
     },
     {
-      id: "keysend",
-      icon: <ZapIcon className="h-5 w-5" />,
-      question: "Qu'est-ce que Keysend et comment l'utiliser ?",
-      answer: `Keysend est une fonctionnalité Lightning qui permet d'envoyer des paiements sans facture préalable :
-1. L'expéditeur connaît uniquement la clé publique du destinataire
-2. Le paiement est envoyé directement sans génération de facture
-3. Le destinataire doit accepter le paiement à l'avance
-4. Keysend est idéal pour les paiements automatiques et les microtransactions
-5. Cette fonctionnalité améliore la confidentialité des transactions
+      id: "channel_management",
+      icon: <SettingsIcon className="h-5 w-5" />,
+      question: t("faq.channel_management"),
+      answer: `Pour gérer efficacement vos canaux :
+1. Équilibrez la liquidité entrante et sortante
+2. Ajustez régulièrement les frais de routage
+3. Fermez les canaux peu utilisés
+4. Ouvrez de nouveaux canaux stratégiques
+5. Surveillez la santé des canaux
 
-Keysend est particulièrement utile pour les applications automatisées et les services de streaming de satoshis.`,
-    },
-    {
-      id: "channel_close",
-      icon: <AlertTriangleIcon className="h-5 w-5" />,
-      question:
-        "J'ai perdu des satoshis lors de la fermeture d'un canal, pourquoi ?",
-      answer: `La perte de satoshis lors de la fermeture d'un canal peut être due à plusieurs raisons :
-1. Frais de transaction on-chain pour la fermeture du canal
-2. Différence entre la capacité du canal et le solde réel
-3. Frais de routage accumulés pendant l'utilisation du canal
-4. Fermeture non coopérative entraînant des frais supplémentaires
-5. Erreurs dans la gestion des fonds du canal
-
-Pour éviter ces pertes, planifiez toujours une réserve de fonds pour les frais de fermeture et privilégiez les fermetures coopératives.`,
+Une bonne gestion des canaux est essentielle pour un nœud performant.`,
     },
     {
       id: "node_monitoring",
-      icon: <SettingsIcon className="h-5 w-5" />,
-      question: "Comment surveiller efficacement mon nœud ?",
-      answer: `Une surveillance efficace de votre nœud est essentielle :
-1. Utilisez les outils de monitoring intégrés à DazLng
-2. Configurez des alertes pour les événements importants
-3. Surveillez régulièrement les métriques de performance
-4. Vérifiez l'état de vos canaux et la liquidité disponible
-5. Tenez un journal des modifications et des incidents
+      icon: <GlobeIcon className="h-5 w-5" />,
+      question: t("faq.node_monitoring"),
+      answer: `Pour surveiller votre nœud :
+1. Utilisez notre tableau de bord intégré
+2. Vérifiez les métriques en temps réel
+3. Configurez des alertes pour les événements importants
+4. Surveillez la santé du réseau
+5. Analysez les performances de routage
 
-Une bonne surveillance vous permet de détecter et résoudre les problèmes avant qu'ils n'affectent vos opérations.`,
+La surveillance proactive permet d'éviter les problèmes.`,
     },
     {
-      id: "daznode_setup",
-      icon: <ServerIcon className="h-5 w-5" />,
-      question: "Comment configurer correctement mon Daznode ?",
-      answer: `La configuration initiale de votre Daznode est cruciale pour son bon fonctionnement :
+      id: "sync_time",
+      icon: <CheckCircleIcon className="h-5 w-5" />,
+      question: t("faq.sync_time"),
+      answer: `Le temps de synchronisation dépend de :
+1. La vitesse de votre connexion Internet
+2. La puissance de votre matériel
+3. L'état de la blockchain Bitcoin
+4. Le nombre de nœuds connectés
+5. La méthode de synchronisation choisie
 
-1. Synchronisation du réseau :
-   - La synchronisation complète de Bitcoin Core peut prendre 1 à 3 jours
-   - Assurez-vous d'avoir une connexion Internet stable
-   - Vérifiez régulièrement l'avancement de la synchronisation
+En moyenne, comptez 4-6 heures pour une synchronisation complète.`,
+    },
+    {
+      id: "tor_only",
+      icon: <LockIcon className="h-5 w-5" />,
+      question: t("faq.tor_only"),
+      answer: `L'utilisation de Tor est recommandée pour :
+1. Améliorer la confidentialité
+2. Éviter la censure
+3. Accéder à des nœuds cachés
+4. Protéger votre adresse IP
+5. Renforcer la sécurité globale
 
-2. Installation d'Umbrel :
-   - Umbrel est préinstallé avec les applications de base
-   - Changez immédiatement les mots de passe par défaut
-   - Configurez les paramètres de sécurité dès le premier démarrage
-
-3. Configuration de la sécurité :
-   - Modifiez tous les mots de passe par défaut
-   - Activez l'authentification à deux facteurs si disponible
-   - Configurez un pare-feu approprié
-   - Sauvegardez régulièrement vos clés de récupération
-
-4. Optimisation des performances :
-   - Ajustez les paramètres de mémoire selon votre matériel
-   - Configurez les sauvegardes automatiques
-   - Activez le monitoring des ressources
-
-5. Vérifications post-installation :
-   - Testez la connectivité du réseau
-   - Vérifiez l'état de tous les services
-   - Validez les sauvegardes
-   - Testez la restauration des données
-
-Une configuration soignée au démarrage évitera bien des problèmes par la suite.`,
+Daznode prend en charge nativement les connexions Tor.`,
     },
   ];
 
-  // Fonction pour naviguer vers une section
   const scrollToSection = (sectionId: CategoryId) => {
     setActiveSection(sectionId);
-    sectionRefs[sectionId].current?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+    const section = sectionRefs[sectionId];
+    if (section.current) {
+      section.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
-  // Filtrer les FAQ en fonction de la recherche
-  const filteredFaqItems = faqItems.filter(
-    (item) =>
-      item.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.answer.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredFaqItems = searchQuery
+    ? faqItems.filter(
+        (item) =>
+          item.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.answer.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : faqItems;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary-50 via-background to-secondary-50 dark:from-primary-950 dark:via-background dark:to-secondary-950">
+    <div className="min-h-screen bg-background animate-fade-in">
       <div className="container mx-auto px-4 py-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -375,92 +331,84 @@ Une configuration soignée au démarrage évitera bien des problèmes par la sui
           transition={{ duration: 0.5 }}
           className="max-w-4xl mx-auto"
         >
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary-600 via-secondary-600 to-accent-600 dark:from-primary-400 dark:via-secondary-400 dark:to-accent-400 text-transparent bg-clip-text">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 gradient-text animate-slide-up">
             {t("title")}
           </h1>
 
-          <p className="text-lg text-muted-foreground mb-8">
-            {t("description")}
-          </p>
+          <div className="card-glass border-accent/20 p-6 rounded-lg animate-slide-up [animation-delay:200ms]">
+            <div className="relative mb-8">
+              <Input
+                type="text"
+                placeholder={t("search.placeholder")}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 bg-card/50 backdrop-blur-sm border-accent/20"
+              />
+              <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+            </div>
 
-          <div className="relative mb-8">
-            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
-            <Input
-              type="text"
-              placeholder={t("searchPlaceholder")}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 py-6 text-lg"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12">
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => scrollToSection(category.id)}
-                className={`flex flex-col items-center justify-center p-4 rounded-lg transition-all ${
-                  activeSection === category.id
-                    ? "bg-primary/20 dark:bg-primary/30"
-                    : "bg-muted/30 hover:bg-muted/50"
-                }`}
-              >
-                <div
-                  className={`p-3 rounded-full mb-2 ${category.bgColor} ${category.color}`}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+              {categories.map((category) => (
+                <Button
+                  key={category.id}
+                  variant="ghost"
+                  className={`flex items-center gap-2 p-4 rounded-lg transition-all duration-200 hover:scale-105 ${
+                    activeSection === category.id
+                      ? "bg-primary/20 text-primary"
+                      : "hover:bg-card/50"
+                  }`}
+                  onClick={() => scrollToSection(category.id)}
                 >
-                  {category.icon}
-                </div>
-                <span className="text-sm font-medium">
-                  {t(`categories.${category.id}`)}
-                </span>
-              </button>
-            ))}
-          </div>
-
-          <div className="space-y-8">
-            {categories.map((category) => (
-              <div
-                key={category.id}
-                ref={sectionRefs[category.id]}
-                className="scroll-mt-24"
-              >
-                <div className="flex items-center mb-6">
                   <div
-                    className={`p-2 rounded-lg mr-3 ${category.bgColor} ${category.color}`}
+                    className={`p-2 rounded-md ${category.bgColor} ${category.color}`}
                   >
                     {category.icon}
                   </div>
-                  <h2 className="text-2xl font-semibold">
+                  <span>{t(`categories.${category.id}`)}</span>
+                </Button>
+              ))}
+            </div>
+
+            <div className="space-y-8">
+              {categories.map((category) => (
+                <div
+                  key={category.id}
+                  ref={sectionRefs[category.id]}
+                  className="scroll-mt-20"
+                >
+                  <h2 className="text-2xl font-bold mb-4 gradient-text">
                     {t(`categories.${category.id}`)}
                   </h2>
-                </div>
-
-                <Accordion type="single" collapsible className="w-full">
-                  {faqByCategory[category.id].map((faqId) => {
-                    const faq = faqItems.find((item) => item.id === faqId);
-                    if (!faq) return null;
-
-                    return (
-                      <AccordionItem key={faqId} value={faqId}>
-                        <AccordionTrigger className="text-left">
-                          <div className="flex items-center">
-                            <div className={`mr-3 ${category.color}`}>
-                              {faq.icon}
+                  <Accordion type="single" collapsible className="w-full">
+                    {faqByCategory[category.id].map((faqId) => {
+                      const faq = faqItems.find((item) => item.id === faqId);
+                      if (!faq) return null;
+                      return (
+                        <AccordionItem
+                          key={faqId}
+                          value={faqId}
+                          className="border-accent/20"
+                        >
+                          <AccordionTrigger className="hover:text-primary">
+                            <div className="flex items-center gap-2">
+                              <div
+                                className={`p-1 rounded-md ${category.bgColor} ${category.color}`}
+                              >
+                                {faq.icon}
+                              </div>
+                              <span>{faq.question}</span>
                             </div>
-                            <span>{faq.question}</span>
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <div className="pl-10 text-muted-foreground">
+                          </AccordionTrigger>
+                          <AccordionContent className="text-muted-foreground">
                             {faq.answer}
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    );
-                  })}
-                </Accordion>
-              </div>
-            ))}
+                          </AccordionContent>
+                        </AccordionItem>
+                      );
+                    })}
+                  </Accordion>
+                </div>
+              ))}
+            </div>
           </div>
         </motion.div>
       </div>

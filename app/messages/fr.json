@@ -1,6 +1,6 @@
 {
   "Header": {
-    "title": "DazLng",
+    "title": "Daznode",
     "searchPlaceholder": "Rechercher...",
     "settings": "Paramètres",
     "language": "Langue",
@@ -25,7 +25,8 @@
     "credits": "Crédits",
     "login": "Connexion",
     "profile": "Mon profil",
-    "logout": "Déconnexion"
+    "logout": "Déconnexion",
+    "myNode": "Mon Nœud"
   },
   "Settings": {
     "title": "Paramètres",
@@ -50,42 +51,62 @@
     "logout": "Déconnexion"
   },
   "Dashboard": {
-    "title": "Tableau de bord",
-    "welcome": "Bienvenue sur votre tableau de bord",
-    "overview": "Vue d'ensemble",
-    "stats": "Statistiques",
-    "recentActivity": "Activité récente",
-    "noData": "Aucune donnée disponible"
+    "title": "Tableau de Bord",
+    "welcome": "Bienvenue sur votre espace de gestion Lightning Network",
+    "stats": {
+      "totalNodes": "Nœuds Totaux",
+      "activeNodes": "Nœuds Actifs",
+      "totalChannels": "Canaux Totaux",
+      "totalCapacity": "Capacité Totale",
+      "avgChannelSize": "Taille Moyenne des Canaux",
+      "networkGrowth": "Croissance du Réseau"
+    },
+    "charts": {
+      "channelPerformance": {
+        "title": "Performance des Canaux",
+        "subtitle": "Analyse des 30 derniers jours",
+        "inbound": "Entrant",
+        "outbound": "Sortant",
+        "fees": "Frais Collectés"
+      },
+      "activeChannels": {
+        "title": "Canaux Actifs",
+        "subtitle": "État actuel de vos canaux",
+        "online": "En ligne",
+        "offline": "Hors ligne",
+        "pending": "En attente"
+      }
+    }
   },
   "HomePage": {
-    "welcome": "Bienvenue sur DazLng",
+    "welcome": "Bienvenue sur Daznode",
     "description": "Gérez vos nœuds Lightning Network."
   },
   "Home": {
-    "welcome": "Bienvenue sur DazLng",
-    "description": "Gérez vos nœuds Lightning Network.",
+    "welcome": "Bienvenue sur Daznode",
+    "description": "Daznode est votre plateforme de gestion de nœuds Lightning Network. Optimisez vos performances et maximisez vos revenus.",
     "hero": {
       "title": "Gérez vos nœuds Lightning Network en toute simplicité",
-      "subtitle": "Optimisez vos performances et votre rentabilité avec Daznode",
+      "subtitle": "Optimisez votre performance et votre rentabilité avec Daznode",
       "cta": "Obtenez votre Dazbox !"
     },
     "features": {
-      "title": "Fonctionnalités principales",
+      "title": "Fonctionnalités Clés",
       "learning": {
-        "title": "Guide d'apprentissage",
-        "description": "Apprenez à gérer efficacement votre nœud avec nos guides détaillés"
+        "title": "Guide d'Apprentissage",
+        "description": "Apprenez à gérer votre nœud efficacement avec nos guides détaillés"
       },
       "transactions": {
-        "title": "Visualisation des transactions",
+        "title": "Visualisation des Transactions",
         "description": "Suivez vos transactions en temps réel avec des graphiques intuitifs"
       },
       "operations": {
         "title": "Opérations Lightning",
-        "description": "Gérez vos canaux et vos paiements en toute simplicité"
+        "description": "Gérez vos canaux et paiements facilement"
       },
       "metrics": {
-        "title": "Métriques avancées",
-        "description": "Analysez les performances de votre nœud avec des métriques détaillées"
+        "title": "Métriques Avancées",
+        "description": "Analysez la performance de votre nœud avec des métriques détaillées"
       },
       "nwc": {
         "title": "Nostr Wallet Connect",
@@ -99,15 +120,16 @@
     "totalChannels": "Canaux Totaux",
     "capacityPerChannel": "{amount} par canal",
     "totalCapacity": "Capacité Totale",
-    "lastUpdate": "Dernière mise à jour: {date}",
+    "lastUpdate": "Dernière mise à jour : {date}",
     "daznodePromo": {
-      "title": "🚀 Offre de Lancement Daznode !",
+      "title": "🚀 Offre de lancement Daznode !",
       "description": "Obtenez votre nœud Lightning pré-configuré pour seulement 400 000 sats au lieu de 500 000 sats.",
+      "limitedOffer": "Limité aux 10 premières commandes",
       "limitedOffer": "Offre limitée aux 10 premières commandes",
       "button": "Profiter de l'offre"
     },
     "benefits": {
-      "title": "Pourquoi choisir DazLng ?",
+      "title": "Pourquoi choisir Daznode ?",
       "items": {
         "simplicity": "Interface simple et intuitive",
         "security": "Sécurité renforcée",
@@ -118,14 +140,16 @@
     },
     "cta": {
       "title": "Prêt à commencer ?",
-      "description": "Rejoignez DazLng et optimisez votre présence sur le réseau Lightning",
+      "description": "Rejoignez Daznode et optimisez votre présence sur le réseau Lightning",
       "button": "Créer un compte"
     }
   },
   "NotFound": {
     "title": "Page non trouvée",
     "description": "Désolé, la page que vous recherchez n'existe pas.",
-    "back": "Retour à l'accueil"
+    "back": "Retour à l'accueil",
+    "or": "ou",
+    "contact": "contactez-nous"
   },
   "Login": {
     "title": "Inscription ou Connexion",
@@ -205,7 +229,7 @@
     }
   },
   "footer": {
-    "description": "DazLng est votre plateforme de gestion de nœuds Lightning Network. Optimisez vos performances et maximisez vos revenus.",
+    "description": "Daznode est votre plateforme de gestion de nœuds Lightning Network. Optimisez vos performances et maximisez vos revenus.",
     "links": {
       "help": "Aide",
       "about": "À propos",
@@ -277,14 +301,14 @@
     },
     "faq": {
       "what_is_lightning": "Qu'est-ce que Lightning Network ?",
-      "how_to_start": "Comment commencer avec DazLng ?",
+      "how_to_start": "Comment commencer avec Daznode ?",
       "how_to_connect": "Comment connecter mon portefeuille ?",
       "how_to_transact": "Comment effectuer des transactions ?"
     }
   },
   "About": {
-    "title": "À propos de DazLng",
-    "description": "DazLng est une plateforme innovante de gestion de nœuds Lightning Network, conçue pour simplifier et optimiser votre expérience sur le réseau.",
+    "title": "À propos de Daznode",
+    "description": "Daznode est une plateforme innovante de gestion de nœuds Lightning Network, conçue pour simplifier et optimiser votre expérience sur le réseau.",
     "features": {
       "title": "Fonctionnalités",
       "learning": "Guide d'apprentissage",
@@ -317,7 +341,7 @@
     "sections": [
       {
         "title": "Notre Mission",
-        "content": "DazLng est né de la volonté de simplifier la gestion des nœuds Lightning Network. Notre mission est de rendre le réseau Lightning plus accessible et plus efficace pour tous."
+        "content": "Daznode est né de la volonté de simplifier la gestion des nœuds Lightning Network. Notre mission est de rendre le réseau Lightning plus accessible et plus efficace pour tous."
       },
       {
         "title": "Notre Technologie",
@@ -408,7 +432,7 @@
     "contact": {
       "title": "Besoin d'aide ?",
       "description": "Notre équipe est disponible 7j/7 pour vous accompagner dans votre aventure Lightning Network.",
-      "email": "support@dazlng.com",
+      "email": "support@dazno.de",
       "phone": "+33 1 23 45 67 89",
       "chat": "Chat Telegram",
       "button": "Contacter le Support"
@@ -416,7 +440,7 @@
     "sections": {
       "gettingStarted": {
         "title": "Premiers pas",
-        "description": "Tout ce dont vous avez besoin pour bien démarrer avec DazLng",
+        "description": "Tout ce dont vous avez besoin pour bien démarrer avec Daznode",
         "items": {
           "setup": {
             "title": "Configuration initiale",
@@ -424,7 +448,7 @@
           },
           "basics": {
             "title": "Les bases",
-            "description": "Comprendre les fonctionnalités essentielles de DazLng"
+            "description": "Comprendre les fonctionnalités essentielles de Daznode"
           },
           "security": {
             "title": "Sécurité",
@@ -627,7 +651,7 @@
     "description": "Prenez contact avec nous pour toute question, support ou opportunité de collaboration.",
     "email": {
       "title": "Email",
-      "address": "dazlng@proton.me"
+      "address": "daznode@proton.me"
     },
     "form": {
       "firstName": "Prénom*",
@@ -670,6 +694,400 @@
       "country": "Pays",
       "phone": "Téléphone",
       "continue": "Continuer vers le paiement"
+    }
+  },
+  "stats": {
+    "title": "Statistiques du Réseau",
+    "subtitle": "Explorez les métriques clés du réseau Lightning",
+    "filters": {
+      "timeRange": "Période",
+      "metric": "Métrique",
+      "country": "Pays"
+    },
+    "metrics": {
+      "nodes": "Nœuds",
+      "channels": "Canaux",
+      "capacity": "Capacité",
+      "avgChannelSize": "Taille moyenne des canaux",
+      "medianChannelSize": "Taille médiane des canaux"
+    },
+    "charts": {
+      "nodesOverTime": "Évolution du nombre de nœuds",
+      "capacityOverTime": "Évolution de la capacité totale",
+      "channelsOverTime": "Évolution du nombre de canaux",
+      "nodesByCountry": "Répartition des nœuds par pays"
+    }
+  },
+  "pricing": {
+    "title": "Nos Offres",
+    "subtitle": "Choisissez l'offre qui vous convient",
+    "monthly": "Mensuel",
+    "yearly": "Annuel",
+    "plans": {
+      "starter": {
+        "name": "Débutant",
+        "price": "{price} sats/mois",
+        "description": "Parfait pour commencer",
+        "features": ["1 nœud", "Statistiques de base", "Support par email"]
+      },
+      "pro": {
+        "name": "Professionnel",
+        "price": "{price} sats/mois",
+        "description": "Pour les utilisateurs avancés",
+        "features": [
+          "3 nœuds",
+          "Statistiques avancées",
+          "Support prioritaire",
+          "API access"
+        ]
+      },
+      "enterprise": {
+        "name": "Entreprise",
+        "price": "Sur mesure",
+        "description": "Pour les grands acteurs",
+        "features": [
+          "Nœuds illimités",
+          "Support dédié",
+          "API illimitée",
+          "Formation personnalisée"
+        ]
+      }
+    },
+    "cta": {
+      "select": "Sélectionner",
+      "contact": "Nous contacter"
+    }
+  },
+  "nodes": {
+    "title": "Gestion des Nœuds",
+    "subtitle": "Gérez vos nœuds Lightning Network",
+    "list": {
+      "title": "Mes Nœuds",
+      "empty": "Aucun nœud trouvé",
+      "add": "Ajouter un nœud"
+    },
+    "details": {
+      "info": "Informations du Nœud",
+      "lastUpdate": "Dernière mise à jour",
+      "status": {
+        "online": "En ligne",
+        "offline": "Hors ligne",
+        "syncing": "Synchronisation"
+      },
+      "metrics": {
+        "capacity": "Capacité",
+        "channels": "Canaux",
+        "peers": "Pairs",
+        "blockHeight": "Hauteur de Bloc"
+      },
+      "actions": {
+        "refresh": "Actualiser",
+        "edit": "Modifier",
+        "delete": "Supprimer"
+      }
+    },
+    "channels": {
+      "title": "Canaux",
+      "empty": "Aucun canal trouvé",
+      "add": "Ouvrir un canal",
+      "list": {
+        "peer": "Pair",
+        "capacity": "Capacité",
+        "status": "État",
+        "age": "Âge"
+      }
+    }
+  },
+  "settings": {
+    "title": "Paramètres",
+    "subtitle": "Personnalisez votre expérience",
+    "general": {
+      "title": "Général",
+      "language": "Langue",
+      "theme": {
+        "title": "Thème",
+        "light": "Clair",
+        "dark": "Sombre",
+        "system": "Système"
+      },
+      "currency": {
+        "title": "Devise",
+        "btc": "Bitcoin (BTC)",
+        "sats": "Satoshis (sats)"
+      }
+    },
+    "notifications": {
+      "title": "Notifications",
+      "email": "Notifications par email",
+      "push": "Notifications push",
+      "alerts": {
+        "title": "Alertes",
+        "channelClosure": "Fermeture de canal",
+        "lowBalance": "Solde faible",
+        "peerOffline": "Pair hors ligne",
+        "updateAvailable": "Mise à jour disponible"
+      }
+    },
+    "security": {
+      "title": "Sécurité",
+      "twoFactor": "Authentification à deux facteurs",
+      "changePassword": "Changer le mot de passe",
+      "sessions": "Sessions actives",
+      "apiKeys": "Clés API"
+    },
+    "advanced": {
+      "title": "Avancé",
+      "logs": "Journaux",
+      "backup": "Sauvegarde",
+      "restore": "Restauration",
+      "reset": "Réinitialisation"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Tout marquer comme lu",
+    "empty": "Aucune notification",
+    "types": {
+      "info": "Information",
+      "success": "Succès",
+      "warning": "Avertissement",
+      "error": "Erreur"
+    },
+    "messages": {
+      "channelOpened": "Canal ouvert avec {peer}",
+      "channelClosed": "Canal fermé avec {peer}",
+      "paymentReceived": "Paiement reçu de {amount}",
+      "paymentSent": "Paiement envoyé de {amount}",
+      "nodeOffline": "Nœud hors ligne depuis {time}",
+      "updateAvailable": "Nouvelle mise à jour disponible",
+      "backupRequired": "Sauvegarde requise",
+      "lowBalance": "Solde faible sur le canal {channel}"
+    }
+  },
+  "payments": {
+    "title": "Paiements",
+    "subtitle": "Gérez vos transactions Lightning Network",
+    "send": {
+      "title": "Envoyer",
+      "amount": "Montant",
+      "recipient": "Destinataire",
+      "description": "Description",
+      "fee": "Frais",
+      "total": "Total",
+      "send": "Envoyer",
+      "sending": "Envoi en cours...",
+      "success": "Paiement envoyé avec succès !",
+      "error": "Erreur lors de l'envoi du paiement"
+    },
+    "receive": {
+      "title": "Recevoir",
+      "amount": "Montant",
+      "description": "Description",
+      "expiry": "Expiration",
+      "generate": "Générer",
+      "generating": "Génération en cours...",
+      "copy": "Copier",
+      "copied": "Copié !",
+      "qrCode": "Scanner le QR code"
+    },
+    "history": {
+      "title": "Historique",
+      "empty": "Aucune transaction",
+      "filters": {
+        "all": "Toutes",
+        "sent": "Envoyées",
+        "received": "Reçues",
+        "pending": "En attente",
+        "failed": "Échouées"
+      },
+      "details": {
+        "date": "Date",
+        "type": "Type",
+        "amount": "Montant",
+        "fee": "Frais",
+        "status": "Statut",
+        "description": "Description"
+      },
+      "status": {
+        "pending": "En attente",
+        "completed": "Terminé",
+        "failed": "Échoué",
+        "expired": "Expiré"
+      }
+    }
+  },
+  "transactions": {
+    "title": "Transactions",
+    "subtitle": "Suivez vos transactions en temps réel",
+    "overview": {
+      "title": "Vue d'ensemble",
+      "totalSent": "Total envoyé",
+      "totalReceived": "Total reçu",
+      "totalFees": "Total des frais",
+      "successRate": "Taux de succès"
+    },
+    "filters": {
+      "timeRange": "Période",
+      "type": "Type",
+      "status": "Statut",
+      "amount": "Montant"
+    },
+    "timeRanges": {
+      "today": "Aujourd'hui",
+      "week": "Cette semaine",
+      "month": "Ce mois",
+      "year": "Cette année",
+      "all": "Tout"
+    },
+    "types": {
+      "all": "Toutes",
+      "sent": "Envoyées",
+      "received": "Reçues",
+      "routing": "Routage"
+    },
+    "status": {
+      "all": "Tous",
+      "pending": "En attente",
+      "completed": "Terminé",
+      "failed": "Échoué",
+      "expired": "Expiré"
+    },
+    "amount": {
+      "min": "Minimum",
+      "max": "Maximum"
+    },
+    "details": {
+      "title": "Détails de la transaction",
+      "id": "ID",
+      "date": "Date",
+      "type": "Type",
+      "amount": "Montant",
+      "fee": "Frais",
+      "status": "Statut",
+      "description": "Description",
+      "route": "Route",
+      "hops": "Sauts",
+      "close": "Fermer"
+    },
+    "export": {
+      "title": "Exporter",
+      "format": "Format",
+      "dateRange": "Période",
+      "download": "Télécharger",
+      "formats": {
+        "csv": "CSV",
+        "json": "JSON",
+        "pdf": "PDF"
+      }
+    }
+  },
+  "routing": {
+    "title": "Routage",
+    "subtitle": "Optimisez vos revenus de routage",
+    "overview": {
+      "title": "Vue d'ensemble",
+      "totalFees": "Total des frais",
+      "successRate": "Taux de succès",
+      "averageFee": "Frais moyens",
+      "totalVolume": "Volume total"
+    },
+    "channels": {
+      "title": "Canaux de routage",
+      "empty": "Aucun canal de routage",
+      "add": "Ajouter un canal",
+      "list": {
+        "peer": "Pair",
+        "capacity": "Capacité",
+        "fees": "Frais",
+        "volume": "Volume",
+        "success": "Taux de succès"
+      }
+    },
+    "fees": {
+      "title": "Gestion des frais",
+      "base": "Frais de base",
+      "rate": "Taux",
+      "minimum": "Minimum",
+      "maximum": "Maximum",
+      "update": "Mettre à jour",
+      "updating": "Mise à jour en cours...",
+      "success": "Frais mis à jour avec succès",
+      "error": "Erreur lors de la mise à jour des frais"
+    },
+    "analytics": {
+      "title": "Analyses",
+      "period": "Période",
+      "metrics": {
+        "fees": "Frais",
+        "volume": "Volume",
+        "success": "Taux de succès",
+        "channels": "Canaux actifs"
+      },
+      "charts": {
+        "feesOverTime": "Évolution des frais",
+        "volumeOverTime": "Évolution du volume",
+        "successRate": "Taux de succès",
+        "channelDistribution": "Distribution des canaux"
+      }
+    }
+  },
+  "optimization": {
+    "title": "Optimisation",
+    "subtitle": "Optimisez la performance de vos canaux",
+    "overview": {
+      "title": "Vue d'ensemble",
+      "score": "Score d'optimisation",
+      "recommendations": "Recommandations",
+      "potential": "Potentiel d'amélioration"
+    },
+    "channels": {
+      "title": "Analyse des canaux",
+      "empty": "Aucun canal à analyser",
+      "metrics": {
+        "balance": "Équilibre",
+        "utilization": "Utilisation",
+        "fees": "Frais",
+        "age": "Âge"
+      },
+      "actions": {
+        "rebalance": "Rééquilibrer",
+        "close": "Fermer",
+        "update": "Mettre à jour"
+      }
+    },
+    "recommendations": {
+      "title": "Recommandations",
+      "empty": "Aucune recommandation",
+      "priority": {
+        "high": "Priorité haute",
+        "medium": "Priorité moyenne",
+        "low": "Priorité basse"
+      },
+      "types": {
+        "rebalance": "Rééquilibrage",
+        "close": "Fermeture",
+        "open": "Ouverture",
+        "update": "Mise à jour"
+      },
+      "apply": "Appliquer",
+      "applying": "Application en cours...",
+      "success": "Recommandation appliquée avec succès",
+      "error": "Erreur lors de l'application de la recommandation"
+    },
+    "history": {
+      "title": "Historique des optimisations",
+      "empty": "Aucune optimisation effectuée",
+      "details": {
+        "date": "Date",
+        "type": "Type",
+        "impact": "Impact",
+        "status": "Statut"
+      },
+      "status": {
+        "completed": "Terminé",
+        "failed": "Échoué",
+        "pending": "En attente"
+      }
     }
   }
 }

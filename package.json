@@ -10,7 +10,7 @@
     "start": "next start",
     "lint": "next lint",
     "clean": "rm -rf .next node_modules/.cache && find app -name '*-back*' -delete && find app -name '*.bak' -delete",
-    "test": "vitest",
+    "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:ui": "vitest --ui",
@@ -21,13 +21,16 @@
     "generate-manifest": "./node_modules/.bin/tsx scripts/generate-manifest.ts"
   },
   "dependencies": {
+    "@auth/mongodb-adapter": "^2.6.0",
     "@emotion/is-prop-valid": "^1.3.1",
     "@formatjs/intl-localematcher": "^0.6.1",
     "@getalby/bitcoin-connect": "^3.7.1",
     "@getalby/sdk": "^4.1.1",
     "@heroicons/react": "^2.1.1",
     "@neondatabase/serverless": "^1.0.0",
+    "@noble/secp256k1": "^2.2.3",
     "@nostr-dev-kit/ndk": "^2.13.0",
+    "@prisma/client": "^5.22.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
@@ -49,24 +52,25 @@
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slider": "^1.1.2",
-    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-slot": "^1.2.0",
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/react-toggle": "^1.0.3",
     "@radix-ui/react-toggle-group": "^1.0.4",
-    "@radix-ui/react-tooltip": "^1.0.7",
+    "@radix-ui/react-tooltip": "^1.2.0",
     "@react-email/components": "^0.0.36",
     "@tanstack/react-query": "^5.0.0",
     "@trpc/client": "^11.0.2",
     "@trpc/react-query": "^11.0.2",
     "@trpc/server": "^11.0.2",
+    "@types/mongodb": "^4.0.7",
+    "@types/next-auth": "^3.13.0",
     "@types/nodemailer": "^6.4.17",
     "@types/prop-types": "^15.7.14",
     "@upstash/ratelimit": "^2.0.5",
     "@upstash/redis": "^1.34.7",
     "@webbtc/webln-types": "^3.0.0",
-    "autoprefixer": "^10.4.21",
     "bcryptjs": "^2.4.3",
     "bitcoinjs-message": "^2.2.0",
     "buffer": "^6.0.3",
@@ -80,10 +84,12 @@
     "framer-motion": "^11.0.8",
     "input-otp": "^1.4.2",
     "jsonwebtoken": "^9.0.2",
+    "lnurl": "^0.27.0",
     "lucide-react": "^0.344.0",
+    "mongodb": "^6.15.0",
     "mongoose": "^8.13.2",
     "next": "^14.1.0",
-    "next-auth": "^4.24.11",
+    "next-auth": "^5.0.0-beta.3",
     "next-intl": "^4.0.2",
     "next-themes": "^0.2.1",
     "node-fetch": "^3.3.1",
@@ -106,33 +112,45 @@
     "secp256k1": "^5.0.0",
     "sonner": "^1.4.0",
     "tailwind-merge": "^2.6.0",
-    "tailwindcss": "^4.1.3",
-    "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.0",
     "zod": "^3.24.2",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
+    "@babel/plugin-transform-private-methods": "^7.25.9",
     "@babel/plugin-transform-runtime": "^7.26.10",
     "@babel/runtime": "^7.24.0",
-    "@testing-library/jest-dom": "^6.4.2",
-    "@testing-library/react": "^14.2.1",
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.16",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^14.3.1",
+    "@testing-library/user-event": "^14.6.1",
     "@types/bcryptjs": "^2.4.6",
+    "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.6",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "^18.2.67",
+    "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.1.0",
     "@typescript-eslint/parser": "^7.1.0",
     "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.14",
     "aws4": "^1.12.0",
     "cssnano": "^6.0.5",
     "eslint": "^8",
     "eslint-config-next": "14.1.0",
-    "postcss": "^8.5.3",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "postcss": "^8.4.31",
+    "prisma": "^5.22.0",
+    "tailwindcss": "^3.3.0",
+    "tailwindcss-animate": "^1.0.7",
+    "ts-jest": "^29.3.1",
     "typescript": "^5",
-    "vitest": "^1.3.1"
+    "vitest": "^1.3.1",
+    "whatwg-fetch": "^3.6.20"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -144,5 +162,24 @@
     ]
   },
   "cursor.ai.enabled": true,
-  "cursor.ai.model": "gpt-4"
+  "cursor.ai.model": "gpt-4",
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.js"
+    ],
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/$1"
+    },
+    "transform": {
+      "^.+\\.(js|jsx|ts|tsx)$": [
+        "babel-jest",
+        {
+          "presets": [
+            "next/babel"
+          ]
+        }
+      ]
+    }
+  }
 }

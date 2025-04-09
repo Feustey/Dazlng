@@ -5,9 +5,9 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: "Contactez-nous | DazLng",
+  title: "Contactez-nous | Daznode",
   description:
-    "Prenez contact avec l'équipe DazLng pour toute question, support ou opportunité de collaboration.",
+    "Prenez contact avec l'équipe Daznode pour toute question, support ou opportunité de collaboration.",
 };
 
 export default function ContactPage() {
@@ -29,7 +29,7 @@ export default function ContactPage() {
           <div className="flex justify-center md:justify-start">
             <Image
               src="/shop.png"
-              alt="Boutique DazLng"
+              alt="Boutique Daznode"
               width={240}
               height={240}
               className="drop-shadow-xl"

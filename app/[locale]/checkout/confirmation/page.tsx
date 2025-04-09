@@ -1,132 +1,190 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { Button } from "../../../components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../../components/ui/card";
+import { useParams } from "next/navigation";
 
-export default function ConfirmationPage() {
+interface OrderDetails {
+  id: string;
+  status: string;
+  createdAt: string;
+  total: number;
+  items: Array<{
+    name: string;
+    quantity: number;
+    price: number;
+  }>;
+}
+
+export default function OrderConfirmationPage() {
+  const t = useTranslations("Checkout");
   const router = useRouter();
-  const t = useTranslations("Checkout.Confirmation");
+  const searchParams = useSearchParams();
+  const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const params = useParams();
 
-  const orderNumber = "ORD-" + Math.floor(100000 + Math.random() * 900000);
+  useEffect(() => {
+    const fetchOrder = async () => {
+      try {
+        const orderId = searchParams.get("orderId");
+        if (!orderId) {
+          setError(t("errors.noOrderId"));
+          return;
+        }
 
-  const handleContinueShopping = () => {
-    router.push("/");
-  };
+        const response = await fetch(`/api/orders/${orderId}`);
+        if (!response.ok) {
+          throw new Error(t("errors.fetchFailed"));
+        }
+
+        const data = await response.json();
+        setOrderDetails(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : t("errors.unknown"));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrder();
+  }, [searchParams, t]);
+
+  if (loading) {
+    return (
+      <div className="container py-8">
+        <Card className="max-w-2xl mx-auto">
+          <CardContent className="p-6">
+            <div className="animate-pulse space-y-4">
+              <div className="h-8 bg-gray-200 rounded w-1/2" />
+              <div className="h-4 bg-gray-200 rounded w-3/4" />
+              <div className="h-4 bg-gray-200 rounded w-2/3" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container py-8">
+        <Card className="max-w-2xl mx-auto">
+          <CardContent className="p-6">
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-red-600 mb-4">
+                {t("errors.title")}
+              </h2>
+              <p className="text-gray-600 mb-6">{error}</p>
+              <Button
+                onClick={() => router.push(`/${params.locale}/checkout`)}
+                variant="outline"
+              >
+                {t("actions.backToCheckout")}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!orderDetails) {
+    return null;
+  }
 
   return (
-    <div className="max-w-3xl mx-auto pb-12">
-      <div className="text-center mb-10">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 mb-4">
-          <svg
-            className="h-8 w-8 text-green-600"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M5 13l4 4L19 7"
-            />
-          </svg>
-        </div>
-
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
-          {t("thankYou") || "Merci pour votre commande !"}
-        </h1>
-        <p className="text-gray-600">
-          {t("orderConfirmed") ||
-            "Votre commande a été confirmée et sera bientôt traitée."}
-        </p>
-      </div>
-
-      <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-        <h2 className="text-lg font-medium mb-4">
-          {t("orderDetails") || "Détails de la commande"}
-        </h2>
-
-        <div className="border-t border-b border-gray-200 py-4 mb-4">
-          <div className="flex justify-between mb-2">
-            <span className="text-sm text-gray-600">
-              {t("orderNumber") || "Numéro de commande"}
-            </span>
-            <span className="text-sm font-medium">{orderNumber}</span>
-          </div>
-          <div className="flex justify-between mb-2">
-            <span className="text-sm text-gray-600">{t("date") || "Date"}</span>
-            <span className="text-sm font-medium">
-              {new Date().toLocaleDateString()}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-sm text-gray-600">
-              {t("status") || "Statut"}
-            </span>
-            <span className="text-sm font-medium text-green-600">
-              {t("processing") || "En traitement"}
-            </span>
-          </div>
-        </div>
-
-        <div className="mb-4">
-          <h3 className="text-sm font-medium mb-2">
-            {t("items") || "Articles commandés"}
-          </h3>
-
-          <div className="border-b border-gray-200 pb-3 mb-3">
-            <div className="flex justify-between mb-1">
-              <span className="text-sm">DazNode Lightning</span>
-              <span className="text-sm font-medium">599 €</span>
+    <div className="container py-8">
+      <Card className="max-w-2xl mx-auto">
+        <CardHeader>
+          <CardTitle>{t("confirmation.title")}</CardTitle>
+        </CardHeader>
+        <CardContent className="p-6">
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-medium mb-2">
+                {t("confirmation.orderDetails")}
+              </h3>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">
+                    {t("confirmation.orderId")}
+                  </span>
+                  <span className="text-sm font-medium">{orderDetails.id}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">
+                    {t("confirmation.date")}
+                  </span>
+                  <span className="text-sm font-medium">
+                    {new Date(orderDetails.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">
+                    {t("confirmation.status")}
+                  </span>
+                  <span className="text-sm font-medium">
+                    {orderDetails.status}
+                  </span>
+                </div>
+              </div>
             </div>
-            <p className="text-xs text-gray-500">
-              Nœud Lightning Network complet
-            </p>
+
+            <div>
+              <h3 className="text-lg font-medium mb-2">
+                {t("confirmation.items")}
+              </h3>
+              <div className="space-y-4">
+                {orderDetails.items.map((item, index) => (
+                  <div key={index} className="flex justify-between">
+                    <div>
+                      <div className="text-sm font-medium">{item.name}</div>
+                      <div className="text-sm text-gray-600">
+                        {t("confirmation.quantity")}: {item.quantity}
+                      </div>
+                    </div>
+                    <span className="text-sm font-medium">
+                      {(item.price * item.quantity).toFixed(2)} €
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="border-t pt-4">
+              <div className="flex justify-between">
+                <span className="text-sm font-medium">
+                  {t("confirmation.total")}
+                </span>
+                <span className="text-sm font-medium">
+                  {orderDetails.total.toFixed(2)} €
+                </span>
+              </div>
+            </div>
+
+            <div className="flex justify-center pt-6">
+              <Button
+                onClick={() =>
+                  router.push(`/${params.locale}/orders/${orderDetails.id}`)
+                }
+              >
+                {t("actions.viewOrder")}
+              </Button>
+            </div>
           </div>
-
-          <div className="flex justify-between text-sm">
-            <span>{t("total") || "Total"}</span>
-            <span className="font-medium">599 €</span>
-          </div>
-        </div>
-
-        <div className="mb-4">
-          <h3 className="text-sm font-medium mb-2">
-            {t("shippingAddress") || "Adresse de livraison"}
-          </h3>
-          <address className="text-sm not-italic text-gray-600">
-            John Doe
-            <br />
-            123 Rue Principale
-            <br />
-            75001 Paris
-            <br />
-            France
-          </address>
-        </div>
-
-        <div>
-          <h3 className="text-sm font-medium mb-2">
-            {t("paymentMethod") || "Méthode de paiement"}
-          </h3>
-          <p className="text-sm text-gray-600">Bitcoin (BTC)</p>
-        </div>
-      </div>
-
-      <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-        <p className="text-sm text-gray-600">
-          {t("emailSent") ||
-            "Un email de confirmation a été envoyé à votre adresse email."}
-        </p>
-
-        <button
-          type="button"
-          onClick={handleContinueShopping}
-          className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          {t("continueShopping") || "Continuer les achats"}
-        </button>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

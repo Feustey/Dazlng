@@ -7,7 +7,7 @@ import { Button } from "../components/ui/button";
 import { useLanguage } from "../contexts/LanguageContext";
 import { toast } from "sonner";
 import { Bot, Send, User, Zap, Star, Quote } from "lucide-react";
-import { cn } from "../lib/utils";
+import { cn } from "@/app/lib/utils";
 
 interface Message {
   id: string;
@@ -83,7 +83,7 @@ const testimonials = [
     name: "Alex M.",
     role: "Opérateur de nœud Lightning",
     content:
-      "Grâce aux recommandations de DazLng, mon nœud est passé de quelques transactions par jour à plus de 100 ! La différence est impressionnante.",
+      "Grâce aux recommandations de Daznode, mon nœud est passé de quelques transactions par jour à plus de 100 ! La différence est impressionnante.",
     rating: 5,
   },
   {
@@ -115,7 +115,7 @@ const testimonials = [
     name: "Lucas R.",
     role: "Entrepreneur crypto",
     content:
-      "DazLng a transformé mon nœud Lightning d'un hobby en une véritable source de revenus. Je ne peux plus m'en passer !",
+      "Daznode a transformé mon nœud Lightning d'un hobby en une véritable source de revenus. Je ne peux plus m'en passer !",
     rating: 5,
   },
 ];

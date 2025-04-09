@@ -3,13 +3,14 @@ import ClientLayout from "../ClientLayout";
 import "../globals.css";
 import Navigation from "../components/Navigation";
 import { Footer } from "../components/Footer";
-import { NextIntlClientProvider } from "next-intl";
 import { locales, defaultLocale } from "../i18n.config";
 import { redirect } from "next/navigation";
 import { Locale } from "../i18n.config.base";
 import { headers } from "next/headers";
-import { connectToDatabase } from "../lib/mongodb";
 import { Inter } from "next/font/google";
+import { Providers } from "./providers";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -79,23 +80,13 @@ interface LayoutProps {
   params: {
     locale: Locale;
   };
-  app: React.ReactNode;
 }
 
 export default async function LocaleLayout({
   children,
   params: { locale },
-  app,
 }: LayoutProps) {
   try {
-    // Vérifier la connexion à la base de données
-    const isConnected = await connectToDatabase();
-    if (!isConnected) {
-      console.error("Database connection failed");
-      // Au lieu de lancer une erreur, nous continuons sans la base de données
-      console.warn("Continuing without database connection");
-    }
-
     // Vérifier la validité de la locale de manière asynchrone
     const validLocales = await Promise.resolve(locales);
     if (!validLocales.includes(locale)) {
@@ -107,44 +98,22 @@ export default async function LocaleLayout({
     // Charger les messages de manière asynchrone
     const messages = await import(`../messages/${locale}.json`)
       .then((module) => module.default)
-      .catch((error) => {
-        console.error(`Failed to load messages for locale ${locale}:`, error);
+      .catch(() => {
+        console.error(`Failed to load messages for locale: ${locale}`);
         return {};
       });
 
     return (
-      <html lang={locale} suppressHydrationWarning>
-        <body className="font-sans antialiased">
-          <NextIntlClientProvider messages={messages} locale={locale}>
-            <ClientLayout>
-              <div className="flex min-h-screen flex-col">
-                <Navigation />
-                <main className="flex-1 pt-16">
-                  <div className="flex-1">{children}</div>
-                  {app}
-                </main>
-                <Footer />
-              </div>
-            </ClientLayout>
-          </NextIntlClientProvider>
-        </body>
-      </html>
+      <Providers locale={locale} messages={messages}>
+        <ClientLayout>
+          <Navigation />
+          <main className={inter.className}>{children}</main>
+          <Footer />
+        </ClientLayout>
+      </Providers>
     );
   } catch (error) {
-    console.error("Layout error:", error);
-    return (
-      <html lang={locale} suppressHydrationWarning>
-        <body className="font-sans antialiased">
-          <div className="flex min-h-screen items-center justify-center">
-            <div className="text-center">
-              <h1 className="text-2xl font-bold text-red-600">
-                Une erreur est survenue
-              </h1>
-              <p className="mt-2 text-gray-600">Veuillez réessayer plus tard</p>
-            </div>
-          </div>
-        </body>
-      </html>
-    );
+    console.error("Error in LocaleLayout:", error);
+    throw error;
   }
 }

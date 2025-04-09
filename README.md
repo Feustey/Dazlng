@@ -1,6 +1,6 @@
-# DazLng 🌩️
+# Daznode 🌩️
 
-DazLng est un tableau de bord intelligent propulsé par l'IA, conçu pour optimiser votre nœud Lightning Network et maximiser sa rentabilité.
+Daznode est un tableau de bord intelligent propulsé par l'IA, conçu pour optimiser votre nœud Lightning Network et maximiser sa rentabilité.
 
 ## 🚀 Caractéristiques
 
@@ -55,8 +55,8 @@ DazLng est un tableau de bord intelligent propulsé par l'IA, conçu pour optimi
 1. Cloner le dépôt :
 
 ```bash
-git clone https://github.com/votre-username/DazLng.git
-cd DazLng
+git clone https://github.com/votre-username/Daznode.git
+cd Daznode
 ```
 
 2. Installer les dépendances :
@@ -88,7 +88,7 @@ DATABASE_URL="votre_url_postgresql"
 DIRECT_URL="votre_url_direct_postgresql"
 
 # Configuration MCP
-MCP_API_URL="https://dazlng-mcp.herokuapp.com"
+MCP_API_URL="https://daznode-mcp.herokuapp.com"
 NODE_PUBKEY="votre_clé_publique"
 
 # Configuration Alby
@@ -102,7 +102,7 @@ SMTP_HOST="smtp.gmail.com"
 SMTP_PORT=587
 SMTP_USER="votre_email@gmail.com"
 SMTP_PASS="votre_mot_de_passe_app"
-SMTP_FROM="DazLng <votre_email@gmail.com>"
+SMTP_FROM="Daznode <votre_email@gmail.com>"
 ```
 
 ## 📊 Architecture
@@ -167,9 +167,9 @@ Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
 ---
 
-Fait avec ⚡️ par l'équipe DazLng
+Fait avec ⚡️ par l'équipe Daznode
 
-# DazLng - Gestionnaire de Nœuds Lightning Network
+# Daznode - Gestionnaire de Nœuds Lightning Network
 
 Application de gestion et de surveillance des nœuds Lightning Network.
 

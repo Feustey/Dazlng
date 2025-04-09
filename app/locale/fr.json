@@ -29,7 +29,7 @@
       }
     },
     "benefits": {
-      "title": "Pourquoi choisir DazLng ?",
+      "title": "Pourquoi choisir Daznode ?",
       "items": {
         "simplicity": "Interface intuitive et facile à utiliser",
         "security": "Sécurité maximale pour vos opérations",
@@ -55,8 +55,8 @@
     "metrics": "Métriques"
   },
   "About": {
-    "title": "À propos de DazLng",
-    "description": "DazLng est une application complète de gestion des nœuds Lightning Network, conçue pour simplifier l'utilisation et le déploiement de nœuds Lightning.",
+    "title": "À propos de Daznode",
+    "description": "Daznode est une application complète de gestion des nœuds Lightning Network, conçue pour simplifier l'utilisation et le déploiement de nœuds Lightning.",
     "features": {
       "title": "Fonctionnalités principales",
       "learning": "Guide d'apprentissage interactif",
@@ -90,7 +90,7 @@
     "faq": {
       "title": "Questions fréquentes",
       "what_is_lightning": "Qu'est-ce que Lightning Network ?",
-      "how_to_start": "Comment commencer avec DazLng ?",
+      "how_to_start": "Comment commencer avec Daznode ?",
       "how_to_connect": "Comment connecter mon portefeuille ?",
       "how_to_transact": "Comment effectuer des transactions ?",
       "how_to_track": "Comment suivre mes opérations ?",

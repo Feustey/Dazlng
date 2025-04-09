@@ -101,28 +101,26 @@ export default function ChannelsPage() {
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-8">
+    <div className="container mx-auto p-6 space-y-8 animate-fade-in">
       <div className="flex flex-col gap-2">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary-600 via-secondary-600 to-accent-600 text-transparent bg-clip-text">
-          Canaux Lightning
-        </h1>
+        <h1 className="text-4xl font-bold gradient-text">Canaux Lightning</h1>
         <p className="text-muted-foreground">
           Gérez vos canaux et explorez le réseau Lightning
         </p>
       </div>
 
-      <div className="relative mb-8">
+      <div className="relative mb-8 animate-slide-up">
         <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
         <Input
           type="text"
           placeholder="node public key, alias, IP address, channel id, block height, location, postal code..."
-          className="w-full pl-12 pr-4 h-14 text-lg rounded-lg"
+          className="w-full pl-12 pr-4 h-14 text-lg rounded-lg bg-card/50 backdrop-blur-sm border-accent/20"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onKeyPress={(e) => e.key === "Enter" && handleSearch()}
         />
         <Button
-          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-green-500 hover:bg-green-600 text-white px-8 h-11"
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 btn-gradient"
           onClick={handleSearch}
           disabled={isLoading}
         >
@@ -130,17 +128,27 @@ export default function ChannelsPage() {
         </Button>
       </div>
 
-      {error && <div className="text-red-500 text-center mb-4">{error}</div>}
+      {error && (
+        <div className="text-red-500 text-center mb-4 animate-shake">
+          {error}
+        </div>
+      )}
 
       {searchResults.length > 0 && (
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">Résultats de recherche</h2>
+        <div className="mb-8 animate-fade-in">
+          <h2 className="text-xl font-semibold mb-4 gradient-text">
+            Résultats de recherche
+          </h2>
           <div className="grid gap-4">
-            {searchResults.map((node) => (
-              <Card key={node.pubkey} className="p-4">
+            {searchResults.map((node, index) => (
+              <Card
+                key={node.pubkey}
+                className="card-glass animate-slide-up p-4"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="font-semibold">
+                    <h3 className="font-semibold text-gradient">
                       {node.alias || "Nœud sans alias"}
                     </h3>
                     <p className="text-sm text-muted-foreground">
@@ -152,7 +160,11 @@ export default function ChannelsPage() {
                       <p>Pairs totaux: {node.total_peers}</p>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="hover:bg-accent/20"
+                  >
                     Voir les détails
                   </Button>
                 </div>
@@ -163,9 +175,11 @@ export default function ChannelsPage() {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="p-6">
+        <Card className="card-glass p-6 animate-slide-up">
           <div className="flex flex-col">
-            <h2 className="text-lg font-semibold mb-4">Number of Nodes</h2>
+            <h2 className="text-lg font-semibold mb-4 text-gradient">
+              Number of Nodes
+            </h2>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold">
                 {isStatsLoading
@@ -196,9 +210,11 @@ export default function ChannelsPage() {
           </div>
         </Card>
 
-        <Card className="p-6">
+        <Card className="card-glass p-6 animate-slide-up">
           <div className="flex flex-col">
-            <h2 className="text-lg font-semibold mb-4">Number of Channels</h2>
+            <h2 className="text-lg font-semibold mb-4 text-gradient">
+              Number of Channels
+            </h2>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold">
                 {isStatsLoading
@@ -229,9 +245,11 @@ export default function ChannelsPage() {
           </div>
         </Card>
 
-        <Card className="p-6">
+        <Card className="card-glass p-6 animate-slide-up">
           <div className="flex flex-col">
-            <h2 className="text-lg font-semibold mb-4">Network Capacity</h2>
+            <h2 className="text-lg font-semibold mb-4 text-gradient">
+              Network Capacity
+            </h2>
             <div className="flex flex-col">
               <div className="flex items-baseline gap-2">
                 <span className="text-3xl font-bold">
@@ -276,9 +294,11 @@ export default function ChannelsPage() {
           </div>
         </Card>
 
-        <Card className="p-6">
+        <Card className="card-glass p-6 animate-slide-up">
           <div className="flex flex-col">
-            <h2 className="text-lg font-semibold mb-4">Average Channel Size</h2>
+            <h2 className="text-lg font-semibold mb-4 text-gradient">
+              Average Channel Size
+            </h2>
             <div className="flex flex-col">
               <span className="text-3xl font-bold">
                 {isStatsLoading

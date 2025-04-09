@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Canaux | DazLng",
+  title: "Canaux | Daznode",
   description:
-    "Gérez vos canaux Lightning Network et découvrez les acteurs majeurs du réseau.",
+    "Gérez vos canaux Lightning Network avec Daznode. Visualisez, analysez et optimisez vos canaux pour maximiser votre présence sur le réseau.",
 };
