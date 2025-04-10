@@ -1,90 +1,60 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { verify } from "jsonwebtoken";
+import { auth } from "./auth";
+import createMiddleware from "next-intl/middleware";
+import { locales, defaultLocale, localePrefix } from "./app/i18n.config.base";
 
-// Liste des routes qui ne nécessitent pas d'authentification
-const publicRoutes = [
-  "/",
-  "/fr",
-  "/en",
-  "/fr/login",
-  "/en/login",
-  "/fr/register",
-  "/en/register",
-  "/login",
-  "/register",
-  "/api/auth/login",
-  "/api/auth/register",
-  "/api/auth/session",
-  "/api/auth/me",
-  "/api/auth/csrf",
-  "/api/auth/signin",
-  "/api/auth/signout",
-  "/api/auth/callback",
-  "/api/auth/verify-request",
-  "/api/auth/error",
-  "/api/auth/providers",
-];
+// Créer le middleware pour next-intl
+const intlMiddleware = createMiddleware({
+  locales,
+  defaultLocale,
+  localePrefix,
+});
 
-export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+// Combiner les middlewares
+export default auth((req) => {
+  // Appliquer d'abord le middleware next-intl
+  const response = intlMiddleware(req);
+  if (response) return response;
 
-  // Vérifier si la route est publique
-  if (publicRoutes.includes(pathname)) {
-    return NextResponse.next();
+  const isAuthenticated = !!req.auth;
+
+  // Routes publiques qui ne nécessitent pas d'authentification
+  const publicRoutes = [
+    "/daznode",
+    "/daz-ia",
+    "/network",
+    "/channels",
+    "/login",
+    "/register",
+    "/api/public",
+  ];
+
+  // Vérifier si la route actuelle est publique
+  const isPublicRoute = publicRoutes.some((route) =>
+    req.nextUrl.pathname.startsWith(route)
+  );
+
+  // Protéger les routes spécifiées
+  const isProtectedRoute =
+    req.nextUrl.pathname.startsWith("/dashboard") ||
+    req.nextUrl.pathname.startsWith("/api/protected");
+
+  if (isProtectedRoute && !isAuthenticated) {
+    return NextResponse.redirect(new URL(`/${defaultLocale}/login`, req.url));
   }
 
-  // Récupérer le token du header Authorization
-  const token = request.headers.get("Authorization")?.replace("Bearer ", "");
+  return NextResponse.next();
+});
 
-  if (!token) {
-    // Si c'est une route API, renvoyer une erreur 401
-    if (pathname.startsWith("/api/")) {
-      return NextResponse.json(
-        { error: "Token d'authentification manquant" },
-        { status: 401 }
-      );
-    }
-
-    // Pour les routes non-API, rediriger vers la page de connexion
-    const url = new URL("/fr/login", request.url);
-    return NextResponse.redirect(url);
-  }
-
-  try {
-    // Vérifier le token
-    const decoded = verify(token, process.env.JWT_SECRET || "votre_secret_jwt");
-
-    // Ajouter les informations de l'utilisateur à la requête
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("user", JSON.stringify(decoded));
-
-    // Continuer avec la requête modifiée
-    return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
-  } catch (error) {
-    // Si c'est une route API, renvoyer une erreur 401
-    if (pathname.startsWith("/api/")) {
-      return NextResponse.json(
-        { error: "Token invalide ou expiré" },
-        { status: 401 }
-      );
-    }
-
-    // Pour les routes non-API, rediriger vers la page de connexion
-    const url = new URL("/fr/login", request.url);
-    return NextResponse.redirect(url);
-  }
-}
-
-// Configuration des routes sur lesquelles le middleware doit s'exécuter
 export const config = {
   matcher: [
-    // Exécuter uniquement sur les routes API nécessitant une authentification
-    // Exclure toutes les routes d'authentification
-    "/api/:path*",
+    "/dashboard/:path*",
+    "/api/protected/:path*",
+    "/daznode/:path*",
+    "/daz-ia/:path*",
+    "/network/:path*",
+    "/channels/:path*",
+    "/((?!api|_next|.*\\..*).*)",
   ],
 };

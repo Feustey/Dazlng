@@ -1,39 +1,5 @@
-import mongoose from "mongoose";
+import { UserModel } from "../lib/models";
+import { IUser } from "../lib/interfaces/user.interface";
 
-const userSchema = new mongoose.Schema(
-  {
-    pubkey: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    nodePubkey: {
-      type: String,
-      default: null,
-    },
-    lightningAddress: {
-      type: String,
-      default: null,
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    password: {
-      type: String,
-    },
-    lastLoginAt: {
-      type: Date,
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
-
-export const User = mongoose.models.User || mongoose.model("User", userSchema);
+export default UserModel;
+export type { IUser };
