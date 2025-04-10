@@ -56,7 +56,7 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
     >
       Cordialement,
       <br />
-      L'équipe Daznode
+      L&apos;équipe Daznode
     </div>
   </div>
 );

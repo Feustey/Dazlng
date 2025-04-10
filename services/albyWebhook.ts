@@ -1,5 +1,5 @@
-import { AlbyWebhook, IAlbyWebhook } from "../models/AlbyWebhook";
-import crypto from "crypto";
+import AlbyWebhook, { IAlbyWebhook } from "../models/AlbyWebhook";
+import { getAlbyService } from "./albyService";
 
 const ALBY_API_URL = "https://api.getalby.com";
 
@@ -46,14 +46,12 @@ export class AlbyWebhookService {
     filterTypes,
   }: CreateWebhookParams): Promise<IAlbyWebhook> {
     try {
-      const response = (await this.makeRequest("/webhook_endpoints", {
-        method: "POST",
-        body: JSON.stringify({
-          url,
-          description,
-          filter_types: filterTypes,
-        }),
-      })) as WebhookResponse;
+      const albyService = await getAlbyService();
+      const response = await albyService.createWebhook({
+        url,
+        description,
+        filterTypes,
+      });
 
       const webhook = await AlbyWebhook.create({
         userId,
@@ -66,7 +64,6 @@ export class AlbyWebhookService {
 
       return webhook;
     } catch (error) {
-      console.error("Error creating Alby webhook:", error);
       throw error;
     }
   }
@@ -76,20 +73,17 @@ export class AlbyWebhookService {
       const webhook = await AlbyWebhook.findOne({ endpointId });
       return webhook;
     } catch (error) {
-      console.error("Error getting Alby webhook:", error);
+      console.error("Erreur lors de la récupération du webhook Alby:", error);
       throw error;
     }
   }
 
   static async deleteWebhook(endpointId: string): Promise<void> {
     try {
-      await this.makeRequest(`/webhook_endpoints/${endpointId}`, {
-        method: "DELETE",
-      });
-
+      const albyService = await getAlbyService();
+      await albyService.deleteWebhook(endpointId);
       await AlbyWebhook.deleteOne({ endpointId });
     } catch (error) {
-      console.error("Error deleting Alby webhook:", error);
       throw error;
     }
   }
@@ -99,27 +93,26 @@ export class AlbyWebhookService {
       const webhooks = await AlbyWebhook.find({ userId });
       return webhooks;
     } catch (error) {
-      console.error("Error getting user Alby webhooks:", error);
+      console.error("Erreur lors de la récupération des webhooks Alby:", error);
       throw error;
     }
   }
 
-  static verifyWebhookSignature(
+  static async verifyWebhookSignature(
     payload: string,
     signature: string,
-    endpointSecret: string
-  ): boolean {
+    secret: string
+  ): Promise<boolean> {
     try {
-      const hmac = crypto.createHmac("sha256", endpointSecret);
-      const calculatedSignature = hmac.update(payload).digest("hex");
-
-      return crypto.timingSafeEqual(
-        Buffer.from(signature),
-        Buffer.from(calculatedSignature)
-      );
+      const albyService = await getAlbyService();
+      return albyService.verifyWebhookSignature(payload, signature, secret);
     } catch (error) {
-      console.error("Error verifying webhook signature:", error);
       return false;
     }
+  }
+
+  static async handleWebhook(payload: any, signature: string) {
+    const albyService = await getAlbyService();
+    // ... existing code ...
   }
 }

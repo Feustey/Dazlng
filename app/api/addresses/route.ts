@@ -1,28 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/app/lib/db";
 import { Address } from "@/app/models/Address";
+import { getToken } from "next-auth/jwt";
 
 // GET /api/addresses - Récupérer toutes les adresses d'un utilisateur
 export async function GET(req: NextRequest) {
   try {
     await connectToDatabase();
 
-    // Récupérer l'ID de l'utilisateur à partir de la session (à implémenter)
-    // const session = await getServerSession(authOptions);
-    // if (!session) {
-    //   return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
-    // }
-    // const userId = session.user.id;
-
-    // Pour l'exemple, nous utilisons un ID fixe
-    const userId = req.nextUrl.searchParams.get("userId");
-    if (!userId) {
+    const token = await getToken({ req });
+    if (!token) {
       return NextResponse.json(
-        { error: "ID utilisateur requis" },
-        { status: 400 }
+        { error: "Vous devez être connecté" },
+        { status: 401 }
       );
     }
 
+    const userId = token.sub;
     const addresses = await Address.find({ userId });
     return NextResponse.json(addresses);
   } catch (error) {
@@ -36,9 +30,16 @@ export async function POST(req: NextRequest) {
   try {
     await connectToDatabase();
 
+    const token = await getToken({ req });
+    if (!token) {
+      return NextResponse.json(
+        { error: "Vous devez être connecté" },
+        { status: 401 }
+      );
+    }
+
     const body = await req.json();
     const {
-      userId,
       type,
       firstName,
       lastName,
@@ -55,14 +56,14 @@ export async function POST(req: NextRequest) {
     // Si c'est l'adresse par défaut, mettre à jour les autres adresses
     if (isDefault) {
       await Address.updateMany(
-        { userId, type, isDefault: true },
+        { userId: token.sub, type, isDefault: true },
         { isDefault: false }
       );
     }
 
     // Créer la nouvelle adresse
     const newAddress = await Address.create({
-      userId,
+      userId: token.sub,
       type,
       firstName,
       lastName,

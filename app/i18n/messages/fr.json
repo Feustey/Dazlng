@@ -1,0 +1,23 @@
+{
+  "faq": {
+    "title": "Questions Fréquentes",
+    "questions": {
+      "q1": "Comment fonctionne DazLng ?",
+      "a1": "DazLng est une plateforme qui vous permet d&apos;apprendre les langues de manière interactive et personnalisée.",
+      "q2": "Quelles langues sont disponibles ?",
+      "a2": "Nous proposons actuellement l&apos;anglais, l&apos;espagnol, l&apos;allemand et le français.",
+      "q3": "Combien coûte l&apos;abonnement ?",
+      "a3": "Nous proposons différents forfaits adaptés à vos besoins, à partir de 9.99€/mois."
+    }
+  },
+  "testimonials": {
+    "title": "Témoignages",
+    "subtitle": "Ce que nos utilisateurs disent de nous"
+  },
+  "newsletter": {
+    "title": "Restez informé",
+    "subtitle": "Inscrivez-vous à notre newsletter pour recevoir nos dernières actualités",
+    "button": "S&apos;inscrire",
+    "placeholder": "Votre adresse email"
+  }
+}

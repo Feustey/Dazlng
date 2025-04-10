@@ -9,6 +9,9 @@ if (!MONGODB_URI) {
 
 const client = new MongoClient(MONGODB_URI);
 
+// Marquer cette route comme dynamique
+export const dynamic = "force-dynamic";
+
 export async function GET(request: Request) {
   try {
     await client.connect();

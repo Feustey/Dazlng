@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { MongoClient } from "mongodb";
+import connectToDatabaseMongoose from "./mongoose-init";
 
 if (!process.env.MONGODB_URI) {
   throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
@@ -29,27 +30,45 @@ if (process.env.NODE_ENV === "development") {
   clientPromise = client.connect();
 }
 
+// Configuration Mongoose
+mongoose.set("strictQuery", true);
+
 export async function connectToDatabase() {
   try {
+    if (mongoose.connection.readyState === 1) {
+      const client = await clientPromise;
+      return { client, db: client.db() };
+    }
+
+    // Utilisation de la connexion mongoose avec le pattern singleton
+    await connectToDatabaseMongoose();
+
     const client = await clientPromise;
-    const db = client.db(process.env.MONGODB_DB);
-    return { client, db };
+    console.log("Connected to MongoDB");
+    return { client, db: client.db() };
   } catch (error) {
-    console.error("Error connecting to database:", error);
+    console.error("Error connecting to MongoDB:", error);
     throw error;
   }
 }
 
 export async function getDb() {
-  const conn = await connectToDatabase();
-  return conn.db;
+  const { db } = await connectToDatabase();
+  return db;
 }
 
 export async function closeDb() {
   await mongoose.connection.close();
+  const client = await clientPromise;
+  await client.close();
 }
 
-export default {
+// Export clientPromise pour l'adapter NextAuth
+export { clientPromise };
+
+const database = {
   getDb,
   closeDb,
 };
+
+export default database;

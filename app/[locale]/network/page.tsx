@@ -15,8 +15,15 @@ import {
 import { NodeList } from "../../components/NodeList";
 import { NetworkCharts } from "../../components/NetworkCharts";
 import NetworkMovers from "../../components/NetworkMovers";
+import NetworkGraph from "../../components/NetworkGraph";
 import { networkService } from "../../services/networkService";
 import { NetworkNode, Node as NetworkNodeType } from "../../types/network";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../../components/ui/tabs";
 
 interface Node {
   id: string;
@@ -195,15 +202,26 @@ export default function NetworkPage() {
         </Card>
       </div>
 
-      {/* Graphiques */}
-      <div className="animate-fade-in [animation-delay:400ms]">
-        <NetworkCharts nodes={networkNodes} />
-      </div>
+      {/* Tabs pour visualisations */}
+      <Tabs defaultValue="chart" className="mb-8">
+        <TabsList className="mb-4">
+          <TabsTrigger value="chart">Graphiques</TabsTrigger>
+          <TabsTrigger value="graph">Graphe du réseau</TabsTrigger>
+          <TabsTrigger value="movers">Mouvements</TabsTrigger>
+        </TabsList>
 
-      {/* Big Movers */}
-      <div className="mt-8 animate-fade-in [animation-delay:500ms]">
-        <NetworkMovers />
-      </div>
+        <TabsContent value="chart" className="animate-fade-in">
+          <NetworkCharts nodes={networkNodes} />
+        </TabsContent>
+
+        <TabsContent value="graph" className="animate-fade-in">
+          <NetworkGraph />
+        </TabsContent>
+
+        <TabsContent value="movers" className="animate-fade-in">
+          <NetworkMovers />
+        </TabsContent>
+      </Tabs>
 
       {/* Filtres */}
       <Card className="card-glass p-6 mb-8 animate-slide-up [animation-delay:600ms]">

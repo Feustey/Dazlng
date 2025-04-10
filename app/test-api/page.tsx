@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import React, { useState, useEffect, useCallback } from "react";
 
 interface ConnectionStatus {
@@ -61,7 +63,7 @@ export default function TestApiPage() {
   const testConnection = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/test-mcp-connection");
+      const response = await fetch("/api/test-mcp");
       const data = await response.json();
       setConnectionStatus(data);
     } catch (error) {

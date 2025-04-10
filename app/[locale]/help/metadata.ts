@@ -1,7 +1,20 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Aide et Support - Daznode",
+  title: "Centre d'aide - Daznode",
   description:
-    "Centre d'aide Daznode : guides, tutoriels et réponses à vos questions sur l'utilisation de notre plateforme Lightning Network.",
+    "Trouvez des réponses à vos questions sur le réseau Lightning Network, la gestion de votre nœud, et l'utilisation de Daznode. Guides, tutoriels et support.",
+  openGraph: {
+    title: "Centre d'aide - Daznode",
+    description:
+      "Trouvez des réponses à vos questions sur le réseau Lightning Network et Daznode",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Centre d'aide Daznode",
+      },
+    ],
+  },
 };

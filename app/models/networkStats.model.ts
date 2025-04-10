@@ -1,6 +1,6 @@
-import { Schema, model, models } from "mongoose";
+import mongoose from "mongoose";
 
-const networkStatsSchema = new Schema({
+const networkStatsSchema = new mongoose.Schema({
   timestamp: { type: Date, default: Date.now },
   node_count: Number,
   channel_count: Number,
@@ -34,5 +34,9 @@ const networkStatsSchema = new Schema({
   ],
 });
 
+// Index pour optimiser les requêtes par timestamp
+networkStatsSchema.index({ timestamp: -1 });
+
 export const NetworkStatsModel =
-  models.NetworkStats || model("NetworkStats", networkStatsSchema);
+  mongoose.models.NetworkStats ||
+  mongoose.model("NetworkStats", networkStatsSchema);

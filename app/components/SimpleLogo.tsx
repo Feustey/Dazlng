@@ -33,7 +33,7 @@ export const SimpleLogo: React.FC<SimpleLogoProps> = ({ className = "" }) => {
       </svg>
 
       {/* Texte stylisé */}
-      <span className="text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent dark:from-blue-400 dark:to-blue-200">
+      <span className="text-2xl font-bold tracking-tight text-gradient">
         Daznode
       </span>
     </div>

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { createHash, createHmac } from "crypto";
 import { connectToDatabase } from "@/app/lib/db";
-import { User } from "@/app/models/User";
+import User from "@/models/User";
 import { Session } from "@/app/models/Session";
 
 // Fonction pour vérifier la signature du webhook

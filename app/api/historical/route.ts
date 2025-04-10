@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { dynamic, errorResponse, successResponse } from "../../api/config";
 
-export const runtime = "edge";
 export { dynamic };
 
 export async function GET() {

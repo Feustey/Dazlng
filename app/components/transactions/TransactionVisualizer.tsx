@@ -407,7 +407,8 @@ export const TransactionVisualizer: React.FC = () => {
 
             <div className="prose max-w-none">
               <h3>
-                {t("bitcoinTxTitle") || "Anatomie d'une transaction Bitcoin"}
+                {t("bitcoinTxTitle") ||
+                  "Anatomie d&apos;une transaction Bitcoin"}
               </h3>
               <p>
                 {t("bitcoinTxDesc") ||
@@ -432,7 +433,7 @@ export const TransactionVisualizer: React.FC = () => {
                 <li>
                   <strong>{t("signature") || "Signature"}</strong> -{" "}
                   {t("signatureDesc") ||
-                    "Preuve cryptographique que l'expéditeur est autorisé à dépenser ces bitcoins"}
+                    "Preuve cryptographique que l&apos;expéditeur est autorisé à dépenser ces bitcoins"}
                 </li>
               </ul>
 
@@ -446,14 +447,17 @@ export const TransactionVisualizer: React.FC = () => {
               </p>
               <ol>
                 <li>
-                  <strong>{t("invoice") || "Création d'une facture"}</strong> -{" "}
+                  <strong>
+                    {t("invoice") || "Création d&apos;une facture"}
+                  </strong>{" "}
+                  -{" "}
                   {t("invoiceDesc") ||
                     "Le destinataire génère une facture (invoice) avec le montant demandé"}
                 </li>
                 <li>
                   <strong>{t("pathfinding") || "Recherche de chemin"}</strong> -{" "}
                   {t("pathfindingDesc") ||
-                    "L'expéditeur trouve un chemin à travers le réseau vers le destinataire"}
+                    "L&apos;expéditeur trouve un chemin à travers le réseau vers le destinataire"}
                 </li>
                 <li>
                   <strong>{t("htlc") || "Contrats HTLC"}</strong> -{" "}

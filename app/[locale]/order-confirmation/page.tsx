@@ -15,7 +15,7 @@ export default function OrderConfirmationPage() {
   const t = useTranslations("daznode");
   const router = useRouter();
   const pathname = usePathname();
-  const locale = pathname.split("/")[1];
+  const locale = pathname?.split("/")[1] || "fr";
 
   return (
     <div className="container mx-auto px-4 py-8 animate-fade-in">

@@ -1,39 +1,9 @@
 import mongoose from "mongoose";
 import type { Node } from "../types/node";
+import { INode } from "../lib/interfaces/node.interface";
+import { NodeModel as NodeModelImport } from "../lib/models";
 
-export interface MongoNode {
-  alias: string;
-  pubkey: string;
-  platform: string;
-  version: string;
-  total_fees: number;
-  avg_fee_rate_ppm: number;
-  capacity: number;
-  channels: number;
-  total_volume: number;
-  total_peers: number;
-  uptime: number;
-  opened_channel_count: number;
-  color: string;
-  address: string;
-  closed_channel_count: number;
-  pending_channel_count: number;
-  avg_capacity: number;
-  avg_fee_rate: number;
-  avg_base_fee_rate: number;
-  betweenness_rank: number;
-  eigenvector_rank: number;
-  closeness_rank: number;
-  weighted_betweenness_rank: number;
-  weighted_closeness_rank: number;
-  weighted_eigenvector_rank: number;
-  last_update: number;
-  timestamp: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const nodeSchema = new mongoose.Schema<MongoNode>({
+const nodeSchema = new mongoose.Schema<INode>({
   alias: { type: String, required: true },
   pubkey: { type: String, required: true, unique: true },
   platform: { type: String, required: true },
@@ -66,7 +36,6 @@ const nodeSchema = new mongoose.Schema<MongoNode>({
 });
 
 // Index pour les requêtes fréquentes
-nodeSchema.index({ pubkey: 1 });
 nodeSchema.index({ timestamp: -1 });
 nodeSchema.index({ capacity: -1 });
 nodeSchema.index({ channels: -1 });
@@ -79,38 +48,13 @@ nodeSchema.index({ uptime: -1, total_peers: -1 });
 nodeSchema.index({ timestamp: -1, pubkey: 1 });
 
 const NodeModel =
-  mongoose.models.Node || mongoose.model<MongoNode>("Node", nodeSchema);
+  mongoose.models.Node || mongoose.model<INode>("Node", nodeSchema);
 
+// Export le modèle avec pattern singleton qui s'initialise automatiquement
 export default NodeModel;
 
-export interface INode {
-  _id?: string;
-  pubkey: string;
-  alias: string;
-  platform: string;
-  version: string;
-  total_fees: number;
-  avg_fee_rate_ppm: number;
-  total_capacity: number;
-  active_channel_count: number;
-  total_volume: number;
-  total_peers: number;
-  uptime: number;
-  opened_channel_count: number;
-  color: string;
-  address: string;
-  closed_channel_count: number;
-  pending_channel_count: number;
-  avg_capacity: number;
-  avg_fee_rate: number;
-  avg_base_fee_rate: number;
-  betweenness_rank: number;
-  eigenvector_rank: number;
-  closeness_rank: number;
-  weighted_betweenness_rank: number;
-  weighted_closeness_rank: number;
-  weighted_eigenvector_rank: number;
-  timestamp: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
+// Re-export l'interface pour la commodité
+export type { INode };
+
+// Pour la compatibilité avec le code existant
+export type MongoNode = INode;

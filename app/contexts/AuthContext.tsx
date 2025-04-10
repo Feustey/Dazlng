@@ -35,6 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const params = useParams();
   const { addToast } = useToast();
+  const locale = params?.locale?.toString() || "fr";
 
   useEffect(() => {
     checkAuth();
@@ -84,7 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         description: "Bienvenue sur votre espace personnel",
         type: "success",
       });
-      router.push(`/${params.locale}/dashboard`);
+      router.push(`/${locale}/dashboard`);
     } catch (error) {
       addToast({
         title: "Erreur de connexion",
@@ -106,7 +107,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const message = `Connexion à Daznode - ${new Date().toISOString()}`;
 
       // Rediriger vers Alby pour la signature
-      const albyUrl = `lightning:${process.env.NEXT_PUBLIC_ALBY_PUBLIC_KEY}?action=signMessage&message=${encodeURIComponent(message)}`;
+      const albyUrl = `lightning:${process.env.ALBY_PUBLIC_KEY}?action=signMessage&message=${encodeURIComponent(message)}`;
       window.location.href = albyUrl;
 
       // Note: La vérification de la signature se fera via un webhook
@@ -145,7 +146,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         description: "Votre compte a été créé avec succès",
         type: "success",
       });
-      router.push(`/${params.locale}/dashboard`);
+      router.push(`/${locale}/dashboard`);
     } catch (error) {
       addToast({
         title: "Erreur d'inscription",
@@ -169,7 +170,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         description: "À bientôt !",
         type: "success",
       });
-      router.push(`/${params.locale}`);
+      router.push(`/${locale}`);
     } catch (error) {
       addToast({
         title: "Erreur de déconnexion",

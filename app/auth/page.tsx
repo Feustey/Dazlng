@@ -1,22 +1,32 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const router = useRouter();
   const params = useParams();
+  const locale = params?.locale as string | undefined;
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     // TODO: Implémenter la logique d'authentification
-    router.push(`/${params.locale}/checkout/delivery`);
+    if (locale) {
+      router.push(`/${locale}/checkout/delivery`);
+    } else {
+      router.push("/checkout/delivery");
+    }
   };
 
   const handleGuestCheckout = () => {
     // TODO: Sauvegarder l'état de la commande en tant qu'invité
-    router.push(`/${params.locale}/checkout/delivery`);
+    if (locale) {
+      router.push(`/${locale}/checkout/delivery`);
+    } else {
+      router.push("/checkout/delivery");
+    }
   };
 
   return (
@@ -27,7 +37,7 @@ export default function AuthPage() {
             {isLogin ? "Connexion" : "Création de compte"}
           </h2>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-6" onSubmit={handleLogin}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <input

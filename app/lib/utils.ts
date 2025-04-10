@@ -20,3 +20,12 @@ export function formatNumber(number: number): string {
     maximumFractionDigits: 2,
   }).format(number);
 }
+
+export function formatPrice(price: number): string {
+  return new Intl.NumberFormat("fr-FR", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(price);
+}

@@ -10,9 +10,9 @@ export default function VerifyPage() {
   const t = useTranslations("Verify");
   const router = useRouter();
   const searchParams = useSearchParams();
-  const email = searchParams.get("email");
+  const email = searchParams?.get("email") || "";
   const pathname = usePathname();
-  const locale = pathname.split("/")[1];
+  const locale = pathname?.split("/")[1] || "fr";
 
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);

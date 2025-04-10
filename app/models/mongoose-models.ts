@@ -15,5 +15,5 @@ export * from "./HistoricalData";
 export * from "./CentralityData";
 export * from "./PeerOfPeer";
 export * from "./networkStats.model";
-export * from "./User";
+export * from "@/models/User";
 export * from "./Session";

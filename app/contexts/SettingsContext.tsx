@@ -34,7 +34,7 @@ export const SettingsProvider = ({
 }) => {
   const params = useParams();
   const currentLocale =
-    typeof params.locale === "string" ? params.locale : "fr";
+    params?.locale && typeof params.locale === "string" ? params.locale : "fr";
 
   const [language, setLanguage] = useState("fr");
   const [currency, setCurrency] = useState("btc");

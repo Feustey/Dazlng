@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
-import { useAuth } from "@/app/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
+import { useAuth } from "@/app/contexts/AuthContext";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -11,15 +12,20 @@ interface ProtectedRouteProps {
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const router = useRouter();
   const params = useParams();
-  const { isAuthenticated } = useAuth();
+  const locale = params?.locale as string | undefined;
+  const { user, isLoading } = useAuth();
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push(`/${params.locale}/login`);
+    if (!isLoading && !user) {
+      if (locale) {
+        router.push(`/${locale}/login`);
+      } else {
+        router.push("/login");
+      }
     }
-  }, [isAuthenticated, router, params.locale]);
+  }, [user, isLoading, router, locale]);
 
-  if (!isAuthenticated) {
+  if (isLoading || !user) {
     return null;
   }
 

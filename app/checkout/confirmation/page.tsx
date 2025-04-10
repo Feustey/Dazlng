@@ -1,6 +1,7 @@
 import dynamicImport from "next/dynamic";
 import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export const dynamic = "force-dynamic";
 

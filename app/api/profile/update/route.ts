@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/app/lib/db";
-import { User } from "@/app/models/User";
+import User, { IUser } from "@/models/User";
 
 export async function PUT(req: NextRequest) {
   try {
@@ -27,8 +27,12 @@ export async function PUT(req: NextRequest) {
 
     // Vérifier si l'email est déjà utilisé par un autre utilisateur
     if (email && email !== user.email) {
-      const existingUser = await User.findOne({ email });
-      if (existingUser && existingUser._id.toString() !== userId) {
+      const existingUser = (await User.findOne({ email })) as IUser | null;
+      if (
+        existingUser &&
+        existingUser._id &&
+        existingUser._id.toString() !== userId
+      ) {
         return NextResponse.json(
           { error: "Cet email est déjà utilisé" },
           { status: 400 }
@@ -41,10 +45,17 @@ export async function PUT(req: NextRequest) {
     if (name) updateData.name = name;
     if (email) updateData.email = email;
 
-    const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+    const updatedUser = (await User.findByIdAndUpdate(userId, updateData, {
       new: true,
       runValidators: true,
-    });
+    })) as IUser | null;
+
+    if (!updatedUser) {
+      return NextResponse.json(
+        { error: "Échec de la mise à jour de l'utilisateur" },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({
       user: {

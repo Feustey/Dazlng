@@ -7,6 +7,16 @@ import AlbyQRCode from "../../components/AlbyQRCode";
 import { useRouter, usePathname } from "next/navigation";
 import { Tabs } from "../../components/Tabs";
 import RecommendationsContent from "../../components/RecommendationsContent";
+import PredictionModule from "../../components/PredictionModule";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card";
+import { useSession } from "next-auth/react";
+import { Alert, AlertDescription, AlertTitle } from "../../components/ui/alert";
+import { ShieldPlus, LockIcon, AlertTriangle } from "lucide-react";
 
 const mockRecommendations = [
   {
@@ -29,7 +39,7 @@ export default function DazIAPage() {
   const t = useTranslations("daz-ia");
   const router = useRouter();
   const pathname = usePathname();
-  const locale = pathname.split("/")[1];
+  const locale = pathname?.split("/")[1] || "fr";
   const [selectedPlan, setSelectedPlan] = useState<
     "one-shot" | "yearly" | null
   >(null);
@@ -37,6 +47,8 @@ export default function DazIAPage() {
   const [paymentStatus, setPaymentStatus] = useState<
     "pending" | "success" | "error"
   >("pending");
+  const session = useSession();
+  const isSubscribed = process.env.NODE_ENV === "development" || false;
 
   const handlePlanSelection = (plan: "one-shot" | "yearly") => {
     setSelectedPlan(plan);
@@ -162,6 +174,80 @@ export default function DazIAPage() {
       id: "recommendations",
       label: t("tabs.recommendations"),
       content: <RecommendationsContent recommendations={mockRecommendations} />,
+    },
+    {
+      id: "predictions",
+      label: t("tabs.predictions"),
+      content: isSubscribed ? (
+        <PredictionModule />
+      ) : (
+        <Card className="w-full">
+          <CardHeader className="text-center">
+            <CardTitle className="flex items-center justify-center gap-2">
+              <LockIcon className="h-5 w-5 text-muted-foreground" />
+              Fonctionnalité Premium
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-center">
+            <p className="mb-4">
+              Les fonctionnalités de prédiction avancée sont réservées aux
+              abonnés premium.
+            </p>
+            <Alert className="mb-4 bg-primary/5 border-primary/20">
+              <ShieldPlus className="h-4 w-4" />
+              <AlertTitle>Abonnez-vous pour accéder</AlertTitle>
+              <AlertDescription>
+                Souscrivez à un abonnement pour profiter de toutes les
+                fonctionnalités avancées et prédictions.
+              </AlertDescription>
+            </Alert>
+          </CardContent>
+        </Card>
+      ),
+    },
+    {
+      id: "simulations",
+      label: t("tabs.simulations"),
+      content: isSubscribed ? (
+        <div className="p-6">
+          <h2 className="text-xl font-semibold mb-4">Simulations</h2>
+          <p className="text-muted-foreground mb-6">
+            Simulez différents scénarios pour votre nœud Lightning Network et
+            obtenez des recommandations basées sur les résultats.
+          </p>
+          <Alert className="mb-6 border-yellow-500/50 bg-yellow-500/10">
+            <AlertTriangle className="h-4 w-4 text-yellow-500" />
+            <AlertTitle>Module en cours de développement</AlertTitle>
+            <AlertDescription>
+              Cette fonctionnalité sera bientôt disponible. Merci de votre
+              patience !
+            </AlertDescription>
+          </Alert>
+        </div>
+      ) : (
+        <Card className="w-full">
+          <CardHeader className="text-center">
+            <CardTitle className="flex items-center justify-center gap-2">
+              <LockIcon className="h-5 w-5 text-muted-foreground" />
+              Fonctionnalité Premium
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-center">
+            <p className="mb-4">
+              Les fonctionnalités de simulation sont réservées aux abonnés
+              premium.
+            </p>
+            <Alert className="mb-4 bg-primary/5 border-primary/20">
+              <ShieldPlus className="h-4 w-4" />
+              <AlertTitle>Abonnez-vous pour accéder</AlertTitle>
+              <AlertDescription>
+                Souscrivez à un abonnement pour profiter de toutes les
+                fonctionnalités avancées et simulations.
+              </AlertDescription>
+            </Alert>
+          </CardContent>
+        </Card>
+      ),
     },
   ];
 

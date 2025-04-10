@@ -266,7 +266,7 @@ export default function ContactForm() {
 
         <Button
           type="submit"
-          className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white transition-all duration-200 dark:from-purple-700 dark:to-purple-800 dark:hover:from-purple-800 dark:hover:to-purple-900"
+          className="w-full btn-gradient"
           disabled={loading}
         >
           {loading ? (

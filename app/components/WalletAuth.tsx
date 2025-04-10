@@ -5,6 +5,7 @@ import { WebLNProvider } from "@webbtc/webln-types";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useLocale } from "next-intl";
+import { useAlert } from "../hooks/useAlert";
 
 declare global {
   interface Window {
@@ -16,7 +17,8 @@ export default function WalletAuth() {
   const router = useRouter();
   const locale = useLocale();
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<Error | string | null>(null);
+  const { showAlert } = useAlert();
 
   useEffect(() => {
     const checkWallet = async () => {
@@ -94,16 +96,16 @@ export default function WalletAuth() {
     };
 
     checkWallet();
-  }, [router, locale]);
+  }, [router, locale, isLoading, error]);
 
   useEffect(() => {
     if (error) {
-      // Gérer l'erreur
+      showAlert("error", error instanceof Error ? error.message : error);
     }
-    if (isLoading) {
-      // Gérer le chargement
+    if (!isLoading && !error) {
+      // ... existing code ...
     }
-  }, [error, isLoading]);
+  }, [error, isLoading, showAlert]);
 
   if (isLoading) {
     console.log("Affichage du loader");
@@ -119,7 +121,7 @@ export default function WalletAuth() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-4">
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-          {error}
+          {error instanceof Error ? error.message : error}
         </div>
         <button
           onClick={() => router.push(`/${locale}/bot-ia`)}

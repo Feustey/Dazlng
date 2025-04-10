@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import mcpService from "../../lib/mcpService";
 import { dynamic, errorResponse, successResponse } from "../../api/config";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 export { dynamic };
 
 // Données fictives pour le développement

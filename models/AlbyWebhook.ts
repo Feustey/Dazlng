@@ -50,6 +50,5 @@ const AlbyWebhookSchema = new Schema<IAlbyWebhook>(
 // Index pour améliorer les performances des requêtes
 AlbyWebhookSchema.index({ userId: 1, endpointId: 1 });
 
-export const AlbyWebhook =
-  mongoose.models.AlbyWebhook ||
+export default mongoose.models.AlbyWebhook ||
   mongoose.model<IAlbyWebhook>("AlbyWebhook", AlbyWebhookSchema);

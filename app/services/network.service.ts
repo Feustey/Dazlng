@@ -1,6 +1,6 @@
 import { NetworkStats, NetworkNode, NetworkChannel } from "../types/network";
 import { MongoClient, Document } from "mongodb";
-import { Schema, model } from "mongoose";
+import mongoose from "mongoose";
 import { connectToDatabase } from "@/app/lib/db";
 import Node from "../models/Node";
 import History from "../models/History";
@@ -64,7 +64,7 @@ interface MongoHistory extends Document {
   total_channels: number;
 }
 
-const networkStatsSchema = new Schema({
+const networkStatsSchema = new mongoose.Schema({
   timestamp: { type: Date, required: true },
   node_count: { type: Number, required: true },
   channel_count: { type: Number, required: true },
@@ -103,7 +103,9 @@ const networkStatsSchema = new Schema({
   ],
 });
 
-const NetworkStatsModel = model("NetworkStats", networkStatsSchema);
+const NetworkStatsModel =
+  mongoose.models.NetworkStats ||
+  mongoose.model("NetworkStats", networkStatsSchema);
 
 class NetworkService {
   private static instance: NetworkService;

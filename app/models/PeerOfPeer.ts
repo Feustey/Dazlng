@@ -10,9 +10,10 @@ const peerOfPeerSchema = new mongoose.Schema({
   timestamp: { type: Date, default: Date.now },
 });
 
+// Index composé unique pour éviter les doublons
+peerOfPeerSchema.index({ nodePubkey: 1, peerPubkey: 1 }, { unique: true });
+
 // Index pour les requêtes fréquentes
-peerOfPeerSchema.index({ nodePubkey: 1 });
-peerOfPeerSchema.index({ peerPubkey: 1 });
 peerOfPeerSchema.index({ timestamp: -1 });
 
 const PeerOfPeer =

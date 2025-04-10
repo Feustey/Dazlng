@@ -1,0 +1,37 @@
+{
+  "Auth": {
+    "connexion": "Connexion à votre compte",
+    "connexionAlby": "CONNEXION AVEC ALBY",
+    "connexionEmail": "OU CONNEXION PAR EMAIL",
+    "connectWithAlby": "Se connecter avec Alby",
+    "or": "OU",
+    "emailPlaceholder": "Adresse email",
+    "passwordPlaceholder": "Mot de passe",
+    "login": "Se connecter",
+    "noAccount": "Pas encore de compte ? Créer un compte",
+    "loginSuccess": "Connexion réussie",
+    "loginError": "Erreur lors de la connexion"
+  },
+  "Header": {
+    "daznode": "DazNode",
+    "dazia": "Daz-IA",
+    "network": "Network",
+    "channels": "Channels",
+    "login": "Connexion"
+  },
+  "Account": {
+    "myAccount": "Mon compte",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "channels": "Canaux",
+    "signOut": "Déconnexion"
+  },
+  "Home": {
+    "features": {
+      "nwc": {
+        "title": "Nostr Wallet Connect",
+        "description": "Connectez-vous à votre portefeuille Lightning via Nostr"
+      }
+    }
+  }
+}

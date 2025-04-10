@@ -8,6 +8,7 @@ import { useParams } from "next/navigation";
 
 export default function RegisterPage() {
   const params = useParams();
+  const locale = params?.locale as string;
 
   return (
     <div className="container relative min-h-screen flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0">
@@ -65,7 +66,7 @@ export default function RegisterPage() {
           <p className="px-8 text-center text-sm text-muted-foreground">
             Déjà un compte ?{" "}
             <Link
-              href={`/${params.locale}/login`}
+              href={`/${locale}/login`}
               className="text-sm text-gray-600 hover:text-gray-900"
             >
               Se connecter

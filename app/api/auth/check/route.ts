@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { getSession } from "../../../lib/edge-auth";
 import { type NextRequest } from "next/server";
 
+// Marquer cette route comme dynamique
+export const dynamic = "force-dynamic";
+
 export async function GET(request: NextRequest) {
   try {
     const session = await getSession(request);

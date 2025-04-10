@@ -37,7 +37,7 @@ export const LanguageProvider = ({
 }) => {
   const params = useParams();
   const currentLocale =
-    typeof params.locale === "string" ? params.locale : "fr";
+    params?.locale && typeof params.locale === "string" ? params.locale : "fr";
   const [language, setLanguage] = useState<Language>("fr");
 
   // Utiliser useEffect pour mettre à jour la langue après le montage du composant

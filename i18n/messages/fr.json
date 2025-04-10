@@ -1,0 +1,13 @@
+{
+  "app": {
+    "title": "Dazlng"
+  },
+  "Home": {
+    "features": {
+      "nwc": {
+        "title": "Nostr Wallet Connect",
+        "description": "Connectez-vous facilement à votre portefeuille Lightning via Nostr Wallet Connect"
+      }
+    }
+  }
+}

@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
+import { connectToDatabase } from "@/app/lib/db";
 
 // Configuration pour forcer le rendu dynamique
 export const dynamic = "force-dynamic";
-export const runtime = "edge";
 
 // Headers CORS
 export function corsHeaders() {
@@ -28,3 +28,18 @@ export const successResponse = (data: any) => {
     headers: { "Content-Type": "application/json" },
   });
 };
+
+export async function withDb(handler: Function) {
+  return async (...args: any[]) => {
+    try {
+      await connectToDatabase();
+      return handler(...args);
+    } catch (error) {
+      console.error("Database error:", error);
+      return new Response(JSON.stringify({ error: "Database error" }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+  };
+}

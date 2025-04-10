@@ -26,7 +26,12 @@
     "login": "Connexion",
     "profile": "Mon profil",
     "logout": "Déconnexion",
-    "myNode": "Mon Nœud"
+    "myNode": "Mon Nœud",
+    "nodes": "Nœuds",
+    "transactions": "Transactions",
+    "daznode": "Daznode",
+    "dazia": "Daz-IA",
+    "network": "Réseau"
   },
   "Settings": {
     "title": "Paramètres",
@@ -108,9 +113,13 @@
         "title": "Métriques Avancées",
         "description": "Analysez la performance de votre nœud avec des métriques détaillées"
       },
+      "alby": {
+        "title": "Extension Alby",
+        "description": "Connectez-vous facilement avec votre portefeuille Alby"
+      },
       "nwc": {
         "title": "Nostr Wallet Connect",
-        "description": "Connectez-vous facilement avec votre portefeuille Nostr"
+        "description": "Connectez-vous via NWC pour une expérience sécurisée"
       }
     },
     "searchPlaceholder": "Rechercher un nœud...",
@@ -273,6 +282,52 @@
     "success": "Paiement réussi !",
     "error": "Une erreur est survenue"
   },
+  "daz-ia-checkout": {
+    "title": "Achat de plan Daz-IA",
+    "steps": {
+      "plan": "Choix du plan",
+      "delivery": "Informations",
+      "payment": "Paiement",
+      "confirmation": "Confirmation"
+    },
+    "plan": {
+      "title": "Choisissez votre plan Daz-IA",
+      "oneShot": "Paiement unique",
+      "yearly": "Abonnement annuel",
+      "savings": "Économisez {percent}%",
+      "continue": "Continuer"
+    },
+    "delivery": {
+      "title": "Vos informations",
+      "personalInfo": "Informations personnelles",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Email",
+      "phone": "Téléphone",
+      "company": "Entreprise (optionnel)",
+      "back": "Retour",
+      "continue": "Continuer"
+    },
+    "payment": {
+      "title": "Paiement",
+      "summary": "Récapitulatif de la commande",
+      "plan": "Plan",
+      "total": "Total",
+      "cardInfo": "Informations de paiement",
+      "cardNumber": "Numéro de carte",
+      "expiryDate": "Date d'expiration",
+      "cvc": "CVC",
+      "back": "Retour",
+      "pay": "Payer {amount}"
+    },
+    "confirmation": {
+      "title": "Confirmation de commande",
+      "thanks": "Merci pour votre achat !",
+      "orderNumber": "Commande #{id}",
+      "emailSent": "Un email de confirmation a été envoyé à {email}",
+      "backToHome": "Retour à l'accueil"
+    }
+  },
   "recommendations": {
     "title": "Recommandations",
     "subtitle": "Découvrez nos recommandations personnalisées",
@@ -291,19 +346,61 @@
   "Help": {
     "title": "Centre d'aide",
     "searchPlaceholder": "Rechercher dans l'aide...",
+    "search": {
+      "placeholder": "Rechercher dans l'aide..."
+    },
     "categories": {
       "getting_started": "Premiers pas",
       "learning": "Apprentissage",
       "transactions": "Transactions",
       "operations": "Opérations",
       "metrics": "Métriques",
-      "nwc": "Nostr Wallet Connect"
+      "alby": "Extension Alby"
     },
     "faq": {
       "what_is_lightning": "Qu'est-ce que Lightning Network ?",
       "how_to_start": "Comment commencer avec Daznode ?",
-      "how_to_connect": "Comment connecter mon portefeuille ?",
-      "how_to_transact": "Comment effectuer des transactions ?"
+      "how_to_transact": "Comment effectuer des transactions ?",
+      "why_bitcoin": "Pourquoi Bitcoin ?",
+      "keysend": "Qu'est-ce que Keysend ?",
+      "channel_close": "Comment fermer un canal ?",
+      "security": "Comment sécuriser mon nœud ?",
+      "backup_channels": "Comment sauvegarder mes canaux ?",
+      "peers_connection": "Comment se connecter à d'autres nœuds ?",
+      "technical": "Quelles sont les exigences techniques ?",
+      "profitable_node": "Comment rendre mon nœud profitable ?",
+      "channel_management": "Comment gérer mes canaux ?",
+      "node_monitoring": "Comment surveiller mon nœud ?",
+      "sync_time": "Combien de temps pour la synchronisation ?",
+      "tor_only": "Pourquoi utiliser Tor ?",
+      "what_is_alby": "Qu'est-ce que l'extension Alby ?",
+      "how_to_use_alby": "Comment utiliser l'extension Alby ?",
+      "alby_features": "Quelles sont les fonctionnalités d'Alby ?",
+      "install_alby": "Comment installer l'extension Alby ?"
+    },
+    "alby": {
+      "title": "Extension Alby",
+      "description": "L'extension Alby est un portefeuille Bitcoin et Lightning Network pour votre navigateur",
+      "features": {
+        "title": "Fonctionnalités",
+        "lightning_wallet": "Portefeuille Lightning Network",
+        "nostr_keys": "Gestion des clés Nostr",
+        "one_click_login": "Connexion en un clic",
+        "secure_payments": "Paiements sécurisés"
+      },
+      "installation": {
+        "title": "Installation",
+        "description": "Installez l'extension Alby depuis le site officiel",
+        "link": "https://getalby.com/products/browser-extension",
+        "button": "Installer Alby"
+      },
+      "usage": {
+        "title": "Utilisation",
+        "connect": "Connectez votre portefeuille Lightning",
+        "sign_in": "Connectez-vous aux applications Bitcoin",
+        "send_receive": "Envoyez et recevez des paiements",
+        "manage_keys": "Gérez vos clés Nostr"
+      }
     }
   },
   "About": {
@@ -375,6 +472,8 @@
   "Daznode": {
     "title": "Daznode - Votre Nœud Lightning Pré-configuré",
     "description": "Un nœud Lightning Network prêt à l'emploi pour gérer vos canaux et vos transactions.",
+    "featuresTitle": "Fonctionnalités Principales",
+    "specsTitle": "Spécifications Techniques",
     "orderTitle": "Commandez votre Daznode",
     "orderDescription": "Obtenez votre nœud Lightning pré-configuré et commencez à participer au réseau dès aujourd'hui",
     "price": "400,000 sats",
@@ -553,6 +652,22 @@
     "timeRemaining": "Temps restant",
     "nodePubkey": "Clé publique de votre nœud Lightning",
     "nodePubkeyHelp": "Entrez la clé publique de votre nœud Lightning (commence par 03...)",
+    "login": "Connexion",
+    "register": "Inscription",
+    "loginDescription": "Connectez-vous à votre compte",
+    "registerDescription": "Créez votre compte pour accéder à toutes les fonctionnalités",
+    "loginWithAlby": "Connexion avec Alby",
+    "registerWithAlby": "Inscription avec Alby",
+    "orLoginWithEmail": "Ou connexion par email",
+    "orRegisterWithEmail": "Ou inscription par email",
+    "noAccount": "Vous n'avez pas de compte ?",
+    "createAccount": "Créer un compte",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "emailPlaceholder": "Votre adresse email",
+    "passwordPlaceholder": "Votre mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "loginButton": "Se connecter",
+    "registerButton": "S'inscrire",
     "error": {
       "invalidSignature": "Signature invalide",
       "expired": "Message expiré",
@@ -565,29 +680,50 @@
     }
   },
   "Learn": {
-    "title": "Apprentissage",
+    "title": "Guide d'apprentissage",
     "guide": "Guide",
-    "lightning": "Lightning Network",
-    "visualization": "Visualisation"
+    "lightning": "Lightning",
+    "visualization": "Visualisation",
+    "resources": "Ressources"
   },
   "Learning": {
     "title": "Guide d'apprentissage",
-    "duration": "Durée",
+    "duration": "Durée estimée",
     "minutes": "minutes",
     "completed": "Terminé",
     "markComplete": "Marquer comme terminé",
     "steps": {
+      "intro": {
+        "title": "Introduction aux cryptomonnaies",
+        "content": "Les cryptomonnaies représentent une révolution dans le monde financier, offrant un système monétaire décentralisé et basé sur la cryptographie. Contrairement aux devises traditionnelles émises par les gouvernements, les cryptomonnaies fonctionnent sur des réseaux distribués utilisant la technologie blockchain."
+      },
+      "bitcoin": {
+        "title": "Bitcoin : Les fondamentaux",
+        "content": "Bitcoin est la première et la plus connue des cryptomonnaies. Lancé en 2009, il a été conçu comme un système de paiement électronique pair-à-pair qui fonctionne sans autorité centrale ou intermédiaires."
+      },
+      "blockchain": {
+        "title": "Comprendre la blockchain",
+        "content": "La blockchain est la technologie sous-jacente qui permet aux cryptomonnaies de fonctionner. Il s'agit d'un registre distribué qui enregistre toutes les transactions de manière transparente, sécurisée et immuable."
+      },
+      "mining": {
+        "title": "Le minage et la sécurité du réseau",
+        "content": "Le minage est le processus par lequel de nouvelles transactions sont ajoutées à la blockchain Bitcoin. Il sert également à sécuriser le réseau et à émettre de nouveaux bitcoins selon un calendrier prédéfini."
+      },
       "basics": {
-        "title": "Les bases",
-        "content": "Découvrez les concepts fondamentaux du réseau Lightning et comment il fonctionne."
+        "title": "Les bases du Lightning Network",
+        "content": "Le Lightning Network est une solution de \"couche 2\" construite sur la blockchain Bitcoin pour résoudre ses problèmes d'évolutivité en permettant des transactions rapides et à faible coût."
       },
       "channels": {
-        "title": "Gestion des canaux",
-        "content": "Apprenez à créer et gérer vos canaux de paiement Lightning."
+        "title": "Les canaux de paiement Lightning",
+        "content": "Les canaux de paiement sont l'élément fondamental du Lightning Network. Ils permettent à deux participants d'échanger des bitcoins instantanément sans nécessiter d'enregistrement immédiat sur la blockchain."
       },
       "transactions": {
-        "title": "Transactions",
-        "content": "Comprenez comment effectuer et suivre vos transactions sur le réseau Lightning."
+        "title": "Transactions Lightning et routage",
+        "content": "Les transactions Lightning sont fondamentalement différentes des transactions Bitcoin standard. Elles sont instantanées, quasi gratuites et peuvent être routées à travers plusieurs canaux pour atteindre leur destination."
+      },
+      "nodes": {
+        "title": "Gestion d'un nœud Lightning",
+        "content": "Faire fonctionner un nœud Lightning vous permet de participer activement au réseau, d'avoir un contrôle total sur vos fonds et de potentiellement gagner des frais de routage."
       }
     }
   },
@@ -685,6 +821,18 @@
   },
   "Checkout": {
     "redirecting": "Redirection...",
+    "Account": {
+      "title": "Création de compte",
+      "subtitle": "Créez un compte ou continuez en tant qu'invité",
+      "email": "Email",
+      "password": "Mot de passe",
+      "createAccount": "Créer un compte",
+      "continueAsGuest": "Continuer en tant qu'invité",
+      "alreadyHaveAccount": "Déjà un compte ?",
+      "login": "Se connecter",
+      "newsletterOptin": "Je souhaite m'inscrire à la newsletter pour recevoir des offres exclusives",
+      "continue": "Continuer"
+    },
     "Delivery": {
       "title": "Informations de livraison",
       "name": "Nom complet",
@@ -694,6 +842,41 @@
       "country": "Pays",
       "phone": "Téléphone",
       "continue": "Continuer vers le paiement"
+    },
+    "Payment": {
+      "title": "Méthode de paiement",
+      "bitcoinInstructions": "Scannez le QR code ou copiez l'adresse ci-dessous pour effectuer le paiement",
+      "continue": "Confirmer la commande",
+      "amount": "Montant à payer",
+      "copyAddress": "Copier l'adresse",
+      "addressCopied": "Adresse copiée !",
+      "waitingPayment": "En attente du paiement...",
+      "paymentReceived": "Paiement reçu !",
+      "paymentError": "Erreur lors du paiement",
+      "retry": "Réessayer"
+    },
+    "Confirmation": {
+      "title": "Confirmation de commande",
+      "orderNumber": "Numéro de commande",
+      "orderDate": "Date de commande",
+      "deliveryAddress": "Adresse de livraison",
+      "paymentStatus": "Statut du paiement",
+      "paymentConfirmed": "Paiement confirmé",
+      "orderSummary": "Résumé de la commande",
+      "product": "Produit",
+      "quantity": "Quantité",
+      "price": "Prix",
+      "total": "Total",
+      "daznode": "Daznode Lightning Node",
+      "thankYou": "Merci pour votre commande !",
+      "orderProcessing": "Votre commande est en cours de traitement",
+      "emailConfirmation": "Un email de confirmation a été envoyé à",
+      "setupInstructions": "Instructions de configuration",
+      "setupGuide": "Un guide de configuration vous sera envoyé par email",
+      "questions": "Des questions ?",
+      "support": "Notre équipe support est là pour vous aider",
+      "contactSupport": "Contacter le support",
+      "backToDashboard": "Retour au tableau de bord"
     }
   },
   "stats": {

@@ -63,7 +63,7 @@ export class McpService {
   private readonly UPDATE_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
   private constructor() {
-    this.baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
+    this.baseUrl = process.env.NEXT_PUBLIC_MCP_API_URL || "";
   }
 
   public static getInstance(): McpService {
@@ -73,11 +73,20 @@ export class McpService {
     return McpService.instance;
   }
 
+  // Nouvelle méthode pour tester la connexion
+  async testConnection(): Promise<boolean> {
+    try {
+      const response = await fetch(`${this.baseUrl}/status`);
+      return response.ok;
+    } catch (error) {
+      console.error("Erreur de connexion à MCP:", error);
+      return false;
+    }
+  }
+
   async getAllNodes(): Promise<Node[]> {
     try {
-      const response = await fetch(
-        `${this.baseUrl}/api/mcp?action=getAllNodes`
-      );
+      const response = await fetch(`${this.baseUrl}/api/nodes`);
       if (!response.ok) {
         throw new Error("Failed to fetch nodes");
       }
@@ -91,9 +100,7 @@ export class McpService {
 
   async getPeersOfPeers(pubkey: string): Promise<PeerOfPeer[]> {
     try {
-      const response = await fetch(
-        `${this.baseUrl}/api/mcp?action=getPeersOfPeers&pubkey=${pubkey}`
-      );
+      const response = await fetch(`${this.baseUrl}/api/peers/${pubkey}`);
       if (!response.ok) {
         throw new Error("Failed to fetch peers");
       }
@@ -107,9 +114,7 @@ export class McpService {
 
   async getCurrentStats(): Promise<NetworkStats> {
     try {
-      const response = await fetch(
-        `${this.baseUrl}/api/mcp?action=getCurrentStats`
-      );
+      const response = await fetch(`${this.baseUrl}/api/stats`);
       if (!response.ok) {
         throw new Error("Failed to fetch stats");
       }
@@ -123,9 +128,7 @@ export class McpService {
 
   async getHistoricalData(): Promise<HistoricalData> {
     try {
-      const response = await fetch(
-        `${this.baseUrl}/api/mcp?action=getHistoricalData`
-      );
+      const response = await fetch(`${this.baseUrl}/api/historical`);
       if (!response.ok) {
         throw new Error("Failed to fetch historical data");
       }
@@ -142,9 +145,7 @@ export class McpService {
 
   async getCentralities(): Promise<Centralities> {
     try {
-      const response = await fetch(
-        `${this.baseUrl}/api/mcp?action=getCentralities`
-      );
+      const response = await fetch(`${this.baseUrl}/api/centralities`);
       if (!response.ok) {
         throw new Error("Failed to fetch centralities");
       }
@@ -158,9 +159,7 @@ export class McpService {
 
   async getNetworkSummary(): Promise<NetworkSummaryData> {
     try {
-      const response = await fetch(
-        `${this.baseUrl}/api/mcp?action=getNetworkSummary`
-      );
+      const response = await fetch(`${this.baseUrl}/api/stats`);
       if (!response.ok) {
         throw new Error("Failed to fetch network summary");
       }
@@ -197,9 +196,7 @@ export class McpService {
 
   async getNodeInfo(nodePubkey: string): Promise<NodeInfo> {
     try {
-      const response = await fetch(
-        `${this.baseUrl}/api/mcp?action=getNodeInfo&pubkey=${nodePubkey}`
-      );
+      const response = await fetch(`${this.baseUrl}/api/nodes/${nodePubkey}`);
       if (!response.ok) {
         throw new Error("Failed to fetch node info");
       }
@@ -233,7 +230,7 @@ export class McpService {
   async getNodeCentrality(pubkey: string): Promise<NodeCentrality> {
     try {
       const response = await fetch(
-        `${this.baseUrl}/api/mcp?action=getNodeCentrality&pubkey=${pubkey}`
+        `${this.baseUrl}/api/centralities/${pubkey}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch node centrality");
@@ -248,9 +245,7 @@ export class McpService {
 
   async getNodeStats(pubkey: string): Promise<NodeStats> {
     try {
-      const response = await fetch(
-        `${this.baseUrl}/api/mcp?action=getNodeStats&pubkey=${pubkey}`
-      );
+      const response = await fetch(`${this.baseUrl}/api/stats/${pubkey}`);
       if (!response.ok) {
         throw new Error("Failed to fetch node stats");
       }
@@ -258,6 +253,193 @@ export class McpService {
       return data.stats;
     } catch (error) {
       console.error("Error fetching node stats:", error);
+      throw error;
+    }
+  }
+
+  // Nouveaux endpoints pour la visualisation du graphe réseau
+  async getNetworkGraph(): Promise<any> {
+    try {
+      const response = await fetch(
+        `${this.baseUrl}/api/mcp?action=getNetworkGraph`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch network graph");
+      }
+      const data = await response.json();
+      return data.graph;
+    } catch (error) {
+      console.error("Error fetching network graph:", error);
+      throw error;
+    }
+  }
+
+  async getNetworkTopology(): Promise<any> {
+    try {
+      const response = await fetch(
+        `${this.baseUrl}/api/mcp?action=getNetworkTopology`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch network topology");
+      }
+      const data = await response.json();
+      return data.topology;
+    } catch (error) {
+      console.error("Error fetching network topology:", error);
+      throw error;
+    }
+  }
+
+  // Méthodes pour les prédictions et analyses avancées
+  async predictNodeGrowth(
+    pubkey: string,
+    timeframe: "7d" | "30d" | "90d" = "30d"
+  ): Promise<any> {
+    try {
+      const response = await fetch(
+        `${this.baseUrl}/api/mcp?action=predictNodeGrowth&pubkey=${pubkey}&timeframe=${timeframe}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to predict node growth");
+      }
+      const data = await response.json();
+      return data.prediction;
+    } catch (error) {
+      console.error("Error predicting node growth:", error);
+      throw error;
+    }
+  }
+
+  async predictNetworkTrends(
+    timeframe: "7d" | "30d" | "90d" = "30d"
+  ): Promise<any> {
+    try {
+      const response = await fetch(
+        `${this.baseUrl}/api/mcp?action=predictNetworkTrends&timeframe=${timeframe}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to predict network trends");
+      }
+      const data = await response.json();
+      return data.prediction;
+    } catch (error) {
+      console.error("Error predicting network trends:", error);
+      throw error;
+    }
+  }
+
+  async analyzeFeeMarket(): Promise<any> {
+    try {
+      const response = await fetch(
+        `${this.baseUrl}/api/mcp?action=analyzeFeeMarket`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to analyze fee market");
+      }
+      const data = await response.json();
+      return data.analysis;
+    } catch (error) {
+      console.error("Error analyzing fee market:", error);
+      throw error;
+    }
+  }
+
+  // Méthodes pour la simulation
+  async simulateScenario(
+    scenario:
+      | "channel_failure"
+      | "node_failure"
+      | "fee_change"
+      | "liquidity_change",
+    params: any
+  ): Promise<any> {
+    try {
+      const response = await fetch(
+        `${this.baseUrl}/api/mcp?action=simulateScenario`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            scenario,
+            params,
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to simulate scenario");
+      }
+      const data = await response.json();
+      return data.simulation;
+    } catch (error) {
+      console.error("Error simulating scenario:", error);
+      throw error;
+    }
+  }
+
+  // Méthodes pour les alertes et le monitoring
+  async getAlerts(): Promise<any> {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/mcp?action=getAlerts`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch alerts");
+      }
+      const data = await response.json();
+      return data.alerts;
+    } catch (error) {
+      console.error("Error fetching alerts:", error);
+      throw error;
+    }
+  }
+
+  async subscribeToEvents(callback: (event: any) => void): Promise<() => void> {
+    try {
+      const eventSource = new EventSource(`${this.baseUrl}/api/mcp/events`);
+
+      eventSource.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          callback(data);
+        } catch (error) {
+          console.error("Error parsing event data:", error);
+        }
+      };
+
+      eventSource.onerror = (error) => {
+        console.error("EventSource error:", error);
+        eventSource.close();
+      };
+
+      // Retourne une fonction pour se désabonner
+      return () => {
+        eventSource.close();
+      };
+    } catch (error) {
+      console.error("Error subscribing to events:", error);
+      throw error;
+    }
+  }
+
+  async configureAlert(alertConfig: any): Promise<any> {
+    try {
+      const response = await fetch(
+        `${this.baseUrl}/api/mcp?action=configureAlert`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(alertConfig),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to configure alert");
+      }
+      const data = await response.json();
+      return data.result;
+    } catch (error) {
+      console.error("Error configuring alert:", error);
       throw error;
     }
   }
@@ -296,6 +478,21 @@ export class McpService {
   async generateResponse(question: string): Promise<string> {
     const analysis = await this.analyzeQuestion(question);
     return analysis.suggestedResponse;
+  }
+
+  // Nouvelle méthode pour les recommandations
+  async getRecommendations(nodePubkey: string): Promise<any> {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/review/${nodePubkey}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch recommendations");
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching recommendations:", error);
+      throw error;
+    }
   }
 }
 

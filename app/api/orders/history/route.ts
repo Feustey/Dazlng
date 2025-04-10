@@ -1,6 +1,14 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { connectToDatabase } from "@/app/lib/db";
 import Order from "@/app/models/Order";
+import {
+  successResponse,
+  errorResponse,
+  HttpStatus,
+} from "../../../lib/api/responses";
+
+// Utiliser revalidate pour définir la durée de mise en cache
+export const revalidate = 60; // Revalidation chaque minute pour les données plus récentes
 
 export async function GET(req: NextRequest) {
   try {
@@ -8,10 +16,9 @@ export async function GET(req: NextRequest) {
     const userId = searchParams.get("userId");
 
     if (!userId) {
-      return NextResponse.json(
-        { error: "ID utilisateur requis" },
-        { status: 400 }
-      );
+      return errorResponse("ID utilisateur requis", {
+        status: HttpStatus.BAD_REQUEST,
+      });
     }
 
     await connectToDatabase();
@@ -20,15 +27,14 @@ export async function GET(req: NextRequest) {
       .sort({ createdAt: -1 })
       .select("-__v");
 
-    return NextResponse.json({ orders });
+    return successResponse({ orders });
   } catch (error) {
     console.error(
       "Erreur lors de la récupération de l'historique des commandes:",
       error
     );
-    return NextResponse.json(
-      { error: "Erreur interne du serveur" },
-      { status: 500 }
-    );
+    return errorResponse("Erreur interne du serveur", {
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
+    });
   }
 }

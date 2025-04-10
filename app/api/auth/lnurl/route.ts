@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { randomBytes } from "crypto";
 
+// Marquer cette route comme dynamique
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const session = await auth();

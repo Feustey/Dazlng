@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/app/lib/db";
-import { User } from "@/app/models/User";
+import User from "@/models/User";
 import bcrypt from "bcryptjs";
 
 // GET /api/users/[id] - Récupérer un utilisateur spécifique

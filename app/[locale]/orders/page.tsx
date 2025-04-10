@@ -26,6 +26,7 @@ export default function OrdersPage() {
   const t = useTranslations("Orders");
   const router = useRouter();
   const params = useParams();
+  const locale = params?.locale as string;
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -105,9 +106,7 @@ export default function OrdersPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() =>
-                      router.push(`/${params.locale}/orders/${order.id}`)
-                    }
+                    onClick={() => router.push(`/${locale}/orders/${order.id}`)}
                   >
                     {t("list.view")}
                   </Button>

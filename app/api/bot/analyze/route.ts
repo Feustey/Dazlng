@@ -1,9 +1,9 @@
-import mcpService from "../../../lib/mcpService";
+import mcpService from "../../../lib/mcpService.edge";
 import { NextResponse } from "next/server";
-import { dynamic, errorResponse, successResponse } from "../../config";
+import { errorResponse, successResponse } from "../../edge-config";
 
 export const runtime = "edge";
-export { dynamic };
+export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   try {

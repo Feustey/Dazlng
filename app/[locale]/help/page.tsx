@@ -33,6 +33,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../../components/ui/accordion";
+import Image from "next/image";
 
 // Types pour les catégories et les FAQ
 type CategoryId =
@@ -41,7 +42,7 @@ type CategoryId =
   | "transactions"
   | "operations"
   | "metrics"
-  | "nwc";
+  | "alby";
 
 interface Category {
   id: CategoryId;
@@ -69,7 +70,7 @@ export default function HelpPage() {
     transactions: useRef<HTMLDivElement>(null),
     operations: useRef<HTMLDivElement>(null),
     metrics: useRef<HTMLDivElement>(null),
-    nwc: useRef<HTMLDivElement>(null),
+    alby: useRef<HTMLDivElement>(null),
   };
 
   const categories: Category[] = [
@@ -104,10 +105,20 @@ export default function HelpPage() {
       bgColor: "bg-secondary/10",
     },
     {
-      id: "nwc",
-      icon: <WalletIcon className="h-5 w-5" />,
-      color: "text-accent",
-      bgColor: "bg-accent/10",
+      id: "alby",
+      icon: (
+        <div className="w-5 h-5 relative">
+          <Image
+            src="/images/alby-logo.svg"
+            alt="Alby"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
+      ),
+      color: "text-primary",
+      bgColor: "bg-primary/10",
     },
   ];
 
@@ -118,7 +129,7 @@ export default function HelpPage() {
     transactions: ["security", "backup_channels", "peers_connection"],
     operations: ["technical", "profitable_node", "channel_management"],
     metrics: ["node_monitoring", "sync_time", "tor_only"],
-    nwc: ["how_to_connect"],
+    alby: ["what_is_alby", "install_alby", "how_to_use_alby", "alby_features"],
   };
 
   const faqItems: FaqItem[] = [
@@ -145,18 +156,6 @@ export default function HelpPage() {
 4. Commencez à gérer votre nœud et vos canaux
 
 N'oubliez pas : "Not your keys, not your coins" - Gardez toujours le contrôle de vos fonds.`,
-    },
-    {
-      id: "how_to_connect",
-      icon: <WalletIcon className="h-5 w-5" />,
-      question: t("faq.how_to_connect"),
-      answer: `Pour connecter votre portefeuille à Daznode :
-1. Ouvrez votre portefeuille Lightning (Phoenix ou Blixt)
-2. Allez dans les paramètres et recherchez "Nostr Wallet Connect"
-3. Scannez le QR code affiché sur Daznode
-4. Confirmez la connexion dans votre portefeuille
-
-Votre portefeuille est maintenant connecté et prêt à être utilisé avec Daznode.`,
     },
     {
       id: "how_to_transact",
@@ -304,6 +303,94 @@ En moyenne, comptez 4-6 heures pour une synchronisation complète.`,
 
 Daznode prend en charge nativement les connexions Tor.`,
     },
+    {
+      id: "what_is_alby",
+      icon: (
+        <div className="w-5 h-5 relative">
+          <Image
+            src="/images/alby-logo.svg"
+            alt="Alby"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
+      ),
+      question: t("faq.what_is_alby"),
+      answer: `L'extension Alby est un portefeuille Bitcoin et Lightning Network pour votre navigateur. Elle vous permet de gérer vos fonds Bitcoin, d'effectuer des transactions Lightning, et de vous connecter à des applications Bitcoin de manière sécurisée. Alby est open-source et développée par une équipe dédiée à l'adoption de Bitcoin.`,
+    },
+    {
+      id: "how_to_use_alby",
+      icon: (
+        <div className="w-5 h-5 relative">
+          <Image
+            src="/images/alby-logo.svg"
+            alt="Alby"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
+      ),
+      question: t("faq.how_to_use_alby"),
+      answer: `Pour utiliser l'extension Alby :
+1. Installez l'extension depuis le site officiel (https://getalby.com)
+2. Créez un compte et configurez votre portefeuille
+3. Ajoutez des fonds à votre portefeuille
+4. Utilisez Alby pour vous connecter à des applications Bitcoin
+5. Effectuez des transactions Lightning directement depuis votre navigateur
+
+Alby est compatible avec la plupart des navigateurs modernes.`,
+    },
+    {
+      id: "alby_features",
+      icon: (
+        <div className="w-5 h-5 relative">
+          <Image
+            src="/images/alby-logo.svg"
+            alt="Alby"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
+      ),
+      question: t("faq.alby_features"),
+      answer: `Les fonctionnalités principales d'Alby incluent :
+1. Portefeuille Lightning Network intégré
+2. Gestion des clés Nostr
+3. Connexion en un clic aux applications Bitcoin
+4. Paiements sécurisés avec authentification
+5. Interface utilisateur intuitive
+6. Support multi-devices
+7. Intégration avec les principales applications Bitcoin
+
+Alby est régulièrement mis à jour avec de nouvelles fonctionnalités.`,
+    },
+    {
+      id: "install_alby",
+      icon: (
+        <div className="w-5 h-5 relative">
+          <Image
+            src="/images/alby-logo.svg"
+            alt="Alby"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
+      ),
+      question: t("faq.install_alby"),
+      answer: `Pour installer l'extension Alby sur votre navigateur :
+
+1. Visitez la page officielle d'Alby sur https://getalby.com/products/browser-extension
+2. Cliquez sur le bouton d'installation correspondant à votre navigateur (Chrome, Firefox, Brave, etc.)
+3. Suivez les instructions d'installation spécifiques à votre navigateur
+4. Une fois installée, l'icône d'Alby apparaîtra dans votre barre d'extensions
+5. Cliquez sur l'icône pour configurer votre portefeuille
+
+L'installation est rapide et gratuite. Après l'installation, vous pourrez immédiatement commencer à utiliser les fonctionnalités de paiement Lightning et de connexion aux applications Bitcoin.`,
+    },
   ];
 
   const scrollToSection = (sectionId: CategoryId) => {
@@ -324,18 +411,18 @@ Daznode prend en charge nativement les connexions Tor.`,
 
   return (
     <div className="min-h-screen bg-background animate-fade-in">
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-8 md:py-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="max-w-4xl mx-auto"
         >
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 gradient-text animate-slide-up">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 gradient-text animate-slide-up text-center md:text-left">
             {t("title")}
           </h1>
 
-          <div className="card-glass border-accent/20 p-6 rounded-lg animate-slide-up [animation-delay:200ms]">
+          <div className="card-glass border-accent/20 p-4 md:p-6 rounded-lg animate-slide-up [animation-delay:200ms]">
             <div className="relative mb-8">
               <Input
                 type="text"
@@ -347,12 +434,12 @@ Daznode prend en charge nativement les connexions Tor.`,
               <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-8">
               {categories.map((category) => (
                 <Button
                   key={category.id}
                   variant="ghost"
-                  className={`flex items-center gap-2 p-4 rounded-lg transition-all duration-200 hover:scale-105 ${
+                  className={`flex items-center gap-2 p-3 md:p-4 rounded-lg transition-all duration-200 hover:scale-105 ${
                     activeSection === category.id
                       ? "bg-primary/20 text-primary"
                       : "hover:bg-card/50"
@@ -364,7 +451,9 @@ Daznode prend en charge nativement les connexions Tor.`,
                   >
                     {category.icon}
                   </div>
-                  <span>{t(`categories.${category.id}`)}</span>
+                  <span className="text-sm md:text-base">
+                    {t(`categories.${category.id}`)}
+                  </span>
                 </Button>
               ))}
             </div>
@@ -387,20 +476,57 @@ Daznode prend en charge nativement les connexions Tor.`,
                         <AccordionItem
                           key={faqId}
                           value={faqId}
-                          className="border-accent/20"
+                          className="border-accent/20 transition-all duration-200 hover:bg-card/50"
                         >
-                          <AccordionTrigger className="hover:text-primary">
+                          <AccordionTrigger className="hover:text-primary px-4">
                             <div className="flex items-center gap-2">
                               <div
                                 className={`p-1 rounded-md ${category.bgColor} ${category.color}`}
                               >
                                 {faq.icon}
                               </div>
-                              <span>{faq.question}</span>
+                              <span className="text-left text-sm md:text-base">
+                                {faq.question}
+                              </span>
                             </div>
                           </AccordionTrigger>
-                          <AccordionContent className="text-muted-foreground">
-                            {faq.answer}
+                          <AccordionContent className="text-muted-foreground px-4 pb-4">
+                            <div className="prose prose-sm md:prose-base prose-gray dark:prose-invert max-w-none">
+                              {faq.answer
+                                .split("\n")
+                                .map((paragraph, index) => {
+                                  if (paragraph.startsWith("1.")) {
+                                    const items = paragraph
+                                      .split("\n")
+                                      .filter((item) => item.match(/^\d+\./));
+                                    return (
+                                      <ol
+                                        key={index}
+                                        className="list-decimal list-inside space-y-2 my-4"
+                                      >
+                                        {items.map((item, i) => (
+                                          <li
+                                            key={i}
+                                            className="leading-relaxed"
+                                          >
+                                            {item.replace(/^\d+\.\s/, "")}
+                                          </li>
+                                        ))}
+                                      </ol>
+                                    );
+                                  }
+                                  return (
+                                    paragraph && (
+                                      <p
+                                        key={index}
+                                        className="mb-4 leading-relaxed"
+                                      >
+                                        {paragraph}
+                                      </p>
+                                    )
+                                  );
+                                })}
+                            </div>
                           </AccordionContent>
                         </AccordionItem>
                       );

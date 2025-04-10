@@ -28,6 +28,7 @@ export function isProtectedRoute(path: string): boolean {
   return protectedRoutes.some((route) => path.startsWith(route));
 }
 
-export function isPublicRoute(path: string): boolean {
+export function isPublicRoute(path: string | null): boolean {
+  if (!path) return false;
   return publicRoutes.some((route) => path === route || path.startsWith(route));
 }

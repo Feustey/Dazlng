@@ -1,10 +1,6 @@
-export interface Node {
-  pubkey: string;
-  alias: string;
-  capacity: number;
-  channels: number;
-  last_update: number;
-}
+import { INode } from "../lib/interfaces/node.interface";
+
+export type Node = INode;
 
 export interface NetworkSummaryData {
   totalNodes: number;

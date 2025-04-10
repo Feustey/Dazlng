@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import React from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
@@ -9,9 +11,9 @@ import {
   TabsList,
   TabsTrigger,
 } from "../../components/ui/tabs";
-import { LearningGuide } from "../../components/learning/LearningGuide";
-import { TransactionVisualizer } from "../../components/transactions/TransactionVisualizer";
 import { LightningNetworkGuide } from "../../components/learning/LightningNetworkGuide";
+import { TransactionVisualizer } from "../../components/transactions/TransactionVisualizer";
+import LearningResources from "../../components/learning/LearningResources";
 
 export default function LearnPage() {
   const t = useTranslations("Learn");
@@ -30,39 +32,58 @@ export default function LearnPage() {
           </h1>
 
           <div className="card-glass border-accent/20 p-6 rounded-lg animate-slide-up [animation-delay:200ms]">
-            <Tabs defaultValue="guide" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 bg-card/50 backdrop-blur-sm border-accent/20 rounded-lg mb-6">
-                <TabsTrigger
-                  value="guide"
-                  className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary"
-                >
-                  {t("guide")}
-                </TabsTrigger>
+            <Tabs defaultValue="lightning" className="w-full">
+              <TabsList className="grid w-full grid-cols-4 bg-card/50 backdrop-blur-sm border-accent/20 rounded-lg mb-6">
                 <TabsTrigger
                   value="lightning"
-                  className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary"
+                  className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary text-foreground"
                 >
                   {t("lightning")}
                 </TabsTrigger>
                 <TabsTrigger
                   value="visualization"
-                  className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary"
+                  className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary text-foreground"
                 >
                   {t("visualization")}
+                </TabsTrigger>
+                <TabsTrigger
+                  value="resources"
+                  className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary text-foreground"
+                >
+                  {t("resources")}
+                </TabsTrigger>
+                <TabsTrigger
+                  value="guide"
+                  className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary text-foreground opacity-50 cursor-not-allowed"
+                  disabled
+                >
+                  {t("guide")}
                 </TabsTrigger>
               </TabsList>
 
               <div className="bg-card/30 backdrop-blur-sm rounded-lg p-6 border border-accent/10">
-                <TabsContent value="guide" className="animate-fade-in">
-                  <LearningGuide />
-                </TabsContent>
-
                 <TabsContent value="lightning" className="animate-fade-in">
                   <LightningNetworkGuide />
                 </TabsContent>
 
                 <TabsContent value="visualization" className="animate-fade-in">
                   <TransactionVisualizer />
+                </TabsContent>
+
+                <TabsContent value="resources" className="animate-fade-in">
+                  <LearningResources />
+                </TabsContent>
+
+                <TabsContent value="guide" className="animate-fade-in">
+                  <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <p className="text-foreground/80 mb-4">
+                      Le guide d'apprentissage sera bientôt disponible.
+                    </p>
+                    <p className="text-sm text-foreground/60">
+                      Nous travaillons sur la création d'un guide complet pour
+                      vous aider à comprendre le Lightning Network.
+                    </p>
+                  </div>
                 </TabsContent>
               </div>
             </Tabs>

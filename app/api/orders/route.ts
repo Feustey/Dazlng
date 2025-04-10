@@ -3,6 +3,9 @@ import { connectToDatabase } from "@/app/lib/db";
 import Order from "@/app/models/Order";
 import { generateId } from "@/app/utils/id";
 
+// Marquer cette route comme dynamique
+export const dynamic = "force-dynamic";
+
 // GET /api/orders - Récupérer toutes les commandes d'un utilisateur
 export async function GET(request: Request) {
   try {

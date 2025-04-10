@@ -22,7 +22,11 @@
     "types": ["@testing-library/jest-dom", "node", "react", "react-dom"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@app/*": ["./app/*"],
+      "@lib/*": ["./app/lib/*"],
+      "@components/*": ["./app/components/*"],
+      "@services/*": ["./app/services/*"]
     },
     "typeRoots": ["./node_modules/@types", "./app/types"]
   },
@@ -30,6 +34,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "**/*.mjs",
     ".next/types/**/*.ts",
     "vitest.config.ts",
     "app/types/**/*.d.ts"

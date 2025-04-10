@@ -69,7 +69,7 @@ export default function ContactEmailTemplate({
       <Text style={signature}>
         Cordialement,
         <br />
-        L'équipe DazNode
+        L&apos;équipe DazNode
       </Text>
     </BaseEmailTemplate>
   );

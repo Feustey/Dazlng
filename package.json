@@ -6,7 +6,7 @@
   "description": "Application de gestion des nœuds Lightning Network",
   "scripts": {
     "dev": "next dev",
-    "build": "next build && next export",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "clean": "rm -rf .next node_modules/.cache && find app -name '*-back*' -delete && find app -name '*.bak' -delete",

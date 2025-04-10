@@ -1,0 +1,13 @@
+{
+  "title": "Contactez-nous",
+  "description": "N'hésitez pas à nous contacter pour toute question ou suggestion",
+  "form": {
+    "name": "Nom",
+    "email": "Email",
+    "subject": "Sujet",
+    "message": "Message",
+    "submit": "Envoyer",
+    "success": "Message envoyé avec succès !",
+    "error": "Une erreur est survenue lors de l'envoi du message."
+  }
+}

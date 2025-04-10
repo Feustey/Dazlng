@@ -121,14 +121,18 @@
     @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
   }
 
+  .hero-gradient {
+    background: linear-gradient(135deg, #0047ab 0%, #1a1a2e 50%, #4c1d95 100%);
+  }
+
   .gradient-text {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(
-      135deg,
-      hsl(var(--primary)),
-      hsl(var(--secondary)),
-      hsl(var(--accent))
-    );
+    background-image: linear-gradient(135deg, #2284ff, #8b5cf6, #f97316);
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #2284ff, #8b5cf6, #f97316);
   }
 
   .btn-gradient {
@@ -137,11 +141,17 @@
     @apply transition-all duration-300;
     @apply hover:shadow-lg hover:scale-105;
     @apply disabled:opacity-50 disabled:cursor-not-allowed;
-    background-image: linear-gradient(
-      135deg,
-      hsl(var(--primary)),
-      hsl(var(--secondary))
-    );
+    background-image: linear-gradient(135deg, #2284ff, #8b5cf6);
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-lg;
+    @apply bg-card/30 hover:bg-card/50 text-white font-semibold;
+    @apply transition-all duration-300;
+    @apply backdrop-blur-sm;
+    @apply py-2 px-4;
+    @apply hover:shadow-lg hover:scale-105;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .card-glass {
@@ -170,10 +180,6 @@
     @apply bg-primary text-primary-foreground hover:bg-primary/90;
   }
 
-  .btn-secondary {
-    @apply bg-secondary text-secondary-foreground hover:bg-secondary/90;
-  }
-
   .btn-accent {
     @apply bg-accent text-accent-foreground hover:bg-accent/90;
   }
@@ -197,12 +203,20 @@
 
   .input {
     @apply flex h-10 w-full rounded-md border;
-    @apply bg-background px-3 py-2 text-sm;
+    @apply bg-card/40 backdrop-blur-sm border-accent/20;
+    @apply focus:border-accent/40 transition-colors;
+    @apply px-3 py-2 text-sm text-foreground;
     @apply file:border-0 file:bg-transparent file:text-sm file:font-medium;
-    @apply placeholder:text-muted-foreground;
+    @apply placeholder:text-muted-foreground/70;
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
     @apply disabled:cursor-not-allowed disabled:opacity-50;
-    border-color: hsl(var(--input));
+  }
+
+  .bg-translucent {
+    @apply bg-card/40 backdrop-blur-sm border border-accent/20;
+    @apply rounded-md p-4;
+    @apply transition-colors duration-300;
+    @apply hover:bg-card/50 hover:border-accent/30;
   }
 
   .nav-link {
@@ -219,15 +233,18 @@
 
 @layer utilities {
   .animate-fade-in {
-    animation: fadeIn 0.5s ease-out forwards;
+    animation: fadeIn 0.3s ease-out forwards;
+    will-change: opacity;
   }
 
   .animate-slide-up {
-    animation: slideUp 0.5s ease-out forwards;
+    animation: slideUp 0.3s ease-out forwards;
+    will-change: transform, opacity;
   }
 
   .animate-slide-down {
-    animation: slideDown 0.5s ease-out forwards;
+    animation: slideDown 0.3s ease-out forwards;
+    will-change: transform, opacity;
   }
 
   @keyframes fadeIn {
@@ -241,7 +258,7 @@
 
   @keyframes slideUp {
     from {
-      transform: translateY(20px);
+      transform: translateY(10px);
       opacity: 0;
     }
     to {
@@ -252,7 +269,7 @@
 
   @keyframes slideDown {
     from {
-      transform: translateY(-20px);
+      transform: translateY(-10px);
       opacity: 0;
     }
     to {

@@ -48,7 +48,7 @@ export default function AuthEmailTemplate({
             Réinitialiser mon mot de passe
           </Button>
           <Text style={text}>
-            Ce lien expirera dans 1 heure. Si vous n'avez pas demandé cette
+            Ce lien expirera dans 1 heure. Si vous n&apos;avez pas demandé cette
             réinitialisation, veuillez ignorer cet email.
           </Text>
         </>
@@ -57,7 +57,7 @@ export default function AuthEmailTemplate({
       <Text style={signature}>
         Cordialement,
         <br />
-        L'équipe DazNode
+        L&apos;équipe DazNode
       </Text>
     </BaseEmailTemplate>
   );

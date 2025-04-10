@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/app/lib/db";
-import { User } from "@/app/models/User";
+import User from "@/models/User";
 import { Profile } from "@/models";
 
 // GET /api/profiles/[id] - Récupérer un profil spécifique

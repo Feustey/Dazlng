@@ -15,11 +15,13 @@ import {
 import { useRouter, useParams } from "next/navigation";
 import { useAuth } from "../../contexts/AuthContext";
 import { useToast } from "../ui/use-toast";
+import { Button } from "@/app/components/ui/button";
 
 export default function AuthOptions() {
   const [activeTab, setActiveTab] = useState("login");
   const router = useRouter();
   const params = useParams();
+  const locale = params?.locale as string | undefined;
   const { loginWithAlby } = useAuth();
   const { addToast } = useToast();
 
@@ -31,12 +33,49 @@ export default function AuthOptions() {
         description: "Bienvenue sur votre espace personnel",
         type: "success",
       });
-      router.push(`/${params.locale}/dashboard`);
+      if (locale) {
+        router.push(`/${locale}/dashboard`);
+      } else {
+        router.push("/dashboard");
+      }
     } catch (error) {
       addToast({
         title: "Erreur de connexion",
         description:
           error instanceof Error ? error.message : "Une erreur est survenue",
+        type: "error",
+      });
+    }
+  };
+
+  const handleLogin = async () => {
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de la connexion");
+      }
+
+      addToast({
+        title: "Connexion réussie",
+        description: "Vous êtes maintenant connecté",
+        type: "success",
+      });
+
+      if (locale) {
+        router.push(`/${locale}/dashboard`);
+      } else {
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      addToast({
+        title: "Erreur de connexion",
+        description: "Une erreur est survenue lors de la connexion",
         type: "error",
       });
     }
@@ -88,7 +127,9 @@ export default function AuthOptions() {
             </div>
 
             <div className="flex justify-center">
-              <AlbyLoginButton onClick={handleAlbyLogin} />
+              <Button onClick={handleLogin} className="w-full">
+                Se connecter avec Alby
+              </Button>
             </div>
           </TabsContent>
 
@@ -119,7 +160,9 @@ export default function AuthOptions() {
             </div>
 
             <div className="flex justify-center">
-              <AlbyLoginButton onClick={handleAlbyLogin} />
+              <Button onClick={handleAlbyLogin} className="w-full">
+                Se connecter avec Alby
+              </Button>
             </div>
           </TabsContent>
         </Tabs>

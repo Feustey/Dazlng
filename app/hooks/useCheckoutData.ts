@@ -21,26 +21,33 @@ interface CheckoutData {
   };
 }
 
+const isClient = typeof window !== "undefined";
+
 export function useCheckoutData() {
   const [checkoutData, setCheckoutData] = useState<CheckoutData>({});
 
   useEffect(() => {
-    // Charger les données du panier depuis le localStorage
-    const savedData = localStorage.getItem("checkoutData");
-    if (savedData) {
-      setCheckoutData(JSON.parse(savedData));
+    if (isClient) {
+      const savedData = localStorage.getItem("checkoutData");
+      if (savedData) {
+        setCheckoutData(JSON.parse(savedData));
+      }
     }
   }, []);
 
   const updateCheckoutData = (data: Partial<CheckoutData>) => {
     const newData = { ...checkoutData, ...data };
     setCheckoutData(newData);
-    localStorage.setItem("checkoutData", JSON.stringify(newData));
+    if (isClient) {
+      localStorage.setItem("checkoutData", JSON.stringify(newData));
+    }
   };
 
   const clearCheckoutData = () => {
     setCheckoutData({});
-    localStorage.removeItem("checkoutData");
+    if (isClient) {
+      localStorage.removeItem("checkoutData");
+    }
   };
 
   return {

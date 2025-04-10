@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { signIn } from "next-auth/react";
 
+// Marquer cette route comme dynamique
+export const dynamic = "force-dynamic";
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const k1 = searchParams.get("k1");

@@ -1,4 +1,12 @@
 {
+  "Header": {
+    "learn": "Apprentissage",
+    "login": "Connexion",
+    "daznode": "Daznode",
+    "dazia": "Daz-IA",
+    "network": "Network",
+    "channels": "Channels"
+  },
   "Home": {
     "hero": {
       "title": "Gérez votre nœud Lightning Network en toute simplicité",
@@ -8,7 +16,7 @@
     "features": {
       "title": "Fonctionnalités principales",
       "learning": {
-        "title": "Guide d'apprentissage interactif",
+        "title": "Guide d&apos;apprentissage interactif",
         "description": "Apprenez à votre rythme avec notre guide étape par étape sur Lightning Network"
       },
       "transactions": {
@@ -40,7 +48,7 @@
     },
     "cta": {
       "title": "Prêt à commencer ?",
-      "description": "Rejoignez la communauté Lightning Network dès aujourd'hui",
+      "description": "Rejoignez la communauté Lightning Network dès aujourd&apos;hui",
       "button": "Créer un compte"
     }
   },
@@ -56,10 +64,10 @@
   },
   "About": {
     "title": "À propos de Daznode",
-    "description": "Daznode est une application complète de gestion des nœuds Lightning Network, conçue pour simplifier l'utilisation et le déploiement de nœuds Lightning.",
+    "description": "Daznode est une application complète de gestion des nœuds Lightning Network, conçue pour simplifier l&apos;utilisation et le déploiement de nœuds Lightning.",
     "features": {
       "title": "Fonctionnalités principales",
-      "learning": "Guide d'apprentissage interactif",
+      "learning": "Guide d&apos;apprentissage interactif",
       "transactions": "Visualisation des transactions en temps réel",
       "operations": "Suivi des opérations",
       "metrics": "Métriques détaillées des nœuds",
@@ -67,7 +75,7 @@
     },
     "team": {
       "title": "Notre équipe",
-      "description": "Nous sommes une équipe passionnée de développeurs et d'experts en Bitcoin, dédiés à la création d'outils innovants pour l'écosystème Lightning Network."
+      "description": "Nous sommes une équipe passionnée de développeurs et d&apos;experts en Bitcoin, dédiés à la création d&apos;outils innovants pour l&apos;écosystème Lightning Network."
     },
     "contact": {
       "title": "Contact",
@@ -77,11 +85,11 @@
     }
   },
   "Help": {
-    "title": "Centre d'aide",
+    "title": "Centre d&apos;aide",
     "search": "Rechercher une aide",
     "categories": {
       "getting_started": "Premiers pas",
-      "learning": "Guide d'apprentissage",
+      "learning": "Guide d&apos;apprentissage",
       "transactions": "Transactions",
       "operations": "Opérations",
       "metrics": "Métriques",
@@ -89,7 +97,7 @@
     },
     "faq": {
       "title": "Questions fréquentes",
-      "what_is_lightning": "Qu'est-ce que Lightning Network ?",
+      "what_is_lightning": "Qu&apos;est-ce que Lightning Network ?",
       "how_to_start": "Comment commencer avec Daznode ?",
       "how_to_connect": "Comment connecter mon portefeuille ?",
       "how_to_transact": "Comment effectuer des transactions ?",
@@ -98,12 +106,12 @@
     },
     "support": {
       "title": "Support",
-      "description": "Besoin d'aide supplémentaire ? Notre équipe de support est là pour vous aider.",
+      "description": "Besoin d&apos;aide supplémentaire ? Notre équipe de support est là pour vous aider.",
       "contact": "Contacter le support"
     }
   },
   "Learning": {
-    "title": "Guide d'apprentissage Lightning Network",
+    "title": "Guide d&apos;apprentissage Lightning Network",
     "duration": "Durée",
     "minutes": "minutes",
     "completed": "Terminé",
@@ -164,7 +172,7 @@
     "activeChannels": "Canaux actifs",
     "totalCapacity": "Capacité totale",
     "successRate": "Taux de réussite",
-    "overview": "Vue d'ensemble",
+    "overview": "Vue d&apos;ensemble",
     "channels": "Canaux",
     "transactions": "Transactions",
     "capacityDistribution": "Distribution de la capacité",

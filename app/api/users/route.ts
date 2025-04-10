@@ -1,18 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/app/lib/db";
-import { User } from "@/app/models/User";
+import User from "@/models/User";
 import bcrypt from "bcryptjs";
+import { getToken } from "next-auth/jwt";
 
 // GET /api/users - Récupérer tous les utilisateurs (admin seulement)
 export async function GET(req: NextRequest) {
   try {
     await connectToDatabase();
 
-    // Vérifier si l'utilisateur est admin (à implémenter avec votre système d'authentification)
-    // const session = await getServerSession(authOptions);
-    // if (!session || session.user.role !== 'admin') {
-    //   return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
-    // }
+    const token = await getToken({ req });
+    if (!token) {
+      return NextResponse.json(
+        { error: "Vous devez être connecté" },
+        { status: 401 }
+      );
+    }
+
+    // Vérifier si l'utilisateur est admin
+    if (token.role !== "admin") {
+      return NextResponse.json(
+        { error: "Accès non autorisé" },
+        { status: 403 }
+      );
+    }
 
     const users = await User.find({}).select("-password");
     return NextResponse.json(users);

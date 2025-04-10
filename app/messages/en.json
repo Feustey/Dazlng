@@ -26,7 +26,9 @@
     "login": "Login",
     "profile": "My Profile",
     "logout": "Logout",
-    "myNode": "My Node"
+    "myNode": "My Node",
+    "nodes": "Nodes",
+    "transactions": "Transactions"
   },
   "HomePage": {
     "welcome": "Welcome to Daznode",
@@ -70,9 +72,9 @@
         "title": "Advanced Metrics",
         "description": "Analyze your node's performance with detailed metrics"
       },
-      "nwc": {
-        "title": "Nostr Wallet Connect",
-        "description": "Connect easily with your Nostr wallet"
+      "alby": {
+        "title": "Alby Extension",
+        "description": "Connect easily with your Alby wallet"
       }
     },
     "benefits": {
@@ -240,6 +242,52 @@
     "success": "Payment successful!",
     "error": "An error occurred"
   },
+  "daz-ia-checkout": {
+    "title": "Daz-IA Plan Purchase",
+    "steps": {
+      "plan": "Choose Plan",
+      "delivery": "Information",
+      "payment": "Payment",
+      "confirmation": "Confirmation"
+    },
+    "plan": {
+      "title": "Choose your Daz-IA plan",
+      "oneShot": "One-time payment",
+      "yearly": "Yearly subscription",
+      "savings": "Save {percent}%",
+      "continue": "Continue"
+    },
+    "delivery": {
+      "title": "Your information",
+      "personalInfo": "Personal information",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "phone": "Phone",
+      "company": "Company (optional)",
+      "back": "Back",
+      "continue": "Continue"
+    },
+    "payment": {
+      "title": "Payment",
+      "summary": "Order summary",
+      "plan": "Plan",
+      "total": "Total",
+      "cardInfo": "Payment information",
+      "cardNumber": "Card number",
+      "expiryDate": "Expiry date",
+      "cvc": "CVC",
+      "back": "Back",
+      "pay": "Pay {amount}"
+    },
+    "confirmation": {
+      "title": "Order confirmation",
+      "thanks": "Thank you for your purchase!",
+      "orderNumber": "Order #{id}",
+      "emailSent": "A confirmation email has been sent to {email}",
+      "backToHome": "Back to home"
+    }
+  },
   "recommendations": {
     "title": "Recommendations",
     "subtitle": "Discover our personalized recommendations",
@@ -272,13 +320,51 @@
       "transactions": "Transactions",
       "operations": "Operations",
       "metrics": "Metrics",
-      "nwc": "Nostr Wallet Connect"
+      "alby": "Alby Extension"
     },
     "faq": {
       "what_is_lightning": "What is Lightning Network?",
       "how_to_start": "How to start with Daznode?",
-      "how_to_connect": "How to connect my wallet?",
-      "how_to_transact": "How to make transactions?"
+      "how_to_transact": "How to make transactions?",
+      "why_bitcoin": "Why Bitcoin?",
+      "keysend": "What is Keysend?",
+      "channel_close": "How to close a channel?",
+      "security": "How to secure my node?",
+      "backup_channels": "How to backup my channels?",
+      "peers_connection": "How to connect to other nodes?",
+      "technical": "What are the technical requirements?",
+      "profitable_node": "How to make my node profitable?",
+      "channel_management": "How to manage my channels?",
+      "node_monitoring": "How to monitor my node?",
+      "sync_time": "How long does synchronization take?",
+      "tor_only": "Why use Tor?",
+      "what_is_alby": "What is the Alby extension?",
+      "how_to_use_alby": "How to use the Alby extension?",
+      "alby_features": "What are Alby's features?"
+    },
+    "alby": {
+      "title": "Alby Extension",
+      "description": "The Alby extension is a Bitcoin and Lightning Network wallet for your browser",
+      "features": {
+        "title": "Features",
+        "lightning_wallet": "Lightning Network Wallet",
+        "nostr_keys": "Nostr Keys Management",
+        "one_click_login": "One-click Login",
+        "secure_payments": "Secure Payments"
+      },
+      "installation": {
+        "title": "Installation",
+        "description": "Install the Alby extension from the official website",
+        "link": "https://getalby.com/products/browser-extension",
+        "button": "Install Alby"
+      },
+      "usage": {
+        "title": "Usage",
+        "connect": "Connect your Lightning wallet",
+        "sign_in": "Sign in to Bitcoin applications",
+        "send_receive": "Send and receive payments",
+        "manage_keys": "Manage your Nostr keys"
+      }
     }
   },
   "About": {
@@ -428,6 +514,12 @@
     "signingIn": "Signing in...",
     "signInSuccess": "Successfully signed in!",
     "timeRemaining": "Remaining time",
+    "login": "Login",
+    "register": "Register",
+    "loginDescription": "Login to your account",
+    "registerDescription": "Create your account to access all features",
+    "loginWithEmail": "Login with email",
+    "orLoginWith": "Or login with",
     "error": {
       "invalidSignature": "Invalid signature",
       "expired": "Message expired",
@@ -440,10 +532,11 @@
     }
   },
   "Learn": {
-    "title": "Learn",
+    "title": "Learning Guide",
     "guide": "Guide",
-    "lightning": "Lightning Network",
-    "visualization": "Visualization"
+    "lightning": "Lightning",
+    "visualization": "Visualization",
+    "resources": "Resources"
   },
   "Learning": {
     "title": "Learning Guide",
@@ -547,6 +640,18 @@
   },
   "Checkout": {
     "redirecting": "Redirecting...",
+    "Account": {
+      "title": "Account Creation",
+      "subtitle": "Create an account or continue as guest",
+      "email": "Email",
+      "password": "Password",
+      "createAccount": "Create account",
+      "continueAsGuest": "Continue as guest",
+      "alreadyHaveAccount": "Already have an account?",
+      "login": "Log in",
+      "newsletterOptin": "I want to subscribe to the newsletter to receive exclusive offers",
+      "continue": "Continue"
+    },
     "Delivery": {
       "title": "Delivery Information",
       "name": "Full Name",
@@ -556,6 +661,67 @@
       "country": "Country",
       "phone": "Phone",
       "continue": "Continue to Payment"
+    },
+    "Payment": {
+      "title": "Payment Method",
+      "bitcoinInstructions": "Scan the QR code or copy the address below to make the payment",
+      "continue": "Confirm Order",
+      "amount": "Amount to Pay",
+      "copyAddress": "Copy Address",
+      "addressCopied": "Address Copied!",
+      "waitingPayment": "Waiting for Payment...",
+      "paymentReceived": "Payment Received!",
+      "paymentError": "Payment Error",
+      "retry": "Retry"
+    },
+    "Confirmation": {
+      "title": "Order Confirmation",
+      "orderNumber": "Order Number",
+      "orderDate": "Order Date",
+      "deliveryAddress": "Delivery Address",
+      "paymentStatus": "Payment Status",
+      "paymentConfirmed": "Payment Confirmed",
+      "orderSummary": "Order Summary",
+      "product": "Product",
+      "quantity": "Quantity",
+      "price": "Price",
+      "total": "Total",
+      "daznode": "Daznode Lightning Node",
+      "thankYou": "Thank you for your order!",
+      "orderProcessing": "Your order is being processed",
+      "emailConfirmation": "A confirmation email has been sent to",
+      "setupInstructions": "Setup Instructions",
+      "setupGuide": "A setup guide will be sent to your email",
+      "questions": "Got questions?",
+      "support": "Our support team is here to help",
+      "contactSupport": "Contact Support",
+      "backToDashboard": "Back to Dashboard"
+    }
+  },
+  "Daznode": {
+    "title": "Get Your Own Lightning Node!",
+    "description": "Start your Lightning Network journey with a pre-configured Raspberry Pi 5 node. Ready to use, secure, and supported.",
+    "featuresTitle": "Key Features",
+    "specsTitle": "Technical Specifications",
+    "orderTitle": "Ready to Join the Lightning Network?",
+    "orderDescription": "Get your pre-configured node with everything you need to start",
+    "price": "500,000 sats",
+    "priceDescription": "One-time payment includes hardware, setup, and support",
+    "orderButton": "Order Your Node",
+    "payment": {
+      "title": "Payment via Lightning Network",
+      "scan": "Scan the QR code to pay",
+      "processing": "Processing payment...",
+      "amount": "Amount to pay: {amount} sats",
+      "invoice": "Lightning invoice",
+      "copy": "Copy invoice",
+      "copied": "Copied!",
+      "success": "Payment successful!",
+      "error": "Payment failed. Please try again.",
+      "close": "Close",
+      "expiry": "Invoice expires in {minutes} minutes",
+      "waitingPayment": "Waiting for payment...",
+      "checkingPayment": "Checking payment status..."
     }
   }
 }
