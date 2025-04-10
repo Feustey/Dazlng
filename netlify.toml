@@ -1,6 +1,6 @@
 [build]
   command = "npm run build"
-  publish = ".next"
+  publish = "out"
 
 [build.environment]
   NEXT_PUBLIC_API_URL = "https://api.dazno.de"
@@ -9,13 +9,15 @@
   NPM_VERSION = "10.2.4"
   NEXT_TELEMETRY_DISABLED = "1"
   NODE_ENV = "production"
+  NEXT_USE_NETLIFY_EDGE = "true"
+  NEXT_PRIVATE_TARGET = "server"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
 [functions]
   node_bundler = "esbuild"
-  external_node_modules = []
+  external_node_modules = ["@netlify/plugin-nextjs"]
 
 [build.processing]
   skip_processing = false

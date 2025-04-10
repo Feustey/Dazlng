@@ -4,7 +4,7 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin();
 
 const nextConfig = {
-  output: "standalone",
+  output: "export",
   generateBuildId: async () => {
     return "build";
   },
@@ -18,6 +18,7 @@ const nextConfig = {
     },
   },
   images: {
+    unoptimized: true,
     domains: [
       "avatars.githubusercontent.com",
       "getalby.com",
