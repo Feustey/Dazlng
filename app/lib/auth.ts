@@ -5,11 +5,29 @@ import { verify } from "jsonwebtoken";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "./mongodb";
 import GoogleProvider from "next-auth/providers/google";
-import AlbyProvider from "./providers/alby";
 import type { Adapter } from "next-auth/adapters";
 import { connectToDatabase } from "@/app/lib/mongodb";
 import { compare } from "bcryptjs";
-import { User } from "@/app/models/User";
+import NextAuth from "next-auth";
+import { MongoClient } from "mongodb";
+import { Session } from "next-auth";
+
+// Spécifier que nous utilisons le runtime Node.js et non Edge
+export const runtime = "nodejs";
+
+// Définition des fonctions d'environnement
+const getOptionalEnvVar = (name: string): string | undefined => {
+  return process.env[name];
+};
+
+const getRequiredEnvVar = (name: string, defaultValue: string = ""): string => {
+  const value = process.env[name];
+  if (!value && !defaultValue) {
+    console.warn(`Warning: Missing ${name} environment variable`);
+    return "";
+  }
+  return value || defaultValue;
+};
 
 interface LNURLSession {
   id: string;
@@ -63,32 +81,15 @@ declare module "next-auth/jwt" {
   }
 }
 
-const getOptionalEnvVar = (name: string): string | undefined => {
-  return process.env[name];
-};
-
-const getRequiredEnvVar = (name: string, defaultValue: string = ""): string => {
-  const value = process.env[name];
-  if (!value && !defaultValue) {
-    console.warn(`Warning: Missing ${name} environment variable`);
-    return "";
-  }
-  return value || defaultValue;
-};
-
 // Récupérer les variables d'environnement de façon plus tolérante
 const envVars = {
   GOOGLE_CLIENT_ID:
     getOptionalEnvVar("GOOGLE_CLIENT_ID") || "dummy-google-client-id",
   GOOGLE_CLIENT_SECRET:
     getOptionalEnvVar("GOOGLE_CLIENT_SECRET") || "dummy-google-client-secret",
-  ALBY_CLIENT_ID: getOptionalEnvVar("ALBY_CLIENT_ID") || "dummy-alby-client-id",
-  ALBY_CLIENT_SECRET:
-    getOptionalEnvVar("ALBY_CLIENT_SECRET") || "dummy-alby-client-secret",
 } as const;
 
 export const authOptions: NextAuthConfig = {
-  adapter: MongoDBAdapter(clientPromise) as Adapter,
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -111,7 +112,9 @@ export const authOptions: NextAuthConfig = {
 
         await connectToDatabase();
 
-        const user = await User.findOne({ email });
+        // Utiliser directement le modèle MongoDB
+        const db = (await clientPromise).db();
+        const user = await db.collection("users").findOne({ email });
 
         if (!user || !user.password) {
           throw new Error("Aucun utilisateur trouvé avec cet email");
@@ -139,47 +142,28 @@ export const authOptions: NextAuthConfig = {
       clientId: envVars.GOOGLE_CLIENT_ID,
       clientSecret: envVars.GOOGLE_CLIENT_SECRET,
     }),
-    AlbyProvider({
-      clientId: envVars.ALBY_CLIENT_ID,
-      clientSecret: envVars.ALBY_CLIENT_SECRET,
-    }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: JWT; user?: any }) {
       if (user) {
-        token.id = user.id || "";
-        token.pubkey = user.pubkey || "";
-        token.nodePubkey = user.nodePubkey || null;
-        token.lightningAddress = user.lightningAddress || null;
-        token.name = user.name || null;
-        token.email = user.email || null;
+        token.id = user.id;
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       if (session.user) {
-        const userObject: any = {
-          id: token.id,
-          pubkey: token.pubkey,
-        };
-
-        if (token.nodePubkey !== undefined)
-          userObject.nodePubkey = token.nodePubkey;
-        if (token.lightningAddress !== undefined)
-          userObject.lightningAddress = token.lightningAddress;
-        if (token.name !== undefined) userObject.name = token.name;
-        if (token.email !== undefined) userObject.email = token.email;
-
-        session.user = userObject;
+        session.user.id = token.id as string;
       }
       return session;
     },
   },
   pages: {
-    signIn: "/auth/login",
+    signIn: "/auth/signin",
     error: "/auth/error",
   },
   session: {
-    strategy: "jwt",
+    strategy: "jwt" as const,
+    maxAge: 30 * 24 * 60 * 60, // 30 jours
   },
+  secret: process.env.NEXTAUTH_SECRET,
 };
