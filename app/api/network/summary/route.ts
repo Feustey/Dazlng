@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { getDb } from "../../../lib/db";
-import { ISession } from "../../../lib/models/Session";
+import { ISession } from "../../../lib/interfaces/session.interface";
 import { WithId, Document } from "mongodb";
+
+// Spécifier que nous utilisons le runtime Node.js et non Edge
+export const runtime = "nodejs";
 
 export async function GET() {
   try {

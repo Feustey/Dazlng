@@ -1,3 +1,6 @@
+// Spécifier que nous utilisons le runtime Node.js et non Edge
+export const runtime = "nodejs";
+
 import { MongoClient } from "mongodb";
 
 if (!process.env.MONGODB_URI) {
@@ -5,7 +8,15 @@ if (!process.env.MONGODB_URI) {
 }
 
 const uri = process.env.MONGODB_URI;
-const options = {};
+const options = {
+  connectTimeoutMS: 30000,
+  socketTimeoutMS: 30000,
+  serverSelectionTimeoutMS: 30000,
+  maxPoolSize: 50,
+  minPoolSize: 10,
+  retryWrites: true,
+  retryReads: true,
+};
 
 let client;
 let clientPromise: Promise<MongoClient>;
@@ -29,9 +40,14 @@ if (process.env.NODE_ENV === "development") {
 }
 
 export async function connectToDatabase() {
-  const client = await clientPromise;
-  const db = client.db(process.env.MONGODB_DB);
-  return db;
+  try {
+    const client = await clientPromise;
+    const db = client.db(process.env.MONGODB_DB);
+    return db;
+  } catch (error) {
+    console.error("Erreur de connexion à MongoDB:", error);
+    throw error;
+  }
 }
 
 // Export a module-scoped MongoClient promise. By doing this in a
