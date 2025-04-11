@@ -1,4 +1,4 @@
-import clientPromise from "@/lib/mongodb";
+import { supabase } from "@/utils/supabase";
 
 export interface NetworkStats {
   totalNodes: number;

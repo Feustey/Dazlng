@@ -1,55 +1,86 @@
-import { connectToDatabase } from "@/app/lib/mongodb";
-import Order from "../models/Order";
+import { supabase } from "@/utils/supabase";
 import { sendOrderConfirmationEmail, sendOrderShippedEmail } from "./email";
-import { generateId } from "../utils/id";
+import { generateId } from "@/utils/id";
 
-interface CreateOrderData {
+export interface CreateOrderData {
   userId: string;
-  items: Array<{
-    name: string;
+  customerName: string;
+  customerEmail: string;
+  items: {
+    productId: string;
     quantity: number;
     price: number;
-  }>;
-  total: number;
-  shippingAddress: {
+  }[];
+  totalAmount: number;
+  deliveryAddress: {
     name: string;
     street: string;
     city: string;
     country: string;
-    email?: string;
   };
-  paymentMethod: string;
 }
 
-export async function createOrder(data: CreateOrderData) {
-  try {
-    await connectToDatabase();
+export interface Order {
+  id: string;
+  userId: string;
+  customerName: string;
+  customerEmail: string;
+  items: {
+    productId: string;
+    quantity: number;
+    price: number;
+  }[];
+  totalAmount: number;
+  status: "pending" | "processing" | "shipped" | "delivered" | "cancelled";
+  createdAt: string;
+  updatedAt: string;
+  deliveryAddress: {
+    name: string;
+    street: string;
+    city: string;
+    country: string;
+  };
+  trackingNumber?: string;
+  trackingUrl?: string;
+}
 
+export async function createOrder(data: CreateOrderData): Promise<Order> {
+  try {
     const id = generateId();
-    const order = await Order.create({
+    const now = new Date().toISOString();
+
+    const order: Order = {
       id,
       ...data,
       status: "pending",
-      paymentStatus: "pending",
-    });
+      createdAt: now,
+      updatedAt: now,
+    };
 
-    // Envoyer l'email de confirmation
+    const { data: insertedOrder, error } = await supabase
+      .from("orders")
+      .insert(order)
+      .select()
+      .single();
+
+    if (error) throw error;
+
     await sendOrderConfirmationEmail({
       id,
-      customerName: data.shippingAddress.name,
+      customerName: data.customerName,
       deliveryAddress: {
-        ...data.shippingAddress,
-        email: data.shippingAddress.email || "customer@example.com",
+        ...data.deliveryAddress,
+        email: data.customerEmail,
       },
       deliveryOption: {
         name: "Standard",
         estimatedDays: "5-7 days",
-        price: data.total,
+        price: data.totalAmount,
       },
-      total: data.total,
+      total: data.totalAmount,
     });
 
-    return order;
+    return insertedOrder;
   } catch (error) {
     console.error("Error creating order:", error);
     throw error;
@@ -58,33 +89,32 @@ export async function createOrder(data: CreateOrderData) {
 
 export async function updateOrderStatus(
   id: string,
-  status: string,
-  paymentStatus?: string
-) {
+  status: Order["status"],
+  trackingNumber?: string,
+  trackingUrl?: string
+): Promise<Order> {
   try {
-    await connectToDatabase();
+    const { data: order, error } = await supabase
+      .from("orders")
+      .update({
+        status,
+        updatedAt: new Date().toISOString(),
+        trackingNumber,
+        trackingUrl,
+      })
+      .eq("id", id)
+      .select()
+      .single();
 
-    const updateData: any = { status };
-    if (paymentStatus) {
-      updateData.paymentStatus = paymentStatus;
-    }
+    if (error) throw error;
 
-    const order = await Order.findOneAndUpdate({ id }, updateData, {
-      new: true,
-    });
-
-    if (!order) {
-      throw new Error("Order not found");
-    }
-
-    // Si la commande est expédiée, envoyer l'email de notification
-    if (status === "SHIPPED") {
+    if (status === "shipped") {
       await sendOrderShippedEmail({
         id,
-        customerName: order.shippingAddress.name,
-        email: order.shippingAddress.email || "customer@example.com",
-        trackingNumber: order.trackingNumber,
-        trackingUrl: order.trackingUrl,
+        customerName: order.customerName,
+        email: order.customerEmail,
+        trackingNumber: order.trackingNumber || "",
+        trackingUrl: order.trackingUrl || "",
       });
     }
 
@@ -95,19 +125,22 @@ export async function updateOrderStatus(
   }
 }
 
-export async function getOrder(id: string) {
+export async function getOrder(id: string): Promise<Order | null> {
   try {
-    await connectToDatabase();
+    const { data: order, error } = await supabase
+      .from("orders")
+      .select()
+      .eq("id", id)
+      .single();
 
-    const order = await Order.findOne({ id });
-
-    if (!order) {
-      throw new Error("Order not found");
+    if (error) {
+      if (error.code === "PGRST116") return null;
+      throw error;
     }
 
     return order;
   } catch (error) {
-    console.error("Error fetching order:", error);
+    console.error("Error getting order:", error);
     throw error;
   }
 }

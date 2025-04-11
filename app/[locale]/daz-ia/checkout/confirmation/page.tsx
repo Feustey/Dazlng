@@ -8,7 +8,7 @@ import Button from "@components/ui/button";
 import { Check, ChevronLeft, Download } from "lucide-react";
 import Card from "@/app/components/ui/card";
 import { CardContent, CardHeader, CardTitle } from "@/app/components/ui/card";
-import { supabase } from "@/app/utils/supabase";
+import { supabase } from "@/utils/supabase";
 import { toast } from "sonner";
 
 interface PlanData {
