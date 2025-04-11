@@ -2,16 +2,15 @@
 
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import PageContainer from "@/app/components/layout/PageContainer";
-import Card from "@/app/components/ui/card";
-import {
+import PageContainer from "@/components/layout/PageContainer";
+import Card, {
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
   CardFooter,
-} from "@/app/components/ui/card";
-import Button from "@/app/components/ui/button";
+} from "@/components/ui/card";
+import Button from "@/components/ui/button";
 import {
   ArrowRight,
   Zap,

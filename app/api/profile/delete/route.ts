@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "@/app/lib/db";
-import User from "@/models/User";
-import { Session } from "@/app/models/Session";
+import { supabase } from "../../../lib/supabase";
 
 export async function DELETE(req: NextRequest) {
   try {
@@ -14,11 +12,14 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    await connectToDatabase();
-
     // Vérifier si l'utilisateur existe
-    const user = await User.findById(userId);
-    if (!user) {
+    const { data: user, error: getUserError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", userId)
+      .single();
+
+    if (getUserError || !user) {
       return NextResponse.json(
         { error: "Utilisateur non trouvé" },
         { status: 404 }
@@ -26,10 +27,24 @@ export async function DELETE(req: NextRequest) {
     }
 
     // Supprimer toutes les sessions de l'utilisateur
-    await Session.deleteMany({ userId });
+    const { error: deleteSessionsError } = await supabase
+      .from("sessions")
+      .delete()
+      .eq("user_id", userId);
+
+    if (deleteSessionsError) {
+      throw deleteSessionsError;
+    }
 
     // Supprimer l'utilisateur
-    await User.findByIdAndDelete(userId);
+    const { error: deleteUserError } = await supabase
+      .from("users")
+      .delete()
+      .eq("id", userId);
+
+    if (deleteUserError) {
+      throw deleteUserError;
+    }
 
     return NextResponse.json({
       message: "Compte supprimé avec succès",

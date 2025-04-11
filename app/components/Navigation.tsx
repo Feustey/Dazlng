@@ -48,7 +48,7 @@ export default function Navigation() {
                     : "text-muted-foreground hover:text-foreground hover:border-b-2 hover:border-muted-foreground"
                 }`}
               >
-                {t("header.navigation.dashboard")}
+                {t("Header.dashboard")}
               </Link>
               <Link
                 href={`/${locale}/network`}
@@ -58,7 +58,7 @@ export default function Navigation() {
                     : "text-muted-foreground hover:text-foreground hover:border-b-2 hover:border-muted-foreground"
                 }`}
               >
-                {t("header.navigation.network")}
+                {t("Header.network")}
               </Link>
               <Link
                 href={`/${locale}/channels`}
@@ -68,7 +68,7 @@ export default function Navigation() {
                     : "text-muted-foreground hover:text-foreground hover:border-b-2 hover:border-muted-foreground"
                 }`}
               >
-                {t("header.navigation.channels")}
+                {t("Header.channels")}
               </Link>
               <Link
                 href={`/${locale}/learn`}
@@ -78,7 +78,7 @@ export default function Navigation() {
                     : "text-muted-foreground hover:text-foreground hover:border-b-2 hover:border-muted-foreground"
                 }`}
               >
-                {t("header.navigation.learn")}
+                {t("Header.learn")}
               </Link>
             </div>
           </div>
@@ -93,7 +93,7 @@ export default function Navigation() {
                   variant="gradient"
                   className="ml-4"
                 >
-                  {t("header.actions.login")}
+                  {t("Header.login")}
                 </Button>
               )}
             </div>
@@ -102,7 +102,7 @@ export default function Navigation() {
                 onClick={toggleMenu}
                 className="inline-flex items-center justify-center p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
               >
-                <span className="sr-only">{t("header.actions.openMenu")}</span>
+                <span className="sr-only">{t("Header.openMenu")}</span>
                 {isMenuOpen ? (
                   <X className="block h-6 w-6" />
                 ) : (
@@ -130,7 +130,7 @@ export default function Navigation() {
             }`}
             onClick={toggleMenu}
           >
-            {t("header.navigation.dashboard")}
+            {t("Header.dashboard")}
           </Link>
           <Link
             href={`/${locale}/network`}
@@ -141,7 +141,7 @@ export default function Navigation() {
             }`}
             onClick={toggleMenu}
           >
-            {t("header.navigation.network")}
+            {t("Header.network")}
           </Link>
           <Link
             href={`/${locale}/channels`}
@@ -152,7 +152,7 @@ export default function Navigation() {
             }`}
             onClick={toggleMenu}
           >
-            {t("header.navigation.channels")}
+            {t("Header.channels")}
           </Link>
           <Link
             href={`/${locale}/learn`}
@@ -163,7 +163,7 @@ export default function Navigation() {
             }`}
             onClick={toggleMenu}
           >
-            {t("header.navigation.learn")}
+            {t("Header.learn")}
           </Link>
         </div>
         <div className="pt-4 pb-3 border-t border-accent/10">
@@ -180,7 +180,7 @@ export default function Navigation() {
                   variant="gradient"
                   className="w-full"
                 >
-                  {t("header.actions.login")}
+                  {t("Header.login")}
                 </Button>
               )}
             </div>

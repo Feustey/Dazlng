@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "@/app/lib/db";
-import Order from "@/app/models/Order";
+import { supabase } from "../../../lib/supabase";
 
 export async function PUT(req: NextRequest) {
   try {
@@ -13,22 +12,33 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    await connectToDatabase();
+    const { data: order, error: getError } = await supabase
+      .from("orders")
+      .select("*")
+      .eq("id", orderId)
+      .single();
 
-    const order = await Order.findById(orderId);
-    if (!order) {
+    if (getError || !order) {
       return NextResponse.json(
         { error: "Commande non trouvée" },
         { status: 404 }
       );
     }
 
-    order.status = status;
-    await order.save();
+    const { data: updatedOrder, error: updateError } = await supabase
+      .from("orders")
+      .update({ status })
+      .eq("id", orderId)
+      .select()
+      .single();
+
+    if (updateError) {
+      throw updateError;
+    }
 
     return NextResponse.json({
       message: "Statut de la commande mis à jour avec succès",
-      order,
+      order: updatedOrder,
     });
   } catch (error) {
     console.error("Erreur lors de la mise à jour du statut:", error);

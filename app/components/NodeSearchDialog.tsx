@@ -7,7 +7,7 @@ import { useLocale } from "next-intl";
 import { Search } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "../contexts/LanguageContext";
-import { Button } from "./ui/button";
+import Button from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,

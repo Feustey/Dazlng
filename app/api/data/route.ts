@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { connectToDatabase } from "@/app/lib/db";
+import { supabase } from "../../lib/supabase";
 
 export const dynamic = "force-dynamic";
 
@@ -8,31 +8,66 @@ export async function GET(request: Request) {
   const type = url.searchParams.get("type");
 
   try {
-    await connectToDatabase();
-
     let data = {};
 
     switch (type) {
       case "stats":
-        // Récupérer les statistiques depuis la base de données
-        // Exemple: const stats = await Stats.find();
-        data = { stats: { users: 100, nodes: 50, transactions: 1000 } };
+        // Récupérer les statistiques depuis Supabase
+        const { data: stats, error: statsError } = await supabase
+          .from("stats")
+          .select("*")
+          .single();
+
+        if (statsError) {
+          throw statsError;
+        }
+
+        data = { stats };
         break;
 
       case "profile":
-        // Récupérer les données de profil, potentiellement avec un ID
+        // Récupérer les données de profil
         const userId = url.searchParams.get("userId");
-        data = { profile: { id: userId, name: "Utilisateur", role: "Admin" } };
+        if (!userId) {
+          return NextResponse.json(
+            { error: "ID utilisateur requis" },
+            { status: 400 }
+          );
+        }
+
+        const { data: profile, error: profileError } = await supabase
+          .from("profiles")
+          .select(
+            `
+            *,
+            user:users (
+              first_name,
+              last_name,
+              email
+            )
+          `
+          )
+          .eq("user_id", userId)
+          .single();
+
+        if (profileError) {
+          throw profileError;
+        }
+
+        data = { profile };
         break;
 
       case "nodes":
         // Récupérer la liste des nœuds
-        data = {
-          nodes: [
-            { id: 1, name: "Node 1" },
-            { id: 2, name: "Node 2" },
-          ],
-        };
+        const { data: nodes, error: nodesError } = await supabase
+          .from("nodes")
+          .select("*");
+
+        if (nodesError) {
+          throw nodesError;
+        }
+
+        data = { nodes };
         break;
 
       default:

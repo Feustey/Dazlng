@@ -10,13 +10,13 @@ interface CardProps {
   onClick?: () => void;
 }
 
-export default function Card({
+const Card = ({
   children,
   className = "",
   gradient = false,
   hover = true,
   onClick,
-}: CardProps) {
+}: CardProps) => {
   const baseClasses = "card-glass p-6";
   const hoverClasses = hover
     ? "transition-transform duration-300 hover:scale-[1.02]"
@@ -34,65 +34,77 @@ export default function Card({
       {children}
     </div>
   );
-}
+};
 
 // Sous-composants pour une meilleure organisation
-export function CardHeader({
+const CardHeader = ({
   children,
   className = "",
 }: {
   children: React.ReactNode;
   className?: string;
-}) {
+}) => {
   return (
     <div className={`flex flex-col space-y-1.5 ${className}`}>{children}</div>
   );
-}
+};
 
-export function CardTitle({
+const CardTitle = ({
   children,
   className = "",
 }: {
   children: React.ReactNode;
   className?: string;
-}) {
+}) => {
   return (
     <h3 className={`text-2xl font-bold text-gradient ${className}`}>
       {children}
     </h3>
   );
-}
+};
 
-export function CardDescription({
+const CardDescription = ({
   children,
   className = "",
 }: {
   children: React.ReactNode;
   className?: string;
-}) {
+}) => {
   return (
     <p className={`text-sm text-muted-foreground ${className}`}>{children}</p>
   );
-}
+};
 
-export function CardContent({
+const CardContent = ({
   children,
   className = "",
 }: {
   children: React.ReactNode;
   className?: string;
-}) {
+}) => {
   return <div className={`pt-4 ${className}`}>{children}</div>;
-}
+};
 
-export function CardFooter({
+const CardFooter = ({
   children,
   className = "",
 }: {
   children: React.ReactNode;
   className?: string;
-}) {
+}) => {
   return (
     <div className={`flex items-center pt-4 ${className}`}>{children}</div>
   );
-}
+};
+
+export {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+};
+
+export type { CardProps };
+export default Card;

@@ -3,11 +3,12 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useCheckoutData } from "@/app/hooks/useCheckoutData";
+import { useCheckoutData } from "../../../../hooks/useCheckoutData";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@components/ui/button";
+import DazIAProgressBar from "@/components/daz-ia/ProgressBar";
+import Button from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -15,18 +16,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/app/components/ui/form";
-import { Input } from "@components/ui/input";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/app/components/ui/select";
-import { Textarea } from "@components/ui/textarea";
-import { Card, CardContent } from "@components/ui/card";
-import DazIAProgressBar from "@/app/components/daz-ia/ProgressBar";
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import Card, { CardContent } from "@/components/ui/card";
 
 export default function DeliveryPage() {
   const router = useRouter();

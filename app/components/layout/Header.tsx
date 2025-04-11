@@ -19,7 +19,7 @@ import {
 import { SimpleLogo } from "../SimpleLogo";
 import { AccountMenu } from "../AccountMenu";
 import { usePathname, useRouter } from "next/navigation";
-import { useTranslation } from "@/app/hooks/useTranslation";
+import { useTranslation } from "@/hooks/useTranslation";
 import { LanguageSelector } from "../LanguageSelector";
 
 export default function Header() {
@@ -35,27 +35,27 @@ export default function Header() {
   const navItems = [
     {
       href: `/${locale}`,
-      label: t("Header.navigation.dashboard"),
+      label: t("header.navigation.dashboard"),
       icon: <Home className="w-5 h-5" />,
     },
     {
       href: `/${locale}/daz-ia`,
-      label: t("Header.navigation.dazia"),
+      label: t("header.navigation.dazia"),
       icon: <Zap className="w-5 h-5" />,
     },
     {
       href: `/${locale}/network`,
-      label: t("Header.navigation.network"),
+      label: t("header.navigation.network"),
       icon: <Network className="w-5 h-5" />,
     },
     {
       href: `/${locale}/channels`,
-      label: t("Header.navigation.channels"),
+      label: t("header.navigation.channels"),
       icon: <BarChart2 className="w-5 h-5" />,
     },
     {
       href: `/${locale}/learn`,
-      label: t("Header.navigation.learn"),
+      label: t("header.navigation.learn"),
       icon: <BookOpen className="w-5 h-5" />,
     },
   ];
@@ -102,14 +102,14 @@ export default function Header() {
                   <Link
                     href={`/${locale}/help`}
                     className="p-2 text-muted-foreground hover:text-foreground transition-colors"
-                    aria-label={t("Header.navigation.help")}
+                    aria-label={t("header.navigation.help")}
                   >
                     <HelpCircle className="w-5 h-5" />
                   </Link>
 
                   <button
                     className="p-2 text-muted-foreground hover:text-foreground transition-colors"
-                    aria-label={t("Header.actions.notifications")}
+                    aria-label={t("header.actions.notifications")}
                   >
                     <Bell className="w-5 h-5" />
                   </button>
@@ -122,7 +122,7 @@ export default function Header() {
                       className="flex items-center space-x-2 btn-gradient py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                     >
                       <LogIn className="w-4 h-4" />
-                      <span>{t("Header.actions.login")}</span>
+                      <span>{t("header.actions.login")}</span>
                     </Link>
                   )}
                 </div>
@@ -175,14 +175,14 @@ export default function Header() {
                   <Link
                     href={`/${locale}/help`}
                     className="p-2 text-muted-foreground hover:text-foreground transition-colors"
-                    aria-label={t("Header.navigation.help")}
+                    aria-label={t("header.navigation.help")}
                   >
                     <HelpCircle className="w-5 h-5" />
                   </Link>
 
                   <button
                     className="p-2 text-muted-foreground hover:text-foreground transition-colors"
-                    aria-label={t("Header.actions.notifications")}
+                    aria-label={t("header.actions.notifications")}
                   >
                     <Bell className="w-5 h-5" />
                   </button>
@@ -195,7 +195,7 @@ export default function Header() {
                       className="flex items-center space-x-2 btn-gradient py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                     >
                       <LogIn className="w-4 h-4" />
-                      <span>{t("Header.actions.login")}</span>
+                      <span>{t("header.actions.login")}</span>
                     </Link>
                   )}
                 </div>

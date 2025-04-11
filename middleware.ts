@@ -24,10 +24,19 @@ export function middleware(request: NextRequest) {
 
   // Rediriger vers la locale par défaut si aucune locale n'est présente
   const newUrl = new URL(`/${defaultLocale}${pathname}`, request.url);
-  return NextResponse.redirect(newUrl);
+
+  // Ajouter un header pour indiquer la locale
+  const response = NextResponse.redirect(newUrl);
+  response.headers.set("x-locale", defaultLocale);
+
+  return response;
 }
 
 export const config = {
   // Matcher pour toutes les routes sauf les fichiers statiques, api, etc.
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)",
+    "/",
+    "/(fr|en)/:path*",
+  ],
 };

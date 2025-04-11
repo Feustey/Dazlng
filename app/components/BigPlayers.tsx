@@ -1,6 +1,8 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import * as React from "react";
+import Card from "./ui/card";
+import { CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";

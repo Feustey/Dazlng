@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "@/app/lib/db";
-import User from "@/models/User";
-import { Profile } from "@/models";
+import { supabase } from "../../../lib/supabase";
 
 // GET /api/profiles/[id] - Récupérer un profil spécifique
 export async function GET(
@@ -9,14 +7,27 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectToDatabase();
-
     const profileId = params.id;
 
-    const profile = await Profile.findById(profileId).populate(
-      "userId",
-      "firstName lastName email"
-    );
+    const { data: profile, error } = await supabase
+      .from("profiles")
+      .select(
+        `
+        *,
+        user:users (
+          first_name,
+          last_name,
+          email
+        )
+      `
+      )
+      .eq("id", profileId)
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
     if (!profile) {
       return NextResponse.json({ error: "Profil non trouvé" }, { status: 404 });
     }
@@ -34,32 +45,53 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectToDatabase();
-
     const profileId = params.id;
     const body = await req.json();
     const { phoneNumber, avatar, bio, preferences, socialLinks } = body;
 
     // Vérifier si le profil existe
-    const profile = await Profile.findById(profileId);
+    const { data: profile, error: getError } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", profileId)
+      .single();
+
+    if (getError) {
+      throw getError;
+    }
+
     if (!profile) {
       return NextResponse.json({ error: "Profil non trouvé" }, { status: 404 });
     }
 
     // Préparer les données de mise à jour
     const updateData: any = {};
-    if (phoneNumber) updateData.phoneNumber = phoneNumber;
+    if (phoneNumber) updateData.phone_number = phoneNumber;
     if (avatar) updateData.avatar = avatar;
     if (bio) updateData.bio = bio;
     if (preferences) updateData.preferences = preferences;
-    if (socialLinks) updateData.socialLinks = socialLinks;
+    if (socialLinks) updateData.social_links = socialLinks;
 
     // Mettre à jour le profil
-    const updatedProfile = await Profile.findByIdAndUpdate(
-      profileId,
-      updateData,
-      { new: true, runValidators: true }
-    ).populate("userId", "firstName lastName email");
+    const { data: updatedProfile, error: updateError } = await supabase
+      .from("profiles")
+      .update(updateData)
+      .eq("id", profileId)
+      .select(
+        `
+        *,
+        user:users (
+          first_name,
+          last_name,
+          email
+        )
+      `
+      )
+      .single();
+
+    if (updateError) {
+      throw updateError;
+    }
 
     return NextResponse.json(updatedProfile);
   } catch (error) {
@@ -74,18 +106,32 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectToDatabase();
-
     const profileId = params.id;
 
     // Vérifier si le profil existe
-    const profile = await Profile.findById(profileId);
+    const { data: profile, error: getError } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", profileId)
+      .single();
+
+    if (getError) {
+      throw getError;
+    }
+
     if (!profile) {
       return NextResponse.json({ error: "Profil non trouvé" }, { status: 404 });
     }
 
     // Supprimer le profil
-    await Profile.findByIdAndDelete(profileId);
+    const { error: deleteError } = await supabase
+      .from("profiles")
+      .delete()
+      .eq("id", profileId);
+
+    if (deleteError) {
+      throw deleteError;
+    }
 
     return NextResponse.json(
       { message: "Profil supprimé avec succès" },

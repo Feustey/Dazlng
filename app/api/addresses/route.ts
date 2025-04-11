@@ -1,13 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "@/app/lib/db";
-import { Address } from "@/app/models/Address";
+import { supabase } from "../../lib/supabase";
 import { getToken } from "next-auth/jwt";
 
 // GET /api/addresses - Récupérer toutes les adresses d'un utilisateur
 export async function GET(req: NextRequest) {
   try {
-    await connectToDatabase();
-
     const token = await getToken({ req });
     if (!token) {
       return NextResponse.json(
@@ -17,7 +14,15 @@ export async function GET(req: NextRequest) {
     }
 
     const userId = token.sub;
-    const addresses = await Address.find({ userId });
+    const { data: addresses, error } = await supabase
+      .from("addresses")
+      .select("*")
+      .eq("user_id", userId);
+
+    if (error) {
+      throw error;
+    }
+
     return NextResponse.json(addresses);
   } catch (error) {
     console.error("Erreur lors de la récupération des adresses:", error);
@@ -28,8 +33,6 @@ export async function GET(req: NextRequest) {
 // POST /api/addresses - Créer une nouvelle adresse
 export async function POST(req: NextRequest) {
   try {
-    await connectToDatabase();
-
     const token = await getToken({ req });
     if (!token) {
       return NextResponse.json(
@@ -41,41 +44,55 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const {
       type,
-      firstName,
-      lastName,
+      first_name,
+      last_name,
       street,
       street2,
       city,
       state,
-      postalCode,
+      postal_code,
       country,
-      isDefault,
-      phoneNumber,
+      is_default,
+      phone_number,
     } = body;
 
     // Si c'est l'adresse par défaut, mettre à jour les autres adresses
-    if (isDefault) {
-      await Address.updateMany(
-        { userId: token.sub, type, isDefault: true },
-        { isDefault: false }
-      );
+    if (is_default) {
+      const { error: updateError } = await supabase
+        .from("addresses")
+        .update({ is_default: false })
+        .eq("user_id", token.sub)
+        .eq("type", type)
+        .eq("is_default", true);
+
+      if (updateError) {
+        throw updateError;
+      }
     }
 
     // Créer la nouvelle adresse
-    const newAddress = await Address.create({
-      userId: token.sub,
-      type,
-      firstName,
-      lastName,
-      street,
-      street2,
-      city,
-      state,
-      postalCode,
-      country,
-      isDefault,
-      phoneNumber,
-    });
+    const { data: newAddress, error: insertError } = await supabase
+      .from("addresses")
+      .insert({
+        user_id: token.sub,
+        type,
+        first_name,
+        last_name,
+        street,
+        street2,
+        city,
+        state,
+        postal_code,
+        country,
+        is_default,
+        phone_number,
+      })
+      .select()
+      .single();
+
+    if (insertError) {
+      throw insertError;
+    }
 
     return NextResponse.json(newAddress, { status: 201 });
   } catch (error) {

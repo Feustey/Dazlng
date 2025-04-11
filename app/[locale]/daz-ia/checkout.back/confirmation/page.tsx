@@ -3,19 +3,18 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useCheckoutData } from "@/app/hooks/useCheckoutData";
-import DazIAProgressBar from "@/app/components/daz-ia/ProgressBar";
-import { Button } from "@components/ui/button";
+import { useCheckoutData } from "../../../../hooks/useCheckoutData";
+import DazIAProgressBar from "@/components/daz-ia/ProgressBar";
+import Button from "@/components/ui/button";
 import { Check, ChevronLeft, Download } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
+import Card, {
   CardHeader,
   CardTitle,
-} from "@/app/components/ui/card";
-import { formatPrice } from "@/app/lib/utils";
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { cn, formatPrice } from "../../../../lib/utils";
 
 export default function DazIACheckoutConfirmationPage() {
   const router = useRouter();

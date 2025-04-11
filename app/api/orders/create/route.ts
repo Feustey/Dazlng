@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "@/app/lib/db";
-import Order from "@/app/models/Order";
-import { Product } from "@/app/models/Product";
+import { supabase } from "../../../lib/supabase";
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,12 +12,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    await connectToDatabase();
-
     // Vérifier que tous les produits existent
     for (const item of items) {
-      const product = await Product.findById(item.productId);
-      if (!product) {
+      const { data: product, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("id", item.productId)
+        .single();
+
+      if (error || !product) {
         return NextResponse.json(
           { error: `Produit non trouvé: ${item.productId}` },
           { status: 404 }
@@ -28,16 +29,24 @@ export async function POST(req: NextRequest) {
     }
 
     // Créer la commande
-    const order = await Order.create({
-      userId,
-      items: items.map((item: any) => ({
-        productId: item.productId,
-        quantity: item.quantity,
-        price: item.price,
-      })),
-      total,
-      status: "pending",
-    });
+    const { data: order, error } = await supabase
+      .from("orders")
+      .insert({
+        user_id: userId,
+        items: items.map((item: any) => ({
+          product_id: item.productId,
+          quantity: item.quantity,
+          price: item.price,
+        })),
+        total,
+        status: "pending",
+      })
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
 
     return NextResponse.json({
       message: "Commande créée avec succès",

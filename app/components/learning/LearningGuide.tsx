@@ -3,9 +3,9 @@
 import React, { useState, FC } from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { Card } from "../ui/card";
+import Card from "@/components/ui/card";
+import Button from "@/components/ui/button";
 import { Progress } from "../ui/progress";
-import { Button } from "../ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import type { ReactNode } from "react";
 

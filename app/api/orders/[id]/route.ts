@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "@/app/lib/db";
-import Order from "@/app/models/Order";
+import { supabase } from "../../../lib/supabase";
 
 // GET /api/orders/[id] - Récupérer une commande spécifique
 export async function GET(
@@ -8,11 +7,18 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectToDatabase();
-
     const orderId = params.id;
 
-    const order = await Order.findById(orderId);
+    const { data: order, error } = await supabase
+      .from("orders")
+      .select("*")
+      .eq("id", orderId)
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
     if (!order) {
       return NextResponse.json(
         { error: "Commande non trouvée" },
@@ -33,14 +39,21 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectToDatabase();
-
     const orderId = params.id;
     const body = await req.json();
     const { status, paymentStatus, trackingNumber, notes } = body;
 
     // Vérifier si la commande existe
-    const order = await Order.findById(orderId);
+    const { data: order, error: getError } = await supabase
+      .from("orders")
+      .select("*")
+      .eq("id", orderId)
+      .single();
+
+    if (getError) {
+      throw getError;
+    }
+
     if (!order) {
       return NextResponse.json(
         { error: "Commande non trouvée" },
@@ -51,16 +64,22 @@ export async function PUT(
     // Préparer les données de mise à jour
     const updateData: any = {};
     if (status) updateData.status = status;
-    if (paymentStatus) updateData.paymentStatus = paymentStatus;
+    if (paymentStatus) updateData.payment_status = paymentStatus;
     if (trackingNumber !== undefined)
-      updateData.trackingNumber = trackingNumber;
+      updateData.tracking_number = trackingNumber;
     if (notes !== undefined) updateData.notes = notes;
 
     // Mettre à jour la commande
-    const updatedOrder = await Order.findByIdAndUpdate(orderId, updateData, {
-      new: true,
-      runValidators: true,
-    });
+    const { data: updatedOrder, error: updateError } = await supabase
+      .from("orders")
+      .update(updateData)
+      .eq("id", orderId)
+      .select()
+      .single();
+
+    if (updateError) {
+      throw updateError;
+    }
 
     return NextResponse.json(updatedOrder);
   } catch (error) {
@@ -75,12 +94,19 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectToDatabase();
-
     const orderId = params.id;
 
     // Vérifier si la commande existe
-    const order = await Order.findById(orderId);
+    const { data: order, error: getError } = await supabase
+      .from("orders")
+      .select("*")
+      .eq("id", orderId)
+      .single();
+
+    if (getError) {
+      throw getError;
+    }
+
     if (!order) {
       return NextResponse.json(
         { error: "Commande non trouvée" },
@@ -100,7 +126,14 @@ export async function DELETE(
     }
 
     // Supprimer la commande
-    await Order.findByIdAndDelete(orderId);
+    const { error: deleteError } = await supabase
+      .from("orders")
+      .delete()
+      .eq("id", orderId);
+
+    if (deleteError) {
+      throw deleteError;
+    }
 
     return NextResponse.json(
       { message: "Commande supprimée avec succès" },

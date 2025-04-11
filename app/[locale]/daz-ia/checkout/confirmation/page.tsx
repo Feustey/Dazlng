@@ -3,11 +3,18 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import DazIAProgressBar from "@/app/components/daz-ia/ProgressBar";
-import Button from "@components/ui/button";
+import { useCheckoutData } from "@/hooks/useCheckoutData";
+import DazIAProgressBar from "@/components/daz-ia/ProgressBar";
+import Button from "@/components/ui/button";
 import { Check, ChevronLeft, Download } from "lucide-react";
-import Card from "@/app/components/ui/card";
-import { CardContent, CardHeader, CardTitle } from "@/app/components/ui/card";
+import Card, {
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { cn, formatPrice } from "@/lib/utils";
 import { supabase } from "@/utils/supabase";
 import { toast } from "sonner";
 

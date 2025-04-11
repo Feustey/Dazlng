@@ -1,20 +1,21 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
+import Card, {
   CardHeader,
   CardTitle,
-} from "@/app/components/ui/card";
-import { Button } from "@/app/components/ui/button";
-import { useNodeInfo } from "@/app/hooks/useNodeInfo";
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "../components/ui/card";
+import Button from "../components/ui/button";
+import { useNodeInfo } from "../hooks/useNodeInfo";
 import Link from "next/link";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/app/components/ui/tooltip";
+} from "../components/ui/tooltip";
 import { InfoIcon } from "lucide-react";
 
 const LearnPage = () => {

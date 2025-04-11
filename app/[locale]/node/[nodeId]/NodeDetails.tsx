@@ -2,16 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Card from "../../../components/ui/card";
+import Card from "@/components/ui/card";
 import {
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../../components/ui/card";
-import Button from "../../../components/ui/button";
-import { useToast } from "../../../components/ui/use-toast";
+} from "@/components/ui/card";
+import Button from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 import {
   BarChart,
   Bar,

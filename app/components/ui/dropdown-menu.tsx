@@ -3,12 +3,26 @@
 import * as React from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { Check, ChevronRight, Circle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 
 import { cn } from "../../lib/utils";
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
 
-const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
+const DropdownMenuTrigger = React.forwardRef<
+  HTMLButtonElement,
+  React.ButtonHTMLAttributes<HTMLButtonElement>
+>(({ className, ...props }, ref) => (
+  <DropdownMenuPrimitive.Trigger asChild>
+    <Button
+      className={cn(buttonVariants({ className }))}
+      ref={ref}
+      {...props}
+    />
+  </DropdownMenuPrimitive.Trigger>
+));
+DropdownMenuTrigger.displayName = "DropdownMenuTrigger";
 
 const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 

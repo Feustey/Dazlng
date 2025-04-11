@@ -3,15 +3,16 @@
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import PageContainer from "@/app/components/layout/PageContainer";
-import Card, {
+import PageContainer from "@/components/layout/PageContainer";
+import Card from "@/components/ui/card";
+import {
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
   CardFooter,
-} from "@/app/components/ui/card";
-import Button from "@/app/components/ui/button";
+} from "@/components/ui/card";
+import Button from "@/components/ui/button";
 import {
   Brain,
   Zap,
@@ -25,13 +26,8 @@ import {
   BarChart3,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { Alert, AlertDescription, AlertTitle } from "@/app/components/ui/alert";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/app/components/ui/tabs";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 
 export default function DazIAPage() {

@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { Card } from "../ui/card";
+import * as React from "react";
+import Card from "../ui/card";
 
 export const LightningNetworkGuide = () => {
   const content = {

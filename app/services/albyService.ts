@@ -1,6 +1,6 @@
 import { Client, auth } from "@getalby/sdk";
 import { envVars } from "@/app/lib/env";
-import { supabase } from "@/app/lib/supabase";
+import { supabase } from "../lib/supabase";
 import { User, CheckoutSession } from "@/app/lib/models";
 import crypto from "crypto";
 

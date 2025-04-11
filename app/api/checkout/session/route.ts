@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/dbConnect";
-import CheckoutSession from "@/models/CheckoutSession";
-import { auth } from "@/app/lib/auth";
+import { supabase } from "../../../lib/supabase";
+import { auth } from "../../../lib/auth";
 
 export async function POST(req: Request) {
   try {
@@ -13,13 +12,20 @@ export async function POST(req: Request) {
       );
     }
 
-    await dbConnect();
     const data = await req.json();
 
-    const checkoutSession = await CheckoutSession.create({
-      userId: session.user.id,
-      ...data,
-    });
+    const { data: checkoutSession, error } = await supabase
+      .from("checkout_sessions")
+      .insert({
+        userId: session.user.id,
+        ...data,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
 
     return NextResponse.json(checkoutSession);
   } catch (error) {
@@ -41,7 +47,6 @@ export async function GET(req: Request) {
       );
     }
 
-    await dbConnect();
     const { searchParams } = new URL(req.url);
     const sessionId = searchParams.get("id");
 
@@ -52,10 +57,16 @@ export async function GET(req: Request) {
       );
     }
 
-    const checkoutSession = await CheckoutSession.findOne({
-      _id: sessionId,
-      userId: session.user.id,
-    });
+    const { data: checkoutSession, error } = await supabase
+      .from("checkout_sessions")
+      .select("*")
+      .eq("id", sessionId)
+      .eq("userId", session.user.id)
+      .single();
+
+    if (error) {
+      throw error;
+    }
 
     if (!checkoutSession) {
       return NextResponse.json(
@@ -84,7 +95,6 @@ export async function PATCH(req: Request) {
       );
     }
 
-    await dbConnect();
     const { searchParams } = new URL(req.url);
     const sessionId = searchParams.get("id");
     const data = await req.json();
@@ -96,14 +106,17 @@ export async function PATCH(req: Request) {
       );
     }
 
-    const checkoutSession = await CheckoutSession.findOneAndUpdate(
-      {
-        _id: sessionId,
-        userId: session.user.id,
-      },
-      { $set: data },
-      { new: true }
-    );
+    const { data: checkoutSession, error } = await supabase
+      .from("checkout_sessions")
+      .update(data)
+      .eq("id", sessionId)
+      .eq("userId", session.user.id)
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
 
     if (!checkoutSession) {
       return NextResponse.json(

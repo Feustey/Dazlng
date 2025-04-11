@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AlbyWebhookService } from "@/services/albyWebhook";
 import Order from "@/models/Order";
+import { supabase } from "../../../lib/supabase";
 
 export async function POST(req: NextRequest) {
   try {

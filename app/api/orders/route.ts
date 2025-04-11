@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "@/app/lib/db";
-import Order from "@/app/models/Order";
+import { supabase } from "../../lib/supabase";
 import { generateId } from "@/app/utils/id";
 
 // Marquer cette route comme dynamique
@@ -19,9 +18,15 @@ export async function GET(request: Request) {
       );
     }
 
-    await connectToDatabase();
+    const { data: orders, error } = await supabase
+      .from("orders")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
 
-    const orders = await Order.find({ userId }).sort({ createdAt: -1 });
+    if (error) {
+      throw error;
+    }
 
     return NextResponse.json(orders);
   } catch (error) {
@@ -46,13 +51,20 @@ export async function POST(request: Request) {
       );
     }
 
-    await connectToDatabase();
-    const order = await Order.create({
-      userId,
-      items,
-      totalAmount,
-      status: "pending",
-    });
+    const { data: order, error } = await supabase
+      .from("orders")
+      .insert({
+        user_id: userId,
+        items,
+        total_amount: totalAmount,
+        status: "pending",
+      })
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
 
     return NextResponse.json(order, { status: 201 });
   } catch (error) {

@@ -2,27 +2,31 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, usePathname, useParams } from "next/navigation";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { useAlert } from "../contexts/AlertContext";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Mail, Lock, User, Shield, Check, X } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useAuth } from "../contexts/AuthContext";
-import { Alert, AlertDescription } from "./ui/alert";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import {
+  Button,
+  Input,
+  Label,
+  Alert,
+  AlertDescription,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "./ui/card";
+  Progress,
+  Checkbox,
+} from "@/components/ui";
+import { useAlert } from "../contexts/AlertContext";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, Mail, Lock, User, Shield, Check, X } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useAuth } from "../contexts/AuthContext";
 import { Icons } from "./ui/icons";
-import { Progress } from "./ui/progress";
-import { Checkbox } from "./ui/checkbox";
 import Image from "next/image";
 
 const tabVariants = {

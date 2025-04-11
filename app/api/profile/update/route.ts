@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "@/app/lib/db";
-import User, { IUser } from "@/models/User";
+import { supabase } from "../../../lib/supabase";
 
 export async function PUT(req: NextRequest) {
   try {
@@ -14,11 +13,14 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    await connectToDatabase();
-
     // Vérifier si l'utilisateur existe
-    const user = await User.findById(userId);
-    if (!user) {
+    const { data: user, error: getUserError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", userId)
+      .single();
+
+    if (getUserError || !user) {
       return NextResponse.json(
         { error: "Utilisateur non trouvé" },
         { status: 404 }
@@ -27,12 +29,18 @@ export async function PUT(req: NextRequest) {
 
     // Vérifier si l'email est déjà utilisé par un autre utilisateur
     if (email && email !== user.email) {
-      const existingUser = (await User.findOne({ email })) as IUser | null;
-      if (
-        existingUser &&
-        existingUser._id &&
-        existingUser._id.toString() !== userId
-      ) {
+      const { data: existingUser, error: emailCheckError } = await supabase
+        .from("users")
+        .select("*")
+        .eq("email", email)
+        .neq("id", userId)
+        .single();
+
+      if (emailCheckError && emailCheckError.code !== "PGRST116") {
+        throw emailCheckError;
+      }
+
+      if (existingUser) {
         return NextResponse.json(
           { error: "Cet email est déjà utilisé" },
           { status: 400 }
@@ -45,10 +53,16 @@ export async function PUT(req: NextRequest) {
     if (name) updateData.name = name;
     if (email) updateData.email = email;
 
-    const updatedUser = (await User.findByIdAndUpdate(userId, updateData, {
-      new: true,
-      runValidators: true,
-    })) as IUser | null;
+    const { data: updatedUser, error: updateError } = await supabase
+      .from("users")
+      .update(updateData)
+      .eq("id", userId)
+      .select()
+      .single();
+
+    if (updateError) {
+      throw updateError;
+    }
 
     if (!updatedUser) {
       return NextResponse.json(
@@ -59,7 +73,7 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json({
       user: {
-        id: updatedUser._id,
+        id: updatedUser.id,
         pubkey: updatedUser.pubkey,
         name: updatedUser.name,
         email: updatedUser.email,

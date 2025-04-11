@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Card } from "./ui/card";
+import * as React from "react";
+import Card from "./ui/card";
 
 interface Channel {
   id: string;

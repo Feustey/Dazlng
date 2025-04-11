@@ -9,7 +9,7 @@ import { Button } from "../components/ui/button";
 import { useLanguage } from "../contexts/LanguageContext";
 import { toast } from "sonner";
 import { Bot, Send, User, Zap, Star, Quote } from "lucide-react";
-import { cn } from "@/app/lib/utils";
+import { cn } from "../lib/utils";
 
 interface Message {
   id: string;

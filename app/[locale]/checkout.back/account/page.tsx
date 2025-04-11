@@ -3,11 +3,8 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Button } from "../../../components/ui/button";
-import { Input } from "../../../components/ui/input";
-import { Card } from "../../../components/ui/card";
+import { Button, Input, Card, Checkbox } from "@/components/ui";
 import { useParams } from "next/navigation";
-import { Checkbox } from "../../../components/ui/checkbox";
 import { Mail, Lock, User } from "lucide-react";
 
 export default function AccountPage() {

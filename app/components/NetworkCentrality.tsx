@@ -1,5 +1,6 @@
-import Card from "./ui/card";
-import { CardContent, CardHeader, CardTitle } from "./ui/card";
+import * as React from "react";
+import Card from "@/components/ui/card";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,

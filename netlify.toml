@@ -1,6 +1,6 @@
 [build]
   command = "npm run build"
-  publish = "out"
+  publish = ".next"
 
 [build.environment]
   NEXT_PUBLIC_ALBY_PUBLIC_KEY = ""
@@ -58,3 +58,10 @@
   for = "/images/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+[template.environment]
+  NEXTAUTH_URL = ""
+  NEXTAUTH_SECRET = ""
+  SUPABASE_URL = ""
+  SUPABASE_ANON_KEY = ""
+  SUPABASE_SERVICE_ROLE_KEY = ""

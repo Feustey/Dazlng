@@ -1,14 +1,16 @@
-import { connectToDatabase } from "./db";
+import { supabase } from "./supabase";
 
 export async function initializeServer() {
   try {
-    await connectToDatabase();
+    // Vérifier la connexion à Supabase
+    const { data, error } = await supabase.from("config").select("*").limit(1);
+
+    if (error) {
+      throw error;
+    }
+
     console.log("Serveur initialisé avec succès");
-  } catch (err) {
-    const error =
-      err instanceof Error
-        ? err
-        : new Error("Une erreur inconnue s'est produite");
+  } catch (error) {
     console.error("Erreur lors de l'initialisation du serveur:", error);
     throw error;
   }

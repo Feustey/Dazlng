@@ -1,8 +1,9 @@
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
+import ClientLayout from "../../../ClientLayout";
 
 export const metadata: Metadata = {
-  title: 'Paramètres - Lightning Manager',
-  description: 'Gérez les paramètres de votre application Lightning Manager',
+  title: "Settings - Dazling",
+  description: "Configurez vos paramètres de l'application.",
 };
 
 export default function SettingsLayout({
@@ -10,5 +11,5 @@ export default function SettingsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
-} 
+  return <ClientLayout>{children}</ClientLayout>;
+}

@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { NetworkStats } from "../../types/network";
 import { searchNodes } from "../../lib/api-client";
-import BigPlayers from "../../components/BigPlayers";
+import BigPlayers from "@/components/BigPlayers";
 import {
   Select,
   SelectContent,

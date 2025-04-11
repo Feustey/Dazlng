@@ -1,16 +1,15 @@
-import Card from "@/components/ui/card";
-import Button from "@/components/ui/button";
-import {
+import { useTranslations } from "next-intl";
+import PageContainer from "@/components/layout/PageContainer";
+import Card, {
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import Button from "@/components/ui/button";
 import { Shield, Rocket, ArrowRight, Package, Zap, Clock } from "lucide-react";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
-import PageContainer from "@/app/components/layout/PageContainer";
 
 export default function DazboxPage({
   params: { locale },

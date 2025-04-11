@@ -1,5 +1,6 @@
-import { Card } from "./ui/card";
-import { Button } from "./ui/button";
+import * as React from "react";
+import Card from "@/components/ui/card";
+import Button from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 
 interface Node {

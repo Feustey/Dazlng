@@ -4,33 +4,28 @@ export const dynamic = "force-dynamic";
 
 import React from "react";
 import { useTranslations } from "next-intl";
-import PageContainer from "@/app/components/layout/PageContainer";
-import Card from "@/app/components/ui/card";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/app/components/ui/tabs";
-import { LightningNetworkGuide } from "../../components/learning/LightningNetworkGuide";
-import { TransactionVisualizer } from "../../components/transactions/TransactionVisualizer";
-import LearningResources from "../../components/learning/LearningResources";
-import {
-  Zap,
-  BookOpen,
-  PlayCircle,
-  FileText,
-  LineChart,
-  Shield,
-  BarChart,
-  Wallet,
-} from "lucide-react";
-import {
+import PageContainer from "@/components/layout/PageContainer";
+import Card, {
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
-} from "@/app/components/ui/card";
+  CardFooter,
+} from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+  BookOpen,
+  Zap,
+  LineChart,
+  BarChart,
+  Wallet,
+  Shield,
+  PlayCircle,
+  FileText,
+} from "lucide-react";
+import { LightningNetworkGuide } from "@/components/learning/LightningNetworkGuide";
+import { TransactionVisualizer } from "@/components/transactions/TransactionVisualizer";
+import LearningResources from "@/components/learning/LearningResources";
 
 export default function LearnPage() {
   const t = useTranslations("pages.learn");

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "@/app/lib/db";
-import User from "@/models/User";
-import bcrypt from "bcryptjs";
+import { supabase } from "../../../lib/supabase";
+import { getToken } from "next-auth/jwt";
 
 // GET /api/users/[id] - Récupérer un utilisateur spécifique
 export async function GET(
@@ -9,11 +8,42 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectToDatabase();
+    const token = await getToken({ req });
+    if (!token) {
+      return NextResponse.json(
+        { error: "Vous devez être connecté" },
+        { status: 401 }
+      );
+    }
 
-    const userId = params.id;
+    // Vérifier si l'utilisateur est admin ou s'il s'agit de son propre compte
+    if (token.role !== "admin" && token.sub !== params.id) {
+      return NextResponse.json(
+        { error: "Accès non autorisé" },
+        { status: 403 }
+      );
+    }
 
-    const user = await User.findById(userId).select("-password");
+    const { data: user, error } = await supabase
+      .from("users")
+      .select(
+        `
+        *,
+        profile:profiles (
+          phone_number,
+          bio,
+          preferences,
+          social_links
+        )
+      `
+      )
+      .eq("id", params.id)
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
     if (!user) {
       return NextResponse.json(
         { error: "Utilisateur non trouvé" },
@@ -34,33 +64,80 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectToDatabase();
+    const token = await getToken({ req });
+    if (!token) {
+      return NextResponse.json(
+        { error: "Vous devez être connecté" },
+        { status: 401 }
+      );
+    }
 
-    const userId = params.id;
+    // Vérifier si l'utilisateur est admin ou s'il s'agit de son propre compte
+    if (token.role !== "admin" && token.sub !== params.id) {
+      return NextResponse.json(
+        { error: "Accès non autorisé" },
+        { status: 403 }
+      );
+    }
+
     const body = await req.json();
-    const { firstName, lastName, email, password } = body;
+    const { email, role, first_name, last_name } = body;
 
     // Vérifier si l'utilisateur existe
-    const user = await User.findById(userId);
-    if (!user) {
+    const { data: existingUser, error: checkError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", params.id)
+      .single();
+
+    if (checkError) {
+      throw checkError;
+    }
+
+    if (!existingUser) {
       return NextResponse.json(
         { error: "Utilisateur non trouvé" },
         { status: 404 }
       );
     }
 
-    // Préparer les données de mise à jour
-    const updateData: any = {};
-    if (firstName) updateData.firstName = firstName;
-    if (lastName) updateData.lastName = lastName;
-    if (email) updateData.email = email;
-    if (password) updateData.password = await bcrypt.hash(password, 10);
+    // Vérifier si l'email est déjà utilisé par un autre utilisateur
+    if (email && email !== existingUser.email) {
+      const { data: emailUser, error: emailCheckError } = await supabase
+        .from("users")
+        .select("*")
+        .eq("email", email)
+        .neq("id", params.id)
+        .single();
+
+      if (emailCheckError && emailCheckError.code !== "PGRST116") {
+        throw emailCheckError;
+      }
+
+      if (emailUser) {
+        return NextResponse.json(
+          { error: "Cet email est déjà utilisé" },
+          { status: 400 }
+        );
+      }
+    }
 
     // Mettre à jour l'utilisateur
-    const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
-      new: true,
-      runValidators: true,
-    }).select("-password");
+    const { data: updatedUser, error: updateError } = await supabase
+      .from("users")
+      .update({
+        email,
+        role,
+        first_name,
+        last_name,
+      })
+      .eq("id", params.id)
+      .select()
+      .single();
+
+    if (updateError) {
+      throw updateError;
+    }
 
     return NextResponse.json(updatedUser);
   } catch (error) {
@@ -75,12 +152,33 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectToDatabase();
+    const token = await getToken({ req });
+    if (!token) {
+      return NextResponse.json(
+        { error: "Vous devez être connecté" },
+        { status: 401 }
+      );
+    }
 
-    const userId = params.id;
+    // Vérifier si l'utilisateur est admin
+    if (token.role !== "admin") {
+      return NextResponse.json(
+        { error: "Accès non autorisé" },
+        { status: 403 }
+      );
+    }
 
     // Vérifier si l'utilisateur existe
-    const user = await User.findById(userId);
+    const { data: user, error: checkError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", params.id)
+      .single();
+
+    if (checkError) {
+      throw checkError;
+    }
+
     if (!user) {
       return NextResponse.json(
         { error: "Utilisateur non trouvé" },
@@ -89,7 +187,14 @@ export async function DELETE(
     }
 
     // Supprimer l'utilisateur
-    await User.findByIdAndDelete(userId);
+    const { error: deleteError } = await supabase
+      .from("users")
+      .delete()
+      .eq("id", params.id);
+
+    if (deleteError) {
+      throw deleteError;
+    }
 
     return NextResponse.json(
       { message: "Utilisateur supprimé avec succès" },

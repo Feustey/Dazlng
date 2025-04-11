@@ -1,21 +1,18 @@
-import { router, publicProcedure } from "@/app/lib/trpc/trpc";
+import { router, publicProcedure } from "../lib/trpc/trpc";
 import { z } from "zod";
-
-const messageSchema = z.object({
-  content: z.string(),
-  role: z.enum(["user", "assistant"]),
-});
-
-type MessageInput = z.infer<typeof messageSchema>;
 
 export const chatRouter = router({
   sendMessage: publicProcedure
-    .input(messageSchema)
-    .mutation(async ({ input }: { input: MessageInput }) => {
-      // Implémentez la logique d'envoi de message ici
+    .input(
+      z.object({
+        message: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      // Implémentation du chat à venir
       return {
         success: true,
-        message: "Message envoyé avec succès",
+        message: `Message reçu: ${input.message}`,
       };
     }),
 });

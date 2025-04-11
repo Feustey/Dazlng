@@ -8,10 +8,10 @@ import { NextIntlClientProvider } from "next-intl";
 import { Toaster } from "sonner";
 
 // Imports de composants
-import { ThemeProvider } from "../components/ThemeProvider";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import ClientLayout from "../ClientLayout";
-import Navigation from "../components/Navigation";
-import { Footer } from "../components/Footer";
+import Navigation from "@/components/Navigation";
+import { Footer } from "@/components/Footer";
 import { Providers } from "./providers";
 
 interface RootLayoutClientProps {

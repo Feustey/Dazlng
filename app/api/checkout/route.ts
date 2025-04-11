@@ -1,11 +1,8 @@
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
-import mongoose from "mongoose";
-import { connectToDatabase } from "../../lib/mongodb";
 import { authOptions } from "../../lib/auth";
 import { getToken } from "next-auth/jwt";
-import CheckoutSession from "@/models/CheckoutSession";
-import { supabase } from "@lib/supabase";
+import { supabase } from "../../lib/supabase";
 
 // Marquer cette route comme dynamique
 export const dynamic = "force-dynamic";
@@ -38,8 +35,6 @@ export async function POST(request: Request) {
 
 export async function GET(req: Request) {
   try {
-    await connectToDatabase();
-
     const token = await getToken({ req });
     if (!token) {
       return NextResponse.json(
@@ -58,17 +53,16 @@ export async function GET(req: Request) {
       );
     }
 
-    if (!mongoose.Types.ObjectId.isValid(sessionId)) {
-      return NextResponse.json(
-        { error: "ID de session invalide" },
-        { status: 400 }
-      );
-    }
+    const { data: checkoutSession, error } = await supabase
+      .from("checkout_sessions")
+      .select("*")
+      .eq("id", sessionId)
+      .eq("userId", token.sub)
+      .single();
 
-    const checkoutSession = await CheckoutSession.findOne({
-      _id: sessionId,
-      userId: token.sub,
-    });
+    if (error) {
+      throw error;
+    }
 
     if (!checkoutSession) {
       return NextResponse.json(
@@ -95,8 +89,6 @@ export async function GET(req: Request) {
 
 export async function PATCH(req: Request) {
   try {
-    await connectToDatabase();
-
     const token = await getToken({ req });
     if (!token) {
       return NextResponse.json(
@@ -115,21 +107,17 @@ export async function PATCH(req: Request) {
       );
     }
 
-    if (!mongoose.Types.ObjectId.isValid(sessionId)) {
-      return NextResponse.json(
-        { error: "ID de session invalide" },
-        { status: 400 }
-      );
-    }
+    const { data: checkoutSession, error } = await supabase
+      .from("checkout_sessions")
+      .update({ status })
+      .eq("id", sessionId)
+      .eq("userId", token.sub)
+      .select()
+      .single();
 
-    const checkoutSession = await CheckoutSession.findOneAndUpdate(
-      {
-        _id: sessionId,
-        userId: token.sub,
-      },
-      { status },
-      { new: true }
-    );
+    if (error) {
+      throw error;
+    }
 
     if (!checkoutSession) {
       return NextResponse.json(

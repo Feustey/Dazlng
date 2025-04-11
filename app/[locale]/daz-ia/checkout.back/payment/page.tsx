@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Card, CardContent } from "../../../../components/ui/card";
 import DazIAProgressBar from "../../../../components/daz-ia/ProgressBar";
-import LightningPayment from "@/app/components/LightningPayment";
+import LightningPayment from "../../../../components/LightningPayment";
 import { toast } from "sonner";
 
 export default function PaymentPage() {

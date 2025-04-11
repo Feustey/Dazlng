@@ -70,3 +70,42 @@ export async function getNetworkStats(): Promise<NetworkStats> {
     throw error;
   }
 }
+
+export async function getPeersOfPeers(nodeId: string): Promise<any[]> {
+  try {
+    const { data, error } = await supabase
+      .from("node_peers")
+      .select("*")
+      .eq("node_id", nodeId);
+
+    if (error) {
+      console.error("Error fetching peers of peers:", error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error("Error in getPeersOfPeers:", error);
+    return [];
+  }
+}
+
+export async function getHistoricalStats(days: number = 30): Promise<any[]> {
+  try {
+    const { data, error } = await supabase
+      .from("network_stats")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(days);
+
+    if (error) {
+      console.error("Error fetching historical stats:", error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error("Error in getHistoricalStats:", error);
+    return [];
+  }
+}

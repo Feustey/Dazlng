@@ -1,24 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Address } from "@/models";
-import { connectToDatabase } from "../../../lib/db";
-import { supabase } from "@lib/supabase";
+import { supabase } from "../../../lib/supabase";
+import { getToken } from "next-auth/jwt";
 
 // GET /api/addresses/[id] - Récupérer une adresse spécifique
 export async function GET(
-  request: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const { data, error } = await supabase
+    const token = await getToken({ req });
+    if (!token) {
+      return NextResponse.json(
+        { error: "Vous devez être connecté" },
+        { status: 401 }
+      );
+    }
+
+    const { data: address, error } = await supabase
       .from("addresses")
       .select("*")
       .eq("id", params.id)
+      .eq("user_id", token.sub)
       .single();
 
-    if (error) throw error;
-    return NextResponse.json(data);
+    if (error) {
+      throw error;
+    }
+
+    if (!address) {
+      return NextResponse.json(
+        { error: "Adresse non trouvée" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(address);
   } catch (error) {
-    return NextResponse.json({ error: "Address not found" }, { status: 404 });
+    console.error("Erreur lors de la récupération de l'adresse:", error);
+    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }
 
@@ -28,27 +47,42 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectToDatabase();
+    const token = await getToken({ req });
+    if (!token) {
+      return NextResponse.json(
+        { error: "Vous devez être connecté" },
+        { status: 401 }
+      );
+    }
 
-    const addressId = params.id;
     const body = await req.json();
     const {
       type,
-      firstName,
-      lastName,
+      first_name,
+      last_name,
       street,
       street2,
       city,
       state,
-      postalCode,
+      postal_code,
       country,
-      isDefault,
-      phoneNumber,
+      is_default,
+      phone_number,
     } = body;
 
-    // Vérifier si l'adresse existe
-    const address = await Address.findById(addressId);
-    if (!address) {
+    // Vérifier si l'adresse existe et appartient à l'utilisateur
+    const { data: existingAddress, error: checkError } = await supabase
+      .from("addresses")
+      .select("*")
+      .eq("id", params.id)
+      .eq("user_id", token.sub)
+      .single();
+
+    if (checkError) {
+      throw checkError;
+    }
+
+    if (!existingAddress) {
       return NextResponse.json(
         { error: "Adresse non trouvée" },
         { status: 404 }
@@ -56,38 +90,44 @@ export async function PUT(
     }
 
     // Si c'est l'adresse par défaut, mettre à jour les autres adresses
-    if (isDefault) {
-      await Address.updateMany(
-        {
-          userId: address.userId,
-          type,
-          isDefault: true,
-          _id: { $ne: addressId },
-        },
-        { isDefault: false }
-      );
+    if (is_default) {
+      const { error: updateError } = await supabase
+        .from("addresses")
+        .update({ is_default: false })
+        .eq("user_id", token.sub)
+        .eq("type", type)
+        .eq("is_default", true)
+        .neq("id", params.id);
+
+      if (updateError) {
+        throw updateError;
+      }
     }
 
-    // Préparer les données de mise à jour
-    const updateData: any = {};
-    if (type) updateData.type = type;
-    if (firstName) updateData.firstName = firstName;
-    if (lastName) updateData.lastName = lastName;
-    if (street) updateData.street = street;
-    if (street2 !== undefined) updateData.street2 = street2;
-    if (city) updateData.city = city;
-    if (state) updateData.state = state;
-    if (postalCode) updateData.postalCode = postalCode;
-    if (country) updateData.country = country;
-    if (isDefault !== undefined) updateData.isDefault = isDefault;
-    if (phoneNumber) updateData.phoneNumber = phoneNumber;
-
     // Mettre à jour l'adresse
-    const updatedAddress = await Address.findByIdAndUpdate(
-      addressId,
-      updateData,
-      { new: true, runValidators: true }
-    );
+    const { data: updatedAddress, error: updateError } = await supabase
+      .from("addresses")
+      .update({
+        type,
+        first_name,
+        last_name,
+        street,
+        street2,
+        city,
+        state,
+        postal_code,
+        country,
+        is_default,
+        phone_number,
+      })
+      .eq("id", params.id)
+      .eq("user_id", token.sub)
+      .select()
+      .single();
+
+    if (updateError) {
+      throw updateError;
+    }
 
     return NextResponse.json(updatedAddress);
   } catch (error) {
@@ -102,12 +142,26 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectToDatabase();
+    const token = await getToken({ req });
+    if (!token) {
+      return NextResponse.json(
+        { error: "Vous devez être connecté" },
+        { status: 401 }
+      );
+    }
 
-    const addressId = params.id;
+    // Vérifier si l'adresse existe et appartient à l'utilisateur
+    const { data: address, error: checkError } = await supabase
+      .from("addresses")
+      .select("*")
+      .eq("id", params.id)
+      .eq("user_id", token.sub)
+      .single();
 
-    // Vérifier si l'adresse existe
-    const address = await Address.findById(addressId);
+    if (checkError) {
+      throw checkError;
+    }
+
     if (!address) {
       return NextResponse.json(
         { error: "Adresse non trouvée" },
@@ -116,7 +170,15 @@ export async function DELETE(
     }
 
     // Supprimer l'adresse
-    await Address.findByIdAndDelete(addressId);
+    const { error: deleteError } = await supabase
+      .from("addresses")
+      .delete()
+      .eq("id", params.id)
+      .eq("user_id", token.sub);
+
+    if (deleteError) {
+      throw deleteError;
+    }
 
     return NextResponse.json(
       { message: "Adresse supprimée avec succès" },

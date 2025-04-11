@@ -3,13 +3,13 @@
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import PageContainer from "@/components/layout/PageContainer";
-import Card from "@/components/ui/card";
-import {
+import Card, {
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
-} from "@/app/components/ui/card";
+  CardFooter,
+} from "@/components/ui/card";
 import {
   Zap,
   Shield,

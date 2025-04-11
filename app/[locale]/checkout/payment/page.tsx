@@ -1,100 +1,95 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useParams, useRouter } from "next/navigation";
-import Image from "next/image";
-import ProgressBar from "@components/checkout/ProgressBar";
-import Button from "@/app/components/ui/button";
+import { useCheckoutData } from "../../../hooks/useCheckoutData";
+import ProgressBar from "@/components/checkout/ProgressBar";
+import { Button } from "@/components/ui/button";
 import { Copy, Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import {
-  createInvoice,
-  checkInvoiceStatus,
-} from "../../../services/albyService";
+import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 
 interface Invoice {
   payment_request: string;
-  checking_id: string;
   payment_hash: string;
-  expires_at: string;
+  expires_at: number;
 }
 
 export default function PaymentPage() {
-  const t = useTranslations("Checkout.Payment");
-  const params = useParams();
-  const locale = params?.locale as string;
+  const t = useTranslations("pages.checkout.payment");
   const router = useRouter();
+  const { checkoutData } = useCheckoutData();
   const [invoice, setInvoice] = useState<Invoice | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isPaid, setIsPaid] = useState(false);
   const [isCopying, setIsCopying] = useState(false);
+  const [isPaid, setIsPaid] = useState(false);
+
+  const generateInvoice = useCallback(async () => {
+    try {
+      const response = await fetch("/api/payment/invoice", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          amount: checkoutData.payment?.total,
+          description: "Paiement Daz'IA",
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to generate invoice");
+      }
+
+      const data = await response.json();
+      setInvoice(data);
+    } catch (error) {
+      console.error("Error generating invoice:", error);
+      toast.error(t("error.generateInvoice"));
+    }
+  }, [checkoutData.payment?.total, t]);
 
   useEffect(() => {
-    // Générer la facture
-    const generateInvoice = async () => {
-      try {
-        const res = await fetch("/api/invoice", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            amount: 400000, // 400,000 sats
-            memo: "Commande DazNode",
-          }),
-        });
+    if (!checkoutData.payment) {
+      router.push("/checkout/delivery");
+      return;
+    }
 
-        if (!res.ok)
-          throw new Error("Erreur lors de la génération de la facture");
-
-        const data = await res.json();
-        setInvoice(data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Erreur:", error);
-        toast.error("Erreur lors de la génération de la facture");
-        setIsLoading(false);
-      }
-    };
-
+    // Générer une facture Lightning
     generateInvoice();
-  }, []);
+  }, [checkoutData.payment, generateInvoice, router]);
 
-  useEffect(() => {
-    if (!invoice) return;
+  const checkPaymentStatus = async (paymentHash: string) => {
+    try {
+      const response = await fetch(`/api/payment/status/${paymentHash}`);
+      const data = await response.json();
 
-    const checkPayment = async () => {
-      try {
-        const res = await fetch(
-          `/api/check-payment?payment_hash=${invoice.payment_hash}`
-        );
-        const data = await res.json();
-
-        if (data.paid) {
-          setIsPaid(true);
-          // Rediriger vers la page de confirmation après un court délai
-          setTimeout(() => {
-            router.push(`/${locale}/checkout/confirmation`);
-          }, 2000);
-        }
-      } catch (error) {
-        console.error("Erreur lors de la vérification du paiement:", error);
+      if (data.paid) {
+        setIsPaid(true);
+        toast.success("Paiement reçu !");
+        setTimeout(() => {
+          router.push("/checkout/confirmation");
+        }, 2000);
+      } else if (!data.expired) {
+        // Vérifier à nouveau dans 2 secondes
+        setTimeout(() => checkPaymentStatus(paymentHash), 2000);
       }
-    };
-
-    const interval = setInterval(checkPayment, 5000);
-    return () => clearInterval(interval);
-  }, [invoice, locale, router]);
+    } catch (error) {
+      console.error("Erreur lors de la vérification du paiement:", error);
+    }
+  };
 
   const copyToClipboard = async () => {
     if (!invoice) return;
-    setIsCopying(true);
+
     try {
       await navigator.clipboard.writeText(invoice.payment_request);
-      toast.success("Adresse copiée !");
+      setIsCopying(true);
+      setTimeout(() => setIsCopying(false), 2000);
+      toast.success("Facture copiée !");
     } catch (error) {
-      toast.error("Erreur lors de la copie");
-    } finally {
-      setIsCopying(false);
+      console.error("Erreur lors de la copie:", error);
+      toast.error("Erreur lors de la copie de la facture");
     }
   };
 
@@ -103,16 +98,12 @@ export default function PaymentPage() {
       <ProgressBar />
 
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold gradient-text mb-2">{t("title")}</h1>
-        <p className="text-muted-foreground">{t("bitcoinInstructions")}</p>
+        <h1 className="text-4xl font-bold mb-4">{t("title")}</h1>
+        <p className="text-muted-foreground">{t("description")}</p>
       </div>
 
       <div className="flex flex-col items-center space-y-6">
-        {isLoading ? (
-          <div className="flex items-center justify-center h-64">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
-        ) : invoice ? (
+        {invoice ? (
           <>
             <div className="bg-white p-4 rounded-lg shadow-lg">
               <Image

@@ -8,10 +8,10 @@ import {
 
 export { locales, defaultLocale, localePrefix } from "./i18n.config.base";
 
-export default getRequestConfig(async ({ locale }) => {
+export default getRequestConfig(async ({ requestLocale }) => {
   // Vérifier si la locale est valide
   const currentLocale = (
-    locales.includes(locale as any) ? locale : defaultLocale
+    locales.includes(requestLocale as any) ? requestLocale : defaultLocale
   ) as string;
 
   return {

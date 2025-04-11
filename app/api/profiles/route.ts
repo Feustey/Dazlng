@@ -1,14 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "@/app/lib/db";
-import User from "@/models/User";
-import { Profile } from "@/models";
+import { supabase } from "../../lib/supabase";
 import { getToken } from "next-auth/jwt";
 
 // GET /api/profiles - Récupérer tous les profils (admin seulement)
 export async function GET(req: NextRequest) {
   try {
-    await connectToDatabase();
-
     const token = await getToken({ req });
     if (!token) {
       return NextResponse.json(
@@ -25,10 +21,19 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const profiles = await Profile.find({}).populate(
-      "userId",
-      "firstName lastName email"
-    );
+    const { data: profiles, error } = await supabase.from("profiles").select(`
+        *,
+        user:users (
+          first_name,
+          last_name,
+          email
+        )
+      `);
+
+    if (error) {
+      throw error;
+    }
+
     return NextResponse.json(profiles);
   } catch (error) {
     console.error("Erreur lors de la récupération des profils:", error);
@@ -39,13 +44,20 @@ export async function GET(req: NextRequest) {
 // POST /api/profiles - Créer un nouveau profil
 export async function POST(req: NextRequest) {
   try {
-    await connectToDatabase();
-
     const body = await req.json();
     const { userId, phoneNumber, bio, preferences, socialLinks } = body;
 
     // Vérifier si un profil existe déjà pour cet utilisateur
-    const existingProfile = await Profile.findOne({ userId });
+    const { data: existingProfile, error: checkError } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+
+    if (checkError && checkError.code !== "PGRST116") {
+      throw checkError;
+    }
+
     if (existingProfile) {
       return NextResponse.json(
         { error: "Un profil existe déjà pour cet utilisateur" },
@@ -54,13 +66,21 @@ export async function POST(req: NextRequest) {
     }
 
     // Créer le nouveau profil
-    const newProfile = await Profile.create({
-      userId,
-      phoneNumber,
-      bio,
-      preferences,
-      socialLinks,
-    });
+    const { data: newProfile, error: createError } = await supabase
+      .from("profiles")
+      .insert({
+        user_id: userId,
+        phone_number: phoneNumber,
+        bio,
+        preferences,
+        social_links: socialLinks,
+      })
+      .select()
+      .single();
+
+    if (createError) {
+      throw createError;
+    }
 
     return NextResponse.json(newProfile, { status: 201 });
   } catch (error) {

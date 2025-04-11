@@ -15,10 +15,9 @@ const nextConfig = {
   // Configuration des images
   images: {
     domains: [
-      "localhost",
       "avatars.githubusercontent.com",
-      "getalby.com",
-      "relay.getalby.com",
+      "lh3.googleusercontent.com",
+      "res.cloudinary.com",
     ],
   },
 
@@ -27,8 +26,9 @@ const nextConfig = {
 
   // Désactiver Edge Runtime pour toute l'application
   experimental: {
-    serverComponentsExternalPackages: ["mongoose", "bcryptjs", "jsonwebtoken"],
-    esmExternals: "loose",
+    serverActions: {
+      allowedOrigins: ["localhost:3000"],
+    },
   },
 
   // Configuration spécifique pour le runtime
@@ -37,38 +37,21 @@ const nextConfig = {
   },
 
   // Modifier la configuration webpack pour gérer les modules problématiques
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      // Ne pas inclure mongoose pour les routes Edge
-      config.externals = [
-        ...(config.externals || []),
-        "mongoose",
-        "mongodb",
-        "bcryptjs",
-      ];
-    }
-
-    // Configurer les fallbacks pour les modules problématiques
-    config.resolve.fallback = {
-      ...config.resolve.fallback,
-      fs: false,
-      net: false,
-      tls: false,
-      crypto: false,
-      querystring: false,
-      child_process: false,
-    };
-
-    // Configurer les alias
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      "@": path.join(__dirname, "./app"),
-      "@lib": path.join(__dirname, "./app/lib"),
-      "@components": path.join(__dirname, "./app/components"),
-      "@services": path.join(__dirname, "./app/services"),
-    };
-
+  webpack: (config) => {
+    config.externals = [...config.externals, "bcryptjs"];
     return config;
+  },
+
+  env: {
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+    GITHUB_ID: process.env.GITHUB_ID,
+    GITHUB_SECRET: process.env.GITHUB_SECRET,
+    GOOGLE_ID: process.env.GOOGLE_ID,
+    GOOGLE_SECRET: process.env.GOOGLE_SECRET,
+    SUPABASE_URL: process.env.SUPABASE_URL,
+    SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
   },
 };
 

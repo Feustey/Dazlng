@@ -1,54 +1,44 @@
-import { jest } from "@jest/globals";
-import { CleanupService } from "../../lib/services/cleanupService";
-import { connectToDatabase } from "../../app/lib/mongodb";
-import mongoose from "mongoose";
+import { describe, expect, jest, test } from "@jest/globals";
+import { supabase } from "../../app/lib/supabase";
+import { cleanupExpiredSessions } from "../../app/services/cleanupService";
 
-// Mock MongoDB
-jest.mock("../../app/lib/mongodb");
+// Mock Supabase
+jest.mock("../../app/lib/supabase", () => ({
+  supabase: {
+    from: jest.fn().mockReturnThis(),
+    select: jest.fn().mockReturnThis(),
+    delete: jest.fn().mockReturnThis(),
+    lt: jest.fn().mockReturnThis(),
+  },
+}));
 
-const mockCollection = {
-  deleteMany: jest.fn().mockResolvedValue({ deletedCount: 1 }),
-};
-
-const mockConnection = {
-  collection: jest.fn().mockReturnValue(mockCollection),
-};
-
-(connectToDatabase as jest.Mock).mockResolvedValue(mockConnection);
-
-describe("CleanupService", () => {
-  let cleanupService: CleanupService;
-
+describe("cleanupService", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    cleanupService = CleanupService.getInstance();
   });
 
-  describe("performCleanup", () => {
-    it("devrait supprimer les sessions expirées", async () => {
-      await cleanupService.performCleanup();
-      expect(connectToDatabase).toHaveBeenCalled();
-      expect(mockConnection.collection).toHaveBeenCalledWith("sessions");
-      expect(mockCollection.deleteMany).toHaveBeenCalledWith({
-        expiresAt: {
-          $lt: expect.any(Date),
-        },
-      });
-    });
+  test("should delete expired sessions", async () => {
+    // Arrange
+    const mockNow = new Date();
+    jest.spyOn(global, "Date").mockImplementation(() => mockNow);
+
+    // Act
+    await cleanupExpiredSessions();
+
+    // Assert
+    expect(supabase.from).toHaveBeenCalledWith("sessions");
+    expect(supabase.delete).toHaveBeenCalled();
+    expect(supabase.lt).toHaveBeenCalledWith("expires", mockNow.toISOString());
   });
 
-  describe("cleanupOldData", () => {
-    it("devrait nettoyer les données anciennes", async () => {
-      const result = await cleanupService.cleanupOldData();
-      expect(connectToDatabase).toHaveBeenCalled();
-      expect(result).toEqual({
-        sessionsDeleted: 1,
-      });
+  test("should handle errors gracefully", async () => {
+    // Arrange
+    const mockError = new Error("Database error");
+    (supabase.from as jest.Mock).mockImplementation(() => {
+      throw mockError;
     });
 
-    it("devrait gérer les erreurs de nettoyage", async () => {
-      mockCollection.deleteMany.mockRejectedValueOnce(new Error("DB Error"));
-      await expect(cleanupService.cleanupOldData()).rejects.toThrow("DB Error");
-    });
+    // Act & Assert
+    await expect(cleanupExpiredSessions()).rejects.toThrow(mockError);
   });
 });

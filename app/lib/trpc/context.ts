@@ -1,13 +1,12 @@
-import { inferAsyncReturnType } from "@trpc/server";
 import { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
-import { auth } from "@/app/lib/auth";
+import { getCurrentUser } from "../auth";
 
-export async function createTRPCContext(opts: FetchCreateContextFnOptions) {
-  const session = await auth();
-  return {
-    req: opts.req,
-    session,
-  };
+export async function createContext({
+  req,
+  resHeaders,
+}: FetchCreateContextFnOptions) {
+  const user = await getCurrentUser();
+  return { req, resHeaders, user };
 }
 
-export type Context = inferAsyncReturnType<typeof createTRPCContext>;
+export type Context = Awaited<ReturnType<typeof createContext>>;

@@ -3,14 +3,14 @@
 import { useLocale } from "next-intl";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
-import { useTranslation } from "@/app/hooks/useTranslation";
+import { useTranslation } from "@/hooks/useTranslation";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-} from "@/app/components/ui/dropdown-menu";
+} from "./ui/dropdown-menu";
 
 export function AccountMenu() {
   const { data: session } = useSession();

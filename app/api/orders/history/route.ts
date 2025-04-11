@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
-import { connectToDatabase } from "@/app/lib/db";
-import Order from "@/app/models/Order";
+import { supabase } from "../../../lib/supabase";
 import {
   successResponse,
   errorResponse,
@@ -21,12 +20,16 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    await connectToDatabase();
-
-    const orders = await Order.find({ userId })
-      .sort({ createdAt: -1 })
-      .select("-__v")
+    const { data: orders, error } = await supabase
+      .from("orders")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
       .limit(50); // Limiter le nombre de résultats pour optimiser les performances
+
+    if (error) {
+      throw error;
+    }
 
     return successResponse(
       { orders },

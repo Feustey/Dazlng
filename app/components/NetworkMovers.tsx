@@ -1,4 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import * as React from "react";
+import Card from "./ui/card";
+import { CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Badge } from "./ui/badge";
 import { motion } from "framer-motion";

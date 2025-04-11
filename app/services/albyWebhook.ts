@@ -1,4 +1,4 @@
-import AlbyWebhook, { IAlbyWebhook } from "../models/AlbyWebhook";
+import { supabase } from "../lib/supabase";
 import { getAlbyService } from "./albyService";
 
 const ALBY_API_URL = "https://api.getalby.com";
@@ -44,7 +44,7 @@ export class AlbyWebhookService {
     url,
     description,
     filterTypes,
-  }: CreateWebhookParams): Promise<IAlbyWebhook> {
+  }: CreateWebhookParams): Promise<any> {
     try {
       const albyService = await getAlbyService();
       const response = await albyService.createWebhook({
@@ -53,24 +53,35 @@ export class AlbyWebhookService {
         filterTypes,
       });
 
-      const webhook = await AlbyWebhook.create({
-        userId,
-        endpointId: response.id,
-        endpointSecret: response.endpoint_secret,
-        url: response.url,
-        description: response.description,
-        filterTypes: response.filter_types,
-      });
+      const { data: webhook, error } = await supabase
+        .from("alby_webhooks")
+        .insert({
+          user_id: userId,
+          endpoint_id: response.id,
+          endpoint_secret: response.endpoint_secret,
+          url: response.url,
+          description: response.description,
+          filter_types: response.filter_types,
+        })
+        .select()
+        .single();
 
+      if (error) throw error;
       return webhook;
     } catch (error) {
       throw error;
     }
   }
 
-  static async getWebhook(endpointId: string): Promise<IAlbyWebhook | null> {
+  static async getWebhook(endpointId: string): Promise<any | null> {
     try {
-      const webhook = await AlbyWebhook.findOne({ endpointId });
+      const { data: webhook, error } = await supabase
+        .from("alby_webhooks")
+        .select("*")
+        .eq("endpoint_id", endpointId)
+        .single();
+
+      if (error) throw error;
       return webhook;
     } catch (error) {
       console.error("Erreur lors de la récupération du webhook Alby:", error);
@@ -82,16 +93,27 @@ export class AlbyWebhookService {
     try {
       const albyService = await getAlbyService();
       await albyService.deleteWebhook(endpointId);
-      await AlbyWebhook.deleteOne({ endpointId });
+
+      const { error } = await supabase
+        .from("alby_webhooks")
+        .delete()
+        .eq("endpoint_id", endpointId);
+
+      if (error) throw error;
     } catch (error) {
       throw error;
     }
   }
 
-  static async getUserWebhooks(userId: string): Promise<IAlbyWebhook[]> {
+  static async getUserWebhooks(userId: string): Promise<any[]> {
     try {
-      const webhooks = await AlbyWebhook.find({ userId });
-      return webhooks;
+      const { data: webhooks, error } = await supabase
+        .from("alby_webhooks")
+        .select("*")
+        .eq("user_id", userId);
+
+      if (error) throw error;
+      return webhooks || [];
     } catch (error) {
       console.error("Erreur lors de la récupération des webhooks Alby:", error);
       throw error;

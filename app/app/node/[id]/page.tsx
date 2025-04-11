@@ -1,14 +1,14 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import Button from "@/app/components/ui/button";
-import Card from "@/app/components/ui/card";
-import {
+import Button from "@/components/ui/button";
+import Card, {
   CardHeader,
   CardTitle,
+  CardDescription,
   CardContent,
   CardFooter,
-} from "@/app/components/ui/card";
+} from "@/components/ui/card";
 import { Zap, GitMerge, BarChart3, ExternalLink } from "lucide-react";
 import Link from "next/link";
 

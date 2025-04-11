@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { connectToDatabase } from "@/app/lib/db";
+import { supabase } from "../lib/supabase";
 
 // Configuration pour forcer le rendu dynamique
 export const dynamic = "force-dynamic";
@@ -32,7 +32,16 @@ export const successResponse = (data: any) => {
 export async function withDb(handler: Function) {
   return async (...args: any[]) => {
     try {
-      await connectToDatabase();
+      // Vérifier la connexion à Supabase
+      const { data, error } = await supabase
+        .from("config")
+        .select("*")
+        .limit(1);
+
+      if (error) {
+        throw error;
+      }
+
       return handler(...args);
     } catch (error) {
       console.error("Database error:", error);

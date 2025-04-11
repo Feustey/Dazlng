@@ -1,14 +1,14 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import PageContainer from "@/app/components/layout/PageContainer";
-import Card from "@/app/components/ui/card";
-import {
+import PageContainer from "@/components/layout/PageContainer";
+import Card, {
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
-} from "@/app/components/ui/card";
+  CardFooter,
+} from "@/components/ui/card";
 import { Shield, Lock, Eye, Server, Key } from "lucide-react";
 
 export default function PrivacyPage() {

@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
-import Features from "@/app/components/Features";
-import { AnimatedHero, AnimatedStat } from "@/app/components/HomeAnimations";
+import Features from "@/components/Features";
+import { AnimatedHero, AnimatedStat } from "@/components/HomeAnimations";
 
 export default async function HomePage() {
   const t = await getTranslations("pages.home");

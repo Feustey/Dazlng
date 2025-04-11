@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { connectToDatabase } from "../../../../lib/mongodb";
-import { ObjectId } from "mongodb";
+import { supabase } from "../../../../lib/supabase";
 
 export const dynamic = "force-dynamic";
 
@@ -9,23 +8,24 @@ export async function GET(
   { params }: { params: { sessionId: string } }
 ) {
   try {
-    const db = await connectToDatabase();
-    if (!db) {
-      throw new Error("Database connection failed");
-    }
+    const { data: session, error } = await supabase
+      .from("checkout_sessions")
+      .select("*")
+      .eq("id", params.sessionId)
+      .single();
 
-    const session = await db.collection("checkout_sessions").findOne({
-      _id: new ObjectId(params.sessionId),
-    });
+    if (error) {
+      throw error;
+    }
 
     if (!session) {
       return NextResponse.json({ error: "Session not found" }, { status: 404 });
     }
 
     return NextResponse.json({
-      id: session._id.toString(),
+      id: session.id,
       amount: session.amount,
-      paymentUrl: session.paymentUrl,
+      paymentUrl: session.payment_url,
       status: session.status,
     });
   } catch (error) {

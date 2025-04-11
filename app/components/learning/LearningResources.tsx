@@ -1,7 +1,7 @@
-import { FC } from "react";
+import * as React from "react";
 import { useTranslations } from "next-intl";
-import { Card } from "../ui/card";
-import { Button } from "../ui/button";
+import Card from "@/components/ui/card";
+import Button from "@/components/ui/button";
 import {
   ExternalLink,
   BookOpen,
@@ -10,7 +10,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 
-const LearningResources: FC = () => {
+const LearningResources: React.FC = () => {
   const t = useTranslations("Learning");
 
   const resources = [
