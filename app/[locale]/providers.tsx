@@ -1,7 +1,10 @@
 "use client";
 
-import { NextIntlClientProvider } from "next-intl";
+// Imports React
 import { ReactNode } from "react";
+
+// Imports de bibliothèques tierces
+import { NextIntlClientProvider } from "next-intl";
 
 type ProvidersProps = {
   locale: string;

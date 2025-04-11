@@ -1,16 +1,10 @@
 import type { NextAuthConfig } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { verify } from "jsonwebtoken";
-import { MongoDBAdapter } from "@auth/mongodb-adapter";
-import clientPromise from "./mongodb";
-import GoogleProvider from "next-auth/providers/google";
-import type { Adapter } from "next-auth/adapters";
-import { connectToDatabase } from "@/app/lib/mongodb";
-import { compare } from "bcryptjs";
 import NextAuth from "next-auth";
-import { MongoClient } from "mongodb";
 import { Session } from "next-auth";
+import { supabase, signInWithPassword } from "./supabase";
+import { Database } from "./supabase.types";
 
 // Spécifier que nous utilisons le runtime Node.js et non Edge
 export const runtime = "nodejs";
@@ -29,64 +23,36 @@ const getRequiredEnvVar = (name: string, defaultValue: string = ""): string => {
   return value || defaultValue;
 };
 
-interface LNURLSession {
-  id: string;
-  pubkey: string;
-  nodePubkey: string | null;
-  lightningAddress: string | null;
-  name: string | null;
-  email: string | null;
-}
+type UserData = Database["public"]["Tables"]["users"]["Row"];
 
-interface AlbyProfile {
+interface CustomUser {
   id: string;
-  name: string;
   email: string;
-  lightning_address: string;
-  nodes: Array<{
-    pubkey: string;
-  }>;
+  name: string;
+  pubkey: string;
+  node_pubkey: string | null;
+  lightning_address: string | null;
+  last_login_at: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 declare module "next-auth" {
-  interface User {
-    id?: string;
-    pubkey?: string;
-    nodePubkey?: string | null;
-    lightningAddress?: string | null;
-    name?: string | null;
-    email?: string | null;
-  }
+  interface User extends CustomUser {}
 
   interface Session {
-    user: {
-      id: string;
-      pubkey: string;
-      nodePubkey: string | null;
-      lightningAddress: string | null;
-      name: string | null;
-      email: string | null;
-    };
+    user: CustomUser;
   }
 }
 
 declare module "next-auth/jwt" {
-  interface JWT {
-    id: string;
-    pubkey: string;
-    nodePubkey: string | null;
-    lightningAddress: string | null;
-    name: string | null;
-    email: string | null;
-  }
+  interface JWT extends CustomUser {}
 }
 
 // Récupérer les variables d'environnement de façon plus tolérante
 const envVars = {
-  GOOGLE_CLIENT_ID:
-    getOptionalEnvVar("GOOGLE_CLIENT_ID") || "dummy-google-client-id",
-  GOOGLE_CLIENT_SECRET:
-    getOptionalEnvVar("GOOGLE_CLIENT_SECRET") || "dummy-google-client-secret",
+  NEXTAUTH_SECRET: getRequiredEnvVar("NEXTAUTH_SECRET"),
+  NEXTAUTH_URL: getRequiredEnvVar("NEXTAUTH_URL"),
 } as const;
 
 export const authOptions: NextAuthConfig = {
@@ -110,49 +76,61 @@ export const authOptions: NextAuthConfig = {
           throw new Error("Email et mot de passe requis");
         }
 
-        await connectToDatabase();
+        try {
+          // Utiliser la fonction signInWithPassword de Supabase
+          const result = await signInWithPassword(email, password);
 
-        // Utiliser directement le modèle MongoDB
-        const db = (await clientPromise).db();
-        const user = await db.collection("users").findOne({ email });
+          if (!result.user) {
+            throw new Error("Aucun utilisateur trouvé");
+          }
 
-        if (!user || !user.password) {
-          throw new Error("Aucun utilisateur trouvé avec cet email");
+          // Récupérer les informations supplémentaires de l'utilisateur
+          const { data: userData, error: userError } = await supabase
+            .from("users")
+            .select("*")
+            .eq("id", result.user.id)
+            .single();
+
+          if (userError || !userData) {
+            throw new Error(
+              "Erreur lors de la récupération des données utilisateur"
+            );
+          }
+
+          return userData as CustomUser;
+        } catch (error) {
+          console.error("Erreur d'authentification:", error);
+          throw error;
         }
-
-        const isValid = await compare(password, user.password);
-
-        if (!isValid) {
-          throw new Error("Mot de passe incorrect");
-        }
-
-        const userSession: LNURLSession = {
-          id: user._id.toString(),
-          pubkey: user.pubkey || "default_pubkey",
-          nodePubkey: user.nodePubkey || null,
-          lightningAddress: user.lightningAddress || null,
-          name: user.name || null,
-          email: user.email || null,
-        };
-
-        return userSession;
       },
-    }),
-    GoogleProvider({
-      clientId: envVars.GOOGLE_CLIENT_ID,
-      clientSecret: envVars.GOOGLE_CLIENT_SECRET,
     }),
   ],
   callbacks: {
-    async jwt({ token, user }: { token: JWT; user?: any }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+        token.pubkey = user.pubkey;
+        token.node_pubkey = user.node_pubkey;
+        token.lightning_address = user.lightning_address;
+        token.last_login_at = user.last_login_at;
+        token.created_at = user.created_at;
+        token.updated_at = user.updated_at;
       }
       return token;
     },
-    async session({ session, token }: { session: Session; token: JWT }) {
+    async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id as string;
+        session.user.id = token.id;
+        session.user.email = token.email;
+        session.user.name = token.name;
+        session.user.pubkey = token.pubkey;
+        session.user.node_pubkey = token.node_pubkey;
+        session.user.lightning_address = token.lightning_address;
+        session.user.last_login_at = token.last_login_at;
+        session.user.created_at = token.created_at;
+        session.user.updated_at = token.updated_at;
       }
       return session;
     },
@@ -165,5 +143,7 @@ export const authOptions: NextAuthConfig = {
     strategy: "jwt" as const,
     maxAge: 30 * 24 * 60 * 60, // 30 jours
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: envVars.NEXTAUTH_SECRET,
 };
+
+export const { auth, signIn, signOut } = NextAuth(authOptions);

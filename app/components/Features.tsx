@@ -46,7 +46,7 @@ const FeatureCard = React.memo(({ feature, index }: FeatureCardProps) => (
 FeatureCard.displayName = "FeatureCard";
 
 export default function Features() {
-  const t = useTranslations("Home");
+  const t = useTranslations("pages.home");
 
   const features: Feature[] = [
     {
@@ -86,8 +86,8 @@ export default function Features() {
     },
     {
       icon: Shield,
-      title: "Sécurité Avancée",
-      description: "Protection maximale de vos fonds et de vos données",
+      title: t("features.security.title"),
+      description: t("features.security.description"),
       color: "text-accent-600 dark:text-accent-400",
       bgColor: "bg-accent-50 dark:bg-accent-950",
     },
@@ -98,10 +98,10 @@ export default function Features() {
       <div className="container">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gradient">
-            Fonctionnalités Principales
+            {t("features.title")}
           </h2>
           <p className="text-xl text-muted-foreground">
-            Découvrez tout ce que Daznode peut faire pour vous
+            {t("features.subtitle")}
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

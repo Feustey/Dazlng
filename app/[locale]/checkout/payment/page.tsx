@@ -1,200 +1,159 @@
 "use client";
 
-export const dynamic = "force-dynamic";
-
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { useParams } from "next/navigation";
-import { QRCodeSVG } from "qrcode.react";
-import { Check, Copy, Loader2 } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
+import ProgressBar from "@components/checkout/ProgressBar";
+import Button from "@/app/components/ui/button";
+import { Copy, Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { getAlbyService } from "@/services/albyService";
+import {
+  createInvoice,
+  checkInvoiceStatus,
+} from "../../../services/albyService";
+
+interface Invoice {
+  payment_request: string;
+  checking_id: string;
+  payment_hash: string;
+  expires_at: string;
+}
 
 export default function PaymentPage() {
-  const router = useRouter();
   const t = useTranslations("Checkout.Payment");
   const params = useParams();
   const locale = params?.locale as string;
-
-  const [paymentMethod, setPaymentMethod] = useState("bitcoin");
-  const [copied, setCopied] = useState(false);
-  const [paymentStatus, setPaymentStatus] = useState("waiting"); // waiting, received, error
-  const [invoice, setInvoice] = useState<string | null>(null);
-  const [amount] = useState("400000"); // en sats
+  const router = useRouter();
+  const [invoice, setInvoice] = useState<Invoice | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isPaid, setIsPaid] = useState(false);
+  const [isCopying, setIsCopying] = useState(false);
 
   useEffect(() => {
-    const createInvoice = async () => {
+    // Générer la facture
+    const generateInvoice = async () => {
       try {
-        const albyService = await getAlbyService();
-        const newInvoice = await albyService.createInvoice({
-          amount: parseInt(amount),
-          memo: "Paiement DazLng",
+        const res = await fetch("/api/invoice", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount: 400000, // 400,000 sats
+            memo: "Commande DazNode",
+          }),
         });
-        setInvoice(newInvoice.payment_request);
+
+        if (!res.ok)
+          throw new Error("Erreur lors de la génération de la facture");
+
+        const data = await res.json();
+        setInvoice(data);
+        setIsLoading(false);
       } catch (error) {
-        console.error("Erreur lors de la création de la facture:", error);
-        setPaymentStatus("error");
-        toast.error(t("invoiceError"));
+        console.error("Erreur:", error);
+        toast.error("Erreur lors de la génération de la facture");
+        setIsLoading(false);
       }
     };
 
-    createInvoice();
-  }, [amount, t]);
+    generateInvoice();
+  }, []);
 
-  const handleCopyAddress = async () => {
+  useEffect(() => {
     if (!invoice) return;
 
-    try {
-      await navigator.clipboard.writeText(invoice);
-      setCopied(true);
-      toast.success(t("addressCopied"));
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error("Failed to copy:", err);
-      toast.error(t("copyError"));
-    }
-  };
-
-  const handleContinue = () => {
-    if (paymentStatus === "received") {
-      router.push(`/${locale}/checkout/confirmation`);
-    }
-  };
-
-  // Vérification du paiement via webhook
-  useEffect(() => {
-    const checkPaymentStatus = async (invoice: string) => {
+    const checkPayment = async () => {
       try {
-        const albyService = await getAlbyService();
-        const status = await albyService.checkInvoiceStatus(invoice);
-        if (status === "paid") {
-          setPaymentStatus("received");
-          toast.success(t("paymentReceived"));
+        const res = await fetch(
+          `/api/check-payment?payment_hash=${invoice.payment_hash}`
+        );
+        const data = await res.json();
+
+        if (data.paid) {
+          setIsPaid(true);
+          // Rediriger vers la page de confirmation après un court délai
+          setTimeout(() => {
+            router.push(`/${locale}/checkout/confirmation`);
+          }, 2000);
         }
       } catch (error) {
-        console.error("Erreur lors de la vérification du statut:", error);
+        console.error("Erreur lors de la vérification du paiement:", error);
       }
     };
 
-    if (invoice) {
-      checkPaymentStatus(invoice);
-    }
-  }, [invoice, t]);
+    const interval = setInterval(checkPayment, 5000);
+    return () => clearInterval(interval);
+  }, [invoice, locale, router]);
 
-  if (!invoice) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
+  const copyToClipboard = async () => {
+    if (!invoice) return;
+    setIsCopying(true);
+    try {
+      await navigator.clipboard.writeText(invoice.payment_request);
+      toast.success("Adresse copiée !");
+    } catch (error) {
+      toast.error("Erreur lors de la copie");
+    } finally {
+      setIsCopying(false);
+    }
+  };
 
   return (
-    <div className="max-w-3xl mx-auto pb-12 animate-fade-in">
-      <h1 className="text-2xl font-bold mb-6 gradient-text">{t("title")}</h1>
+    <div className="max-w-4xl mx-auto pb-12 animate-fade-in">
+      <ProgressBar />
 
-      <div className="card-glass border-accent/20 rounded-lg p-6 mb-6 animate-slide-up">
-        <div className="space-y-4">
-          <div className="flex items-center">
-            <input
-              id="payment-bitcoin"
-              name="payment-method"
-              type="radio"
-              className="h-4 w-4 text-primary border-accent/20"
-              checked={true}
-              readOnly
-            />
-            <label
-              htmlFor="payment-bitcoin"
-              className="ml-3 block text-sm font-medium text-foreground"
-            >
-              Bitcoin Lightning
-            </label>
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold gradient-text mb-2">{t("title")}</h1>
+        <p className="text-muted-foreground">{t("bitcoinInstructions")}</p>
+      </div>
+
+      <div className="flex flex-col items-center space-y-6">
+        {isLoading ? (
+          <div className="flex items-center justify-center h-64">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
-
-          <div className="ml-7 p-4 bg-card/50 backdrop-blur-sm rounded-md border border-accent/20">
-            <div className="flex justify-between items-center mb-4">
-              <p className="text-sm font-medium text-foreground">
-                {t("amount")}
-              </p>
-              <p className="text-lg font-bold text-primary">{amount} sats</p>
-            </div>
-
-            <p className="text-sm text-muted-foreground mb-4">
-              {t("bitcoinInstructions")}
-            </p>
-
-            <div className="bg-white p-4 rounded-lg mb-4 mx-auto w-fit">
-              <QRCodeSVG
-                value={invoice}
-                size={200}
-                level="H"
-                includeMargin={true}
-                className="mx-auto"
+        ) : invoice ? (
+          <>
+            <div className="bg-white p-4 rounded-lg shadow-lg">
+              <Image
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${invoice.payment_request}`}
+                alt="QR Code de paiement"
+                width={192}
+                height={192}
+                className="w-48 h-48"
               />
             </div>
 
-            <div className="flex items-center justify-between p-3 bg-card/30 rounded-md">
-              <code className="text-xs sm:text-sm break-all text-muted-foreground flex-1 mr-2">
-                {invoice}
+            <div className="flex items-center space-x-2">
+              <code className="bg-muted px-4 py-2 rounded-md text-sm">
+                {invoice.payment_request}
               </code>
-              <button
-                onClick={handleCopyAddress}
-                className="flex items-center justify-center h-8 w-8 rounded-md hover:bg-accent/10 transition-colors"
-                title={t("copyAddress")}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={copyToClipboard}
+                disabled={isCopying}
               >
-                {copied ? (
-                  <Check className="h-4 w-4 text-green-500" />
+                {isCopying ? (
+                  <Check className="h-4 w-4" />
                 ) : (
-                  <Copy className="h-4 w-4 text-muted-foreground" />
+                  <Copy className="h-4 w-4" />
                 )}
-              </button>
+              </Button>
             </div>
 
-            <div className="mt-4 flex items-center justify-center text-sm">
-              {paymentStatus === "waiting" && (
-                <div className="flex items-center text-amber-500">
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  {t("waitingPayment")}
-                </div>
-              )}
-              {paymentStatus === "received" && (
-                <div className="flex items-center text-green-500">
-                  <Check className="h-4 w-4 mr-2" />
-                  {t("paymentReceived")}
-                </div>
-              )}
-              {paymentStatus === "error" && (
-                <div className="flex items-center text-red-500">
-                  <span className="mr-2">⚠️</span>
-                  {t("paymentError")}
-                  <button
-                    onClick={() => {
-                      setPaymentStatus("waiting");
-                      window.location.reload();
-                    }}
-                    className="ml-2 underline"
-                  >
-                    {t("retry")}
-                  </button>
-                </div>
-              )}
-            </div>
+            {isPaid && (
+              <div className="flex items-center space-x-2 text-green-500">
+                <Check className="h-5 w-5" />
+                <span>Paiement reçu ! Redirection en cours...</span>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="text-center text-muted-foreground">
+            Erreur lors de la génération de la facture
           </div>
-        </div>
-      </div>
-
-      <div className="flex justify-end animate-slide-up [animation-delay:200ms]">
-        <button
-          type="button"
-          onClick={handleContinue}
-          disabled={paymentStatus !== "received"}
-          className={`btn-gradient py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 
-            ${paymentStatus === "received" ? "hover:scale-105" : "opacity-50 cursor-not-allowed"}`}
-        >
-          {t("continue")}
-        </button>
+        )}
       </div>
     </div>
   );

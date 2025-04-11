@@ -1,89 +1,103 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { cn } from "../../lib/utils";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import {
+  CheckCircle,
+  Circle,
+  Package,
+  CreditCard,
+  ClipboardCheck,
+} from "lucide-react";
 
 export default function ProgressBar() {
   const pathname = usePathname();
   const t = useTranslations("Checkout");
+  const params = useParams();
+  const locale = params?.locale as string;
 
   const steps = [
-    { id: "account", label: t("Account.title"), path: "/checkout/account" },
-    { id: "delivery", label: t("Delivery.title"), path: "/checkout/delivery" },
-    { id: "payment", label: t("Payment.title"), path: "/checkout/payment" },
     {
-      id: "confirmation",
-      label: t("Confirmation.title"),
-      path: "/checkout/confirmation",
+      name: t("steps.delivery"),
+      href: `/${locale}/checkout/delivery`,
+      icon: Package,
+      current: pathname.includes("/checkout/delivery"),
+      completed:
+        pathname.includes("/checkout/payment") ||
+        pathname.includes("/checkout/confirmation"),
+    },
+    {
+      name: t("steps.payment"),
+      href: `/${locale}/checkout/payment`,
+      icon: CreditCard,
+      current: pathname.includes("/checkout/payment"),
+      completed: pathname.includes("/checkout/confirmation"),
+    },
+    {
+      name: t("steps.confirmation"),
+      href: `/${locale}/checkout/confirmation`,
+      icon: ClipboardCheck,
+      current: pathname.includes("/checkout/confirmation"),
+      completed: false,
     },
   ];
 
-  const currentStepIndex = steps.findIndex((step) =>
-    pathname ? pathname.includes(step.id) : false
-  );
-
   return (
-    <div className="w-full max-w-4xl mx-auto mb-8 px-4">
-      <nav aria-label="Progress" className="py-8">
-        <ol role="list" className="flex items-center">
-          {steps.map((step, index) => (
-            <li
-              key={step.id}
-              className={cn(
-                "relative flex-1",
-                index !== steps.length - 1 && "pr-8 sm:pr-20"
-              )}
-            >
-              <div className="flex flex-col items-center group">
-                <div className="flex items-center w-full">
-                  <div
-                    className={cn(
-                      "h-10 w-10 rounded-full flex items-center justify-center transition-all duration-200",
-                      index <= currentStepIndex
-                        ? "bg-gradient-to-r from-primary to-primary-accent shadow-lg shadow-primary/20 scale-110"
-                        : "bg-muted border-2 border-muted-foreground/20",
-                      index === currentStepIndex && "animate-pulse"
-                    )}
-                  >
-                    <span
-                      className={cn(
-                        "text-sm font-bold",
-                        index <= currentStepIndex
-                          ? "text-primary-foreground"
-                          : "text-muted-foreground"
-                      )}
-                    >
-                      {index + 1}
-                    </span>
-                  </div>
-                  {index !== steps.length - 1 && (
-                    <div
-                      className={cn(
-                        "flex-1 h-0.5 transition-all duration-200",
-                        index < currentStepIndex
-                          ? "bg-gradient-to-r from-primary to-primary-accent"
-                          : "bg-muted"
-                      )}
+    <nav aria-label="Progress">
+      <ol role="list" className="flex items-center">
+        {steps.map((step, stepIdx) => (
+          <li
+            key={step.name}
+            className={`${
+              stepIdx !== steps.length - 1 ? "pr-8 sm:pr-20" : ""
+            } relative`}
+          >
+            <Link href={step.href}>
+              <div className="flex items-center">
+                <div
+                  className={`${
+                    step.completed
+                      ? "bg-primary"
+                      : step.current
+                        ? "border-2 border-primary"
+                        : "border-2 border-gray-300"
+                  } rounded-full p-1`}
+                >
+                  {step.completed ? (
+                    <CheckCircle className="h-5 w-5 text-white" />
+                  ) : (
+                    <Circle
+                      className={`h-5 w-5 ${
+                        step.current ? "text-primary" : "text-gray-300"
+                      }`}
                     />
                   )}
                 </div>
-                <span
-                  className={cn(
-                    "mt-4 text-sm font-medium transition-all duration-200",
-                    index <= currentStepIndex
-                      ? "text-foreground"
-                      : "text-muted-foreground",
-                    index === currentStepIndex && "scale-110"
-                  )}
+                <div
+                  className={`ml-4 min-w-0 flex flex-col ${
+                    step.completed
+                      ? "text-primary"
+                      : step.current
+                        ? "text-primary font-medium"
+                        : "text-gray-500"
+                  }`}
                 >
-                  {step.label}
-                </span>
+                  <span className="text-sm font-medium">{step.name}</span>
+                </div>
               </div>
-            </li>
-          ))}
-        </ol>
-      </nav>
-    </div>
+            </Link>
+            {stepIdx !== steps.length - 1 && (
+              <div
+                className={`absolute top-5 left-8 -ml-px h-0.5 w-full ${
+                  step.completed ? "bg-primary" : "bg-gray-300"
+                }`}
+              />
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
   );
 }

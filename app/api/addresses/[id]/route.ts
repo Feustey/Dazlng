@@ -1,29 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Address } from "@/models";
 import { connectToDatabase } from "../../../lib/db";
+import { supabase } from "@lib/supabase";
 
 // GET /api/addresses/[id] - Récupérer une adresse spécifique
 export async function GET(
-  req: NextRequest,
+  request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectToDatabase();
+    const { data, error } = await supabase
+      .from("addresses")
+      .select("*")
+      .eq("id", params.id)
+      .single();
 
-    const addressId = params.id;
-
-    const address = await Address.findById(addressId);
-    if (!address) {
-      return NextResponse.json(
-        { error: "Adresse non trouvée" },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json(address);
+    if (error) throw error;
+    return NextResponse.json(data);
   } catch (error) {
-    console.error("Erreur lors de la récupération de l'adresse:", error);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    return NextResponse.json({ error: "Address not found" }, { status: 404 });
   }
 }
 

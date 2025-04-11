@@ -1,5 +1,14 @@
-import { Heading, Section, Text } from "@react-email/components";
-import BaseEmailTemplate from "./BaseEmailTemplate";
+import React from "react";
+import {
+  Body,
+  Container,
+  Head,
+  Heading,
+  Html,
+  Preview,
+  Section,
+  Text,
+} from "@react-email/components";
 
 interface ContactEmailTemplateProps {
   type: "admin" | "user";
@@ -10,104 +19,92 @@ interface ContactEmailTemplateProps {
   message?: string;
 }
 
-export default function ContactEmailTemplate({
+export const ContactEmailTemplate: React.FC<ContactEmailTemplateProps> = ({
   type,
   firstName,
   lastName,
   email,
   interest,
   message,
-}: ContactEmailTemplateProps) {
+}) => {
   const isAdmin = type === "admin";
 
   return (
-    <BaseEmailTemplate
-      previewText={
-        isAdmin
-          ? `[Contact DazNode] ${interest} - ${firstName} ${lastName}`
-          : "Confirmation de votre message - DazNode"
-      }
-    >
-      <Heading style={h1}>
+    <Html>
+      <Head />
+      <Preview>
         {isAdmin
-          ? "Nouveau message de contact"
-          : "Merci de nous avoir contacté !"}
-      </Heading>
-
-      {isAdmin ? (
-        <>
-          <Section style={contactDetails}>
-            <Text style={text}>
-              <strong>Nom :</strong> {firstName} {lastName}
-            </Text>
-            <Text style={text}>
-              <strong>Email :</strong> {email}
-            </Text>
-            <Text style={text}>
-              <strong>Intérêt :</strong> {interest}
-            </Text>
-            {message && (
+          ? `Nouveau message de contact de ${firstName} ${lastName}`
+          : "Confirmation de votre message - DazNode"}
+      </Preview>
+      <Body style={main}>
+        <Container style={container}>
+          <Heading style={h1}>
+            {isAdmin
+              ? "Nouveau message de contact"
+              : "Confirmation de votre message"}
+          </Heading>
+          <Section style={section}>
+            {isAdmin ? (
               <>
                 <Text style={text}>
-                  <strong>Message :</strong>
+                  De: {firstName} {lastName}
                 </Text>
-                <Text style={messageText}>{message}</Text>
+                <Text style={text}>Email: {email}</Text>
+                <Text style={text}>Intérêt: {interest}</Text>
+                {message && (
+                  <>
+                    <Text style={text}>Message:</Text>
+                    <Text style={text}>{message}</Text>
+                  </>
+                )}
+              </>
+            ) : (
+              <>
+                <Text style={text}>Bonjour {firstName},</Text>
+                <Text style={text}>
+                  Nous avons bien reçu votre message concernant {interest}.
+                  Notre équipe vous répondra dans les plus brefs délais.
+                </Text>
+                <Text style={text}>Merci de votre intérêt pour DazNode !</Text>
               </>
             )}
           </Section>
-        </>
-      ) : (
-        <>
-          <Text style={text}>Cher/Chère {firstName},</Text>
-          <Text style={text}>
-            Nous avons bien reçu votre message et nous vous répondrons dans les
-            plus brefs délais.
-          </Text>
-        </>
-      )}
-
-      <Text style={signature}>
-        Cordialement,
-        <br />
-        L&apos;équipe DazNode
-      </Text>
-    </BaseEmailTemplate>
+        </Container>
+      </Body>
+    </Html>
   );
-}
+};
+
+const main = {
+  backgroundColor: "#ffffff",
+  fontFamily:
+    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
+};
+
+const container = {
+  margin: "0 auto",
+  padding: "20px 0 48px",
+  maxWidth: "580px",
+};
+
+const section = {
+  padding: "24px",
+  backgroundColor: "#f7f7f7",
+  borderRadius: "4px",
+};
 
 const h1 = {
   color: "#1a1a1a",
   fontSize: "24px",
   fontWeight: "600",
   lineHeight: "1.25",
-  marginBottom: "24px",
+  margin: "16px 0",
 };
 
 const text = {
-  color: "#4a4a4a",
+  color: "#1a1a1a",
   fontSize: "16px",
   lineHeight: "24px",
-  marginBottom: "16px",
-};
-
-const contactDetails = {
-  backgroundColor: "#f9f9f9",
-  padding: "24px",
-  borderRadius: "4px",
-  marginBottom: "24px",
-};
-
-const messageText = {
-  color: "#4a4a4a",
-  fontSize: "16px",
-  lineHeight: "24px",
-  marginBottom: "16px",
-  whiteSpace: "pre-wrap" as const,
-};
-
-const signature = {
-  color: "#4a4a4a",
-  fontSize: "14px",
-  lineHeight: "20px",
-  marginTop: "32px",
+  margin: "16px 0",
 };

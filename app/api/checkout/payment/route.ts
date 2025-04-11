@@ -1,27 +1,43 @@
+import { supabase } from "../../../lib/supabase";
+import {
+  createInvoice,
+  checkInvoiceStatus,
+} from "../../../services/albyService";
 import { NextResponse } from "next/server";
-import { connectToDatabase } from "@/app/lib/db";
-import { getAlbyService } from "@/services/albyService";
 
 export const dynamic = "force-dynamic";
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
-    await connectToDatabase();
+    const { amount, description } = await request.json();
 
-    const albyService = await getAlbyService();
-    const { amount, memo } = await req.json();
+    // Créer une facture Alby
+    const invoice = await createInvoice(amount, description);
 
-    const invoice = await albyService.createInvoice({
-      amount,
-      memo,
+    // Enregistrer la session de paiement dans Supabase
+    const { data, error } = await supabase
+      .from("checkout_sessions")
+      .insert({
+        amount,
+        description,
+        payment_hash: invoice.payment_hash,
+        payment_request: invoice.payment_request,
+        status: "pending",
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return NextResponse.json({
+      ...invoice,
+      session_id: data.id,
     });
-
-    return NextResponse.json(invoice);
   } catch (error) {
-    console.error("Payment error:", error);
-    return new Response(JSON.stringify({ error: "Payment error" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    console.error("Erreur lors du traitement du paiement:", error);
+    return NextResponse.json(
+      { error: "Erreur lors du traitement du paiement" },
+      { status: 500 }
+    );
   }
 }

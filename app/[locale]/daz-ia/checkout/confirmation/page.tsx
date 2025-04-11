@@ -1,47 +1,130 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import DazIAProgressBar from "@/app/components/daz-ia/ProgressBar";
-import { Button } from "@/app/components/ui/button";
+import Button from "@components/ui/button";
 import { Check, ChevronLeft, Download } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/app/components/ui/card";
-import { formatPrice } from "@/app/lib/utils";
+import Card from "@/app/components/ui/card";
+import { CardContent, CardHeader, CardTitle } from "@/app/components/ui/card";
+import { supabase } from "@/app/utils/supabase";
+import { toast } from "sonner";
+
+interface PlanData {
+  plan: string;
+  billingCycle: string;
+  sats: number;
+}
+
+interface DeliveryInfo {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  company?: string;
+}
+
+interface OrderData {
+  plan: PlanData;
+  deliveryInfo: DeliveryInfo;
+  sessionId: string;
+}
 
 export default function DazIACheckoutConfirmationPage() {
   const router = useRouter();
   const t = useTranslations("daz-ia-checkout");
-  const [orderData, setOrderData] = useState<{
-    plan: string;
-    billingCycle: string;
-    price: number;
-    deliveryInfo: {
-      name: string;
-      email: string;
-    };
-  } | null>(null);
+  const [orderData, setOrderData] = useState<OrderData | null>(null);
+  const [isStoring, setIsStoring] = useState(true);
+
+  const storeDataInSupabase = useCallback(
+    async (
+      planData: PlanData,
+      deliveryInfo: DeliveryInfo,
+      sessionId: string
+    ) => {
+      try {
+        setIsStoring(true);
+
+        // 1. Ajouter l'utilisateur
+        const { data: userData, error: userError } = await supabase
+          .from("users")
+          .upsert(
+            {
+              name: `${deliveryInfo.firstName} ${deliveryInfo.lastName}`,
+              email: deliveryInfo.email,
+              phone: deliveryInfo.phone,
+              company: deliveryInfo.company,
+            },
+            { onConflict: "email" }
+          )
+          .select();
+
+        if (userError) throw userError;
+
+        const userId = userData[0].id;
+
+        // 2. Créer la commande
+        const { data: orderData, error: orderError } = await supabase
+          .from("orders")
+          .insert({
+            user_id: userId,
+            product_type: "daz-ia",
+            plan: planData.plan,
+            billing_cycle: planData.billingCycle,
+            amount: planData.sats,
+            payment_method: "lightning",
+            payment_status: "paid",
+          })
+          .select();
+
+        if (orderError) throw orderError;
+
+        const orderId = orderData[0].id;
+
+        // 3. Enregistrer le paiement
+        const { error: paymentError } = await supabase.from("payments").insert({
+          order_id: orderId,
+          payment_hash: sessionId,
+          amount: planData.sats,
+          status: "success",
+        });
+
+        if (paymentError) throw paymentError;
+
+        setIsStoring(false);
+        toast.success(t("confirmation.success"));
+      } catch (error) {
+        console.error("Erreur lors de l'enregistrement dans Supabase:", error);
+        setIsStoring(false);
+        toast.error(t("confirmation.error"));
+      }
+    },
+    [t]
+  );
 
   useEffect(() => {
     // Récupérer les données de la commande depuis localStorage
-    const storedOrderData = localStorage.getItem("dazIAOrderData");
-    if (storedOrderData) {
-      try {
-        setOrderData(JSON.parse(storedOrderData));
-      } catch (error) {
-        console.error("Failed to parse order data", error);
-      }
-    }
-  }, []);
+    const storedPlan = localStorage.getItem("dazIAPlan");
+    const storedDeliveryInfo = localStorage.getItem("dazIADeliveryInfo");
+    const sessionId = localStorage.getItem("checkoutSessionId");
 
-  if (!orderData) {
+    if (storedPlan && storedDeliveryInfo) {
+      const planData = JSON.parse(storedPlan) as PlanData;
+      const deliveryInfo = JSON.parse(storedDeliveryInfo) as DeliveryInfo;
+
+      setOrderData({
+        plan: planData,
+        deliveryInfo: deliveryInfo,
+        sessionId: sessionId || "",
+      });
+
+      // Enregistrer les données dans Supabase
+      storeDataInSupabase(planData, deliveryInfo, sessionId || "");
+    }
+  }, [storeDataInSupabase]);
+
+  if (!orderData || isStoring) {
     return (
       <div className="container py-10">
         <div className="text-center">
@@ -51,98 +134,40 @@ export default function DazIACheckoutConfirmationPage() {
     );
   }
 
-  const handleDownloadInvoice = () => {
-    // Logique pour télécharger la facture
-    alert(t("confirmation.invoice-download-started"));
-  };
-
-  const handleBackToHome = () => {
-    router.push("/");
-  };
-
   return (
-    <div className="container py-10">
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
       <DazIAProgressBar currentStep={4} />
 
-      <div className="max-w-3xl mx-auto mt-12">
-        <Card className="border-none shadow-lg">
-          <CardHeader className="text-center bg-green-50 dark:bg-green-900/20 rounded-t-lg">
-            <div className="mx-auto mb-4 bg-green-100 dark:bg-green-800 w-16 h-16 rounded-full flex items-center justify-center">
-              <Check className="w-8 h-8 text-green-600 dark:text-green-300" />
-            </div>
-            <CardTitle className="text-2xl font-bold text-green-700 dark:text-green-300">
-              {t("confirmation.thank-you")}
-            </CardTitle>
-            <CardDescription className="text-green-600 dark:text-green-400">
-              {t("confirmation.order-processed")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="space-y-6">
-              <div className="border-b pb-4">
-                <h3 className="text-lg font-medium mb-2">
-                  {t("confirmation.order-details")}
-                </h3>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="text-sm text-muted-foreground">
-                    {t("confirmation.plan")}
-                  </div>
-                  <div className="text-sm font-medium">{orderData.plan}</div>
-                  <div className="text-sm text-muted-foreground">
-                    {t("confirmation.billing-cycle")}
-                  </div>
-                  <div className="text-sm font-medium">
-                    {orderData.billingCycle}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {t("confirmation.price")}
-                  </div>
-                  <div className="text-sm font-medium">
-                    {formatPrice(orderData.price)}
-                  </div>
-                </div>
-              </div>
+      <Card className="mt-8">
+        <CardHeader className="text-center">
+          <div className="mx-auto mb-4 bg-green-100 p-2 rounded-full w-12 h-12 flex items-center justify-center">
+            <Check className="text-green-600 w-6 h-6" />
+          </div>
+          <CardTitle className="text-2xl">{t("confirmation.title")}</CardTitle>
+        </CardHeader>
 
-              <div>
-                <h3 className="text-lg font-medium mb-2">
-                  {t("confirmation.delivery-info")}
-                </h3>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="text-sm text-muted-foreground">
-                    {t("confirmation.name")}
-                  </div>
-                  <div className="text-sm font-medium">
-                    {orderData.deliveryInfo.name}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {t("confirmation.email")}
-                  </div>
-                  <div className="text-sm font-medium">
-                    {orderData.deliveryInfo.email}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter className="flex flex-col sm:flex-row gap-4 justify-between pt-6">
+        <CardContent className="space-y-6">
+          <div className="text-center">
+            <p className="text-xl font-medium">{t("confirmation.thanks")}</p>
+            <p className="text-gray-500 mt-2">
+              {t("confirmation.emailSent", {
+                email: orderData.deliveryInfo.email,
+              })}
+            </p>
+          </div>
+
+          <div className="flex justify-center space-x-4">
             <Button
               variant="outline"
-              className="w-full sm:w-auto"
-              onClick={handleBackToHome}
+              onClick={() => router.push("/")}
+              className="flex items-center"
             >
-              <ChevronLeft className="w-4 h-4 mr-2" />
-              {t("confirmation.back-to-home")}
+              <ChevronLeft className="mr-2 h-4 w-4" />
+              {t("confirmation.backToHome")}
             </Button>
-            <Button
-              className="w-full sm:w-auto"
-              onClick={handleDownloadInvoice}
-            >
-              <Download className="w-4 h-4 mr-2" />
-              {t("confirmation.download-invoice")}
-            </Button>
-          </CardFooter>
-        </Card>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

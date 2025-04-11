@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { Button } from "@/app/components/ui/button";
+import { Button } from "@components/ui/button";
 import { getAlbyService } from "@/services/albyService";
 import { toast } from "sonner";
 

@@ -1,4 +1,4 @@
-import { Card } from "./ui/card";
+import Card from "./ui/card";
 import { Node } from "../types/network";
 import {
   Chart as ChartJS,
@@ -13,6 +13,7 @@ import {
   LineElement,
 } from "chart.js";
 import { Bar, Pie, Line, Scatter } from "react-chartjs-2";
+import { useTranslations } from "next-intl";
 
 ChartJS.register(
   CategoryScale,
@@ -31,12 +32,14 @@ interface NetworkChartsProps {
 }
 
 export function NetworkCharts({ nodes }: NetworkChartsProps) {
+  const t = useTranslations("pages.network.charts");
+
   // Préparation des données pour le graphique de capacité
   const capacityData = {
     labels: nodes.map((node) => node.name),
     datasets: [
       {
-        label: "Capacité (BTC)",
+        label: t("capacity.label"),
         data: nodes.map((node) => parseFloat(node.capacity.toString())),
         backgroundColor: "rgba(53, 162, 235, 0.5)",
       },
@@ -45,7 +48,7 @@ export function NetworkCharts({ nodes }: NetworkChartsProps) {
 
   // Préparation des données pour le graphique de statut
   const statusData = {
-    labels: ["Actif", "Inactif"],
+    labels: [t("status.active"), t("status.inactive")],
     datasets: [
       {
         data: [
@@ -60,23 +63,23 @@ export function NetworkCharts({ nodes }: NetworkChartsProps) {
   // Préparation des données pour l'évolution de la capacité
   const capacityEvolutionData = {
     labels: [
-      "Jan",
-      "Fév",
-      "Mar",
-      "Avr",
-      "Mai",
-      "Juin",
-      "Juil",
-      "Aoû",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Déc",
+      t("months.jan"),
+      t("months.feb"),
+      t("months.mar"),
+      t("months.apr"),
+      t("months.may"),
+      t("months.jun"),
+      t("months.jul"),
+      t("months.aug"),
+      t("months.sep"),
+      t("months.oct"),
+      t("months.nov"),
+      t("months.dec"),
     ],
     datasets: [
       {
-        label: "Capacité totale (BTC)",
-        data: [120, 150, 180, 220, 250, 280, 300, 320, 350, 380, 400, 420], // À remplacer par les vraies données
+        label: t("capacityEvolution.label"),
+        data: [120, 150, 180, 220, 250, 280, 300, 320, 350, 380, 400, 420],
         borderColor: "rgb(75, 192, 192)",
         tension: 0.1,
       },
@@ -85,10 +88,16 @@ export function NetworkCharts({ nodes }: NetworkChartsProps) {
 
   // Préparation des données pour la distribution des âges
   const ageDistributionData = {
-    labels: ["< 1 mois", "1-3 mois", "3-6 mois", "6-12 mois", "> 1 an"],
+    labels: [
+      t("ageDistribution.lessThanMonth"),
+      t("ageDistribution.oneToThreeMonths"),
+      t("ageDistribution.threeToSixMonths"),
+      t("ageDistribution.sixToTwelveMonths"),
+      t("ageDistribution.moreThanYear"),
+    ],
     datasets: [
       {
-        label: "Nombre de nœuds",
+        label: t("ageDistribution.label"),
         data: [
           nodes.filter((node) => node.age < 1).length,
           nodes.filter((node) => node.age >= 1 && node.age < 3).length,
@@ -105,7 +114,7 @@ export function NetworkCharts({ nodes }: NetworkChartsProps) {
   const correlationData = {
     datasets: [
       {
-        label: "Nœuds",
+        label: t("correlation.label"),
         data: nodes.map((node) => ({
           x: parseFloat(node.capacity.toString()),
           y: node.channels.length,
@@ -130,13 +139,13 @@ export function NetworkCharts({ nodes }: NetworkChartsProps) {
       x: {
         title: {
           display: true,
-          text: "Capacité (BTC)",
+          text: t("correlation.xAxis"),
         },
       },
       y: {
         title: {
           display: true,
-          text: "Nombre de canaux",
+          text: t("correlation.yAxis"),
         },
       },
     },
@@ -145,29 +154,27 @@ export function NetworkCharts({ nodes }: NetworkChartsProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
       <Card className="p-4">
-        <h3 className="text-lg font-semibold mb-4">Capacité par nœud</h3>
+        <h3 className="text-lg font-semibold mb-4">{t("capacity.title")}</h3>
         <Bar data={capacityData} options={options} />
       </Card>
       <Card className="p-4">
-        <h3 className="text-lg font-semibold mb-4">Répartition des statuts</h3>
+        <h3 className="text-lg font-semibold mb-4">{t("status.title")}</h3>
         <Pie data={statusData} options={options} />
       </Card>
       <Card className="p-4">
         <h3 className="text-lg font-semibold mb-4">
-          Évolution de la capacité du réseau
+          {t("capacityEvolution.title")}
         </h3>
         <Line data={capacityEvolutionData} options={options} />
       </Card>
       <Card className="p-4">
         <h3 className="text-lg font-semibold mb-4">
-          Distribution des âges des nœuds
+          {t("ageDistribution.title")}
         </h3>
         <Bar data={ageDistributionData} options={options} />
       </Card>
       <Card className="p-4 md:col-span-2">
-        <h3 className="text-lg font-semibold mb-4">
-          Corrélation Capacité / Nombre de canaux
-        </h3>
+        <h3 className="text-lg font-semibold mb-4">{t("correlation.title")}</h3>
         <Scatter data={correlationData} options={scatterOptions} />
       </Card>
     </div>

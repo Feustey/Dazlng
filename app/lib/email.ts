@@ -1,6 +1,6 @@
 import { Resend } from "resend";
-import AuthEmailTemplate from "../components/emails/AuthEmailTemplate";
-import WelcomeEmailTemplate from "../components/emails/WelcomeEmailTemplate";
+import { AuthEmailTemplate } from "../components/emails/AuthEmailTemplate";
+import { WelcomeEmailTemplate } from "../components/emails/WelcomeEmailTemplate";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 

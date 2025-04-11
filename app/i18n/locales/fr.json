@@ -1,0 +1,280 @@
+{
+  "common": {
+    "buttons": {
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "send": "Envoyer",
+      "close": "Fermer",
+      "back": "Retour",
+      "next": "Suivant",
+      "confirm": "Confirmer"
+    },
+    "status": {
+      "loading": "Chargement...",
+      "error": "Erreur",
+      "success": "Succès",
+      "pending": "En attente",
+      "completed": "Terminé",
+      "failed": "Échoué"
+    },
+    "language": "Langue",
+    "help": "Aide",
+    "notifications": "Notifications",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "profile": "Profil",
+    "settings": "Paramètres"
+  },
+  "header": {
+    "title": "Daznode",
+    "navigation": {
+      "dashboard": "Tableau de bord",
+      "dazia": "Daz-IA",
+      "network": "Réseau",
+      "channels": "Canaux",
+      "learn": "Apprendre",
+      "help": "Aide"
+    },
+    "actions": {
+      "login": "Connexion",
+      "logout": "Déconnexion",
+      "profile": "Mon profil",
+      "settings": "Paramètres",
+      "notifications": "Notifications",
+      "openMenu": "Ouvrir le menu"
+    }
+  },
+  "pages": {
+    "home": {
+      "title": "Bienvenue sur DazLng",
+      "subtitle": "Découvrez l'avenir des réseaux Lightning",
+      "cta": {
+        "primary": "Commencer maintenant",
+        "secondary": "En savoir plus"
+      },
+      "stats": {
+        "nodes": "Nœuds",
+        "nodesDescription": "Nœuds actifs sur le réseau",
+        "channels": "Canaux",
+        "channelsDescription": "Canaux de paiement ouverts",
+        "capacity": "Capacité",
+        "capacityDescription": "Capacité totale du réseau"
+      },
+      "features": {
+        "title": "Fonctionnalités clés",
+        "subtitle": "Découvrez tout ce que Daznode peut faire pour vous",
+        "learning": {
+          "title": "Guide d'apprentissage",
+          "description": "Apprenez à gérer votre nœud efficacement avec nos guides détaillés"
+        },
+        "transactions": {
+          "title": "Visualisation des transactions",
+          "description": "Suivez vos transactions en temps réel avec des graphiques intuitifs"
+        },
+        "operations": {
+          "title": "Opérations Lightning",
+          "description": "Gérez vos canaux et paiements facilement"
+        },
+        "metrics": {
+          "title": "Métriques avancées",
+          "description": "Analysez les performances de votre nœud avec des métriques détaillées"
+        },
+        "nwc": {
+          "title": "Nostr Wallet Connect",
+          "description": "Connectez votre portefeuille Lightning de manière sécurisée"
+        },
+        "security": {
+          "title": "Sécurité Avancée",
+          "description": "Protection maximale de vos fonds et de vos données"
+        }
+      }
+    },
+    "network": {
+      "title": "Vue d'ensemble du réseau",
+      "subtitle": "Explorez les statistiques et les tendances du réseau Lightning",
+      "metrics": {
+        "totalNodes": "Total des nœuds",
+        "totalNodesDescription": "Nombre total de nœuds actifs sur le réseau",
+        "totalChannels": "Total des canaux",
+        "totalChannelsDescription": "Nombre total de canaux de paiement ouverts",
+        "totalCapacity": "Capacité totale",
+        "totalCapacityDescription": "Capacité totale du réseau en BTC"
+      },
+      "charts": {
+        "capacityHistory": {
+          "title": "Historique de la capacité",
+          "description": "Évolution de la capacité totale du réseau au fil du temps"
+        },
+        "nodesByCountry": {
+          "title": "Distribution géographique",
+          "description": "Répartition des nœuds par pays"
+        },
+        "capacity": {
+          "title": "Capacité par nœud",
+          "label": "Capacité (BTC)"
+        },
+        "status": {
+          "title": "Répartition des statuts",
+          "active": "Actif",
+          "inactive": "Inactif"
+        },
+        "capacityEvolution": {
+          "title": "Évolution de la capacité du réseau",
+          "label": "Capacité totale (BTC)"
+        },
+        "months": {
+          "jan": "Jan",
+          "feb": "Fév",
+          "mar": "Mar",
+          "apr": "Avr",
+          "may": "Mai",
+          "jun": "Juin",
+          "jul": "Juil",
+          "aug": "Aoû",
+          "sep": "Sep",
+          "oct": "Oct",
+          "nov": "Nov",
+          "dec": "Déc"
+        },
+        "ageDistribution": {
+          "title": "Distribution des âges des nœuds",
+          "label": "Nombre de nœuds",
+          "lessThanMonth": "< 1 mois",
+          "oneToThreeMonths": "1-3 mois",
+          "threeToSixMonths": "3-6 mois",
+          "sixToTwelveMonths": "6-12 mois",
+          "moreThanYear": "> 1 an"
+        },
+        "correlation": {
+          "title": "Corrélation Capacité / Nombre de canaux",
+          "label": "Nœuds",
+          "xAxis": "Capacité (BTC)",
+          "yAxis": "Nombre de canaux"
+        }
+      },
+      "centrality": {
+        "title": "Centralités du Réseau",
+        "betweenness": {
+          "title": "Betweenness"
+        },
+        "eigenvector": {
+          "title": "Eigenvector"
+        },
+        "closeness": {
+          "title": "Closeness"
+        },
+        "weightedBetweenness": {
+          "title": "Betweenness Pondéré"
+        },
+        "weightedEigenvector": {
+          "title": "Eigenvector Pondéré"
+        },
+        "weightedCloseness": {
+          "title": "Closeness Pondéré"
+        },
+        "table": {
+          "rank": "Rang",
+          "pubkey": "Pubkey",
+          "value": "Valeur"
+        },
+        "lastUpdate": "Dernière mise à jour",
+        "error": {
+          "fetch": "Erreur lors de la récupération des données",
+          "unknown": "Une erreur est survenue"
+        }
+      }
+    },
+    "learn": {
+      "title": "Guide d'apprentissage",
+      "subtitle": "Découvrez et apprenez tout sur le Lightning Network",
+      "sections": {
+        "basics": {
+          "title": "Les bases",
+          "subtitle": "Découvrez les fondamentaux du Lightning Network",
+          "topics": {
+            "introduction": {
+              "title": "Introduction au Lightning Network",
+              "description": "Comprenez les concepts de base et l'architecture du réseau Lightning"
+            },
+            "channels": {
+              "title": "Canaux de paiement",
+              "description": "Apprenez à créer et gérer des canaux de paiement"
+            },
+            "transactions": {
+              "title": "Transactions Lightning",
+              "description": "Découvrez comment effectuer des transactions instantanées et peu coûteuses"
+            }
+          }
+        },
+        "advanced": {
+          "title": "Concepts avancés",
+          "subtitle": "Maîtrisez les aspects techniques du Lightning Network",
+          "topics": {
+            "security": {
+              "title": "Sécurité et confidentialité",
+              "description": "Protégez vos fonds et vos données avec les meilleures pratiques"
+            },
+            "performance": {
+              "title": "Optimisation des performances",
+              "description": "Améliorez les performances de votre nœud et de vos canaux"
+            },
+            "wallets": {
+              "title": "Portefeuilles Lightning",
+              "description": "Découvrez les différents types de portefeuilles et leurs fonctionnalités"
+            }
+          }
+        }
+      }
+    }
+  },
+  "errors": {
+    "system": {
+      "unknown": "Une erreur inattendue s'est produite",
+      "network": "Erreur de connexion réseau",
+      "auth": "Erreur d'authentification",
+      "notFound": "Page non trouvée",
+      "validation": "Erreur de validation"
+    },
+    "form": {
+      "required": "Ce champ est requis",
+      "invalid": "Format invalide",
+      "email": "Email invalide",
+      "password": "Mot de passe invalide",
+      "match": "Les mots de passe ne correspondent pas"
+    }
+  },
+  "notifications": {
+    "success": {
+      "saved": "Modifications enregistrées avec succès",
+      "sent": "Message envoyé avec succès",
+      "deleted": "Suppression effectuée avec succès"
+    },
+    "error": {
+      "save": "Erreur lors de l'enregistrement",
+      "send": "Erreur lors de l'envoi",
+      "delete": "Erreur lors de la suppression"
+    }
+  },
+  "settings": {
+    "language": {
+      "label": "Langue",
+      "options": {
+        "fr": "Français",
+        "en": "Anglais",
+        "de": "Allemand",
+        "es": "Espagnol"
+      }
+    },
+    "theme": {
+      "label": "Thème",
+      "options": {
+        "light": "Clair",
+        "dark": "Sombre",
+        "system": "Système"
+      }
+    },
+    "save": "Enregistrer les modifications",
+    "success": "Paramètres enregistrés avec succès",
+    "error": "Échec de l'enregistrement des paramètres"
+  }
+}

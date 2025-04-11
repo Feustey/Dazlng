@@ -1,7 +1,9 @@
 "use client";
 
+import * as React from "react";
 import { useEffect, useRef, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import Card from "./ui/card";
+import { CardContent, CardHeader, CardTitle } from "./ui/card";
 import { McpService } from "../lib/mcpService";
 import {
   NetworkGraph as NetworkGraphType,
@@ -9,7 +11,7 @@ import {
   NetworkGraphEdge,
 } from "../types/mcpService";
 import { Loader2, ZoomIn, ZoomOut, RotateCw, Download } from "lucide-react";
-import { Button } from "./ui/button";
+import Button from "./ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import {
   Select,
@@ -18,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { useTranslations } from "next-intl";
 
 // Simuler des données pour le développement
 const mockNetworkGraph: NetworkGraphType = {
@@ -286,6 +289,7 @@ function drawGraph(
 
 export default function NetworkGraph() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const t = useTranslations("pages.network.graph");
   const [graph, setGraph] = useState<NetworkGraphType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -525,7 +529,7 @@ export default function NetworkGraph() {
     <Card className="w-full">
       <CardHeader className="pb-2">
         <div className="flex justify-between items-center">
-          <CardTitle>Visualisation du réseau</CardTitle>
+          <CardTitle>{t("title")}</CardTitle>
           <div className="flex gap-2">
             <Button
               variant="outline"
@@ -626,19 +630,19 @@ export default function NetworkGraph() {
         {graph && (
           <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
             <div className="flex flex-col">
-              <span className="text-muted-foreground">Nœuds</span>
+              <span className="text-muted-foreground">{t("nodes")}</span>
               <span className="font-bold">{graph.nodes.length}</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-muted-foreground">Canaux</span>
+              <span className="text-muted-foreground">{t("channels")}</span>
               <span className="font-bold">{graph.edges.length}</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-muted-foreground">Diamètre</span>
+              <span className="text-muted-foreground">{t("diameter")}</span>
               <span className="font-bold">{graph.metrics.diameter}</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-muted-foreground">Densité</span>
+              <span className="text-muted-foreground">{t("density")}</span>
               <span className="font-bold">
                 {graph.metrics.density.toFixed(3)}
               </span>

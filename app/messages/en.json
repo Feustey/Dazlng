@@ -212,7 +212,84 @@
     "description": "Discover the power of artificial intelligence with Daz-IA",
     "tabs": {
       "plans": "Plans",
-      "recommendations": "Recommendations"
+      "engine": "Engine"
+    },
+    "engine": {
+      "what_it_does": {
+        "title": "🎯 What Daz-IA Actually Does",
+        "items": [
+          "Continuous analysis of node state: transactions, connections, reliability, etc.",
+          "Personalized advice on channel opening, optimal fees, liquidity management",
+          "Smart alerts to anticipate problems or seize routing opportunities",
+          "Strategic planning with performance indicators and long-term goals",
+          "Contextualized responses to your simple or complex questions"
+        ]
+      },
+      "architecture": {
+        "title": "⚙️ A Powerful Technical Architecture",
+        "description": "The Daz-IA engine is based on a robust and proven technical stack:",
+        "items": [
+          "Document vectorization with AI agent, dedicated LLM and FAISS indexing",
+          "Continuously fed database + intelligent cache",
+          "Microservices architecture with high availability",
+          "Enhanced security, advanced monitoring and customizable configuration"
+        ]
+      },
+      "smart_node": {
+        "title": "💡 The Smart Node, Ready to Use",
+        "content": "Paired with the Dazbox, our turnkey hardware node, it natively embeds this augmented intelligence. By combining network performance, simple interface and integrated AI assistance, the Dazbox becomes more than just a node: an intelligent control center for your Lightning Network operations."
+      },
+      "launch_offer": {
+        "title": "🔥 Exclusive Launch Offer",
+        "subtitle": "📅 In 10 days, be among the first to activate Daz-IA with our special launch offer:",
+        "price": "➡️ 400,000 sats instead of 500,000",
+        "description": "The subscription gives you complete access to the Daz-IA engine, dashboard, alerts and evolving recommendations."
+      },
+      "benefits": {
+        "title": "⚡ Boost Performance, Automate Your Decisions",
+        "subtitle": "With Daznode, you gain the advantage:",
+        "items": [
+          "Optimized routing and increased revenue",
+          "Reduced operational costs",
+          "Better risk management",
+          "Time savings on node management",
+          "Continuous learning and adaptation"
+        ]
+      },
+      "plans": {
+        "title": "📊 Choose Your Plan",
+        "description": "Select the plan that best suits your needs:",
+        "basic": {
+          "title": "Basic",
+          "price": "Free",
+          "features": [
+            "Basic node analysis",
+            "Standard alerts",
+            "Community support"
+          ]
+        },
+        "pro": {
+          "title": "Pro",
+          "price": "500,000 sats/year",
+          "features": [
+            "Advanced node analysis",
+            "Smart alerts",
+            "Priority support",
+            "Custom recommendations"
+          ]
+        },
+        "enterprise": {
+          "title": "Enterprise",
+          "price": "Contact us",
+          "features": [
+            "Full node analysis",
+            "Custom alerts",
+            "Dedicated support",
+            "API access",
+            "Custom development"
+          ]
+        }
+      }
     },
     "one-shot": {
       "title": "One-Shot",

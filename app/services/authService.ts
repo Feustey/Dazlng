@@ -1,4 +1,4 @@
-import { mcpService } from "./mcpService";
+import { supabase } from "@/app/lib/supabase";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
@@ -8,34 +8,30 @@ export interface User {
   email: string;
   name: string;
   password: string;
-  createdAt: Date;
-  updatedAt: Date;
-  emailVerified: boolean;
+  created_at: Date;
+  updated_at: Date;
+  email_verified: boolean;
 }
 
 export interface Session {
   id: string;
-  userId: string;
+  user_id: string;
   expires: Date;
-  createdAt: Date;
+  created_at: Date;
 }
 
 export interface VerificationCode {
   id: string;
-  userId: string;
+  user_id: string;
   code: string;
   expires: Date;
-  createdAt: Date;
+  created_at: Date;
 }
 
 export class AuthService {
-  private users: Map<string, User> = new Map();
-  private sessions: Map<string, Session> = new Map();
-  private verificationCodes: Map<string, VerificationCode> = new Map();
   private transporter: nodemailer.Transporter;
 
   constructor() {
-    // Initialiser le transporteur d'emails
     this.transporter = nodemailer.createTransport({
       host: process.env.EMAIL_SERVER_HOST,
       port: Number(process.env.EMAIL_SERVER_PORT),
@@ -47,7 +43,6 @@ export class AuthService {
     });
   }
 
-  // Créer un nouvel utilisateur
   async createUser(
     email: string,
     name: string,
@@ -55,9 +50,11 @@ export class AuthService {
   ): Promise<User> {
     try {
       // Vérifier si l'utilisateur existe déjà
-      const existingUser = Array.from(this.users.values()).find(
-        (user) => user.email === email
-      );
+      const { data: existingUser } = await supabase
+        .from("users")
+        .select("*")
+        .eq("email", email)
+        .single();
 
       if (existingUser) {
         throw new Error("User already exists");
@@ -67,59 +64,77 @@ export class AuthService {
       const hashedPassword = await bcrypt.hash(password, 10);
 
       // Créer un nouvel utilisateur
-      const user: User = {
-        id: `user_${Date.now()}`,
-        email,
-        name,
-        password: hashedPassword,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        emailVerified: false,
+      const { data: user, error } = await supabase
+        .from("users")
+        .insert({
+          email,
+          name,
+          password: hashedPassword,
+          email_verified: false,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      return {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        password: user.password,
+        created_at: new Date(user.created_at),
+        updated_at: new Date(user.updated_at),
+        email_verified: user.email_verified,
       };
-
-      // Stocker l'utilisateur
-      this.users.set(user.id, user);
-
-      return user;
     } catch (error) {
       console.error("Error creating user:", error);
       throw error;
     }
   }
 
-  // Vérifier un utilisateur
   async verifyUser(email: string, code: string): Promise<boolean> {
     try {
       // Trouver l'utilisateur
-      const user = Array.from(this.users.values()).find(
-        (user) => user.email === email
-      );
+      const { data: user } = await supabase
+        .from("users")
+        .select("*")
+        .eq("email", email)
+        .single();
 
       if (!user) {
         throw new Error("User not found");
       }
 
       // Trouver le code de vérification
-      const verificationCode = Array.from(this.verificationCodes.values()).find(
-        (vc) => vc.userId === user.id && vc.code === code
-      );
+      const { data: verificationCode } = await supabase
+        .from("verification_codes")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("code", code)
+        .single();
 
       if (!verificationCode) {
         throw new Error("Invalid verification code");
       }
 
       // Vérifier si le code est expiré
-      if (verificationCode.expires < new Date()) {
+      if (new Date(verificationCode.expires) < new Date()) {
         throw new Error("Verification code expired");
       }
 
       // Marquer l'utilisateur comme vérifié
-      user.emailVerified = true;
-      user.updatedAt = new Date();
-      this.users.set(user.id, user);
+      const { error } = await supabase
+        .from("users")
+        .update({ email_verified: true })
+        .eq("id", user.id);
+
+      if (error) throw error;
 
       // Supprimer le code de vérification
-      this.verificationCodes.delete(verificationCode.id);
+      await supabase
+        .from("verification_codes")
+        .delete()
+        .eq("id", verificationCode.id);
 
       return true;
     } catch (error) {
@@ -128,70 +143,81 @@ export class AuthService {
     }
   }
 
-  // Créer une session
   async createSession(userId: string): Promise<Session> {
     try {
       // Vérifier si l'utilisateur existe
-      const user = this.users.get(userId);
+      const { data: user } = await supabase
+        .from("users")
+        .select("*")
+        .eq("id", userId)
+        .single();
 
       if (!user) {
         throw new Error("User not found");
       }
 
       // Créer une nouvelle session
-      const session: Session = {
-        id: `session_${Date.now()}`,
-        userId,
-        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 jours
-        createdAt: new Date(),
+      const { data: session, error } = await supabase
+        .from("sessions")
+        .insert({
+          user_id: userId,
+          expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      return {
+        id: session.id,
+        user_id: session.user_id,
+        expires: new Date(session.expires),
+        created_at: new Date(session.created_at),
       };
-
-      // Stocker la session
-      this.sessions.set(session.id, session);
-
-      return session;
     } catch (error) {
       console.error("Error creating session:", error);
       throw error;
     }
   }
 
-  // Obtenir une session
   async getSession(sessionId: string): Promise<Session | null> {
     try {
-      // Trouver la session
-      const session = this.sessions.get(sessionId);
+      const { data: session } = await supabase
+        .from("sessions")
+        .select("*")
+        .eq("id", sessionId)
+        .single();
 
       if (!session) {
         return null;
       }
 
       // Vérifier si la session est expirée
-      if (session.expires < new Date()) {
-        this.sessions.delete(sessionId);
+      if (new Date(session.expires) < new Date()) {
+        await supabase.from("sessions").delete().eq("id", sessionId);
         return null;
       }
 
-      return session;
+      return {
+        id: session.id,
+        user_id: session.user_id,
+        expires: new Date(session.expires),
+        created_at: new Date(session.created_at),
+      };
     } catch (error) {
       console.error("Error getting session:", error);
       throw error;
     }
   }
 
-  // Supprimer une session
   async deleteSession(sessionId: string): Promise<boolean> {
     try {
-      // Vérifier si la session existe
-      const session = this.sessions.get(sessionId);
+      const { error } = await supabase
+        .from("sessions")
+        .delete()
+        .eq("id", sessionId);
 
-      if (!session) {
-        return false;
-      }
-
-      // Supprimer la session
-      this.sessions.delete(sessionId);
-
+      if (error) throw error;
       return true;
     } catch (error) {
       console.error("Error deleting session:", error);
@@ -199,11 +225,14 @@ export class AuthService {
     }
   }
 
-  // Créer un code de vérification
   async createVerificationCode(userId: string): Promise<VerificationCode> {
     try {
       // Vérifier si l'utilisateur existe
-      const user = this.users.get(userId);
+      const { data: user } = await supabase
+        .from("users")
+        .select("*")
+        .eq("id", userId)
+        .single();
 
       if (!user) {
         throw new Error("User not found");
@@ -213,16 +242,17 @@ export class AuthService {
       const code = Math.floor(100000 + Math.random() * 900000).toString();
 
       // Créer un nouveau code de vérification
-      const verificationCode: VerificationCode = {
-        id: `vc_${Date.now()}`,
-        userId,
-        code,
-        expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 heures
-        createdAt: new Date(),
-      };
+      const { data: verificationCode, error } = await supabase
+        .from("verification_codes")
+        .insert({
+          user_id: userId,
+          code,
+          expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+        })
+        .select()
+        .single();
 
-      // Stocker le code de vérification
-      this.verificationCodes.set(verificationCode.id, verificationCode);
+      if (error) throw error;
 
       // Envoyer l'email de vérification
       await this.transporter.sendMail({
@@ -233,31 +263,46 @@ export class AuthService {
         html: `<p>Votre code de vérification est: <strong>${code}</strong></p>`,
       });
 
-      return verificationCode;
+      return {
+        id: verificationCode.id,
+        user_id: verificationCode.user_id,
+        code: verificationCode.code,
+        expires: new Date(verificationCode.expires),
+        created_at: new Date(verificationCode.created_at),
+      };
     } catch (error) {
       console.error("Error creating verification code:", error);
       throw error;
     }
   }
 
-  // Obtenir un utilisateur
   async getUser(userId: string): Promise<User | null> {
     try {
-      // Trouver l'utilisateur
-      const user = this.users.get(userId);
+      const { data: user } = await supabase
+        .from("users")
+        .select("*")
+        .eq("id", userId)
+        .single();
 
       if (!user) {
         return null;
       }
 
-      return user;
+      return {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        password: user.password,
+        created_at: new Date(user.created_at),
+        updated_at: new Date(user.updated_at),
+        email_verified: user.email_verified,
+      };
     } catch (error) {
       console.error("Error getting user:", error);
       throw error;
     }
   }
 
-  // Générer un token JWT
   generateToken(user: User): string {
     return jwt.sign(
       { id: user.id, email: user.email },
@@ -266,7 +311,6 @@ export class AuthService {
     );
   }
 
-  // Vérifier un token JWT
   verifyToken(token: string): any {
     return jwt.verify(token, process.env.JWT_SECRET || "secret");
   }

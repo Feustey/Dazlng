@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import CheckoutSession from "@/models/CheckoutSession";
-import { auth } from "@/auth";
+import { auth } from "@/app/lib/auth";
 
 export async function POST(req: Request) {
   try {

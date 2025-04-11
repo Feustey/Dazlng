@@ -1,15 +1,25 @@
 "use client";
 
+// Imports React
+import { useState, useEffect } from "react";
+
+// Imports Next.js
+import { useParams } from "next/navigation";
+
+// Imports de bibliothèques tierces
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
-import { AlertProvider } from "../contexts/AlertContext";
-import { AuthProvider } from "../contexts/AuthContext";
 import { NextIntlClientProvider } from "next-intl";
-import { useParams } from "next/navigation";
-import { useState, useEffect } from "react";
+
+// Imports de configuration
 import { locales, defaultLocale } from "../i18n.config.base";
 
+// Imports de contextes
+import { AlertProvider } from "../contexts/AlertContext";
+import { AuthProvider } from "../contexts/AuthContext";
+
 export function Providers({ children }: { children: React.ReactNode }) {
+  const [mounted, setMounted] = useState(false);
   const [messages, setMessages] = useState<Record<string, any>>({});
   const params = useParams();
   const locale = (params.locale as string) || defaultLocale;
@@ -20,6 +30,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     : defaultLocale;
 
   useEffect(() => {
+    setMounted(true);
     // Charger les messages de manière dynamique côté client
     import(`../messages/${validLocale}.json`)
       .then((module) => {
@@ -33,6 +44,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
         setMessages({}); // Utiliser un objet vide en cas d'erreur
       });
   }, [validLocale]);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <NextIntlClientProvider

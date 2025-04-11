@@ -1,286 +1,97 @@
 "use client";
 
+import { useTranslation } from "@/app/hooks/useTranslation";
+import { motion } from "framer-motion";
+import { BarChart2, Globe, Zap } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState, useMemo, useEffect } from "react";
-import { Card } from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
-import { Input } from "../../components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../components/ui/select";
-import { NodeList } from "../../components/NodeList";
-import { NetworkCharts } from "../../components/NetworkCharts";
-import NetworkMovers from "../../components/NetworkMovers";
-import NetworkGraph from "../../components/NetworkGraph";
-import { networkService } from "../../services/networkService";
-import { NetworkNode, Node as NetworkNodeType } from "../../types/network";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../../components/ui/tabs";
-
-interface Node {
-  id: string;
-  name: string;
-  capacity: string;
-  channels: number;
-  age: string;
-  status: "active" | "inactive";
-}
-
-function transformNetworkNode(node: NetworkNode): Node {
-  return {
-    id: node.publicKey,
-    name: node.alias,
-    capacity: node.capacity.toString(),
-    channels: node.channelCount,
-    age: "N/A", // À implémenter si nécessaire
-    status: "active", // À implémenter si nécessaire
-  };
-}
-
-function transformToNetworkNodeType(node: NetworkNode): NetworkNodeType {
-  return {
-    id: node.publicKey,
-    publicKey: node.publicKey,
-    name: node.alias,
-    alias: node.alias,
-    color: node.color,
-    addresses: node.addresses,
-    lastUpdate: node.lastUpdate,
-    capacity: node.capacity,
-    channelCount: node.channelCount,
-    avgChannelSize: node.avgChannelSize,
-    channels: [],
-    age: 0,
-    status: "active",
-  };
-}
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import { Users } from "lucide-react";
+import { CapacityChart, CountryChart } from "@/components/charts";
+import { PageContainer } from "@/components/layout/PageContainer";
 
 export default function NetworkPage() {
-  const t = useTranslations("Network");
-  const [nodes, setNodes] = useState<Node[]>([]);
-  const [networkNodes, setNetworkNodes] = useState<NetworkNodeType[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [networkStats, setNetworkStats] = useState({
-    totalNodes: 0,
-    totalChannels: 0,
-    totalCapacity: "0 BTC",
-    avgChannelSize: "0 BTC",
-  });
-  const [filters, setFilters] = useState({
-    capacity: "",
-    age: "",
-    status: "all",
-  });
-
-  // Chargement des données
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const [nodesData, statsData] = await Promise.all([
-          networkService.getNodes(),
-          networkService.getNetworkStats(),
-        ]);
-        setNodes(nodesData.map(transformNetworkNode));
-        setNetworkNodes(nodesData.map(transformToNetworkNodeType));
-        setNetworkStats(statsData);
-        setError(null);
-      } catch (err) {
-        setError("Erreur lors du chargement des données");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  // Logique de filtrage
-  const filteredNodes = useMemo(() => {
-    return nodes.filter((node) => {
-      if (
-        filters.capacity &&
-        parseFloat(node.capacity) < parseFloat(filters.capacity)
-      ) {
-        return false;
-      }
-      if (
-        filters.age &&
-        node.age !== "N/A" &&
-        parseInt(node.age) < parseInt(filters.age)
-      ) {
-        return false;
-      }
-      if (filters.status !== "all" && node.status !== filters.status) {
-        return false;
-      }
-      return true;
-    });
-  }, [nodes, filters]);
-
-  // Handlers
-  const handleViewDetails = async (nodeId: string) => {
-    try {
-      const nodeDetails = await networkService.getNodeDetails(nodeId);
-      console.log("Node details:", nodeDetails);
-      // Implémenter la navigation vers la page de détails
-    } catch (err) {
-      console.error("Error fetching node details:", err);
-    }
-  };
-
-  const handleManageChannels = async (nodeId: string) => {
-    try {
-      const channels = await networkService.getNodeChannels(nodeId);
-      console.log("Node channels:", channels);
-      // Implémenter la gestion des canaux
-    } catch (err) {
-      console.error("Error fetching node channels:", err);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center text-red-500 animate-shake">{error}</div>
-      </div>
-    );
-  }
+  const t = useTranslations("pages.network");
 
   return (
-    <div className="container mx-auto px-4 py-8 animate-fade-in">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold gradient-text">{t("title")}</h1>
-        <Button className="btn-gradient">{t("actions.addNode")}</Button>
+    <PageContainer title={t("title")} subtitle={t("subtitle")}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold">{t("metrics.totalNodes")}</h3>
+            <Users className="w-6 h-6 text-primary" />
+          </div>
+          <p className="text-3xl font-bold text-gradient">10,000+</p>
+          <p className="text-sm text-muted-foreground mt-2">
+            {t("metrics.totalNodesDescription")}
+          </p>
+        </Card>
+
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold">
+              {t("metrics.totalChannels")}
+            </h3>
+            <Zap className="w-6 h-6 text-primary" />
+          </div>
+          <p className="text-3xl font-bold text-gradient">50,000+</p>
+          <p className="text-sm text-muted-foreground mt-2">
+            {t("metrics.totalChannelsDescription")}
+          </p>
+        </Card>
+
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold">
+              {t("metrics.totalCapacity")}
+            </h3>
+            <BarChart2 className="w-6 h-6 text-primary" />
+          </div>
+          <p className="text-3xl font-bold text-gradient">1,000 BTC</p>
+          <p className="text-sm text-muted-foreground mt-2">
+            {t("metrics.totalCapacityDescription")}
+          </p>
+        </Card>
       </div>
 
-      {/* Statistiques */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <Card className="card-glass p-6 animate-slide-up">
-          <h3 className="text-lg font-semibold mb-2 text-gradient">
-            {t("stats.totalNodes")}
-          </h3>
-          <p className="text-2xl">{networkStats.totalNodes}</p>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="p-6">
+          <CardHeader>
+            <CardTitle className="text-xl font-bold">
+              {t("charts.capacityHistory.title")}
+            </CardTitle>
+            <CardDescription>
+              {t("charts.capacityHistory.description")}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[300px]">
+              <CapacityChart />
+            </div>
+          </CardContent>
         </Card>
-        <Card className="card-glass p-6 animate-slide-up [animation-delay:100ms]">
-          <h3 className="text-lg font-semibold mb-2 text-gradient">
-            {t("stats.activeChannels")}
-          </h3>
-          <p className="text-2xl">{networkStats.totalChannels}</p>
-        </Card>
-        <Card className="card-glass p-6 animate-slide-up [animation-delay:200ms]">
-          <h3 className="text-lg font-semibold mb-2 text-gradient">
-            {t("stats.totalCapacity")}
-          </h3>
-          <p className="text-2xl">{networkStats.totalCapacity}</p>
-        </Card>
-        <Card className="card-glass p-6 animate-slide-up [animation-delay:300ms]">
-          <h3 className="text-lg font-semibold mb-2 text-gradient">
-            Taille moyenne des canaux
-          </h3>
-          <p className="text-2xl">{networkStats.avgChannelSize}</p>
+
+        <Card className="p-6">
+          <CardHeader>
+            <CardTitle className="text-xl font-bold">
+              {t("charts.nodesByCountry.title")}
+            </CardTitle>
+            <CardDescription>
+              {t("charts.nodesByCountry.description")}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[300px]">
+              <CountryChart />
+            </div>
+          </CardContent>
         </Card>
       </div>
-
-      {/* Tabs pour visualisations */}
-      <Tabs defaultValue="chart" className="mb-8">
-        <TabsList className="mb-4">
-          <TabsTrigger value="chart">Graphiques</TabsTrigger>
-          <TabsTrigger value="graph">Graphe du réseau</TabsTrigger>
-          <TabsTrigger value="movers">Mouvements</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="chart" className="animate-fade-in">
-          <NetworkCharts nodes={networkNodes} />
-        </TabsContent>
-
-        <TabsContent value="graph" className="animate-fade-in">
-          <NetworkGraph />
-        </TabsContent>
-
-        <TabsContent value="movers" className="animate-fade-in">
-          <NetworkMovers />
-        </TabsContent>
-      </Tabs>
-
-      {/* Filtres */}
-      <Card className="card-glass p-6 mb-8 animate-slide-up [animation-delay:600ms]">
-        <h2 className="text-xl font-semibold mb-4 gradient-text">
-          {t("filters.title")}
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <Input
-              type="number"
-              placeholder={t("filters.capacity")}
-              className="w-full bg-card/50 backdrop-blur-sm border-accent/20"
-              value={filters.capacity}
-              onChange={(e) =>
-                setFilters({ ...filters, capacity: e.target.value })
-              }
-            />
-          </div>
-          <div>
-            <Input
-              type="number"
-              placeholder={t("filters.age")}
-              className="w-full bg-card/50 backdrop-blur-sm border-accent/20"
-              value={filters.age}
-              onChange={(e) => setFilters({ ...filters, age: e.target.value })}
-            />
-          </div>
-          <div>
-            <Select
-              value={filters.status}
-              onValueChange={(value) =>
-                setFilters({ ...filters, status: value })
-              }
-            >
-              <SelectTrigger className="w-full bg-card/50 backdrop-blur-sm border-accent/20">
-                <SelectValue placeholder={t("filters.status.all")} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t("filters.status.all")}</SelectItem>
-                <SelectItem value="active">
-                  {t("filters.status.active")}
-                </SelectItem>
-                <SelectItem value="inactive">
-                  {t("filters.status.inactive")}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-      </Card>
-
-      {/* Liste des nœuds */}
-      <div className="animate-fade-in [animation-delay:700ms]">
-        <NodeList
-          nodes={filteredNodes}
-          onViewDetails={handleViewDetails}
-          onManageChannels={handleManageChannels}
-        />
-      </div>
-    </div>
+    </PageContainer>
   );
 }

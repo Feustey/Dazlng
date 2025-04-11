@@ -1,15 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "@/app/components/ui/button";
-import { Input } from "@/app/components/ui/input";
-import { Label } from "@/app/components/ui/label";
-import { getAlbyService } from "@/services/albyService";
+import { Button } from "@components/ui/button";
+import { Input } from "@components/ui/input";
+import { Label } from "@components/ui/label";
+import { createInvoice, checkInvoiceStatus } from "../services/albyService";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
 interface LightningPaymentProps {
-  onSuccess?: () => void;
+  onSuccess?: (invoice: any) => void;
   onError?: (error: Error) => void;
   defaultAmount?: number;
   defaultMemo?: string;
@@ -28,6 +28,7 @@ export default function LightningPayment({
   const [memo, setMemo] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [invoice, setInvoice] = useState<any>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -41,35 +42,20 @@ export default function LightningPayment({
       return;
     }
 
-    setLoading(true);
-    setError(null);
-
     try {
-      const albyService = await getAlbyService();
-      const invoice = await albyService.createInvoice({
-        amount,
-        memo,
-      });
-
-      const paymentPromise = albyService.sendPayment({
-        invoice: invoice.payment_request,
-      });
-
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(
-          () => reject(new Error("Délai d'attente dépassé (5 minutes)")),
-          300000
-        );
-      });
-
-      await Promise.race([paymentPromise, timeoutPromise]);
-
-      toast.success("Paiement effectué avec succès");
-      onSuccess?.();
-    } catch (err) {
-      console.error("Erreur lors du paiement:", err);
-      setError("Erreur lors de la création de la facture");
-      onError?.(err as Error);
+      setLoading(true);
+      const invoice = await createInvoice(amount);
+      setInvoice(invoice);
+      // Vérifier périodiquement le statut
+      const interval = setInterval(async () => {
+        const isPaid = await checkInvoiceStatus(invoice.payment_hash);
+        if (isPaid) {
+          clearInterval(interval);
+          onSuccess(invoice);
+        }
+      }, 5000);
+    } catch (error) {
+      toast.error("Erreur lors de la création de la facture");
     } finally {
       setLoading(false);
     }

@@ -1,3 +1,4 @@
+import { supabase } from "@/app/lib/supabase";
 import { mcpService } from "./mcpService";
 
 export interface Payment {
@@ -19,25 +20,50 @@ export class PaymentService {
     amount: number
   ): Promise<Payment> {
     try {
-      // Utiliser MCP pour envoyer un paiement
-      const payment = await mcpService.sendPayment(
+      // Créer un enregistrement de paiement dans Supabase
+      const { data: payment, error } = await supabase
+        .from("payments")
+        .insert({
+          source_node_id: sourceNodeId,
+          target_node_id: targetNodeId,
+          amount,
+          status: "pending",
+          timestamp: new Date().toISOString(),
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // Utiliser MCP pour envoyer le paiement
+      const mcpPayment = await mcpService.sendPayment(
         sourceNodeId,
         amount,
         targetNodeId
       );
+
+      // Mettre à jour le paiement dans Supabase
+      await supabase
+        .from("payments")
+        .update({
+          status: mcpPayment.status,
+          fee: mcpPayment.fee,
+          route: mcpPayment.route,
+        })
+        .eq("id", payment.id);
 
       return {
         id: payment.id,
         sourceNodeId,
         targetNodeId,
         amount,
-        status: payment.status || "pending",
+        status: mcpPayment.status || "pending",
         timestamp: new Date(payment.timestamp),
-        fee: payment.fee,
-        route: payment.route,
+        fee: mcpPayment.fee,
+        route: mcpPayment.route,
       };
     } catch (error) {
-      console.error("Error sending payment with MCP:", error);
+      console.error("Error sending payment:", error);
       throw error;
     }
   }
@@ -45,13 +71,18 @@ export class PaymentService {
   // Obtenir le statut d'un paiement
   async getPaymentStatus(paymentId: string): Promise<Payment> {
     try {
-      // Utiliser MCP pour obtenir le statut d'un paiement
-      const payment = await mcpService.getPaymentStatus(paymentId);
+      const { data: payment, error } = await supabase
+        .from("payments")
+        .select("*")
+        .eq("id", paymentId)
+        .single();
+
+      if (error) throw error;
 
       return {
         id: payment.id,
-        sourceNodeId: payment.sourceNodeId,
-        targetNodeId: payment.targetNodeId,
+        sourceNodeId: payment.source_node_id,
+        targetNodeId: payment.target_node_id,
         amount: payment.amount,
         status: payment.status || "pending",
         timestamp: new Date(payment.timestamp),
@@ -59,7 +90,7 @@ export class PaymentService {
         route: payment.route,
       };
     } catch (error) {
-      console.error("Error getting payment status from MCP:", error);
+      console.error("Error getting payment status:", error);
       throw error;
     }
   }
@@ -91,21 +122,25 @@ export class PaymentService {
   // Récupérer l'historique des transactions
   async getTransactions(): Promise<Payment[]> {
     try {
-      // Utiliser MCP pour récupérer l'historique des transactions
-      const transactions = await mcpService.getHistoricalData();
+      const { data: payments, error } = await supabase
+        .from("payments")
+        .select("*")
+        .order("timestamp", { ascending: false });
 
-      return transactions.map((tx: any) => ({
-        id: tx.id,
-        sourceNodeId: tx.sourceNodeId,
-        targetNodeId: tx.targetNodeId,
-        amount: tx.amount,
-        status: tx.status || "pending",
-        timestamp: new Date(tx.timestamp),
-        fee: tx.fee,
-        route: tx.route,
+      if (error) throw error;
+
+      return payments.map((payment) => ({
+        id: payment.id,
+        sourceNodeId: payment.source_node_id,
+        targetNodeId: payment.target_node_id,
+        amount: payment.amount,
+        status: payment.status || "pending",
+        timestamp: new Date(payment.timestamp),
+        fee: payment.fee,
+        route: payment.route,
       }));
     } catch (error) {
-      console.error("Error getting transactions from MCP:", error);
+      console.error("Error getting transactions:", error);
       throw error;
     }
   }

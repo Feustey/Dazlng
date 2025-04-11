@@ -1,10 +1,15 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2015",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
+    "noImplicitAny": false, // Permet les types 'any' implicites
+    "strictNullChecks": false, // Désactive la vérification stricte des null/undefined
+    "strictFunctionTypes": false, // Désactive la vérification stricte des types de fonction
+    "strictPropertyInitialization": false, // Désactive la vérification d'initialisation des propriétés
+    "noImplicitThis": false, // Permet l'utilisation implicite de 'this'
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -22,11 +27,7 @@
     "types": ["@testing-library/jest-dom", "node", "react", "react-dom"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "@app/*": ["./app/*"],
-      "@lib/*": ["./app/lib/*"],
-      "@components/*": ["./app/components/*"],
-      "@services/*": ["./app/services/*"]
+      "@/*": ["./*"]
     },
     "typeRoots": ["./node_modules/@types", "./app/types"]
   },

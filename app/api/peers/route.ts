@@ -5,8 +5,8 @@ import {
   HttpStatus,
 } from "../../lib/api/responses";
 
-// Utiliser une stratégie de mise en cache au lieu de force-dynamic
-export const revalidate = 3600; // Revalider toutes les heures
+// Configuration de la revalidation
+export const revalidate = 300; // Revalider toutes les 5 minutes
 
 export async function GET(request: Request) {
   try {
@@ -20,7 +20,11 @@ export async function GET(request: Request) {
     }
 
     const peersData = await getPeersOfPeers(nodePubkey);
-    return successResponse(peersData);
+    return successResponse(peersData, {
+      headers: {
+        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+      },
+    });
   } catch (error) {
     console.error("Error fetching peers:", error);
     return errorResponse("Erreur lors de la récupération des pairs", {

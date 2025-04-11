@@ -59,6 +59,15 @@ const nextConfig = {
       child_process: false,
     };
 
+    // Configurer les alias
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@": path.join(__dirname, "./app"),
+      "@lib": path.join(__dirname, "./app/lib"),
+      "@components": path.join(__dirname, "./app/components"),
+      "@services": path.join(__dirname, "./app/services"),
+    };
+
     return config;
   },
 };

@@ -1,8 +1,11 @@
 "use client";
 
+// Imports Next.js
+import Script from "next/script";
+
+// Imports de bibliothèques tierces
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { type ThemeProviderProps } from "next-themes/dist/types";
-import Script from "next/script";
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return (

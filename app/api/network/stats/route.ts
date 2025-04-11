@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 
+// Configuration de la revalidation
+export const revalidate = 300; // Revalider toutes les 5 minutes
+
 // Données fictives pour la démonstration
 const mockStats = {
   totalNodes: 18934,
@@ -16,7 +19,11 @@ export async function GET() {
   try {
     // Ici vous pourriez implémenter la vraie logique pour récupérer les statistiques
     // Par exemple, requête à une base de données ou appel à un service externe
-    return NextResponse.json(mockStats);
+    return NextResponse.json(mockStats, {
+      headers: {
+        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+      },
+    });
   } catch (error) {
     console.error("Error fetching network stats:", error);
     return NextResponse.json(

@@ -1,6 +1,6 @@
 import { inferAsyncReturnType } from "@trpc/server";
 import { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
-import { auth } from "@/auth";
+import { auth } from "@/app/lib/auth";
 
 export async function createTRPCContext(opts: FetchCreateContextFnOptions) {
   const session = await auth();

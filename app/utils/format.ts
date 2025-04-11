@@ -20,3 +20,8 @@ export function formatSats(sats: number): string {
   }
   return `${sats} sats`;
 }
+
+export function formatPubkey(pubkey: string): string {
+  if (!pubkey) return "";
+  return `${pubkey.slice(0, 6)}...${pubkey.slice(-4)}`;
+}

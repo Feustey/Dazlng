@@ -1,14 +1,32 @@
 "use client";
 
-import { Card } from "../../components/ui/card";
 import { useTranslations } from "next-intl";
-import { Button } from "../../components/ui/button";
-import { Input } from "../../components/ui/input";
-import { Search, ChevronDown, TrendingDown, TrendingUp } from "lucide-react";
 import { useState, useEffect } from "react";
+import PageContainer from "@/app/components/layout/PageContainer";
+import Card from "@/app/components/ui/card";
+import Button from "@/app/components/ui/button";
+import { Input } from "@/app/components/ui/input";
+import {
+  Search,
+  TrendingDown,
+  TrendingUp,
+  Loader2,
+  Filter,
+  Network,
+  Activity,
+  Zap,
+  Users,
+} from "lucide-react";
 import { NetworkStats } from "../../types/network";
 import { searchNodes } from "../../lib/api-client";
 import BigPlayers from "../../components/BigPlayers";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/app/components/ui/select";
 
 interface Node {
   pubkey: string;
@@ -100,235 +118,191 @@ export default function ChannelsPage() {
     }
   };
 
+  if (isStatsLoading) {
+    return (
+      <PageContainer>
+        <div className="flex items-center justify-center h-[60vh]">
+          <Loader2 className="w-12 h-12 animate-spin text-primary" />
+        </div>
+      </PageContainer>
+    );
+  }
+
   return (
-    <div className="container mx-auto p-6 space-y-8 animate-fade-in">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-4xl font-bold gradient-text">Canaux Lightning</h1>
-        <p className="text-muted-foreground">
-          Gérez vos canaux et explorez le réseau Lightning
-        </p>
+    <PageContainer
+      title="Canaux Lightning"
+      subtitle="Gérez vos canaux et explorez le réseau Lightning"
+    >
+      {/* Statistiques du réseau */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <Card
+          gradient
+          className="p-6 hover:scale-[1.02] transition-transform duration-300"
+        >
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-primary/20 rounded-lg">
+              <Network className="w-6 h-6 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gradient">Nœuds</h3>
+              <p className="text-2xl font-bold">
+                {networkStats?.totalNodes?.toLocaleString() ?? "N/A"}
+              </p>
+            </div>
+          </div>
+        </Card>
+
+        <Card
+          gradient
+          className="p-6 hover:scale-[1.02] transition-transform duration-300"
+        >
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-secondary/20 rounded-lg">
+              <Activity className="w-6 h-6 text-secondary" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gradient">Canaux</h3>
+              <p className="text-2xl font-bold">
+                {networkStats?.totalChannels?.toLocaleString() ?? "N/A"}
+              </p>
+            </div>
+          </div>
+        </Card>
+
+        <Card
+          gradient
+          className="p-6 hover:scale-[1.02] transition-transform duration-300"
+        >
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-accent/20 rounded-lg">
+              <Zap className="w-6 h-6 text-accent" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gradient">Capacité</h3>
+              <p className="text-2xl font-bold">
+                {networkStats?.totalCapacity ?? "N/A"}
+              </p>
+            </div>
+          </div>
+        </Card>
+
+        <Card
+          gradient
+          className="p-6 hover:scale-[1.02] transition-transform duration-300"
+        >
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-primary/20 rounded-lg">
+              <Users className="w-6 h-6 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gradient">
+                Taille Moyenne
+              </h3>
+              <p className="text-2xl font-bold">
+                {networkStats?.avgChannelSize ?? "N/A"}
+              </p>
+            </div>
+          </div>
+        </Card>
       </div>
 
-      <div className="relative mb-8 animate-slide-up">
-        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
-        <Input
-          type="text"
-          placeholder="node public key, alias, IP address, channel id, block height, location, postal code..."
-          className="w-full pl-12 pr-4 h-14 text-lg rounded-lg bg-card/50 backdrop-blur-sm border-accent/20"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-        />
-        <Button
-          className="absolute right-2 top-1/2 transform -translate-y-1/2 btn-gradient"
-          onClick={handleSearch}
-          disabled={isLoading}
-        >
-          {isLoading ? "Recherche..." : "SEARCH"}
-        </Button>
-      </div>
+      {/* Barre de recherche et filtres */}
+      <Card className="mb-8">
+        <div className="p-6">
+          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+            <div className="flex-1 max-w-md">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
+                <Input
+                  type="text"
+                  placeholder="Rechercher un nœud..."
+                  className="pl-10 bg-background/50"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                />
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <Select>
+                <SelectTrigger className="w-[180px] bg-background/50">
+                  <SelectValue placeholder="Filtrer par capacité" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Toutes les capacités</SelectItem>
+                  <SelectItem value="small">Petite capacité</SelectItem>
+                  <SelectItem value="medium">Capacité moyenne</SelectItem>
+                  <SelectItem value="large">Grande capacité</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button
+                variant="gradient"
+                onClick={handleSearch}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                ) : (
+                  <>
+                    <Search className="w-4 h-4 mr-2" />
+                    Rechercher
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Card>
 
       {error && (
-        <div className="text-red-500 text-center mb-4 animate-shake">
-          {error}
-        </div>
+        <Card gradient className="p-6 mb-8">
+          <p className="text-red-500 text-center">{error}</p>
+        </Card>
       )}
 
+      {/* Résultats de recherche */}
       {searchResults.length > 0 && (
-        <div className="mb-8 animate-fade-in">
-          <h2 className="text-xl font-semibold mb-4 gradient-text">
-            Résultats de recherche
-          </h2>
-          <div className="grid gap-4">
-            {searchResults.map((node, index) => (
-              <Card
-                key={node.pubkey}
-                className="card-glass animate-slide-up p-4"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-semibold text-gradient">
-                      {node.alias || "Nœud sans alias"}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {node.pubkey}
-                    </p>
-                    <div className="mt-2 text-sm">
-                      <p>Capacité totale: {node.total_capacity} sats</p>
-                      <p>Canaux actifs: {node.active_channels}</p>
-                      <p>Pairs totaux: {node.total_peers}</p>
+        <Card className="mb-8">
+          <div className="p-6">
+            <h3 className="text-lg font-semibold mb-4">
+              Résultats de recherche
+            </h3>
+            <div className="space-y-4">
+              {searchResults.map((node) => (
+                <Card
+                  key={node.pubkey}
+                  className="p-4 hover:bg-card/50 transition-colors"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium">{node.alias}</h4>
+                      <p className="text-sm text-muted-foreground">
+                        {node.pubkey}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-medium">{node.total_capacity} BTC</p>
+                      <p className="text-sm text-muted-foreground">
+                        {node.active_channels} canaux actifs
+                      </p>
                     </div>
                   </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="hover:bg-accent/20"
-                  >
-                    Voir les détails
-                  </Button>
-                </div>
-              </Card>
-            ))}
+                </Card>
+              ))}
+            </div>
           </div>
-        </div>
+        </Card>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="card-glass p-6 animate-slide-up">
-          <div className="flex flex-col">
-            <h2 className="text-lg font-semibold mb-4 text-gradient">
-              Number of Nodes
-            </h2>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold">
-                {isStatsLoading
-                  ? "..."
-                  : (networkStats?.totalNodes?.toLocaleString() ?? "N/A")}
-              </span>
-              {!isStatsLoading &&
-                networkStats?.topNodes &&
-                networkStats.totalNodes &&
-                networkStats.topNodes.length > 0 && (
-                  <div className="flex items-center text-green-500">
-                    <TrendingUp className="h-4 w-4" />
-                    <span>
-                      +
-                      {(
-                        (networkStats.topNodes.length /
-                          networkStats.totalNodes) *
-                        100
-                      ).toFixed(1)}
-                      %
-                    </span>
-                  </div>
-                )}
-            </div>
-            <Button variant="ghost" className="mt-4">
-              <ChevronDown className="h-4 w-4" />
-            </Button>
-          </div>
-        </Card>
-
-        <Card className="card-glass p-6 animate-slide-up">
-          <div className="flex flex-col">
-            <h2 className="text-lg font-semibold mb-4 text-gradient">
-              Number of Channels
-            </h2>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold">
-                {isStatsLoading
-                  ? "..."
-                  : (networkStats?.totalChannels?.toLocaleString() ?? "N/A")}
-              </span>
-              {!isStatsLoading &&
-                networkStats?.recentChannels &&
-                networkStats.totalChannels &&
-                networkStats.recentChannels.length > 0 && (
-                  <div className="flex items-center text-green-500">
-                    <TrendingUp className="h-4 w-4" />
-                    <span>
-                      +
-                      {(
-                        (networkStats.recentChannels.length /
-                          networkStats.totalChannels) *
-                        100
-                      ).toFixed(1)}
-                      %
-                    </span>
-                  </div>
-                )}
-            </div>
-            <Button variant="ghost" className="mt-4">
-              <ChevronDown className="h-4 w-4" />
-            </Button>
-          </div>
-        </Card>
-
-        <Card className="card-glass p-6 animate-slide-up">
-          <div className="flex flex-col">
-            <h2 className="text-lg font-semibold mb-4 text-gradient">
-              Network Capacity
-            </h2>
-            <div className="flex flex-col">
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-bold">
-                  {isStatsLoading
-                    ? "..."
-                    : networkStats?.totalCapacity
-                      ? (
-                          Number(networkStats.totalCapacity) / 100000000
-                        ).toFixed(2)
-                      : "N/A"}{" "}
-                  BTC
-                </span>
-                {!isStatsLoading &&
-                  networkStats?.capacityHistory &&
-                  networkStats.capacityHistory.length > 0 && (
-                    <div className="flex items-center text-green-500">
-                      <TrendingUp className="h-4 w-4" />
-                      <span>
-                        +
-                        {(
-                          (networkStats.capacityHistory[0].value /
-                            Number(networkStats.totalCapacity)) *
-                          100
-                        ).toFixed(1)}
-                        %
-                      </span>
-                    </div>
-                  )}
-              </div>
-              <span className="text-muted-foreground">
-                $
-                {networkStats?.totalCapacity
-                  ? (
-                      Number(networkStats.totalCapacity) * 0.00004
-                    ).toLocaleString()
-                  : "..."}
-              </span>
-            </div>
-            <Button variant="ghost" className="mt-4">
-              <ChevronDown className="h-4 w-4" />
-            </Button>
-          </div>
-        </Card>
-
-        <Card className="card-glass p-6 animate-slide-up">
-          <div className="flex flex-col">
-            <h2 className="text-lg font-semibold mb-4 text-gradient">
-              Average Channel Size
-            </h2>
-            <div className="flex flex-col">
-              <span className="text-3xl font-bold">
-                {isStatsLoading
-                  ? "..."
-                  : networkStats?.avgCapacityPerChannel
-                    ? (networkStats.avgCapacityPerChannel / 100000000).toFixed(
-                        4
-                      )
-                    : "N/A"}{" "}
-                BTC
-              </span>
-              <span className="text-muted-foreground">
-                {isStatsLoading
-                  ? "..."
-                  : networkStats?.avgChannelsPerNode
-                    ? networkStats.avgChannelsPerNode.toFixed(1)
-                    : "N/A"}{" "}
-                channels/node
-              </span>
-            </div>
-            <Button variant="ghost" className="mt-4">
-              <ChevronDown className="h-4 w-4" />
-            </Button>
-          </div>
-        </Card>
-      </div>
-
-      <div className="mt-8">
-        <BigPlayers />
-      </div>
-    </div>
+      {/* Big Players */}
+      <Card className="mb-8">
+        <div className="p-6">
+          <h3 className="text-lg font-semibold mb-4">
+            Grands acteurs du réseau
+          </h3>
+          <BigPlayers />
+        </div>
+      </Card>
+    </PageContainer>
   );
 }

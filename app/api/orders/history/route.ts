@@ -7,7 +7,7 @@ import {
   HttpStatus,
 } from "../../../lib/api/responses";
 
-// Utiliser revalidate pour définir la durée de mise en cache
+// Configuration de la revalidation
 export const revalidate = 60; // Revalidation chaque minute pour les données plus récentes
 
 export async function GET(req: NextRequest) {
@@ -25,9 +25,17 @@ export async function GET(req: NextRequest) {
 
     const orders = await Order.find({ userId })
       .sort({ createdAt: -1 })
-      .select("-__v");
+      .select("-__v")
+      .limit(50); // Limiter le nombre de résultats pour optimiser les performances
 
-    return successResponse({ orders });
+    return successResponse(
+      { orders },
+      {
+        headers: {
+          "Cache-Control": "private, s-maxage=60, stale-while-revalidate=120",
+        },
+      }
+    );
   } catch (error) {
     console.error(
       "Erreur lors de la récupération de l'historique des commandes:",

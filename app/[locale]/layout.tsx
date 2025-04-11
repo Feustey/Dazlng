@@ -1,13 +1,13 @@
 import { Metadata, Viewport } from "next";
-import { locales, defaultLocale } from "../i18n.config";
-import { redirect, notFound } from "next/navigation";
+import { locales } from "../i18n.config";
+import { notFound } from "next/navigation";
 import { Locale } from "../i18n.config.base";
-import { headers } from "next/headers";
 import { Inter } from "next/font/google";
 import "../globals.css";
 import { Providers } from "../components/Providers";
 import Header from "../components/layout/Header";
 import { Footer } from "../components/Footer";
+import { siteConfig } from "../config/metadata";
 
 // Pas besoin de force-dynamic pour le layout principal
 // export const dynamic = "force-dynamic";
@@ -24,10 +24,15 @@ export const metadata: Metadata = {
   title: "Daznode - Votre Portail Lightning Network",
   description:
     "Découvrez Daznode, la plateforme qui simplifie la gestion de votre nœud Lightning Network.",
+  metadataBase: new URL(siteConfig.url),
+  alternates: {
+    canonical: siteConfig.url,
+  },
 };
 
 interface RootLayoutProps {
   children: React.ReactNode;
+  app: React.ReactNode;
   params: {
     locale: Locale;
   };
@@ -39,13 +44,12 @@ export function generateStaticParams() {
 
 export default async function RootLayout({
   children,
+  app,
   params: { locale },
 }: RootLayoutProps) {
   // Vérifier la validité de la locale
   if (!locales.includes(locale as Locale)) {
-    const headersList = headers();
-    const pathname = headersList.get("x-pathname") || "";
-    redirect(`/${defaultLocale}${pathname}`);
+    notFound();
   }
 
   let messages;
@@ -60,11 +64,15 @@ export default async function RootLayout({
     <html lang={locale} suppressHydrationWarning>
       <body
         className={`${inter.className} min-h-screen bg-background antialiased`}
+        suppressHydrationWarning
       >
         <Providers>
-          <div className="flex flex-col min-h-screen">
+          <div className="relative flex min-h-screen flex-col">
             <Header />
-            <div className="flex-grow pt-[80px]">{children}</div>
+            <main className="flex-1 pt-16">
+              {children}
+              {app}
+            </main>
             <Footer />
           </div>
         </Providers>

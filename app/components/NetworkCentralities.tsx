@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import Card from "./ui/card";
+import { CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Loader2 } from "lucide-react";
 import { Centralities } from "../types/node";
 import {
@@ -13,32 +14,32 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
+import { useTranslations } from "next-intl";
 
 export default function NetworkCentralities() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [centralities, setCentralities] = useState<Centralities | null>(null);
+  const t = useTranslations("pages.network.centrality");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch("/api/centralities");
         if (!response.ok) {
-          throw new Error("Erreur lors de la récupération des données");
+          throw new Error(t("error.fetch"));
         }
         const data = await response.json();
         setCentralities(data);
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Une erreur est survenue"
-        );
+        setError(err instanceof Error ? err.message : t("error.unknown"));
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [t]);
 
   if (loading) {
     return (
@@ -65,9 +66,9 @@ export default function NetworkCentralities() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Rang</TableHead>
-            <TableHead>Pubkey</TableHead>
-            <TableHead>Valeur</TableHead>
+            <TableHead>{t("table.rank")}</TableHead>
+            <TableHead>{t("table.pubkey")}</TableHead>
+            <TableHead>{t("table.value")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -87,30 +88,38 @@ export default function NetworkCentralities() {
 
   return (
     <Card className="p-6">
-      <h2 className="text-xl font-semibold mb-6">Centralités du Réseau</h2>
-
-      <div className="space-y-8">
-        {renderCentralityTable("Betweenness", centralities.betweenness)}
-        {renderCentralityTable("Eigenvector", centralities.eigenvector)}
-        {renderCentralityTable("Closeness", centralities.closeness)}
-        {renderCentralityTable(
-          "Betweenness Pondéré",
-          centralities.weighted_betweenness
-        )}
-        {renderCentralityTable(
-          "Eigenvector Pondéré",
-          centralities.weighted_eigenvector
-        )}
-        {renderCentralityTable(
-          "Closeness Pondéré",
-          centralities.weighted_closeness
-        )}
-      </div>
-
-      <div className="mt-4 text-sm text-muted-foreground">
-        Dernière mise à jour:{" "}
-        {new Date(centralities.last_update).toLocaleString()}
-      </div>
+      <CardHeader>
+        <CardTitle>{t("title")}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-8">
+          {renderCentralityTable(
+            t("betweenness.title"),
+            centralities.betweenness
+          )}
+          {renderCentralityTable(
+            t("eigenvector.title"),
+            centralities.eigenvector
+          )}
+          {renderCentralityTable(t("closeness.title"), centralities.closeness)}
+          {renderCentralityTable(
+            t("weightedBetweenness.title"),
+            centralities.weighted_betweenness
+          )}
+          {renderCentralityTable(
+            t("weightedEigenvector.title"),
+            centralities.weighted_eigenvector
+          )}
+          {renderCentralityTable(
+            t("weightedCloseness.title"),
+            centralities.weighted_closeness
+          )}
+        </div>
+        <div className="mt-4 text-sm text-muted-foreground">
+          {t("lastUpdate")}:{" "}
+          {new Date(centralities.last_update).toLocaleString()}
+        </div>
+      </CardContent>
     </Card>
   );
 }

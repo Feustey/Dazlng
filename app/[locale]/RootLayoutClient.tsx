@@ -1,8 +1,14 @@
 "use client";
 
+// Imports React
+import { ReactNode } from "react";
+
+// Imports de bibliothèques tierces
 import { NextIntlClientProvider } from "next-intl";
-import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Toaster } from "sonner";
+
+// Imports de composants
+import { ThemeProvider } from "../components/ThemeProvider";
 import ClientLayout from "../ClientLayout";
 import Navigation from "../components/Navigation";
 import { Footer } from "../components/Footer";

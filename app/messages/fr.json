@@ -252,7 +252,49 @@
     "description": "Découvrez la puissance de l'intelligence artificielle avec Daz-IA",
     "tabs": {
       "plans": "Plans",
-      "recommendations": "Recommandations"
+      "engine": "Engine"
+    },
+    "engine": {
+      "what_it_does": {
+        "title": "🎯 Ce que Daz-IA fait concrètement",
+        "items": [
+          "Analyse continue de l'état du nœud : transactions, connexions, fiabilité, etc.",
+          "Conseils personnalisés sur l'ouverture de canaux, les frais optimaux, la gestion de liquidité",
+          "Alertes intelligentes pour anticiper les problèmes ou saisir les opportunités de routage",
+          "Planification stratégique avec indicateurs de performance et objectifs à long terme",
+          "Réponses contextualisées à vos questions simples ou complexes"
+        ]
+      },
+      "architecture": {
+        "title": "⚙️ Une architecture technique puissante",
+        "description": "Le moteur Daz-IA est basé sur une stack technique robuste et éprouvée :",
+        "items": [
+          "Vectorisation de documents avec la agent IA, un LLM dédié et une indexation FAISS",
+          "Base de données allimentée en continue + cache intelligent",
+          "Architecture en microservices avec haute disponibilité",
+          "Sécurité renforcée, monitoring avancé et configuration personnalisable"
+        ]
+      },
+      "smart_node": {
+        "title": "💡 Le nœud intelligent, prêt à l'emploi",
+        "content": "Associé à La Dazbox, notre node hardware clé-en-main, embarque nativement cette intelligence augmentée. En combinant performance réseau, interface simple et assistance IA intégrée, la Dazbox devient bien plus qu'un nœud : un centre de pilotage intelligent pour vos opérations sur le Lightning Network."
+      },
+      "launch_offer": {
+        "title": "🔥 Offre de lancement exclusive",
+        "subtitle": "📅 Dans 10 jours, soyez parmi les premiers à activer Daz-IA avec notre offre de lancement spéciale :",
+        "price": "➡️ 400 000 sats au lieu de 500 000",
+        "description": "L'abonnement vous donne un accès complet au moteur Daz-IA, au tableau de bord, aux alertes et aux recommandations évolutives."
+      },
+      "benefits": {
+        "title": "⚡ Gagnez en performance, automatisez vos décisions",
+        "subtitle": "Avec Daznode, vous prenez l'avantage :",
+        "items": [
+          "Des décisions basées sur les données, plus jamais au hasard",
+          "Un pilotage précis de votre stratégie de frais et de routage",
+          "Un nœud qui travaille pour vous, 24/7"
+        ]
+      },
+      "cta": "📍 Rejoignez la révolution Lightning augmentée"
     },
     "one-shot": {
       "title": "One-Shot",
@@ -835,12 +877,16 @@
     },
     "Delivery": {
       "title": "Informations de livraison",
-      "name": "Nom complet",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Email",
       "address": "Adresse",
       "city": "Ville",
       "zipCode": "Code postal",
+      "province": "Province/Département",
       "country": "Pays",
       "phone": "Téléphone",
+      "newsletter": "Je souhaite m'inscrire à la newsletter pour recevoir des offres exclusives",
       "continue": "Continuer vers le paiement"
     },
     "Payment": {
@@ -1270,6 +1316,24 @@
         "completed": "Terminé",
         "failed": "Échoué",
         "pending": "En attente"
+      }
+    }
+  },
+  "pages": {
+    "home": {
+      "title": "Bienvenue sur Daznode",
+      "description": "Découvrez l'avenir des réseaux Lightning",
+      "stats": {
+        "nodes": "Nœuds",
+        "nodesDescription": "Nœuds actifs sur le réseau",
+        "channels": "Canaux",
+        "channelsDescription": "Canaux ouverts",
+        "capacity": "Capacité",
+        "capacityDescription": "Capacité totale du réseau"
+      },
+      "cta": {
+        "start": "Commencer maintenant",
+        "learn": "En savoir plus"
       }
     }
   }

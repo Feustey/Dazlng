@@ -1,83 +1,115 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useParams } from "next/navigation";
-import { useAuth } from "@/app/contexts/AuthContext";
-import { Button } from "@/app/components/ui/button";
-import { Input } from "@/app/components/ui/input";
-import { Label } from "@/app/components/ui/label";
+import React from "react";
+import { useTranslations } from "next-intl";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Button } from "../ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { toast } from "sonner";
 
-interface RegisterFormProps {
-  onSuccess?: () => void;
-}
+const formSchema = z
+  .object({
+    email: z.string().email(),
+    password: z.string().min(8),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Les mots de passe ne correspondent pas",
+    path: ["confirmPassword"],
+  });
 
-export default function RegisterForm({ onSuccess }: RegisterFormProps) {
-  const router = useRouter();
-  const params = useParams();
-  const locale = params?.locale as string | undefined;
-  const { register } = useAuth();
+export const RegisterForm: React.FC = () => {
+  const t = useTranslations("Auth");
+  const [isLoading, setIsLoading] = React.useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
 
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await register(
-        formData.get("email") as string,
-        formData.get("password") as string,
-        formData.get("name") as string
-      );
-      handleSuccess();
-    } catch (error) {
-      // L'erreur est déjà gérée par le contexte d'authentification
-      console.error("Erreur lors de l'inscription:", error);
-    }
-  };
+      setIsLoading(true);
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
 
-  const handleSuccess = () => {
-    if (onSuccess) onSuccess();
-    if (locale) {
-      router.push(`/${locale}/dashboard`);
-    } else {
-      router.push("/dashboard");
+      if (!response.ok) {
+        throw new Error("Erreur lors de l'inscription");
+      }
+
+      toast.success(t("registerSuccess"));
+      // Redirection après inscription réussie
+      window.location.href = "/auth/signin";
+    } catch (error) {
+      toast.error(t("registerError"));
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <Label htmlFor="name">Nom</Label>
-        <Input
-          id="name"
-          name="name"
-          type="text"
-          required
-          placeholder="Votre nom"
-        />
-      </div>
-      <div>
-        <Label htmlFor="email">Email</Label>
-        <Input
-          id="email"
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
           name="email"
-          type="email"
-          required
-          placeholder="votre@email.com"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("email")}</FormLabel>
+              <FormControl>
+                <Input placeholder="email@example.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
-      <div>
-        <Label htmlFor="password">Mot de passe</Label>
-        <Input
-          id="password"
+        <FormField
+          control={form.control}
           name="password"
-          type="password"
-          required
-          placeholder="••••••••"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("password")}</FormLabel>
+              <FormControl>
+                <Input type="password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
-      <Button type="submit" className="w-full">
-        S'inscrire
-      </Button>
-    </form>
+        <FormField
+          control={form.control}
+          name="confirmPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("confirmPassword")}</FormLabel>
+              <FormControl>
+                <Input type="password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" className="w-full" disabled={isLoading}>
+          {isLoading ? t("registering") : t("register")}
+        </Button>
+      </form>
+    </Form>
   );
-}
+};

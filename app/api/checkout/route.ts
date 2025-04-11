@@ -5,87 +5,32 @@ import { connectToDatabase } from "../../lib/mongodb";
 import { authOptions } from "../../lib/auth";
 import { getToken } from "next-auth/jwt";
 import CheckoutSession from "@/models/CheckoutSession";
+import { supabase } from "@lib/supabase";
 
 // Marquer cette route comme dynamique
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   try {
-    await connectToDatabase();
+    const { amount, description } = await request.json();
 
-    const token = await getToken({ req: request });
-    if (!token) {
-      return NextResponse.json(
-        { error: "Authentication required" },
-        { status: 401 }
-      );
-    }
+    const { data, error } = await supabase
+      .from("checkout_sessions")
+      .insert({
+        amount,
+        description,
+        status: "pending",
+      })
+      .select()
+      .single();
 
-    const data = await request.json();
-    const { plan, billingCycle, amount, deliveryInfo, paymentMethod } = data;
+    if (error) throw error;
 
-    // Validate required fields
-    if (!plan || !billingCycle || !amount || !deliveryInfo || !paymentMethod) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
-    }
-
-    // Validate plan and billing cycle
-    if (
-      !["oneshot", "monthly", "yearly"].includes(plan) ||
-      !["once", "monthly", "yearly"].includes(billingCycle)
-    ) {
-      return NextResponse.json(
-        { error: "Invalid plan or billing cycle" },
-        { status: 400 }
-      );
-    }
-
-    // Validate amount
-    let expectedAmount = 0;
-    if (plan === "oneshot" && billingCycle === "once") {
-      expectedAmount = 10000; // 10,000 sats
-    } else if (plan === "monthly" && billingCycle === "monthly") {
-      expectedAmount = 5000; // 5,000 sats
-    } else if (plan === "yearly" && billingCycle === "yearly") {
-      expectedAmount = 50000; // 50,000 sats
-    }
-
-    if (amount !== expectedAmount) {
-      return NextResponse.json(
-        { error: "Invalid amount for selected plan" },
-        { status: 400 }
-      );
-    }
-
-    // Create payment URL (simulated for now)
-    const paymentUrl =
-      "lightning:LNURL1DP68GURN8GHJ7MRWW4EXCTNXD9SHG6NPVCHXXMMD9AKXUATJDSKHW6T5DPJ8YCTH8AEX2UT99E3K7MF0D3H82UNVWP5HGCT884KX7EMFDCNXKVFA89JH2CTWYPJKZURNVE3K7MF0";
-
-    // Create new checkout session
-    const newCheckoutSession = new CheckoutSession({
-      userId: token.sub,
-      plan,
-      billingCycle,
-      amount,
-      deliveryInfo,
-      paymentMethod,
-      paymentUrl,
-      status: "pending",
-    });
-
-    await newCheckoutSession.save();
-
-    return NextResponse.json({
-      sessionId: newCheckoutSession._id,
-      paymentUrl,
-    });
+    return NextResponse.json(data);
   } catch (error) {
-    console.error("Checkout error:", error);
+    console.error("Erreur lors de la création de la session:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Erreur lors de la création de la session" },
       { status: 500 }
     );
   }

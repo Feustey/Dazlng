@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AlbyWebhookService } from "@/services/albyWebhook";
-import { auth } from "@/auth";
+import { auth } from "@/app/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {

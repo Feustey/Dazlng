@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/auth";
+import { auth } from "@/app/lib/auth";
 import { chatRouter } from "../../services/chatService";
 
 export async function POST(req: Request) {

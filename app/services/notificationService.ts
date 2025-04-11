@@ -1,18 +1,17 @@
+import { supabase } from "@/app/lib/supabase";
 import { mcpService } from "./mcpService";
 
 export interface Notification {
   id: string;
-  userId: string;
+  user_id: string;
   type: "info" | "success" | "warning" | "error";
   title: string;
   message: string;
   read: boolean;
-  createdAt: Date;
+  created_at: Date;
 }
 
 export class NotificationService {
-  private notifications: Map<string, Notification> = new Map();
-
   // Créer une nouvelle notification
   async createNotification(
     userId: string,
@@ -21,17 +20,19 @@ export class NotificationService {
     message: string
   ): Promise<Notification> {
     try {
-      const notification: Notification = {
-        id: `notif_${Date.now()}`,
-        userId,
-        type,
-        title,
-        message,
-        read: false,
-        createdAt: new Date(),
-      };
+      const { data: notification, error } = await supabase
+        .from("notifications")
+        .insert({
+          user_id: userId,
+          type,
+          title,
+          message,
+          read: false,
+        })
+        .select()
+        .single();
 
-      this.notifications.set(notification.id, notification);
+      if (error) throw error;
 
       // Envoyer la notification via MCP
       await mcpService.sendNotification({
@@ -41,7 +42,15 @@ export class NotificationService {
         message,
       });
 
-      return notification;
+      return {
+        id: notification.id,
+        user_id: notification.user_id,
+        type: notification.type,
+        title: notification.title,
+        message: notification.message,
+        read: notification.read,
+        created_at: new Date(notification.created_at),
+      };
     } catch (error) {
       console.error("Error creating notification:", error);
       throw error;
@@ -51,9 +60,23 @@ export class NotificationService {
   // Obtenir les notifications d'un utilisateur
   async getUserNotifications(userId: string): Promise<Notification[]> {
     try {
-      return Array.from(this.notifications.values())
-        .filter((notif) => notif.userId === userId)
-        .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+      const { data: notifications, error } = await supabase
+        .from("notifications")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      return notifications.map((notification) => ({
+        id: notification.id,
+        user_id: notification.user_id,
+        type: notification.type,
+        title: notification.title,
+        message: notification.message,
+        read: notification.read,
+        created_at: new Date(notification.created_at),
+      }));
     } catch (error) {
       console.error("Error getting user notifications:", error);
       throw error;
@@ -63,15 +86,12 @@ export class NotificationService {
   // Marquer une notification comme lue
   async markAsRead(notificationId: string): Promise<boolean> {
     try {
-      const notification = this.notifications.get(notificationId);
+      const { error } = await supabase
+        .from("notifications")
+        .update({ read: true })
+        .eq("id", notificationId);
 
-      if (!notification) {
-        return false;
-      }
-
-      notification.read = true;
-      this.notifications.set(notificationId, notification);
-
+      if (error) throw error;
       return true;
     } catch (error) {
       console.error("Error marking notification as read:", error);
@@ -82,7 +102,13 @@ export class NotificationService {
   // Supprimer une notification
   async deleteNotification(notificationId: string): Promise<boolean> {
     try {
-      return this.notifications.delete(notificationId);
+      const { error } = await supabase
+        .from("notifications")
+        .delete()
+        .eq("id", notificationId);
+
+      if (error) throw error;
+      return true;
     } catch (error) {
       console.error("Error deleting notification:", error);
       throw error;
@@ -92,14 +118,12 @@ export class NotificationService {
   // Supprimer toutes les notifications d'un utilisateur
   async deleteUserNotifications(userId: string): Promise<boolean> {
     try {
-      const userNotifications = Array.from(this.notifications.values()).filter(
-        (notif) => notif.userId === userId
-      );
+      const { error } = await supabase
+        .from("notifications")
+        .delete()
+        .eq("user_id", userId);
 
-      userNotifications.forEach((notif) => {
-        this.notifications.delete(notif.id);
-      });
-
+      if (error) throw error;
       return true;
     } catch (error) {
       console.error("Error deleting user notifications:", error);
@@ -110,9 +134,14 @@ export class NotificationService {
   // Obtenir le nombre de notifications non lues
   async getUnreadCount(userId: string): Promise<number> {
     try {
-      return Array.from(this.notifications.values()).filter(
-        (notif) => notif.userId === userId && !notif.read
-      ).length;
+      const { count, error } = await supabase
+        .from("notifications")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", userId)
+        .eq("read", false);
+
+      if (error) throw error;
+      return count || 0;
     } catch (error) {
       console.error("Error getting unread count:", error);
       throw error;

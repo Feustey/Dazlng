@@ -1,20 +1,21 @@
 "use client";
 
-import * as React from "react";
+import React from "react";
 import Link from "next/link";
-import { useLocale, useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 import { Menu, X } from "lucide-react";
 import { SimpleLogo } from "./SimpleLogo";
 import { useSession } from "next-auth/react";
 import { AccountMenu } from "./AccountMenu";
 import { usePathname } from "next/navigation";
-import { Button } from "./ui/button";
-import { AuthenticationWrapper } from "./auth/AuthenticationWrapper";
+import Button from "./ui/button";
+import { LanguageSelector } from "./LanguageSelector";
+import { useTranslation } from "../hooks/useTranslation";
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [loginModalOpen, setLoginModalOpen] = React.useState(false);
-  const t = useTranslations("Header");
+  const { t } = useTranslation();
   const locale = useLocale();
   const { data: session } = useSession();
   const pathname = usePathname() || "";
@@ -28,79 +29,164 @@ export default function Navigation() {
   const isActive = (path: string) => pathname.startsWith(`/${locale}${path}`);
 
   return (
-    <AuthenticationWrapper
-      showLoginModal={loginModalOpen}
-      onCloseModal={() => setLoginModalOpen(false)}
-    >
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-white/10">
-        <div className="container mx-auto px-4 h-[var(--header-height)] flex items-center justify-between">
-          {/* Logo */}
-          <Link href={`/${locale}`} className="flex items-center">
-            <SimpleLogo className="h-8 w-auto animate-fade-in" />
-          </Link>
-
-          {/* Navigation Desktop */}
-          <nav className="hidden md:flex items-center space-x-8">
+    <nav className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex">
             <Link
-              href={`/${locale}/learn`}
-              className={`nav-link ${isActive("/learn") ? "nav-link-active" : ""}`}
+              href={`/${locale}`}
+              className="flex-shrink-0 flex items-center"
             >
-              {t("learn")}
+              <SimpleLogo className="h-8 w-auto" />
             </Link>
-            {session ? (
-              <AccountMenu />
-            ) : (
-              <Button
-                onClick={openLoginModal}
-                variant="ghost"
-                className="nav-link"
+            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+              <Link
+                href={`/${locale}/dashboard`}
+                className={`inline-flex items-center px-1 pt-1 text-sm font-medium ${
+                  isActive("/dashboard")
+                    ? "text-primary border-b-2 border-primary"
+                    : "text-muted-foreground hover:text-foreground hover:border-b-2 hover:border-muted-foreground"
+                }`}
               >
-                {t("login")}
-              </Button>
-            )}
-          </nav>
-
-          {/* Menu Mobile Button */}
-          <button
-            className="md:hidden p-2 rounded-lg hover:bg-accent text-foreground transition-colors duration-200"
-            onClick={toggleMenu}
-          >
-            {isMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden absolute top-[var(--header-height)] left-0 right-0 bg-background/95 backdrop-blur-xl border-b border-white/10 animate-slide-down">
-            <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
+                {t("header.navigation.dashboard")}
+              </Link>
+              <Link
+                href={`/${locale}/network`}
+                className={`inline-flex items-center px-1 pt-1 text-sm font-medium ${
+                  isActive("/network")
+                    ? "text-primary border-b-2 border-primary"
+                    : "text-muted-foreground hover:text-foreground hover:border-b-2 hover:border-muted-foreground"
+                }`}
+              >
+                {t("header.navigation.network")}
+              </Link>
+              <Link
+                href={`/${locale}/channels`}
+                className={`inline-flex items-center px-1 pt-1 text-sm font-medium ${
+                  isActive("/channels")
+                    ? "text-primary border-b-2 border-primary"
+                    : "text-muted-foreground hover:text-foreground hover:border-b-2 hover:border-muted-foreground"
+                }`}
+              >
+                {t("header.navigation.channels")}
+              </Link>
               <Link
                 href={`/${locale}/learn`}
-                className={`nav-link ${isActive("/learn") ? "nav-link-active" : ""}`}
-                onClick={toggleMenu}
+                className={`inline-flex items-center px-1 pt-1 text-sm font-medium ${
+                  isActive("/learn")
+                    ? "text-primary border-b-2 border-primary"
+                    : "text-muted-foreground hover:text-foreground hover:border-b-2 hover:border-muted-foreground"
+                }`}
               >
-                {t("learn")}
+                {t("header.navigation.learn")}
               </Link>
+            </div>
+          </div>
+          <div className="flex items-center">
+            <LanguageSelector />
+            <div className="hidden sm:ml-6 sm:flex sm:items-center">
               {session ? (
-                <div className="py-2">
-                  <AccountMenu />
-                </div>
+                <AccountMenu />
               ) : (
                 <Button
                   onClick={openLoginModal}
-                  variant="ghost"
-                  className="justify-start p-0 h-auto font-normal text-base"
+                  variant="gradient"
+                  className="ml-4"
                 >
-                  {t("login")}
+                  {t("header.actions.login")}
+                </Button>
+              )}
+            </div>
+            <div className="sm:hidden">
+              <button
+                onClick={toggleMenu}
+                className="inline-flex items-center justify-center p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
+              >
+                <span className="sr-only">{t("header.actions.openMenu")}</span>
+                {isMenuOpen ? (
+                  <X className="block h-6 w-6" />
+                ) : (
+                  <Menu className="block h-6 w-6" />
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Menu mobile */}
+      <div
+        className={`sm:hidden ${
+          isMenuOpen ? "block" : "hidden"
+        } transition-all duration-200 ease-in-out`}
+      >
+        <div className="pt-2 pb-3 space-y-1">
+          <Link
+            href={`/${locale}/dashboard`}
+            className={`block px-3 py-2 text-base font-medium ${
+              isActive("/dashboard")
+                ? "text-primary bg-accent/10"
+                : "text-muted-foreground hover:text-foreground hover:bg-accent/10"
+            }`}
+            onClick={toggleMenu}
+          >
+            {t("header.navigation.dashboard")}
+          </Link>
+          <Link
+            href={`/${locale}/network`}
+            className={`block px-3 py-2 text-base font-medium ${
+              isActive("/network")
+                ? "text-primary bg-accent/10"
+                : "text-muted-foreground hover:text-foreground hover:bg-accent/10"
+            }`}
+            onClick={toggleMenu}
+          >
+            {t("header.navigation.network")}
+          </Link>
+          <Link
+            href={`/${locale}/channels`}
+            className={`block px-3 py-2 text-base font-medium ${
+              isActive("/channels")
+                ? "text-primary bg-accent/10"
+                : "text-muted-foreground hover:text-foreground hover:bg-accent/10"
+            }`}
+            onClick={toggleMenu}
+          >
+            {t("header.navigation.channels")}
+          </Link>
+          <Link
+            href={`/${locale}/learn`}
+            className={`block px-3 py-2 text-base font-medium ${
+              isActive("/learn")
+                ? "text-primary bg-accent/10"
+                : "text-muted-foreground hover:text-foreground hover:bg-accent/10"
+            }`}
+            onClick={toggleMenu}
+          >
+            {t("header.navigation.learn")}
+          </Link>
+        </div>
+        <div className="pt-4 pb-3 border-t border-accent/10">
+          <div className="flex items-center px-5">
+            <div className="flex-shrink-0">
+              <LanguageSelector />
+            </div>
+            <div className="ml-3">
+              {session ? (
+                <AccountMenu />
+              ) : (
+                <Button
+                  onClick={openLoginModal}
+                  variant="gradient"
+                  className="w-full"
+                >
+                  {t("header.actions.login")}
                 </Button>
               )}
             </div>
           </div>
-        )}
-      </header>
-    </AuthenticationWrapper>
+        </div>
+      </div>
+    </nav>
   );
 }
