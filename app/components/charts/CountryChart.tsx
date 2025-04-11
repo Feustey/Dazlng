@@ -1,57 +1,53 @@
+"use client";
+
+import { Pie } from "react-chartjs-2";
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
+  Chart as ChartJS,
+  ArcElement,
   Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-import { useTranslations } from "next-intl";
+  Legend,
+  Colors,
+} from "chart.js";
 
-interface CountryChartProps {
-  data: Record<string, number>;
-}
+ChartJS.register(ArcElement, Tooltip, Legend, Colors);
 
-export default function CountryChart({ data }: CountryChartProps) {
-  const t = useTranslations("pages.network.charts.nodesByCountry");
-  const chartData = Object.entries(data)
-    .map(([country, count]) => ({
-      country,
-      count,
-    }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 10);
+const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: "right" as const,
+    },
+  },
+};
+
+export function CountryChart({ data }: { data: any }) {
+  const chartData = {
+    labels: data.labels,
+    datasets: [
+      {
+        data: data.values,
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.5)",
+          "rgba(54, 162, 235, 0.5)",
+          "rgba(255, 206, 86, 0.5)",
+          "rgba(75, 192, 192, 0.5)",
+          "rgba(153, 102, 255, 0.5)",
+        ],
+        borderColor: [
+          "rgba(255, 99, 132, 1)",
+          "rgba(54, 162, 235, 1)",
+          "rgba(255, 206, 86, 1)",
+          "rgba(75, 192, 192, 1)",
+          "rgba(153, 102, 255, 1)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
 
   return (
-    <div className="h-[300px]">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            dataKey="country"
-            label={{
-              value: t("xAxisLabel"),
-              position: "insideBottom",
-              offset: -5,
-            }}
-          />
-          <YAxis
-            label={{
-              value: t("yAxisLabel"),
-              angle: -90,
-              position: "insideLeft",
-            }}
-          />
-          <Tooltip
-            contentStyle={{ backgroundColor: "var(--background)" }}
-            labelStyle={{ color: "var(--foreground)" }}
-            formatter={(value) => [value, t("tooltipValue")]}
-            labelFormatter={(label) => `${t("tooltipLabel")}: ${label}`}
-          />
-          <Bar dataKey="count" fill="var(--blue-500)" name={t("barName")} />
-        </BarChart>
-      </ResponsiveContainer>
+    <div className="w-full h-[300px] relative">
+      <Pie options={options} data={chartData} />
     </div>
   );
 }

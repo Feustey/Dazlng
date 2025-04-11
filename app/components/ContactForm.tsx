@@ -2,18 +2,18 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
-import { Textarea } from "../components/ui/textarea";
+import Button from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../components/ui/select";
-import { useAlert } from "../contexts/AlertContext";
+} from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
 
 interface ContactFormData {
@@ -34,7 +34,7 @@ interface ApiError extends Error {
 
 export default function ContactForm() {
   const t = useTranslations("Contact.form");
-  const { showAlert } = useAlert();
+  const { addToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<ContactFormData>({
     firstName: "",
@@ -64,22 +64,34 @@ export default function ContactForm() {
     setFormData((prev) => ({ ...prev, interest: value }));
   };
 
+  const showToast = (
+    type: "success" | "error",
+    title: string,
+    description: string
+  ) => {
+    addToast({
+      title,
+      description,
+      type,
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validation
     if (!formData.firstName.trim() || !formData.lastName.trim()) {
-      showAlert("error", t("error.requiredFields"));
+      showToast("error", t("error.title"), t("error.requiredFields"));
       return;
     }
 
     if (!validateEmail(formData.email)) {
-      showAlert("error", t("error.invalidEmail"));
+      showToast("error", t("error.title"), t("error.invalidEmail"));
       return;
     }
 
     if (!formData.message.trim()) {
-      showAlert("error", t("error.requiredMessage"));
+      showToast("error", t("error.title"), t("error.requiredMessage"));
       return;
     }
 
@@ -100,7 +112,8 @@ export default function ContactForm() {
         throw new Error(data.error || t("error.default"));
       }
 
-      showAlert("success", t("success"));
+      showToast("success", t("success.title"), t("success.message"));
+
       setFormData({
         firstName: "",
         lastName: "",
@@ -114,7 +127,7 @@ export default function ContactForm() {
       });
     } catch (err) {
       const error = err as ApiError;
-      showAlert("error", error.message);
+      showToast("error", t("error.title"), error.message);
     } finally {
       setLoading(false);
     }
@@ -264,16 +277,8 @@ export default function ContactForm() {
           />
         </div>
 
-        <Button
-          type="submit"
-          className="w-full btn-gradient"
-          disabled={loading}
-        >
-          {loading ? (
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-          ) : (
-            t("submit")
-          )}
+        <Button type="submit" className="w-full" disabled={loading}>
+          {loading ? t("sending") : t("send")}
         </Button>
       </form>
     </motion.div>

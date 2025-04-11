@@ -95,17 +95,15 @@ export default function DazIAPage() {
                     {t("what.features.title")}
                   </h3>
                   <ul className="space-y-3">
-                    {t
-                      .raw("what.features.items")
-                      .map((feature: string, index: number) => (
-                        <li
-                          key={index}
-                          className="flex items-center text-gray-300"
-                        >
-                          <Brain className="w-5 h-5 mr-2 text-primary" />
-                          {feature}
-                        </li>
-                      ))}
+                    {[0, 1, 2, 3].map((index) => (
+                      <li
+                        key={index}
+                        className="flex items-center text-gray-300"
+                      >
+                        <Brain className="w-5 h-5 mr-2 text-primary" />
+                        {t(`what.features.items.${index}`)}
+                      </li>
+                    ))}
                   </ul>
                 </div>
                 <div className="space-y-4">
@@ -113,17 +111,15 @@ export default function DazIAPage() {
                     {t("what.benefits.title")}
                   </h3>
                   <ul className="space-y-3">
-                    {t
-                      .raw("what.benefits.items")
-                      .map((benefit: string, index: number) => (
-                        <li
-                          key={index}
-                          className="flex items-center text-gray-300"
-                        >
-                          <Zap className="w-5 h-5 mr-2 text-primary" />
-                          {benefit}
-                        </li>
-                      ))}
+                    {[0, 1, 2, 3].map((index) => (
+                      <li
+                        key={index}
+                        className="flex items-center text-gray-300"
+                      >
+                        <Zap className="w-5 h-5 mr-2 text-primary" />
+                        {t(`what.benefits.items.${index}`)}
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
@@ -142,27 +138,27 @@ export default function DazIAPage() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {t
-                  .raw("architecture.components")
-                  .map((component: any, index: number) => (
+                {[0, 1, 2].map((index) => {
+                  const icons = {
+                    cpu: <Cpu className="w-6 h-6 mr-2 text-primary" />,
+                    server: <Server className="w-6 h-6 mr-2 text-primary" />,
+                    shield: <Shield className="w-6 h-6 mr-2 text-primary" />,
+                  };
+                  const icon = t(`architecture.components.${index}.icon`);
+                  return (
                     <div key={index} className="space-y-4">
                       <div className="flex items-center">
-                        {component.icon === "cpu" && (
-                          <Cpu className="w-6 h-6 mr-2 text-primary" />
-                        )}
-                        {component.icon === "server" && (
-                          <Server className="w-6 h-6 mr-2 text-primary" />
-                        )}
-                        {component.icon === "shield" && (
-                          <Shield className="w-6 h-6 mr-2 text-primary" />
-                        )}
+                        {icons[icon as keyof typeof icons]}
                         <h3 className="text-lg font-semibold text-white">
-                          {component.title}
+                          {t(`architecture.components.${index}.title`)}
                         </h3>
                       </div>
-                      <p className="text-gray-300">{component.description}</p>
+                      <p className="text-gray-300">
+                        {t(`architecture.components.${index}.description`)}
+                      </p>
                     </div>
-                  ))}
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
@@ -187,17 +183,12 @@ export default function DazIAPage() {
                   </span>
                 </p>
                 <ul className="space-y-4">
-                  {t
-                    .raw("one-shot.features")
-                    .map((feature: string, index: number) => (
-                      <li
-                        key={index}
-                        className="flex items-center text-gray-300"
-                      >
-                        <Shield className="w-5 h-5 mr-2 text-primary" />
-                        {feature}
-                      </li>
-                    ))}
+                  {[0, 1, 2, 3].map((index) => (
+                    <li key={index} className="flex items-center text-gray-300">
+                      <Shield className="w-5 h-5 mr-2 text-primary" />
+                      {t(`one-shot.features.${index}`)}
+                    </li>
+                  ))}
                 </ul>
               </div>
             </CardContent>
@@ -219,75 +210,44 @@ export default function DazIAPage() {
           <Card className="p-8 bg-gradient-to-r from-primary/10 to-secondary/10">
             <CardHeader>
               <CardTitle className="text-2xl font-bold text-gradient">
-                {t("subscription.title")}
+                {t("yearly.title")}
               </CardTitle>
               <CardDescription className="text-gray-300">
-                {t("subscription.subtitle")}
+                {t("yearly.subtitle")}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
                 <p className="text-lg text-gray-300">
                   <span className="text-gradient font-bold text-2xl">
-                    {t("subscription.price")}
+                    {t("yearly.price")}
                   </span>
-                  <span className="text-gray-400 ml-2">/mois</span>
+                  <span className="text-gray-400 ml-2">/an</span>
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-white">
-                      {t("subscription.features.title")}
+                      {t("yearly.features.title")}
                     </h3>
                     <ul className="space-y-3">
-                      {t
-                        .raw("subscription.features.items")
-                        .map((feature: string, index: number) => (
-                          <li
-                            key={index}
-                            className="flex items-center text-gray-300"
-                          >
-                            <Rocket className="w-5 h-5 mr-2 text-primary" />
-                            {feature}
-                          </li>
-                        ))}
+                      {[0, 1, 2, 3].map((index) => (
+                        <li
+                          key={index}
+                          className="flex items-center text-gray-300"
+                        >
+                          <Rocket className="w-5 h-5 mr-2 text-primary" />
+                          {t(`yearly.features.items.${index}`)}
+                        </li>
+                      ))}
                     </ul>
                   </div>
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-white">
-                      {t("subscription.alerts.title")}
-                    </h3>
-                    <ul className="space-y-3">
-                      {t
-                        .raw("subscription.alerts.items")
-                        .map((alert: string, index: number) => (
-                          <li
-                            key={index}
-                            className="flex items-center text-gray-300"
-                          >
-                            <AlertTriangle className="w-5 h-5 mr-2 text-primary" />
-                            {alert}
-                          </li>
-                        ))}
-                    </ul>
-                  </div>
-                </div>
-                <div className="mt-6 p-4 bg-accent/5 rounded-lg">
-                  <h3 className="text-lg font-semibold text-white mb-2">
-                    {t("subscription.weekly_report.title")}
-                  </h3>
-                  <p className="text-gray-300">
-                    {t("subscription.weekly_report.description")}
-                  </p>
                 </div>
               </div>
             </CardContent>
             <CardFooter>
-              <Link
-                href={`/${locale}/checkout?plan=subscription`}
-                className="w-full"
-              >
+              <Link href={`/${locale}/checkout?plan=yearly`} className="w-full">
                 <Button variant="gradient" size="lg" className="w-full group">
-                  {t("subscription.cta")}{" "}
+                  {t("yearly.cta")}{" "}
                   <span className="ml-2 font-bold">100K sats/an</span>
                   <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Button>

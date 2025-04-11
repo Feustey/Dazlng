@@ -1,64 +1,63 @@
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+"use client";
+
+import { Line } from "react-chartjs-2";
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
   Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-import { formatSats } from "../../utils/format";
-import { useTranslations } from "next-intl";
+  Legend,
+} from "chart.js";
 
-interface CapacityChartProps {
-  data: Array<{
-    date: Date;
-    value: number;
-  }>;
-}
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
-export default function CapacityChart({ data }: CapacityChartProps) {
-  const t = useTranslations("pages.network.charts.capacityHistory");
+const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: "top" as const,
+    },
+  },
+  scales: {
+    y: {
+      beginAtZero: true,
+      ticks: {
+        callback: function (value: any) {
+          return value + " sats";
+        },
+      },
+    },
+  },
+};
+
+export function CapacityChart({ data }: { data: any }) {
+  const chartData = {
+    labels: data.labels,
+    datasets: [
+      {
+        label: "Capacité totale",
+        data: data.values,
+        borderColor: "rgb(75, 192, 192)",
+        backgroundColor: "rgba(75, 192, 192, 0.5)",
+        tension: 0.4,
+      },
+    ],
+  };
 
   return (
-    <div className="h-[400px]">
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            dataKey="date"
-            tickFormatter={(date) => new Date(date).toLocaleDateString()}
-            label={{
-              value: t("xAxisLabel"),
-              position: "insideBottom",
-              offset: -5,
-            }}
-          />
-          <YAxis
-            tickFormatter={(value) => `${(value / 1000000000).toFixed(0)}B`}
-            label={{
-              value: t("yAxisLabel"),
-              angle: -90,
-              position: "insideLeft",
-            }}
-          />
-          <Tooltip
-            formatter={(value) => formatSats(Number(value))}
-            labelFormatter={(date) => new Date(date).toLocaleDateString()}
-            contentStyle={{ backgroundColor: "var(--background)" }}
-            labelStyle={{ color: "var(--foreground)" }}
-          />
-          <Line
-            type="monotone"
-            dataKey="value"
-            stroke="var(--orange-500)"
-            strokeWidth={2}
-            name={t("lineName")}
-          />
-        </LineChart>
-      </ResponsiveContainer>
+    <div className="w-full h-[300px] relative">
+      <Line options={options} data={chartData} />
     </div>
   );
 }

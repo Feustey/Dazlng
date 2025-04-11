@@ -6,12 +6,44 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
   try {
-    const { firstName, lastName, email, interest, message } =
-      await request.json();
+    const {
+      firstName,
+      lastName,
+      email,
+      companyName,
+      jobTitle,
+      companyPhone,
+      companyWebsite,
+      interest,
+      message,
+    } = await request.json();
+
+    const emailContent = `
+      Nouveau message de contact:
+      
+      Nom: ${firstName} ${lastName}
+      Email: ${email}
+      Entreprise: ${companyName || "Non renseigné"}
+      Fonction: ${jobTitle || "Non renseigné"}
+      Téléphone: ${companyPhone || "Non renseigné"}
+      Site web: ${companyWebsite || "Non renseigné"}
+      Sujet: ${interest}
+      
+      Message:
+      ${message}
+    `;
+
+    await resend.emails.send({
+      from: "DazNode <onboarding@resend.dev>",
+      to: "contact@dazno.de",
+      subject: `Nouveau message de contact - ${interest}`,
+      text: emailContent,
+      replyTo: email,
+    });
 
     // Envoyer l'email de contact à l'admin
     await resend.emails.send({
-      from: "DazNode <contact@daznode.com>",
+      from: "DazNode <onboarding@resend.dev>",
       to: "contact@dazno.de",
       subject: `[Contact DazNode] ${interest} - ${firstName} ${lastName}`,
       react: ContactEmailTemplate({
@@ -26,7 +58,7 @@ export async function POST(request: Request) {
 
     // Envoyer un email de confirmation à l'utilisateur
     await resend.emails.send({
-      from: "DazNode <contact@daznode.com>",
+      from: "DazNode <onboarding@resend.dev>",
       to: email,
       subject: "Confirmation de votre message - DazNode",
       react: ContactEmailTemplate({
@@ -38,11 +70,14 @@ export async function POST(request: Request) {
       }),
     });
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Error sending contact email:", error);
     return NextResponse.json(
-      { error: "Failed to send contact email" },
+      { message: "Message envoyé avec succès" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Erreur lors de l'envoi de l'email:", error);
+    return NextResponse.json(
+      { error: "Erreur lors de l'envoi du message" },
       { status: 500 }
     );
   }

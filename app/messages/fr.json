@@ -157,6 +157,7 @@
     "title": "Page non trouvée",
     "description": "Désolé, la page que vous recherchez n'existe pas.",
     "back": "Retour à l'accueil",
+    "backHome": "Retour à l'accueil",
     "or": "ou",
     "contact": "contactez-nous"
   },
@@ -249,76 +250,89 @@
   },
   "daz-ia": {
     "title": "Daz-IA",
-    "description": "Découvrez la puissance de l'intelligence artificielle avec Daz-IA",
+    "description": "L'intelligence artificielle au service de votre nœud Lightning",
     "tabs": {
-      "plans": "Plans",
-      "engine": "Engine"
+      "engine": "Le Moteur",
+      "plans": "Les Plans"
     },
-    "engine": {
-      "what_it_does": {
-        "title": "🎯 Ce que Daz-IA fait concrètement",
+    "what": {
+      "title": "Qu'est-ce que Daz-IA ?",
+      "subtitle": "Une intelligence artificielle dédiée à l'optimisation de votre nœud",
+      "features": {
+        "title": "Fonctionnalités",
         "items": [
-          "Analyse continue de l'état du nœud : transactions, connexions, fiabilité, etc.",
-          "Conseils personnalisés sur l'ouverture de canaux, les frais optimaux, la gestion de liquidité",
-          "Alertes intelligentes pour anticiper les problèmes ou saisir les opportunités de routage",
-          "Planification stratégique avec indicateurs de performance et objectifs à long terme",
-          "Réponses contextualisées à vos questions simples ou complexes"
+          "Analyse en temps réel du réseau",
+          "Prédiction des tendances",
+          "Optimisation automatique des canaux",
+          "Détection des opportunités"
         ]
-      },
-      "architecture": {
-        "title": "⚙️ Une architecture technique puissante",
-        "description": "Le moteur Daz-IA est basé sur une stack technique robuste et éprouvée :",
-        "items": [
-          "Vectorisation de documents avec la agent IA, un LLM dédié et une indexation FAISS",
-          "Base de données allimentée en continue + cache intelligent",
-          "Architecture en microservices avec haute disponibilité",
-          "Sécurité renforcée, monitoring avancé et configuration personnalisable"
-        ]
-      },
-      "smart_node": {
-        "title": "💡 Le nœud intelligent, prêt à l'emploi",
-        "content": "Associé à La Dazbox, notre node hardware clé-en-main, embarque nativement cette intelligence augmentée. En combinant performance réseau, interface simple et assistance IA intégrée, la Dazbox devient bien plus qu'un nœud : un centre de pilotage intelligent pour vos opérations sur le Lightning Network."
-      },
-      "launch_offer": {
-        "title": "🔥 Offre de lancement exclusive",
-        "subtitle": "📅 Dans 10 jours, soyez parmi les premiers à activer Daz-IA avec notre offre de lancement spéciale :",
-        "price": "➡️ 400 000 sats au lieu de 500 000",
-        "description": "L'abonnement vous donne un accès complet au moteur Daz-IA, au tableau de bord, aux alertes et aux recommandations évolutives."
       },
       "benefits": {
-        "title": "⚡ Gagnez en performance, automatisez vos décisions",
-        "subtitle": "Avec Daznode, vous prenez l'avantage :",
+        "title": "Avantages",
         "items": [
-          "Des décisions basées sur les données, plus jamais au hasard",
-          "Un pilotage précis de votre stratégie de frais et de routage",
-          "Un nœud qui travaille pour vous, 24/7"
+          "Augmentation des revenus",
+          "Réduction des coûts",
+          "Meilleure performance du réseau",
+          "Prise de décision optimisée"
         ]
-      },
-      "cta": "📍 Rejoignez la révolution Lightning augmentée"
+      }
+    },
+    "architecture": {
+      "title": "Architecture",
+      "subtitle": "Une solution complète et intégrée",
+      "components": [
+        {
+          "icon": "cpu",
+          "title": "Moteur d'IA",
+          "description": "Analyse et optimisation en temps réel"
+        },
+        {
+          "icon": "server",
+          "title": "Infrastructure",
+          "description": "Haute disponibilité et performance"
+        },
+        {
+          "icon": "shield",
+          "title": "Sécurité",
+          "description": "Protection maximale de vos données"
+        }
+      ]
     },
     "one-shot": {
-      "title": "One-Shot",
-      "price": "10 000 sats",
+      "title": "Offre One-Shot",
+      "subtitle": "Accès unique à Daz-IA",
+      "price": "10K sats",
       "features": [
-        "Accès à Daz-IA pendant 24h",
+        "Analyse complète de votre nœud",
         "Recommandations personnalisées",
-        "Support prioritaire",
-        "Accès à toutes les fonctionnalités"
+        "Rapport détaillé",
+        "Support pendant 48h"
       ],
-      "cta": "Choisir One-Shot"
+      "cta": "Commander maintenant"
     },
     "yearly": {
-      "title": "Annuel",
-      "price": "100 000 sats",
-      "highlight": "Meilleure offre",
-      "features": [
-        "Accès à Daz-IA pendant 1 an",
-        "Recommandations personnalisées",
-        "Support prioritaire 24/7",
-        "Accès à toutes les fonctionnalités",
-        "Mises à jour gratuites"
-      ],
-      "cta": "Choisir Annuel"
+      "title": "Abonnement Annuel",
+      "subtitle": "Accès complet à Daz-IA",
+      "price": "100K sats",
+      "features": {
+        "title": "Fonctionnalités incluses",
+        "items": [
+          "Analyse en temps réel",
+          "Optimisation continue",
+          "Support prioritaire",
+          "Mises à jour exclusives"
+        ]
+      },
+      "benefits": {
+        "title": "Avantages premium",
+        "items": [
+          "ROI optimisé",
+          "Performance maximale",
+          "Accès anticipé aux nouvelles fonctionnalités",
+          "Formation personnalisée"
+        ]
+      },
+      "cta": "S'abonner maintenant"
     },
     "processing": "Traitement en cours...",
     "success": "Paiement réussi !",
@@ -1334,6 +1348,38 @@
       "cta": {
         "start": "Commencer maintenant",
         "learn": "En savoir plus"
+      }
+    }
+  },
+  "Dazbox": {
+    "title": "Dazbox - Votre Nœud Lightning Pré-configuré",
+    "description": "Un nœud Lightning Network prêt à l'emploi pour gérer vos canaux et vos transactions.",
+    "oneShot": {
+      "title": "Offre One-Shot",
+      "offers": {
+        "0": {
+          "title": "Dazbox Basic",
+          "subtitle": "Un nœud Lightning pré-configuré pour commencer",
+          "features": [
+            "Configuration optimisée pour le routage",
+            "Support technique prioritaire pendant 2 semaines"
+          ],
+          "cta": "Commander maintenant"
+        }
+      }
+    },
+    "subscription": {
+      "title": "Abonnement",
+      "offers": {
+        "0": {
+          "title": "Dazbox Pro",
+          "subtitle": "Un nœud Lightning avec support premium",
+          "features": [
+            "Configuration optimisée pour le routage",
+            "Support technique prioritaire 24/7"
+          ],
+          "cta": "S'abonner"
+        }
       }
     }
   }
