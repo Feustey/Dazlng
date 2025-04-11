@@ -2,8 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import PageContainer from "@/app/components/layout/PageContainer";
-import Card from "@/app/components/ui/card";
+import PageContainer from "@/components/layout/PageContainer";
+import Card from "@/components/ui/card";
 import {
   CardHeader,
   CardTitle,

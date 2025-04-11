@@ -2,15 +2,16 @@
 
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
-import PageContainer from "@/app/components/layout/PageContainer";
-import Card, {
+import PageContainer from "@/components/layout/PageContainer";
+import Card from "@/components/ui/card";
+import {
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
   CardFooter,
-} from "@/app/components/ui/card";
-import Button from "@/app/components/ui/button";
+} from "@/components/ui/card";
+import Button from "@/components/ui/button";
 import { ArrowRight, Check, Zap } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";

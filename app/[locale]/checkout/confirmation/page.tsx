@@ -3,10 +3,11 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { supabase } from "@/app/utils/supabase";
+import { createClient } from "@/utils/supabase";
 import { Check } from "lucide-react";
-import Button from "@/app/components/ui/button";
+import Button from "@/components/ui/button";
 import { toast } from "sonner";
+import PageContainer from "@/components/layout/PageContainer";
 
 interface ShippingInfo {
   name: string;
@@ -51,7 +52,7 @@ export default function CheckoutConfirmationPage() {
         setIsStoring(true);
 
         // 1. Ajouter l'utilisateur
-        const { data: userData, error: userError } = await supabase
+        const { data: userData, error: userError } = await createClient
           .from("users")
           .upsert(
             {
@@ -70,7 +71,7 @@ export default function CheckoutConfirmationPage() {
         const userId = (userData as SupabaseUser).id;
 
         // 2. Créer la commande
-        const { data: orderData, error: orderError } = await supabase
+        const { data: orderData, error: orderError } = await createClient
           .from("orders")
           .insert({
             user_id: userId,
@@ -88,7 +89,7 @@ export default function CheckoutConfirmationPage() {
         const orderId = (orderData as SupabaseOrder).id;
 
         // 3. Enregistrer la livraison
-        const { error: deliveryError } = await supabase
+        const { error: deliveryError } = await createClient
           .from("deliveries")
           .insert({
             order_id: orderId,
@@ -103,12 +104,14 @@ export default function CheckoutConfirmationPage() {
           throw new Error(`Erreur livraison: ${deliveryError.message}`);
 
         // 4. Enregistrer le paiement
-        const { error: paymentError } = await supabase.from("payments").insert({
-          order_id: orderId,
-          payment_hash: paymentHash,
-          amount: 400000,
-          status: "success",
-        });
+        const { error: paymentError } = await createClient
+          .from("payments")
+          .insert({
+            order_id: orderId,
+            payment_hash: paymentHash,
+            amount: 400000,
+            status: "success",
+          });
 
         if (paymentError)
           throw new Error(`Erreur paiement: ${paymentError.message}`);

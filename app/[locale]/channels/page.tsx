@@ -2,10 +2,10 @@
 
 import { useTranslations } from "next-intl";
 import { useState, useEffect } from "react";
-import PageContainer from "@/app/components/layout/PageContainer";
-import Card from "@/app/components/ui/card";
-import Button from "@/app/components/ui/button";
-import { Input } from "@/app/components/ui/input";
+import PageContainer from "@/components/layout/PageContainer";
+import Card from "@/components/ui/card";
+import Button from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Search,
   TrendingDown,
@@ -26,7 +26,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/app/components/ui/select";
+} from "@/components/ui/select";
 
 interface Node {
   pubkey: string;

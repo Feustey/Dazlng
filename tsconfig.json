@@ -27,7 +27,7 @@
     "types": ["@testing-library/jest-dom", "node", "react", "react-dom"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./app/*"]
     },
     "typeRoots": ["./node_modules/@types", "./app/types"]
   },
