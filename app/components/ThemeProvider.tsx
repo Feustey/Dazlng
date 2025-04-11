@@ -2,6 +2,7 @@
 
 // Imports Next.js
 import Script from "next/script";
+import React from "react";
 
 // Imports de bibliothèques tierces
 import { ThemeProvider as NextThemesProvider } from "next-themes";
@@ -10,7 +11,7 @@ import { type ThemeProviderProps } from "next-themes/dist/types";
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return (
     <>
-      <Script id="theme-script" strategy="beforeInteractive">
+      <Script id="theme-script" strategy="afterInteractive">
         {`
           try {
             const theme = localStorage.getItem('daznode-theme') || 'system';
