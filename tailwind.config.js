@@ -6,7 +6,19 @@ module.exports = {
     "./lib/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        card: {
+          DEFAULT: "var(--card)",
+          30: "rgba(var(--card-rgb), 0.3)",
+          50: "rgba(var(--card-rgb), 0.5)",
+        },
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        border: "var(--border)",
+        accent: "var(--accent)",
+      },
+    },
   },
   plugins: [],
 };
