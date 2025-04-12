@@ -149,7 +149,7 @@
 
   .btn-secondary {
     @apply inline-flex items-center justify-center rounded-lg;
-    @apply bg-card/30 hover:bg-card/50 text-white font-semibold;
+    @apply bg-card-30 hover:bg-card-50 text-white font-semibold;
     @apply transition-all duration-300;
     @apply backdrop-blur-sm;
     @apply py-2 px-4;
