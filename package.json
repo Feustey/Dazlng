@@ -11,7 +11,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@auth/supabase-adapter": "^0.1.12",
+    "@auth/supabase-adapter": "^1.8.0",
     "@getalby/sdk": "^4.1.1",
     "@hookform/resolvers": "^3.3.4",
     "@radix-ui/react-accordion": "^1.1.2",
@@ -65,7 +65,7 @@
     "framer-motion": "^11.0.3",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.321.0",
-    "next": "14.1.0",
+    "next": "^14.2.28",
     "next-auth": "^4.24.5",
     "next-intl": "^3.5.4",
     "next-themes": "^0.2.1",

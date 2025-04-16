@@ -6,12 +6,12 @@ import { useApi } from "../hooks/useApi";
 import { useAlert } from "../hooks/useAlert";
 import { Card } from "./ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import Loading from "./Loading";
-import ApiError from "./ApiError";
-import ChannelMap from "./ChannelMap";
+import Loading from "../ui/Loading";
+import ApiError from "../ui/ApiError";
+import ChannelMap from "../channels/ChannelMap";
 import NodePerformance from "./NodePerformance";
 import NodeGeneralInfo from "./NodeGeneralInfo";
-import ChannelList from "./ChannelList";
+import ChannelList from "../channels/ChannelList";
 
 interface Channel {
   id: string;

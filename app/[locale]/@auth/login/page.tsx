@@ -352,8 +352,9 @@ export default function LoginPage() {
                   <Button
                     onClick={handleAlbyLogin}
                     onKeyDown={handleKeyDown}
-                    className="w-full btn-gradient relative hover:shadow-lg transition-all duration-300"
+                    variant="gradient"
                     size="lg"
+                    fullWidth
                     disabled={isLoading}
                     aria-label={
                       isLoading ? t("connexionEnCours") : t("connectWithAlby")

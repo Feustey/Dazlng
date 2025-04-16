@@ -1,0 +1,77 @@
+{
+  "title": "DazNode - Ihr Lightning Network Portal",
+  "description": "DazNode ist ein Bitcoin Lightning Network Explorer, mit dem Sie das Netzwerk in Echtzeit visualisieren und analysieren können.",
+  "hero": {
+    "title": "Optimieren Sie Ihre Leistung und Rentabilität mit Daznode",
+    "description": "Daznode ist ein KI-gesteuertes intelligentes Dashboard, das Ihren Lightning Network-Knoten optimiert und seine Rentabilität maximiert.",
+    "cta": "Mit der Erkundung beginnen"
+  },
+  "features": {
+    "title": "Funktionen",
+    "items": [
+      {
+        "title": "Echtzeit-Analyse",
+        "description": "Verfolgen Sie die Entwicklung des Lightning-Netzwerks mit Echtzeit-Updates von Knoten und Kanälen.",
+        "icon": "zap"
+      },
+      {
+        "title": "Gebührenoptimierung",
+        "description": "Passen Sie die Gebühren Ihrer aktivsten Kanäle an, um Ihre Einnahmen zu maximieren.",
+        "icon": "trending-up"
+      },
+      {
+        "title": "Liquiditätsmanagement",
+        "description": "Gleichen Sie Ihre Kanäle aus, um die verfügbare Liquidität zu optimieren.",
+        "icon": "refresh-cw"
+      },
+      {
+        "title": "KI-Assistent",
+        "description": "Stellen Sie Fragen an den KI-Assistenten, der Ihnen hilft, Ihren Lightning-Knoten zu verstehen und zu optimieren.",
+        "icon": "message-circle"
+      }
+    ]
+  },
+  "dashboard": {
+    "title": "Dashboard Ihres Lightning-Knotens",
+    "subtitle": "Überwachen und optimieren Sie die Leistung Ihres Knotens in Echtzeit",
+    "metrics": {
+      "channels": "Kanäle insgesamt",
+      "activeChannels": "{count} aktive Kanäle",
+      "capacity": "Gesamtkapazität",
+      "fees": "Gesamtgebühren"
+    }
+  },
+  "testimonials": {
+    "title": "Was unsere Benutzer sagen",
+    "items": [
+      {
+        "quote": "Dank der Empfehlungen von Daznode ist mein Knoten von einigen Transaktionen pro Tag auf über 100 gestiegen! Der Unterschied ist beeindruckend.",
+        "author": "Marie L."
+      },
+      {
+        "quote": "Daznode hat meinen Lightning-Knoten von einem Hobby zu einer echten Einnahmequelle gemacht. Ich kann nicht mehr darauf verzichten!",
+        "author": "Peter D."
+      }
+    ]
+  },
+  "faq": {
+    "title": "Häufig gestellte Fragen",
+    "items": [
+      {
+        "question": "Was ist DazNode?",
+        "answer": "DazNode ist ein KI-gesteuertes intelligentes Dashboard, das Ihren Lightning Network-Knoten optimiert und seine Rentabilität maximiert."
+      },
+      {
+        "question": "Wie kann DazNode mir helfen?",
+        "answer": "DazNode analysiert Ihren Knoten und das Lightning-Netzwerk, um Ihnen personalisierte Optimierungsempfehlungen zu geben, die Ihnen helfen, Ihre Einnahmen zu steigern und die Leistung Ihres Knotens zu verbessern."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Bereit, Ihren Lightning-Knoten zu optimieren?",
+    "description": "Treten Sie DazNode noch heute bei und entdecken Sie, wie Sie die Leistung Ihres Knotens maximieren können.",
+    "button": "Jetzt starten"
+  },
+
+  "space": {}
+}

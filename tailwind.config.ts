@@ -87,6 +87,8 @@ const config: Config = {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+          30: "rgba(var(--card-rgb), 0.3)",
+          50: "rgba(var(--card-rgb), 0.5)",
         },
       },
       borderRadius: {
@@ -100,6 +102,21 @@ const config: Config = {
         md: "var(--shadow-md)",
         lg: "var(--shadow-lg)",
         xl: "var(--shadow-xl)",
+      },
+      transitionDuration: {
+        fast: "150ms",
+        DEFAULT: "300ms",
+        slow: "500ms",
+      },
+      transitionTimingFunction: {
+        "ease-default": "ease-in-out",
+        "ease-snappy": "cubic-bezier(0.25, 1, 0.5, 1)",
+      },
+      animationDelay: {
+        75: "75ms",
+        150: "150ms",
+        300: "300ms",
+        500: "500ms",
       },
       keyframes: {
         "accordion-down": {
@@ -124,11 +141,15 @@ const config: Config = {
         },
       },
       animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fadeIn 0.5s ease-out forwards",
-        "slide-up": "slideUp 0.5s ease-out forwards",
-        "slide-down": "slideDown 0.5s ease-out forwards",
+        "accordion-down":
+          "accordion-down var(--animation-duration, 0.2s) ease-out",
+        "accordion-up": "accordion-up var(--animation-duration, 0.2s) ease-out",
+        "fade-in":
+          "fadeIn var(--animation-duration, 0.5s) ease-default forwards",
+        "slide-up":
+          "slideUp var(--animation-duration, 0.5s) ease-default forwards",
+        "slide-down":
+          "slideDown var(--animation-duration, 0.5s) ease-default forwards",
       },
     },
   },

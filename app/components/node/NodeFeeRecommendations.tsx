@@ -11,7 +11,7 @@ import {
   ArrowDownRight,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import PremiumFeatureAccess from "./PremiumFeatureAccess";
+import PremiumFeatureAccess from "../features/PremiumFeatureAccess";
 import { FeeRecommendation } from "../services/premiumMcpService";
 
 interface NodeFeeRecommendationsProps {

@@ -2,14 +2,14 @@
 
 import { useState, useEffect, useCallback } from "react";
 import * as React from "react";
-import Card from "./ui/card";
-import { CardHeader, CardTitle, CardContent } from "./ui/card";
-import Button from "./ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import Card from "@/components/ui/card";
+import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import Button from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2, AlertCircle, TrendingUp, Zap, Scale } from "lucide-react";
 import { useTranslations } from "next-intl";
-import PremiumFeatureAccess from "./PremiumFeatureAccess";
-import { NodeGrowthPrediction as GrowthPredictionType } from "../types/mcpService";
+import PremiumFeatureAccess from "../features/PremiumFeatureAccess";
+import { NodeGrowthPrediction as GrowthPredictionType } from "@/types/mcpService";
 import {
   LineChart,
   Line,

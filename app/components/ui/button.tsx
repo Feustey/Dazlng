@@ -27,9 +27,9 @@ const buttonVariants = ({
 
   const variantClasses = {
     gradient:
-      "btn-gradient text-white hover:shadow-lg hover:scale-105 disabled:hover:scale-100",
+      "bg-gradient-to-r from-primary to-primary-600 text-white hover:shadow-lg hover:scale-105 disabled:hover:scale-100",
     secondary:
-      "btn-secondary text-white hover:shadow-lg hover:scale-105 disabled:hover:scale-100",
+      "bg-card/30 backdrop-blur-sm border border-accent/20 text-white hover:bg-card/50 hover:shadow-lg hover:scale-105 disabled:hover:scale-100",
     outline:
       "border-2 border-primary/20 hover:border-primary/40 text-primary hover:bg-primary/10",
     ghost: "text-foreground hover:bg-accent/10",

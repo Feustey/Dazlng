@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Button from "@/components/ui/button";
 import Card, { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import OrderStatus from "@/components/OrderStatus";
+import OrderStatus from "@/components/payment/OrderStatus";
 
 interface OrderPageProps {
   params: {

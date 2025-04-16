@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useTranslations } from "next-intl";
 import Button from "@/components/ui/button";
-import AlbyLoginButton from "../AlbyLoginButton";
+import AlbyLoginButton from "./AlbyLoginButton";
 import { Separator } from "../ui/separator";
 
 export const AuthOptions: React.FC = () => {

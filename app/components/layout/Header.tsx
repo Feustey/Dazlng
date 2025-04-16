@@ -16,11 +16,14 @@ import {
   LogIn,
   Menu,
 } from "lucide-react";
-import { SimpleLogo } from "../SimpleLogo";
-import { AccountMenu } from "../AccountMenu";
+import { SimpleLogo } from "./SimpleLogo";
+import { AccountMenu } from "../auth/AccountMenu";
 import { usePathname, useRouter } from "next/navigation";
 import { useTranslation } from "@/hooks/useTranslation";
-import { LanguageSelector } from "../LanguageSelector";
+import { LanguageSelector } from "../ui/LanguageSelector";
+import { useTheme } from "next-themes";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export default function Header() {
   const { t } = useTranslation();
@@ -119,7 +122,13 @@ export default function Header() {
                   ) : (
                     <Link
                       href={`/${locale}/auth/signin`}
-                      className="flex items-center space-x-2 btn-gradient py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                      className={cn(
+                        buttonVariants({
+                          variant: "gradient",
+                          size: "sm",
+                        }),
+                        "flex items-center space-x-2"
+                      )}
                     >
                       <LogIn className="w-4 h-4" />
                       <span>{t("header.actions.login")}</span>
@@ -192,7 +201,13 @@ export default function Header() {
                   ) : (
                     <Link
                       href={`/${locale}/auth/signin`}
-                      className="flex items-center space-x-2 btn-gradient py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                      className={cn(
+                        buttonVariants({
+                          variant: "gradient",
+                          size: "sm",
+                        }),
+                        "flex items-center space-x-2"
+                      )}
                     >
                       <LogIn className="w-4 h-4" />
                       <span>{t("header.actions.login")}</span>

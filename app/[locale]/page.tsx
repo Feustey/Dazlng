@@ -1,7 +1,10 @@
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
-import Features from "@/components/Features";
-import { AnimatedHero, AnimatedStat } from "@/components/HomeAnimations";
+import Image from "next/image";
+import Features from "@/components/features/Features";
+import { AnimatedHero, AnimatedStat } from "@/components/ui/HomeAnimations";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export default async function HomePage() {
   const t = await getTranslations("pages.home");
@@ -40,7 +43,12 @@ export default async function HomePage() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Link
                   href="/daznode"
-                  className="btn-gradient py-2 px-6 rounded-lg text-white font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                  className={cn(
+                    buttonVariants({
+                      variant: "gradient",
+                      size: "md",
+                    })
+                  )}
                 >
                   {t("cta.start")}
                 </Link>

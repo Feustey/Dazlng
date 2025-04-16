@@ -5,6 +5,9 @@ import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import Card from "./ui/card";
+import { buttonVariants } from "./ui/button";
+import { cn } from "@/lib/utils";
 
 export default function Hero() {
   const t = useTranslations("Home");
@@ -32,11 +35,17 @@ export default function Hero() {
             Optimisez vos performances et votre rentabilité avec Daznode
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center animate-slide-up">
-            <Link href={`/${locale}/daznode`} className="btn-gradient">
+            <Link
+              href={`/${locale}/daznode`}
+              className={cn(buttonVariants({ variant: "gradient" }))}
+            >
               Obtenez votre Dazbox !{" "}
               <ArrowRight className="ml-2 h-5 w-5 inline" />
             </Link>
-            <Link href={`/${locale}/learn`} className="btn-secondary">
+            <Link
+              href={`/${locale}/learn`}
+              className={cn(buttonVariants({ variant: "secondary" }))}
+            >
               Apprentissage
             </Link>
           </div>
@@ -44,30 +53,30 @@ export default function Hero() {
 
         {/* Statistiques avec animation */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20 animate-fade-in">
-          <div className="card-glass p-6">
+          <Card translucent className="p-6 shadow-xl">
             <h3 className="text-4xl font-bold text-gradient mb-2">
               Nœuds
               <br />
               Totaux
             </h3>
             <p className="text-gray-300 text-2xl font-semibold">10,000+</p>
-          </div>
-          <div className="card-glass p-6">
+          </Card>
+          <Card translucent className="p-6 shadow-xl">
             <h3 className="text-4xl font-bold text-gradient mb-2">
               Canaux
               <br />
               Totaux
             </h3>
             <p className="text-gray-300 text-2xl font-semibold">50,000+</p>
-          </div>
-          <div className="card-glass p-6">
+          </Card>
+          <Card translucent className="p-6 shadow-xl">
             <h3 className="text-4xl font-bold text-gradient mb-2">
               Capacité
               <br />
               Totale
             </h3>
             <p className="text-gray-300 text-2xl font-semibold">1,000 BTC</p>
-          </div>
+          </Card>
         </div>
       </div>
     </section>

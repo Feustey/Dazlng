@@ -8,7 +8,7 @@ import Button from "./ui/button";
 import { Check, AlertCircle, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import PremiumFeatureAccess from "./PremiumFeatureAccess";
+import PremiumFeatureAccess from "../features/PremiumFeatureAccess";
 
 interface NodeOptimizationRecommendationsProps {
   nodeId: string;

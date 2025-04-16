@@ -1,6 +1,7 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useState, useEffect } from "react";
+import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import PageContainer from "@/components/layout/PageContainer";
 import Card, {
@@ -14,230 +15,219 @@ import Button from "@/components/ui/button";
 import {
   ArrowRight,
   Zap,
-  Shield,
-  Settings,
-  Package,
-  Bitcoin,
-  Globe,
+  TrendingUp,
+  RefreshCw,
+  MessageCircle,
   CheckCircle2,
-  Clock,
-  Gift,
+  Quote,
 } from "lucide-react";
-import { useState } from "react";
 
 export default function DaznodePage() {
-  const t = useTranslations("daznode");
+  const locale = useLocale();
   const router = useRouter();
-  const [language, setLanguage] = useState<"fr" | "en">("fr");
+  const [content, setContent] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  const features = [
-    {
-      icon: <Package className="w-8 h-8 text-primary" />,
-      title: t("package.question"),
-      description: t("package.answer"),
-    },
-    {
-      icon: <Zap className="w-8 h-8 text-primary" />,
-      title: "Nœud Lightning Pré-configuré",
-      description:
-        "Prêt à l'emploi avec LND, 50 000 sats pré-chargés et interface de gestion intuitive.",
-    },
-    {
-      icon: <Shield className="w-8 h-8 text-primary" />,
-      title: "Sécurité Garantie",
-      description:
-        "Boîtier sécurisé, refroidissement optimisé et protection contre les surtensions.",
-    },
-  ];
+  useEffect(() => {
+    async function loadContent() {
+      try {
+        const response = await fetch(`/locale/daznode/${locale}.json`);
+        if (!response.ok) {
+          throw new Error("Failed to load content");
+        }
+        const data = await response.json();
+        setContent(data);
+      } catch (error) {
+        console.error("Error loading daznode content:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
 
-  const pricing = [
-    {
-      name: "Dazbox Basic",
-      price: "299€",
-      features: [
-        "Nœud Lightning pré-configuré",
-        "50 000 sats pré-chargés",
-        "Interface de gestion",
-        "Support technique",
-      ],
-      popular: false,
-    },
-    {
-      name: "Dazbox Pro",
-      price: "499€",
-      features: [
-        "Tout ce qui est inclus dans Basic",
-        "100 000 sats pré-chargés",
-        "Support prioritaire",
-        "Accès aux fonctionnalités avancées",
-      ],
-      popular: true,
-    },
-    {
-      name: "Dazbox Enterprise",
-      price: "999€",
-      features: [
-        "Tout ce qui est inclus dans Pro",
-        "500 000 sats pré-chargés",
-        "Support 24/7",
-        "Configuration personnalisée",
-      ],
-      popular: false,
-    },
-  ];
+    loadContent();
+  }, [locale]);
 
-  const toggleLanguage = () => {
-    setLanguage(language === "fr" ? "en" : "fr");
+  // Fonction pour obtenir l'icône correspondante
+  const getIcon = (iconName: string) => {
+    const iconSize = "w-8 h-8 text-primary";
+    switch (iconName) {
+      case "zap":
+        return <Zap className={iconSize} />;
+      case "trending-up":
+        return <TrendingUp className={iconSize} />;
+      case "refresh-cw":
+        return <RefreshCw className={iconSize} />;
+      case "message-circle":
+        return <MessageCircle className={iconSize} />;
+      default:
+        return <Zap className={iconSize} />;
+    }
   };
 
+  if (loading || !content) {
+    return (
+      <PageContainer title="Daznode">
+        <div className="flex items-center justify-center h-[50vh]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      </PageContainer>
+    );
+  }
+
   return (
-    <PageContainer
-      title="Daznode"
-      subtitle="La solution complète pour gérer votre nœud Lightning Network"
-    >
-      {/* Section principale */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-        <Card
-          gradient
-          className="p-8 hover:scale-[1.02] transition-transform duration-300"
-        >
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold text-gradient">
-              Commencez Maintenant
-            </CardTitle>
-            <CardDescription className="text-gray-300 text-lg">
-              Obtenez votre Dazbox et rejoignez le réseau Lightning
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-primary/20 rounded-lg">
-                  <Gift className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <p className="text-lg text-gray-300">
-                    Prix à partir de{" "}
-                    <span className="text-gradient font-bold text-3xl">
-                      299€
-                    </span>
-                  </p>
-                  <p className="text-sm text-gray-400">Livraison gratuite</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-secondary/20 rounded-lg">
-                  <Clock className="w-6 h-6 text-secondary" />
-                </div>
-                <div>
-                  <p className="text-lg text-gray-300">
-                    Livraison en{" "}
-                    <span className="text-gradient font-bold">2-3 jours</span>
-                  </p>
-                  <p className="text-sm text-gray-400">En stock</p>
-                </div>
-              </div>
-              <Button variant="gradient" size="lg" className="w-full text-lg">
-                Commander Maintenant <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card
-          gradient
-          className="p-8 hover:scale-[1.02] transition-transform duration-300"
-        >
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold text-gradient">
-              Statistiques du Réseau
-            </CardTitle>
-            <CardDescription className="text-gray-300 text-lg">
-              Découvrez la puissance du réseau Lightning
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <p className="text-sm text-gray-400">Nœuds Totaux</p>
-                <p className="text-4xl font-bold text-gradient">10,000+</p>
-              </div>
-              <div className="space-y-2">
-                <p className="text-sm text-gray-400">Canaux Actifs</p>
-                <p className="text-4xl font-bold text-gradient">50,000+</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+    <PageContainer title={content.title} subtitle={content.description}>
+      {/* Section Hero */}
+      <div className="bg-gradient-to-br from-background to-background/50 rounded-lg p-8 mb-12 border border-border shadow-lg">
+        <div className="max-w-3xl mx-auto text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-gradient mb-6">
+            {content.hero.title}
+          </h1>
+          <p className="text-lg text-gray-300 mb-8">
+            {content.hero.description}
+          </p>
+          <Button variant="gradient" size="lg">
+            {content.hero.cta} <ArrowRight className="ml-2 w-5 h-5" />
+          </Button>
+        </div>
       </div>
 
-      {/* Section des tarifs */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-        {pricing.map((plan, index) => (
-          <Card
-            key={index}
-            className={`p-6 hover:scale-[1.02] transition-transform duration-300 ${
-              plan.popular ? "border-2 border-primary" : ""
-            }`}
-          >
-            <CardHeader>
-              <div className="flex items-center justify-between">
+      {/* Section Fonctionnalités */}
+      <div className="mb-16">
+        <h2 className="text-3xl font-bold text-gradient mb-8 text-center">
+          {content.features.title}
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {content.features.items.map((feature: any, index: number) => (
+            <Card
+              key={index}
+              className="p-6 hover:scale-[1.02] transition-transform duration-300"
+            >
+              <CardHeader>
+                <div className="mb-4">{getIcon(feature.icon)}</div>
                 <CardTitle className="text-xl font-semibold text-gradient">
-                  {plan.name}
+                  {feature.title}
                 </CardTitle>
-                {plan.popular && (
-                  <span className="px-2 py-1 text-xs font-semibold bg-primary/20 text-primary rounded-full">
-                    Populaire
-                  </span>
-                )}
-              </div>
-              <div className="mt-4">
-                <span className="text-3xl font-bold text-gradient">
-                  {plan.price}
-                </span>
-                <span className="text-gray-400">/unité</span>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-3">
-                {plan.features.map((feature, i) => (
-                  <li key={i} className="flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-primary" />
-                    <span className="text-gray-300">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-            <CardFooter>
-              <Button
-                variant={plan.popular ? "gradient" : "outline"}
-                className="w-full"
-              >
-                Choisir {plan.name}
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
+                <CardDescription className="text-gray-300">
+                  {feature.description}
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          ))}
+        </div>
       </div>
 
-      {/* Section des fonctionnalités */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {features.map((feature, index) => (
-          <Card
-            key={index}
-            className="p-6 hover:scale-[1.02] transition-transform duration-300"
-          >
-            <CardHeader>
-              <div className="mb-4">{feature.icon}</div>
-              <CardTitle className="text-xl font-semibold text-gradient">
-                {feature.title}
-              </CardTitle>
-              <CardDescription className="text-gray-300">
-                {feature.description}
-              </CardDescription>
-            </CardHeader>
-          </Card>
-        ))}
+      {/* Section Dashboard */}
+      <div className="mb-16 bg-gradient-to-br from-background/80 to-background/40 rounded-lg p-8 border border-border shadow-lg">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-3xl font-bold text-gradient mb-4 text-center">
+            {content.dashboard.title}
+          </h2>
+          <p className="text-lg text-gray-300 mb-8 text-center">
+            {content.dashboard.subtitle}
+          </p>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <Card className="p-4 text-center">
+              <CardContent className="p-2">
+                <p className="text-sm text-gray-400">
+                  {content.dashboard.metrics.channels}
+                </p>
+                <p className="text-3xl font-bold text-gradient">250</p>
+              </CardContent>
+            </Card>
+            <Card className="p-4 text-center">
+              <CardContent className="p-2">
+                <p className="text-sm text-gray-400">
+                  {content.dashboard.metrics.activeChannels.replace(
+                    "{count}",
+                    "120"
+                  )}
+                </p>
+                <p className="text-3xl font-bold text-gradient">120</p>
+              </CardContent>
+            </Card>
+            <Card className="p-4 text-center">
+              <CardContent className="p-2">
+                <p className="text-sm text-gray-400">
+                  {content.dashboard.metrics.capacity}
+                </p>
+                <p className="text-3xl font-bold text-gradient">5.2 BTC</p>
+              </CardContent>
+            </Card>
+            <Card className="p-4 text-center">
+              <CardContent className="p-2">
+                <p className="text-sm text-gray-400">
+                  {content.dashboard.metrics.fees}
+                </p>
+                <p className="text-3xl font-bold text-gradient">50,000 sats</p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+
+      {/* Section Témoignages */}
+      <div className="mb-16">
+        <h2 className="text-3xl font-bold text-gradient mb-8 text-center">
+          {content.testimonials.title}
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {content.testimonials.items.map((testimonial: any, index: number) => (
+            <Card
+              key={index}
+              gradient
+              className="p-6 hover:scale-[1.02] transition-transform duration-300"
+            >
+              <CardContent className="pt-6">
+                <div className="flex items-start mb-4">
+                  <Quote className="w-10 h-10 text-primary/50 mr-4 flex-shrink-0" />
+                  <p className="text-lg text-gray-300 italic">
+                    {testimonial.quote}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-gradient font-semibold">
+                    {testimonial.author}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Section FAQ */}
+      <div className="mb-16">
+        <h2 className="text-3xl font-bold text-gradient mb-8 text-center">
+          {content.faq.title}
+        </h2>
+        <div className="max-w-3xl mx-auto grid grid-cols-1 gap-6">
+          {content.faq.items.map((item: any, index: number) => (
+            <Card key={index} className="p-6">
+              <CardHeader>
+                <CardTitle className="text-xl font-semibold text-gradient">
+                  {item.question}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300">{item.answer}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Section CTA */}
+      <div className="bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg p-8 border border-border shadow-lg text-center">
+        <h2 className="text-3xl font-bold text-gradient mb-4">
+          {content.cta.title}
+        </h2>
+        <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
+          {content.cta.description}
+        </p>
+        <Button variant="gradient" size="lg">
+          {content.cta.button} <ArrowRight className="ml-2 w-5 h-5" />
+        </Button>
       </div>
     </PageContainer>
   );

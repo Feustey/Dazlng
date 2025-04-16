@@ -116,7 +116,7 @@ export default function DeliveryPage() {
       <ProgressBar />
       <h1 className="text-2xl font-bold mb-6 gradient-text">{t("title")}</h1>
 
-      <Card className="card-glass border-accent/20 p-6 backdrop-blur-sm">
+      <Card translucent className="p-6">
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="animate-slide-up space-y-6"
@@ -298,10 +298,7 @@ export default function DeliveryPage() {
           </div>
 
           <div className="pt-6 flex justify-end">
-            <Button
-              type="submit"
-              className="btn-gradient py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 hover:scale-105"
-            >
+            <Button type="submit" variant="gradient">
               {t("continue")}
             </Button>
           </div>
