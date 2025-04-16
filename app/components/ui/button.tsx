@@ -4,11 +4,13 @@ import React from "react";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "gradient" | "secondary" | "outline" | "ghost";
-  size?: "sm" | "md" | "lg";
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "gradient" | "secondary" | "outline" | "ghost" | "default";
+  size?: "sm" | "md" | "lg" | "icon";
   loading?: boolean;
   fullWidth?: boolean;
+  asChild?: boolean;
 }
 
 const buttonVariants = ({
@@ -33,12 +35,14 @@ const buttonVariants = ({
     outline:
       "border-2 border-primary/20 hover:border-primary/40 text-primary hover:bg-primary/10",
     ghost: "text-foreground hover:bg-accent/10",
+    default: "bg-primary text-primary-foreground hover:bg-primary/90",
   };
 
   const sizeClasses = {
     sm: "text-sm px-3 py-1.5",
     md: "text-base px-4 py-2",
     lg: "text-lg px-6 py-3",
+    icon: "h-10 w-10 p-2",
   };
 
   const widthClass = fullWidth ? "w-full" : "";
@@ -54,7 +58,16 @@ const buttonVariants = ({
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { className, variant, size, loading, children, fullWidth, ...props },
+    {
+      className,
+      variant,
+      size,
+      loading,
+      children,
+      fullWidth,
+      asChild = false,
+      ...props
+    },
     ref
   ) => {
     return (
