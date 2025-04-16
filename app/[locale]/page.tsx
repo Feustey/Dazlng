@@ -1,10 +1,10 @@
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import Image from "next/image";
-import Features from "@/components/features/Features";
-import { AnimatedHero, AnimatedStat } from "@/components/ui/HomeAnimations";
-import { buttonVariants } from "@/components/ui/button";
+import Features from "@components/features/Features";
+import { AnimatedHero, AnimatedStat } from "@components/ui/HomeAnimations";
 import { cn } from "@/lib/utils";
+import { Button } from "@components/ui/button";
 
 export default async function HomePage() {
   const t = await getTranslations("pages.home");
@@ -41,17 +41,9 @@ export default async function HomePage() {
                 {t("description")}
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Link
-                  href="/daznode"
-                  className={cn(
-                    buttonVariants({
-                      variant: "gradient",
-                      size: "md",
-                    })
-                  )}
-                >
-                  {t("cta.start")}
-                </Link>
+                <Button asChild variant="gradient" size="md">
+                  <Link href="/daznode">{t("cta.start")}</Link>
+                </Button>
                 <Link
                   href="/learn"
                   className="text-muted-foreground hover:text-foreground transition-colors"

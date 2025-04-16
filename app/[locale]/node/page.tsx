@@ -1,19 +1,14 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
+import { Button } from "@components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../../components/ui/dropdown-menu";
+} from "@components/ui/dropdown-menu";
 import { MoreVertical } from "lucide-react";
 
 export default function NodePage() {
@@ -96,26 +91,28 @@ export default function NodePage() {
                   <td className="px-6 py-4 whitespace-nowrap">126.8k sats</td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
+                      <DropdownMenuTrigger>
                         <Button variant="ghost" className="h-8 w-8 p-0">
                           <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem asChild>
+                        <DropdownMenuItem>
                           <a
                             href="https://mempool.space/tx/d85776127e760129bedb87fd17874e3349ec2aa357f1557e89962bcd817fde1c#flow=&vout=1"
                             target="_blank"
                             rel="noopener noreferrer"
+                            className="w-full block"
                           >
                             {t("viewFundingTransaction")}
                           </a>
                         </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
+                        <DropdownMenuItem>
                           <a
                             href="https://amboss.space/node/03d607f3e69fd032524a867b288216bfab263b6eaee4e07783799a6fe69bb84fac"
                             target="_blank"
                             rel="noopener noreferrer"
+                            className="w-full block"
                           >
                             {t("viewNodeOnAmboss")}
                           </a>

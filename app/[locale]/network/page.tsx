@@ -1,19 +1,18 @@
 "use client";
 
-import { useTranslation } from "@/app/hooks/useTranslation";
 import { motion } from "framer-motion";
 import { BarChart2, Globe, Zap } from "lucide-react";
 import { useTranslations } from "next-intl";
-import Card from "@/components/ui/card";
+import Card from "@components/ui/card";
 import {
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
-} from "@/components/ui/card";
+} from "@components/ui/card";
 import { Users } from "lucide-react";
-import { CapacityChart, CountryChart } from "@/components/charts";
-import PageContainer from "@/components/layout/PageContainer";
+import { CapacityChart, CountryChart } from "@components/charts";
+import PageContainer from "@components/layout/PageContainer";
 import { useEffect, useState, useMemo, useCallback, Suspense } from "react";
 
 // Types

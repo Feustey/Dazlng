@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { authOptions } from "../../lib/auth";
 import { getToken } from "next-auth/jwt";
 import { supabase } from "../../lib/supabase";
+import type { NextRequest } from "next/server";
 
 // Marquer cette route comme dynamique
 export const dynamic = "force-dynamic";
@@ -33,7 +34,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
     const token = await getToken({ req });
     if (!token) {
@@ -43,51 +44,58 @@ export async function GET(req: Request) {
       );
     }
 
-    const url = new URL(req.url);
-    const sessionId = url.searchParams.get("sessionId");
+    // Récupérer l'email de l'utilisateur depuis le token
+    const userEmail = token.email;
 
-    if (!sessionId) {
-      return NextResponse.json(
-        { error: "ID de session requis" },
-        { status: 400 }
-      );
-    }
-
-    const { data: checkoutSession, error } = await supabase
-      .from("checkout_sessions")
+    // Vérifier si l'utilisateur existe dans la base de données
+    const { data: user, error: userError } = await supabase
+      .from("users")
       .select("*")
-      .eq("id", sessionId)
-      .eq("userId", token.sub)
+      .eq("email", userEmail)
       .single();
 
-    if (error) {
-      throw error;
-    }
-
-    if (!checkoutSession) {
+    if (userError || !user) {
       return NextResponse.json(
-        { error: "Session de paiement non trouvée" },
+        { error: "Utilisateur non trouvé" },
         { status: 404 }
       );
     }
 
+    // Créer une session de paiement
+    const { data: session, error: sessionError } = await supabase
+      .from("payment_sessions")
+      .insert([
+        {
+          user_id: user.id,
+          amount: 400000, // 400,000 sats
+          status: "pending",
+        },
+      ])
+      .select()
+      .single();
+
+    if (sessionError || !session) {
+      return NextResponse.json(
+        { error: "Erreur lors de la création de la session" },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json({
-      success: true,
-      session: checkoutSession,
+      sessionId: session.id,
+      amount: session.amount,
+      status: session.status,
     });
   } catch (error) {
-    console.error(
-      "Erreur lors de la récupération de la session de paiement:",
-      error
-    );
+    console.error("Error in checkout route:", error);
     return NextResponse.json(
-      { error: "Erreur serveur lors de la récupération de la session" },
+      { error: "Une erreur est survenue" },
       { status: 500 }
     );
   }
 }
 
-export async function PATCH(req: Request) {
+export async function PATCH(req: NextRequest) {
   try {
     const token = await getToken({ req });
     if (!token) {
@@ -97,46 +105,39 @@ export async function PATCH(req: Request) {
       );
     }
 
-    const data = await req.json();
-    const { sessionId, status } = data;
+    const body = await req.json();
+    const { sessionId } = body;
 
-    if (!sessionId || !status) {
+    if (!sessionId) {
       return NextResponse.json(
-        { error: "ID de session et statut requis" },
+        { error: "ID de session manquant" },
         { status: 400 }
       );
     }
 
-    const { data: checkoutSession, error } = await supabase
-      .from("checkout_sessions")
-      .update({ status })
+    // Mettre à jour le statut de la session
+    const { data: session, error: sessionError } = await supabase
+      .from("payment_sessions")
+      .update({ status: "completed" })
       .eq("id", sessionId)
-      .eq("userId", token.sub)
       .select()
       .single();
 
-    if (error) {
-      throw error;
-    }
-
-    if (!checkoutSession) {
+    if (sessionError || !session) {
       return NextResponse.json(
-        { error: "Session de paiement non trouvée" },
+        { error: "Session non trouvée" },
         { status: 404 }
       );
     }
 
     return NextResponse.json({
-      success: true,
-      session: checkoutSession,
+      sessionId: session.id,
+      status: session.status,
     });
   } catch (error) {
-    console.error(
-      "Erreur lors de la mise à jour de la session de paiement:",
-      error
-    );
+    console.error("Error updating payment session:", error);
     return NextResponse.json(
-      { error: "Erreur serveur lors de la mise à jour de la session" },
+      { error: "Une erreur est survenue" },
       { status: 500 }
     );
   }

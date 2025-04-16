@@ -12,7 +12,8 @@ export const supabase = createSupabaseClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
-export const createClient = createSupabaseClient;
+// Exporter supabase comme createClient pour la compatibilité
+export const createClient = supabase;
 
 // Types pour les données
 export type User = {

@@ -80,6 +80,16 @@ export default function Navigation() {
               >
                 {t("Header.learn")}
               </Link>
+              <Link
+                href={`/${locale}/daznode`}
+                className={`inline-flex items-center px-1 pt-1 text-sm font-medium ${
+                  isActive("/daznode")
+                    ? "text-primary border-b-2 border-primary"
+                    : "text-muted-foreground hover:text-foreground hover:border-b-2 hover:border-muted-foreground"
+                }`}
+              >
+                {t("Header.daznode")}
+              </Link>
             </div>
           </div>
           <div className="flex items-center">
@@ -164,6 +174,17 @@ export default function Navigation() {
             onClick={toggleMenu}
           >
             {t("Header.learn")}
+          </Link>
+          <Link
+            href={`/${locale}/daznode`}
+            className={`block px-3 py-2 text-base font-medium ${
+              isActive("/daznode")
+                ? "text-primary bg-accent/10"
+                : "text-muted-foreground hover:text-foreground hover:bg-accent/10"
+            }`}
+            onClick={toggleMenu}
+          >
+            {t("Header.daznode")}
           </Link>
         </div>
         <div className="pt-4 pb-3 border-t border-accent/10">

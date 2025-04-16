@@ -28,7 +28,10 @@
     "logout": "Logout",
     "myNode": "My Node",
     "nodes": "Nodes",
-    "transactions": "Transactions"
+    "transactions": "Transactions",
+    "daznode": "Daznode",
+    "dazia": "Daz-AI",
+    "network": "Network"
   },
   "HomePage": {
     "welcome": "Welcome to Daznode",
@@ -51,11 +54,12 @@
     },
     "hero": {
       "title": "Manage your Lightning Network nodes with ease",
-      "subtitle": "Optimize your performance and your profitability with Daznode",
+      "subtitle": "Optimize your performance and profitability with Daznode",
       "cta": "Get your Dazbox!"
     },
     "features": {
       "title": "Key Features",
+      "subtitle": "Discover everything Daznode can do for you",
       "learning": {
         "title": "Learning Guide",
         "description": "Learn to manage your node effectively with our detailed guides"
@@ -66,7 +70,7 @@
       },
       "operations": {
         "title": "Lightning Operations",
-        "description": "Manage your channels and payments with ease"
+        "description": "Manage your channels and payments easily"
       },
       "metrics": {
         "title": "Advanced Metrics",
@@ -75,6 +79,14 @@
       "alby": {
         "title": "Alby Extension",
         "description": "Connect easily with your Alby wallet"
+      },
+      "nwc": {
+        "title": "Nostr Wallet Connect",
+        "description": "Connect via NWC for a secure experience"
+      },
+      "security": {
+        "title": "Advanced Security",
+        "description": "Maximum protection for your funds and data"
       }
     },
     "benefits": {
@@ -88,8 +100,8 @@
       }
     },
     "cta": {
-      "title": "Ready to get started?",
-      "description": "Join Daznode and optimize your presence on the Lightning Network",
+      "title": "Ready to start?",
+      "description": "Join Daznode and optimize your presence on the Lightning network",
       "button": "Create account"
     }
   },
@@ -608,12 +620,97 @@
       "invalidFormat": "Invalid signature format"
     }
   },
+  "pages": {
+    "learn": {
+      "title": "Learning Guide",
+      "subtitle": "Discover and master the Lightning Network",
+      "sections": {
+        "basics": {
+          "title": "Basics",
+          "subtitle": "Discover the fundamentals of the Lightning Network",
+          "topics": {
+            "introduction": {
+              "title": "Introduction to Lightning Network",
+              "description": "Understand the basic concepts and architecture of the Lightning Network"
+            },
+            "channels": {
+              "title": "Payment Channels",
+              "description": "Learn how to create and manage payment channels"
+            },
+            "transactions": {
+              "title": "Lightning Transactions",
+              "description": "Discover how to make instant and low-cost transactions"
+            }
+          }
+        },
+        "advanced": {
+          "title": "Advanced Concepts",
+          "subtitle": "Master the technical aspects of the Lightning Network",
+          "topics": {
+            "security": {
+              "title": "Security and Privacy",
+              "description": "Protect your funds and data with best practices"
+            },
+            "performance": {
+              "title": "Performance Optimization",
+              "description": "Improve your node and channel performance"
+            },
+            "wallets": {
+              "title": "Lightning Wallets",
+              "description": "Discover different types of wallets and their features"
+            }
+          }
+        }
+      }
+    }
+  },
   "Learn": {
     "title": "Learning Guide",
+    "subtitle": "Learn everything about the Lightning Network",
     "guide": "Guide",
     "lightning": "Lightning",
     "visualization": "Visualization",
-    "resources": "Resources"
+    "resources": "Resources",
+    "sections": {
+      "basics": {
+        "title": "Basics",
+        "content": "Discover the fundamentals of the Lightning Network, how it works, and its benefits."
+      },
+      "channels": {
+        "title": "Channel Management",
+        "content": "Learn how to open, manage, and optimize your payment channels."
+      },
+      "transactions": {
+        "title": "Lightning Transactions",
+        "content": "Master the art of instant transactions on the Lightning Network."
+      },
+      "security": {
+        "title": "Security",
+        "content": "Learn how to secure your funds and payment channels."
+      },
+      "advanced": {
+        "title": "Advanced Concepts",
+        "content": "Dive into the advanced technical aspects of the Lightning Network."
+      }
+    },
+    "resources": {
+      "documentation": {
+        "title": "Documentation",
+        "description": "Official documentation and technical guides"
+      },
+      "tutorials": {
+        "title": "Tutorials",
+        "description": "Step-by-step guides and explanatory videos"
+      },
+      "community": {
+        "title": "Community",
+        "description": "Forums and discussion groups"
+      },
+      "tools": {
+        "title": "Tools",
+        "description": "Recommended software and utilities"
+      }
+    }
   },
   "Learning": {
     "title": "Learning Guide",

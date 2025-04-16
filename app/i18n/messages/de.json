@@ -1,0 +1,61 @@
+{
+  "Home": {
+    "hero": {
+      "title": "Verwalten Sie Ihre Lightning Network Nodes mit Leichtigkeit",
+      "subtitle": "Optimieren Sie Ihre Leistung und Rentabilität mit Daznode",
+      "cta": {
+        "primary": "Starten",
+        "secondary": "Mehr erfahren"
+      }
+    },
+    "stats": {
+      "monitoredChannels": "Überwachte Kanäle",
+      "dailyVolume": "Tägliches Volumen",
+      "activeNodes": "Aktive Nodes",
+      "revenueGrowth": "Umsatzwachstum"
+    }
+  },
+  "header": {
+    "navigation": {
+      "dashboard": "Dashboard",
+      "dazia": "Daz-IA",
+      "network": "Netzwerk",
+      "channels": "Kanäle",
+      "learn": "Lernen",
+      "help": "Hilfe"
+    },
+    "actions": {
+      "login": "Anmelden",
+      "logout": "Abmelden",
+      "profile": "Mein Profil",
+      "settings": "Einstellungen",
+      "notifications": "Benachrichtigungen"
+    }
+  },
+  "notFound": {
+    "title": "Seite nicht gefunden",
+    "description": "Entschuldigung, die gesuchte Seite existiert nicht oder wurde verschoben.",
+    "backToHome": "Zurück zur Startseite"
+  },
+  "faq": {
+    "title": "Häufig gestellte Fragen",
+    "questions": {
+      "q1": "Wie funktioniert DazLng?",
+      "a1": "DazLng ist eine Plattform, die Ihnen ermöglicht, Sprachen interaktiv und personalisiert zu lernen.",
+      "q2": "Welche Sprachen sind verfügbar?",
+      "a2": "Wir bieten derzeit Englisch, Spanisch, Deutsch und Französisch an.",
+      "q3": "Was kostet das Abonnement?",
+      "a3": "Wir bieten verschiedene Pakete an, die auf Ihre Bedürfnisse zugeschnitten sind, ab 9,99€/Monat."
+    }
+  },
+  "testimonials": {
+    "title": "Kundenstimmen",
+    "subtitle": "Was unsere Nutzer sagen"
+  },
+  "newsletter": {
+    "title": "Bleiben Sie informiert",
+    "subtitle": "Abonnieren Sie unseren Newsletter für die neuesten Updates",
+    "button": "Abonnieren",
+    "placeholder": "Ihre E-Mail"
+  }
+}

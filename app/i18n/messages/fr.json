@@ -1,23 +1,61 @@
 {
+  "Home": {
+    "hero": {
+      "title": "Gérez vos nœuds Lightning Network avec facilité",
+      "subtitle": "Optimisez vos performances et rentabilité avec Daznode",
+      "cta": {
+        "primary": "Commencer",
+        "secondary": "En savoir plus"
+      }
+    },
+    "stats": {
+      "monitoredChannels": "Canaux surveillés",
+      "dailyVolume": "Volume quotidien",
+      "activeNodes": "Nœuds actifs",
+      "revenueGrowth": "Croissance des revenus"
+    }
+  },
+  "header": {
+    "navigation": {
+      "dashboard": "Tableau de bord",
+      "dazia": "Daz-IA",
+      "network": "Réseau",
+      "channels": "Canaux",
+      "learn": "Apprendre",
+      "help": "Aide"
+    },
+    "actions": {
+      "login": "Connexion",
+      "logout": "Déconnexion",
+      "profile": "Mon profil",
+      "settings": "Paramètres",
+      "notifications": "Notifications"
+    }
+  },
+  "notFound": {
+    "title": "Page non trouvée",
+    "description": "Désolé, la page que vous recherchez n'existe pas ou a été déplacée.",
+    "backToHome": "Retour à l'accueil"
+  },
   "faq": {
-    "title": "Questions Fréquentes",
+    "title": "Questions fréquentes",
     "questions": {
       "q1": "Comment fonctionne DazLng ?",
-      "a1": "DazLng est une plateforme qui vous permet d&apos;apprendre les langues de manière interactive et personnalisée.",
+      "a1": "DazLng est une plateforme qui vous permet d'apprendre les langues de manière interactive et personnalisée.",
       "q2": "Quelles langues sont disponibles ?",
-      "a2": "Nous proposons actuellement l&apos;anglais, l&apos;espagnol, l&apos;allemand et le français.",
-      "q3": "Combien coûte l&apos;abonnement ?",
-      "a3": "Nous proposons différents forfaits adaptés à vos besoins, à partir de 9.99€/mois."
+      "a2": "Nous proposons actuellement l'anglais, l'espagnol, l'allemand et le français.",
+      "q3": "Combien coûte l'abonnement ?",
+      "a3": "Nous proposons plusieurs forfaits adaptés à vos besoins, à partir de 9,99€/mois."
     }
   },
   "testimonials": {
     "title": "Témoignages",
-    "subtitle": "Ce que nos utilisateurs disent de nous"
+    "subtitle": "Ce que disent nos utilisateurs"
   },
   "newsletter": {
     "title": "Restez informé",
-    "subtitle": "Inscrivez-vous à notre newsletter pour recevoir nos dernières actualités",
-    "button": "S&apos;inscrire",
-    "placeholder": "Votre adresse email"
+    "subtitle": "Abonnez-vous à notre newsletter pour recevoir les dernières mises à jour",
+    "button": "S'abonner",
+    "placeholder": "Votre email"
   }
 }

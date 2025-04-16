@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "../../lib/supabase";
-import { generateId } from "@/app/utils/id";
+import { generateId } from "@/utils/id";
 
 // Marquer cette route comme dynamique
 export const dynamic = "force-dynamic";

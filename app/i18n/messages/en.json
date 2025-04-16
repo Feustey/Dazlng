@@ -1,4 +1,42 @@
 {
+  "Home": {
+    "hero": {
+      "title": "Manage your Lightning Network nodes with ease",
+      "subtitle": "Optimize your performance and profitability with Daznode",
+      "cta": {
+        "primary": "Get Started",
+        "secondary": "Learn More"
+      }
+    },
+    "stats": {
+      "monitoredChannels": "Monitored Channels",
+      "dailyVolume": "Daily Volume",
+      "activeNodes": "Active Nodes",
+      "revenueGrowth": "Revenue Growth"
+    }
+  },
+  "header": {
+    "navigation": {
+      "dashboard": "Dashboard",
+      "dazia": "Daz-IA",
+      "network": "Network",
+      "channels": "Channels",
+      "learn": "Learn",
+      "help": "Help"
+    },
+    "actions": {
+      "login": "Login",
+      "logout": "Logout",
+      "profile": "My Profile",
+      "settings": "Settings",
+      "notifications": "Notifications"
+    }
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "description": "Sorry, the page you are looking for does not exist or has been moved.",
+    "backToHome": "Back to Home"
+  },
   "faq": {
     "title": "Frequently Asked Questions",
     "questions": {

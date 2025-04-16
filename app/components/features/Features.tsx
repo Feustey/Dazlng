@@ -46,7 +46,7 @@ const FeatureCard = React.memo(({ feature, index }: FeatureCardProps) => (
 FeatureCard.displayName = "FeatureCard";
 
 export default function Features() {
-  const t = useTranslations("pages.home");
+  const t = useTranslations("Home");
 
   const features: Feature[] = [
     {

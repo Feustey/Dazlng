@@ -3,23 +3,37 @@ import { NextResponse } from "next/server";
 // Configuration de la revalidation
 export const revalidate = 300; // Revalider toutes les 5 minutes
 
-// Données fictives pour la démonstration
-const mockStats = {
-  totalNodes: 18934,
-  totalChannels: 128475,
-  totalCapacity: "5234.67 BTC",
-  avgChannelSize: "0.0407 BTC",
-  medianChannelSize: "0.0285 BTC",
-  nodeGrowth: "+2.3%",
-  channelGrowth: "+1.8%",
-  capacityGrowth: "+3.1%",
-};
+// Simuler un appel à l'API MCP
+async function fetchDataFromMCP() {
+  try {
+    // Dans un environnement de production, vous utiliseriez l'API réelle
+    // const response = await fetch('http://localhost:8000/api/network/summary');
+    // if (response.ok) return await response.json();
+
+    // Données fictives pour la démonstration
+    return {
+      network_summary: {
+        total_nodes: 18934,
+        active_nodes: 17500,
+        total_channels: 128475,
+        active_channels: 115800,
+        total_capacity: 523467000000, // en sats
+      },
+      daily_volume: 450000000, // en sats
+      monitored_channels: 52430,
+      revenue_growth: 12.5, // pourcentage
+    };
+  } catch (error) {
+    console.error("Error fetching data from MCP:", error);
+    throw new Error("Failed to fetch network data");
+  }
+}
 
 export async function GET() {
   try {
-    // Ici vous pourriez implémenter la vraie logique pour récupérer les statistiques
-    // Par exemple, requête à une base de données ou appel à un service externe
-    return NextResponse.json(mockStats, {
+    const stats = await fetchDataFromMCP();
+
+    return NextResponse.json(stats, {
       headers: {
         "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
       },

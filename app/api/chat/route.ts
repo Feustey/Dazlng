@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { auth } from "../../lib/auth";
 import { chatRouter } from "../../services/chatService";
+import { getCurrentUser } from "../../lib/auth";
+import { Headers } from "next/dist/compiled/@edge-runtime/primitives";
 
 export async function POST(req: Request) {
   try {
@@ -9,9 +11,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     }
 
+    const resHeaders = new Headers();
+    const user = await getCurrentUser();
     const body = await req.json();
+
     const result = await chatRouter
-      .createCaller({ req, session })
+      .createCaller({ req, resHeaders, user })
       .sendMessage(body);
 
     return NextResponse.json(result);

@@ -13,7 +13,7 @@ export interface ButtonProps
   asChild?: boolean;
 }
 
-const buttonVariants = ({
+export const buttonVariants = ({
   variant = "gradient",
   size = "md",
   fullWidth = false,
@@ -86,5 +86,5 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
 Button.displayName = "Button";
 
-export { Button, buttonVariants };
+export { Button };
 export default Button;

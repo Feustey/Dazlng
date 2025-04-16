@@ -12,7 +12,7 @@
     "messages": "Messages",
     "dashboard": "Tableau de bord",
     "channels": "Canaux",
-    "learn": "Étudie",
+    "learn": "Apprendre",
     "review": "Avis",
     "currency": "Devise",
     "btc": "BTC",
@@ -97,6 +97,7 @@
     },
     "features": {
       "title": "Fonctionnalités Clés",
+      "subtitle": "Découvrez tout ce que Daznode peut faire pour vous",
       "learning": {
         "title": "Guide d'Apprentissage",
         "description": "Apprenez à gérer votre nœud efficacement avec nos guides détaillés"
@@ -120,6 +121,10 @@
       "nwc": {
         "title": "Nostr Wallet Connect",
         "description": "Connectez-vous via NWC pour une expérience sécurisée"
+      },
+      "security": {
+        "title": "Sécurité Avancée",
+        "description": "Protection maximale de vos fonds et de vos données"
       }
     },
     "searchPlaceholder": "Rechercher un nœud...",
@@ -220,22 +225,27 @@
   },
   "Network": {
     "title": "Réseau Lightning",
+    "subtitle": "Explorez les statistiques du réseau Lightning",
     "totalNodes": "Nombre total de nœuds",
     "totalChannels": "Nombre total de canaux",
     "totalCapacity": "Capacité totale",
-    "avgChannelsPerNode": "Canaux par nœud",
+    "avgChannelsPerNode": "{count} canaux par nœud",
+    "capacityPerChannel": "{amount} par canal",
+    "channels": "canaux",
     "capacityHistory": "Évolution de la capacité",
     "nodesByCountry": "Distribution par pays",
-    "topNodes": "Top des nœuds",
-    "channels": "canaux",
-    "recentChannels": "Canaux récents",
-    "channelId": "ID du canal",
-    "capacity": "Capacité",
-    "status": "Statut",
-    "lastUpdate": "Dernière mise à jour",
     "error": {
       "title": "Erreur",
       "fetchFailed": "Impossible de récupérer les données du réseau"
+    },
+    "lastUpdate": "Dernière mise à jour : {date}",
+    "loading": "Chargement des données...",
+    "selectPeriod": "Sélectionner une période",
+    "period": {
+      "day": "24 heures",
+      "week": "7 jours",
+      "month": "30 jours",
+      "year": "1 an"
     }
   },
   "footer": {
@@ -737,10 +747,51 @@
   },
   "Learn": {
     "title": "Guide d'apprentissage",
+    "subtitle": "Découvrez tout sur le Lightning Network",
     "guide": "Guide",
     "lightning": "Lightning",
     "visualization": "Visualisation",
-    "resources": "Ressources"
+    "resources": "Ressources",
+    "sections": {
+      "basics": {
+        "title": "Les bases",
+        "content": "Découvrez les fondamentaux du Lightning Network, son fonctionnement et ses avantages."
+      },
+      "channels": {
+        "title": "Gestion des canaux",
+        "content": "Apprenez à ouvrir, gérer et optimiser vos canaux de paiement."
+      },
+      "transactions": {
+        "title": "Transactions Lightning",
+        "content": "Maîtrisez l'art des transactions instantanées sur le réseau Lightning."
+      },
+      "security": {
+        "title": "Sécurité",
+        "content": "Apprenez à sécuriser vos fonds et vos canaux de paiement."
+      },
+      "advanced": {
+        "title": "Concepts avancés",
+        "content": "Plongez dans les aspects techniques avancés du Lightning Network."
+      }
+    },
+    "resources": {
+      "documentation": {
+        "title": "Documentation",
+        "description": "Documentation officielle et guides techniques"
+      },
+      "tutorials": {
+        "title": "Tutoriels",
+        "description": "Guides pas à pas et vidéos explicatives"
+      },
+      "community": {
+        "title": "Communauté",
+        "description": "Forums et groupes de discussion"
+      },
+      "tools": {
+        "title": "Outils",
+        "description": "Logiciels et utilitaires recommandés"
+      }
+    }
   },
   "Learning": {
     "title": "Guide d'apprentissage",
@@ -1348,6 +1399,48 @@
       "cta": {
         "start": "Commencer maintenant",
         "learn": "En savoir plus"
+      }
+    },
+    "learn": {
+      "title": "Guide d'apprentissage",
+      "subtitle": "Découvrez et maîtrisez le Lightning Network",
+      "sections": {
+        "basics": {
+          "title": "Les bases",
+          "subtitle": "Découvrez les fondamentaux du Lightning Network",
+          "topics": {
+            "introduction": {
+              "title": "Introduction au Lightning Network",
+              "description": "Comprenez les concepts de base et l'architecture du réseau Lightning"
+            },
+            "channels": {
+              "title": "Canaux de paiement",
+              "description": "Apprenez à créer et gérer des canaux de paiement"
+            },
+            "transactions": {
+              "title": "Transactions Lightning",
+              "description": "Découvrez comment effectuer des transactions instantanées et peu coûteuses"
+            }
+          }
+        },
+        "advanced": {
+          "title": "Concepts avancés",
+          "subtitle": "Maîtrisez les aspects techniques du Lightning Network",
+          "topics": {
+            "security": {
+              "title": "Sécurité et confidentialité",
+              "description": "Protégez vos fonds et vos données avec les meilleures pratiques"
+            },
+            "performance": {
+              "title": "Optimisation des performances",
+              "description": "Améliorez les performances de votre nœud et de vos canaux"
+            },
+            "wallets": {
+              "title": "Portefeuilles Lightning",
+              "description": "Découvrez les différents types de portefeuilles et leurs fonctionnalités"
+            }
+          }
+        }
       }
     }
   },

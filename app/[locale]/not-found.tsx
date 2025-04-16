@@ -1,21 +1,19 @@
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
-import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 export default async function NotFound() {
-  const t = await getTranslations("NotFound");
+  const t = await getTranslations("notFound");
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6 text-center px-4">
-      <h1 className="text-4xl font-bold tracking-tight">{t("title")}</h1>
-      <p className="text-lg text-muted-foreground max-w-[600px]">
-        {t("description")}
-      </p>
-      <Link href="/" className={cn(buttonVariants({ variant: "gradient" }))}>
-        {t("backHome")}
-      </Link>
+    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+      <h1 className="text-6xl font-bold mb-4">404</h1>
+      <h2 className="text-2xl mb-6">{t("title")}</h2>
+      <p className="text-muted-foreground mb-8 max-w-md">{t("description")}</p>
+      <Button asChild variant="gradient">
+        <Link href="/">{t("backToHome")}</Link>
+      </Button>
     </div>
   );
 }
