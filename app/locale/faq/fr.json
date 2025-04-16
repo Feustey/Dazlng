@@ -1,0 +1,86 @@
+{
+  "pages": {
+    "faq": {
+      "title": "Questions fréquentes",
+      "subtitle": "Trouvez les réponses à vos questions sur Daznode",
+      "categories": {
+        "general": "Général",
+        "setup": "Configuration et Démarrage",
+        "performance": "Performance et Optimisation",
+        "support": "Support et Assistance",
+        "alby": "Wallet Alby"
+      },
+      "questions": {
+        "what_is_daznode": {
+          "question": "Qu'est-ce que Daznode ?",
+          "answer": "Daznode est un gestionnaire de nœud Lightning Network qui vous permet de surveiller et gérer facilement votre nœud Bitcoin. Il offre une interface intuitive pour gérer vos canaux de paiement, surveiller vos performances et optimiser vos revenus."
+        },
+        "how_lightning_works": {
+          "question": "Comment fonctionne un nœud Lightning ?",
+          "answer": "Un nœud Lightning est un point d'accès au réseau Lightning qui permet de créer des canaux de paiement avec d'autres nœuds. Ces canaux permettent d'effectuer des transactions rapides et peu coûteuses sans enregistrer chaque transaction sur la blockchain Bitcoin."
+        },
+        "security": {
+          "question": "Est-ce sécurisé de gérer mon propre nœud ?",
+          "answer": "Oui, avec Daznode, la sécurité est notre priorité. Nous utilisons des protocoles de sécurité avancés et des sauvegardes automatiques pour protéger vos fonds. De plus, vous conservez toujours le contrôle total de vos clés privées."
+        },
+        "setup_time": {
+          "question": "Combien de temps faut-il pour configurer un nœud ?",
+          "answer": "Avec Daznode, vous pouvez démarrer en moins de 5 minutes. Notre interface intuitive et nos guides détaillés vous accompagnent à chaque étape."
+        },
+        "minimum_investment": {
+          "question": "Quel est le montant minimum d'investissement ?",
+          "answer": "Vous pouvez commencer avec un investissement minimal de 0.01 BTC. Notre algorithme optimise automatiquement votre capital pour maximiser les retours."
+        },
+        "how_to_setup": {
+          "question": "Comment configurer mon nœud Lightning avec Daznode ?",
+          "answer": "Pour configurer votre nœud Lightning avec Daznode, vous devez d'abord installer un nœud Lightning (comme LND, c-lightning ou Eclair) sur votre serveur. Ensuite, connectez-vous à Daznode et suivez l'assistant de configuration qui vous guidera à travers le processus de connexion à votre nœud."
+        },
+        "routing_fees": {
+          "question": "Comment sont calculés les frais de routage ?",
+          "answer": "Nos algorithmes analysent en temps réel le marché et ajustent dynamiquement vos frais pour maximiser les revenus tout en maintenant une excellente connectivité."
+        },
+        "financial_benefits": {
+          "question": "Quels sont les avantages financiers ?",
+          "answer": "En gérant un nœud Lightning, vous pouvez gagner des frais de routage lorsque d'autres utilisateurs transitent par vos canaux. Ces revenus peuvent être modestes au début mais augmentent avec la taille et l'activité de votre nœud."
+        },
+        "optimization": {
+          "question": "Comment optimiser les performances de mon nœud ?",
+          "answer": "Daznode vous fournit des recommandations personnalisées basées sur l'analyse de votre nœud et du réseau. Nos algorithmes vous aident à optimiser la taille des canaux, les frais de routage et les connexions pour maximiser vos revenus."
+        },
+        "support_policy": {
+          "question": "Quelle est la politique de support ?",
+          "answer": "Nous offrons un support 24/7 pour tous nos utilisateurs, avec des temps de réponse moyens de moins de 2 heures pour les questions techniques."
+        },
+        "additional_help": {
+          "question": "Comment puis-je obtenir de l'aide supplémentaire ?",
+          "answer": "Notre équipe de support est disponible par email, chat ou visioconférence. Nous proposons également une documentation complète, des guides d'utilisation et des webinaires réguliers."
+        },
+        "community": {
+          "question": "Quelle est la communauté autour de Daznode ?",
+          "answer": "Notre communauté est composée de passionnés de Bitcoin et de la technologie Lightning. Nous organisons régulièrement des webinaires, des ateliers et des événements pour partager nos connaissances et aider les nouveaux utilisateurs."
+        },
+        "what_is_alby": {
+          "question": "Qu'est-ce que le wallet Alby ?",
+          "answer": "Alby est un wallet Bitcoin Lightning qui vous permet de gérer facilement vos bitcoins et d'interagir avec le réseau Lightning. Il est disponible sous forme d'extension de navigateur et d'application mobile."
+        },
+        "alby_features": {
+          "question": "Quelles sont les fonctionnalités d'Alby ?",
+          "answer": "Alby offre plusieurs fonctionnalités :\n- Extension de navigateur pour les paiements en ligne\n- Intégration avec Nostr\n- Support pour les podcasts Value4Value\n- Plugin WordPress pour les créateurs de contenu\n- Interface utilisateur intuitive"
+        },
+        "alby_setup": {
+          "question": "Comment configurer Alby ?",
+          "answer": "Pour configurer Alby :\n1. Installez l'extension de navigateur depuis le Chrome Web Store\n2. Créez un compte sur getalby.com\n3. Connectez votre wallet Lightning\n4. Configurez vos préférences de paiement"
+        },
+        "alby_links": {
+          "question": "Où trouver plus d'informations sur Alby ?",
+          "answer": "Vous pouvez trouver plus d'informations sur :\n- Le site officiel : getalby.com\n- Le guide utilisateur : guides.getalby.com\n- La documentation développeur : developers.getalby.com\n- Le blog : blog.getalby.com\n- La communauté : chat.getalby.com"
+        }
+      },
+      "contact_support": {
+        "title": "Vous n'avez pas trouvé la réponse à votre question ?",
+        "description": "Notre équipe est là pour vous aider",
+        "button": "Contacter le support"
+      }
+    }
+  }
+}
