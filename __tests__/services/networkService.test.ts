@@ -1,13 +1,17 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { networkService } from "../../src/app/services/networkService";
+import { networkService } from "../../app/services/networkService";
 
 // Mock fetch
-const mockFetch = vi.fn();
+const mockFetch = jest.fn();
 global.fetch = mockFetch;
+
+// Configuration de l'URL de base pour les tests
+const BASE_URL = "http://localhost:3000/api";
 
 describe("NetworkService", () => {
   beforeEach(() => {
     mockFetch.mockClear();
+    // Réinitialiser l'URL de base pour chaque test
+    process.env.NEXT_PUBLIC_API_URL = BASE_URL;
   });
 
   describe("getNetworkStats", () => {

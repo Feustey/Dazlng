@@ -1,82 +1,19 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { useState, useEffect } from "react";
-import PageContainer from "@/components/layout/PageContainer";
-import Card from "@/components/ui/card";
-import Button from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Search,
-  TrendingDown,
-  TrendingUp,
-  Loader2,
-  Filter,
-  Network,
-  Activity,
-  Zap,
-  Users,
-} from "lucide-react";
-import { NetworkStats } from "../../types/network";
-import { searchNodes } from "../../lib/api-client";
-import BigPlayers from "@/components/network/BigPlayers";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-interface Node {
-  pubkey: string;
-  alias: string;
-  platform?: string;
-  version?: string;
-  total_capacity: number;
-  active_channels: number;
-  total_peers: number;
-  uptime?: number;
-}
+import { Card } from "@/components/ui/card";
+import { NetworkStats } from "@/components/network/NetworkStats";
+import { Loader2 } from "lucide-react";
+import { searchNodes } from "@/services/nodeService";
+import { Node } from "@/types/network";
 
 export default function ChannelsPage() {
   const t = useTranslations("channels");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Node[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isStatsLoading, setIsStatsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [networkStats, setNetworkStats] = useState<NetworkStats | null>(null);
-
-  useEffect(() => {
-    const fetchNetworkStats = async () => {
-      setIsStatsLoading(true);
-      try {
-        const response = await fetch("/api/network/stats");
-        if (!response.ok) {
-          throw new Error(`Erreur HTTP: ${response.status}`);
-        }
-        const data = await response.json();
-        setNetworkStats(data);
-      } catch (err) {
-        const error =
-          err instanceof Error
-            ? err
-            : new Error("Une erreur inconnue s'est produite");
-        console.error(
-          "Erreur lors de la récupération des statistiques:",
-          error
-        );
-        setError("Impossible de charger les statistiques du réseau.");
-      } finally {
-        setIsStatsLoading(false);
-      }
-    };
-
-    fetchNetworkStats();
-    const interval = setInterval(fetchNetworkStats, 300000); // Rafraîchir toutes les 5 minutes
-    return () => clearInterval(interval);
-  }, []);
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
@@ -118,144 +55,41 @@ export default function ChannelsPage() {
     }
   };
 
-  if (isStatsLoading) {
-    return (
-      <PageContainer>
-        <div className="flex items-center justify-center h-[60vh]">
-          <Loader2 className="w-12 h-12 animate-spin text-primary" />
-        </div>
-      </PageContainer>
-    );
-  }
-
   return (
-    <PageContainer
-      title="Canaux Lightning"
-      subtitle="Gérez vos canaux et explorez le réseau Lightning"
-    >
-      {/* Statistiques du réseau */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <Card
-          gradient
-          className="p-6 hover:scale-[1.02] transition-transform duration-300"
-        >
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-primary/20 rounded-lg">
-              <Network className="w-6 h-6 text-primary" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gradient">Nœuds</h3>
-              <p className="text-2xl font-bold">
-                {networkStats?.totalNodes?.toLocaleString() ?? "N/A"}
-              </p>
-            </div>
-          </div>
-        </Card>
-
-        <Card
-          gradient
-          className="p-6 hover:scale-[1.02] transition-transform duration-300"
-        >
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-secondary/20 rounded-lg">
-              <Activity className="w-6 h-6 text-secondary" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gradient">Canaux</h3>
-              <p className="text-2xl font-bold">
-                {networkStats?.totalChannels?.toLocaleString() ?? "N/A"}
-              </p>
-            </div>
-          </div>
-        </Card>
-
-        <Card
-          gradient
-          className="p-6 hover:scale-[1.02] transition-transform duration-300"
-        >
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-accent/20 rounded-lg">
-              <Zap className="w-6 h-6 text-accent" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gradient">Capacité</h3>
-              <p className="text-2xl font-bold">
-                {networkStats?.totalCapacity ?? "N/A"}
-              </p>
-            </div>
-          </div>
-        </Card>
-
-        <Card
-          gradient
-          className="p-6 hover:scale-[1.02] transition-transform duration-300"
-        >
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-primary/20 rounded-lg">
-              <Users className="w-6 h-6 text-primary" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gradient">
-                Taille Moyenne
-              </h3>
-              <p className="text-2xl font-bold">
-                {networkStats?.avgChannelSize ?? "N/A"}
-              </p>
-            </div>
-          </div>
-        </Card>
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex flex-col gap-2 mb-8">
+        <h1 className="text-4xl font-bold">{t("title")}</h1>
+        <p className="text-muted-foreground">{t("subtitle")}</p>
       </div>
 
-      {/* Barre de recherche et filtres */}
-      <Card className="mb-8">
-        <div className="p-6">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            <div className="flex-1 max-w-md">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
-                <Input
-                  type="text"
-                  placeholder="Rechercher un nœud..."
-                  className="pl-10 bg-background/50"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-                />
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <Select>
-                <SelectTrigger className="w-[180px] bg-background/50">
-                  <SelectValue placeholder="Filtrer par capacité" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Toutes les capacités</SelectItem>
-                  <SelectItem value="small">Petite capacité</SelectItem>
-                  <SelectItem value="medium">Capacité moyenne</SelectItem>
-                  <SelectItem value="large">Grande capacité</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button
-                variant="gradient"
-                onClick={handleSearch}
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                ) : (
-                  <>
-                    <Search className="w-4 h-4 mr-2" />
-                    Rechercher
-                  </>
-                )}
-              </Button>
-            </div>
-          </div>
+      <NetworkStats />
+
+      {/* Barre de recherche */}
+      <Card className="p-6 mb-8">
+        <div className="flex gap-4">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={t("searchPlaceholder")}
+            className="flex-1 px-4 py-2 rounded-lg border border-input bg-background"
+          />
+          <button
+            onClick={handleSearch}
+            disabled={isLoading}
+            className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50"
+          >
+            {isLoading ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              t("search")
+            )}
+          </button>
         </div>
       </Card>
 
       {error && (
-        <Card gradient className="p-6 mb-8">
+        <Card className="p-6 mb-8">
           <p className="text-red-500 text-center">{error}</p>
         </Card>
       )}
@@ -293,16 +127,6 @@ export default function ChannelsPage() {
           </div>
         </Card>
       )}
-
-      {/* Big Players */}
-      <Card className="mb-8">
-        <div className="p-6">
-          <h3 className="text-lg font-semibold mb-4">
-            Grands acteurs du réseau
-          </h3>
-          <BigPlayers />
-        </div>
-      </Card>
-    </PageContainer>
+    </div>
   );
 }

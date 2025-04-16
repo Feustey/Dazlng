@@ -11,16 +11,11 @@ export interface NetworkMovement {
 }
 
 class NetworkService {
-  private static instance: NetworkService;
-  private baseUrl: string = "/api/network";
+  private baseUrl: string;
 
-  private constructor() {}
-
-  public static getInstance(): NetworkService {
-    if (!NetworkService.instance) {
-      NetworkService.instance = new NetworkService();
-    }
-    return NetworkService.instance;
+  constructor() {
+    this.baseUrl =
+      process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api/network";
   }
 
   async getNetworkStats(): Promise<NetworkStats> {
@@ -76,7 +71,7 @@ class NetworkService {
   }
 
   async getTopNodes(
-    period: "daily" | "weekly" = "daily"
+    period: "daily" | "weekly" | "monthly"
   ): Promise<NetworkNode[]> {
     try {
       const response = await fetch(
@@ -93,7 +88,7 @@ class NetworkService {
   }
 
   async getNetworkMovements(
-    period: "daily" | "weekly" = "daily"
+    period: "daily" | "weekly" | "monthly"
   ): Promise<NetworkMovement[]> {
     try {
       const response = await fetch(
@@ -125,4 +120,4 @@ class NetworkService {
   }
 }
 
-export const networkService = NetworkService.getInstance();
+export const networkService = new NetworkService();

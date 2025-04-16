@@ -6,11 +6,11 @@ import { useLocale } from "next-intl";
 import { Menu, X } from "lucide-react";
 import { SimpleLogo } from "./SimpleLogo";
 import { useSession } from "next-auth/react";
-import { AccountMenu } from "./AccountMenu";
+import { AccountMenu } from "@/components/layout/AccountMenu";
 import { usePathname } from "next/navigation";
-import Button from "./ui/button";
-import { LanguageSelector } from "./LanguageSelector";
-import { useTranslation } from "../hooks/useTranslation";
+import { Button } from "@/components/ui/button";
+import { LanguageSelector } from "@/components/layout/LanguageSelector";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);

@@ -13,7 +13,12 @@ export interface NetworkStats {
     channels: number;
     capacity: number;
   };
+  capacityHistory: any[];
+  nodesByCountry: any[];
+  lastUpdate: Date;
 }
+
+export const revalidate = 60; // Revalidation toutes les minutes
 
 export async function getCurrentStats(): Promise<NetworkStats> {
   try {
@@ -40,6 +45,9 @@ export async function getCurrentStats(): Promise<NetworkStats> {
           channels: 850,
           capacity: 50000000,
         },
+        capacityHistory: [],
+        nodesByCountry: [],
+        lastUpdate: new Date(),
       };
     }
 
@@ -64,7 +72,23 @@ export async function getNetworkStats(): Promise<NetworkStats> {
       throw error;
     }
 
-    return stats;
+    return {
+      totalNodes: stats.total_nodes,
+      totalChannels: stats.total_channels,
+      totalCapacity: stats.total_capacity,
+      avgCapacityPerChannel: stats.avg_capacity_per_channel,
+      avgChannelsPerNode: stats.avg_channels_per_node,
+      activeNodes: stats.active_nodes,
+      activeChannels: stats.active_channels,
+      networkGrowth: {
+        nodes: stats.nodes_growth,
+        channels: stats.channels_growth,
+        capacity: stats.capacity_growth,
+      },
+      capacityHistory: stats.capacity_history,
+      nodesByCountry: stats.nodes_by_country,
+      lastUpdate: new Date(stats.created_at),
+    };
   } catch (error) {
     console.error("Error in getNetworkStats:", error);
     throw error;

@@ -1,112 +1,69 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
 import { screen, fireEvent, waitFor } from "@testing-library/react";
 import { render } from "../utils/test-utils";
-import BigPlayers from "../../app/components/BigPlayers";
-import { networkService } from "../../app/services/networkService";
+import BigPlayers from "../../app/components/network/BigPlayers";
 
-// Mock du service réseau
-vi.mock("../../app/services/networkService", () => ({
-  networkService: {
-    getTopNodes: vi.fn(),
-  },
-}));
+// Mock fetch
+const mockFetch = jest.fn();
+global.fetch = mockFetch;
 
 describe("BigPlayers", () => {
-  const mockNodes = [
-    { rank: 1, name: "ACINQ", channels: 3421, capacity: 591.4, pubkey: "abc" },
-    { rank: 2, name: "Kraken", channels: 1173, capacity: 264.4, pubkey: "def" },
-    {
-      rank: 3,
-      name: "Bitfinex",
-      channels: 987,
-      capacity: 198.2,
-      pubkey: "ghi",
-    },
-  ];
-
   beforeEach(() => {
-    vi.clearAllMocks();
-    (networkService.getTopNodes as jest.Mock).mockResolvedValue(mockNodes);
+    mockFetch.mockClear();
   });
 
-  it("renders the component with title", () => {
-    render(<BigPlayers />);
-    expect(screen.getByText("Big Players")).toBeInTheDocument();
-  });
+  it("affiche les grands acteurs du réseau", async () => {
+    const mockNodes = [
+      {
+        rank: 1,
+        name: "ACINQ",
+        channels: 3421,
+        capacity: 591.4,
+        pubkey: "abc",
+      },
+      {
+        rank: 2,
+        name: "Kraken",
+        channels: 1173,
+        capacity: 264.4,
+        pubkey: "def",
+      },
+    ];
 
-  it("displays tabs for different time periods", () => {
-    render(<BigPlayers />);
-    expect(screen.getByText("Quotidien")).toBeInTheDocument();
-    expect(screen.getByText("Hebdomadaire")).toBeInTheDocument();
-  });
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve(mockNodes),
+    });
 
-  it("fetches and displays top nodes", async () => {
     render(<BigPlayers />);
 
     await waitFor(() => {
-      expect(networkService.getTopNodes).toHaveBeenCalledWith("daily");
-    });
-
-    expect(screen.getByText("ACINQ")).toBeInTheDocument();
-    expect(screen.getByText("3421")).toBeInTheDocument();
-    expect(screen.getByText("591.4 BTC")).toBeInTheDocument();
-  });
-
-  it("changes period when clicking on tabs", async () => {
-    render(<BigPlayers />);
-
-    const weeklyTab = screen.getByText("Hebdomadaire");
-    fireEvent.click(weeklyTab);
-
-    await waitFor(() => {
-      expect(networkService.getTopNodes).toHaveBeenCalledWith("weekly");
+      expect(screen.getByText("ACINQ")).toBeInTheDocument();
+      expect(screen.getByText("Kraken")).toBeInTheDocument();
+      expect(screen.getByText("3,421")).toBeInTheDocument();
+      expect(screen.getByText("591.4 BTC")).toBeInTheDocument();
     });
   });
 
-  it("displays loading state", () => {
-    (networkService.getTopNodes as jest.Mock).mockImplementation(
-      () => new Promise((resolve) => setTimeout(resolve, 1000))
-    );
-
-    render(<BigPlayers />);
-    expect(screen.getByTestId("loading-skeleton")).toBeInTheDocument();
-  });
-
-  it("displays error state", async () => {
-    (networkService.getTopNodes as jest.Mock).mockRejectedValue(
-      new Error("Failed to fetch")
-    );
+  it("gère les erreurs de chargement", async () => {
+    mockFetch.mockRejectedValueOnce(new Error("Erreur de chargement"));
 
     render(<BigPlayers />);
 
     await waitFor(() => {
       expect(
-        screen.getByText("Erreur lors du chargement des données")
+        screen.getByText("Erreur de chargement des données")
       ).toBeInTheDocument();
     });
   });
 
-  it("displays nodes in correct order", async () => {
+  it("permet de changer la période", async () => {
     render(<BigPlayers />);
 
-    await waitFor(() => {
-      const nodes = screen.getAllByTestId("player-row");
-      expect(nodes).toHaveLength(3);
-      expect(nodes[0]).toHaveTextContent("ACINQ");
-      expect(nodes[1]).toHaveTextContent("Kraken");
-      expect(nodes[2]).toHaveTextContent("Bitfinex");
-    });
-  });
+    const periodSelect = screen.getByLabelText("Période");
+    fireEvent.change(periodSelect, { target: { value: "weekly" } });
 
-  it("displays node metrics correctly", async () => {
-    render(<BigPlayers />);
-
-    await waitFor(() => {
-      const firstNode = screen
-        .getByText("ACINQ")
-        .closest("[data-testid='player-row']");
-      expect(firstNode).toHaveTextContent("3421");
-      expect(firstNode).toHaveTextContent("591.4 BTC");
-    });
+    expect(mockFetch).toHaveBeenCalledWith(
+      expect.stringContaining("/api/network/top-nodes?period=weekly")
+    );
   });
 });

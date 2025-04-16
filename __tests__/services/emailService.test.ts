@@ -1,77 +1,78 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { EmailService } from "../../app/lib/emailService";
+import EmailService from "../../app/lib/emailService";
 import { Resend } from "resend";
 
-vi.mock("resend", () => ({
-  Resend: vi.fn().mockImplementation(() => ({
-    emails: {
-      send: vi.fn(),
-    },
-  })),
-}));
+// Mock Resend
+jest.mock("resend", () => {
+  return {
+    Resend: jest.fn().mockImplementation(() => ({
+      emails: {
+        send: jest.fn(),
+      },
+    })),
+  };
+});
 
 describe("EmailService", () => {
-  let emailService: EmailService;
+  let mockResend: jest.Mocked<Resend>;
 
   beforeEach(() => {
-    vi.clearAllMocks();
-    process.env.RESEND_API_KEY = "test_key";
-    emailService = EmailService.getInstance();
+    mockResend = new Resend() as jest.Mocked<Resend>;
+    (mockResend.emails.send as jest.Mock).mockClear();
   });
 
-  describe("getInstance", () => {
-    it("devrait retourner la même instance", () => {
-      const instance1 = EmailService.getInstance();
-      const instance2 = EmailService.getInstance();
-      expect(instance1).toBe(instance2);
-    });
-  });
-
-  describe("sendEmail", () => {
+  it("sends an email successfully", async () => {
     const mockEmailData = {
-      to: "test@example.com",
+      to: "recipient@example.com",
       firstName: "John",
       subject: "Test Email",
-      message: "Test message",
+      message: "Test content",
     };
 
-    it("devrait envoyer un email avec succès", async () => {
-      const mockResponse = { id: "email_123" };
-      const mockResend = new Resend();
-      mockResend.emails.send = vi.fn().mockResolvedValue({
-        data: mockResponse,
-        error: null,
-      });
-
-      const result = await emailService.sendEmail(mockEmailData);
-
-      expect(result).toEqual(mockResponse);
-      expect(mockResend.emails.send).toHaveBeenCalledWith({
-        from: expect.stringContaining("Daznode"),
-        to: [mockEmailData.to],
-        subject: mockEmailData.subject,
-        react: expect.any(Object),
-      });
+    (mockResend.emails.send as jest.Mock).mockResolvedValueOnce({
+      data: { id: "test-id" },
+      error: null,
     });
 
-    it("devrait gérer les erreurs d'envoi", async () => {
-      const mockError = new Error("Failed to send email");
-      const mockResend = new Resend();
-      mockResend.emails.send = vi.fn().mockResolvedValue({
-        data: null,
-        error: mockError,
-      });
+    const result = await EmailService.sendEmail(mockEmailData);
 
-      await expect(emailService.sendEmail(mockEmailData)).rejects.toThrow();
+    expect(result).toEqual({ id: "test-id" });
+    expect(mockResend.emails.send).toHaveBeenCalledWith({
+      from: "Daznode <contact@dazno.de>",
+      to: [mockEmailData.to],
+      subject: mockEmailData.subject,
+      react: expect.any(Object),
+    });
+  });
+
+  it("handles email sending error", async () => {
+    const mockError = new Error("Failed to send email");
+    (mockResend.emails.send as jest.Mock).mockResolvedValueOnce({
+      data: null,
+      error: mockError,
     });
 
-    it("devrait gérer les erreurs de réseau", async () => {
-      const mockResend = new Resend();
-      mockResend.emails.send = vi
-        .fn()
-        .mockRejectedValue(new Error("Network error"));
+    await expect(
+      EmailService.sendEmail({
+        to: "recipient@example.com",
+        firstName: "John",
+        subject: "Test Email",
+        message: "Test content",
+      })
+    ).rejects.toThrow("Failed to send email");
+  });
 
-      await expect(emailService.sendEmail(mockEmailData)).rejects.toThrow();
-    });
+  it("handles network error", async () => {
+    (mockResend.emails.send as jest.Mock).mockRejectedValue(
+      new Error("Network error")
+    );
+
+    await expect(
+      EmailService.sendEmail({
+        to: "recipient@example.com",
+        firstName: "John",
+        subject: "Test Email",
+        message: "Test content",
+      })
+    ).rejects.toThrow("Network error");
   });
 });

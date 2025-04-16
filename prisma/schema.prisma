@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  price       Float
+  stock       Int      @default(0)
+  imageUrl    String?
+  categories  String[]
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("products")
+}
+
+model CheckoutSession {
+  id           String                @id @default(uuid())
+  userId       String?               @map("user_id")
+  amount       Float
+  plan         String?
+  status       CheckoutSessionStatus @default(pending)
+  paymentUrl   String?               @map("payment_url")
+  paymentHash  String?               @map("payment_hash")
+  currency     String                @default("sat")
+  products     Json?
+  deliveryInfo Json?                 @map("delivery_info")
+  paymentInfo  Json?                 @map("payment_info")
+  createdAt    DateTime              @default(now()) @map("created_at")
+  updatedAt    DateTime              @updatedAt @map("updated_at")
+
+  @@map("checkout_sessions")
+}
+
+enum CheckoutSessionStatus {
+  pending
+  completed
+  failed
+} 
