@@ -1,7 +1,7 @@
 "use client";
 
-import Button from "./ui/button";
-import Card from "./ui/card";
+import Button from "../ui/button";
+import Card from "../ui/card";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";

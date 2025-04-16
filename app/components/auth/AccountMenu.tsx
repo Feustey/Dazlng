@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-} from "./ui/dropdown-menu";
+} from "../ui/dropdown-menu";
 
 export function AccountMenu() {
   const { data: session } = useSession();

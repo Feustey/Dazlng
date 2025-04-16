@@ -5,7 +5,7 @@ import { useLocale } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
-import { locales, localeNames, localeFlags } from "../i18n.config.base";
+import { locales, localeNames, localeFlags } from "../../i18n.config.base";
 
 export function LanguageSelector() {
   const [isOpen, setIsOpen] = useState(false);

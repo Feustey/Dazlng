@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import ContactForm from "../../components/ContactForm";
+import ContactForm from "../../components/pages/ContactForm";
 import { Card } from "../../components/ui/card";
 import { useTranslations } from "next-intl";
 import Image from "next/image";

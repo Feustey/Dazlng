@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Card from "./ui/card";
-import { CardHeader, CardTitle, CardContent } from "./ui/card";
-import Button from "./ui/button";
+import Card from "../ui/card";
+import { CardHeader, CardTitle, CardContent } from "../ui/card";
+import Button from "../ui/button";
 import {
   Loader2,
   AlertCircle,
@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import PremiumFeatureAccess from "../features/PremiumFeatureAccess";
-import { FeeRecommendation } from "../services/premiumMcpService";
+import { FeeRecommendation } from "../../services/premiumMcpService";
 
 interface NodeFeeRecommendationsProps {
   nodeId: string;

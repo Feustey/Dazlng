@@ -1,14 +1,14 @@
 "use client";
 
 import * as React from "react";
-import Card from "./ui/card";
-import { CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import Card from "../ui/card";
+import { CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { networkService } from "../services/networkService";
-import { NetworkNode } from "../types/network";
-import { Skeleton } from "./ui/skeleton";
+import { networkService } from "../../services/networkService";
+import { NetworkNode } from "../../types/network";
+import { Skeleton } from "../ui/skeleton";
 
 interface PlayerRowProps {
   node: NetworkNode;

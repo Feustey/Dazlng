@@ -1,8 +1,8 @@
 import * as React from "react";
-import Card from "./ui/card";
-import { CardContent, CardHeader, CardTitle } from "./ui/card";
-import Button from "./ui/button";
-import { Badge } from "./ui/badge";
+import Card from "../ui/card";
+import { CardContent, CardHeader, CardTitle } from "../ui/card";
+import Button from "../ui/button";
+import { Badge } from "../ui/badge";
 import { motion } from "framer-motion";
 import {
   ArrowUpRight,
@@ -120,10 +120,10 @@ export default function ActiveChannels() {
                     <div className="text-xs text-muted-foreground">Remote</div>
                   </div>
                   <div className="flex gap-2">
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="sm">
                       <Settings className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="sm">
                       <AlertCircle className="h-4 w-4" />
                     </Button>
                   </div>

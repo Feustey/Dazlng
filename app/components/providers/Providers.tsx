@@ -12,11 +12,11 @@ import { ThemeProvider } from "next-themes";
 import { NextIntlClientProvider } from "next-intl";
 
 // Imports de configuration
-import { locales, defaultLocale } from "../i18n.config.base";
+import { locales, defaultLocale } from "../../i18n.config.base";
 
 // Imports de contextes
-import { AlertProvider } from "../contexts/AlertContext";
-import { AuthProvider } from "../contexts/AuthContext";
+import { AlertProvider } from "../../contexts/AlertContext";
+import { AuthProvider } from "../../contexts/AuthContext";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
@@ -32,7 +32,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setMounted(true);
     // Charger les messages de manière dynamique côté client
-    import(`../messages/${validLocale}.json`)
+    import(`../../messages/${validLocale}.json`)
       .then((module) => {
         setMessages(module.default);
       })

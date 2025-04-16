@@ -2,18 +2,18 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import Button from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Textarea } from "./ui/textarea";
+import Button from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Textarea } from "../ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
-import { useToast } from "./ui/use-toast";
+} from "../ui/select";
+import { useToast } from "../ui/use-toast";
 import { motion } from "framer-motion";
 
 interface ContactFormData {

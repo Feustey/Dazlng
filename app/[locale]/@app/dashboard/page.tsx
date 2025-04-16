@@ -4,9 +4,9 @@
 import { useTranslations } from "next-intl";
 
 // Imports de composants
-import DashboardStats from "../../../components/DashboardStats";
-import ChannelPerformance from "../../../components/ChannelPerformance";
-import ActiveChannels from "../../../components/ActiveChannels";
+import DashboardStats from "../../../components/pages/DashboardStats";
+import ChannelPerformance from "../../../components/channels/ChannelPerformance";
+import ActiveChannels from "../../../components/channels/ActiveChannels";
 
 export const dynamic = "force-dynamic";
 

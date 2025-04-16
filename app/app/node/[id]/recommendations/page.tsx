@@ -1,9 +1,9 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import NodeOptimizationRecommendations from "../../../../components/NodeOptimizationRecommendations";
-import NodeFeeRecommendations from "../../../../components/NodeFeeRecommendations";
-import NodeGrowthPrediction from "../../../../components/NodeGrowthPrediction";
+import NodeOptimizationRecommendations from "../../../../components/node/NodeOptimizationRecommendations";
+import NodeFeeRecommendations from "../../../../components/node/NodeFeeRecommendations";
+import NodeGrowthPrediction from "../../../../components/node/NodeGrowthPrediction";
 import {
   Tabs,
   TabsContent,

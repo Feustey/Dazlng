@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useCallback } from "react";
 import * as React from "react";
-import Card from "./ui/card";
-import { CardHeader, CardTitle, CardContent } from "./ui/card";
-import Button from "./ui/button";
+import Card from "../ui/card";
+import { CardHeader, CardTitle, CardContent } from "../ui/card";
+import Button from "../ui/button";
 import { Check, AlertCircle, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
