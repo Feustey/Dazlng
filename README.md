@@ -1,3 +1,131 @@
+# Daznode - Application de monitoring pour nœuds Lightning
+
+Daznode est une application de monitoring pour les nœuds Lightning Network, écrite en Python avec FastAPI.
+Elle permet de suivre les performances d'un nœud, analyser le réseau et optimiser la gestion des canaux.
+
+## Fonctionnalités
+
+- **Tableau de bord** : Vue d'ensemble des performances de votre nœud
+- **Analyses du réseau** : Statistiques et visualisations du réseau Lightning
+- **Gestion des canaux** : Suivi et optimisation de vos canaux Lightning
+- **Intégration avec MCP** : Données contextuelles du réseau grâce à l'API MCP
+- **Compatible Umbrel** : Installation facile sur votre Umbrel
+
+## Prérequis
+
+- Python 3.9+
+- Nœud Lightning (LND, c-lightning, etc.)
+- Accès à l'API MCP (optionnel mais recommandé)
+
+## Installation
+
+### Configuration de l'environnement
+
+1. Cloner le dépôt :
+
+   ```bash
+   git clone https://github.com/yourusername/daznode.git
+   cd daznode
+   ```
+
+2. Créer un environnement virtuel et l'activer :
+
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Sur Windows : venv\Scripts\activate
+   ```
+
+3. Installer les dépendances :
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Configurer les variables d'environnement :
+   ```bash
+   cp .env.example .env
+   # Éditez le fichier .env avec vos propres configurations
+   ```
+
+### Lancement de l'application
+
+```bash
+uvicorn main:app --reload
+```
+
+L'application sera accessible à l'adresse : http://localhost:8000
+
+L'API est documentée à l'adresse : http://localhost:8000/api/v1/docs
+
+## Structure du projet
+
+```
+daznode/
+├── app/
+│   ├── api/
+│   │   ├── api_v1/
+│   │   │   ├── endpoints/
+│   │   │   │   ├── auth.py
+│   │   │   │   ├── channels.py
+│   │   │   │   ├── dashboard.py
+│   │   │   │   └── network.py
+│   │   │   └── api.py
+│   │   └── deps.py
+│   ├── core/
+│   │   ├── config.py
+│   │   └── security.py
+│   ├── crud/
+│   │   └── user.py
+│   ├── db/
+│   │   └── session.py
+│   ├── models/
+│   │   └── user.py
+│   ├── schemas/
+│   │   ├── channel.py
+│   │   ├── dashboard.py
+│   │   ├── network.py
+│   │   ├── token.py
+│   │   └── user.py
+│   └── services/
+│       ├── feustey.py
+│       └── mcp.py
+├── static/
+├── templates/
+├── .env
+├── .env.example
+├── main.py
+└── requirements.txt
+```
+
+## Utilisation
+
+### API
+
+L'API REST est accessible via le préfixe `/api/v1` et propose les endpoints suivants :
+
+- **Authentification** : `/api/v1/auth/`
+- **Réseau** : `/api/v1/network/`
+- **Canaux** : `/api/v1/channels/`
+- **Tableau de bord** : `/api/v1/dashboard/`
+
+Consultez la documentation interactive pour plus de détails : `/api/v1/docs`
+
+### Interface utilisateur
+
+_Note : Cette version est axée sur l'API. Une interface utilisateur complète sera développée dans une version future._
+
+## Contribuer
+
+Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou à soumettre une pull request.
+
+## Licence
+
+Ce projet est sous licence MIT. Voir le fichier LICENSE pour plus de détails.
+
+---
+
+Fait avec ⚡️ par l'équipe Daznode
+
 # Daznode 🌩️
 
 Daznode est un tableau de bord intelligent propulsé par l'IA, conçu pour optimiser votre nœud Lightning Network et maximiser sa rentabilité.
@@ -244,3 +372,4 @@ npm start
 - Tailwind CSS
 - next-themes (thème clair/sombre)
 - heroicons (icônes)
+# Dazbox
