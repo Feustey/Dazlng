@@ -14,6 +14,7 @@ import {
 
 import { cn } from "../../lib/utils";
 import { Label } from "./label";
+import { Input, InputProps } from "./input";
 
 const Form = FormProvider;
 
@@ -167,6 +168,27 @@ const FormMessage = React.forwardRef<
 });
 FormMessage.displayName = "FormMessage";
 
+interface FormInputProps extends InputProps {
+  label?: string;
+  description?: string;
+}
+
+const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
+  ({ className, label, description, ...props }, ref) => {
+    return (
+      <FormItem>
+        {label && <FormLabel>{label}</FormLabel>}
+        <FormControl>
+          <Input className={cn(className)} ref={ref} {...props} />
+        </FormControl>
+        {description && <FormDescription>{description}</FormDescription>}
+        <FormMessage />
+      </FormItem>
+    );
+  }
+);
+FormInput.displayName = "FormInput";
+
 export {
   useFormField,
   Form,
@@ -176,4 +198,5 @@ export {
   FormDescription,
   FormMessage,
   FormField,
+  FormInput,
 };
