@@ -158,6 +158,11 @@
       "button": "Créer un compte"
     }
   },
+  "notFound": {
+    "title": "Page non trouvée",
+    "description": "Désolé, la page que vous recherchez n'existe pas.",
+    "backToHome": "Retour à l'accueil"
+  },
   "NotFound": {
     "title": "Page non trouvée",
     "description": "Désolé, la page que vous recherchez n'existe pas.",
