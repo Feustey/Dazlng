@@ -17,6 +17,7 @@ import { locales, defaultLocale } from "../../i18n.config.base";
 // Imports de contextes
 import { AlertProvider } from "../../contexts/AlertContext";
 import { AuthProvider } from "../../contexts/AuthContext";
+import { Toaster } from "../ui/toaster";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
@@ -66,7 +67,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
           disableTransitionOnChange
         >
           <AlertProvider>
-            <AuthProvider>{children}</AuthProvider>
+            <AuthProvider>
+              {children}
+              <Toaster />
+            </AuthProvider>
           </AlertProvider>
         </ThemeProvider>
       </SessionProvider>
