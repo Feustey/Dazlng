@@ -8,7 +8,7 @@ import {
   ReactNode,
 } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { useToast } from "../components/ui/use-toast";
+import { useToast } from "../hooks/use-toast";
 
 interface User {
   id: string;
@@ -34,7 +34,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const params = useParams();
-  const { addToast } = useToast();
+  const { toast } = useToast();
   const locale = params?.locale?.toString() || "fr";
 
   useEffect(() => {
@@ -80,18 +80,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       const userData = await response.json();
       setUser(userData);
-      addToast({
+      toast({
         title: "Connexion réussie",
         description: "Bienvenue sur votre espace personnel",
-        type: "success",
+        variant: "default",
       });
       router.push(`/${locale}/dashboard`);
     } catch (error) {
-      addToast({
+      toast({
         title: "Erreur de connexion",
         description:
           error instanceof Error ? error.message : "Une erreur est survenue",
-        type: "error",
+        variant: "destructive",
       });
       throw error;
     } finally {
@@ -113,11 +113,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Note: La vérification de la signature se fera via un webhook
       // Le webhook sera géré par l'API route /api/auth/alby/webhook
     } catch (error) {
-      addToast({
+      toast({
         title: "Erreur de connexion",
         description:
           error instanceof Error ? error.message : "Une erreur est survenue",
-        type: "error",
+        variant: "destructive",
       });
       throw error;
     } finally {
@@ -141,18 +141,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       const userData = await response.json();
       setUser(userData);
-      addToast({
+      toast({
         title: "Inscription réussie",
         description: "Votre compte a été créé avec succès",
-        type: "success",
+        variant: "default",
       });
       router.push(`/${locale}/dashboard`);
     } catch (error) {
-      addToast({
+      toast({
         title: "Erreur d'inscription",
         description:
           error instanceof Error ? error.message : "Une erreur est survenue",
-        type: "error",
+        variant: "destructive",
       });
       throw error;
     } finally {
@@ -165,18 +165,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsLoading(true);
       await fetch("/api/auth/logout", { method: "POST" });
       setUser(null);
-      addToast({
+      toast({
         title: "Déconnexion réussie",
         description: "À bientôt !",
-        type: "success",
+        variant: "default",
       });
       router.push(`/${locale}`);
     } catch (error) {
-      addToast({
+      toast({
         title: "Erreur de déconnexion",
         description:
           error instanceof Error ? error.message : "Une erreur est survenue",
-        type: "error",
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
