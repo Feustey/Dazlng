@@ -8,12 +8,12 @@ import Button from "@/components/ui/button";
 import Card, { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import OrderStatus from "@/components/payment/OrderStatus";
 
-interface OrderPageProps {
+type OrderPageProps = {
   params: {
     id: string;
     locale: string;
   };
-}
+};
 
 export default function OrderPage({ params }: OrderPageProps) {
   const t = useTranslations("Orders");
