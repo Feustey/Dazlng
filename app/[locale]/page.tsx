@@ -6,7 +6,6 @@ import { AnimatedHero } from "@components/ui/HomeAnimations";
 import { cn } from "@/lib/utils";
 import { Button } from "@components/ui/button";
 import { Zap, Box } from "lucide-react";
-import { NetworkStats } from "@/components/network/NetworkStats";
 
 export default async function HomePage() {
   const t = await getTranslations("pages.home");
@@ -66,13 +65,6 @@ export default async function HomePage() {
             </div>
           </div>
         </AnimatedHero>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-900/10 to-purple-900/10 backdrop-blur-sm">
-        <div className="container mx-auto px-4">
-          <NetworkStats />
-        </div>
       </section>
 
       {/* Features Section */}
