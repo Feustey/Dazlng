@@ -1,0 +1,26 @@
+{
+  "title": "Manage your Lightning nodes with ease",
+  "subtitle": "An intuitive interface for managing your Lightning Network nodes",
+  "cta": "Get Started",
+  "sections": [
+    {
+      "title": "About Daznode",
+      "content": "Daznode is a comprehensive solution for Lightning Network node management, designed to make the user experience as simple and efficient as possible."
+    },
+    {
+      "title": "Key Features",
+      "items": [
+        "Intuitive user interface",
+        "Multi-node management",
+        "Real-time monitoring",
+        "Enhanced security",
+        "Detailed analytics",
+        "Multilingual support"
+      ]
+    },
+    {
+      "title": "Our Mission",
+      "content": "Our mission is to make Lightning Network node management accessible to everyone while maintaining the highest standards of security and performance."
+    }
+  ]
+}

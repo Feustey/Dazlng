@@ -1,0 +1,17 @@
+{
+  "title": "ヘルプセンター",
+  "description": "DazNodeの使用方法に関する質問の回答を見つける",
+  "faq": {
+    "title": "よくある質問",
+    "questions": [
+      {
+        "question": "DazNodeとは何ですか？",
+        "answer": "DazNodeは、Lightning Networkノードを簡単に監視・管理できるノードマネージャーです。支払いチャネルの管理、パフォーマンスの監視、収益の最適化のための直感的なインターフェースを提供します。"
+      },
+      {
+        "question": "DazNodeでLightningノードを設定するにはどうすればよいですか？",
+        "answer": "DazNodeでLightningノードを設定するには、まずサーバーにLightningノード（LND、c-lightning、Eclairなど）をインストールする必要があります。その後、DazNodeにログインし、ノード接続プロセスを案内するセットアップウィザードに従ってください。"
+      }
+    ]
+  }
+}

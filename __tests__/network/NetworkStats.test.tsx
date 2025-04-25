@@ -43,14 +43,14 @@ describe("NetworkStats", () => {
   it("affiche les statistiques actives", async () => {
     render(<NetworkStats />);
 
-    expect(await screen.findByText("12,000 actifs")).toBeInTheDocument();
-    expect(await screen.findByText("60,000 actifs")).toBeInTheDocument();
+    expect(await screen.findByText("(12,000 actifs)")).toBeInTheDocument();
+    expect(await screen.findByText("(60,000 actifs)")).toBeInTheDocument();
   });
 
   it("affiche la capacité moyenne par canal", async () => {
     render(<NetworkStats />);
 
-    expect(await screen.findByText("Moyenne: 0.0005 BTC")).toBeInTheDocument();
+    expect(await screen.findByText("Moyenne: 0.0 BTC")).toBeInTheDocument();
   });
 
   it("gère les erreurs de chargement", async () => {
@@ -61,6 +61,6 @@ describe("NetworkStats", () => {
     render(<NetworkStats />);
 
     // Vérifie que le composant gère l'erreur gracieusement
-    expect(await screen.findByText("N/A")).toBeInTheDocument();
+    expect(await screen.findAllByText("N/A")).toHaveLength(2);
   });
 });

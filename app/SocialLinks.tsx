@@ -1,0 +1,50 @@
+"use client";
+
+import * as React from "react";
+
+import { Github, Send, Twitter, MessageCircle } from "lucide-react";
+
+const socialLinks = [
+  {
+    name: "GitHub",
+    url: "https://github.com/Feustey/DazNode",
+    icon: Github,
+  },
+  {
+    name: "Discord",
+    url: "https://discord.gg/8SZ7g9xDfK",
+    icon: MessageCircle,
+  },
+  {
+    name: "Twitter",
+    url: "https://twitter.com/daznode",
+    icon: Twitter,
+  },
+  {
+    name: "Telegram",
+    url: "https://t.me/daznode",
+    icon: Send,
+  },
+];
+
+export default function SocialLinks() {
+  return (
+    <div className="flex items-center gap-4">
+      {socialLinks.map((link) => {
+        const Icon = link.icon;
+        return (
+          <a
+            key={link.name}
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-600 hover:text-orange-500 transition-colors"
+            aria-label={link.name}
+          >
+            <Icon className="w-6 h-6" />
+          </a>
+        );
+      })}
+    </div>
+  );
+}

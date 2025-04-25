@@ -1,0 +1,26 @@
+{
+  "title": "Gérez vos nœuds Lightning avec simplicité",
+  "subtitle": "Une interface intuitive pour gérer vos nœuds Lightning Network",
+  "cta": "Commencer",
+  "sections": [
+    {
+      "title": "À propos de Daznode",
+      "content": "Daznode est une solution complète pour la gestion de nœuds Lightning Network, conçue pour rendre l'expérience utilisateur aussi simple et efficace que possible."
+    },
+    {
+      "title": "Caractéristiques principales",
+      "items": [
+        "Interface utilisateur intuitive",
+        "Gestion multi-nœuds",
+        "Surveillance en temps réel",
+        "Sécurité renforcée",
+        "Analyses détaillées",
+        "Support multilingue"
+      ]
+    },
+    {
+      "title": "Notre mission",
+      "content": "Notre mission est de rendre la gestion des nœuds Lightning Network accessible à tous, tout en maintenant les plus hauts standards de sécurité et de performance."
+    }
+  ]
+}

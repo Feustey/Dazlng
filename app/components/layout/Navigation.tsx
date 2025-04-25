@@ -2,14 +2,14 @@
 
 import React from "react";
 import Link from "next/link";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Menu, X } from "lucide-react";
 import { SimpleLogo } from "./SimpleLogo";
 import { useSession } from "next-auth/react";
-import { AccountMenu } from "@/components/layout/AccountMenu";
+import { AccountMenu } from "@/components/auth/AccountMenu";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { LanguageSelector } from "@/components/layout/LanguageSelector";
+import { LanguageSelector } from "@/components/ui/LanguageSelector";
 import { useTranslation } from "@/hooks/useTranslation";
 
 export default function Navigation() {
@@ -71,12 +71,10 @@ export default function Navigation() {
                 {t("Header.channels")}
               </Link>
               <Link
-                href={`/${locale}/learn`}
-                className={`inline-flex items-center px-1 pt-1 text-sm font-medium ${
-                  isActive("/learn")
-                    ? "text-primary border-b-2 border-primary"
-                    : "text-muted-foreground hover:text-foreground hover:border-b-2 hover:border-muted-foreground"
-                }`}
+                href="https://docs.dazno.de"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`inline-flex items-center px-1 pt-1 text-sm font-medium text-muted-foreground hover:text-foreground hover:border-b-2 hover:border-muted-foreground`}
               >
                 {t("Header.learn")}
               </Link>
@@ -165,12 +163,10 @@ export default function Navigation() {
             {t("Header.channels")}
           </Link>
           <Link
-            href={`/${locale}/learn`}
-            className={`block px-3 py-2 text-base font-medium ${
-              isActive("/learn")
-                ? "text-primary bg-accent/10"
-                : "text-muted-foreground hover:text-foreground hover:bg-accent/10"
-            }`}
+            href="https://docs.dazno.de"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent/10`}
             onClick={toggleMenu}
           >
             {t("Header.learn")}

@@ -1,0 +1,136 @@
+{
+  "common": {
+    "buttons": {
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "send": "Enviar",
+      "close": "Cerrar",
+      "back": "Volver",
+      "next": "Siguiente",
+      "confirm": "Confirmar"
+    },
+    "status": {
+      "loading": "Cargando...",
+      "error": "Error",
+      "success": "Éxito",
+      "pending": "Pendiente",
+      "completed": "Completado",
+      "failed": "Fallido"
+    },
+    "language": "Idioma",
+    "help": "Ayuda",
+    "notifications": "Notificaciones",
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "profile": "Perfil",
+    "settings": "Configuración"
+  },
+  "header": {
+    "title": "Daznode",
+    "navigation": {
+      "dashboard": "Panel de control",
+      "dazia": "Daz-IA",
+      "network": "Red",
+      "channels": "Canales",
+      "learn": "Aprender",
+      "help": "Ayuda"
+    },
+    "actions": {
+      "login": "Iniciar sesión",
+      "logout": "Cerrar sesión",
+      "profile": "Mi perfil",
+      "settings": "Configuración",
+      "notifications": "Notificaciones"
+    }
+  },
+  "pages": {
+    "home": {
+      "title": "Bienvenido a DazLng",
+      "subtitle": "Descubre el futuro de las redes Lightning",
+      "cta": {
+        "primary": "Comenzar ahora",
+        "secondary": "Saber más"
+      },
+      "stats": {
+        "nodes": "Nodos",
+        "channels": "Canales",
+        "capacity": "Capacidad"
+      }
+    },
+    "network": {
+      "title": "Vista general de la red",
+      "metrics": {
+        "totalNodes": "Total de nodos",
+        "totalChannels": "Total de canales",
+        "totalCapacity": "Capacidad total"
+      },
+      "charts": {
+        "capacityHistory": "Historial de capacidad",
+        "nodesByCountry": "Nodos por país"
+      }
+    },
+    "learn": {
+      "title": "Guía de aprendizaje",
+      "sections": {
+        "basics": {
+          "title": "Fundamentos de Lightning",
+          "content": "Descubre los fundamentos de la red Lightning"
+        },
+        "advanced": {
+          "title": "Conceptos avanzados",
+          "content": "Domina los aspectos técnicos de la red Lightning"
+        }
+      }
+    }
+  },
+  "errors": {
+    "system": {
+      "unknown": "Ha ocurrido un error inesperado",
+      "network": "Error de conexión de red",
+      "auth": "Error de autenticación",
+      "notFound": "Página no encontrada",
+      "validation": "Error de validación"
+    },
+    "form": {
+      "required": "Este campo es obligatorio",
+      "invalid": "Formato inválido",
+      "email": "Correo electrónico inválido",
+      "password": "Contraseña inválida",
+      "match": "Las contraseñas no coinciden"
+    }
+  },
+  "notifications": {
+    "success": {
+      "saved": "Cambios guardados correctamente",
+      "sent": "Mensaje enviado correctamente",
+      "deleted": "Eliminado correctamente"
+    },
+    "error": {
+      "save": "Error al guardar",
+      "send": "Error al enviar",
+      "delete": "Error al eliminar"
+    }
+  },
+  "settings": {
+    "language": {
+      "label": "Idioma",
+      "options": {
+        "fr": "Francés",
+        "en": "Inglés",
+        "de": "Alemán",
+        "es": "Español"
+      }
+    },
+    "theme": {
+      "label": "Tema",
+      "options": {
+        "light": "Claro",
+        "dark": "Oscuro",
+        "system": "Sistema"
+      }
+    },
+    "save": "Guardar cambios",
+    "success": "Configuración guardada correctamente",
+    "error": "Error al guardar la configuración"
+  }
+}

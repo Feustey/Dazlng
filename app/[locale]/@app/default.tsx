@@ -1,3 +1,6 @@
-export default function Default() {
-  return null;
+import { redirect } from "next/navigation";
+import { defaultLocale } from "@/i18n.config.base";
+
+export default function DefaultAppRoute() {
+  redirect(`/${defaultLocale}`);
 }

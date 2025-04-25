@@ -1,0 +1,14 @@
+{
+  "app": {
+    "title": "Dazling",
+    "description": "Lightning Network Management Platform",
+    "settings": {
+      "title": "Settings",
+      "description": "Configure your application settings"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "description": "Welcome to your Lightning Network management space"
+    }
+  }
+}

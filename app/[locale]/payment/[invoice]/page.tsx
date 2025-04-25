@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
+import { Button } from "@/components/ui/button";
 import { QRCodeSVG } from "qrcode.react";
 import { Copy, Check, Loader2 } from "lucide-react";
-import { toast } from "sonner";
+import { useToast } from "@/components/ui/use-toast";
 import {
   createInvoice,
   checkInvoiceStatus,
@@ -14,6 +16,9 @@ import {
 
 interface Invoice extends AlbyInvoice {
   expires_at?: string;
+  payment_hash: string;
+  payment_request: string;
+  amount: number;
 }
 
 export default function PaymentPage() {
@@ -26,6 +31,7 @@ export default function PaymentPage() {
   const [isPaid, setIsPaid] = useState(false);
   const [isCopying, setIsCopying] = useState(false);
   const [expiryTime, setExpiryTime] = useState<number | null>(null);
+  const { addToast } = useToast();
 
   useEffect(() => {
     if (!invoiceId) return;
@@ -37,13 +43,17 @@ export default function PaymentPage() {
         setIsLoading(false);
       } catch (error) {
         console.error("Erreur lors de la récupération de la facture:", error);
-        toast.error("Erreur lors de la récupération de la facture");
+        addToast({
+          title: t("erreurPaiement"),
+          description: error instanceof Error ? error.message : String(error),
+          type: "error",
+        });
         setIsLoading(false);
       }
     };
 
     fetchInvoice();
-  }, [invoiceId, t]);
+  }, [invoiceId, t, addToast]);
 
   useEffect(() => {
     if (!invoice) return;
@@ -53,7 +63,11 @@ export default function PaymentPage() {
         const isPaid = await checkInvoiceStatus(invoice.payment_hash);
         if (isPaid) {
           setIsPaid(true);
-          toast.success(t("success"));
+          addToast({
+            title: t("copySuccess"),
+            description: t("paiementReussi"),
+            type: "success",
+          });
           setTimeout(() => {
             router.push(`/${params.locale}/checkout/confirmation`);
           }, 2000);
@@ -65,7 +79,7 @@ export default function PaymentPage() {
 
     const interval = setInterval(checkPayment, 5000);
     return () => clearInterval(interval);
-  }, [invoice, params.locale, router, t]);
+  }, [invoice, params.locale, router, t, addToast]);
 
   useEffect(() => {
     if (invoice) {
@@ -88,9 +102,17 @@ export default function PaymentPage() {
     try {
       setIsCopying(true);
       await navigator.clipboard.writeText(invoice.payment_request);
-      toast.success(t("copied"));
+      addToast({
+        title: t("copySuccess"),
+        description: t("copied"),
+        type: "success",
+      });
     } catch (error) {
-      toast.error(t("copy_error"));
+      addToast({
+        title: t("erreurPaiement"),
+        description: error instanceof Error ? error.message : String(error),
+        type: "error",
+      });
     } finally {
       setIsCopying(false);
     }

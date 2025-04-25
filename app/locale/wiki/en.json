@@ -1,0 +1,229 @@
+{
+  "title": "Lightning Network Knowledge Center",
+  "subtitle": "Everything you need to know to navigate the Lightning ecosystem",
+  "sections": {
+    "alby": {
+      "title": "Alby",
+      "description": "A Lightning wallet browser extension that allows you to manage your satoshis, make instant payments, connect to your personal Lightning node, and use Bitcoin Web3 applications."
+    },
+    "telegram": {
+      "title": "Telegram",
+      "description": "Join specialized Lightning Network discussion groups."
+    },
+    "umbrel": {
+      "title": "Umbrel",
+      "description": "A personal Bitcoin and Lightning Network node management tool."
+    },
+    "rtl": {
+      "title": "RTL (Ride The Lightning)",
+      "description": "An interface for managing a Lightning Network node."
+    },
+    "nostr": {
+      "title": "Nostr",
+      "description": "A decentralized social network protocol that allows users to control their data and identity.",
+      "content": {
+        "foundations": "Nostr is based on a simple but powerful idea: each user has a private key and a public key. The private key is used to sign messages, and the public key is used to verify them.",
+        "advantages": "Nostr offers several advantages over traditional social networks: decentralization, censorship resistance, data ownership, and interoperability.",
+        "getting_started": {
+          "title": "Getting Started with Nostr",
+          "steps": [
+            "Acquire some satoshis (the smallest unit of Bitcoin)",
+            "Set up a Lightning node",
+            "Generate your Nostr keys",
+            "Choose a Nostr client"
+          ]
+        }
+      }
+    },
+    "rag": {
+      "title": "RAG (Retrieval-Augmented Generation)",
+      "description": "An advanced routing solution that combines the power of language models with external knowledge retrieval.",
+      "content": {
+        "introduction": "RAG represents a significant advancement in artificial intelligence, combining the power of language models with external knowledge retrieval.",
+        "concept": "RAG is a technique that enhances language models by allowing them to access and incorporate external information during the generation process.",
+        "functioning": "The system works by first retrieving relevant information from a knowledge base, then using this information to generate more accurate and contextually relevant responses.",
+        "advantages": {
+          "title": "Advantages of RAG",
+          "points": [
+            "Improved accuracy and relevance of responses",
+            "Ability to access up-to-date information",
+            "Reduced hallucination in model outputs",
+            "Better handling of domain-specific knowledge",
+            "Enhanced context awareness"
+          ]
+        },
+        "limitations": {
+          "title": "Limitations",
+          "points": [
+            "Dependence on the quality of the knowledge base",
+            "Potential latency in retrieval operations",
+            "Complexity in maintaining and updating the knowledge base",
+            "Challenges in handling ambiguous queries"
+          ]
+        },
+        "advanced_techniques": {
+          "title": "Advanced Techniques",
+          "optimization": {
+            "title": "Optimization",
+            "points": [
+              "Query expansion and reformulation",
+              "Hybrid search approaches",
+              "Contextual reranking"
+            ]
+          },
+          "retrieval": {
+            "title": "Retrieval",
+            "points": ["Semantic search", "Dense retrieval", "Sparse retrieval"]
+          },
+          "post_retrieval": {
+            "title": "Post-Retrieval",
+            "points": [
+              "Passage selection",
+              "Answer generation",
+              "Fact verification"
+            ]
+          },
+          "sophisticated": {
+            "title": "Sophisticated Approaches",
+            "points": [
+              "Multi-hop reasoning",
+              "Iterative retrieval",
+              "Cross-lingual retrieval",
+              "Multi-modal retrieval"
+            ]
+          }
+        },
+        "evaluation": {
+          "title": "Evaluation",
+          "retrieval": {
+            "title": "Retrieval Metrics",
+            "points": ["Precision", "Recall", "F1 score", "MRR", "NDCG"]
+          },
+          "generation": {
+            "title": "Generation Metrics",
+            "points": ["ROUGE", "BLEU", "METEOR"]
+          },
+          "tools": "Various tools and frameworks are available for evaluating RAG systems, including both automated metrics and human evaluation.",
+          "expert_validation": "Expert validation is crucial for assessing the quality and reliability of RAG systems in real-world applications."
+        },
+        "challenges": {
+          "title": "Challenges",
+          "points": [
+            "Scalability of knowledge bases",
+            "Real-time information updates",
+            "Bias and fairness in retrieval",
+            "Privacy and security concerns",
+            "Integration with existing systems"
+          ]
+        },
+        "conclusion": "RAG represents a powerful approach to enhancing language models with external knowledge. While challenges remain, the potential benefits for various applications make it a promising direction for AI development."
+      }
+    },
+    "lightning_network": {
+      "title": "Join the Lightning Network: Unlock Bitcoin's Power Instantly",
+      "description": "A revolutionary second-layer solution for instant and economical Bitcoin transactions",
+      "content": {
+        "introduction": "Imagine a world where Bitcoin transactions are instant, nearly free, and accessible to everyone, without intermediaries or borders. This world already exists thanks to the Lightning Network, a revolutionary technology that transforms how we use Bitcoin.",
+        "what_is": {
+          "title": "What is the Lightning Network?",
+          "description": "The Lightning Network is a second-layer solution built on top of the Bitcoin blockchain. It enables fast and low-cost transactions by creating payment channels between users, avoiding congestion on the main network.",
+          "functioning": {
+            "title": "How the Lightning Network Works",
+            "example": "Let's take the example of Alice and Bob who want to exchange bitcoins quickly.",
+            "steps": [
+              "Opening a payment channel: Alice and Bob create a multi-signature wallet and deposit funds into it.",
+              "Off-chain transactions: They can then make instant transactions between themselves without recording each operation on the blockchain.",
+              "Closing the channel: When they finish their exchanges, the final balance is recorded on the blockchain."
+            ],
+            "benefit": "This system enables fast, secure, and economical payments while reducing the load on the main blockchain."
+          }
+        },
+        "why_use": {
+          "title": "Why Use the Lightning Network?",
+          "points": [
+            "Speed: Transactions are nearly instant, ideal for daily payments.",
+            "Reduced fees: Transaction costs are minimal, making micro-payments viable.",
+            "Scalability: The network can handle millions of transactions per second, surpassing traditional systems.",
+            "Privacy: Off-chain transactions offer better privacy."
+          ]
+        },
+        "getting_started": {
+          "title": "How to Get Started with the Lightning Network",
+          "steps": {
+            "step1": {
+              "title": "Step 1: Acquire Bitcoins",
+              "description": "Before starting, you need to own bitcoins. You can buy them on reputable exchanges, use Bitcoin ATMs, or accept Bitcoin payments for your goods and services."
+            },
+            "step2": {
+              "title": "Step 2: Choose a Lightning Wallet",
+              "description": "A Lightning wallet allows you to interact with the network. Here are some options:",
+              "wallets": [
+                "Phoenix: Non-custodial wallet with an excellent user experience.",
+                "Breez: Offers a user-friendly interface and full control over your keys.",
+                "Blue Wallet: Enables easy use of the Lightning Network.",
+                "Wallet of Satoshi: Simple custodial wallet to use, ideal for beginners."
+              ]
+            },
+            "step3": {
+              "title": "Step 3: Fund Your Wallet",
+              "description": "Once your wallet is installed, you need to transfer bitcoins to it. Generate a receiving address in your wallet and send funds to it from your Bitcoin source."
+            },
+            "step4": {
+              "title": "Step 4: Make Transactions",
+              "description": "With funds in your wallet, you can start making transactions on the Lightning Network. To send funds, scan the recipient's QR code or enter their payment request. To receive funds, generate a payment request in your wallet and share it with the sender."
+            }
+          }
+        },
+        "checklist": {
+          "title": "Actionable Checklist",
+          "items": [
+            "Buy bitcoins through an exchange or Bitcoin ATM.",
+            "Install a Lightning wallet suited to your needs.",
+            "Transfer bitcoins to your Lightning wallet.",
+            "Make a transaction to test the network's operation."
+          ]
+        },
+        "conclusion": "The Lightning Network revolutionizes Bitcoin usage by making transactions faster, less expensive, and more accessible. By mastering this technology, you actively participate in the evolution of the Bitcoin ecosystem.",
+        "faq": {
+          "title": "FAQ",
+          "questions": {
+            "non_custodial": {
+              "question": "What is a non-custodial wallet?",
+              "answer": "A non-custodial wallet gives you full control over your private keys, ensuring complete ownership of your funds."
+            },
+            "technical_experience": {
+              "question": "Can I use the Lightning Network without technical experience?",
+              "answer": "Yes, many wallets offer a user-friendly interface that simplifies using the Lightning Network, even for beginners."
+            },
+            "security": {
+              "question": "Is the Lightning Network secure?",
+              "answer": "Yes, it uses smart contracts and secure payment channels to guarantee transaction security."
+            }
+          }
+        }
+      }
+    }
+  },
+  "related_resources": {
+    "daz_ia": {
+      "title": "Daz-IA",
+      "description": "Explore our AI solutions for the Lightning Network."
+    },
+    "daznode": {
+      "title": "Daznode",
+      "description": "Discover our Lightning Network node solutions."
+    },
+    "lightning_network": {
+      "title": "Lightning Network",
+      "description": "Learn more about the Lightning Network technology."
+    }
+  },
+  "cta": {
+    "title": "Join the Lightning Revolution",
+    "description": "Whether you're a beginner or an expert, we have solutions for you.",
+    "buttons": {
+      "order_daznode": "Order a Daznode",
+      "discover_daz_ia": "Discover Daz-IA"
+    }
+  }
+}

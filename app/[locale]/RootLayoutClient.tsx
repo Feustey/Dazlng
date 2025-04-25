@@ -6,11 +6,10 @@ import { ReactNode } from "react";
 // Imports de bibliothèques tierces
 import { NextIntlClientProvider } from "next-intl";
 import { Toaster } from "sonner";
-import { useTheme } from "next-themes";
+import { ThemeProvider } from "next-themes";
 
 // Imports de composants
-import { ThemeProvider } from "@/components/providers/ThemeProvider";
-import ClientLayout from "../ClientLayout";
+import ClientLayout from "../../app/ClientLayout";
 import Navigation from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
 import { Providers } from "./providers";

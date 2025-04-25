@@ -5,11 +5,19 @@ import { Locale } from "@/i18n.config.base";
 import { Inter } from "next/font/google";
 import "@/globals.css";
 import { Providers } from "@/components/providers/Providers";
-import Header from "@/components/layout/Header";
+import dynamic from "next/dynamic";
 import { Footer } from "@/components/layout/Footer";
 import { siteConfig } from "@/config/metadata";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
+
+// Import dynamique du Header pour éviter les problèmes de rendu côté client
+const Header = dynamic(() => import("@/components/layout/Header"), {
+  ssr: true,
+  loading: () => (
+    <div className="h-16 w-full bg-background/80 backdrop-blur-xl border-b border-border"></div>
+  ),
+});
 
 // Pas besoin de force-dynamic pour le layout principal
 // export const dynamic = "force-dynamic";

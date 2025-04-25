@@ -1,4 +1,4 @@
-import { initializeApp } from "./lib/init";
+import { initializeServices } from "./init";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -6,11 +6,13 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default async function RootLayout({
   children,
+  app,
 }: {
   children: React.ReactNode;
+  app: React.ReactNode;
 }) {
   // Initialiser l'application
-  await initializeApp();
+  await initializeServices();
 
   return (
     <html suppressHydrationWarning>

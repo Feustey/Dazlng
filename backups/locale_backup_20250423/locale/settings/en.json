@@ -1,0 +1,21 @@
+{
+  "title": "Settings",
+  "language": {
+    "label": "Language",
+    "options": {
+      "en": "English",
+      "fr": "French"
+    }
+  },
+  "theme": {
+    "label": "Theme",
+    "options": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    }
+  },
+  "save": "Save changes",
+  "success": "Settings saved successfully",
+  "error": "Failed to save settings"
+}

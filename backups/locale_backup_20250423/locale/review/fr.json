@@ -1,0 +1,16 @@
+{
+  "title": "Aperçu du nœud",
+  "tabs": {
+    "overview": "Vue d'ensemble",
+    "channels": "Canaux",
+    "financial": "Finance",
+    "network": "Réseau"
+  },
+  "labels": {
+    "capacity": "Capacité totale",
+    "channels": "Canaux actifs",
+    "volume": "Volume total",
+    "fees": "Frais totaux",
+    "peers": "Pairs"
+  }
+}

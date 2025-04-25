@@ -1,4 +1,4 @@
-import EmailService from "../../app/lib/emailService";
+import EmailService from "@lib/emailService";
 import { Resend } from "resend";
 
 // Mock Resend

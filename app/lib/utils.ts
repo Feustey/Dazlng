@@ -1,31 +1,25 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+/**
+ * Combine et fusionne les classes CSS avec Tailwind
+ * Utilise clsx pour combiner les classes et tailwind-merge pour fusionner les conflits
+ */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatBitcoin(amount: number): string {
-  return new Intl.NumberFormat("fr-FR", {
-    style: "currency",
-    currency: "XBT",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 8,
-  }).format(amount);
+export function formatNumber(num: number): string {
+  return new Intl.NumberFormat().format(num);
 }
 
-export function formatNumber(number: number): string {
-  return new Intl.NumberFormat("fr-FR", {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  }).format(number);
-}
-
-export function formatPrice(price: number): string {
-  return new Intl.NumberFormat("fr-FR", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(price);
+export function formatSats(sats: number): string {
+  const btc = sats / 100000000;
+  return (
+    new Intl.NumberFormat("fr-FR", {
+      style: "decimal",
+      minimumFractionDigits: 8,
+      maximumFractionDigits: 8,
+    }).format(btc) + " BTC"
+  );
 }

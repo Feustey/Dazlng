@@ -5,22 +5,26 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { Card } from "@/components/ui/card";
 import { LineChart, PieChart } from "@/components/ui/charts";
 import { formatNumber } from "@/lib/utils";
-import {
-  NetworkStats,
-  getNetworkStats,
-  getHistoricalData,
-} from "@/services/network";
+import { getNetworkStats, getHistoricalData } from "@/services/network";
 import { Loader2 } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
-// Données par défaut (à utiliser en cas d'erreur ou pendant le chargement)
-const defaultStats: NetworkStats = {
+interface NetworkStatsData {
+  totalNodes: number;
+  totalChannels: number;
+  totalCapacity: number;
+  lastUpdate?: string;
+  capacityHistory: Array<{
+    date: string;
+    value: number;
+  }>;
+  nodesByCountry: Array<{
+    country: string;
+    count: number;
+  }>;
+}
+
+// Données par défaut
+const defaultStats: NetworkStatsData = {
   totalNodes: 15000,
   totalChannels: 75000,
   totalCapacity: 1000.5,
@@ -46,9 +50,45 @@ const defaultStats: NetworkStats = {
 
 type Period = "1d" | "1w" | "1m" | "1y";
 
+const formatChartData = (data: Array<{ date: string; value: number }>) => {
+  return {
+    labels: data.map((item) => item.date),
+    datasets: [
+      {
+        label: "Capacité",
+        data: data.map((item) => item.value),
+        borderColor: "#3B82F6",
+        tension: 0.4,
+      },
+    ],
+  };
+};
+
+const formatPieChartData = (
+  data: Array<{ country: string; count: number }>
+) => {
+  const colors = [
+    "#FF6384",
+    "#36A2EB",
+    "#FFCE56",
+    "#4BC0C0",
+    "#9966FF",
+    "#FF9F40",
+    "#FF6384",
+    "#36A2EB",
+    "#FFCE56",
+  ];
+
+  return data.map((item, index) => ({
+    label: item.country,
+    value: item.count,
+    color: colors[index % colors.length],
+  }));
+};
+
 export default function NetworkPage() {
   const { t } = useTranslation();
-  const [stats, setStats] = useState<NetworkStats>(defaultStats);
+  const [stats, setStats] = useState<NetworkStatsData>(defaultStats);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedPeriod, setSelectedPeriod] = useState<Period>("1m");
@@ -62,10 +102,25 @@ export default function NetworkPage() {
           getHistoricalData(selectedPeriod),
         ]);
 
-        setStats({
-          ...networkStats,
-          capacityHistory: historicalData,
-        });
+        // Conversion des données reçues au format attendu
+        const formattedStats: NetworkStatsData = {
+          totalNodes: Number(networkStats.totalNodes),
+          totalChannels: Number(networkStats.totalChannels),
+          totalCapacity: Number(networkStats.totalCapacity),
+          lastUpdate: networkStats.lastUpdate,
+          capacityHistory: historicalData.map((item) => ({
+            date: item.date,
+            value: Number(item.value),
+          })),
+          nodesByCountry: Object.entries(networkStats.nodesByCountry || {}).map(
+            ([country, count]) => ({
+              country,
+              count: Number(count),
+            })
+          ),
+        };
+
+        setStats(formattedStats);
         setError(null);
       } catch (err) {
         console.error("Error fetching network data:", err);
@@ -138,15 +193,13 @@ export default function NetworkPage() {
             {t("Network.totalCapacity")}
           </h3>
           <p className="text-3xl font-bold">
-            {stats.totalCapacity.toFixed(1)} BTC
+            {formatNumber(stats.totalCapacity)} BTC
           </p>
           <p className="text-sm text-muted-foreground">
             {t("Network.capacityPerChannel", {
               amount:
-                (
-                  (stats.totalCapacity * 100000000) /
-                  stats.totalChannels
-                ).toFixed(0) + " sats",
+                formatNumber(stats.totalCapacity / stats.totalChannels) +
+                " BTC",
             })}
           </p>
         </Card>
@@ -159,25 +212,19 @@ export default function NetworkPage() {
             <h3 className="text-xl font-medium">
               {t("Network.capacityHistory")}
             </h3>
-            <Select
+            <select
               value={selectedPeriod}
-              onValueChange={(value) => setSelectedPeriod(value as Period)}
+              onChange={(e) => setSelectedPeriod(e.target.value as Period)}
+              className="w-[180px] border rounded p-2"
             >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder={t("Network.selectPeriod")} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1d">{t("Network.period.day")}</SelectItem>
-                <SelectItem value="1w">{t("Network.period.week")}</SelectItem>
-                <SelectItem value="1m">{t("Network.period.month")}</SelectItem>
-                <SelectItem value="1y">{t("Network.period.year")}</SelectItem>
-              </SelectContent>
-            </Select>
+              <option value="1d">{t("Network.period.day")}</option>
+              <option value="1w">{t("Network.period.week")}</option>
+              <option value="1m">{t("Network.period.month")}</option>
+              <option value="1y">{t("Network.period.year")}</option>
+            </select>
           </div>
           <LineChart
-            data={stats.capacityHistory}
-            xKey="date"
-            yKey="value"
+            data={formatChartData(stats.capacityHistory)}
             height={300}
           />
         </Card>
@@ -187,9 +234,7 @@ export default function NetworkPage() {
             {t("Network.nodesByCountry")}
           </h3>
           <PieChart
-            data={stats.nodesByCountry}
-            nameKey="country"
-            valueKey="count"
+            data={formatPieChartData(stats.nodesByCountry)}
             height={300}
           />
         </Card>

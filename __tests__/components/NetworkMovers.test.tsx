@@ -1,6 +1,6 @@
 import { screen, fireEvent, waitFor } from "@testing-library/react";
 import { render } from "../utils/test-utils";
-import NetworkMovers from "../../app/components/network/NetworkMovers";
+import NetworkMovers from "@components/network/NetworkMovers";
 
 // Mock fetch
 global.fetch = jest.fn();

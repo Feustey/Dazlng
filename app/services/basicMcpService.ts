@@ -1,5 +1,5 @@
-import { NetworkSummaryData } from "../types/node";
-import { NetworkGraph, NetworkTopology } from "../types/mcpService";
+import { NetworkSummaryData } from "@/types/node";
+import { NetworkGraph } from "@/types/mcpService";
 
 export class BasicMcpService {
   private static instance: BasicMcpService;

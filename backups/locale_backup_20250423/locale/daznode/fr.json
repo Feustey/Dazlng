@@ -1,0 +1,77 @@
+{
+  "title": "DazNode - Votre Portail Lightning Network",
+  "description": "DazNode est un explorateur de réseau Lightning Bitcoin qui vous permet de visualiser et d'analyser le réseau en temps réel.",
+  "hero": {
+    "title": "Optimisez vos performances et votre rentabilité avec Daznode",
+    "description": "Daznode est un tableau de bord intelligent propulsé par l'IA, conçu pour optimiser votre nœud Lightning Network et maximiser sa rentabilité.",
+    "cta": "Commencer l'exploration"
+  },
+  "features": {
+    "title": "Fonctionnalités",
+    "items": [
+      {
+        "title": "Analyse en Temps Réel",
+        "description": "Suivez l'évolution du réseau Lightning avec des mises à jour en temps réel des nœuds et des canaux.",
+        "icon": "zap"
+      },
+      {
+        "title": "Optimisation des Frais",
+        "description": "Ajustez les frais de vos canaux les plus actifs pour maximiser vos revenus.",
+        "icon": "trending-up"
+      },
+      {
+        "title": "Gestion de la Liquidité",
+        "description": "Rééquilibrez vos canaux pour optimiser la liquidité disponible.",
+        "icon": "refresh-cw"
+      },
+      {
+        "title": "Assistant IA",
+        "description": "Posez vos questions à l'assistant IA qui vous aidera à comprendre et optimiser votre nœud Lightning.",
+        "icon": "message-circle"
+      }
+    ]
+  },
+  "dashboard": {
+    "title": "Tableau de bord de votre nœud Lightning",
+    "subtitle": "Surveillez et optimisez les performances de votre nœud en temps réel",
+    "metrics": {
+      "channels": "Canaux totaux",
+      "activeChannels": "{count} canaux actifs",
+      "capacity": "Capacité totale",
+      "fees": "Frais totaux"
+    }
+  },
+  "testimonials": {
+    "title": "Ce que disent nos utilisateurs",
+    "items": [
+      {
+        "quote": "Grâce aux recommandations de Daznode, mon nœud est passé de quelques transactions par jour à plus de 100 ! La différence est impressionnante.",
+        "author": "Marie L."
+      },
+      {
+        "quote": "Daznode a transformé mon nœud Lightning d'un hobby en une véritable source de revenus. Je ne peux plus m'en passer !",
+        "author": "Pierre D."
+      }
+    ]
+  },
+  "faq": {
+    "title": "Questions fréquentes",
+    "items": [
+      {
+        "question": "Qu'est-ce que DazNode ?",
+        "answer": "DazNode est un tableau de bord intelligent propulsé par l'IA, conçu pour optimiser votre nœud Lightning Network et maximiser sa rentabilité."
+      },
+      {
+        "question": "Comment DazNode peut-il m'aider ?",
+        "answer": "DazNode analyse votre nœud et le réseau Lightning pour vous fournir des recommandations personnalisées d'optimisation, vous aidant à augmenter vos revenus et à améliorer les performances de votre nœud."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Prêt à optimiser votre nœud Lightning ?",
+    "description": "Rejoignez DazNode aujourd'hui et découvrez comment maximiser la performance de votre nœud.",
+    "button": "Commencer maintenant"
+  },
+
+  "space": {}
+}

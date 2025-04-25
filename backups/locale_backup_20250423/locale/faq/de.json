@@ -1,0 +1,86 @@
+{
+  "pages": {
+    "faq": {
+      "title": "Häufig gestellte Fragen",
+      "subtitle": "Finden Sie Antworten auf Ihre Fragen zu Daznode",
+      "categories": {
+        "general": "Allgemein",
+        "setup": "Einrichtung und Start",
+        "performance": "Leistung und Optimierung",
+        "support": "Support und Hilfe",
+        "alby": "Alby Wallet"
+      },
+      "questions": {
+        "what_is_daznode": {
+          "question": "Was ist Daznode?",
+          "answer": "Daznode ist ein Lightning Network Node-Manager, der es Ihnen ermöglicht, Ihren Bitcoin-Node einfach zu überwachen und zu verwalten. Er bietet eine intuitive Benutzeroberfläche für die Verwaltung Ihrer Zahlungskanäle, die Überwachung der Leistung und die Optimierung Ihrer Einnahmen."
+        },
+        "how_lightning_works": {
+          "question": "Wie funktioniert ein Lightning-Node?",
+          "answer": "Ein Lightning-Node ist ein Zugangspunkt zum Lightning Network, der es Ihnen ermöglicht, Zahlungskanäle mit anderen Nodes zu erstellen. Diese Kanäle ermöglichen schnelle und kostengünstige Transaktionen, ohne jede Transaktion in der Bitcoin-Blockchain zu speichern."
+        },
+        "security": {
+          "question": "Ist es sicher, meinen eigenen Node zu betreiben?",
+          "answer": "Ja, bei Daznode ist Sicherheit unsere oberste Priorität. Wir verwenden fortschrittliche Sicherheitsprotokolle und automatische Backups, um Ihre Gelder zu schützen. Außerdem behalten Sie stets die volle Kontrolle über Ihre privaten Schlüssel."
+        },
+        "setup_time": {
+          "question": "Wie lange dauert die Einrichtung eines Nodes?",
+          "answer": "Mit Daznode können Sie in weniger als 5 Minuten starten. Unsere intuitive Benutzeroberfläche und detaillierte Anleitungen führen Sie durch jeden Schritt."
+        },
+        "minimum_investment": {
+          "question": "Wie hoch ist die Mindestinvestition?",
+          "answer": "Sie können mit einer Mindestinvestition von 0.01 BTC beginnen. Unser Algorithmus optimiert Ihr Kapital automatisch, um die Rendite zu maximieren."
+        },
+        "how_to_setup": {
+          "question": "Wie richte ich meinen Lightning-Node mit Daznode ein?",
+          "answer": "Um Ihren Lightning-Node mit Daznode einzurichten, müssen Sie zunächst einen Lightning-Node (wie LND, c-lightning oder Eclair) auf Ihrem Server installieren. Dann melden Sie sich bei Daznode an und folgen dem Einrichtungsassistenten, der Sie durch den Prozess der Verbindung mit Ihrem Node führt."
+        },
+        "routing_fees": {
+          "question": "Wie werden Routing-Gebühren berechnet?",
+          "answer": "Unsere Algorithmen analysieren den Markt in Echtzeit und passen Ihre Gebühren dynamisch an, um die Einnahmen zu maximieren und gleichzeitig eine ausgezeichnete Konnektivität zu gewährleisten."
+        },
+        "financial_benefits": {
+          "question": "Welche finanziellen Vorteile gibt es?",
+          "answer": "Durch den Betrieb eines Lightning-Nodes können Sie Routing-Gebühren verdienen, wenn andere Benutzer Ihre Kanäle nutzen. Diese Einnahmen können zunächst bescheiden sein, steigen aber mit der Größe und Aktivität Ihres Nodes."
+        },
+        "optimization": {
+          "question": "Wie kann ich die Leistung meines Nodes optimieren?",
+          "answer": "Daznode bietet personalisierte Empfehlungen basierend auf der Analyse Ihres Nodes und des Netzwerks. Unsere Algorithmen helfen Ihnen, die Kanäle, Routing-Gebühren und Verbindungen zu optimieren, um Ihre Einnahmen zu maximieren."
+        },
+        "support_policy": {
+          "question": "Wie ist die Support-Politik?",
+          "answer": "Wir bieten 24/7-Support für alle unsere Benutzer mit durchschnittlichen Antwortzeiten von weniger als 2 Stunden für technische Fragen."
+        },
+        "additional_help": {
+          "question": "Wie kann ich zusätzliche Hilfe erhalten?",
+          "answer": "Unser Support-Team ist per E-Mail, Chat oder Videokonferenz erreichbar. Wir bieten auch umfassende Dokumentation, Benutzerhandbücher und regelmäßige Webinare an."
+        },
+        "community": {
+          "question": "Wie ist die Daznode-Community?",
+          "answer": "Unsere Community besteht aus Bitcoin- und Lightning-Technologie-Enthusiasten. Wir organisieren regelmäßig Webinare, Workshops und Veranstaltungen, um Wissen zu teilen und neuen Benutzern zu helfen."
+        },
+        "what_is_alby": {
+          "question": "Was ist die Alby Wallet?",
+          "answer": "Alby ist eine Bitcoin Lightning Wallet, die es Ihnen ermöglicht, Ihre Bitcoins einfach zu verwalten und mit dem Lightning Network zu interagieren. Sie ist als Browser-Erweiterung und mobile App verfügbar."
+        },
+        "alby_features": {
+          "question": "Welche Funktionen bietet Alby?",
+          "answer": "Alby bietet mehrere Funktionen:\n- Browser-Erweiterung für Online-Zahlungen\n- Nostr-Integration\n- Value4Value Podcast-Unterstützung\n- WordPress-Plugin für Content-Ersteller\n- Intuitive Benutzeroberfläche"
+        },
+        "alby_setup": {
+          "question": "Wie richte ich Alby ein?",
+          "answer": "So richten Sie Alby ein:\n1. Installieren Sie die Browser-Erweiterung aus dem Chrome Web Store\n2. Erstellen Sie ein Konto auf getalby.com\n3. Verbinden Sie Ihre Lightning Wallet\n4. Konfigurieren Sie Ihre Zahlungseinstellungen"
+        },
+        "alby_links": {
+          "question": "Wo finde ich weitere Informationen über Alby?",
+          "answer": "Weitere Informationen finden Sie unter:\n- Offizielle Website: getalby.com\n- Benutzerhandbuch: guides.getalby.com\n- Entwicklerdokumentation: developers.getalby.com\n- Blog: blog.getalby.com\n- Community: chat.getalby.com"
+        }
+      },
+      "contact_support": {
+        "title": "Haben Sie keine Antwort auf Ihre Frage gefunden?",
+        "description": "Unser Team ist hier, um Ihnen zu helfen",
+        "button": "Support kontaktieren"
+      }
+    }
+  }
+}

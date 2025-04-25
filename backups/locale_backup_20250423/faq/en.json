@@ -1,0 +1,86 @@
+{
+  "pages": {
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Find answers to your questions about Daznode",
+      "categories": {
+        "general": "General",
+        "setup": "Setup and Getting Started",
+        "performance": "Performance and Optimization",
+        "support": "Support and Assistance",
+        "alby": "Alby Wallet"
+      },
+      "questions": {
+        "what_is_daznode": {
+          "question": "What is Daznode?",
+          "answer": "Daznode is a Lightning Network node manager that allows you to easily monitor and manage your Bitcoin node. It provides an intuitive interface for managing your payment channels, monitoring performance, and optimizing your earnings."
+        },
+        "how_lightning_works": {
+          "question": "How does a Lightning node work?",
+          "answer": "A Lightning node is an access point to the Lightning Network that allows you to create payment channels with other nodes. These channels enable fast and low-cost transactions without recording each transaction on the Bitcoin blockchain."
+        },
+        "security": {
+          "question": "Is it secure to run my own node?",
+          "answer": "Yes, with Daznode, security is our top priority. We use advanced security protocols and automatic backups to protect your funds. Additionally, you always maintain full control of your private keys."
+        },
+        "setup_time": {
+          "question": "How long does it take to set up a node?",
+          "answer": "With Daznode, you can get started in less than 5 minutes. Our intuitive interface and detailed guides will walk you through each step."
+        },
+        "minimum_investment": {
+          "question": "What is the minimum investment required?",
+          "answer": "You can start with a minimum investment of 0.01 BTC. Our algorithm automatically optimizes your capital to maximize returns."
+        },
+        "how_to_setup": {
+          "question": "How do I set up my Lightning node with Daznode?",
+          "answer": "To set up your Lightning node with Daznode, you first need to install a Lightning node (such as LND, c-lightning, or Eclair) on your server. Then, log in to Daznode and follow the setup wizard that will guide you through the process of connecting to your node."
+        },
+        "routing_fees": {
+          "question": "How are routing fees calculated?",
+          "answer": "Our algorithms analyze the market in real-time and dynamically adjust your fees to maximize earnings while maintaining excellent connectivity."
+        },
+        "financial_benefits": {
+          "question": "What are the financial benefits?",
+          "answer": "By running a Lightning node, you can earn routing fees when other users route through your channels. These earnings may start modestly but increase with the size and activity of your node."
+        },
+        "optimization": {
+          "question": "How can I optimize my node's performance?",
+          "answer": "Daznode provides personalized recommendations based on the analysis of your node and the network. Our algorithms help you optimize channel size, routing fees, and connections to maximize your earnings."
+        },
+        "support_policy": {
+          "question": "What is the support policy?",
+          "answer": "We offer 24/7 support for all our users, with average response times of less than 2 hours for technical questions."
+        },
+        "additional_help": {
+          "question": "How can I get additional help?",
+          "answer": "Our support team is available via email, chat, or video conference. We also provide comprehensive documentation, user guides, and regular webinars."
+        },
+        "community": {
+          "question": "What is the Daznode community like?",
+          "answer": "Our community is made up of Bitcoin and Lightning technology enthusiasts. We regularly organize webinars, workshops, and events to share knowledge and help new users."
+        },
+        "what_is_alby": {
+          "question": "What is the Alby wallet?",
+          "answer": "Alby is a Bitcoin Lightning wallet that allows you to easily manage your bitcoins and interact with the Lightning Network. It's available as a browser extension and mobile app."
+        },
+        "alby_features": {
+          "question": "What are Alby's features?",
+          "answer": "Alby offers several features:\n- Browser extension for online payments\n- Nostr integration\n- Value4Value podcast support\n- WordPress plugin for content creators\n- Intuitive user interface"
+        },
+        "alby_setup": {
+          "question": "How to set up Alby?",
+          "answer": "To set up Alby:\n1. Install the browser extension from Chrome Web Store\n2. Create an account on getalby.com\n3. Connect your Lightning wallet\n4. Configure your payment preferences"
+        },
+        "alby_links": {
+          "question": "Where to find more information about Alby?",
+          "answer": "You can find more information at:\n- Official website: getalby.com\n- User guide: guides.getalby.com\n- Developer documentation: developers.getalby.com\n- Blog: blog.getalby.com\n- Community: chat.getalby.com"
+        }
+      },
+      "contact_support": {
+        "title": "Didn't find the answer to your question?",
+        "description": "Our team is here to help you",
+        "button": "Contact Support"
+      }
+    }
+  }
+}

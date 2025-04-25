@@ -1,0 +1,9 @@
+{
+  "title": "About DazNode",
+  "content": "DazNode was born from the vision of making Lightning Network node management accessible to everyone. Our mission is to democratize access to analysis and optimization tools for Lightning node operators.",
+  "timeline": {
+    "title": "Our Journey",
+    "content": "Founded in 2024, DazNode has quickly evolved to become a reference in the Lightning Network ecosystem. Our team combines technical expertise and innovative vision to create tools that transform how operators manage their nodes.",
+    "events": ["2024: Launch of DazNode's first version"]
+  }
+}

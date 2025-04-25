@@ -1,4 +1,4 @@
-import { networkService } from "../../app/services/networkService";
+import { networkService } from "@services/networkService";
 
 // Mock fetch
 const mockFetch = jest.fn();

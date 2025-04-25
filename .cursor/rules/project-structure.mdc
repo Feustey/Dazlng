@@ -1,0 +1,36 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Structure du Projet Dazbox
+
+Ce projet est une application Next.js qui utilise les fonctionnalités App Router et l'internationalisation. Voici les répertoires principaux :
+
+## Structure Principale
+- `/app` : Contient la logique principale de l'application
+  - `/[locale]` : Routes internationalisées
+    - `/@app` : Routes protégées de l'application
+    - `/@auth` : Routes d'authentification
+    - `/@modal` : Routes modales (intercepting)
+    - `/@dashboard` : Routes parallèles
+  - `/components` : Composants React réutilisables
+  - `/api` : Points d'entrée API (non internationalisés)
+  - `/hooks` : Hooks React personnalisés
+  - `/utils` : Utilitaires et fonctions helpers
+  - `/services` : Services métier
+  - `/config` : Configuration de l'application
+  - `/i18n` : Configuration et fichiers de traduction
+
+## Tests et Configuration
+- `/__tests__` : Tests unitaires et d'intégration
+- `/.next` : Build et cache Next.js (généré automatiquement)
+- `/public` : Assets statiques
+- `/docs` : Documentation technique
+
+## Documentation
+Les fichiers principaux sont :
+- [README.md](mdc:README.md) : Documentation principale
+- [ARCHITECTURE.md](mdc:ARCHITECTURE.md) : Documentation détaillée de l'architecture
+- [package.json](mdc:package.json) : Dépendances et scripts
+- [next.config.mjs](mdc:next.config.mjs) : Configuration Next.js

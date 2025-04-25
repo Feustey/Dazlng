@@ -1,0 +1,21 @@
+{
+  "title": "Paramètres",
+  "language": {
+    "label": "Langue",
+    "options": {
+      "en": "Anglais",
+      "fr": "Français"
+    }
+  },
+  "theme": {
+    "label": "Thème",
+    "options": {
+      "light": "Clair",
+      "dark": "Sombre",
+      "system": "Système"
+    }
+  },
+  "save": "Enregistrer les modifications",
+  "success": "Paramètres enregistrés avec succès",
+  "error": "Erreur lors de l'enregistrement des paramètres"
+}

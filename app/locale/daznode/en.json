@@ -1,0 +1,77 @@
+{
+  "title": "DazNode - Your Lightning Network Portal",
+  "description": "DazNode is a Bitcoin Lightning Network explorer that allows you to visualize and analyze the network in real-time.",
+  "hero": {
+    "title": "Optimize your performance and profitability with Daznode",
+    "description": "Daznode is an AI-powered intelligent dashboard designed to optimize your Lightning Network node and maximize its profitability.",
+    "cta": "Start Exploring"
+  },
+  "features": {
+    "title": "Features",
+    "items": [
+      {
+        "title": "Real-Time Analysis",
+        "description": "Track the evolution of the Lightning Network with real-time updates of nodes and channels.",
+        "icon": "zap"
+      },
+      {
+        "title": "Fee Optimization",
+        "description": "Adjust the fees of your most active channels to maximize your revenue.",
+        "icon": "trending-up"
+      },
+      {
+        "title": "Liquidity Management",
+        "description": "Rebalance your channels to optimize available liquidity.",
+        "icon": "refresh-cw"
+      },
+      {
+        "title": "AI Assistant",
+        "description": "Ask questions to the AI assistant who will help you understand and optimize your Lightning node.",
+        "icon": "message-circle"
+      }
+    ]
+  },
+  "dashboard": {
+    "title": "Your Lightning node dashboard",
+    "subtitle": "Monitor and optimize your node's performance in real-time",
+    "metrics": {
+      "channels": "Total channels",
+      "activeChannels": "{count} active channels",
+      "capacity": "Total capacity",
+      "fees": "Total fees"
+    }
+  },
+  "testimonials": {
+    "title": "What our users say",
+    "items": [
+      {
+        "quote": "Thanks to Daznode's recommendations, my node went from a few transactions per day to over 100! The difference is impressive.",
+        "author": "Marie L."
+      },
+      {
+        "quote": "Daznode transformed my Lightning node from a hobby into a real source of income. I can't do without it anymore!",
+        "author": "Pierre D."
+      }
+    ]
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "items": [
+      {
+        "question": "What is DazNode?",
+        "answer": "DazNode is an AI-powered intelligent dashboard designed to optimize your Lightning Network node and maximize its profitability."
+      },
+      {
+        "question": "How can DazNode help me?",
+        "answer": "DazNode analyzes your node and the Lightning Network to provide you with personalized optimization recommendations, helping you increase your revenue and improve your node's performance."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Ready to optimize your Lightning node?",
+    "description": "Join DazNode today and discover how to maximize your node's performance.",
+    "button": "Get Started Now"
+  },
+
+  "space": {}
+}

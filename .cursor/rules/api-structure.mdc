@@ -1,0 +1,32 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Structure de l'API
+
+L'API est organisée selon les standards REST et utilise les routes API de Next.js App Router.
+
+## Organisation des Routes API
+- `/app/api` : Routes API non internationalisées
+  - `/auth` : Authentification et gestion des sessions
+  - `/user` : Gestion des utilisateurs
+  - `/network` : Endpoints réseau Lightning
+    - `/nodes` : Gestion des nœuds
+    - `/stats` : Statistiques réseau
+    - `/search` : Recherche dans le réseau
+  - `/orders` : Gestion des commandes
+  - `/checkout` : Processus de paiement
+  - `/webhooks` : Webhooks pour intégrations externes
+
+## Bonnes Pratiques
+- Utiliser des handlers séparés pour les différentes méthodes HTTP 
+- Valider les entrées avec Zod
+- Organiser les routes API par domaine
+- Gérer les erreurs de manière cohérente
+- Ne pas internationaliser les routes API
+
+## Documentation
+- Standards API détaillés dans [api-standards.md](mdc:api-standards.md)
+- Les erreurs doivent suivre un format standardisé
+- Les réponses doivent être en JSON

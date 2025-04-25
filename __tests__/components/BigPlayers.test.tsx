@@ -1,6 +1,6 @@
 import { screen, fireEvent, waitFor } from "@testing-library/react";
 import { render } from "../utils/test-utils";
-import BigPlayers from "../../app/components/network/BigPlayers";
+import BigPlayers from "@components/network/BigPlayers";
 
 // Mock fetch
 const mockFetch = jest.fn();

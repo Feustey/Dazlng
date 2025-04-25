@@ -1,0 +1,136 @@
+{
+  "common": {
+    "buttons": {
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "send": "Senden",
+      "close": "Schließen",
+      "back": "Zurück",
+      "next": "Weiter",
+      "confirm": "Bestätigen"
+    },
+    "status": {
+      "loading": "Laden...",
+      "error": "Fehler",
+      "success": "Erfolg",
+      "pending": "Ausstehend",
+      "completed": "Abgeschlossen",
+      "failed": "Fehlgeschlagen"
+    },
+    "language": "Sprache",
+    "help": "Hilfe",
+    "notifications": "Benachrichtigungen",
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "profile": "Profil",
+    "settings": "Einstellungen"
+  },
+  "header": {
+    "title": "Daznode",
+    "navigation": {
+      "dashboard": "Dashboard",
+      "dazia": "Daz-IA",
+      "network": "Netzwerk",
+      "channels": "Kanäle",
+      "learn": "Lernen",
+      "help": "Hilfe"
+    },
+    "actions": {
+      "login": "Anmelden",
+      "logout": "Abmelden",
+      "profile": "Mein Profil",
+      "settings": "Einstellungen",
+      "notifications": "Benachrichtigungen"
+    }
+  },
+  "pages": {
+    "home": {
+      "title": "Willkommen bei DazLng",
+      "subtitle": "Entdecken Sie die Zukunft der Lightning-Netzwerke",
+      "cta": {
+        "primary": "Jetzt starten",
+        "secondary": "Mehr erfahren"
+      },
+      "stats": {
+        "nodes": "Knoten",
+        "channels": "Kanäle",
+        "capacity": "Kapazität"
+      }
+    },
+    "network": {
+      "title": "Netzwerk-Übersicht",
+      "metrics": {
+        "totalNodes": "Gesamte Knoten",
+        "totalChannels": "Gesamte Kanäle",
+        "totalCapacity": "Gesamte Kapazität"
+      },
+      "charts": {
+        "capacityHistory": "Kapazitätsverlauf",
+        "nodesByCountry": "Knoten nach Land"
+      }
+    },
+    "learn": {
+      "title": "Lernführer",
+      "sections": {
+        "basics": {
+          "title": "Lightning-Grundlagen",
+          "content": "Entdecken Sie die Grundlagen des Lightning-Netzwerks"
+        },
+        "advanced": {
+          "title": "Fortgeschrittene Konzepte",
+          "content": "Beherrschen Sie die technischen Aspekte des Lightning-Netzwerks"
+        }
+      }
+    }
+  },
+  "errors": {
+    "system": {
+      "unknown": "Ein unerwarteter Fehler ist aufgetreten",
+      "network": "Netzwerkverbindungsfehler",
+      "auth": "Authentifizierungsfehler",
+      "notFound": "Seite nicht gefunden",
+      "validation": "Validierungsfehler"
+    },
+    "form": {
+      "required": "Dieses Feld ist erforderlich",
+      "invalid": "Ungültiges Format",
+      "email": "Ungültige E-Mail",
+      "password": "Ungültiges Passwort",
+      "match": "Passwörter stimmen nicht überein"
+    }
+  },
+  "notifications": {
+    "success": {
+      "saved": "Änderungen erfolgreich gespeichert",
+      "sent": "Nachricht erfolgreich gesendet",
+      "deleted": "Erfolgreich gelöscht"
+    },
+    "error": {
+      "save": "Fehler beim Speichern",
+      "send": "Fehler beim Senden",
+      "delete": "Fehler beim Löschen"
+    }
+  },
+  "settings": {
+    "language": {
+      "label": "Sprache",
+      "options": {
+        "fr": "Französisch",
+        "en": "Englisch",
+        "de": "Deutsch",
+        "es": "Spanisch"
+      }
+    },
+    "theme": {
+      "label": "Design",
+      "options": {
+        "light": "Hell",
+        "dark": "Dunkel",
+        "system": "System"
+      }
+    },
+    "save": "Änderungen speichern",
+    "success": "Einstellungen erfolgreich gespeichert",
+    "error": "Fehler beim Speichern der Einstellungen"
+  }
+}

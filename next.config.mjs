@@ -38,6 +38,19 @@ const nextConfig = {
 
   // Modifier la configuration webpack pour gérer les modules problématiques
   webpack: (config) => {
+    // Ajoute la résolution des alias définis dans tsconfig.json
+    config.resolve = config.resolve || {};
+    config.resolve.alias = {
+      ...(config.resolve.alias || {}),
+      "@": path.resolve(__dirname, "app"),
+      "@components": path.resolve(__dirname, "app/components"),
+      "@services": path.resolve(__dirname, "app/services"),
+      "@lib": path.resolve(__dirname, "app/lib"),
+      "@utils": path.resolve(__dirname, "app/utils"),
+      "@ui": path.resolve(__dirname, "app/components/ui"),
+      "@hooks": path.resolve(__dirname, "app/hooks"),
+    };
+    // Exclusions existantes
     config.externals = [...config.externals, "bcryptjs"];
     return config;
   },

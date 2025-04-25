@@ -1,0 +1,57 @@
+{
+  "title": "Lightning Node Dashboard",
+  "subtitle": "Monitor and optimize your node's performance in real-time",
+  "metrics": {
+    "channels": "Total Channels",
+    "activeChannels": "{count} active channels",
+    "capacity": "Total Capacity",
+    "fees": "Total Fees",
+    "averageFee": "Average fee: {fee} BTC",
+    "network": {
+      "nodes": "Network Nodes",
+      "channels": "{count} channels",
+      "capacity": "Total Capacity",
+      "avgCapacity": "Average: {capacity} BTC/channel",
+      "centrality": "Centrality",
+      "rank": "Rank: {rank}"
+    }
+  },
+  "charts": {
+    "fees": {
+      "title": "Fee Evolution (7 days)",
+      "tooltip": {
+        "fees": "Fees (BTC)"
+      }
+    },
+    "capacity": {
+      "title": "Capacity Evolution (7 days)",
+      "tooltip": {
+        "capacity": "Capacity (BTC)"
+      }
+    }
+  },
+  "peers": {
+    "title": "Peers of Peers",
+    "capacity": "Capacity",
+    "channels": "Active Channels",
+    "peers": "Peers"
+  },
+  "recommendations": {
+    "title": "Optimization Recommendations",
+    "0": {
+      "title": "Fee Optimization",
+      "description": "Adjust fees on your most active channels to maximize revenue",
+      "impact": "Estimated impact: +15% revenue"
+    },
+    "1": {
+      "title": "Network Expansion",
+      "description": "Open new channels with high-activity nodes",
+      "impact": "Estimated impact: +25% capacity"
+    },
+    "2": {
+      "title": "Liquidity Management",
+      "description": "Rebalance your channels to optimize available liquidity",
+      "impact": "Estimated impact: +20% efficiency"
+    }
+  }
+}

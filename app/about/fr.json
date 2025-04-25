@@ -1,0 +1,9 @@
+{
+  "title": "À propos de DazNode",
+  "content": "DazNode est né de la vision de rendre la gestion des nœuds Lightning Network accessible à tous. Notre mission est de démocratiser l'accès aux outils d'analyse et d'optimisation pour les opérateurs de nœuds Lightning.",
+  "timeline": {
+    "title": "Notre parcours",
+    "content": "Fondé en 2024, DazNode a rapidement évolué pour devenir une référence dans l'écosystème Lightning Network. Notre équipe combine expertise technique et vision innovante pour créer des outils qui transforment la façon dont les opérateurs gèrent leurs nœuds.",
+    "events": ["2024 : Lancement de la première version de DazNode"]
+  }
+}

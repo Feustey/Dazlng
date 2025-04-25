@@ -1,0 +1,22 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Configuration du Projet
+
+## Fichiers de Configuration
+- [.env.example](mdc:.env.example) : Template des variables d'environnement
+- [next.config.mjs](mdc:next.config.mjs) : Configuration Next.js
+- [tsconfig.json](mdc:tsconfig.json) : Configuration TypeScript
+- [package.json](mdc:package.json) : Dépendances et scripts
+
+## Variables d'Environnement
+- Copier `.env.example` vers `.env.local` pour le développement
+- Les variables de production sont gérées via l'environnement d'hébergement
+- Les variables de test sont dans `.env.test`
+
+## Internationalisation
+- Configuration i18n dans [i18n.config.ts](mdc:i18n.config.ts)
+- Messages de traduction dans `/app/messages`
+- Support multilingue via le paramètre `[locale]`

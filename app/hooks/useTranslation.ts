@@ -1,29 +1,21 @@
-import { useTranslations } from "next-intl";
+"use client";
 
-type TranslationKey = string;
+import { useTranslations, useLocale } from "next-intl";
 
-export function useTranslation() {
-  const t = useTranslations();
-
-  const translate = (
-    key: TranslationKey,
-    params?: Record<string, string | number>
-  ) => {
-    try {
-      return t(key, params);
-    } catch (error) {
-      console.error(`Translation key not found: ${key}`);
-      return key;
-    }
-  };
+/**
+ * Hook personnalisé pour gérer les traductions avec next-intl
+ * @param namespace Namespace optionnel pour les traductions
+ * @returns Object avec la fonction t pour traduire
+ */
+export function useTranslation(namespace: string = "common") {
+  const t = useTranslations(namespace);
+  const locale = useLocale();
 
   return {
-    t: translate,
+    t,
+    locale,
+    changeLocale: async (newLocale: string) => {
+      // Implémentation à ajouter si nécessaire
+    },
   };
 }
-
-// Exemple d'utilisation:
-// const { t } = useTranslation();
-// t('common.buttons.save')
-// t('pages.home.title')
-// t('errors.system.unknown')

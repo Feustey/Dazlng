@@ -1,0 +1,39 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Organisation des Composants
+
+Les composants sont organisés selon une structure modulaire bien définie :
+
+## Structure des Composants
+- `/app/components` : Composants globaux réutilisables
+  - `/ui` : Composants UI de base (boutons, inputs, etc.)
+  - `/layout` : Composants de mise en page (header, footer, etc.)
+  - `/auth` : Composants d'authentification
+  - `/network` : Composants liés au réseau Lightning
+  - `/checkout` : Composants pour le processus de paiement
+  - `/daz-ia` : Composants spécifiques à l'IA
+  - `/providers` : Providers React (theme, auth, etc.)
+
+- `/app/[locale]/feature/_components/` : Composants spécifiques aux fonctionnalités
+  - Colocalisés avec leurs fonctionnalités respectives
+
+## Server vs Client Components
+- **Server Components** (par défaut) pour :
+  - Accès aux données
+  - Opérations sensibles
+  - Logique métier complexe
+
+- **Client Components** ("use client") pour :
+  - Interactivité utilisateur
+  - Hooks React
+  - APIs du navigateur
+  - État local et animations
+
+## Bonnes Pratiques
+- Un composant ne doit pas dépasser 300 lignes
+- Colocalisez les composants spécifiques dans des dossiers `_components`
+- Utilisez les composants UI de base pour maintenir la cohérence
+- Les tests sont placés dans `/__tests__/components`

@@ -1,0 +1,14 @@
+{
+  "app": {
+    "title": "Dazling",
+    "description": "Plateforme de Gestion Lightning Network",
+    "settings": {
+      "title": "Paramètres",
+      "description": "Configurez vos paramètres de l'application"
+    },
+    "dashboard": {
+      "title": "Tableau de Bord",
+      "description": "Bienvenue sur votre espace de gestion Lightning Network"
+    }
+  }
+}

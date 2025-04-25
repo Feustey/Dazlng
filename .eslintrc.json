@@ -3,5 +3,13 @@
   "rules": {
     "react/no-unescaped-entities": "off",
     "react-hooks/exhaustive-deps": "warn"
+  },
+  "ignorePatterns": ["archive/", "node_modules/", ".next/"],
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "project": "./tsconfig.json"
+      }
+    }
   }
 }

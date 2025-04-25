@@ -1,7 +1,7 @@
-import { http, HttpResponse } from "msw";
+import { rest } from "msw";
 import { server } from "../mocks/server";
-import { checkoutService } from "../../services/checkoutService";
-import type { CheckoutSessionData } from "../../services/checkoutService";
+import { checkoutService } from "@/services/checkoutService";
+import type { CheckoutSessionData } from "@/services/checkoutService";
 
 describe("Service de paiement", () => {
   describe("createSession", () => {
@@ -14,8 +14,10 @@ describe("Service de paiement", () => {
       const mockSession = { id: "session_123", ...mockData };
 
       server.use(
-        http.post("/api/checkout/session", async () => {
-          return HttpResponse.json(mockSession);
+        rest.post("/api/checkout/session", async () => {
+          return {
+            json: () => mockSession,
+          };
         })
       );
 
@@ -25,8 +27,10 @@ describe("Service de paiement", () => {
 
     it("devrait gérer les erreurs lors de la création de session", async () => {
       server.use(
-        http.post("/api/checkout/session", () => {
-          return new HttpResponse(null, { status: 500 });
+        rest.post("/api/checkout/session", () => {
+          return {
+            status: 500,
+          };
         })
       );
 
@@ -48,8 +52,10 @@ describe("Service de paiement", () => {
       };
 
       server.use(
-        http.get("/api/checkout/session/:sessionId", () => {
-          return HttpResponse.json(mockSession);
+        rest.get("/api/checkout/session/:sessionId", () => {
+          return {
+            json: () => mockSession,
+          };
         })
       );
 
@@ -59,8 +65,10 @@ describe("Service de paiement", () => {
 
     it("devrait gérer les erreurs lors de la récupération de session", async () => {
       server.use(
-        http.get("/api/checkout/session/:sessionId", () => {
-          return new HttpResponse(null, { status: 404 });
+        rest.get("/api/checkout/session/:sessionId", () => {
+          return {
+            status: 404,
+          };
         })
       );
 
@@ -83,8 +91,10 @@ describe("Service de paiement", () => {
       };
 
       server.use(
-        http.patch("/api/checkout/session/:sessionId", () => {
-          return HttpResponse.json(mockUpdatedSession);
+        rest.patch("/api/checkout/session/:sessionId", () => {
+          return {
+            json: () => mockUpdatedSession,
+          };
         })
       );
 
@@ -97,8 +107,10 @@ describe("Service de paiement", () => {
 
     it("devrait gérer les erreurs lors de la mise à jour de session", async () => {
       server.use(
-        http.patch("/api/checkout/session/:sessionId", () => {
-          return new HttpResponse(null, { status: 500 });
+        rest.patch("/api/checkout/session/:sessionId", () => {
+          return {
+            status: 500,
+          };
         })
       );
 
@@ -120,17 +132,23 @@ describe("Service de paiement", () => {
       };
 
       server.use(
-        http.get("/api/checkout/session/:sessionId", () => {
-          return HttpResponse.json(mockSession);
+        rest.get("/api/checkout/session/:sessionId", () => {
+          return {
+            json: () => mockSession,
+          };
         }),
-        http.post("/api/alby/invoice", () => {
-          return HttpResponse.json(mockInvoice);
+        rest.post("/api/alby/invoice", () => {
+          return {
+            json: () => mockInvoice,
+          };
         }),
-        http.patch("/api/checkout/session/:sessionId", () => {
-          return HttpResponse.json({
-            ...mockSession,
-            paymentInfo: { paymentUrl: mockInvoice.payment_request },
-          });
+        rest.patch("/api/checkout/session/:sessionId", () => {
+          return {
+            json: () => ({
+              ...mockSession,
+              paymentInfo: { paymentUrl: mockInvoice.payment_request },
+            }),
+          };
         })
       );
 
@@ -140,8 +158,10 @@ describe("Service de paiement", () => {
 
     it("devrait gérer les erreurs lors du traitement du paiement", async () => {
       server.use(
-        http.get("/api/checkout/session/:sessionId", () => {
-          return new HttpResponse(null, { status: 500 });
+        rest.get("/api/checkout/session/:sessionId", () => {
+          return {
+            status: 500,
+          };
         })
       );
 

@@ -1,0 +1,17 @@
+{
+  "title": "帮助中心",
+  "description": "查找关于使用DazNode的问题答案",
+  "faq": {
+    "title": "常见问题",
+    "questions": [
+      {
+        "question": "什么是DazNode？",
+        "answer": "DazNode是一个Lightning Network节点管理器，让您可以轻松监控和管理您的比特币节点。它提供了直观的界面来管理支付通道、监控性能并优化收益。"
+      },
+      {
+        "question": "如何使用DazNode设置我的Lightning节点？",
+        "answer": "要使用DazNode设置您的Lightning节点，您首先需要在服务器上安装Lightning节点（如LND、c-lightning或Eclair）。然后登录DazNode，按照设置向导的指引完成节点连接过程。"
+      }
+    ]
+  }
+}

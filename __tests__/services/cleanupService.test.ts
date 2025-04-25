@@ -1,9 +1,9 @@
 import { describe, expect, jest, test } from "@jest/globals";
-import { supabase } from "../../app/lib/supabase";
-import { cleanupExpiredSessions } from "../../app/services/cleanupService";
+import { supabase } from "@lib/supabase";
+import { cleanupExpiredSessions } from "@services/cleanupService";
 
 // Mock Supabase
-jest.mock("../../app/lib/supabase", () => ({
+jest.mock("@lib/supabase", () => ({
   supabase: {
     from: jest.fn().mockReturnThis(),
     select: jest.fn().mockReturnThis(),

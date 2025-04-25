@@ -9,19 +9,16 @@ import { WebLNProvider } from "@webbtc/webln-types";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
 import { AlertCircle, Loader2, Wallet, Sun, Moon } from "lucide-react";
-import Button from "../../../components/ui/button";
-import Card, {
+import { Button } from "@/components/ui/button";
+import {
+  Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from "../../../components/ui/card";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "../../../components/ui/alert";
-import { useToast } from "../../../components/ui/use-toast";
+} from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useToast } from "@/components/ui/use-toast";
 
 declare global {
   interface Window {
@@ -200,6 +197,9 @@ export default function LoginPage() {
 
       addToast({
         title: t("loginSuccess"),
+        description: t("loginSuccessDescription", {
+          fallback: "You are now logged in",
+        }),
         type: "success",
       });
 

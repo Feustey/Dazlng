@@ -1,0 +1,16 @@
+{
+  "title": "Node Overview",
+  "tabs": {
+    "overview": "Overview",
+    "channels": "Channels",
+    "financial": "Financial",
+    "network": "Network"
+  },
+  "labels": {
+    "capacity": "Total Capacity",
+    "channels": "Active Channels",
+    "volume": "Total Volume",
+    "fees": "Total Fees",
+    "peers": "Peers"
+  }
+}

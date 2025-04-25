@@ -3,18 +3,12 @@
 export const dynamic = "force-dynamic";
 
 import { useState, ChangeEvent, useCallback } from "react";
-import { Line } from "react-chartjs-2";
 
-import { Badge } from "../components/ui/badge";
-import { Button } from "../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/card";
-import { Chart } from "../components/ui/chart";
-import { FormInput } from "../components/ui/form-input";
+import { Badge } from "@ui/badge";
+import { Button } from "@ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui/card";
+import { LineChart } from "@ui/charts";
+import { FormInput } from "@ui/form-input";
 import { useLanguage } from "../contexts/LanguageContext";
 
 export default function TestPage() {
@@ -33,22 +27,15 @@ export default function TestPage() {
     []
   );
 
-  const chartData = {
-    labels: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin"],
-    datasets: [
-      {
-        label: "Ventes 2024",
-        data: [12, 19, 3, 5, 2, 3],
-        borderColor: "rgb(75, 192, 192)",
-        tension: 0.1,
-      },
-    ],
-  };
-
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-  };
+  // Données adaptées au format attendu par le composant LineChart
+  const chartData = [
+    { date: "Jan", value: 12 },
+    { date: "Fév", value: 19 },
+    { date: "Mar", value: 3 },
+    { date: "Avr", value: 5 },
+    { date: "Mai", value: 2 },
+    { date: "Juin", value: 3 },
+  ];
 
   return (
     <div className="container mx-auto p-4">
@@ -84,7 +71,12 @@ export default function TestPage() {
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
-              <Chart data={chartData} options={chartOptions} />
+              <LineChart
+                data={chartData}
+                xKey="date"
+                yKey="value"
+                height={300}
+              />
             </div>
           </CardContent>
         </Card>

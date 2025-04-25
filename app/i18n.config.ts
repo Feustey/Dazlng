@@ -8,7 +8,15 @@ import {
 
 export { locales, defaultLocale, localePrefix } from "./i18n.config.base";
 
-export default getRequestConfig(async ({ requestLocale }) => {
+/**
+ * Configuration de l'internationalisation pour next-intl
+ *
+ * Cette configuration est utilisée par le middleware next-intl
+ * pour charger les traductions appropriées en fonction de la locale demandée.
+ *
+ * @see https://next-intl.dev/docs/usage/configuration
+ */
+export default getRequestConfig(async ({ locale: requestLocale }) => {
   // Vérifier si la locale est valide
   const currentLocale = (
     locales.includes(requestLocale as any) ? requestLocale : defaultLocale

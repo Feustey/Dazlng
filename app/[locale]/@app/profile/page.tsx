@@ -5,16 +5,12 @@ export const dynamic = "force-dynamic";
 import { useState, FormEvent, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useSession } from "next-auth/react";
-import Card, {
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../../../components/ui/card";
-import { Input } from "../../../components/ui/input";
-import { Label } from "../../../components/ui/label";
-import Button from "../../../components/ui/button";
-import { Checkbox } from "../../../components/ui/checkbox";
-import { useToast } from "../../../components/ui/use-toast";
+import Card, { CardContent, CardHeader, CardTitle } from "@ui/card";
+import { Input } from "@ui/input";
+import { Label } from "@ui/label";
+import Button from "@ui/button";
+import { Checkbox } from "@ui/checkbox";
+import { useToast } from "@ui/use-toast";
 import {
   FaUser,
   FaInfoCircle,
@@ -27,7 +23,7 @@ import {
   FaCamera,
 } from "react-icons/fa";
 import { IconType } from "react-icons";
-import { cacheManager, createCacheKey } from "../../../lib/cache";
+import { cacheManager, createCacheKey } from "@lib/cache";
 
 export default function ProfilePage() {
   const t = useTranslations("Profile");
@@ -165,6 +161,7 @@ export default function ProfilePage() {
       addToast({
         title: t("success.title"),
         description: t("success.description"),
+        type: "success",
       });
     } catch (error) {
       addToast({

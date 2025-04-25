@@ -1,0 +1,12 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /auth/
+Disallow: /dashboard/
+
+# Host
+Host: https://dazno.de
+
+# Sitemaps
+Sitemap: https://dazno.de/sitemap.xml 

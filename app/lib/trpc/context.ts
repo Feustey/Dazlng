@@ -1,12 +1,7 @@
-import { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
-import { getCurrentUser } from "../auth";
+import { type FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
 
-export async function createContext({
-  req,
-  resHeaders,
-}: FetchCreateContextFnOptions) {
-  const user = await getCurrentUser();
-  return { req, resHeaders, user };
+export async function createContext(opts: FetchCreateContextFnOptions) {
+  return {
+    req: opts.req,
+  };
 }
-
-export type Context = Awaited<ReturnType<typeof createContext>>;

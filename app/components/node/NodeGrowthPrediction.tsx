@@ -1,310 +1,146 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import * as React from "react";
-import Card from "@/components/ui/card";
-import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import Button from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, AlertCircle, TrendingUp, Zap, Scale } from "lucide-react";
 import { useTranslations } from "next-intl";
-import PremiumFeatureAccess from "../features/PremiumFeatureAccess";
-import { NodeGrowthPrediction as GrowthPredictionType } from "@/types/mcpService";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-} from "recharts";
+import { motion } from "framer-motion";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { LineChart, PieChart } from "@/components/ui/charts";
 
 interface NodeGrowthPredictionProps {
-  nodeId: string;
+  predictionData: {
+    dates: string[];
+    values: number[];
+    factors: {
+      positive: string[];
+      challenges: string[];
+    };
+    distribution: Array<{
+      label: string;
+      value: number;
+      color: string;
+    }>;
+  };
 }
 
-export default function NodeGrowthPrediction({
-  nodeId,
-}: NodeGrowthPredictionProps) {
-  const t = useTranslations("components.nodeGrowthPrediction");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [timeframe, setTimeframe] = useState<"7d" | "30d" | "90d">("30d");
-  const [predictionData, setPredictionData] =
-    useState<GrowthPredictionType | null>(null);
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5 },
+};
 
-  // Fonction pour récupérer les prédictions de croissance
-  const fetchGrowthPrediction = useCallback(
-    async (selectedTimeframe: "7d" | "30d" | "90d" = timeframe) => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const response = await fetch(
-          `/api/node/${nodeId}/growth-prediction?timeframe=${selectedTimeframe}`
-        );
-
-        if (!response.ok) {
-          // Si le statut est 403, c'est que l'utilisateur n'a pas accès à cette fonctionnalité
-          if (response.status === 403) {
-            // Le composant PremiumFeatureAccess s'occupera d'afficher le message
-            setLoading(false);
-            return;
-          }
-
-          const errorData = await response.json();
-          throw new Error(
-            errorData.error || "Erreur lors de la récupération des prédictions"
-          );
-        }
-
-        const data = await response.json();
-        setPredictionData(data);
-      } catch (err) {
-        setError(
-          err instanceof Error
-            ? err.message
-            : "Erreur lors de la récupération des prédictions de croissance"
-        );
-      } finally {
-        setLoading(false);
-      }
+const staggerContainer = {
+  animate: {
+    transition: {
+      staggerChildren: 0.1,
     },
-    [nodeId, timeframe]
-  );
+  },
+};
 
-  // Chargement initial des données
-  useEffect(() => {
-    fetchGrowthPrediction();
-  }, [nodeId, fetchGrowthPrediction]);
+export function NodeGrowthPrediction({
+  predictionData,
+}: NodeGrowthPredictionProps) {
+  const t = useTranslations("components.node.growth");
 
-  // Charger de nouvelles données lorsque le timeframe change
-  const handleTimeframeChange = (value: string) => {
-    const newTimeframe = value as "7d" | "30d" | "90d";
-    setTimeframe(newTimeframe);
-    fetchGrowthPrediction(newTimeframe);
+  const chartData = {
+    labels: predictionData.dates,
+    datasets: [
+      {
+        label: "Croissance prévue",
+        data: predictionData.values,
+        borderColor: "#3B82F6",
+        tension: 0.4,
+      },
+    ],
   };
 
-  // Transformer les données pour le graphique
-  const getChartData = () => {
-    if (!predictionData || !predictionData.metrics) return [];
-
-    const { dates, capacity, channels, fees } = predictionData.metrics;
-
-    return dates.map((date, index) => ({
-      date,
-      capacity: capacity[index],
-      channels: channels[index],
-      fees: fees[index],
-    }));
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
   };
 
-  // Si l'utilisateur n'a pas accès à cette fonctionnalité premium
-  if (!loading && !predictionData && !error) {
-    return (
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>{t("title")}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <PremiumFeatureAccess
-            nodeId={nodeId}
-            featureName={t("featureName")}
-          />
-        </CardContent>
-      </Card>
-    );
-  }
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+      },
+    },
+  };
 
   return (
-    <Card className="mb-6">
-      <CardHeader>
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <CardTitle>{t("title")}</CardTitle>
-          {predictionData && (
-            <TabsList>
-              <TabsTrigger
-                value="7d"
-                onClick={() => handleTimeframeChange("7d")}
-                className={
-                  timeframe === "7d" ? "bg-primary text-primary-foreground" : ""
-                }
-              >
-                {t("timeframe.7d")}
-              </TabsTrigger>
-              <TabsTrigger
-                value="30d"
-                onClick={() => handleTimeframeChange("30d")}
-                className={
-                  timeframe === "30d"
-                    ? "bg-primary text-primary-foreground"
-                    : ""
-                }
-              >
-                {t("timeframe.30d")}
-              </TabsTrigger>
-              <TabsTrigger
-                value="90d"
-                onClick={() => handleTimeframeChange("90d")}
-                className={
-                  timeframe === "90d"
-                    ? "bg-primary text-primary-foreground"
-                    : ""
-                }
-              >
-                {t("timeframe.90d")}
-              </TabsTrigger>
-            </TabsList>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent>
-        {loading ? (
-          <div className="flex flex-col items-center justify-center py-8">
-            <Loader2 className="h-8 w-8 animate-spin mb-4" />
-            <p>{t("loading")}</p>
-          </div>
-        ) : error ? (
-          <div className="flex flex-col items-center justify-center py-8 text-red-500">
-            <AlertCircle className="h-8 w-8 mb-4" />
-            <p>{error}</p>
-            <Button
-              variant="outline"
-              onClick={() => fetchGrowthPrediction()}
-              className="mt-4"
-            >
-              {t("retryButton")}
-            </Button>
-          </div>
-        ) : (
-          predictionData && (
-            <div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                <div className="flex flex-col p-4 bg-green-50 dark:bg-green-900/20 rounded-md">
-                  <div className="flex items-center gap-2 mb-1">
-                    <TrendingUp className="h-4 w-4 text-green-500" />
-                    <span className="text-sm text-muted-foreground">
-                      {t("capacityGrowth")}
-                    </span>
-                  </div>
-                  <span className="text-xl font-bold text-green-600 dark:text-green-400">
-                    +{predictionData.trends.capacityGrowth.toFixed(2)}%
-                  </span>
-                </div>
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-6"
+    >
+      <motion.div variants={itemVariants}>
+        <Card className="p-6">
+          <h3 className="text-xl font-semibold mb-4">
+            Prévision de Croissance
+          </h3>
+          <LineChart data={chartData} height={300} className="mb-4" />
+        </Card>
+      </motion.div>
 
-                <div className="flex flex-col p-4 bg-blue-50 dark:bg-blue-900/20 rounded-md">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Scale className="h-4 w-4 text-blue-500" />
-                    <span className="text-sm text-muted-foreground">
-                      {t("channelGrowth")}
-                    </span>
-                  </div>
-                  <span className="text-xl font-bold text-blue-600 dark:text-blue-400">
-                    +{predictionData.trends.channelGrowth.toFixed(2)}%
-                  </span>
-                </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <motion.div variants={itemVariants}>
+          <Card className="p-6">
+            <h3 className="text-lg font-semibold mb-4">
+              Distribution des Facteurs
+            </h3>
+            <PieChart
+              data={predictionData.distribution}
+              height={250}
+              width={250}
+            />
+          </Card>
+        </motion.div>
 
-                <div className="flex flex-col p-4 bg-amber-50 dark:bg-amber-900/20 rounded-md">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Zap className="h-4 w-4 text-amber-500" />
-                    <span className="text-sm text-muted-foreground">
-                      {t("feeRevenue")}
-                    </span>
-                  </div>
-                  <span className="text-xl font-bold text-amber-600 dark:text-amber-400">
-                    {predictionData.trends.feeRevenue.toLocaleString()} sats
-                  </span>
-                </div>
+        <motion.div variants={itemVariants}>
+          <Card className="p-6">
+            <h3 className="text-lg font-semibold mb-4">
+              Facteurs de Croissance
+            </h3>
+            <div className="space-y-6">
+              <div>
+                <h4 className="text-sm font-medium text-green-500 mb-2">
+                  Facteurs Positifs
+                </h4>
+                <ul className="list-disc list-inside space-y-1">
+                  {predictionData.factors.positive.map((factor, index) => (
+                    <li key={index} className="text-sm">
+                      {factor}
+                    </li>
+                  ))}
+                </ul>
               </div>
-
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-2">
-                  {t("predictionChart")}
-                </h3>
-                <div className="h-80 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart
-                      data={getChartData()}
-                      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                      <XAxis
-                        dataKey="date"
-                        tick={{ fontSize: 12 }}
-                        tickFormatter={(date) =>
-                          new Date(date).toLocaleDateString(undefined, {
-                            month: "short",
-                            day: "numeric",
-                          })
-                        }
-                      />
-                      <YAxis tick={{ fontSize: 12 }} />
-                      <Tooltip
-                        formatter={(value: number) => [
-                          value.toLocaleString(),
-                          "",
-                        ]}
-                        labelFormatter={(date) =>
-                          new Date(date).toLocaleDateString()
-                        }
-                      />
-                      <Legend />
-                      <Line
-                        type="monotone"
-                        dataKey="capacity"
-                        name={t("metrics.capacity")}
-                        stroke="#10b981"
-                        activeDot={{ r: 8 }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="channels"
-                        name={t("metrics.channels")}
-                        stroke="#3b82f6"
-                        activeDot={{ r: 8 }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="fees"
-                        name={t("metrics.fees")}
-                        stroke="#f59e0b"
-                        activeDot={{ r: 8 }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-
-              {predictionData.recommendations &&
-                predictionData.recommendations.length > 0 && (
-                  <div>
-                    <h3 className="text-lg font-semibold mb-2">
-                      {t("recommendationsTitle")}
-                    </h3>
-                    <ul className="list-disc pl-6 space-y-1">
-                      {predictionData.recommendations.map((rec, i) => (
-                        <li key={i}>{rec}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-              <div className="flex items-center justify-between mt-6">
-                <div className="text-sm text-muted-foreground">
-                  {t("confidenceScore")}:{" "}
-                  {(predictionData.confidence * 100).toFixed(0)}%
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  {t("lastUpdated")}:{" "}
-                  {new Date(predictionData.timestamp).toLocaleString()}
-                </div>
+              <div>
+                <h4 className="text-sm font-medium text-amber-500 mb-2">
+                  Défis à Relever
+                </h4>
+                <ul className="list-disc list-inside space-y-1">
+                  {predictionData.factors.challenges.map((challenge, index) => (
+                    <li key={index} className="text-sm">
+                      {challenge}
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
-          )
-        )}
-      </CardContent>
-    </Card>
+          </Card>
+        </motion.div>
+      </div>
+    </motion.div>
   );
 }
+
+// Ajouter un export par défaut pour la compatibilité
+export default NodeGrowthPrediction;

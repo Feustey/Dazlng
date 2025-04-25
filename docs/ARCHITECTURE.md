@@ -63,7 +63,6 @@ dazlng/
 - `@static/` : Pages statiques et informations
 
   - `about/` : À propos
-  - `learn/` : Documentation et apprentissage
   - `terms/` : Conditions d'utilisation
   - `privacy/` : Politique de confidentialité
   - `help/` : Centre d'aide
@@ -159,7 +158,6 @@ const orderId = searchParams.get("orderId");
   - `checkout/_components/` : Composants de checkout
   - `daz-ia/_components/` : Composants de l'IA
   - `about/_components/` : Composants de la page À propos
-  - `learn/_components/` : Composants éducatifs
 
 - Composants de page : `app/[locale]/_components/`
   - Composants spécifiques à la page d'accueil

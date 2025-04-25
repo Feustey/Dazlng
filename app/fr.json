@@ -1,0 +1,36 @@
+{
+  "title": "Assistant IA",
+  "description": "Posez vos questions à l'assistant IA qui vous aidera à comprendre et optimiser votre nœud Lightning",
+  "inputPlaceholder": "Écrivez votre question...",
+  "sendButton": "Envoyer",
+  "thinking": "L'assistant réfléchit...",
+  "errors": {
+    "loadFailed": "Échec du chargement de l'assistant",
+    "sendFailed": "Échec de l'envoi du message",
+    "timeout": "Délai d'attente dépassé"
+  },
+  "maxLength": 500,
+  "nodeInfo": {
+    "title": "Informations du Nœud",
+    "alias": "Alias",
+    "capacity": "Capacité Totale",
+    "channels": "Nombre de Canaux",
+    "avgCapacity": "Capacité Moyenne",
+    "betweenness": "Centralité"
+  },
+  "networkMetrics": {
+    "title": "Métriques Réseau",
+    "nodes": "Nombre de Nœuds",
+    "channels": "Nombre de Canaux",
+    "capacity": "Capacité Totale"
+  },
+  "peersOfPeers": {
+    "title": "Pairs de Pairs",
+    "capacity": "Capacité",
+    "channels": "Canaux Actifs",
+    "peers": "Nombre de Pairs"
+  },
+  "recommendations": {
+    "title": "Recommandations"
+  }
+}

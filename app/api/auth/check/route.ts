@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getSession } from "../../../lib/edge-auth";
+import { getSession } from "@/lib/edge-auth";
 import { type NextRequest } from "next/server";
 
 // Marquer cette route comme dynamique

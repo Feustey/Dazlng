@@ -1,0 +1,17 @@
+{
+  "title": "Hilfezentrum",
+  "description": "Finden Sie Antworten auf Ihre Fragen zur Nutzung von DazNode",
+  "faq": {
+    "title": "Häufig gestellte Fragen",
+    "questions": [
+      {
+        "question": "Was ist DazNode?",
+        "answer": "DazNode ist ein Lightning Network Node-Manager, der es Ihnen ermöglicht, Ihren Bitcoin-Node einfach zu überwachen und zu verwalten. Er bietet eine intuitive Benutzeroberfläche zur Verwaltung Ihrer Zahlungskanäle, Überwachung Ihrer Leistung und Optimierung Ihrer Einnahmen."
+      },
+      {
+        "question": "Wie richte ich meinen Lightning-Node mit DazNode ein?",
+        "answer": "Um Ihren Lightning-Node mit DazNode einzurichten, müssen Sie zunächst einen Lightning-Node (wie LND, c-lightning oder Eclair) auf Ihrem Server installieren. Melden Sie sich dann bei DazNode an und folgen Sie dem Einrichtungsassistenten, der Sie durch den Prozess der Verbindung mit Ihrem Node führt."
+      }
+    ]
+  }
+}

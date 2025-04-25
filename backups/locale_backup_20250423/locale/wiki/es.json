@@ -1,0 +1,239 @@
+{
+  "title": "Centro de Conocimiento de la Red Lightning",
+  "subtitle": "Todo lo que necesitas saber para navegar en el ecosistema Lightning",
+  "sections": {
+    "alby": {
+      "title": "Alby",
+      "description": "Una extensión de navegador para cartera Lightning que te permite gestionar tus satoshis, realizar pagos instantáneos, conectar con tu nodo Lightning personal y usar aplicaciones Bitcoin Web3."
+    },
+    "telegram": {
+      "title": "Telegram",
+      "description": "Únete a grupos de discusión especializados sobre la Red Lightning."
+    },
+    "umbrel": {
+      "title": "Umbrel",
+      "description": "Una herramienta de gestión personal para nodos Bitcoin y la Red Lightning."
+    },
+    "rtl": {
+      "title": "RTL (Ride The Lightning)",
+      "description": "Una interfaz para gestionar un nodo de la Red Lightning."
+    },
+    "nostr": {
+      "title": "Nostr",
+      "description": "Un protocolo de red social descentralizada que permite a los usuarios controlar sus datos e identidad.",
+      "content": {
+        "foundations": "Nostr se basa en una idea simple pero poderosa: cada usuario tiene una clave privada y una clave pública. La clave privada se usa para firmar mensajes y la clave pública para verificarlos.",
+        "advantages": "Nostr ofrece varias ventajas sobre las redes sociales tradicionales: descentralización, resistencia a la censura, propiedad de datos e interoperabilidad.",
+        "getting_started": {
+          "title": "Cómo Empezar con Nostr",
+          "steps": [
+            "Adquirir algunos satoshis (la unidad más pequeña de Bitcoin)",
+            "Configurar un nodo Lightning",
+            "Generar tus claves Nostr",
+            "Elegir un cliente Nostr"
+          ]
+        }
+      }
+    },
+    "rag": {
+      "title": "RAG (Generación Aumentada por Recuperación)",
+      "description": "Una solución de enrutamiento avanzada que combina el poder de los modelos de lenguaje con la recuperación de conocimiento externo.",
+      "content": {
+        "introduction": "RAG representa un avance significativo en la inteligencia artificial, combinando el poder de los modelos de lenguaje con la recuperación de conocimiento externo.",
+        "concept": "RAG es una técnica que mejora los modelos de lenguaje permitiéndoles acceder e incorporar información externa durante el proceso de generación.",
+        "functioning": "El sistema funciona recuperando primero información relevante de una base de conocimiento, luego usando esta información para generar respuestas más precisas y contextualmente relevantes.",
+        "advantages": {
+          "title": "Ventajas de RAG",
+          "points": [
+            "Mejor precisión y relevancia de las respuestas",
+            "Capacidad para acceder a información actualizada",
+            "Reducción de alucinaciones en las salidas del modelo",
+            "Mejor manejo del conocimiento específico del dominio",
+            "Mayor conciencia contextual"
+          ]
+        },
+        "limitations": {
+          "title": "Limitaciones",
+          "points": [
+            "Dependencia de la calidad de la base de conocimiento",
+            "Posible latencia en las operaciones de recuperación",
+            "Complejidad en el mantenimiento y actualización de la base de conocimiento",
+            "Desafíos en el manejo de consultas ambiguas"
+          ]
+        },
+        "advanced_techniques": {
+          "title": "Técnicas Avanzadas",
+          "optimization": {
+            "title": "Optimización",
+            "points": [
+              "Expansión y reformulación de consultas",
+              "Enfoques de búsqueda híbrida",
+              "Reordenamiento contextual"
+            ]
+          },
+          "retrieval": {
+            "title": "Recuperación",
+            "points": [
+              "Búsqueda semántica",
+              "Recuperación densa",
+              "Recuperación dispersa"
+            ]
+          },
+          "post_retrieval": {
+            "title": "Post-Recuperación",
+            "points": [
+              "Selección de pasajes",
+              "Generación de respuestas",
+              "Verificación de hechos"
+            ]
+          },
+          "sophisticated": {
+            "title": "Enfoques Sofisticados",
+            "points": [
+              "Razonamiento multi-paso",
+              "Recuperación iterativa",
+              "Recuperación multilingüe",
+              "Recuperación multimodal"
+            ]
+          }
+        },
+        "evaluation": {
+          "title": "Evaluación",
+          "retrieval": {
+            "title": "Métricas de Recuperación",
+            "points": [
+              "Precisión",
+              "Recuperación",
+              "Puntuación F1",
+              "MRR",
+              "NDCG"
+            ]
+          },
+          "generation": {
+            "title": "Métricas de Generación",
+            "points": ["ROUGE", "BLEU", "METEOR"]
+          },
+          "tools": "Existen varias herramientas y marcos disponibles para evaluar sistemas RAG, incluyendo métricas automatizadas y evaluación humana.",
+          "expert_validation": "La validación de expertos es crucial para evaluar la calidad y confiabilidad de los sistemas RAG en aplicaciones del mundo real."
+        },
+        "challenges": {
+          "title": "Desafíos",
+          "points": [
+            "Escalabilidad de las bases de conocimiento",
+            "Actualizaciones de información en tiempo real",
+            "Sesgo y equidad en la recuperación",
+            "Preocupaciones de privacidad y seguridad",
+            "Integración con sistemas existentes"
+          ]
+        },
+        "conclusion": "RAG representa un enfoque poderoso para mejorar los modelos de lenguaje con conocimiento externo. Aunque persisten desafíos, los beneficios potenciales para diversas aplicaciones lo convierten en una dirección prometedora para el desarrollo de la IA."
+      }
+    },
+    "lightning_network": {
+      "title": "Únete a la Red Lightning: Libera el Poder de Bitcoin Instantáneamente",
+      "description": "Una solución revolucionaria de segunda capa para transacciones Bitcoin instantáneas y económicas",
+      "content": {
+        "introduction": "Imagina un mundo donde las transacciones de Bitcoin son instantáneas, casi gratuitas y accesibles para todos, sin intermediarios ni fronteras. Este mundo ya existe gracias a la Red Lightning, una tecnología revolucionaria que transforma nuestra forma de usar Bitcoin.",
+        "what_is": {
+          "title": "¿Qué es la Red Lightning?",
+          "description": "La Red Lightning es una solución de segunda capa construida sobre la blockchain de Bitcoin. Permite transacciones rápidas y de bajo costo creando canales de pago entre usuarios, evitando así la congestión de la red principal.",
+          "functioning": {
+            "title": "Cómo Funciona la Red Lightning",
+            "example": "Tomemos el ejemplo de Alice y Bob que quieren intercambiar bitcoins rápidamente.",
+            "steps": [
+              "Apertura de un canal de pago: Alice y Bob crean una cartera multi-firma y depositan fondos en ella.",
+              "Transacciones fuera de la cadena: Pueden realizar transacciones instantáneas entre ellos sin registrar cada operación en la blockchain.",
+              "Cierre del canal: Cuando terminan sus intercambios, el saldo final se registra en la blockchain."
+            ],
+            "benefit": "Este sistema permite pagos rápidos, seguros y económicos mientras reduce la carga en la blockchain principal."
+          }
+        },
+        "why_use": {
+          "title": "¿Por qué Usar la Red Lightning?",
+          "points": [
+            "Velocidad: Las transacciones son casi instantáneas, ideales para pagos diarios.",
+            "Tarifas reducidas: Los costos de transacción son mínimos, haciendo viables los micro-pagos.",
+            "Escalabilidad: La red puede manejar millones de transacciones por segundo, superando los sistemas tradicionales.",
+            "Privacidad: Las transacciones fuera de la cadena ofrecen mejor privacidad."
+          ]
+        },
+        "getting_started": {
+          "title": "Cómo Empezar con la Red Lightning",
+          "steps": {
+            "step1": {
+              "title": "Paso 1: Adquirir Bitcoins",
+              "description": "Antes de comenzar, necesitas poseer bitcoins. Puedes comprarlos en exchanges reputados, usar cajeros automáticos de Bitcoin o aceptar pagos en Bitcoin por tus bienes y servicios."
+            },
+            "step2": {
+              "title": "Paso 2: Elegir una Cartera Lightning",
+              "description": "Una cartera Lightning te permite interactuar con la red. Aquí tienes algunas opciones:",
+              "wallets": [
+                "Phoenix: Cartera no custodial con una excelente experiencia de usuario.",
+                "Breez: Ofrece una interfaz amigable y control total sobre tus claves.",
+                "Blue Wallet: Permite un uso fácil de la Red Lightning.",
+                "Wallet of Satoshi: Cartera custodial simple de usar, ideal para principiantes."
+              ]
+            },
+            "step3": {
+              "title": "Paso 3: Fondear tu Cartera",
+              "description": "Una vez instalada tu cartera, necesitas transferir bitcoins a ella. Genera una dirección de recepción en tu cartera y envía fondos desde tu fuente de Bitcoin."
+            },
+            "step4": {
+              "title": "Paso 4: Realizar Transacciones",
+              "description": "Con fondos en tu cartera, puedes comenzar a realizar transacciones en la Red Lightning. Para enviar fondos, escanea el código QR del destinatario o ingresa su solicitud de pago. Para recibir fondos, genera una solicitud de pago en tu cartera y compártela con el remitente."
+            }
+          }
+        },
+        "checklist": {
+          "title": "Lista de Acciones",
+          "items": [
+            "Comprar bitcoins a través de un exchange o cajero automático de Bitcoin.",
+            "Instalar una cartera Lightning adecuada a tus necesidades.",
+            "Transferir bitcoins a tu cartera Lightning.",
+            "Realizar una transacción para probar el funcionamiento de la red."
+          ]
+        },
+        "conclusion": "La Red Lightning revoluciona el uso de Bitcoin al hacer las transacciones más rápidas, menos costosas y más accesibles. Al dominar esta tecnología, participas activamente en la evolución del ecosistema Bitcoin.",
+        "faq": {
+          "title": "Preguntas Frecuentes",
+          "questions": {
+            "non_custodial": {
+              "question": "¿Qué es una cartera no custodial?",
+              "answer": "Una cartera no custodial te da control total sobre tus claves privadas, asegurando la plena propiedad de tus fondos."
+            },
+            "technical_experience": {
+              "question": "¿Puedo usar la Red Lightning sin experiencia técnica?",
+              "answer": "Sí, muchas carteras ofrecen una interfaz amigable que simplifica el uso de la Red Lightning, incluso para principiantes."
+            },
+            "security": {
+              "question": "¿Es segura la Red Lightning?",
+              "answer": "Sí, utiliza contratos inteligentes y canales de pago seguros para garantizar la seguridad de las transacciones."
+            }
+          }
+        }
+      }
+    }
+  },
+  "related_resources": {
+    "daz_ia": {
+      "title": "Daz-IA",
+      "description": "Explora nuestras soluciones de IA para la Red Lightning."
+    },
+    "daznode": {
+      "title": "Daznode",
+      "description": "Descubre nuestras soluciones de nodos para la Red Lightning."
+    },
+    "lightning_network": {
+      "title": "Red Lightning",
+      "description": "Aprende más sobre la tecnología de la Red Lightning."
+    }
+  },
+  "cta": {
+    "title": "Únete a la Revolución Lightning",
+    "description": "Ya seas principiante o experto, tenemos soluciones para ti.",
+    "buttons": {
+      "order_daznode": "Ordena un Daznode",
+      "discover_daz_ia": "Descubre Daz-IA"
+    }
+  }
+}

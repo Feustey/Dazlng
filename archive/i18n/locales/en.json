@@ -1,0 +1,219 @@
+{
+  "common": {
+    "buttons": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "send": "Send",
+      "close": "Close",
+      "back": "Back",
+      "next": "Next",
+      "confirm": "Confirm"
+    },
+    "status": {
+      "loading": "Loading...",
+      "error": "Error",
+      "success": "Success",
+      "pending": "Pending",
+      "completed": "Completed",
+      "failed": "Failed"
+    },
+    "language": "Language",
+    "help": "Help",
+    "notifications": "Notifications",
+    "login": "Login",
+    "logout": "Logout",
+    "profile": "Profile",
+    "settings": "Settings"
+  },
+  "header": {
+    "title": "Daznode",
+    "navigation": {
+      "dashboard": "Dashboard",
+      "dazia": "Daz-IA",
+      "network": "Network",
+      "channels": "Channels",
+      "learn": "Learn",
+      "help": "Help"
+    },
+    "actions": {
+      "login": "Login",
+      "logout": "Logout",
+      "profile": "My Profile",
+      "settings": "Settings",
+      "notifications": "Notifications"
+    }
+  },
+  "pages": {
+    "home": {
+      "title": "Welcome to DazLng",
+      "subtitle": "Discover the future of Lightning networks",
+      "cta": {
+        "primary": "Get started",
+        "secondary": "Learn more"
+      },
+      "stats": {
+        "nodes": "Nodes",
+        "channels": "Channels",
+        "capacity": "Capacity"
+      }
+    },
+    "network": {
+      "title": "Network Overview",
+      "subtitle": "Explore Lightning Network statistics and trends",
+      "metrics": {
+        "totalNodes": "Total Nodes",
+        "totalNodesDescription": "Total number of active nodes on the network",
+        "totalChannels": "Total Channels",
+        "totalChannelsDescription": "Total number of open payment channels",
+        "totalCapacity": "Total Capacity",
+        "totalCapacityDescription": "Total network capacity in BTC"
+      },
+      "charts": {
+        "capacityHistory": {
+          "title": "Capacity History",
+          "description": "Evolution of total network capacity over time"
+        },
+        "nodesByCountry": {
+          "title": "Geographic Distribution",
+          "description": "Distribution of nodes by country"
+        },
+        "capacity": {
+          "title": "Capacity per Node",
+          "label": "Capacity (BTC)"
+        },
+        "status": {
+          "title": "Status Distribution",
+          "active": "Active",
+          "inactive": "Inactive"
+        },
+        "capacityEvolution": {
+          "title": "Network Capacity Evolution",
+          "label": "Total Capacity (BTC)"
+        },
+        "months": {
+          "jan": "Jan",
+          "feb": "Feb",
+          "mar": "Mar",
+          "apr": "Apr",
+          "may": "May",
+          "jun": "Jun",
+          "jul": "Jul",
+          "aug": "Aug",
+          "sep": "Sep",
+          "oct": "Oct",
+          "nov": "Nov",
+          "dec": "Dec"
+        },
+        "ageDistribution": {
+          "title": "Node Age Distribution",
+          "label": "Number of Nodes",
+          "lessThanMonth": "< 1 month",
+          "oneToThreeMonths": "1-3 months",
+          "threeToSixMonths": "3-6 months",
+          "sixToTwelveMonths": "6-12 months",
+          "moreThanYear": "> 1 year"
+        },
+        "correlation": {
+          "title": "Capacity / Channels Correlation",
+          "label": "Nodes",
+          "xAxis": "Capacity (BTC)",
+          "yAxis": "Number of Channels"
+        }
+      },
+      "centrality": {
+        "title": "Network Centralities",
+        "betweenness": {
+          "title": "Betweenness"
+        },
+        "eigenvector": {
+          "title": "Eigenvector"
+        },
+        "closeness": {
+          "title": "Closeness"
+        },
+        "weightedBetweenness": {
+          "title": "Weighted Betweenness"
+        },
+        "weightedEigenvector": {
+          "title": "Weighted Eigenvector"
+        },
+        "weightedCloseness": {
+          "title": "Weighted Closeness"
+        },
+        "table": {
+          "rank": "Rank",
+          "pubkey": "Pubkey",
+          "value": "Value"
+        },
+        "lastUpdate": "Last update",
+        "error": {
+          "fetch": "Error fetching data",
+          "unknown": "An error occurred"
+        }
+      }
+    },
+    "learn": {
+      "title": "Learning Guide",
+      "sections": {
+        "basics": {
+          "title": "Lightning Basics",
+          "content": "Discover the fundamentals of the Lightning Network"
+        },
+        "advanced": {
+          "title": "Advanced Concepts",
+          "content": "Master the technical aspects of the Lightning Network"
+        }
+      }
+    }
+  },
+  "errors": {
+    "system": {
+      "unknown": "An unexpected error occurred",
+      "network": "Network connection error",
+      "auth": "Authentication error",
+      "notFound": "Page not found",
+      "validation": "Validation error"
+    },
+    "form": {
+      "required": "This field is required",
+      "invalid": "Invalid format",
+      "email": "Invalid email",
+      "password": "Invalid password",
+      "match": "Passwords do not match"
+    }
+  },
+  "notifications": {
+    "success": {
+      "saved": "Changes saved successfully",
+      "sent": "Message sent successfully",
+      "deleted": "Successfully deleted"
+    },
+    "error": {
+      "save": "Error while saving",
+      "send": "Error while sending",
+      "delete": "Error while deleting"
+    }
+  },
+  "settings": {
+    "language": {
+      "label": "Language",
+      "options": {
+        "fr": "French",
+        "en": "English",
+        "de": "German",
+        "es": "Spanish"
+      }
+    },
+    "theme": {
+      "label": "Theme",
+      "options": {
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+      }
+    },
+    "save": "Save changes",
+    "success": "Settings saved successfully",
+    "error": "Failed to save settings"
+  }
+}
