@@ -1,0 +1,22 @@
+<svg width="180" height="32" viewBox="0 0 180 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hexagonal logo -->
+  <g>
+    <path d="M16 2L2 9V23L16 30L30 23V9L16 2Z" fill="#4169E1"/>
+    <path d="M16 6L6 11V21L16 26L26 21V11L16 6Z" fill="white"/>
+    <path d="M16 10L10 13V19L16 22L22 19V13L16 10Z" fill="#FFC107"/>
+  </g>
+
+  <!-- Gradient definition -->
+  <defs>
+    <linearGradient id="textGradient" x1="0" y1="0" x2="100%" y2="0">
+      <stop offset="0%" stop-color="#5B6FFF"/>
+      <stop offset="50%" stop-color="#B56CFF"/>
+      <stop offset="100%" stop-color="#FF7F50"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Text "Daznode" -->
+  <text x="40" y="22" font-size="20" font-family="Segoe UI, sans-serif" font-weight="bold" fill="url(#textGradient)">
+    Daznode
+  </text>
+</svg>

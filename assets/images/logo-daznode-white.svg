@@ -1,0 +1,13 @@
+<svg width="180" height="32" viewBox="0 0 180 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hexagonal logo -->
+  <g>
+    <path d="M16 2L2 9V23L16 30L30 23V9L16 2Z" fill="#FFFFFF"/>
+    <path d="M16 6L6 11V21L16 26L26 21V11L16 6Z" fill="#F7931A"/>
+    <path d="M16 10L10 13V19L16 22L22 19V13L16 10Z" fill="#FFFFFF"/>
+  </g>
+
+  <!-- Text "Daznode" -->
+  <text x="40" y="22" font-size="20" font-family="Segoe UI, sans-serif" font-weight="bold" fill="#FFFFFF">
+    Daznode
+  </text>
+</svg> 
