@@ -1,9 +1,11 @@
 import { View, Text, StyleSheet, ScrollView, Pressable, Image, Dimensions } from 'react-native';
-import { Link } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 import Colors from '../../constants/Colors';
 import { cardShadow } from '../../constants/Shadows';
 
 export default function DazboxScreen() {
+  const navigation = useNavigation();
+  
   return (
     <ScrollView style={styles.container}>
       {/* Hero Section */}
@@ -44,12 +46,13 @@ export default function DazboxScreen() {
           <Text style={styles.priceSubtext}>Prix unique - Pas d'abonnement</Text>
         </View>
 
-        <Link href="/checkout" asChild>
-          <Pressable style={styles.button}>
-            <Text style={styles.buttonText}>Commander maintenant</Text>
-            <Text style={styles.buttonSubtext}>3 mois Daznode Premium offerts</Text>
-          </Pressable>
-        </Link>
+        <Pressable 
+          style={styles.button}
+          onPress={() => navigation.navigate('Checkout')}
+        >
+          <Text style={styles.buttonText}>Commander maintenant</Text>
+          <Text style={styles.buttonSubtext}>3 mois Daznode Premium offerts</Text>
+        </Pressable>
       </View>
 
       {/* Additional Info */}
@@ -58,11 +61,12 @@ export default function DazboxScreen() {
         <Text style={styles.infoText}>
           Notre équipe est là pour répondre à toutes vos questions et vous accompagner dans votre choix.
         </Text>
-        <Link href="/contact" asChild>
-          <Pressable style={styles.outlineButton}>
-            <Text style={styles.outlineButtonText}>Contactez-nous</Text>
-          </Pressable>
-        </Link>
+        <Pressable 
+          style={styles.outlineButton}
+          onPress={() => navigation.navigate('Contact')}
+        >
+          <Text style={styles.outlineButtonText}>Contactez-nous</Text>
+        </Pressable>
       </View>
     </ScrollView>
   );

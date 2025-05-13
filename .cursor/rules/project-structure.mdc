@@ -1,0 +1,60 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Structure du Projet Daz3
+
+Ce projet est une application hybride utilisant Next.js 13+ et Expo pour supporter à la fois le web et le mobile.
+
+## Organisation des Dossiers
+
+### App Router (Next.js 13+)
+- `app/` : Pages et routes Next.js
+  - `(tabs)/` : Pages avec navigation par onglets
+    - `home/` : Page d'accueil
+    - `daznode/` : Page DazNode
+    - `dazpay/` : Page DazPay
+    - `dazbox/` : Page DazBox
+  - `api/` : Routes API
+  - `auth/` : Pages d'authentification
+  - `register/` : Pages d'inscription
+  - `subscribe/` : Pages d'abonnement
+
+### Composants et Logique
+- `components/` : Composants réutilisables
+  - `shared/` : Composants partagés web/mobile
+    - `ui/` : Composants UI de base
+    - `layout/` : Composants de mise en page
+  - `mobile/` : Composants spécifiques mobile
+  - `web/` : Composants spécifiques web
+
+### Assets et Configuration
+- `assets/` : Ressources statiques
+- `constants/` : Constantes globales
+- `hooks/` : Custom hooks React
+- `navigation/` : Configuration navigation (Expo)
+- `screens/` : Écrans principaux mobile
+- `types/` : Types TypeScript
+- `utils/` : Fonctions utilitaires
+
+## Conventions de Migration
+
+### Composants
+- Les composants partagés doivent être dans `components/shared/`
+- Les composants spécifiques à une plateforme dans `components/mobile/` ou `components/web/`
+- Utiliser des styles responsive pour supporter web/mobile
+
+### Pages et Routes
+- Pages web dans `app/(tabs)/[route]/page.tsx`
+- Écrans mobiles dans `screens/[Screen].tsx`
+- API routes dans `app/api/[route]/route.ts`
+
+### Navigation
+- Web : Utiliser Next.js App Router
+- Mobile : Utiliser Expo Router avec la même structure
+
+## Fichiers de Configuration
+- [next.config.js](mdc:next.config.js) : Configuration Next.js
+- [app.config.js](mdc:app.config.js) : Configuration Expo
+- [package.json](mdc:package.json) : Dépendances

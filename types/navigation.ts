@@ -1,3 +1,23 @@
+import { NavigatorScreenParams } from '@react-navigation/native';
+
+export type TabParamList = {
+  Home: undefined;
+  Dazbox: undefined;
+  Daznode: undefined;
+  DazPay: undefined;
+};
+
+export type RootStackParamList = {
+  MainTabs: undefined;
+  Login: undefined;
+};
+
+declare global {
+  namespace ReactNavigation {
+    interface RootParamList extends RootStackParamList {}
+  }
+}
+
 export type AppRoutes = {
   '(tabs)': {
     dazbox: undefined;

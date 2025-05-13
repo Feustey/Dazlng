@@ -1,17 +1,40 @@
-import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable, Alert } from 'react-native';
 import { useState } from 'react';
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import Colors from '../constants/Colors';
+import { storage } from '../src/utils/storage';
 
 export default function LoginScreen() {
   const [form, setForm] = useState({
     email: '',
     password: '',
   });
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
-    // Implémentation de la connexion à venir
-    console.log('Login attempt:', form);
+  const handleLogin = async () => {
+    try {
+      setLoading(true);
+      
+      // Simulation d'une API pour la version minimale
+      if (form.email && form.password) {
+        const mockUser = {
+          id: '1',
+          email: form.email,
+          name: 'Utilisateur Test',
+        };
+        
+        await storage.setUser(mockUser);
+        await storage.setAuth('mock-token-123');
+        
+        router.replace('/');
+      } else {
+        Alert.alert('Erreur', 'Veuillez remplir tous les champs');
+      }
+    } catch (error) {
+      Alert.alert('Erreur', 'Une erreur est survenue lors de la connexion');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -43,6 +66,7 @@ export default function LoginScreen() {
               placeholderTextColor={Colors.gray[400]}
               keyboardType="email-address"
               autoCapitalize="none"
+              editable={!loading}
             />
           </View>
 
@@ -55,11 +79,18 @@ export default function LoginScreen() {
               placeholder="Votre mot de passe"
               placeholderTextColor={Colors.gray[400]}
               secureTextEntry
+              editable={!loading}
             />
           </View>
 
-          <Pressable style={styles.button} onPress={handleLogin}>
-            <Text style={styles.buttonText}>Se connecter</Text>
+          <Pressable 
+            style={[styles.button, loading && styles.buttonDisabled]} 
+            onPress={handleLogin}
+            disabled={loading}
+          >
+            <Text style={styles.buttonText}>
+              {loading ? 'Connexion...' : 'Se connecter'}
+            </Text>
           </Pressable>
 
           <Text style={styles.forgotPassword}>
@@ -93,10 +124,10 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   form: {
-    gap: 20,
+    marginBottom: 20,
   },
   inputGroup: {
-    gap: 8,
+    marginBottom: 16,
   },
   label: {
     fontSize: 16,
@@ -118,6 +149,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     marginTop: 10,
+  },
+  buttonDisabled: {
+    opacity: 0.7,
   },
   buttonText: {
     color: Colors.white,

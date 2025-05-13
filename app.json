@@ -14,7 +14,11 @@
       "web"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.feustey.boltexponativewind",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "web": {
       "bundler": "metro",
@@ -35,6 +39,9 @@
         "projectId": "06b88460-a5a1-4b4d-a0f2-78e1fb02cc03"
       }
     },
-    "owner": "feustey"
+    "owner": "feustey",
+    "android": {
+      "package": "com.feustey.boltexponativewind"
+    }
   }
 }

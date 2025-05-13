@@ -1,13 +1,13 @@
-import { Tabs } from 'expo-router';
+import { Tabs, useRootNavigation } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Image, Pressable, View } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import { Link } from 'expo-router';
 import Colors from '../../constants/Colors';
 import Footer from '../../components/Footer';
 import { useEffect, useState } from 'react';
 
 export default function TabLayout() {
-  const router = useRouter();
+  const rootNavigation = useRootNavigation();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export default function TabLayout() {
             },
             headerTintColor: Colors.white,
             headerTitle: () => (
-              <Pressable onPress={() => router.push('/')}>
+              <Pressable onPress={() => rootNavigation.navigate('index')}>
                 <Image
                   source={require('../../assets/images/logo-daznode-white.png')}
                   style={{ width: 120, height: 24 }}

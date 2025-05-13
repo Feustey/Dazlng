@@ -1,10 +1,12 @@
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
-import { Link } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 import Colors from '../../constants/Colors';
 import { cardShadow } from '../../constants/Shadows';
 import { Terminal, BarChart3, Zap, ArrowRightLeft } from 'lucide-react-native';
 
 export default function DazPayScreen() {
+  const navigation = useNavigation();
+
   return (
     <ScrollView style={styles.container}>
       {/* Hero Section */}
@@ -73,11 +75,12 @@ export default function DazPayScreen() {
           <Text style={styles.planFeature}>• Interface d'encaissement intuitive</Text>
           <Text style={styles.planFeature}>• Dashboard de suivi des transactions</Text>
           <Text style={styles.planFeature}>• Support par email</Text>
-          <Link href="/register/standard" asChild>
-            <Pressable style={styles.button}>
-              <Text style={styles.buttonText}>Commencer gratuitement</Text>
-            </Pressable>
-          </Link>
+          <Pressable 
+            style={styles.button}
+            onPress={() => navigation.navigate('Register', { plan: 'standard' })}
+          >
+            <Text style={styles.buttonText}>Commencer gratuitement</Text>
+          </Pressable>
         </View>
 
         <View style={[styles.planCard, styles.proPlan]}>
@@ -91,11 +94,12 @@ export default function DazPayScreen() {
           <Text style={styles.planFeature}>• Taux de commission réduit</Text>
           <Text style={styles.planFeature}>• Support prioritaire 7j/7</Text>
           <Text style={styles.planFeature}>• Formation personnalisée</Text>
-          <Link href="/register/pro" asChild>
-            <Pressable style={styles.button}>
-              <Text style={styles.buttonText}>Choisir Pro</Text>
-            </Pressable>
-          </Link>
+          <Pressable 
+            style={styles.button}
+            onPress={() => navigation.navigate('Register', { plan: 'pro' })}
+          >
+            <Text style={styles.buttonText}>Choisir Pro</Text>
+          </Pressable>
         </View>
       </View>
 
@@ -105,11 +109,12 @@ export default function DazPayScreen() {
         <Text style={styles.conversionDescription}>
           Conversion instantanée via nos partenaires de confiance (Strike, River, Btcpay + liquidity node). Recevez vos paiements directement en euros sur votre compte bancaire.
         </Text>
-        <Link href="/contact" asChild>
-          <Pressable style={styles.outlineButton}>
-            <Text style={styles.outlineButtonText}>En savoir plus</Text>
-          </Pressable>
-        </Link>
+        <Pressable 
+          style={styles.outlineButton}
+          onPress={() => navigation.navigate('Contact')}
+        >
+          <Text style={styles.outlineButtonText}>En savoir plus</Text>
+        </Pressable>
       </View>
     </ScrollView>
   );

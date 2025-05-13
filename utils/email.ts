@@ -16,18 +16,22 @@ export interface EmailOptions {
 
 const DEFAULT_FROM = 'onboarding@resend.dev';
 
-export async function sendEmail({ from = DEFAULT_FROM, to, subject, html }: EmailOptions) {
+export async function sendEmail(to: string, subject: string, content: string) {
   try {
-    const data = await resend.emails.send({
-      from,
+    const { data, error } = await resend.emails.send({
+      from: 'noreply@daznode.com',
       to,
       subject,
-      html,
+      html: content,
     });
 
-    return { success: true, data };
+    if (error) {
+      throw error;
+    }
+
+    return data;
   } catch (error) {
     console.error('Erreur lors de l\'envoi de l\'email:', error);
-    return { success: false, error };
+    throw error;
   }
 } 
