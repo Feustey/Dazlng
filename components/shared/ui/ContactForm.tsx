@@ -92,7 +92,7 @@ export default function ContactForm({
         `
       });
 
-      if (adminResult.success && userResult.success) {
+      if (adminResult && userResult) {
         Alert.alert(
           'Succès',
           'Votre message a été envoyé avec succès. Vous recevrez une confirmation par email.',

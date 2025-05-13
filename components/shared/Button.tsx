@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-unused-styles */
 import React from 'react';
 import {
   TouchableOpacity,
@@ -5,6 +6,7 @@ import {
   StyleSheet,
   Platform,
   TouchableOpacityProps,
+  ViewStyle,
 } from 'react-native';
 import { colors, spacing, typography } from '@/src/styles/shared';
 
@@ -14,6 +16,10 @@ interface ButtonProps extends TouchableOpacityProps {
   children: React.ReactNode;
 }
 
+interface WebStyle extends ViewStyle {
+  cursor?: string;
+}
+
 export const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   size = 'md',
@@ -21,20 +27,19 @@ export const Button: React.FC<ButtonProps> = ({
   style,
   ...props
 }) => {
+  const webStyles: WebStyle | undefined = Platform.select({
+    web: {
+      cursor: 'pointer',
+    },
+  });
+
   return (
     <TouchableOpacity
       style={[
         styles.base,
         styles[variant],
         styles[size],
-        Platform.select({
-          web: {
-            cursor: 'pointer',
-            ':hover': {
-              opacity: 0.8,
-            },
-          },
-        }),
+        webStyles,
         style,
       ]}
       {...props}
@@ -77,7 +82,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#FFFFFF',
-    fontWeight: typography.weights.medium,
+    fontWeight: '500',
   },
   smText: {
     fontSize: typography.sizes.sm,

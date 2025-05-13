@@ -1,17 +1,17 @@
 import { useState } from 'react';
-import type { EmailOptions } from '@/utils/email';
+import type { SendEmailParams } from '@/utils/email';
 
 interface UseEmailReturn {
   sending: boolean;
   error: string | null;
-  sendEmail: (options: EmailOptions) => Promise<boolean>;
+  sendEmail: (options: SendEmailParams) => Promise<boolean>;
 }
 
 export function useEmail(): UseEmailReturn {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const sendEmail = async (options: EmailOptions): Promise<boolean> => {
+  const sendEmail = async (options: SendEmailParams): Promise<boolean> => {
     try {
       setSending(true);
       setError(null);

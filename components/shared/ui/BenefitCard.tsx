@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Icon } from 'lucide-react-native';
+import { LucideIcon } from 'lucide-react-native';
 import Colors from '../../../constants/Colors';
 import { cardShadow } from '../../../constants/Shadows';
 
 interface BenefitCardProps {
-  icon: Icon;
+  icon: LucideIcon;
   title: string;
   description: string;
   iconColor?: string;

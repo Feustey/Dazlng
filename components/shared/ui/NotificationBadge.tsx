@@ -1,33 +1,28 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated } from 'react-native';
-import Colors from '../../../constants/Colors';
+import React, { useRef, useEffect } from 'react';
+import { Text, StyleSheet, Animated } from 'react-native';
 
 interface NotificationBadgeProps {
   count?: number;
   show: boolean;
 }
 
-export default function NotificationBadge({ count, show }: NotificationBadgeProps) {
+export default function NotificationBadge({ count = 0, show }: NotificationBadgeProps) {
   const scale = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    if (show) {
-      Animated.spring(scale, {
-        toValue: 1,
-        tension: 80,
-        friction: 5,
-        useNativeDriver: true,
-      }).start();
-    } else {
-      Animated.timing(scale, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: true,
-      }).start();
-    }
-  }, [show]);
+    Animated.spring(scale, {
+      toValue: 1,
+      tension: 50,
+      friction: 7,
+      useNativeDriver: true,
+    }).start();
 
-  if (!show) return null;
+    return () => {
+      scale.setValue(0);
+    };
+  }, [scale]);
+
+  if (!show || count === 0) return null;
 
   return (
     <Animated.View
@@ -38,9 +33,7 @@ export default function NotificationBadge({ count, show }: NotificationBadgeProp
         },
       ]}
     >
-      {count !== undefined && (
-        <Text style={styles.text}>{count > 99 ? '99+' : count}</Text>
-      )}
+      <Text style={styles.text}>{count}</Text>
     </Animated.View>
   );
 }
@@ -48,19 +41,19 @@ export default function NotificationBadge({ count, show }: NotificationBadgeProp
 const styles = StyleSheet.create({
   badge: {
     position: 'absolute',
-    top: -5,
-    right: -10,
-    backgroundColor: Colors.error,
-    borderRadius: 10,
-    minWidth: 20,
-    height: 20,
+    top: -8,
+    right: -8,
+    minWidth: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: '#F7931A',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 4,
   },
   text: {
-    color: Colors.white,
+    color: '#FFFFFF',
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
 }); 

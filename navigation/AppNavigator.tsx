@@ -19,9 +19,9 @@ import BuyScreen from '../app/(tabs)/buy';
 import CheckoutScreen from '../app/(tabs)/checkout';
 import HowItWorksScreen from '../app/(tabs)/how-it-works';
 
-import TabBarIcon from '../components/TabBarIcon';
-import NotificationBadge from '../components/NotificationBadge';
-import CustomHeader from '../components/CustomHeader';
+import TabBarIcon from '../components/shared/ui/TabBarIcon';
+import NotificationBadge from '../components/shared/ui/NotificationBadge';
+import CustomHeader from '../components/shared/ui/CustomHeader';
 import { RootStackParamList, TabParamList } from '../types/navigation';
 import Colors from '../constants/Colors';
 

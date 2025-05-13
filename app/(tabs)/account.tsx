@@ -192,6 +192,7 @@ export default function AccountScreen() {
             source={{ uri: 'https://images.pexels.com/photos/6781008/pexels-photo-6781008.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' }}
             style={styles.loginImage}
             resizeMode="cover"
+            alt="Login background"
           />
           
           <View style={styles.formContainer}>

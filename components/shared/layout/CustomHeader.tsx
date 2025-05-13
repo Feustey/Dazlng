@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Animated, TouchableOpacity } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../../../constants/Colors';
@@ -15,7 +15,7 @@ export default function CustomHeader({ title, showBack = true }: CustomHeaderPro
   const translateY = useRef(new Animated.Value(-10)).current;
 
   useEffect(() => {
-    Animated.parallel([
+    const animations = [
       Animated.timing(opacity, {
         toValue: 1,
         duration: 300,
@@ -27,8 +27,14 @@ export default function CustomHeader({ title, showBack = true }: CustomHeaderPro
         friction: 7,
         useNativeDriver: true,
       }),
-    ]).start();
-  }, []);
+    ];
+
+    Animated.parallel(animations).start();
+
+    return () => {
+      animations.forEach(animation => animation.stop());
+    };
+  }, [opacity, translateY]);
 
   return (
     <View style={styles.container}>

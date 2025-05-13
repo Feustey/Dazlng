@@ -19,7 +19,11 @@ export default function TabBarIcon({ Icon, color, size, focused }: TabBarIconPro
       tension: 50,
       friction: 7,
     }).start();
-  }, [focused]);
+
+    return () => {
+      scaleAnim.stopAnimation();
+    };
+  }, [focused, scaleAnim]);
 
   return (
     <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>

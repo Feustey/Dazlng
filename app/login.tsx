@@ -24,7 +24,10 @@ export default function LoginScreen() {
         };
         
         await storage.setUser(mockUser);
-        await storage.setAuth('mock-token-123');
+        await storage.setAuth({
+          token: 'mock-token-123',
+          refreshToken: 'mock-refresh-token-123'
+        });
         
         router.replace('/');
       } else {

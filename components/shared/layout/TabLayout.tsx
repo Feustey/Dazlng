@@ -5,18 +5,37 @@ import { Link } from 'expo-router';
 import Colors from '../../../constants/Colors';
 import Footer from '../ui/Footer';
 import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 
 interface TabIconProps {
   color: string;
-  name: keyof typeof FontAwesome5['glyphMap'];
-  size?: number;
+  name: string;
+  size: number;
 }
 
-const TabIcon: React.FC<TabIconProps> = ({ color, name, size = 24 }) => (
+interface TabButtonProps {
+  onPress: () => void;
+}
+
+interface HeaderLogoProps {
+  onPress: () => void;
+}
+
+const TabIcon: React.FC<TabIconProps> = ({ color, name, size }) => (
   <FontAwesome5 name={name} size={size} color={color} />
 );
 
-const HeaderLogo: React.FC<{ onPress: () => void }> = ({ onPress }) => (
+const TabButton: React.FC<TabButtonProps> = ({ onPress }) => (
+  <View onTouchEnd={onPress}>
+    <Image
+      source={require('@/assets/images/logo.png')}
+      alt="Logo"
+      style={styles.logo}
+    />
+  </View>
+);
+
+const HeaderLogo: React.FC<HeaderLogoProps> = ({ onPress }) => (
   <Pressable onPress={onPress}>
     <Image
       source={require('../../../assets/images/logo-daznode-white.png')}
@@ -27,10 +46,24 @@ const HeaderLogo: React.FC<{ onPress: () => void }> = ({ onPress }) => (
   </Pressable>
 );
 
+TabIcon.propTypes = {
+  color: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  size: PropTypes.number.isRequired,
+};
+
+TabButton.propTypes = {
+  onPress: PropTypes.func.isRequired,
+};
+
+HeaderLogo.propTypes = {
+  onPress: PropTypes.func.isRequired,
+};
+
 const UserButton: React.FC = () => (
   <Link href="/login" asChild>
     <Pressable style={styles.userButton}>
-      <TabIcon name="user-circle" color={Colors.white} />
+      <TabIcon name="user-circle" color={Colors.white} size={24} />
     </Pressable>
   </Link>
 );
@@ -55,6 +88,10 @@ export default function TabLayout() {
     { name: 'dazpay', title: 'DazPay', icon: 'cash-register' },
   ] as const;
 
+  const handleLogoPress = () => {
+    rootNavigation?.navigate('Main', { screen: 'Accueil' });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -65,7 +102,7 @@ export default function TabLayout() {
             headerStyle: styles.header,
             headerTintColor: Colors.white,
             headerTitle: () => (
-              <HeaderLogo onPress={() => rootNavigation.navigate('index')} />
+              <HeaderLogo onPress={handleLogoPress} />
             ),
             headerRight: () => <UserButton />,
           }}
@@ -77,7 +114,7 @@ export default function TabLayout() {
               options={{
                 title: tab.title,
                 tabBarIcon: ({ color }) => (
-                  <TabIcon name={tab.icon} color={color} />
+                  <TabIcon name={tab.icon} color={color} size={24} />
                 ),
               }}
             />

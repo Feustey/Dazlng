@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { useEmail } from '@/hooks/useEmail';
-import { colors, spacing, typography, shared } from '@/styles/shared';
+import { colors, spacing, typography, shared } from '../../src/styles/shared';
 
 export default function ContactForm() {
   const { sending, error, sendEmail } = useEmail();

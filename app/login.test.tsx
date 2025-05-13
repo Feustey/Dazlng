@@ -1,4 +1,7 @@
+import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { router } from 'expo-router';
+import { storage } from '../src/utils/storage';
 import LoginScreen from './login';
 
 jest.mock('expo-router', () => ({
@@ -27,9 +30,9 @@ describe('LoginScreen', () => {
     fireEvent.press(loginButton);
 
     await waitFor(() => {
-      expect(require('../src/utils/storage').storage.setUser).toHaveBeenCalled();
-      expect(require('../src/utils/storage').storage.setAuth).toHaveBeenCalled();
-      expect(require('expo-router').router.replace).toHaveBeenCalledWith('/');
+      expect(storage.setUser).toHaveBeenCalled();
+      expect(storage.setAuth).toHaveBeenCalled();
+      expect(router.replace).toHaveBeenCalledWith('/');
     });
   });
 }); 

@@ -23,7 +23,7 @@ export default function Hero({
   const translateYAnim = useRef(new Animated.Value(20)).current;
   
   useEffect(() => {
-    Animated.parallel([
+    const animations = [
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 1000,
@@ -34,8 +34,14 @@ export default function Hero({
         duration: 1000,
         useNativeDriver: true,
       }),
-    ]).start();
-  }, []);
+    ];
+
+    Animated.parallel(animations).start();
+
+    return () => {
+      animations.forEach(animation => animation.stop());
+    };
+  }, [fadeAnim, translateYAnim]);
 
   return (
     <Animated.View 
@@ -51,6 +57,7 @@ export default function Hero({
         source={{ uri: imageUrl }}
         style={styles.image}
         resizeMode="cover"
+        alt="Hero background"
       />
       <View style={[
         styles.overlay,

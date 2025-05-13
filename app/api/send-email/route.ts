@@ -1,32 +1,42 @@
 import { NextResponse } from 'next/server';
-import { sendEmail, EmailOptions } from '@/utils/email';
+import { logger } from '@/src/utils/logger';
+import nodemailer from 'nodemailer';
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { from, to, subject, html } = body as EmailOptions;
+    const { to, subject, text } = await request.json();
 
-    if (!to || !subject || !html) {
+    if (!to || !subject || !text) {
       return NextResponse.json(
-        { error: 'Les champs to, subject et html sont requis' },
+        { error: 'Email, subject and text are required' },
         { status: 400 }
       );
     }
 
-    const result = await sendEmail({ from, to, subject, html });
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT),
+      secure: true,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
 
-    if (!result.success) {
-      return NextResponse.json(
-        { error: 'Erreur lors de l\'envoi de l\'email' },
-        { status: 500 }
-      );
-    }
+    await transporter.sendMail({
+      from: process.env.SMTP_FROM,
+      to,
+      subject,
+      text,
+    });
 
-    return NextResponse.json(result);
+    logger.info('Email sent successfully:', { to, subject });
+
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Erreur dans la route send-email:', error);
+    logger.error('Error sending email:', error);
     return NextResponse.json(
-      { error: 'Erreur interne du serveur' },
+      { error: 'Failed to send email' },
       { status: 500 }
     );
   }

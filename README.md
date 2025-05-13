@@ -1,86 +1,87 @@
-# Daz3 - Application Mobile-First avec Support Web
+# DazNode
 
-## Structure du Projet
+Application web et mobile pour la gestion de DazNode.
 
-```
-Daz3/
-├── app/                    # Pages Next.js et API routes
-│   ├── api/               # Routes API (email, etc.)
-│   └── auth/              # Pages d'authentification
-├── components/            # Composants UI
-│   ├── mobile/           # Composants spécifiques mobile
-│   ├── web/             # Composants spécifiques web
-│   └── shared/          # Composants partagés
-├── src/
-│   ├── screens/         # Écrans principaux (mobile)
-│   ├── navigation/      # Configuration de la navigation
-│   ├── styles/         # Styles partagés
-│   ├── constants/      # Constantes de l'application
-│   ├── types/         # Types TypeScript
-│   └── utils/         # Utilitaires
-└── assets/            # Images, fonts, etc.
+## Configuration requise
+
+- Node.js 18+
+- npm 8+
+
+## Installation
+
+1. Clonez le dépôt :
+```bash
+git clone <repository-url>
+cd daznode
 ```
 
-## Configuration
+2. Installez les dépendances :
+```bash
+npm install
+```
 
-- **Mobile** : Expo/React Native
-- **Web** : Next.js avec Tailwind CSS
-- **Styles** : Système de design unifié via `src/styles/shared.ts`
-- **Navigation** : React Navigation (mobile) + Next.js Routes (web)
+3. Copiez le fichier d'environnement :
+```bash
+cp .env.example .env
+```
 
-## Scripts
-
-- `npm run dev` : Démarre l'application en mode développement (Expo)
-- `npm run web` : Démarre l'application web (Next.js)
-- `npm run ios` : Lance sur iOS Simulator
-- `npm run android` : Lance sur Android Emulator
-- `npm run build` : Build l'application web
-- `npm run clean` : Nettoie les caches et réinstalle les dépendances
-
-## Conventions
-
-### Composants
-
-- Utiliser les composants de `shared/` par défaut
-- Créer des versions spécifiques dans `mobile/` ou `web/` si nécessaire
-- Suivre le système de design défini dans `styles/shared.ts`
-
-### Styles
-
-- Mobile : StyleSheet de React Native
-- Web : Tailwind CSS
-- Utiliser les tokens définis dans `styles/shared.ts`
-
-### Navigation
-
-- Mobile : React Navigation
-- Web : Next.js App Router
-- Garder les routes cohérentes entre mobile et web
+4. Configurez les variables d'environnement dans `.env`
 
 ## Développement
 
-1. Installer les dépendances :
-   ```bash
-   npm install
-   ```
+```bash
+# Démarrer en mode développement
+npm run dev
 
-2. Configurer les variables d'environnement :
-   ```bash
-   cp .env.example .env
-   ```
+# Construire pour la production
+npm run build
 
-3. Lancer l'application :
-   ```bash
-   # Mobile
-   npm run dev
-   
-   # Web
-   npm run web
-   ```
+# Démarrer en production
+npm start
+```
 
-## Bonnes Pratiques
+## Déploiement
 
-- Privilégier les composants partagés quand possible
-- Utiliser TypeScript strictement
-- Suivre le système de design unifié
-- Tester sur mobile ET web avant de committer 
+1. Créez un compte sur [Vercel](https://vercel.com)
+2. Installez Vercel CLI :
+```bash
+npm i -g vercel
+```
+
+3. Connectez-vous à Vercel :
+```bash
+vercel login
+```
+
+4. Déployez :
+```bash
+vercel --prod
+```
+
+## Fonctionnalités principales
+
+- Authentification utilisateur
+- Gestion de compte
+- Envoi d'emails
+- Interface responsive (web/mobile)
+
+## Structure du projet
+
+```
+.
+├── app/                # Pages et routes Next.js
+├── components/         # Composants React réutilisables
+├── utils/             # Utilitaires et helpers
+├── public/            # Fichiers statiques
+└── styles/            # Styles globaux
+```
+
+## Tests
+
+```bash
+npm test
+```
+
+## Licence
+
+Propriétaire - Tous droits réservés 

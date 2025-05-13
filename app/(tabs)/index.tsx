@@ -3,21 +3,16 @@ import { View, Text, Image, ScrollView, StyleSheet, Pressable } from 'react-nati
 import { Zap, Shield, Award } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../../constants/Colors';
-import { AppRoutes } from '../../types/navigation';
+import { RootStackParamList } from '../../types/navigation';
 import { cardShadow } from '../../constants/Shadows';
 import Hero from '../../components/shared/ui/Hero';
 import BenefitCard from '../../components/shared/ui/BenefitCard';
 
-type ProductId = keyof AppRoutes['(tabs)'];
+type NavigationProp = {
+  navigate: (screen: keyof RootStackParamList, params?: any) => void;
+};
 
-const products: Array<{
-  id: ProductId;
-  title: string;
-  subtitle: string;
-  description: string;
-  price: string;
-  bonus: string;
-}> = [
+const products = [
   {
     id: 'dazbox',
     title: 'Dazbox',
@@ -63,7 +58,7 @@ const benefits = [
 ];
 
 export default function HomeScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp>();
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
@@ -72,7 +67,7 @@ export default function HomeScreen() {
         subtitle="Your Plug & Play Lightning Node"
         imageUrl="https://images.pexels.com/photos/6781008/pexels-photo-6781008.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
         buttonText="Get Started"
-        onButtonPress={() => navigation.navigate('dazbox')}
+        onButtonPress={() => navigation.navigate('Main', { screen: 'Dazbox' })}
       />
 
       <View style={styles.sectionContainer}>
@@ -110,7 +105,7 @@ export default function HomeScreen() {
         {products.map((product) => (
           <Pressable 
             key={product.id} 
-            onPress={() => navigation.navigate(product.id)}
+            onPress={() => navigation.navigate('Main', { screen: product.id === 'dazbox' ? 'Dazbox' : product.id === 'daznode' ? 'Daznode' : 'Dazpay' })}
             style={styles.productCard}
           >
             <View style={styles.productContent}>

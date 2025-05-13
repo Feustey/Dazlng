@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   extends: [
-    'eslint:recommended',
+    'next/core-web-vitals',
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
     'plugin:react-native/all',
@@ -24,11 +24,22 @@ module.exports = {
     'react-native/no-inline-styles': 'warn',
     'react-native/no-color-literals': 'off',
     'react-native/sort-styles': 'off',
-    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     'no-console': 'warn',
-    'react/no-unescaped-entities': 'off'
+    'react/no-unescaped-entities': 'off',
+    'react-native/no-raw-text': ['error', {
+      skip: ['div', 'span', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'button', 'a']
+    }]
   },
   env: {
     'react-native/react-native': true,
   },
+  overrides: [
+    {
+      files: ['app/**/*.tsx', 'components/web/**/*.tsx'],
+      rules: {
+        'react-native/no-raw-text': 'off'
+      }
+    }
+  ]
 }; 

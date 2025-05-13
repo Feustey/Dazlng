@@ -29,7 +29,7 @@ export default function FormInput({
       <TextInput
         style={[
           styles.input,
-          error && styles.inputError
+          error ? styles.inputError : null
         ]}
         value={value}
         onChangeText={onChangeText}

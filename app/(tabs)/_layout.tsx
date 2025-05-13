@@ -1,6 +1,6 @@
 import { Tabs, useRootNavigation } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { Image, Pressable, View } from 'react-native';
+import { Image, Pressable, View, StyleSheet } from 'react-native';
 import { Link } from 'expo-router';
 import Colors from '../../constants/Colors';
 import Footer from '../../components/Footer';
@@ -20,8 +20,8 @@ export default function TabLayout() {
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ flex: 1 }}>
+    <View style={styles.container}>
+      <View style={styles.content}>
         <Tabs
           screenOptions={{
             tabBarActiveTintColor: Colors.primary,
@@ -31,17 +31,19 @@ export default function TabLayout() {
             },
             headerTintColor: Colors.white,
             headerTitle: () => (
-              <Pressable onPress={() => rootNavigation.navigate('index')}>
-                <Image
-                  source={require('../../assets/images/logo-daznode-white.png')}
-                  style={{ width: 120, height: 24 }}
-                  resizeMode="contain"
-                />
-              </Pressable>
+              <Link href="/" asChild>
+                <Pressable>
+                  <Image
+                    source={require('@/assets/images/logo.png')}
+                    alt="Logo"
+                    style={styles.logo}
+                  />
+                </Pressable>
+              </Link>
             ),
             headerRight: () => (
               <Link href="/login" asChild>
-                <Pressable style={{ marginRight: 15 }}>
+                <Pressable style={styles.userIcon}>
                   <FontAwesome5 name="user-circle" size={24} color={Colors.white} />
                 </Pressable>
               </Link>
@@ -82,3 +84,19 @@ export default function TabLayout() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+  },
+  logo: {
+    width: 120,
+    height: 24,
+  },
+  userIcon: {
+    marginRight: 15,
+  },
+});

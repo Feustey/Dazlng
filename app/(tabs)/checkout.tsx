@@ -85,7 +85,7 @@ export default function CheckoutScreen() {
 
       // Email pour l'administrateur
       const adminResult = await sendEmail({
-        to: 'admin@.com', // Remplacez par votre email d'administration
+        to: 'contact@ddazno.de',
         subject: `Nouvelle commande de ${form.fullName}`,
         html: `
           <h2>Nouvelle commande reçue</h2>
@@ -116,7 +116,7 @@ export default function CheckoutScreen() {
         `
       });
 
-      if (customerResult.success && adminResult.success) {
+      if (customerResult && adminResult) {
         Alert.alert(
           'Succès',
           'Votre commande a été confirmée. Vous recevrez un email de confirmation.',

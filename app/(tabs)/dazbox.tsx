@@ -1,10 +1,14 @@
 import { View, Text, StyleSheet, ScrollView, Pressable, Image, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../types/navigation';
 import Colors from '../../constants/Colors';
 import { cardShadow } from '../../constants/Shadows';
 
+type DazboxScreenNavigationProp = StackNavigationProp<RootStackParamList>;
+
 export default function DazboxScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<DazboxScreenNavigationProp>();
   
   return (
     <ScrollView style={styles.container}>

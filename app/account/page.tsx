@@ -3,8 +3,15 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+interface UserData {
+  name: string;
+  email: string;
+  orders: any[];
+  subscriptions: any[];
+}
+
 export default function AccountPage() {
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -17,8 +24,8 @@ export default function AccountPage() {
           return;
         }
         setUserData({
-          name: 'Utilisateur Test',
-          email: 'test@example.com',
+          name: 'DazUser',
+          email: 'contact@dazno.de',
           orders: [],
           subscriptions: []
         });
@@ -30,7 +37,7 @@ export default function AccountPage() {
       }
     };
     checkAuth();
-  }, []);
+  }, [router]);
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');

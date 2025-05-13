@@ -244,50 +244,48 @@ export default function BuyScreen() {
           />
         </View>
         
-        <View style={styles.formRow}>
-          <View style={[styles.formGroup, { flex: 2, marginRight: 10 }]}>
-            <Text style={styles.formLabel}>Street Address</Text>
-            <TextInput
-              style={styles.formInput}
-              placeholder="Enter street address"
-              placeholderTextColor="#999999"
-              value={formData.streetAddress}
-              onChangeText={(text) => setFormData(prev => ({ ...prev, streetAddress: text }))}
-            />
-          </View>
-          <View style={[styles.formGroup, { flex: 1 }]}>
-            <Text style={styles.formLabel}>Apt/Suite</Text>
-            <TextInput
-              style={styles.formInput}
-              placeholder="Optional"
-              placeholderTextColor="#999999"
-              value={formData.aptSuite}
-              onChangeText={(text) => setFormData(prev => ({ ...prev, aptSuite: text }))}
-            />
-          </View>
+        <View style={[styles.formGroup, styles.formRowGroup]}>
+          <Text style={styles.formLabel}>Street Address</Text>
+          <TextInput
+            style={styles.formInput}
+            placeholder="Enter street address"
+            placeholderTextColor="#999999"
+            value={formData.streetAddress}
+            onChangeText={(text) => setFormData(prev => ({ ...prev, streetAddress: text }))}
+          />
         </View>
         
-        <View style={styles.formRow}>
-          <View style={[styles.formGroup, { flex: 1, marginRight: 10 }]}>
-            <Text style={styles.formLabel}>City</Text>
-            <TextInput
-              style={styles.formInput}
-              placeholder="Enter city"
-              placeholderTextColor="#999999"
-              value={formData.city}
-              onChangeText={(text) => setFormData(prev => ({ ...prev, city: text }))}
-            />
-          </View>
-          <View style={[styles.formGroup, { flex: 1 }]}>
-            <Text style={styles.formLabel}>Postal Code</Text>
-            <TextInput
-              style={styles.formInput}
-              placeholder="Enter postal code"
-              placeholderTextColor="#999999"
-              value={formData.postalCode}
-              onChangeText={(text) => setFormData(prev => ({ ...prev, postalCode: text }))}
-            />
-          </View>
+        <View style={[styles.formGroup, styles.formRowGroupSmall]}>
+          <Text style={styles.formLabel}>Apt/Suite</Text>
+          <TextInput
+            style={styles.formInput}
+            placeholder="Optional"
+            placeholderTextColor="#999999"
+            value={formData.aptSuite}
+            onChangeText={(text) => setFormData(prev => ({ ...prev, aptSuite: text }))}
+          />
+        </View>
+        
+        <View style={[styles.formGroup, styles.formRowGroupWithMargin]}>
+          <Text style={styles.formLabel}>City</Text>
+          <TextInput
+            style={styles.formInput}
+            placeholder="Enter city"
+            placeholderTextColor="#999999"
+            value={formData.city}
+            onChangeText={(text) => setFormData(prev => ({ ...prev, city: text }))}
+          />
+        </View>
+        
+        <View style={[styles.formGroup, styles.formRowGroupSmall]}>
+          <Text style={styles.formLabel}>Postal Code</Text>
+          <TextInput
+            style={styles.formInput}
+            placeholder="Enter postal code"
+            placeholderTextColor="#999999"
+            value={formData.postalCode}
+            onChangeText={(text) => setFormData(prev => ({ ...prev, postalCode: text }))}
+          />
         </View>
         
         <View style={styles.formGroup}>
@@ -555,8 +553,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#111111',
   },
-  formRow: {
-    flexDirection: 'row',
+  formRowGroup: {
+    flex: 2,
+    marginRight: 10,
+  },
+  formRowGroupSmall: {
+    flex: 1,
+  },
+  formRowGroupWithMargin: {
+    flex: 1,
+    marginRight: 10,
   },
   securityNote: {
     flexDirection: 'row',

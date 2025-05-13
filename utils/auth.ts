@@ -1,16 +1,11 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { openDb } from './db';
+import { supabase } from '../lib/supabaseClient';
+import { User } from '../types/database';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
-export interface User {
-  id: number;
-  email: string;
-  name: string;
-}
-
-export interface UserWithOrders extends User {
+export interface UserWithOrders extends Omit<User, 'password'> {
   orders: Array<{
     order_number: string;
     amount: number;
@@ -25,29 +20,38 @@ export interface UserWithOrders extends User {
 }
 
 export async function registerUser(email: string, password: string, name: string) {
-  const db = await openDb();
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
-    const result = await db.run(
-      'INSERT INTO users (email, password, name) VALUES (?, ?, ?)',
-      [email, hashedPassword, name]
-    );
-    return { id: result.lastID, email, name };
-  } catch (err: unknown) {
-    const error = err as { message: string };
-    if (error.message.includes('UNIQUE constraint failed')) {
-      throw new Error('Cet email est déjà utilisé');
+    const { data: user, error } = await supabase
+      .from('users')
+      .insert([
+        { email, password: hashedPassword, name }
+      ])
+      .select()
+      .single();
+
+    if (error) {
+      if (error.message.includes('duplicate key')) {
+        throw new Error('Cet email est déjà utilisé');
+      }
+      throw error;
     }
+
+    return user;
+  } catch (err) {
     throw err;
   }
 }
 
 export async function loginUser(email: string, password: string) {
-  const db = await openDb();
-  const user = await db.get('SELECT * FROM users WHERE email = ?', [email]);
+  const { data: user, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('email', email)
+    .single();
 
-  if (!user) {
+  if (error || !user) {
     throw new Error('Utilisateur non trouvé');
   }
 
@@ -72,24 +76,71 @@ export async function loginUser(email: string, password: string) {
   };
 }
 
-export async function getUserData(userId: number): Promise<UserWithOrders> {
-  const db = await openDb();
-  
-  const user = await db.get('SELECT id, email, name FROM users WHERE id = ?', [userId]);
-  if (!user) throw new Error('Utilisateur non trouvé');
+interface OrderResult {
+  id: string;
+  amount: number;
+  created_at: string;
+}
 
-  const orders = await db.all(
-    'SELECT order_number, amount, date FROM orders WHERE user_id = ? ORDER BY date DESC',
-    [userId]
-  );
+interface SubscriptionWithProduct {
+  products: {
+    name: string;
+  };
+  status: string;
+  start_date: string;
+  end_date: string | null;
+}
 
-  const subscriptions = await db.all(
-    'SELECT name, is_active, start_date, end_date FROM subscriptions WHERE user_id = ?',
-    [userId]
-  );
+export async function getUserData(userId: string): Promise<UserWithOrders> {
+  const { data: user, error: userError } = await supabase
+    .from('users')
+    .select('id, email, name, created_at, updated_at')
+    .eq('id', userId)
+    .single();
+
+  if (userError || !user) throw new Error('Utilisateur non trouvé');
+
+  const { data: ordersData, error: ordersError } = await supabase
+    .from('orders')
+    .select('id, amount, created_at')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false });
+
+  if (ordersError) throw ordersError;
+
+  const orders = (ordersData || []).map((order: OrderResult) => ({
+    order_number: order.id,
+    amount: order.amount,
+    date: order.created_at
+  }));
+
+  const { data: subscriptionsData, error: subscriptionsError } = await supabase
+    .from('subscriptions')
+    .select(`
+      products!inner (
+        name
+      ),
+      status,
+      start_date,
+      end_date
+    `)
+    .eq('user_id', userId);
+
+  if (subscriptionsError) throw subscriptionsError;
+
+  const subscriptions = ((subscriptionsData || []) as unknown as SubscriptionWithProduct[]).map(sub => ({
+    name: sub.products.name,
+    is_active: sub.status === 'active',
+    start_date: sub.start_date,
+    end_date: sub.end_date || undefined
+  }));
 
   return {
-    ...user,
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    created_at: user.created_at,
+    updated_at: user.updated_at,
     orders,
     subscriptions
   };
@@ -97,7 +148,7 @@ export async function getUserData(userId: number): Promise<UserWithOrders> {
 
 export function verifyToken(token: string) {
   try {
-    return jwt.verify(token, JWT_SECRET) as { id: number; email: string };
+    return jwt.verify(token, JWT_SECRET) as { id: string; email: string };
   } catch {
     throw new Error('Token invalide');
   }
