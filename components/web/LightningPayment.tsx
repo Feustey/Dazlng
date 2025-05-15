@@ -1,12 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { generateInvoice, checkPayment } from '../../lib/lightning';
+import Image from 'next/image';
+import QRCode from 'qrcode';
 
 interface LightningPaymentProps {
   amount: number;
-  onSuccess?: () => void;
   productName: string;
+  onSuccess: () => void;
 }
 
 declare global {
@@ -18,12 +20,13 @@ declare global {
   }
 }
 
-export default function LightningPayment({ amount, onSuccess, productName }: LightningPaymentProps) {
+export default function LightningPayment({ amount, productName, onSuccess }: LightningPaymentProps) {
   const [invoice, setInvoice] = useState<{ paymentRequest: string; paymentHash: string } | null>(null);
   const [paymentStatus, setPaymentStatus] = useState<'pending' | 'success'>('pending');
   const [error, setError] = useState<string | null>(null);
   const [isWebLNAvailable, setIsWebLNAvailable] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [qrUrl, setQrUrl] = useState<string | null>(null);
 
   // Vérifier si WebLN est disponible (extension Alby installée)
   useEffect(() => {
@@ -35,7 +38,7 @@ export default function LightningPayment({ amount, onSuccess, productName }: Lig
           setIsWebLNAvailable(true);
         }
       } catch (err) {
-        console.log('WebLN non disponible:', err);
+        // SUPPRIMER console.log('WebLN non disponible:', err);
       } finally {
         setIsLoading(false);
       }
@@ -71,22 +74,19 @@ export default function LightningPayment({ amount, onSuccess, productName }: Lig
   }, [amount, productName]);
 
   // Fonction pour vérifier l'état du paiement
-  const checkPaymentStatus = async (paymentHash: string) => {
+  const checkPaymentStatus = useCallback(async (paymentHash: string) => {
     try {
       const isPaid = await checkPayment(paymentHash);
-      
       if (isPaid) {
         setPaymentStatus('success');
         if (onSuccess) onSuccess();
       } else if (paymentStatus === 'pending') {
-        // Réessayer dans 5 secondes
         setTimeout(() => checkPaymentStatus(paymentHash), 5000);
       }
     } catch (err) {
-      console.error('Erreur lors de la vérification du paiement:', err);
       setError(`Erreur lors de la vérification du paiement: ${err instanceof Error ? err.message : 'Erreur inconnue'}`);
     }
-  };
+  }, [onSuccess, paymentStatus]);
 
   // Fonction pour payer avec WebLN (Alby extension)
   const payWithWebLN = async () => {
@@ -109,6 +109,20 @@ export default function LightningPayment({ amount, onSuccess, productName }: Lig
     }
   };
 
+  // Génère le QR code quand l'invoice change
+  useEffect(() => {
+    if (invoice?.paymentRequest) {
+      QRCode.toDataURL(invoice.paymentRequest)
+        .then((url: string) => setQrUrl(url));
+    }
+  }, [invoice]);
+
+  useEffect(() => {
+    if (invoice?.paymentHash) {
+      checkPaymentStatus(invoice.paymentHash);
+    }
+  }, [checkPaymentStatus, invoice]);
+
   if (isLoading) {
     return <div className="text-center p-4">Chargement en cours...</div>;
   }
@@ -126,51 +140,40 @@ export default function LightningPayment({ amount, onSuccess, productName }: Lig
   }
 
   return (
-    <div className="p-4 border rounded-lg shadow-md max-w-md mx-auto">
-      <h3 className="text-lg font-bold mb-4">Paiement Bitcoin Lightning</h3>
-      <p className="mb-4">Montant: {amount} sats</p>
-      
+    <div className="p-6 border border-gray-200 rounded-lg text-center">
+      <p>Paiement Lightning pour <b>{productName}</b> ({amount} sats)</p>
+
       {invoice && (
-        <>
-          {/* QR Code pour paiement mobile */}
-          <div className="mb-4 text-center">
-            <img 
-              src={`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${encodeURIComponent(invoice.paymentRequest)}`} 
-              alt="QR Code Lightning" 
-              className="mx-auto"
-            />
-          </div>
-          
-          {/* Bouton WebLN pour desktop avec Alby */}
-          {isWebLNAvailable && (
-            <button 
-              onClick={payWithWebLN}
-              className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded w-full mb-4"
-            >
-              Payer avec Alby
-            </button>
+        <div className="my-4">
+          <p>
+            <b>Invoice Lightning :</b>
+          </p>
+          <code className="break-all text-xs block mb-3">
+            {invoice.paymentRequest}
+          </code>
+          {qrUrl && (
+            <div className="flex justify-center mb-3">
+              <Image src={qrUrl} alt="QR code Lightning" width={180} height={180} className="w-44 h-44" />
+            </div>
           )}
-          
-          {/* Bouton pour copier l'invoice */}
-          <button 
-            onClick={() => {
-              navigator.clipboard.writeText(invoice.paymentRequest);
-              alert('Facture copiée dans le presse-papier');
-            }}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded w-full mb-4"
-          >
-            Copier la facture Lightning
-          </button>
-          
-          {/* Lien de secours pour ouvrir avec un wallet Lightning */}
-          <a 
-            href={`lightning:${invoice.paymentRequest}`}
-            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded block text-center"
-          >
-            Ouvrir avec un Wallet Lightning
-          </a>
-        </>
+        </div>
       )}
+
+      {isWebLNAvailable && invoice && (
+        <button
+          className="bg-yellow-400 text-gray-900 px-6 py-2 rounded font-semibold cursor-pointer mr-2"
+          onClick={payWithWebLN}
+        >
+          Payer avec WebLN (Alby)
+        </button>
+      )}
+
+      <button
+        className="bg-green-500 text-white px-6 py-2 rounded font-semibold cursor-pointer"
+        onClick={onSuccess}
+      >
+        Simuler le paiement
+      </button>
     </div>
   );
 } 

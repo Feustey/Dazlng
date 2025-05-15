@@ -1,6 +1,10 @@
-import { useState, useEffect } from 'react';
+"use client";
+
+import { useState, useEffect, useCallback } from 'react';
 import { Text, View, Alert, Platform, StyleSheet, Pressable } from 'react-native';
 import { generateInvoice, checkPayment } from '../../../lib/lightning';
+import Colors from '../../../constants/Colors';
+import Image from 'next/image';
 
 interface LightningPaymentProps {
   amount: number;
@@ -34,7 +38,7 @@ export default function LightningPayment({ amount, onSuccess, productName }: Lig
           setIsWebLNAvailable(true);
         }
       } catch (err) {
-        console.log('WebLN non disponible:', err);
+        // console.log('WebLN non disponible:', err);
       } finally {
         setIsLoading(false);
       }
@@ -70,22 +74,19 @@ export default function LightningPayment({ amount, onSuccess, productName }: Lig
   }, [amount, productName]);
 
   // Fonction pour vérifier l'état du paiement
-  const checkPaymentStatus = async (paymentHash: string) => {
+  const checkPaymentStatus = useCallback(async (paymentHash: string) => {
     try {
       const isPaid = await checkPayment(paymentHash);
-      
       if (isPaid) {
         setPaymentStatus('success');
         if (onSuccess) onSuccess();
       } else if (paymentStatus === 'pending') {
-        // Réessayer dans 5 secondes
         setTimeout(() => checkPaymentStatus(paymentHash), 5000);
       }
     } catch (err) {
-      console.error('Erreur lors de la vérification du paiement:', err);
       setError(`Erreur lors de la vérification du paiement: ${err instanceof Error ? err.message : 'Erreur inconnue'}`);
     }
-  };
+  }, [onSuccess, paymentStatus]);
 
   // Fonction pour payer avec WebLN (Alby extension)
   const payWithWebLN = async () => {
@@ -107,6 +108,12 @@ export default function LightningPayment({ amount, onSuccess, productName }: Lig
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (invoice?.paymentHash) {
+      checkPaymentStatus(invoice.paymentHash);
+    }
+  }, [checkPaymentStatus, invoice]);
 
   if (isLoading) {
     return (
@@ -142,9 +149,11 @@ export default function LightningPayment({ amount, onSuccess, productName }: Lig
           {/* QR Code pour paiement mobile */}
           <View style={styles.qrContainer}>
             {Platform.OS === 'web' && (
-              <img 
-                src={`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${encodeURIComponent(invoice.paymentRequest)}`} 
-                alt="QR Code Lightning" 
+              <Image 
+                src={`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${encodeURIComponent(invoice.paymentRequest)}`}
+                alt="QR Code Lightning"
+                width={250}
+                height={250}
                 style={styles.qrCode}
               />
             )}
@@ -192,24 +201,34 @@ export default function LightningPayment({ amount, onSuccess, productName }: Lig
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
-    borderRadius: 8,
-    backgroundColor: '#ffffff',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    maxWidth: 400,
+    padding: 32,
+    borderRadius: 28,
+    backgroundColor: '#232336cc',
+    borderWidth: 1.5,
+    borderColor: Colors.secondary,
+    shadowColor: Colors.black,
+    shadowOpacity: 0.18,
+    shadowOffset: { width: 0, height: 8 },
+    shadowRadius: 32,
+    elevation: 8,
+    maxWidth: 440,
     marginHorizontal: 'auto',
+    marginVertical: 24,
   },
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 28,
+    fontWeight: '800',
+    color: Colors.secondary,
     marginBottom: 16,
+    textAlign: 'center',
+    letterSpacing: 0.2,
   },
   amount: {
     marginBottom: 16,
+    color: Colors.text,
+    fontSize: 18,
+    textAlign: 'center',
+    fontWeight: '600',
   },
   qrContainer: {
     marginBottom: 16,
@@ -218,32 +237,59 @@ const styles = StyleSheet.create({
   qrCode: {
     width: 250,
     height: 250,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: Colors.secondary,
   },
   errorText: {
-    color: '#ef4444',
+    color: Colors.error,
+    textAlign: 'center',
+    fontWeight: '600',
+    marginBottom: 12,
   },
   successText: {
-    color: '#22c55e',
+    color: Colors.success,
+    textAlign: 'center',
+    fontWeight: '700',
+    marginBottom: 12,
   },
   albyButton: {
-    backgroundColor: '#eab308',
-    padding: 8,
-    borderRadius: 4,
+    backgroundColor: Colors.secondary,
+    padding: 14,
+    borderRadius: 25,
     marginBottom: 16,
+    alignItems: 'center',
+    shadowColor: Colors.secondary,
+    shadowOpacity: 0.18,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 12,
   },
   copyButton: {
-    backgroundColor: '#3b82f6',
-    padding: 8,
-    borderRadius: 4,
+    backgroundColor: Colors.primary,
+    padding: 14,
+    borderRadius: 25,
     marginBottom: 16,
+    alignItems: 'center',
+    shadowColor: Colors.primary,
+    shadowOpacity: 0.12,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
   },
   walletButton: {
-    backgroundColor: '#22c55e',
-    padding: 8,
-    borderRadius: 4,
+    backgroundColor: Colors.success,
+    padding: 14,
+    borderRadius: 25,
+    alignItems: 'center',
+    shadowColor: Colors.success,
+    shadowOpacity: 0.12,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
   },
   buttonText: {
-    color: '#ffffff',
+    color: Colors.primary,
     textAlign: 'center',
+    fontWeight: '700',
+    fontSize: 16,
+    letterSpacing: 0.2,
   },
 }); 
