@@ -1,13 +1,9 @@
 const isDevelopment = process.env.NODE_ENV === 'development';
 
-type LogArgs = string | number | boolean | null | undefined | object;
-
 class Logger {
   private static instance: Logger;
 
-  private constructor() {
-    // Constructeur privé pour empêcher l'instanciation directe
-  }
+  private constructor() {}
 
   static getInstance(): Logger {
     if (!Logger.instance) {
@@ -16,27 +12,21 @@ class Logger {
     return Logger.instance;
   }
 
-  info(message: string, ...args: LogArgs[]): void {
+  info(message: string, ...args: unknown[]): void {
     if (isDevelopment) {
       console.info(`[INFO] ${message}`, ...args);
     }
   }
 
   error(message: string, error?: Error | unknown): void {
-    if (isDevelopment) {
-      console.error(`[ERROR] ${message}`, error);
-    }
-    // Ici, vous pourriez ajouter une intégration avec un service de monitoring
-    // comme Sentry, LogRocket, etc.
+    // Ajoute ici une intégration Sentry/LogRocket si besoin
   }
 
-  warn(message: string, ...args: LogArgs[]): void {
-    if (isDevelopment) {
-      console.warn(`[WARN] ${message}`, ...args);
-    }
+  warn(message: string, ...args: unknown[]): void {
+    // Ajoute ici une intégration Sentry/LogRocket si besoin
   }
 
-  debug(message: string, ...args: LogArgs[]): void {
+  debug(message: string, ...args: unknown[]): void {
     if (isDevelopment) {
       console.debug(`[DEBUG] ${message}`, ...args);
     }

@@ -2,45 +2,43 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 interface UserData {
   name: string;
   email: string;
-  orders: any[];
-  subscriptions: any[];
 }
 
 export default function AccountPage() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const supabase = createClientComponentClient();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const token = localStorage.getItem('authToken');
-        if (!token) {
-          router.replace('/auth/login');
-          return;
-        }
-        setUserData({
-          name: 'DazUser',
-          email: 'contact@dazno.de',
-          orders: [],
-          subscriptions: []
-        });
-      } catch (error) {
-        console.error('Erreur d\'authentification:', error);
+    async function fetchUserData() {
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      if (!token) {
         router.replace('/auth/login');
-      } finally {
-        setLoading(false);
+        return;
       }
-    };
-    checkAuth();
-  }, [router]);
+      const res = await fetch('/api/user', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setUserData(data);
+      } else {
+        router.replace('/auth/login');
+      }
+      setLoading(false);
+    }
+    fetchUserData();
+  }, [router, supabase]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('authToken');
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
     router.replace('/auth/login');
   };
 

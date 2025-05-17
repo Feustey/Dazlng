@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TextInput, Pressable, ScrollView } from 'react-native';
 import { useState } from 'react';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { useParams } from 'next/navigation';
 import Colors from '../../constants/Colors';
 
 const plans = {
@@ -27,7 +27,8 @@ const plans = {
 };
 
 export default function RegisterScreen() {
-  const { plan } = useLocalSearchParams();
+  const params = useParams();
+  const plan = params.plan;
   const planDetails = plans[plan as keyof typeof plans];
 
   const [form, setForm] = useState({
@@ -42,7 +43,7 @@ export default function RegisterScreen() {
 
   const handleSubmit = () => {
     // Ici, nous implémenterons l'inscription
-    console.log('Registration submitted:', { plan, ...form });
+    // console.log('Registration submitted:', { plan, ...form });
   };
 
   if (!planDetails) {
@@ -55,16 +56,6 @@ export default function RegisterScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <Stack.Screen 
-        options={{
-          title: `Inscription ${planDetails.name}`,
-          headerStyle: {
-            backgroundColor: Colors.primary,
-          },
-          headerTintColor: Colors.white,
-        }}
-      />
-      
       <View style={styles.content}>
         <View style={styles.planHeader}>
           <Text style={styles.title}>{planDetails.name}</Text>

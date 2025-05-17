@@ -1,0 +1,34 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Guide de Structure du Projet Daz3
+
+## Points d'entrée principaux
+
+- **Mobile/Expo** : Le point d'entrée principal pour la version mobile est [`App.tsx`](mdc:App.tsx), qui utilise la navigation React Native via [`navigation/AppNavigator.tsx`](mdc:navigation/AppNavigator.tsx).
+- **Web/Next.js** : Le point d'entrée principal pour la version web est le dossier [`app/`](mdc:app), avec le layout global dans [`app/layout.tsx`](mdc:app/layout.tsx) et la page d'accueil dans [`app/page.tsx`](mdc:app/page.tsx).
+
+## Layout et UI globaux
+
+- Le layout web global inclut le header (logo + navigation) et le footer via [`components/shared/layout/Header.tsx`](mdc:components/shared/layout/Header.tsx) et [`components/shared/layout/Footer.tsx`](mdc:components/shared/layout/Footer.tsx), intégrés dans [`app/layout.tsx`](mdc:app/layout.tsx).
+- Les images statiques (ex : logo) doivent être placées dans [`public/assets/images/`](mdc:public/assets/images) pour être accessibles via Next.js.
+
+## Navigation
+
+- **Mobile** : La navigation tabulaire et stack est gérée dans [`navigation/AppNavigator.tsx`](mdc:navigation/AppNavigator.tsx).
+- **Web** : La navigation principale est dans le composant `Header` (voir ci-dessus).
+
+## Sécurité et dépendances
+
+- Les dépendances critiques sont listées dans [`package.json`](mdc:package.json).
+- Les failles de sécurité sont à surveiller via `npm audit` et les changelogs Expo/Next.js.
+- Attention à la vulnérabilité AuthSession d'Expo : ne pas utiliser `useProxy: true` avec AuthSession sauf nécessité.
+
+## Bonnes pratiques
+
+- Pour toute modification de structure ou ajout de dépendance, vérifier la compatibilité avec Expo SDK et Next.js.
+- Les composants partagés entre mobile et web doivent être placés dans `components/shared/`.
+
+---

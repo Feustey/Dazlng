@@ -27,24 +27,13 @@ export default function LightningPayment({ amount, productName, onSuccess }: Lig
   const [isWebLNAvailable, setIsWebLNAvailable] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [qrUrl, setQrUrl] = useState<string | null>(null);
+  const [showWalletModal, setShowWalletModal] = useState(false);
 
   // Vérifier si WebLN est disponible (extension Alby installée)
   useEffect(() => {
-    const checkWebLN = async () => {
-      try {
-        setIsLoading(true);
-        if (typeof window !== 'undefined' && window.webln) {
-          await window.webln.enable();
-          setIsWebLNAvailable(true);
-        }
-      } catch (err) {
-        // SUPPRIMER console.log('WebLN non disponible:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkWebLN();
+    if (typeof window !== 'undefined' && window.webln) {
+      setIsWebLNAvailable(true);
+    }
   }, []);
 
   // Générer l'invoice au chargement du composant
@@ -56,9 +45,7 @@ export default function LightningPayment({ amount, productName, onSuccess }: Lig
           amount: amount,
           memo: `Paiement pour ${productName}`,
         });
-        
         setInvoice(invoiceData);
-        
         // Commencer à vérifier l'état du paiement
         if (invoiceData.paymentHash) {
           checkPaymentStatus(invoiceData.paymentHash);
@@ -69,7 +56,6 @@ export default function LightningPayment({ amount, productName, onSuccess }: Lig
         setIsLoading(false);
       }
     };
-
     createInvoice();
   }, [amount, productName]);
 
@@ -91,13 +77,10 @@ export default function LightningPayment({ amount, productName, onSuccess }: Lig
   // Fonction pour payer avec WebLN (Alby extension)
   const payWithWebLN = async () => {
     if (!invoice || !window.webln) return;
-
     try {
       setIsLoading(true);
       await window.webln.enable();
-      
       const result = await window.webln.sendPayment(invoice.paymentRequest);
-      
       if (result.preimage) {
         setPaymentStatus('success');
         if (onSuccess) onSuccess();
@@ -142,7 +125,6 @@ export default function LightningPayment({ amount, productName, onSuccess }: Lig
   return (
     <div className="p-6 border border-gray-200 rounded-lg text-center">
       <p>Paiement Lightning pour <b>{productName}</b> ({amount} sats)</p>
-
       {invoice && (
         <div className="my-4">
           <p>
@@ -159,17 +141,64 @@ export default function LightningPayment({ amount, productName, onSuccess }: Lig
         </div>
       )}
 
-      {isWebLNAvailable && invoice && (
-        <button
-          className="bg-yellow-400 text-gray-900 px-6 py-2 rounded font-semibold cursor-pointer mr-2"
-          onClick={payWithWebLN}
-        >
-          Payer avec WebLN (Alby)
-        </button>
+      {/* Bouton pour ouvrir le pop-up de choix de wallet */}
+      <button
+        className="bg-blue-500 text-white px-6 py-2 rounded font-semibold cursor-pointer mb-2"
+        onClick={() => setShowWalletModal(true)}
+      >
+        Choisir un wallet de paiement
+      </button>
+
+      {/* Modal de choix de wallet */}
+      {showWalletModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg max-w-sm w-full">
+            <h2 className="text-lg font-bold mb-4">Choisissez votre wallet</h2>
+            {isWebLNAvailable && (
+              <button
+                className="w-full bg-yellow-400 text-gray-900 px-4 py-2 rounded mb-2"
+                onClick={async () => {
+                  setShowWalletModal(false);
+                  await payWithWebLN();
+                }}
+              >
+                Payer avec Alby/WebLN
+              </button>
+            )}
+            <button
+              className="w-full bg-green-500 text-white px-4 py-2 rounded mb-2"
+              onClick={() => {
+                setShowWalletModal(false);
+                if (invoice) window.location.href = `lightning:${invoice.paymentRequest}`;
+              }}
+            >
+              Ouvrir avec un wallet Lightning
+            </button>
+            <button
+              className="w-full bg-gray-200 text-gray-900 px-4 py-2 rounded mb-2"
+              onClick={() => {
+                setShowWalletModal(false);
+                if (invoice) {
+                  navigator.clipboard.writeText(invoice.paymentRequest);
+                  alert('Facture copiée !');
+                }
+              }}
+            >
+              Copier la facture Lightning
+            </button>
+            <button
+              className="w-full bg-red-500 text-white px-4 py-2 rounded"
+              onClick={() => setShowWalletModal(false)}
+            >
+              Annuler
+            </button>
+          </div>
+        </div>
       )}
 
+      {/* Bouton de simulation */}
       <button
-        className="bg-green-500 text-white px-6 py-2 rounded font-semibold cursor-pointer"
+        className="bg-green-500 text-white px-6 py-2 rounded font-semibold cursor-pointer mt-2"
         onClick={onSuccess}
       >
         Simuler le paiement

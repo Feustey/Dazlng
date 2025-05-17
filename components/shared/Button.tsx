@@ -8,16 +8,12 @@ import {
   TouchableOpacityProps,
   ViewStyle,
 } from 'react-native';
-import { colors, spacing, typography } from '@/src/styles/shared';
+import { colors, spacing, typography } from 'styles/shared';
 
 interface ButtonProps extends TouchableOpacityProps {
   variant?: 'primary' | 'secondary';
   size?: 'sm' | 'md' | 'lg';
   children: React.ReactNode;
-}
-
-interface WebStyle extends ViewStyle {
-  cursor?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -27,9 +23,9 @@ export const Button: React.FC<ButtonProps> = ({
   style,
   ...props
 }) => {
-  const webStyles: WebStyle | undefined = Platform.select({
+  const webStyles: ViewStyle | undefined = Platform.select({
     web: {
-      cursor: 'pointer',
+      // cursor: 'pointer',
     },
   });
 

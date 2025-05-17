@@ -43,7 +43,7 @@ export default function Footer() {
     try {
       await Linking.openURL(url);
     } catch (error) {
-      console.error('Erreur lors de l\'ouverture du lien:', error);
+      // console.error('Erreur lors de l\'ouverture du lien:', error);
     }
   };
 

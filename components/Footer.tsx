@@ -1,5 +1,7 @@
-import { View, StyleSheet, Pressable, Linking } from 'react-native';
-import { Svg, Path } from 'react-native-svg';
+import React from 'react';
+import { View, Pressable, StyleSheet } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
+import { Linking } from 'react-native';
 import Colors from '../constants/Colors';
 
 export default function Footer() {

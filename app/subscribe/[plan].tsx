@@ -1,6 +1,6 @@
 import { View, StyleSheet, ScrollView, Pressable, Text } from 'react-native';
 import { useState } from 'react';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { useParams } from 'next/navigation';
 import Colors from '../../constants/Colors';
 import FormInput from '../../components/shared/ui/FormInput';
 import FeaturesList from '../../components/shared/ui/FeaturesList';
@@ -43,7 +43,8 @@ interface FormData {
 }
 
 export default function SubscribeScreen() {
-  const { plan } = useLocalSearchParams();
+  const params = useParams();
+  const plan = params.plan;
   const planDetails = plans[plan as keyof typeof plans];
 
   const [form, setForm] = useState<FormData>({
@@ -55,7 +56,7 @@ export default function SubscribeScreen() {
 
   const handleSubmit = () => {
     // Ici, nous implémenterons l'inscription
-    console.log('Subscription submitted:', { plan, ...form });
+    // console.log('Subscription submitted:', { plan, ...form });
   };
 
   if (!planDetails) {
@@ -68,16 +69,6 @@ export default function SubscribeScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <Stack.Screen 
-        options={{
-          title: `Inscription ${planDetails.name}`,
-          headerStyle: {
-            backgroundColor: Colors.primary,
-          },
-          headerTintColor: Colors.white,
-        }}
-      />
-      
       <View style={styles.content}>
         <View style={styles.planHeader}>
           <Text style={styles.title}>{planDetails.name}</Text>

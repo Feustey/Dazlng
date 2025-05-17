@@ -1,3 +1,4 @@
+"use client";
 import { Tabs, useRootNavigation } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Image, Pressable, View, StyleSheet } from 'react-native';
@@ -30,6 +31,7 @@ const TabButton: React.FC<TabButtonProps> = ({ onPress }) => (
     <Image
       source={require('@/assets/images/logo.png')}
       alt="Logo"
+      accessibilityLabel="Logo Daznode"
       style={styles.logo}
     />
   </View>
@@ -42,6 +44,7 @@ const HeaderLogo: React.FC<HeaderLogoProps> = ({ onPress }) => (
       style={styles.logo}
       resizeMode="contain"
       accessibilityLabel="Logo Daznode"
+      alt="Logo Daznode"
     />
   </Pressable>
 );

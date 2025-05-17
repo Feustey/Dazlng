@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { ArrowRight } from 'lucide-react-native';
+import Colors from '../../../constants/Colors';
 
 interface HeroProps {
   title: string;
@@ -8,7 +9,6 @@ interface HeroProps {
   imageUrl: string;
   buttonText?: string;
   onButtonPress?: () => void;
-  overlayOpacity?: number;
 }
 
 export default function Hero({
@@ -17,7 +17,6 @@ export default function Hero({
   imageUrl,
   buttonText = 'Commencer',
   onButtonPress,
-  overlayOpacity = 0.5,
 }: HeroProps) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const translateYAnim = useRef(new Animated.Value(20)).current;
@@ -59,10 +58,7 @@ export default function Hero({
         resizeMode="cover"
         alt="Hero background"
       />
-      <View style={[
-        styles.overlay,
-        { backgroundColor: `rgba(0, 0, 0, ${overlayOpacity})` }
-      ]}>
+      <View style={styles.overlay}>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.subtitle}>{subtitle}</Text>
         {onButtonPress && (
@@ -72,7 +68,7 @@ export default function Hero({
             activeOpacity={0.8}
           >
             <Text style={styles.buttonText}>{buttonText}</Text>
-            <ArrowRight size={18} color="#FFFFFF" />
+            <ArrowRight size={18} color={Colors.primary} />
           </TouchableOpacity>
         )}
       </View>
@@ -89,6 +85,7 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
+    borderRadius: 28,
   },
   overlay: {
     position: 'absolute',
@@ -98,34 +95,50 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: 32,
+    backgroundColor: '#232336cc',
+    borderRadius: 28,
+    borderWidth: 1.5,
+    borderColor: Colors.secondary,
+    shadowColor: Colors.black,
+    shadowOpacity: 0.18,
+    shadowOffset: { width: 0, height: 8 },
+    shadowRadius: 32,
+    elevation: 8,
   },
   title: {
     fontSize: 42,
-    fontWeight: '700',
-    color: '#FFFFFF',
+    fontWeight: '800',
+    color: Colors.secondary,
     marginBottom: 10,
     textAlign: 'center',
+    letterSpacing: 0.2,
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '500',
-    color: '#FFFFFF',
+    color: Colors.muted,
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 24,
   },
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F7931A',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
+    backgroundColor: Colors.secondary,
+    paddingVertical: 14,
+    paddingHorizontal: 32,
     borderRadius: 25,
     gap: 8,
+    marginTop: 12,
+    shadowColor: Colors.secondary,
+    shadowOpacity: 0.18,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 12,
   },
   buttonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
+    color: Colors.primary,
+    fontSize: 18,
+    fontWeight: '700',
+    letterSpacing: 0.2,
   },
 }); 

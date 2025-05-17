@@ -24,13 +24,13 @@ export async function sendEmail({ to, subject, html, from = 'contact@daznode.com
     });
 
     if (error) {
-      console.error('Erreur lors de l\'envoi de l\'email:', error);
+      // console.error('Erreur lors de l\'envoi de l\'email:', error);
       throw new Error('Échec de l\'envoi de l\'email');
     }
 
     return data;
   } catch (error) {
-    console.error('Erreur lors de l\'envoi de l\'email:', error);
+    // console.error('Erreur lors de l\'envoi de l\'email:', error);
     throw new Error('Échec de l\'envoi de l\'email');
   }
 } 

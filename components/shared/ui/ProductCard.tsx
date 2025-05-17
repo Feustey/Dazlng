@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import Colors from '../../../constants/Colors';
 
 interface Feature {
   text: string;
@@ -42,50 +43,76 @@ const ProductCard = ({ title, subtitle, price, features, bonusFeatures }: Produc
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    backgroundColor: Colors.background,
+    borderRadius: 28,
+    padding: 32,
+    borderWidth: 1.5,
+    borderColor: Colors.secondary,
+    shadowColor: Colors.black,
+    shadowOpacity: 0.18,
+    shadowOffset: { width: 0, height: 8 },
+    shadowRadius: 32,
+    elevation: 8,
+    margin: 12,
   },
   header: {
     marginBottom: 24,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: '800',
+    color: Colors.secondary,
     marginBottom: 8,
+    letterSpacing: 0.2,
+    textAlign: 'center',
   },
   subtitle: {
     fontSize: 18,
-    color: '#666',
+    color: Colors.muted,
+    textAlign: 'center',
   },
   priceCard: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
+    backgroundColor: Colors.primary,
+    borderRadius: 18,
     padding: 24,
     marginBottom: 24,
-    shadowColor: '#000',
+    shadowColor: Colors.secondary,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOpacity: 0.10,
+    shadowRadius: 8,
     elevation: 3,
+    alignItems: 'center',
   },
   price: {
-    fontSize: 20,
-    fontWeight: '600',
+    fontSize: 22,
+    fontWeight: '700',
+    color: Colors.secondary,
     marginBottom: 16,
   },
   feature: {
     marginBottom: 8,
+    color: Colors.text,
+    fontSize: 15,
   },
   bonusSection: {
-    backgroundColor: '#EBF5FF',
-    borderRadius: 8,
+    backgroundColor: Colors.background,
+    borderRadius: 18,
     padding: 16,
+    borderWidth: 1,
+    borderColor: Colors.secondary,
+    marginTop: 8,
   },
   bonusTitle: {
-    fontWeight: '600',
+    fontWeight: '700',
     marginBottom: 8,
+    color: Colors.secondary,
+    textAlign: 'center',
   },
   bonusFeature: {
     marginBottom: 4,
+    color: Colors.text,
+    fontSize: 14,
+    textAlign: 'center',
   },
 });
 

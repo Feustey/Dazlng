@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 export default function LoginPage() {
   const [form, setForm] = useState({
@@ -9,24 +10,26 @@ export default function LoginPage() {
     password: '',
   });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const supabase = createClientComponentClient();
 
   const handleLogin = async () => {
+    setError(null);
     if (!form.email || !form.password) {
-      alert('Veuillez remplir tous les champs');
+      setError('Veuillez remplir tous les champs');
       return;
     }
-
-    try {
-      setLoading(true);
-      // Simulation d'une API pour la version minimale
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      localStorage.setItem('authToken', 'mock-token-123');
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({
+      email: form.email,
+      password: form.password,
+    });
+    setLoading(false);
+    if (error) {
+      setError(error.message);
+    } else {
       router.push('/account');
-    } catch (error) {
-      alert('Une erreur est survenue lors de la connexion');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -75,6 +78,8 @@ export default function LoginPage() {
               />
             </div>
           </div>
+
+          {error && <div className="text-red-600 text-sm mt-2">{error}</div>}
 
           <div>
             <button

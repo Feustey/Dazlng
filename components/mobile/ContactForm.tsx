@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { useEmail } from '@/hooks/useEmail';
-import { colors, spacing, typography, shared } from '../../src/styles/shared';
+import { colors, spacing, typography, shared } from 'styles/shared';
 
 export default function ContactForm() {
   const { sending, error, sendEmail } = useEmail();
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   button: {
-    ...shared.button.primary,
+    ...filterButtonStyle(shared.button.primary),
     width: '100%',
   },
   buttonDisabled: {
@@ -141,4 +141,9 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     textAlign: 'center',
   },
-}); 
+});
+
+function filterButtonStyle(styleObj: any) {
+  const { cursor, transition, ':hover': _hover, ...rest } = styleObj;
+  return rest;
+} 

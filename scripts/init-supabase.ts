@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabaseClient';
+import { supabase } from '../lib/supabase';
 import { v4 as uuidv4 } from 'uuid';
 import { registerUser } from '../utils/auth';
 
@@ -143,7 +143,7 @@ async function initializeDatabase() {
 
     if (subscriptionsError) throw subscriptionsError;
 
-    console.log('Base de données initialisée avec succès !');
+    // console.log('Base de données initialisée avec succès !');
   } catch (error) {
     console.error('Erreur lors de l\'initialisation de la base de données:', error);
     throw error;
@@ -153,7 +153,7 @@ async function initializeDatabase() {
 // Exécuter l'initialisation
 initializeDatabase()
   .then(() => {
-    console.log('Script terminé avec succès');
+    // console.log('Script terminé avec succès');
     process.exit(0);
   })
   .catch((error) => {

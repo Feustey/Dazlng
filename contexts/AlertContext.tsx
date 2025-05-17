@@ -1,0 +1,21 @@
+import React, { createContext, useContext } from 'react';
+
+interface AlertContextType {
+  showAlert: (type: string, message: string) => void;
+}
+
+const AlertContext = createContext<AlertContextType>({
+  showAlert: (type: string, message: string) => {
+    // console.log(`[Alert] ${type}: ${message}`);
+  },
+});
+
+export const AlertProvider = ({ children }: { children: React.ReactNode }) => (
+  <AlertContext.Provider value={{ showAlert: (type: string, message: string) => {
+    // console.log(`[Alert] ${type}: ${message}`);
+  } }}>
+    {children}
+  </AlertContext.Provider>
+);
+
+export const useAlert = () => useContext(AlertContext); 

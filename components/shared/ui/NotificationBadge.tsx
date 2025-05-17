@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useEffect } from 'react';
 import { Text, StyleSheet, Animated } from 'react-native';
 

@@ -1,30 +1,18 @@
-import { View, StyleSheet, ViewStyle } from 'react-native';
-import type { PropsWithChildren } from 'react';
+import React from 'react';
+import styles from './PageLayout.module.css';
 
-interface PageLayoutProps extends PropsWithChildren {
-  style?: ViewStyle;
-  contentStyle?: ViewStyle;
+interface PageLayoutProps {
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+  contentStyle?: React.CSSProperties;
 }
 
 export default function PageLayout({ children, style, contentStyle }: PageLayoutProps) {
   return (
-    <View style={[styles.container, style]}>
-      <View style={[styles.content, contentStyle]}>
+    <div className={styles.pageLayout} style={style}>
+      <div className={styles.pageContent} style={contentStyle}>
         {children}
-      </View>
-    </View>
+      </div>
+    </div>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-}); 
+} 

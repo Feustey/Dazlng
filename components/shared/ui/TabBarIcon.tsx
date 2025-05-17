@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useRef } from 'react';
 import { Animated } from 'react-native';
 import { LucideIcon } from 'lucide-react-native';

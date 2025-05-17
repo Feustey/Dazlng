@@ -1,42 +1,41 @@
 import { NextResponse } from 'next/server';
-import { logger } from '@/src/utils/logger';
-import nodemailer from 'nodemailer';
+import { logger } from '@/utils/logger';
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
   try {
-    const { to, subject, text } = await request.json();
+    const { to, subject, text, html } = await request.json();
 
-    if (!to || !subject || !text) {
+    if (!to || !subject || (!text && !html)) {
       return NextResponse.json(
-        { error: 'Email, subject and text are required' },
+        { error: 'Email, subject et contenu (text ou html) requis' },
         { status: 400 }
       );
     }
 
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT),
-      secure: true,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
-
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM,
+    const { error } = await resend.emails.send({
+      from: process.env.SMTP_FROM || 'Dazno.de <contact@dazno.de>',
       to,
       subject,
-      text,
+      html: html || text,
     });
 
-    logger.info('Email sent successfully:', { to, subject });
+    if (error) {
+      logger.error('Erreur lors de l\'envoi de l\'email:', error);
+      return NextResponse.json(
+        { error: 'Échec de l\'envoi de l\'email' },
+        { status: 500 }
+      );
+    }
 
+    logger.info('Email envoyé avec succès:', { to, subject });
     return NextResponse.json({ success: true });
   } catch (error) {
-    logger.error('Error sending email:', error);
+    logger.error('Erreur lors de l\'envoi de l\'email:', error);
     return NextResponse.json(
-      { error: 'Failed to send email' },
+      { error: 'Échec de l\'envoi de l\'email' },
       { status: 500 }
     );
   }

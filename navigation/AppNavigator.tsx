@@ -2,22 +2,22 @@ import React from 'react';
 import { View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator, TransitionPresets, CardStyleInterpolators } from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import { Home, Box, CreditCard, Network, Sparkles, User } from 'lucide-react-native';
 
 // Importe tes écrans principaux (tabs)
-import HomeScreen from '../app/(tabs)/index';
-import DazboxScreen from '../app/(tabs)/dazbox';
-import DazpayScreen from '../app/(tabs)/dazpay';
-import DaznodeScreen from '../app/(tabs)/daznode';
-import FeaturesScreen from '../app/(tabs)/features';
-import AccountScreen from '../app/(tabs)/account';
+import HomeScreen from 'mobile/app/tabs/index';
+import DazboxScreen from 'mobile/app/tabs/dazbox';
+import DazpayScreen from 'mobile/app/tabs/dazpay';
+import DaznodeScreen from 'mobile/app/tabs/daznode';
+import FeaturesScreen from 'mobile/app/tabs/features';
+// import AccountScreen from 'mobile/app/tabs/account';
 
 // Importe les écrans secondaires (stack)
-import ContactScreen from '../app/contact';
-import BuyScreen from '../app/(tabs)/buy';
-import CheckoutScreen from '../app/(tabs)/checkout';
-import HowItWorksScreen from '../app/(tabs)/how-it-works';
+import ContactScreen from 'app/contact/page';
+// import BuyScreen from 'mobile/app/tabs/buy';
+// import CheckoutScreen from 'mobile/app/tabs/checkout';
+import HowItWorksScreen from 'mobile/app/tabs/how-it-works';
 
 import TabBarIcon from '../components/shared/ui/TabBarIcon';
 import NotificationBadge from '../components/shared/ui/NotificationBadge';
@@ -108,18 +108,6 @@ function TabNavigator() {
           ),
         }}
       />
-      <Tab.Screen 
-        name="Compte" 
-        component={AccountScreen}
-        options={{
-          tabBarIcon: ({ color, size, focused }) => (
-            <View>
-              <TabBarIcon Icon={User} color={color} size={size} focused={focused} />
-              <NotificationBadge show={false} />
-            </View>
-          ),
-        }}
-      />
     </Tab.Navigator>
   );
 }
@@ -129,7 +117,6 @@ export default function AppNavigator() {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
-          cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
           header: ({ route, options }) => (
             <CustomHeader 
               title={options.title || route.name} 
@@ -150,22 +137,6 @@ export default function AppNavigator() {
           component={ContactScreen}
           options={{
             title: 'Nous contacter',
-            cardStyleInterpolator: CardStyleInterpolators.forModalPresentationIOS,
-          }}
-        />
-        <Stack.Screen 
-          name="Buy" 
-          component={BuyScreen}
-          options={{
-            title: 'Acheter',
-          }}
-        />
-        <Stack.Screen 
-          name="Checkout" 
-          component={CheckoutScreen}
-          options={{
-            title: 'Paiement',
-            cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
           }}
         />
         <Stack.Screen 

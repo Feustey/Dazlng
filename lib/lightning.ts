@@ -26,25 +26,16 @@ export async function generateInvoice({ amount, memo }: InvoiceParams): Promise<
 }
 
 export async function checkPayment(paymentHash: string): Promise<boolean> {
-  try {
-    const address = new LightningAddress(process.env.LIGHTNING_ADDRESS as string);
-    await address.fetch();
+  const response = await fetch('/api/check-payment', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ paymentHash }),
+  });
 
-    const lnurlPayEndpoint = address.lnurlpData?.callback;
-    if (!lnurlPayEndpoint) {
-      throw new Error('Endpoint LNURL-pay non disponible');
-    }
-
-    const response = await fetch(`${lnurlPayEndpoint}/paymentStatus/${paymentHash}`);
-    const data = await response.json();
-    return data.status === 'completed';
-  } catch (error) {
-    console.error('Erreur lors de la vérification du paiement:', error);
-    throw new Error('Échec de la vérification du paiement');
+  if (!response.ok) {
+    throw new Error('Erreur lors de la vérification du paiement');
   }
-}
 
-module.exports = {
-  generateInvoice,
-  checkPayment,
-}; 
+  const data = await response.json();
+  return data.paid === true;
+} 

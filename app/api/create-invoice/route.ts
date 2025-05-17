@@ -1,48 +1,21 @@
 import { NextResponse } from 'next/server';
-import { logger } from '@/src/utils/logger';
+import { createInvoice } from 'ln-service';
+import { lnd } from '@/app/lib/lnd';
 
-export async function POST(request: Request) {
-  try {
-    const { amount, description } = await request.json();
+export async function POST(req: Request) {
+  const body = await req.json();
+  const tokens = body.tokens ?? 300000; // 300k sats par défaut
+  const description = body.description ?? 'Checkout payment';
 
-    if (!amount || !description) {
-      return NextResponse.json(
-        { error: 'Amount and description are required' },
-        { status: 400 }
-      );
-    }
-
-    // Création de la facture avec l'API Lightning
-    const response = await fetch(`${process.env.LIGHTNING_API_URL}/v1/invoice`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Api-Key': process.env.LIGHTNING_API_KEY || '',
-      },
-      body: JSON.stringify({
-        amount,
-        description,
-        expiry: 3600, // 1 heure
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to create invoice');
-    }
-
-    const data = await response.json();
-    
-    logger.info('Invoice created:', { amount, description, paymentHash: data.payment_hash });
-
-    return NextResponse.json({
-      paymentRequest: data.payment_request,
-      paymentHash: data.payment_hash,
-    });
-  } catch (error) {
-    logger.error('Error creating invoice:', error);
-    return NextResponse.json(
-      { error: 'Failed to create invoice' },
-      { status: 500 }
-    );
+  if (!tokens || !description) {
+    return NextResponse.json({ error: 'tokens et description requis' }, { status: 400 });
   }
+
+  const invoice = await createInvoice({ lnd, tokens, description });
+
+  return NextResponse.json({
+    request: invoice.request,
+    id: invoice.id,
+    expires_at: invoice.expires_at,
+  });
 } 

@@ -1,14 +1,9 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import { router } from 'expo-router';
 import { storage } from '../src/utils/storage';
 import LoginScreen from './login';
 
-jest.mock('expo-router', () => ({
-  router: {
-    replace: jest.fn(),
-  },
-}));
+
 
 jest.mock('../src/utils/storage', () => ({
   storage: {

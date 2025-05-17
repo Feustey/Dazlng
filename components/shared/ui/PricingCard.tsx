@@ -1,6 +1,5 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Platform } from 'react-native';
 import Colors from '../../../constants/Colors';
-import { cardShadow } from '../../../constants/Shadows';
 
 export interface PricingCardProps {
   title: string;
@@ -52,55 +51,86 @@ export default function PricingCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.white,
-    borderRadius: 8,
-    padding: 20,
-    marginBottom: 20,
-    ...cardShadow,
+    backgroundColor: Colors.background,
+    borderRadius: 28,
+    padding: 32,
+    marginBottom: 28,
+    shadowColor: Colors.black,
+    shadowOpacity: 0.18,
+    shadowOffset: { width: 0, height: 8 },
+    shadowRadius: 32,
+    elevation: 8,
+    ...Platform.select({
+      web: {
+        boxShadow: '0 8px 32px 0 rgba(0,0,0,0.18)',
+        transition: 'box-shadow 0.2s',
+      },
+    }),
   },
   addonCard: {
-    borderWidth: 1,
-    borderColor: Colors.gray[200],
+    borderWidth: 2,
+    borderColor: Colors.secondary,
   },
   planName: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
+    fontSize: 26,
+    fontWeight: '700',
+    color: Colors.text,
+    marginBottom: 12,
+    fontFamily: Platform.select({ web: 'Inter, sans-serif', default: 'System' }),
   },
   addonTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 5,
+    fontSize: 22,
+    fontWeight: '600',
+    color: Colors.secondary,
+    marginBottom: 8,
+    fontFamily: Platform.select({ web: 'Inter, sans-serif', default: 'System' }),
   },
   price: {
-    fontSize: 24,
-    color: Colors.primary,
-    marginBottom: 15,
+    fontSize: 32,
+    color: Colors.secondary,
+    fontWeight: '700',
+    marginBottom: 18,
+    fontFamily: Platform.select({ web: 'Inter, sans-serif', default: 'System' }),
   },
   description: {
-    fontSize: 16,
-    marginBottom: 15,
-    color: Colors.gray[600],
+    fontSize: 17,
+    marginBottom: 18,
+    color: Colors.muted,
+    fontFamily: Platform.select({ web: 'Inter, sans-serif', default: 'System' }),
   },
   feature: {
     fontSize: 16,
-    marginBottom: 5,
-    color: Colors.gray[800],
+    marginBottom: 6,
+    color: Colors.text,
+    fontFamily: Platform.select({ web: 'Inter, sans-serif', default: 'System' }),
   },
   button: {
-    backgroundColor: Colors.primary,
-    padding: 15,
-    borderRadius: 8,
+    backgroundColor: Colors.secondary,
+    paddingVertical: 16,
+    paddingHorizontal: 36,
+    borderRadius: 25,
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 18,
+    shadowColor: Colors.secondary,
+    shadowOpacity: 0.18,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 12,
+    ...Platform.select({
+      web: {
+        transition: 'background 0.2s, color 0.2s',
+        cursor: 'pointer',
+      },
+    }),
   },
   buttonPressed: {
-    opacity: 0.9,
-    transform: [{ scale: 0.98 }],
+    opacity: 0.85,
+    transform: [{ scale: 0.97 }],
   },
   buttonText: {
-    color: Colors.white,
-    fontSize: 16,
-    fontWeight: 'bold',
+    color: Colors.primary,
+    fontSize: 18,
+    fontWeight: '700',
+    fontFamily: Platform.select({ web: 'Inter, sans-serif', default: 'System' }),
+    letterSpacing: 0.2,
   },
 }); 

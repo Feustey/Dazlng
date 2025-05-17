@@ -1,4 +1,4 @@
-import { View, Text, TextInput, StyleSheet, TextInputProps } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TextInputProps, Platform } from 'react-native';
 import Colors from '../../../constants/Colors';
 
 export interface FormInputProps extends TextInputProps {
@@ -34,7 +34,7 @@ export default function FormInput({
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor={Colors.gray[400]}
+        placeholderTextColor={Colors.gray[600]}
         keyboardType={keyboardType}
         autoCapitalize={autoCapitalize}
         {...props}
@@ -48,38 +48,44 @@ export default function FormInput({
 
 const styles = StyleSheet.create({
   inputGroup: {
-    gap: 8,
+    gap: 10,
   },
   labelContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+    marginBottom: 2,
   },
   label: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: Colors.secondary,
+    fontSize: 17,
+    fontWeight: '600',
+    color: Colors.text,
+    fontFamily: Platform.select({ web: 'Inter, sans-serif', default: 'System' }),
+    letterSpacing: 0.1,
   },
   optional: {
-    fontSize: 14,
-    color: Colors.gray[500],
+    fontSize: 15,
+    color: Colors.muted,
     fontStyle: 'italic',
   },
   input: {
-    backgroundColor: Colors.white,
-    borderWidth: 1,
-    borderColor: Colors.gray[200],
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    color: Colors.secondary,
+    backgroundColor: Colors.background,
+    borderWidth: 2,
+    borderColor: Colors.gray[400],
+    borderRadius: 18,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    fontSize: 17,
+    color: Colors.text,
+    fontFamily: Platform.select({ web: 'Inter, sans-serif', default: 'System' }),
   },
   inputError: {
     borderColor: Colors.error,
   },
   errorText: {
-    fontSize: 14,
+    fontSize: 15,
     color: Colors.error,
     marginTop: 4,
+    fontWeight: '500',
   },
 }); 

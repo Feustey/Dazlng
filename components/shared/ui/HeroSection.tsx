@@ -4,16 +4,14 @@ import Colors from '../../../constants/Colors';
 interface HeroSectionProps {
   title: string;
   subtitle: string;
-  backgroundColor?: string;
 }
 
 export default function HeroSection({
   title,
   subtitle,
-  backgroundColor = Colors.primary,
 }: HeroSectionProps) {
   return (
-    <View style={[styles.container, { backgroundColor }]}>
+    <View style={[styles.container, { backgroundColor: '#232336cc', borderColor: Colors.secondary }]}>
       <Text style={styles.title} accessibilityRole="header">
         {title}
       </Text>
@@ -26,17 +24,30 @@ export default function HeroSection({
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: 32,
+    borderRadius: 28,
+    borderWidth: 1.5,
+    borderColor: Colors.secondary,
+    shadowColor: Colors.black,
+    shadowOpacity: 0.18,
+    shadowOffset: { width: 0, height: 8 },
+    shadowRadius: 32,
+    elevation: 8,
+    marginBottom: 24,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: Colors.white,
-    marginBottom: 10,
+    fontSize: 32,
+    fontWeight: '800',
+    color: Colors.secondary,
+    marginBottom: 12,
+    textAlign: 'center',
+    letterSpacing: 0.2,
   },
   subtitle: {
-    fontSize: 16,
-    color: Colors.white,
-    lineHeight: 24,
+    fontSize: 18,
+    color: Colors.muted,
+    lineHeight: 26,
+    textAlign: 'center',
+    fontWeight: '500',
   },
 }); 

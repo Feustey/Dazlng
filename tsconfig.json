@@ -20,7 +20,10 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@lib/*": ["lib/*"],
+      "@components/ui/*": ["components/shared/ui/*"],
+      "@app/lib/*": ["app/lib/*"]
     },
     "plugins": [
       {
@@ -41,6 +44,5 @@
     "compilerOptions": {
       "module": "commonjs"
     }
-  },
-  "extends": "expo/tsconfig.base"
+  }
 }

@@ -1,28 +1,27 @@
-import { NextResponse } from 'next/server';
-import { logger } from '@/src/utils/logger';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(request: Request) {
-  try {
-    const { paymentHash } = await request.json();
+export async function POST(req: NextRequest) {
+  const { paymentHash } = await req.json();
 
-    // Vérification du paiement avec l'API Lightning
-    const response = await fetch(`${process.env.LIGHTNING_API_URL}/v1/invoice/${paymentHash}`, {
-      headers: {
-        'X-Api-Key': process.env.LIGHTNING_API_KEY || '',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to check payment status');
-    }
-
-    const data = await response.json();
-    
-    logger.info('Payment status checked:', { paymentHash, status: data.settled });
-
-    return NextResponse.json({ settled: data.settled });
-  } catch (error) {
-    logger.error('Error checking payment:', error);
-    return NextResponse.json({ error: 'Failed to check payment status' }, { status: 500 });
+  // Récupère le token API Alby depuis les variables d'environnement
+  const ALBY_API_TOKEN = process.env.ALBY_API_TOKEN;
+  if (!ALBY_API_TOKEN) {
+    return NextResponse.json({ error: 'Token API Alby manquant' }, { status: 500 });
   }
+
+  // Appel à l'API Alby pour vérifier le paiement
+  const response = await fetch(`https://api.getalby.com/v1/invoices/${paymentHash}`, {
+    headers: {
+      Authorization: `Bearer ${ALBY_API_TOKEN}`,
+      Accept: 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    return NextResponse.json({ error: 'Erreur lors de la vérification du paiement' }, { status: 500 });
+  }
+
+  const data = await response.json();
+  // data.settled === true si payé
+  return NextResponse.json({ paid: data.settled });
 } 

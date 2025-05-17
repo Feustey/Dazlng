@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { User, Product, Order, Delivery, Payment, Subscription } from '../types/database';
-import { supabase } from '../lib/supabaseClient';
+import { supabase } from '../lib/supabase';
 
 // Users
 export async function createUser(userData: Omit<User, 'id' | 'created_at' | 'updated_at'>): Promise<User> {

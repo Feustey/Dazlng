@@ -8,7 +8,7 @@ export default function LoginScreen() {
 
   const handleLogin = () => {
     // TODO: Implémenter la logique de connexion
-    console.log('Login attempt:', { email, password });
+    // console.log('Login attempt:', { email, password });
   };
 
   return (

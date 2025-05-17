@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FaFontAwesome } from 'react-icons/fa';
 import { View, Image, Pressable } from 'react-native';
 import Colors from './constants/Colors';
 import Footer from './components/Footer';
@@ -11,17 +11,17 @@ import Footer from './components/Footer';
 import { RootStackParamList, TabParamList } from './types/navigation';
 
 // Import des écrans
-import HomeScreen from './app/(tabs)/index';
-import DazboxScreen from './app/(tabs)/dazbox';
-import DaznodeScreen from './app/(tabs)/daznode';
-import DazpayScreen from './app/(tabs)/dazpay';
+import HomeScreen from './mobile/app/tabs/index';
+import DazboxScreen from './mobile/app/tabs/dazbox';
+import DaznodeScreen from './mobile/app/tabs/daznode';
+import DazPayScreen from './mobile/app/tabs/dazpay';
 import LoginScreen from './app/auth/login/page';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
 
 type NavigationProp = {
-  navigate: (screen: keyof RootStackParamList, params?: any) => void;
+  navigate: (screen: keyof RootStackParamList, params?: Record<string, unknown>) => void;
 };
 
 function TabNavigator() {
@@ -52,7 +52,7 @@ function TabNavigator() {
                 style={{ marginRight: 15 }}
                 onPress={() => navigation.navigate('Login')}
               >
-                <FontAwesome5 name="user-circle" size={24} color={Colors.white} />
+                <FaFontAwesome name="user-circle" size={24} color={Colors.white} />
               </Pressable>
             ),
           }}
@@ -61,28 +61,28 @@ function TabNavigator() {
             name="Accueil"
             component={HomeScreen}
             options={{
-              tabBarIcon: ({ color }) => <FontAwesome5 name="home" size={24} color={color} />,
+              tabBarIcon: ({ color }) => <FaFontAwesome name="home" size={24} color={color} />,
             }}
           />
           <Tab.Screen
             name="Dazbox"
             component={DazboxScreen}
             options={{
-              tabBarIcon: ({ color }) => <FontAwesome5 name="box" size={24} color={color} />,
+              tabBarIcon: ({ color }) => <FaFontAwesome name="box" size={24} color={color} />,
             }}
           />
           <Tab.Screen
             name="Daznode"
             component={DaznodeScreen}
             options={{
-              tabBarIcon: ({ color }) => <FontAwesome5 name="network-wired" size={24} color={color} />,
+              tabBarIcon: ({ color }) => <FaFontAwesome name="network-wired" size={24} color={color} />,
             }}
           />
           <Tab.Screen
             name="Dazpay"
-            component={DazpayScreen}
+            component={DazPayScreen}
             options={{
-              tabBarIcon: ({ color }) => <FontAwesome5 name="cash-register" size={24} color={color} />,
+              tabBarIcon: ({ color }) => <FaFontAwesome name="cash-register" size={24} color={color} />,
             }}
           />
         </Tab.Navigator>

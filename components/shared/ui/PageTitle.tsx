@@ -1,25 +1,12 @@
-import { Text, StyleSheet, TextStyle, View } from 'react-native';
+import React from 'react';
 
 interface PageTitleProps {
-  children: string;
-  style?: TextStyle;
+  children: React.ReactNode;
+  style?: React.CSSProperties;
 }
 
 export default function PageTitle({ children, style }: PageTitleProps) {
   return (
-    <View>
-      <Text style={[styles.title, style]}>
-        {children}
-      </Text>
-    </View>
+    <h1 style={{ fontSize: 32, fontWeight: 700, marginBottom: 24, ...style }}>{children}</h1>
   );
-}
-
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-}); 
+} 
