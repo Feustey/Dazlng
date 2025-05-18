@@ -31,7 +31,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
   line-height: 1.5;
-  background: linear-gradient(135deg, #0a0f2c, #1e0038 80%);
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   color: #fff;
   font-family: 'Segoe UI', 'Inter', Arial, sans-serif;
   min-height: 100vh;

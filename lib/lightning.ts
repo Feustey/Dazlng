@@ -11,17 +11,39 @@ interface Invoice {
 }
 
 export async function generateInvoice({ amount, memo }: InvoiceParams): Promise<Invoice> {
-  const address = new LightningAddress(process.env.LIGHTNING_ADDRESS as string);
-  await address.fetch();
+  const lightningAddress = process.env.ALBY_LIGHTNING_ADDRESS;
+  if (!lightningAddress || typeof lightningAddress !== 'string' || !lightningAddress.includes('@')) {
+    throw new Error("La variable d'environnement ALBY_LIGHTNING_ADDRESS est absente ou invalide. Veuillez la définir dans votre .env, exemple : ALBY_LIGHTNING_ADDRESS=tonadresse@tondomaine.com");
+  }
+  const apiKey = process.env.ALBY_API_KEY;
+  if (!apiKey) {
+    throw new Error("La variable d'environnement ALBY_API_KEY est absente. Veuillez la définir dans votre .env");
+  }
 
-  const invoice = await address.requestInvoice({
-    satoshi: amount,
-    comment: memo,
+  // Appel direct à l'API Alby pour générer une facture
+  const response = await fetch('https://api.getalby.com/invoices', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify({
+      amount: amount.toString(),
+      description: memo,
+      lightning_address: lightningAddress,
+    }),
   });
 
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error('Erreur lors de la création de la facture: ' + error);
+  }
+
+  const data = await response.json();
   return {
-    paymentRequest: invoice.paymentRequest,
-    paymentHash: invoice.paymentHash,
+    paymentRequest: data.payment_request,
+    paymentHash: data.payment_hash,
   };
 }
 

@@ -5,9 +5,8 @@ type LogArgs = string | number | boolean | null | undefined | object;
 class Logger {
   private static instance: Logger;
 
-  private constructor() {
-    // Constructeur privé pour empêcher l'instanciation directe
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  private constructor() { /* constructeur privé */ }
 
   static getInstance(): Logger {
     if (!Logger.instance) {

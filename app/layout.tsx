@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import Header from '@/components/shared/layout/Header';
 import Footer from '@/components/shared/layout/Footer';
+import ClientLayout from './ClientLayout';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -24,10 +25,9 @@ export default function RootLayout({
           ' bg-gradient-dazno text-[#E5E5E5] min-h-screen flex flex-col font-sans antialiased'
         }
       >
-        <Header />
-        <main className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-8 py-8">
+        <ClientLayout>
           {children}
-        </main>
+        </ClientLayout>
         <Footer />
       </body>
     </html>

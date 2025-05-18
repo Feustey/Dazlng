@@ -40,19 +40,6 @@ export default function DazBoxPage() {
           </Link>
         </div>
       </div>
-      {/* QR code temporaire pour test du funnel */}
-      <div className="flex flex-col items-center mb-10">
-        <h3 className="text-lg font-semibold mb-2 text-center text-red-600">QR code temporaire pour test du funnel</h3>
-        <Image
-          src="/assets/images/qr-dazbox-temp.png"
-          alt="QR code Wallet of Satoshi temporaire"
-          width={300}
-          height={300}
-          className="rounded-lg border-2 border-yellow-400 shadow-lg"
-          priority
-        />
-        <p className="text-sm text-gray-500 mt-2 text-center">Ce QR code est utilisé uniquement pour les tests du tunnel d'achat.</p>
-      </div>
       <section className="max-w-3xl mx-auto">
         <h2 className="text-xl font-bold mb-3">Qu'est-ce que le Lightning Network&nbsp;?</h2>
         <p className="mb-2">

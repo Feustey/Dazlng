@@ -15,7 +15,8 @@ export default function AlbyLoginButton({ onClick }: AlbyLoginButtonProps) {
 
   return (
     <Button
-      onPress={onClick}
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      onPress={onClick ?? (() => {})}
     >
       Se connecter avec Alby
     </Button>

@@ -7,7 +7,7 @@ export default function ContactPage() {
     firstName: '',
     lastName: '',
     email: '',
-    interest: 'support',
+    interest: 'dazpay',
     message: '',
   });
   const [success, setSuccess] = useState(false);
@@ -63,6 +63,7 @@ export default function ContactPage() {
         </div>
         <input name="email" value={form.email} onChange={handleChange} placeholder="Email" type="email" className="w-full border p-2 rounded" required />
         <select name="interest" value={form.interest} onChange={handleChange} className="w-full border p-2 rounded" required>
+          <option value="dazpay">Dazpay</option>
           <option value="support">Support</option>
           <option value="conseil">Conseil</option>
           <option value="partenariat">Partenariat</option>

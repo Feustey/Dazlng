@@ -16,12 +16,13 @@ export async function GET(req: NextRequest) {
   // Récupère les infos du profil
   const { data, error } = await supabase
     .from("profiles")
-    .select("name, email")
+    .select("id, email, nom, prenom, pubkey, compte_x, compte_nostr, t4g_tokens")
     .eq("id", user.id)
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
-  return NextResponse.json(data);
+  // Par défaut, 1 token pour l'inscription si non défini
+  return NextResponse.json({ ...data, t4g_tokens: data?.t4g_tokens ?? 1 });
 }
 
 export async function PUT(req: NextRequest) {
@@ -29,14 +30,14 @@ export async function PUT(req: NextRequest) {
   if (!user) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
 
   const body = await req.json();
-  const { name, email } = body;
+  const { nom, prenom, pubkey, compte_x, compte_nostr } = body;
 
   // Met à jour le profil
   const { error } = await supabase
     .from("profiles")
-    .update({ name, email })
+    .update({ nom, prenom, pubkey, compte_x, compte_nostr })
     .eq("id", user.id);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
-  return NextResponse.json({ name, email });
+  return NextResponse.json({ nom, prenom, pubkey, compte_x, compte_nostr });
 }

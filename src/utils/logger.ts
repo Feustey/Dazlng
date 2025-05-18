@@ -3,7 +3,8 @@ const isDevelopment = process.env.NODE_ENV === 'development';
 class Logger {
   private static instance: Logger;
 
-  private constructor() {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  private constructor() { /* constructeur privé */ }
 
   static getInstance(): Logger {
     if (!Logger.instance) {
