@@ -21,7 +21,7 @@ declare global {
 }
 
 export default function LightningPayment({ amount, productName, onSuccess }: LightningPaymentProps) {
-  const [invoice, setInvoice] = useState<{ paymentRequest: string; paymentHash: string } | null>(null);
+  const [invoice, setInvoice] = useState<{ id: string; paymentRequest: string; paymentHash?: string } | null>(null);
   const [paymentStatus, setPaymentStatus] = useState<'pending' | 'success'>('pending');
   const [error, setError] = useState<string | null>(null);
   const [isWebLNAvailable, setIsWebLNAvailable] = useState(false);
@@ -47,8 +47,8 @@ export default function LightningPayment({ amount, productName, onSuccess }: Lig
         });
         setInvoice(invoiceData);
         // Commencer à vérifier l'état du paiement
-        if (invoiceData.paymentHash) {
-          checkPaymentStatus(invoiceData.paymentHash);
+        if (invoiceData.id) {
+          checkPaymentStatus(invoiceData.id);
         }
       } catch (err) {
         setError(`Erreur lors de la génération de la facture: ${err instanceof Error ? err.message : 'Erreur inconnue'}`);
@@ -60,14 +60,14 @@ export default function LightningPayment({ amount, productName, onSuccess }: Lig
   }, [amount, productName]);
 
   // Fonction pour vérifier l'état du paiement
-  const checkPaymentStatus = useCallback(async (paymentHash: string) => {
+  const checkPaymentStatus = useCallback(async (invoiceId: string) => {
     try {
-      const isPaid = await checkPayment(paymentHash);
+      const isPaid = await checkPayment(invoiceId);
       if (isPaid) {
         setPaymentStatus('success');
         if (onSuccess) onSuccess();
       } else if (paymentStatus === 'pending') {
-        setTimeout(() => checkPaymentStatus(paymentHash), 5000);
+        setTimeout(() => checkPaymentStatus(invoiceId), 5000);
       }
     } catch (err) {
       setError(`Erreur lors de la vérification du paiement: ${err instanceof Error ? err.message : 'Erreur inconnue'}`);
@@ -101,8 +101,8 @@ export default function LightningPayment({ amount, productName, onSuccess }: Lig
   }, [invoice]);
 
   useEffect(() => {
-    if (invoice?.paymentHash) {
-      checkPaymentStatus(invoice.paymentHash);
+    if (invoice?.id) {
+      checkPaymentStatus(invoice.id);
     }
   }, [checkPaymentStatus, invoice]);
 
