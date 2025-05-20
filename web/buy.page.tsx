@@ -1,14 +1,14 @@
 "use client";
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, TextInput, Alert } from 'react-native';
-import { Check, CreditCard, Truck, Lock, X } from 'lucide-react-native';
+import Image from 'next/image';
+import { Check, CreditCard, Truck, Lock, X } from 'lucide-react';
 
 const DAZBOX_PRICE = 299;
 const DAZBOX_PRO_PRICE = 499;
 
 type ProductVariant = 'standard' | 'pro';
 
-export default function BuyScreen() {
+export default function BuyScreen(): React.ReactElement {
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant>('standard');
   const [quantity, setQuantity] = useState(1);
   const [formData, setFormData] = useState({
@@ -21,594 +21,189 @@ export default function BuyScreen() {
     country: ''
   });
   
-  const increaseQuantity = () => setQuantity(prev => prev + 1);
-  const decreaseQuantity = () => setQuantity(prev => prev > 1 ? prev - 1 : 1);
+  const increaseQuantity = (): void => setQuantity(prev => prev + 1);
+  const decreaseQuantity = (): void => setQuantity(prev => prev > 1 ? prev - 1 : 1);
   
   const currentPrice = selectedVariant === 'standard' ? DAZBOX_PRICE : DAZBOX_PRO_PRICE;
   const subtotal = currentPrice * quantity;
   const shipping = 15;
   const total = subtotal + shipping;
 
-  const handleCheckout = () => {
+  const handleCheckout = (): void => {
     // Validation basique
     if (!formData.fullName || !formData.email || !formData.streetAddress || !formData.city || !formData.postalCode || !formData.country) {
-      Alert.alert(
-        "Erreur de formulaire",
-        "Veuillez remplir tous les champs obligatoires",
-        [{ text: "OK" }]
-      );
+      alert("Erreur de formulaire\nVeuillez remplir tous les champs obligatoires");
       return;
     }
 
     // Validation email basique
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      Alert.alert(
-        "Email invalide",
-        "Veuillez entrer une adresse email valide",
-        [{ text: "OK" }]
-      );
+      alert("Email invalide\nVeuillez entrer une adresse email valide");
       return;
     }
 
-    Alert.alert(
-      "Confirmation de commande",
-      `Voulez-vous confirmer votre commande pour ${quantity} DazBox ${selectedVariant === 'pro' ? 'Pro' : 'Standard'} ?`,
-      [
-        {
-          text: "Annuler",
-          style: "cancel"
-        },
-        {
-          text: "Confirmer",
-          onPress: () => {
+    // Confirmation de commande (remplacer par une modale custom si besoin)
+    if (window.confirm(`Voulez-vous confirmer votre commande pour ${quantity} DazBox ${selectedVariant === 'pro' ? 'Pro' : 'Standard'} ?`)) {
             // Ici, vous pouvez ajouter la logique pour traiter le paiement
-            Alert.alert(
-              "Commande confirmée",
-              "Merci pour votre commande ! Vous recevrez un email de confirmation.",
-              [{ text: "OK" }]
-            );
-          }
-        }
-      ]
-    );
+      alert("Commande confirmée\nMerci pour votre commande ! Vous recevrez un email de confirmation.");
+    }
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Purchase DazBox</Text>
-        <Text style={styles.headerSubtitle}>
+    <div className="min-h-screen bg-white">
+      <header className="p-5 bg-blue-900">
+        <h1 className="text-2xl font-bold text-white mb-2">Purchase DazBox</h1>
+        <p className="text-base text-white opacity-90">
           Select your model and complete your purchase
-        </Text>
-      </View>
+        </p>
+      </header>
 
-      <View style={styles.productSection}>
-        <View style={styles.productVariants}>
-          <TouchableOpacity 
-            style={[
-              styles.variantCard, 
-              selectedVariant === 'standard' && styles.variantCardSelected
-            ]}
-            onPress={() => setSelectedVariant('standard')}
+      <main className="p-5 max-w-3xl mx-auto">
+        {/* Sélection du produit */}
+        <section className="mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Standard */}
+            <button
+              type="button"
+              className={`relative border rounded-xl overflow-hidden flex flex-col items-stretch transition-all ${selectedVariant === 'standard' ? 'border-orange-500 ring-2 ring-orange-200' : 'border-gray-200'}`}
+              onClick={() => setSelectedVariant('standard')}
           >
             <Image
-              source={{ uri: 'https://images.pexels.com/photos/3912422/pexels-photo-3912422.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' }}
-              style={styles.variantImage}
-              resizeMode="cover"
-            />
-            <View style={styles.variantInfo}>
-              <Text style={styles.variantName}>DazBox Standard</Text>
-              <Text style={styles.variantPrice}>${DAZBOX_PRICE}</Text>
-              <View style={styles.variantFeatures}>
-                <View style={styles.featureItem}>
-                  <Check size={16} color="#F7931A" />
-                  <Text style={styles.featureText}>4GB RAM</Text>
-                </View>
-                <View style={styles.featureItem}>
-                  <Check size={16} color="#F7931A" />
-                  <Text style={styles.featureText}>128GB SSD</Text>
-                </View>
-                <View style={styles.featureItem}>
-                  <Check size={16} color="#F7931A" />
-                  <Text style={styles.featureText}>Basic Dazia AI</Text>
-                </View>
-              </View>
-            </View>
-            {selectedVariant === 'standard' && (
-              <View style={styles.selectedBadge}>
-                <Check size={20} color="#FFFFFF" />
-              </View>
-            )}
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={[
-              styles.variantCard, 
-              selectedVariant === 'pro' && styles.variantCardSelected
-            ]}
-            onPress={() => setSelectedVariant('pro')}
-          >
-            <View style={styles.proBadge}>
-              <Text style={styles.proBadgeText}>PRO</Text>
-            </View>
-            <Image
-              source={{ uri: 'https://images.pexels.com/photos/3913020/pexels-photo-3913020.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' }}
-              style={styles.variantImage}
-              resizeMode="cover"
-            />
-            <View style={styles.variantInfo}>
-              <Text style={styles.variantName}>DazBox Pro</Text>
-              <Text style={styles.variantPrice}>${DAZBOX_PRO_PRICE}</Text>
-              <View style={styles.variantFeatures}>
-                <View style={styles.featureItem}>
-                  <Check size={16} color="#F7931A" />
-                  <Text style={styles.featureText}>8GB RAM</Text>
-                </View>
-                <View style={styles.featureItem}>
-                  <Check size={16} color="#F7931A" />
-                  <Text style={styles.featureText}>256GB SSD</Text>
-                </View>
-                <View style={styles.featureItem}>
-                  <Check size={16} color="#F7931A" />
-                  <Text style={styles.featureText}>Advanced Dazia AI</Text>
-                </View>
-                <View style={styles.featureItem}>
-                  <Check size={16} color="#F7931A" />
-                  <Text style={styles.featureText}>Premium Support</Text>
-                </View>
-              </View>
-            </View>
-            {selectedVariant === 'pro' && (
-              <View style={styles.selectedBadge}>
-                <Check size={20} color="#FFFFFF" />
-              </View>
-            )}
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.quantityContainer}>
-          <Text style={styles.quantityLabel}>Quantity:</Text>
-          <View style={styles.quantityControls}>
-            <TouchableOpacity style={styles.quantityButton} onPress={decreaseQuantity}>
-              <X size={20} color="#444444" />
-            </TouchableOpacity>
-            <Text style={styles.quantityText}>{quantity}</Text>
-            <TouchableOpacity style={styles.quantityButton} onPress={increaseQuantity}>
-              <Text style={styles.quantityButtonText}>+</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.orderSummary}>
-          <Text style={styles.orderSummaryTitle}>Order Summary</Text>
-          
-          <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Subtotal</Text>
-            <Text style={styles.summaryValue}>${subtotal.toFixed(2)}</Text>
-          </View>
-          
-          <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Shipping</Text>
-            <Text style={styles.summaryValue}>${shipping.toFixed(2)}</Text>
-          </View>
-          
-          <View style={styles.summaryDivider} />
-          
-          <View style={styles.summaryRow}>
-            <Text style={styles.totalLabel}>Total</Text>
-            <Text style={styles.totalValue}>${total.toFixed(2)}</Text>
-          </View>
-
-          <View style={styles.paymentOptions}>
-            <Text style={styles.paymentTitle}>Payment Methods</Text>
-            
-            <View style={styles.paymentMethod}>
-              <CreditCard size={20} color="#111111" />
-              <Text style={styles.paymentMethodText}>Credit/Debit Card</Text>
-            </View>
-            
-            <View style={styles.paymentMethod}>
-              <Image 
-                source={{ uri: 'https://images.pexels.com/photos/5980743/pexels-photo-5980743.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' }} 
-                style={styles.bitcoinIcon} 
+                src="https://images.pexels.com/photos/3912422/pexels-photo-3912422.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                alt="DazBox Standard"
+                width={400}
+                height={120}
+                className="w-full h-32 object-cover"
               />
-              <Text style={styles.paymentMethodText}>Bitcoin</Text>
-            </View>
-          </View>
-        </View>
-      </View>
+              <div className="p-4 flex-1 flex flex-col">
+                <h2 className="text-lg font-semibold text-gray-900 mb-1">DazBox Standard</h2>
+                <div className="text-2xl font-bold text-orange-500 mb-2">${DAZBOX_PRICE}</div>
+                <ul className="space-y-1 mb-2">
+                  <li className="flex items-center text-sm text-gray-700"><Check size={16} className="mr-2 text-orange-500" />4GB RAM</li>
+                  <li className="flex items-center text-sm text-gray-700"><Check size={16} className="mr-2 text-orange-500" />128GB SSD</li>
+                  <li className="flex items-center text-sm text-gray-700"><Check size={16} className="mr-2 text-orange-500" />Basic Dazia AI</li>
+                </ul>
+              </div>
+            {selectedVariant === 'standard' && (
+                <span className="absolute top-3 right-3 bg-orange-500 text-white rounded-full p-1"><Check size={20} /></span>
+              )}
+            </button>
+            {/* Pro */}
+            <button
+              type="button"
+              className={`relative border rounded-xl overflow-hidden flex flex-col items-stretch transition-all ${selectedVariant === 'pro' ? 'border-orange-500 ring-2 ring-orange-200' : 'border-gray-200'}`}
+              onClick={() => setSelectedVariant('pro')}
+            >
+              <span className="absolute top-3 left-3 bg-blue-900 text-white rounded px-2 py-1 text-xs font-semibold z-10">PRO</span>
+            <Image
+                src="https://images.pexels.com/photos/3913020/pexels-photo-3913020.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                alt="DazBox Pro"
+                width={400}
+                height={120}
+                className="w-full h-32 object-cover"
+              />
+              <div className="p-4 flex-1 flex flex-col">
+                <h2 className="text-lg font-semibold text-gray-900 mb-1">DazBox Pro</h2>
+                <div className="text-2xl font-bold text-orange-500 mb-2">${DAZBOX_PRO_PRICE}</div>
+                <ul className="space-y-1 mb-2">
+                  <li className="flex items-center text-sm text-gray-700"><Check size={16} className="mr-2 text-orange-500" />8GB RAM</li>
+                  <li className="flex items-center text-sm text-gray-700"><Check size={16} className="mr-2 text-orange-500" />256GB SSD</li>
+                  <li className="flex items-center text-sm text-gray-700"><Check size={16} className="mr-2 text-orange-500" />Advanced Dazia AI</li>
+                  <li className="flex items-center text-sm text-gray-700"><Check size={16} className="mr-2 text-orange-500" />Premium Support</li>
+                </ul>
+              </div>
+              {selectedVariant === 'pro' && (
+                <span className="absolute top-3 right-3 bg-orange-500 text-white rounded-full p-1"><Check size={20} /></span>
+              )}
+            </button>
+          </div>
+        </section>
 
-      <View style={styles.shippingSection}>
-        <Text style={styles.sectionTitle}>Shipping Information</Text>
-        
-        <View style={styles.formGroup}>
-          <Text style={styles.formLabel}>Full Name</Text>
-          <TextInput
-            style={styles.formInput}
-            placeholder="Enter your full name"
-            placeholderTextColor="#999999"
-            value={formData.fullName}
-            onChangeText={(text) => setFormData(prev => ({ ...prev, fullName: text }))}
-          />
-        </View>
-        
-        <View style={styles.formGroup}>
-          <Text style={styles.formLabel}>Email Address</Text>
-          <TextInput
-            style={styles.formInput}
-            placeholder="Enter your email address"
-            keyboardType="email-address"
-            placeholderTextColor="#999999"
-            value={formData.email}
-            onChangeText={(text) => setFormData(prev => ({ ...prev, email: text }))}
-          />
-        </View>
-        
-        <View style={[styles.formGroup, styles.formRowGroup]}>
-          <Text style={styles.formLabel}>Street Address</Text>
-          <TextInput
-            style={styles.formInput}
-            placeholder="Enter street address"
-            placeholderTextColor="#999999"
-            value={formData.streetAddress}
-            onChangeText={(text) => setFormData(prev => ({ ...prev, streetAddress: text }))}
-          />
-        </View>
-        
-        <View style={[styles.formGroup, styles.formRowGroupSmall]}>
-          <Text style={styles.formLabel}>Apt/Suite</Text>
-          <TextInput
-            style={styles.formInput}
-            placeholder="Optional"
-            placeholderTextColor="#999999"
-            value={formData.aptSuite}
-            onChangeText={(text) => setFormData(prev => ({ ...prev, aptSuite: text }))}
-          />
-        </View>
-        
-        <View style={[styles.formGroup, styles.formRowGroupWithMargin]}>
-          <Text style={styles.formLabel}>City</Text>
-          <TextInput
-            style={styles.formInput}
-            placeholder="Enter city"
-            placeholderTextColor="#999999"
-            value={formData.city}
-            onChangeText={(text) => setFormData(prev => ({ ...prev, city: text }))}
-          />
-        </View>
-        
-        <View style={[styles.formGroup, styles.formRowGroupSmall]}>
-          <Text style={styles.formLabel}>Postal Code</Text>
-          <TextInput
-            style={styles.formInput}
-            placeholder="Enter postal code"
-            placeholderTextColor="#999999"
-            value={formData.postalCode}
-            onChangeText={(text) => setFormData(prev => ({ ...prev, postalCode: text }))}
-          />
-        </View>
-        
-        <View style={styles.formGroup}>
-          <Text style={styles.formLabel}>Country</Text>
-          <TextInput
-            style={styles.formInput}
-            placeholder="Enter country"
-            placeholderTextColor="#999999"
-            value={formData.country}
-            onChangeText={(text) => setFormData(prev => ({ ...prev, country: text }))}
-          />
-        </View>
-      </View>
+        {/* Quantité */}
+        <section className="mb-8 flex items-center justify-between bg-gray-100 p-4 rounded-lg">
+          <span className="text-base font-semibold text-gray-900">Quantity:</span>
+          <div className="flex items-center border border-gray-300 rounded bg-white">
+            <button type="button" className="w-10 h-10 flex items-center justify-center" onClick={decreaseQuantity}><X size={20} className="text-gray-700" /></button>
+            <span className="w-10 text-center text-lg font-semibold">{quantity}</span>
+            <button type="button" className="w-10 h-10 flex items-center justify-center text-lg font-bold" onClick={increaseQuantity}>+</button>
+          </div>
+        </section>
 
-      <View style={styles.securityNote}>
-        <Lock size={20} color="#111111" />
-        <Text style={styles.securityText}>
-          Your personal information is encrypted and secure. We never store your payment details.
-        </Text>
-      </View>
+        {/* Récapitulatif */}
+        <section className="mb-8 bg-gray-50 p-6 rounded-xl border border-gray-200">
+          <h3 className="text-lg font-bold mb-4 text-gray-900">Order Summary</h3>
+          <div className="flex justify-between mb-2"><span className="text-gray-700">Subtotal</span><span>${subtotal.toFixed(2)}</span></div>
+          <div className="flex justify-between mb-2"><span className="text-gray-700">Shipping</span><span>${shipping.toFixed(2)}</span></div>
+          <div className="border-t border-gray-200 my-2"></div>
+          <div className="flex justify-between text-lg font-bold"><span>Total</span><span className="text-orange-500">${total.toFixed(2)}</span></div>
+          <div className="mt-4">
+            <div className="font-semibold mb-2">Payment Methods</div>
+            <div className="flex items-center bg-white p-2 rounded mb-2 border border-gray-100"><CreditCard size={20} className="mr-2 text-gray-900" />Credit/Debit Card</div>
+            <div className="flex items-center bg-white p-2 rounded border border-gray-100">
+              <Image src="https://images.pexels.com/photos/5980743/pexels-photo-5980743.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Bitcoin" width={20} height={20} className="rounded-full mr-2" />Bitcoin
+            </div>
+          </div>
+        </section>
 
-      <View style={styles.shippingNote}>
-        <Truck size={20} color="#111111" />
-        <Text style={styles.shippingText}>
-          Free shipping on orders over $500. Estimated delivery: 5-7 business days.
-        </Text>
-      </View>
+        {/* Formulaire de livraison */}
+        <section className="mb-8 bg-white p-6 rounded-xl border border-gray-200">
+          <h3 className="text-lg font-bold mb-4 text-gray-900">Shipping Information</h3>
+          <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="col-span-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+              <input type="text" className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2 mb-2" value={formData.fullName} onChange={e => setFormData(prev => ({ ...prev, fullName: e.target.value }))} required />
+            </div>
+            <div className="col-span-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+              <input type="email" className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2 mb-2" value={formData.email} onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))} required />
+            </div>
+            <div className="col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Street Address</label>
+              <input type="text" className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2 mb-2" value={formData.streetAddress} onChange={e => setFormData(prev => ({ ...prev, streetAddress: e.target.value }))} required />
+            </div>
+            <div className="col-span-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Apt/Suite</label>
+              <input type="text" className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2 mb-2" value={formData.aptSuite} onChange={e => setFormData(prev => ({ ...prev, aptSuite: e.target.value }))} />
+            </div>
+            <div className="col-span-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
+              <input type="text" className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2 mb-2" value={formData.city} onChange={e => setFormData(prev => ({ ...prev, city: e.target.value }))} required />
+            </div>
+            <div className="col-span-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Postal Code</label>
+              <input type="text" className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2 mb-2" value={formData.postalCode} onChange={e => setFormData(prev => ({ ...prev, postalCode: e.target.value }))} required />
+            </div>
+            <div className="col-span-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
+              <input type="text" className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2 mb-2" value={formData.country} onChange={e => setFormData(prev => ({ ...prev, country: e.target.value }))} required />
+            </div>
+          </form>
+        </section>
 
-      <TouchableOpacity style={styles.checkoutButton} onPress={handleCheckout}>
-        <Text style={styles.checkoutButtonText}>Proceed to Payment</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        {/* Sécurité & livraison */}
+        <section className="flex flex-col md:flex-row gap-4 mb-8">
+          <div className="flex items-start bg-gray-50 p-4 rounded-lg flex-1">
+            <Lock size={20} className="text-gray-900 mr-2 mt-1" />
+            <span className="text-sm text-gray-700">Your personal information is encrypted and secure. We never store your payment details.</span>
+          </div>
+          <div className="flex items-start bg-gray-50 p-4 rounded-lg flex-1">
+            <Truck size={20} className="text-gray-900 mr-2 mt-1" />
+            <span className="text-sm text-gray-700">Free shipping on orders over $500. Estimated delivery: 5-7 business days.</span>
+          </div>
+        </section>
+
+        {/* Bouton paiement */}
+        <div className="flex justify-end">
+          <button
+            type="button"
+            className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-full text-lg font-bold shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={handleCheckout}
+          >
+            Proceed to Payment
+          </button>
+        </div>
+      </main>
+    </div>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  header: {
-    padding: 20,
-    backgroundColor: '#0F3B82',
-  },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#FFFFFF',
-    marginBottom: 10,
-  },
-  headerSubtitle: {
-    fontSize: 16,
-    fontWeight: '400',
-    color: '#FFFFFF',
-    opacity: 0.9,
-    lineHeight: 22,
-  },
-  productSection: {
-    padding: 20,
-  },
-  productVariants: {
-    marginBottom: 24,
-  },
-  variantCard: {
-    borderWidth: 1,
-    borderColor: '#E5E5E5',
-    borderRadius: 12,
-    marginBottom: 16,
-    overflow: 'hidden',
-    position: 'relative',
-  },
-  variantCardSelected: {
-    borderColor: '#F7931A',
-    borderWidth: 2,
-  },
-  variantImage: {
-    width: '100%',
-    height: 120,
-  },
-  variantInfo: {
-    padding: 16,
-  },
-  variantName: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#111111',
-    marginBottom: 5,
-  },
-  variantPrice: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#F7931A',
-    marginBottom: 10,
-  },
-  variantFeatures: {
-    marginTop: 8,
-  },
-  featureItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 6,
-  },
-  featureText: {
-    marginLeft: 8,
-    fontSize: 14,
-    color: '#444444',
-  },
-  selectedBadge: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    backgroundColor: '#F7931A',
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  proBadge: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
-    backgroundColor: '#0F3B82',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 4,
-    zIndex: 1,
-  },
-  proBadgeText: {
-    color: '#FFFFFF',
-    fontWeight: '600',
-    fontSize: 12,
-  },
-  quantityContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 24,
-    backgroundColor: '#F5F5F5',
-    padding: 16,
-    borderRadius: 8,
-  },
-  quantityLabel: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#111111',
-  },
-  quantityControls: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#E5E5E5',
-    borderRadius: 4,
-    backgroundColor: '#FFFFFF',
-  },
-  quantityButton: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  quantityButtonText: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#444444',
-  },
-  quantityText: {
-    width: 40,
-    textAlign: 'center',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  orderSummary: {
-    backgroundColor: '#F5F5F5',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 24,
-  },
-  orderSummaryTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#111111',
-    marginBottom: 16,
-  },
-  summaryRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  summaryLabel: {
-    fontSize: 14,
-    color: '#444444',
-  },
-  summaryValue: {
-    fontSize: 14,
-    color: '#111111',
-    fontWeight: '500',
-  },
-  summaryDivider: {
-    height: 1,
-    backgroundColor: '#E5E5E5',
-    marginVertical: 10,
-  },
-  totalLabel: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#111111',
-  },
-  totalValue: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#F7931A',
-  },
-  paymentOptions: {
-    marginTop: 16,
-  },
-  paymentTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#111111',
-    marginBottom: 10,
-  },
-  paymentMethod: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    padding: 12,
-    borderRadius: 6,
-    marginBottom: 8,
-  },
-  paymentMethodText: {
-    marginLeft: 10,
-    fontSize: 14,
-    color: '#111111',
-  },
-  bitcoinIcon: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-  },
-  shippingSection: {
-    padding: 20,
-    borderTopWidth: 8,
-    borderTopColor: '#F5F5F5',
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#111111',
-    marginBottom: 16,
-  },
-  formGroup: {
-    marginBottom: 16,
-  },
-  formLabel: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#111111',
-    marginBottom: 6,
-  },
-  formInput: {
-    backgroundColor: '#F5F5F5',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 14,
-    color: '#111111',
-  },
-  formRowGroup: {
-    flex: 2,
-    marginRight: 10,
-  },
-  formRowGroupSmall: {
-    flex: 1,
-  },
-  formRowGroupWithMargin: {
-    flex: 1,
-    marginRight: 10,
-  },
-  securityNote: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    backgroundColor: '#F5F5F5',
-    padding: 16,
-    borderRadius: 8,
-    marginHorizontal: 20,
-    marginTop: 10,
-  },
-  securityText: {
-    fontSize: 13,
-    color: '#444444',
-    marginLeft: 10,
-    flex: 1,
-    lineHeight: 18,
-  },
-  shippingNote: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    backgroundColor: '#F5F5F5',
-    padding: 16,
-    borderRadius: 8,
-    marginHorizontal: 20,
-    marginTop: 16,
-  },
-  shippingText: {
-    fontSize: 13,
-    color: '#444444',
-    marginLeft: 10,
-    flex: 1,
-    lineHeight: 18,
-  },
-  checkoutButton: {
-    backgroundColor: '#F7931A',
-    paddingVertical: 16,
-    borderRadius: 30,
-    marginHorizontal: 20,
-    marginTop: 30,
-    marginBottom: 40,
-    alignItems: 'center',
-  },
-  checkoutButtonText: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-});

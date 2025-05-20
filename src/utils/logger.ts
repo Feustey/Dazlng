@@ -19,11 +19,11 @@ class Logger {
     }
   }
 
-  error(message: string, error?: Error | unknown): void {
+  error(_: string): void {
     // Ajoute ici une intégration Sentry/LogRocket si besoin
   }
 
-  warn(message: string, ...args: unknown[]): void {
+  warn(_: string): void {
     // Ajoute ici une intégration Sentry/LogRocket si besoin
   }
 

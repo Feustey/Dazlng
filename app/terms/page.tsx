@@ -10,7 +10,7 @@ import {
   FaTimesCircle,
 } from 'react-icons/fa';
 
-export default function TermsPage() {
+export default function TermsPage(): React.ReactElement {
   const termsSections = [
     {
       icon: <FaFileAlt size={32} className="text-primary" />,

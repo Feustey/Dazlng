@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'rea
 import { Zap, Server, Activity, Shield, Cpu, RefreshCw, Wrench, Award } from 'lucide-react-native';
 import { cardShadow } from '../../constants/Shadows';
 
-export default function FeaturesScreen() {
+export default function FeaturesScreen(): React.ReactElement {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>

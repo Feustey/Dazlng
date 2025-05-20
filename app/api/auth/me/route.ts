@@ -5,7 +5,7 @@ import { authOptions } from "../../../../lib/auth";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(): Promise<Response> {
   try {
     const session = await getServerSession(authOptions);
 

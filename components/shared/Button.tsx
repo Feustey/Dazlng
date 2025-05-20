@@ -1,92 +1,39 @@
 /* eslint-disable react-native/no-unused-styles */
 import React from 'react';
-import {
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  Platform,
-  TouchableOpacityProps,
-  ViewStyle,
-} from 'react-native';
-import { colors, spacing, typography } from 'styles/shared';
 
-interface ButtonProps extends TouchableOpacityProps {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary';
   size?: 'sm' | 'md' | 'lg';
   children: React.ReactNode;
 }
 
-export const Button: React.FC<ButtonProps> = ({
+const variantClasses = {
+  primary: 'bg-primary text-white',
+  secondary: 'bg-secondary text-white',
+};
+
+const sizeClasses = {
+  sm: 'py-2 px-3 text-sm',
+  md: 'py-3 px-5 text-base',
+  lg: 'py-4 px-7 text-lg',
+};
+
+const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   size = 'md',
   children,
-  style,
+  className = '',
   ...props
 }) => {
-  const webStyles: ViewStyle | undefined = Platform.select({
-    web: {
-      // cursor: 'pointer',
-    },
-  });
-
   return (
-    <TouchableOpacity
-      style={[
-        styles.base,
-        styles[variant],
-        styles[size],
-        webStyles,
-        style,
-      ]}
+    <button
+      className={`rounded-lg font-medium flex items-center justify-center transition-colors duration-200 ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
       {...props}
     >
-      <Text
-        style={[
-          styles.text,
-          styles[`${size}Text`],
-        ]}
-      >
-        {children}
-      </Text>
-    </TouchableOpacity>
+      {children}
+    </button>
   );
 };
 
-const styles = StyleSheet.create({
-  base: {
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  primary: {
-    backgroundColor: colors.primary,
-  },
-  secondary: {
-    backgroundColor: colors.secondary,
-  },
-  sm: {
-    paddingVertical: spacing.xs,
-    paddingHorizontal: spacing.sm,
-  },
-  md: {
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.md,
-  },
-  lg: {
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.lg,
-  },
-  text: {
-    color: '#FFFFFF',
-    fontWeight: '500',
-  },
-  smText: {
-    fontSize: typography.sizes.sm,
-  },
-  mdText: {
-    fontSize: typography.sizes.base,
-  },
-  lgText: {
-    fontSize: typography.sizes.lg,
-  },
-}); 
+export { Button };
+export default Button; 

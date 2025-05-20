@@ -1,61 +1,25 @@
 "use client";
 
-import React, { useRef, useEffect } from 'react';
-import { Text, StyleSheet, Animated } from 'react-native';
+import React from 'react';
 
 interface NotificationBadgeProps {
   count?: number;
   show: boolean;
 }
 
-export default function NotificationBadge({ count = 0, show }: NotificationBadgeProps) {
-  const scale = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.spring(scale, {
-      toValue: 1,
-      tension: 50,
-      friction: 7,
-      useNativeDriver: true,
-    }).start();
-
-    return () => {
-      scale.setValue(0);
-    };
-  }, [scale]);
-
+export default function NotificationBadge({ count = 0, show }: NotificationBadgeProps): React.ReactElement | null {
   if (!show || count === 0) return null;
 
   return (
-    <Animated.View
-      style={[
-        styles.badge,
-        {
-          transform: [{ scale }],
-        },
-      ]}
+    <span
+      className="absolute -top-2 -right-2 min-w-[18px] h-[18px] rounded-full bg-[#F7931A] flex items-center justify-center px-1.5 animate-scale-in"
+      style={{ animation: 'scale-in 0.3s cubic-bezier(0.4,0,0.2,1)' }}
     >
-      <Text style={styles.text}>{count}</Text>
-    </Animated.View>
+      <span className="text-white text-xs font-semibold">{count}</span>
+    </span>
   );
 }
 
-const styles = StyleSheet.create({
-  badge: {
-    position: 'absolute',
-    top: -8,
-    right: -8,
-    minWidth: 18,
-    height: 18,
-    borderRadius: 9,
-    backgroundColor: '#F7931A',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 4,
-  },
-  text: {
-    color: '#FFFFFF',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-}); 
+// Ajoute dans ton CSS global ou tailwind.config.js :
+// @keyframes scale-in { from { transform: scale(0); } to { transform: scale(1); } }
+// .animate-scale-in { animation: scale-in 0.3s cubic-bezier(0.4,0,0.2,1); } 

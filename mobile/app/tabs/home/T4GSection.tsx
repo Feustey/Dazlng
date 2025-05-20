@@ -1,5 +1,4 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
 
 const T4GSection = () => {
   const rewardCategories = [
@@ -33,81 +32,29 @@ const T4GSection = () => {
   ];
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Token For Good (T4G)</Text>
-      <Text style={styles.subtitle}>Contribuez à la communauté, gagnez des récompenses</Text>
+    <div className="p-4">
+      <h2 className="text-2xl font-bold mb-2">Token For Good (T4G)</h2>
+      <p className="text-base text-gray-500 mb-6">Contribuez à la communauté, gagnez des récompenses</p>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Comment gagner des points</Text>
+      <div className="mb-8">
+        <h3 className="text-lg font-semibold mb-4">Comment gagner des points</h3>
         {rewardCategories.map((category, index) => (
-          <View key={index} style={styles.categoryCard}>
-            <Text style={styles.categoryTitle}>{category.title}</Text>
-            <Text style={styles.categoryDescription}>{category.description}</Text>
-            <Text style={styles.points}>{category.points}</Text>
-          </View>
+          <div key={index} className="bg-white rounded-lg p-4 mb-3 shadow-md">
+            <div className="text-base font-semibold mb-1">{category.title}</div>
+            <div className="text-gray-500 mb-2">{category.description}</div>
+            <div className="text-blue-500 font-medium">{category.points}</div>
+          </div>
         ))}
-      </View>
+      </div>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Utilisez vos points pour</Text>
+      <div className="mb-4">
+        <h3 className="text-lg font-semibold mb-4">Utilisez vos points pour</h3>
         {rewards.map((reward, index) => (
-          <Text key={index} style={styles.reward}>• {reward}</Text>
+          <div key={index} className="text-base mb-2">• {reward}</div>
         ))}
-      </View>
-    </View>
+      </div>
+    </div>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 24,
-  },
-  section: {
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 16,
-  },
-  categoryCard: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  categoryTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 4,
-  },
-  categoryDescription: {
-    color: '#666',
-    marginBottom: 8,
-  },
-  points: {
-    color: '#0070f3',
-    fontWeight: '500',
-  },
-  reward: {
-    fontSize: 16,
-    marginBottom: 8,
-  },
-});
 
 export default T4GSection; 

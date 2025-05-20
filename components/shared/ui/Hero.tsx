@@ -1,7 +1,6 @@
-import React, { useRef, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Animated } from 'react-native';
-import { ArrowRight } from 'lucide-react-native';
-import Colors from '../../../constants/Colors';
+import React from 'react';
+import Image from 'next/image';
+import { ArrowRight } from 'lucide-react';
 
 interface HeroProps {
   title: string;
@@ -17,128 +16,30 @@ export default function Hero({
   imageUrl,
   buttonText = 'Commencer',
   onButtonPress,
-}: HeroProps) {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const translateYAnim = useRef(new Animated.Value(20)).current;
-  
-  useEffect(() => {
-    const animations = [
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true,
-      }),
-      Animated.timing(translateYAnim, {
-        toValue: 0,
-        duration: 1000,
-        useNativeDriver: true,
-      }),
-    ];
-
-    Animated.parallel(animations).start();
-
-    return () => {
-      animations.forEach(animation => animation.stop());
-    };
-  }, [fadeAnim, translateYAnim]);
-
+}: HeroProps): React.ReactElement {
   return (
-    <Animated.View 
-      style={[
-        styles.container,
-        {
-          opacity: fadeAnim,
-          transform: [{ translateY: translateYAnim }]
-        }
-      ]}
-    >
+    <div className="relative w-full h-[420px]">
       <Image
-        source={{ uri: imageUrl }}
-        style={styles.image}
-        resizeMode="cover"
+        src={imageUrl}
         alt="Hero background"
+        fill
+        className="object-cover rounded-[28px]"
+        priority
       />
-      <View style={styles.overlay}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.subtitle}>{subtitle}</Text>
+      <div className="absolute inset-0 flex flex-col justify-center items-center p-8 bg-[#232336cc] rounded-[28px] border-[1.5px] border-secondary shadow-[0_8px_32px_0_rgba(0,0,0,0.18)]">
+        <h1 className="text-[42px] font-extrabold text-secondary mb-2 text-center tracking-wide">{title}</h1>
+        <p className="text-[20px] font-medium text-muted text-center mb-6">{subtitle}</p>
         {onButtonPress && (
-          <TouchableOpacity 
-            style={styles.button}
-            onPress={onButtonPress}
-            activeOpacity={0.8}
+          <button
+            className="flex flex-row items-center bg-secondary py-3 px-8 rounded-[25px] gap-2 mt-3 shadow-md hover:opacity-90"
+            onClick={onButtonPress}
+            type="button"
           >
-            <Text style={styles.buttonText}>{buttonText}</Text>
-            <ArrowRight size={18} color={Colors.primary} />
-          </TouchableOpacity>
+            <span className="text-primary text-[18px] font-bold tracking-wide">{buttonText}</span>
+            <ArrowRight size={18} color="var(--color-primary, #fff)" />
+          </button>
         )}
-      </View>
-    </Animated.View>
+      </div>
+    </div>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'relative',
-    height: 420,
-    width: '100%',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 28,
-  },
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 32,
-    backgroundColor: '#232336cc',
-    borderRadius: 28,
-    borderWidth: 1.5,
-    borderColor: Colors.secondary,
-    shadowColor: Colors.black,
-    shadowOpacity: 0.18,
-    shadowOffset: { width: 0, height: 8 },
-    shadowRadius: 32,
-    elevation: 8,
-  },
-  title: {
-    fontSize: 42,
-    fontWeight: '800',
-    color: Colors.secondary,
-    marginBottom: 10,
-    textAlign: 'center',
-    letterSpacing: 0.2,
-  },
-  subtitle: {
-    fontSize: 20,
-    fontWeight: '500',
-    color: Colors.muted,
-    textAlign: 'center',
-    marginBottom: 24,
-  },
-  button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.secondary,
-    paddingVertical: 14,
-    paddingHorizontal: 32,
-    borderRadius: 25,
-    gap: 8,
-    marginTop: 12,
-    shadowColor: Colors.secondary,
-    shadowOpacity: 0.18,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 12,
-  },
-  buttonText: {
-    color: Colors.primary,
-    fontSize: 18,
-    fontWeight: '700',
-    letterSpacing: 0.2,
-  },
-}); 
+} 

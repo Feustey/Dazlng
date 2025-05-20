@@ -1,193 +1,65 @@
 import React from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import Colors from '../constants/Colors';
 
 export default function DazpayScreen() {
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>DazPay</Text>
-        <Text style={styles.subtitle}>
-          Solution de paiement Lightning pour les commerces
-        </Text>
-      </View>
-
-      <View style={styles.content}>
-        <View style={styles.statsCard}>
+    <div className="min-h-screen bg-background">
+      <div className="p-8 bg-primary">
+        <h1 className="text-3xl font-bold text-white mb-2">DazPay</h1>
+        <p className="text-base text-gray-100">Solution de paiement Lightning pour les commerces</p>
+      </div>
+      <div className="p-8 max-w-4xl mx-auto">
+        <div className="bg-gray-900 rounded-xl p-6 mb-8 flex flex-wrap gap-6">
           <StatItem label="Transactions (24h)" value="42" />
           <StatItem label="Volume (24h)" value="123 456 sats" />
           <StatItem label="Commission moyenne" value="0.5%" />
           <StatItem label="Temps moyen" value="2.3s" />
-        </View>
-
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Fonctionnalités</Text>
-          <View style={styles.featureList}>
+        </div>
+        <div className="bg-gray-900 rounded-xl p-6 mb-8">
+          <h2 className="text-xl font-bold text-white mb-4">Fonctionnalités</h2>
+          <div className="space-y-2">
             <FeatureItem text="Terminal de paiement web" />
             <FeatureItem text="Application mobile (bientôt)" />
             <FeatureItem text="Tableau de bord détaillé" />
             <FeatureItem text="Intégration API" />
             <FeatureItem text="Support multidevises" />
-          </View>
-        </View>
-
-        <View style={styles.pricingCard}>
-          <Text style={styles.cardTitle}>Offres</Text>
-          
-          <View style={styles.planContainer}>
-            <View style={styles.plan}>
-              <Text style={styles.planName}>Basic</Text>
-              <Text style={styles.planPrice}>Gratuit</Text>
-              <Text style={styles.planDetail}>1% de commission</Text>
-            </View>
-
-            <View style={[styles.plan, styles.planPremium]}>
-              <Text style={styles.planName}>Premium</Text>
-              <Text style={styles.planPrice}>30 000 sats/mois</Text>
-              <Text style={styles.planDetail}>0.5% de commission</Text>
-            </View>
-          </View>
-        </View>
-
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Passer Premium</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+          </div>
+        </div>
+        <div className="bg-gray-900 rounded-xl p-6 mb-8">
+          <h2 className="text-xl font-bold text-white mb-4">Offres</h2>
+          <div className="flex flex-col md:flex-row gap-6 mt-2">
+            <div className="flex-1 bg-gray-800 rounded-lg p-4 flex flex-col items-center">
+              <div className="text-lg font-bold text-white mb-2">Basic</div>
+              <div className="text-base text-white mb-1">Gratuit</div>
+              <div className="text-sm text-gray-300">1% de commission</div>
+            </div>
+            <div className="flex-1 bg-primary rounded-lg p-4 flex flex-col items-center">
+              <div className="text-lg font-bold text-white mb-2">Premium</div>
+              <div className="text-base text-white mb-1">30 000 sats/mois</div>
+              <div className="text-sm text-gray-100">0.5% de commission</div>
+            </div>
+          </div>
+        </div>
+        <button className="w-full bg-primary rounded-lg p-4 text-lg font-semibold text-white mt-4 hover:bg-primary/90 transition">
+          Passer Premium
+        </button>
+      </div>
+    </div>
   );
 }
 
 function StatItem({ label, value }: { label: string; value: string }) {
   return (
-    <View style={styles.statItem}>
-      <Text style={styles.statLabel}>{label}</Text>
-      <Text style={styles.statValue}>{value}</Text>
-    </View>
+    <div className="flex-1 min-w-[150px]">
+      <div className="text-sm text-gray-400 mb-1">{label}</div>
+      <div className="text-lg font-bold text-white">{value}</div>
+    </div>
   );
 }
 
 function FeatureItem({ text }: { text: string }) {
   return (
-    <View style={styles.featureItem}>
-      <Text style={styles.featureText}>• {text}</Text>
-    </View>
+    <div className="flex items-center">
+      <span className="text-base text-gray-300">• {text}</span>
+    </div>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.background,
-  },
-  header: {
-    padding: 20,
-    backgroundColor: Colors.primary,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: Colors.white,
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: Colors.gray[100],
-  },
-  content: {
-    padding: 20,
-  },
-  statsCard: {
-    backgroundColor: Colors.gray[900],
-    borderRadius: 12,
-    padding: 20,
-    marginBottom: 20,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 20,
-  },
-  statItem: {
-    flex: 1,
-    minWidth: 150,
-  },
-  statLabel: {
-    fontSize: 14,
-    color: Colors.gray[400],
-    marginBottom: 4,
-  },
-  statValue: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: Colors.white,
-  },
-  card: {
-    backgroundColor: Colors.gray[900],
-    borderRadius: 12,
-    padding: 20,
-    marginBottom: 20,
-  },
-  pricingCard: {
-    backgroundColor: Colors.gray[900],
-    borderRadius: 12,
-    padding: 20,
-    marginBottom: 20,
-  },
-  cardTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: Colors.white,
-    marginBottom: 16,
-  },
-  featureList: {
-    gap: 12,
-  },
-  featureItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  featureText: {
-    fontSize: 16,
-    color: Colors.gray[300],
-  },
-  planContainer: {
-    flexDirection: 'row',
-    gap: 20,
-    marginTop: 10,
-  },
-  plan: {
-    flex: 1,
-    backgroundColor: Colors.gray[800],
-    borderRadius: 8,
-    padding: 16,
-    alignItems: 'center',
-  },
-  planPremium: {
-    backgroundColor: Colors.primary,
-  },
-  planName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: Colors.white,
-    marginBottom: 8,
-  },
-  planPrice: {
-    fontSize: 16,
-    color: Colors.white,
-    marginBottom: 4,
-  },
-  planDetail: {
-    fontSize: 14,
-    color: Colors.gray[300],
-  },
-  button: {
-    backgroundColor: Colors.primary,
-    borderRadius: 8,
-    padding: 16,
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  buttonText: {
-    color: Colors.white,
-    fontSize: 18,
-    fontWeight: '600',
-  },
-}); 
+} 

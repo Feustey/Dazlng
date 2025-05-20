@@ -1,9 +1,8 @@
-import './globals.css';
+import './styles/globals.css';
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import Header from '@/components/shared/layout/Header';
-import Footer from '@/components/shared/layout/Footer';
 import ClientLayout from './ClientLayout';
+import React from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -12,24 +11,16 @@ export const metadata: Metadata = {
   description: 'Votre plateforme DazNode',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <html lang="fr">
-      <body
-        className={
-          inter.className +
-          ' bg-gradient-dazno text-[#E5E5E5] min-h-screen flex flex-col font-sans antialiased'
-        }
-      >
+      <body className={inter.className + ' text-t4g-gray min-h-screen flex flex-col font-sans antialiased'}>
         <ClientLayout>
           {children}
         </ClientLayout>
-        <Footer />
       </body>
     </html>
   );
-} 
+};
+
+export default RootLayout; 

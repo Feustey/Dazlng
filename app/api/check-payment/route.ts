@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   const { paymentHash } = await req.json();
 
   // Récupère le token API Alby depuis les variables d'environnement

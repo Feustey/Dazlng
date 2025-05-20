@@ -3,58 +3,68 @@ description:
 globs:
 alwaysApply: false
 ---
-# Structure du Projet Daz3
+# Structure du Projet Daz3 (Mise à jour 2024)
 
-Ce projet est une application hybride utilisant Next.js 13+ et Expo pour supporter à la fois le web et le mobile.
+Ce projet est une application hybride Next.js 13+ (web) et Expo (mobile), avec une page d'accueil unique centralisant les contenus, l'utilisation de Tailwind CSS pour tous les styles web, et l'intégration possible de Three.js pour des rendus 3D.
 
 ## Organisation des Dossiers
 
 ### App Router (Next.js 13+)
 - `app/` : Pages et routes Next.js
-  - `(tabs)/` : Pages avec navigation par onglets
-    - `home/` : Page d'accueil
-    - `daznode/` : Page DazNode
-    - `dazpay/` : Page DazPay
-    - `dazbox/` : Page DazBox
-  - `api/` : Routes API
-  - `auth/` : Pages d'authentification
-  - `register/` : Pages d'inscription
-  - `subscribe/` : Pages d'abonnement
+  - `page.tsx` ou `home/page.tsx` : **Page d'accueil unique** (centralise tous les contenus web)
+  - `api/` : Routes API (REST)
+  - `auth/`, `register/`, `subscribe/` : Authentification, inscription, abonnement
+  - Les autres sous-pages sont supprimées ou redirigées vers la home si non nécessaires
 
 ### Composants et Logique
 - `components/` : Composants réutilisables
   - `shared/` : Composants partagés web/mobile
-    - `ui/` : Composants UI de base
+    - `ui/` : Composants UI de base (boutons, inputs…)
     - `layout/` : Composants de mise en page
-  - `mobile/` : Composants spécifiques mobile
+  - `mobile/` : Composants spécifiques mobile (React Native)
   - `web/` : Composants spécifiques web
+- **Tous les styles web sont en classes Tailwind** (aucun style natif, aucun module CSS, aucun objet JS)
+
+### Mobile (Expo/React Native)
+- `mobile/` : Composants mobiles
+- `screens/` : Écrans principaux mobile
+- `navigation/` : Navigation mobile
 
 ### Assets et Configuration
-- `assets/` : Ressources statiques
+- `public/assets/` : Images et ressources statiques web
 - `constants/` : Constantes globales
 - `hooks/` : Custom hooks React
-- `navigation/` : Configuration navigation (Expo)
-- `screens/` : Écrans principaux mobile
 - `types/` : Types TypeScript
 - `utils/` : Fonctions utilitaires
 
-## Conventions de Migration
+### Styles
+- `styles/` : Fichiers globaux (ex : `globals.css` pour resets, variables)
+- **Aucun module CSS ni style inline sur le web** : tout est Tailwind
 
-### Composants
-- Les composants partagés doivent être dans `components/shared/`
-- Les composants spécifiques à une plateforme dans `components/mobile/` ou `components/web/`
-- Utiliser des styles responsive pour supporter web/mobile
+### 3D / Three.js
+- Les composants ou hooks utilisant Three.js/tree.js sont placés dans `components/web/` ou `components/shared/` selon leur usage.
+- Les dépendances sont dans le `package.json` (`three`).
 
-### Pages et Routes
-- Pages web dans `app/(tabs)/[route]/page.tsx`
-- Écrans mobiles dans `screens/[Screen].tsx`
-- API routes dans `app/api/[route]/route.ts`
+## Conventions
 
-### Navigation
-- Web : Utiliser Next.js App Router
-- Mobile : Utiliser Expo Router avec la même structure
+- **Web** : tout le style passe par Tailwind CSS (`className="..."`), aucune trace de `StyleSheet.create` ou de modules CSS.
+- **Mobile** : styles natifs autorisés, mais à migrer si une version web responsive est souhaitée.
+- **Composants partagés** : dans `components/shared/`
+- **Composants spécifiques** : dans `components/web/` ou `components/mobile/`
+- **Pages web** : tout est centralisé dans la home (`app/page.tsx`), les autres pages sont supprimées ou redirigées.
+- **API** : routes dans `app/api/`
 
 ## Fichiers de Configuration
-- [next.config.js](mdc:next.config.js) : Configuration Next.js
-- [app.config.js](mdc:app.config.js) : Configuration Expo
-- [package.json](mdc:package.json) : Dépendances
+- `next.config.js` : Configuration Next.js
+- `tailwind.config.js` : Configuration Tailwind CSS
+- `app.config.js` : Configuration Expo
+- `package.json` : Dépendances
+
+---
+
+**Résumé** :  
+- Home unique pour le web  
+- Styles web 100% Tailwind  
+- Suppression des anciens styles natifs/modules CSS côté web  
+- Structure claire entre web, mobile, partagé  
+- Intégration possible de Three.js dans les composants web/shared

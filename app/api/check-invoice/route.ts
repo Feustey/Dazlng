@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest): Promise<Response> {
   const { searchParams } = new URL(req.url);
   const invoiceId = searchParams.get('id');
   if (!invoiceId) {
@@ -19,12 +19,14 @@ export async function GET(req: NextRequest) {
     });
 
     return NextResponse.json(response.data);
-  } catch (error: any) {
-    console.error('Erreur lors de la vérification:', error.response?.data || error.message);
+  } catch (error) {
+    const err = error as { response?: { data?: unknown }; message?: string };
+    // eslint-disable-next-line no-console
+    console.error('Erreur lors de la vérification:', err.response?.data || err.message);
     return NextResponse.json({ error: 'Erreur lors de la vérification de la facture' }, { status: 500 });
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(): Promise<Response> {
   return NextResponse.json({ error: 'LND non disponible sur ce déploiement.' }, { status: 501 });
 } 

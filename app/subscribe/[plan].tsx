@@ -1,9 +1,5 @@
-import { View, StyleSheet, ScrollView, Pressable, Text } from 'react-native';
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
-import Colors from '../../constants/Colors';
-import FormInput from '../../components/shared/ui/FormInput';
-import FeaturesList from '../../components/shared/ui/FeaturesList';
 
 const plans = {
   gratuit: {
@@ -42,7 +38,7 @@ interface FormData {
   phone: string;
 }
 
-export default function SubscribeScreen() {
+export default function SubscribeScreen(): React.ReactElement {
   const params = useParams();
   const plan = params.plan;
   const planDetails = plans[plan as keyof typeof plans];
@@ -54,124 +50,87 @@ export default function SubscribeScreen() {
     phone: '',
   });
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.FormEvent): void => {
+    e.preventDefault();
     // Ici, nous implémenterons l'inscription
     // console.log('Subscription submitted:', { plan, ...form });
   };
 
   if (!planDetails) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.error}>Plan non trouvé</Text>
-      </View>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <p className="text-lg text-error text-center">Plan non trouvé</p>
+      </div>
     );
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <View style={styles.planHeader}>
-          <Text style={styles.title}>{planDetails.name}</Text>
-          <Text style={styles.price}>{planDetails.price}</Text>
-        </View>
-
-        <FeaturesList features={planDetails.features} />
-
-        <View style={styles.form}>
-          <FormInput
-            label="Nom complet"
-            value={form.name}
-            onChangeText={(text) => setForm({ ...form, name: text })}
-            placeholder="Votre nom"
-          />
-
-          <FormInput
-            label="Email"
-            value={form.email}
-            onChangeText={(text) => setForm({ ...form, email: text })}
-            placeholder="votre@email.com"
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-
-          <FormInput
-            label="Entreprise"
-            value={form.company}
-            onChangeText={(text) => setForm({ ...form, company: text })}
-            placeholder="Nom de votre entreprise"
-            optional
-          />
-
-          <FormInput
-            label="Téléphone"
-            value={form.phone}
-            onChangeText={(text) => setForm({ ...form, phone: text })}
-            placeholder="Votre numéro de téléphone"
-            keyboardType="phone-pad"
-            optional
-          />
-
-          <Pressable 
-            style={({ pressed }) => [
-              styles.button,
-              pressed && styles.buttonPressed
-            ]} 
-            onPress={handleSubmit}
+    <div className="min-h-screen bg-background flex flex-col">
+      <div className="max-w-xl w-full mx-auto p-5">
+        <div className="flex flex-col items-center mb-8">
+          <h1 className="text-3xl font-bold text-secondary mb-2">{planDetails.name}</h1>
+          <p className="text-4xl font-bold text-primary">{planDetails.price}</p>
+        </div>
+        <div className="bg-white p-5 rounded-lg mb-8">
+          <h2 className="text-lg font-bold text-secondary mb-4">Services inclus :</h2>
+          <ul className="space-y-2">
+            {planDetails.features.map((feature, index) => (
+              <li key={index} className="text-base text-gray-700">• {feature}</li>
+            ))}
+          </ul>
+        </div>
+        <form className="space-y-5" onSubmit={handleSubmit}>
+          <div>
+            <label className="block text-base font-semibold text-text mb-1">Nom complet</label>
+            <input
+              className="w-full bg-background border-2 border-gray-400 rounded-lg py-3 px-4 text-base text-text mb-1"
+              value={form.name}
+              onChange={e => setForm({ ...form, name: e.target.value })}
+              placeholder="Votre nom"
+              type="text"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-base font-semibold text-text mb-1">Email</label>
+            <input
+              className="w-full bg-background border-2 border-gray-400 rounded-lg py-3 px-4 text-base text-text mb-1"
+              value={form.email}
+              onChange={e => setForm({ ...form, email: e.target.value })}
+              placeholder="votre@email.com"
+              type="email"
+              autoComplete="email"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-base font-semibold text-text mb-1">Entreprise</label>
+            <input
+              className="w-full bg-background border-2 border-gray-400 rounded-lg py-3 px-4 text-base text-text mb-1"
+              value={form.company}
+              onChange={e => setForm({ ...form, company: e.target.value })}
+              placeholder="Nom de votre entreprise"
+              type="text"
+            />
+          </div>
+          <div>
+            <label className="block text-base font-semibold text-text mb-1">Téléphone</label>
+            <input
+              className="w-full bg-background border-2 border-gray-400 rounded-lg py-3 px-4 text-base text-text mb-1"
+              value={form.phone}
+              onChange={e => setForm({ ...form, phone: e.target.value })}
+              placeholder="Votre numéro de téléphone"
+              type="tel"
+            />
+          </div>
+          <button
+            className="w-full bg-primary text-white font-bold py-3 rounded-lg mt-2 hover:bg-primary/90 transition-colors duration-200"
+            type="submit"
           >
-            <Text style={styles.buttonText}>S'inscrire</Text>
-          </Pressable>
-        </View>
-      </View>
-    </ScrollView>
+            S'inscrire
+          </button>
+        </form>
+      </div>
+    </div>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.background,
-  },
-  content: {
-    padding: 20,
-  },
-  planHeader: {
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: Colors.secondary,
-    marginBottom: 10,
-  },
-  price: {
-    fontSize: 36,
-    fontWeight: 'bold',
-    color: Colors.primary,
-  },
-  form: {
-    gap: 20,
-  },
-  button: {
-    backgroundColor: Colors.primary,
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  buttonPressed: {
-    opacity: 0.9,
-    transform: [{ scale: 0.98 }],
-  },
-  buttonText: {
-    color: Colors.white,
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  error: {
-    fontSize: 16,
-    color: Colors.error,
-    textAlign: 'center',
-    marginTop: 20,
-  },
-}); 
+} 

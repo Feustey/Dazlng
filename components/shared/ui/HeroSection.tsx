@@ -1,53 +1,10 @@
-import { View, Text, StyleSheet } from 'react-native';
-import Colors from '../../../constants/Colors';
+import React from 'react';
 
-interface HeroSectionProps {
-  title: string;
-  subtitle: string;
-}
-
-export default function HeroSection({
-  title,
-  subtitle,
-}: HeroSectionProps) {
+export default function HeroSection({ title, subtitle }: { title: string; subtitle: string }): React.ReactElement {
   return (
-    <View style={[styles.container, { backgroundColor: '#232336cc', borderColor: Colors.secondary }]}>
-      <Text style={styles.title} accessibilityRole="header">
-        {title}
-      </Text>
-      <Text style={styles.subtitle} accessibilityRole="text">
-        {subtitle}
-      </Text>
-    </View>
+    <section className="bg-white rounded-2xl shadow-lg mb-24 p-8">
+      <h1 className="text-4xl font-extrabold text-[#C026D3] mb-3 text-center tracking-wide">{title}</h1>
+      <p className="text-lg text-gray-700 leading-7 text-center font-medium">{subtitle}</p>
+    </section>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 32,
-    borderRadius: 28,
-    borderWidth: 1.5,
-    borderColor: Colors.secondary,
-    shadowColor: Colors.black,
-    shadowOpacity: 0.18,
-    shadowOffset: { width: 0, height: 8 },
-    shadowRadius: 32,
-    elevation: 8,
-    marginBottom: 24,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: '800',
-    color: Colors.secondary,
-    marginBottom: 12,
-    textAlign: 'center',
-    letterSpacing: 0.2,
-  },
-  subtitle: {
-    fontSize: 18,
-    color: Colors.muted,
-    lineHeight: 26,
-    textAlign: 'center',
-    fontWeight: '500',
-  },
-}); 
+} 

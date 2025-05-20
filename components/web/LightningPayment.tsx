@@ -20,7 +20,7 @@ declare global {
   }
 }
 
-export default function LightningPayment({ amount, productName, onSuccess }: LightningPaymentProps) {
+const LightningPayment: React.FC<LightningPaymentProps> = ({ amount, productName, onSuccess }) => {
   const [invoice, setInvoice] = useState<{ id: string; paymentRequest: string; paymentHash?: string } | null>(null);
   const [paymentStatus, setPaymentStatus] = useState<'pending' | 'success'>('pending');
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +38,7 @@ export default function LightningPayment({ amount, productName, onSuccess }: Lig
 
   // Générer l'invoice au chargement du composant
   useEffect(() => {
-    const createInvoice = async () => {
+    const createInvoice = async (): Promise<void> => {
       try {
         setIsLoading(true);
         const invoiceData = await generateInvoice({
@@ -48,7 +48,7 @@ export default function LightningPayment({ amount, productName, onSuccess }: Lig
         setInvoice(invoiceData);
         // Commencer à vérifier l'état du paiement
         if (invoiceData.id) {
-          checkPaymentStatus(invoiceData.id);
+          await checkPaymentStatus(invoiceData.id);
         }
       } catch (err) {
         setError(`Erreur lors de la génération de la facture: ${err instanceof Error ? err.message : 'Erreur inconnue'}`);
@@ -60,7 +60,7 @@ export default function LightningPayment({ amount, productName, onSuccess }: Lig
   }, [amount, productName]);
 
   // Fonction pour vérifier l'état du paiement
-  const checkPaymentStatus = useCallback(async (invoiceId: string) => {
+  const checkPaymentStatus = useCallback(async (invoiceId: string): Promise<void> => {
     try {
       const isPaid = await checkPayment(invoiceId);
       if (isPaid) {
@@ -75,7 +75,7 @@ export default function LightningPayment({ amount, productName, onSuccess }: Lig
   }, [onSuccess, paymentStatus]);
 
   // Fonction pour payer avec WebLN (Alby extension)
-  const payWithWebLN = async () => {
+  const payWithWebLN = async (): Promise<void> => {
     if (!invoice || !window.webln) return;
     try {
       setIsLoading(true);
@@ -217,4 +217,6 @@ export default function LightningPayment({ amount, productName, onSuccess }: Lig
       )}
     </div>
   );
-} 
+};
+
+export default LightningPayment; 

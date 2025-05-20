@@ -1,9 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
-import { Text, View, Alert, Platform, StyleSheet, Pressable } from 'react-native';
 import { generateInvoice, checkPayment } from '../../../lib/lightning';
-import Colors from '../../../constants/Colors';
 import Image from 'next/image';
 
 interface LightningPaymentProps {
@@ -21,47 +19,32 @@ declare global {
   }
 }
 
-export default function LightningPayment({ amount, onSuccess, productName }: LightningPaymentProps) {
-  const [invoice, setInvoice] = useState<{ paymentRequest: string; paymentHash: string } | null>(null);
+export default function LightningPayment(props: LightningPaymentProps): React.ReactElement {
+  const [invoice, setInvoice] = useState<{ id: string; paymentRequest: string; paymentHash?: string } | null>(null);
   const [paymentStatus, setPaymentStatus] = useState<'pending' | 'success'>('pending');
   const [error, setError] = useState<string | null>(null);
   const [isWebLNAvailable, setIsWebLNAvailable] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [qrUrl, setQrUrl] = useState<string | null>(null);
+  const [showWalletModal, setShowWalletModal] = useState(false);
 
-  // Vérifier si WebLN est disponible (extension Alby installée)
   useEffect(() => {
-    const checkWebLN = async () => {
-      try {
-        setIsLoading(true);
-        if (Platform.OS === 'web' && typeof window !== 'undefined' && window.webln) {
-          await window.webln.enable();
-          setIsWebLNAvailable(true);
-        }
-      } catch (err) {
-        // console.log('WebLN non disponible:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkWebLN();
+    if (typeof window !== 'undefined' && window.webln) {
+      setIsWebLNAvailable(true);
+    }
   }, []);
 
-  // Générer l'invoice au chargement du composant
   useEffect(() => {
-    const createInvoice = async () => {
+    const createInvoice = async (): Promise<void> => {
       try {
         setIsLoading(true);
         const invoiceData = await generateInvoice({
-          amount: amount,
-          memo: `Paiement pour ${productName}`,
+          amount: props.amount,
+          memo: `Paiement pour ${props.productName}`,
         });
-        
         setInvoice(invoiceData);
-        
-        // Commencer à vérifier l'état du paiement
         if (invoiceData.paymentHash) {
-          checkPaymentStatus(invoiceData.paymentHash);
+          await checkPaymentStatus(invoiceData.paymentHash);
         }
       } catch (err) {
         setError(`Erreur lors de la génération de la facture: ${err instanceof Error ? err.message : 'Erreur inconnue'}`);
@@ -69,38 +52,32 @@ export default function LightningPayment({ amount, onSuccess, productName }: Lig
         setIsLoading(false);
       }
     };
-
     createInvoice();
-  }, [amount, productName]);
+  }, [props.amount, props.productName]);
 
-  // Fonction pour vérifier l'état du paiement
-  const checkPaymentStatus = useCallback(async (paymentHash: string) => {
+  const checkPaymentStatus = useCallback(async (paymentHash: string): Promise<void> => {
     try {
       const isPaid = await checkPayment(paymentHash);
       if (isPaid) {
         setPaymentStatus('success');
-        if (onSuccess) onSuccess();
+        if (props.onSuccess) props.onSuccess();
       } else if (paymentStatus === 'pending') {
         setTimeout(() => checkPaymentStatus(paymentHash), 5000);
       }
     } catch (err) {
       setError(`Erreur lors de la vérification du paiement: ${err instanceof Error ? err.message : 'Erreur inconnue'}`);
     }
-  }, [onSuccess, paymentStatus]);
+  }, [props.onSuccess, paymentStatus]);
 
-  // Fonction pour payer avec WebLN (Alby extension)
-  const payWithWebLN = async () => {
+  const payWithWebLN = async (): Promise<void> => {
     if (!invoice || !window.webln) return;
-
     try {
       setIsLoading(true);
       await window.webln.enable();
-      
       const result = await window.webln.sendPayment(invoice.paymentRequest);
-      
       if (result.preimage) {
         setPaymentStatus('success');
-        if (onSuccess) onSuccess();
+        if (props.onSuccess) props.onSuccess();
       }
     } catch (err) {
       setError(`Erreur de paiement WebLN: ${err instanceof Error ? err.message : 'Erreur inconnue'}`);
@@ -110,6 +87,12 @@ export default function LightningPayment({ amount, onSuccess, productName }: Lig
   };
 
   useEffect(() => {
+    if (invoice?.paymentRequest) {
+      setQrUrl(`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${encodeURIComponent(invoice.paymentRequest)}`);
+    }
+  }, [invoice]);
+
+  useEffect(() => {
     if (invoice?.paymentHash) {
       checkPaymentStatus(invoice.paymentHash);
     }
@@ -117,179 +100,102 @@ export default function LightningPayment({ amount, onSuccess, productName }: Lig
 
   if (isLoading) {
     return (
-      <View style={styles.container}>
-        <Text>Chargement en cours...</Text>
-      </View>
-    );
+      <div className="flex flex-col items-center justify-center p-8 animate-pulse">
+        <div className="w-44 h-44 bg-gradient-to-br from-yellow-300 to-purple-400 rounded-2xl mb-6" />
+        <div className="h-6 w-2/3 bg-gray-200 rounded mb-2" />
+        <div className="h-4 w-1/2 bg-gray-100 rounded" />
+        <p className="mt-6 text-lg text-gray-400">Chargement du paiement Lightning...</p>
+      </div>
+    ) as React.ReactElement;
   }
 
   if (error) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>{error}</Text>
-      </View>
-    );
+      <div className="flex flex-col items-center justify-center p-8 bg-red-50 border border-red-200 rounded-2xl shadow-lg">
+        <h3 className="text-xl font-bold text-red-600 mb-2">Erreur de paiement</h3>
+        <p className="text-red-500 mb-2">{error}</p>
+        <button className="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition" onClick={() => window.location.reload()}>Réessayer</button>
+      </div>
+    ) as React.ReactElement;
   }
 
   if (paymentStatus === 'success') {
     return (
-      <View style={styles.container}>
-        <Text style={styles.successText}>Paiement réussi! Merci pour votre achat.</Text>
-      </View>
-    );
+      <div className="flex flex-col items-center justify-center p-8 bg-green-50 border border-green-200 rounded-2xl shadow-lg animate-bounceIn">
+        <svg className="w-16 h-16 text-green-500 mb-4 animate-bounce" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+        <h3 className="text-2xl font-bold text-green-600 mb-2">Paiement réussi !</h3>
+        <p className="text-green-700">Merci pour votre achat ⚡️</p>
+      </div>
+    ) as React.ReactElement;
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Paiement Bitcoin Lightning</Text>
-      <Text style={styles.amount}>Montant: {amount} sats</Text>
-      
-      {invoice && (
-        <>
-          {/* QR Code pour paiement mobile */}
-          <View style={styles.qrContainer}>
-            {Platform.OS === 'web' && (
-              <Image 
-                src={`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${encodeURIComponent(invoice.paymentRequest)}`}
-                alt="QR Code Lightning"
-                width={250}
-                height={250}
-                style={styles.qrCode}
-              />
-            )}
-          </View>
-          
-          {/* Bouton WebLN pour desktop avec Alby */}
-          {isWebLNAvailable && Platform.OS === 'web' && (
-            <Pressable 
-              onPress={payWithWebLN}
-              style={styles.albyButton}
-            >
-              <Text style={styles.buttonText}>Payer avec Alby</Text>
-            </Pressable>
-          )}
-          
-          {/* Bouton pour copier l'invoice */}
-          <Pressable 
-            onPress={() => {
-              if (Platform.OS === 'web') {
-                navigator.clipboard.writeText(invoice.paymentRequest);
-                Alert.alert('Succès', 'Facture copiée dans le presse-papier');
-              }
-            }}
-            style={styles.copyButton}
-          >
-            <Text style={styles.buttonText}>Copier la facture Lightning</Text>
-          </Pressable>
-          
-          {/* Lien de secours pour ouvrir avec un wallet Lightning */}
-          <Pressable 
-            onPress={() => {
-              if (Platform.OS === 'web') {
-                window.location.href = `lightning:${invoice.paymentRequest}`;
-              }
-            }}
-            style={styles.walletButton}
-          >
-            <Text style={styles.buttonText}>Ouvrir avec un Wallet Lightning</Text>
-          </Pressable>
-        </>
+    <div className="flex flex-col items-center justify-center p-8 bg-white/90 rounded-2xl shadow-2xl max-w-md mx-auto">
+      <h3 className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-400 mb-2">Paiement Lightning</h3>
+      <p className="text-gray-700 mb-4 text-center">Scanne le QR code ou copie la facture pour payer avec ton wallet Lightning. Paiement instantané, sécurisé et sans frais !</p>
+      {invoice && qrUrl && (
+        <div className="mb-4 transition-transform hover:scale-105">
+          <Image src={qrUrl} alt="QR code Lightning" width={200} height={200} className="rounded-xl shadow-lg border-4 border-yellow-300" />
+        </div>
       )}
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 32,
-    borderRadius: 28,
-    backgroundColor: '#232336cc',
-    borderWidth: 1.5,
-    borderColor: Colors.secondary,
-    shadowColor: Colors.black,
-    shadowOpacity: 0.18,
-    shadowOffset: { width: 0, height: 8 },
-    shadowRadius: 32,
-    elevation: 8,
-    maxWidth: 440,
-    marginHorizontal: 'auto',
-    marginVertical: 24,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: Colors.secondary,
-    marginBottom: 16,
-    textAlign: 'center',
-    letterSpacing: 0.2,
-  },
-  amount: {
-    marginBottom: 16,
-    color: Colors.text,
-    fontSize: 18,
-    textAlign: 'center',
-    fontWeight: '600',
-  },
-  qrContainer: {
-    marginBottom: 16,
-    alignItems: 'center',
-  },
-  qrCode: {
-    width: 250,
-    height: 250,
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: Colors.secondary,
-  },
-  errorText: {
-    color: Colors.error,
-    textAlign: 'center',
-    fontWeight: '600',
-    marginBottom: 12,
-  },
-  successText: {
-    color: Colors.success,
-    textAlign: 'center',
-    fontWeight: '700',
-    marginBottom: 12,
-  },
-  albyButton: {
-    backgroundColor: Colors.secondary,
-    padding: 14,
-    borderRadius: 25,
-    marginBottom: 16,
-    alignItems: 'center',
-    shadowColor: Colors.secondary,
-    shadowOpacity: 0.18,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 12,
-  },
-  copyButton: {
-    backgroundColor: Colors.primary,
-    padding: 14,
-    borderRadius: 25,
-    marginBottom: 16,
-    alignItems: 'center',
-    shadowColor: Colors.primary,
-    shadowOpacity: 0.12,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-  },
-  walletButton: {
-    backgroundColor: Colors.success,
-    padding: 14,
-    borderRadius: 25,
-    alignItems: 'center',
-    shadowColor: Colors.success,
-    shadowOpacity: 0.12,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-  },
-  buttonText: {
-    color: Colors.primary,
-    textAlign: 'center',
-    fontWeight: '700',
-    fontSize: 16,
-    letterSpacing: 0.2,
-  },
-}); 
+      {invoice && (
+        <div className="w-full flex flex-col items-center">
+          <code className="break-all text-xs bg-gray-100 rounded-lg px-4 py-2 mb-2 w-full text-center border border-gray-200 select-all cursor-pointer" onClick={() => {navigator.clipboard.writeText(invoice.paymentRequest); alert('Facture copiée dans le presse-papier !')}}>
+            {invoice.paymentRequest}
+          </code>
+          <button
+            className="px-5 py-2 bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-500 text-white font-bold rounded-lg shadow-md hover:scale-105 transition mb-2"
+            onClick={() => {navigator.clipboard.writeText(invoice.paymentRequest); alert('Facture copiée dans le presse-papier !')}}
+          >
+            Copier la facture
+          </button>
+          <button
+            className="px-5 py-2 bg-blue-500 text-white font-bold rounded-lg shadow-md hover:bg-blue-600 transition mb-2"
+            onClick={() => setShowWalletModal(true)}
+          >
+            Choisir un wallet de paiement
+          </button>
+          <button
+            className="px-5 py-2 bg-green-500 text-white font-bold rounded-lg shadow-md hover:bg-green-600 transition"
+            onClick={() => {window.location.href = `lightning:${invoice.paymentRequest}`;}}
+          >
+            Ouvrir avec un wallet Lightning
+          </button>
+        </div>
+      )}
+      {showWalletModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-2xl max-w-sm w-full shadow-2xl border border-gray-200">
+            <h2 className="text-lg font-bold mb-4 text-center">Choisissez votre wallet</h2>
+            {isWebLNAvailable && (
+              <button
+                className="w-full bg-yellow-400 text-gray-900 px-4 py-2 rounded-lg mb-2 font-semibold hover:bg-yellow-500 transition"
+                onClick={async () => { setShowWalletModal(false); await payWithWebLN(); }}
+              >
+                Payer avec Alby/WebLN
+              </button>
+            )}
+            <button
+              className="w-full bg-green-500 text-white px-4 py-2 rounded-lg mb-2 font-semibold hover:bg-green-600 transition"
+              onClick={() => { setShowWalletModal(false); if (invoice) window.location.href = `lightning:${invoice.paymentRequest}`; }}
+            >
+              Ouvrir avec un wallet Lightning
+            </button>
+            <button
+              className="w-full bg-gray-200 text-gray-900 px-4 py-2 rounded-lg mb-2 font-semibold hover:bg-gray-300 transition"
+              onClick={() => { setShowWalletModal(false); if (invoice) { navigator.clipboard.writeText(invoice.paymentRequest); alert('Facture copiée !'); } }}
+            >
+              Copier la facture Lightning
+            </button>
+            <button
+              className="w-full bg-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-600 transition"
+              onClick={() => setShowWalletModal(false)}
+            >
+              Annuler
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  ) as React.ReactElement;
+} 

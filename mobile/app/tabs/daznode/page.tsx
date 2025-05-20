@@ -2,7 +2,7 @@ import React from 'react';
 import { View, ScrollView } from 'react-native';
 import ProductCard from 'components/shared/ui/ProductCard';
 
-const DaznodePage = () => {
+const DaznodePage = (): React.ReactElement => {
   const freeFeatures = [
     { text: "✓ Statistiques de base" },
     { text: "✓ Monitoring basique" },

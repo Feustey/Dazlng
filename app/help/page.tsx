@@ -1,11 +1,11 @@
 import React from "react";
 
-export default function HelpPage() {
+export default function HelpPage(): React.ReactElement {
   return (
     <main className="max-w-3xl mx-auto py-12 px-4">
-      <h1 className="text-4xl font-bold mb-6">Centre d’aide Dazno.de</h1>
+      <h1 className="text-4xl font-bold mb-6">Centre d'aide Dazno.de</h1>
       <p className="mb-6">
-        Bienvenue dans notre centre d’aide. Vous trouverez ici toutes les informations nécessaires pour utiliser Dazno.de en toute sérénité.
+        Bienvenue dans notre centre d'aide. Vous trouverez ici toutes les informations nécessaires pour utiliser Dazno.de en toute sérénité.
       </p>
 
       <section className="mb-8">
@@ -13,7 +13,7 @@ export default function HelpPage() {
         <ul className="space-y-4">
           <li>
             <strong>Comment créer un compte ?</strong><br />
-            Cliquez sur « S’inscrire » en haut à droite de la page d’accueil et suivez les instructions. Un email de confirmation vous sera envoyé.
+            Cliquez sur « S'inscrire » en haut à droite de la page d'accueil et suivez les instructions. Un email de confirmation vous sera envoyé.
           </li>
           <li>
             <strong>Comment effectuer un paiement ?</strong><br />
@@ -43,9 +43,9 @@ export default function HelpPage() {
       </section>
 
       <section>
-        <h2 className="text-2xl font-semibold mb-2">Besoin d’aide supplémentaire ?</h2>
+        <h2 className="text-2xl font-semibold mb-2">Besoin d'aide supplémentaire ?</h2>
         <p>
-          Notre équipe est disponible 7j/7 pour répondre à toutes vos questions. N’hésitez pas à nous contacter !
+          Notre équipe est disponible 7j/7 pour répondre à toutes vos questions. N'hésitez pas à nous contacter !
         </p>
       </section>
     </main>

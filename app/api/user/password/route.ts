@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
-async function getUserFromRequest(req: NextRequest) {
+async function getUserFromRequest(req: NextRequest): Promise<unknown> {
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
   if (!token) return null;
   const { data: { user } } = await supabase.auth.getUser(token);
   return user;
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   const user = await getUserFromRequest(req);
   if (!user) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
 

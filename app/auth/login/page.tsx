@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-export default function LoginPage() {
+export default function LoginPage(): React.ReactElement {
   const [tab, setTab] = useState<'login' | 'signup'>('login');
   const [form, setForm] = useState({
     email: '',
@@ -16,7 +16,7 @@ export default function LoginPage() {
   const router = useRouter();
   const supabase = createClientComponentClient();
 
-  const handleLogin = async () => {
+  const handleLogin = async (): Promise<void> => {
     setError(null);
     if (!form.email || !form.password) {
       setError('Veuillez remplir tous les champs');
@@ -35,7 +35,7 @@ export default function LoginPage() {
     }
   };
 
-  const handleSignup = async () => {
+  const handleSignup = async (): Promise<void> => {
     setError(null);
     if (!form.email || !form.password || !form.confirmPassword) {
       setError('Veuillez remplir tous les champs');
@@ -46,7 +46,7 @@ export default function LoginPage() {
       return;
     }
     setLoading(true);
-    const { error, data } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email: form.email,
       password: form.password,
     });

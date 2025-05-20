@@ -1,5 +1,7 @@
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../../../types/navigation';
+import { StackNavigationProp } from '@react-navigation/stack';
 import Colors from '../../../constants/Colors';
 import PricingCard from '../../../components/shared/ui/PricingCard';
 import HeroSection from '../../../components/shared/ui/HeroSection';
@@ -13,8 +15,8 @@ interface Plan {
   features: string[];
 }
 
-export default function DaznodeScreen() {
-  const navigation = useNavigation();
+export default function DaznodeScreen(): React.ReactElement {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   
   const plans: Plan[] = [
     {

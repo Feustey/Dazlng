@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-export default function DazpayCheckoutPage() {
+export default function CheckoutDazpayPage(): React.ReactElement {
   const [form, setForm] = useState({
     fullName: '',
     email: '',
@@ -18,11 +18,11 @@ export default function DazpayCheckoutPage() {
   const [error, setError] = useState<string | null>(null);
   const supabase = createClientComponentClient();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     setError(null);
     if (!form.fullName || !form.email || !form.address || !form.city || !form.postalCode || !form.country) {
@@ -39,7 +39,7 @@ export default function DazpayCheckoutPage() {
     quantity: 1,
   };
 
-  const handlePaymentSuccess = async () => {
+  const handlePaymentSuccess = async (): Promise<void> => {
     setError(null);
     setPaymentSuccess(true);
     const { data: { session } } = await supabase.auth.getSession();
@@ -72,123 +72,71 @@ export default function DazpayCheckoutPage() {
   };
 
   return (
-    <div style={{ maxWidth: 500, margin: '40px auto', padding: 24, background: '#fff', borderRadius: 12, boxShadow: '0 2px 8px #0001' }}>
-      <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 16 }}>Checkout Dazpay</h1>
+    <div className="max-w-lg mx-auto my-10 p-6 bg-white rounded-xl shadow-lg">
+      <h1 className="text-2xl font-bold mb-6 text-gray-900">Checkout Dazpay</h1>
       {paymentSuccess ? (
-        <div style={{ textAlign: 'center', color: '#22c55e', fontSize: 20 }}>
+        <div className="text-center text-green-500 text-lg font-semibold">
           Paiement réussi ! Merci pour votre commande.<br />
           {orderId && <div>Numéro de commande : <b>{orderId}</b></div>}
-          Vous recevrez un email de confirmation sous peu.
+          <div className="mt-2 text-gray-700">Vous recevrez un email de confirmation sous peu.</div>
         </div>
       ) : showPayment ? (
         <>
-          <h2 style={{ fontSize: 20, fontWeight: 600, marginBottom: 12 }}>Récapitulatif de la commande</h2>
-          <ul style={{ marginBottom: 16 }}>
+          <h2 className="text-xl font-semibold mb-3">Récapitulatif de la commande</h2>
+          <ul className="mb-4 text-gray-700">
             <li><b>Produit :</b> {product.name}</li>
             <li><b>Prix :</b> {product.priceEur}€ (~{product.priceSats} sats)</li>
             <li><b>Quantité :</b> {product.quantity}</li>
             <li><b>Total :</b> {product.priceEur * product.quantity}€</li>
           </ul>
-          <h3 style={{ fontSize: 18, fontWeight: 500, marginBottom: 8 }}>Informations client</h3>
-          <ul style={{ marginBottom: 24 }}>
+          <h3 className="text-lg font-medium mb-2">Informations client</h3>
+          <ul className="mb-6 text-gray-700">
             <li><b>Nom :</b> {form.fullName}</li>
             <li><b>Email :</b> {form.email}</li>
             <li><b>Adresse :</b> {form.address}, {form.city}, {form.postalCode}, {form.country}</li>
             <li><b>Téléphone :</b> {form.phone}</li>
           </ul>
           {/* Remplacer par le composant de paiement réel */}
-          <button onClick={handlePaymentSuccess} style={{ background: '#22c55e', color: '#fff', padding: 12, borderRadius: 6, fontWeight: 600, fontSize: 18, border: 'none', cursor: 'pointer' }}>Simuler le paiement</button>
-          <button style={{ marginTop: 24, color: '#e11d48', background: 'none', border: 'none', cursor: 'pointer' }} onClick={() => setShowPayment(false)}>
+          <button onClick={handlePaymentSuccess} className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-bold text-lg transition mb-4">Simuler le paiement</button>
+          <button className="w-full text-red-500 hover:underline mt-2" onClick={() => setShowPayment(false)}>
             &larr; Modifier les informations
           </button>
-          {error && <div style={{ color: '#e11d48', marginTop: 12 }}>{error}</div>}
+          {error && <div className="text-red-500 mt-3">{error}</div>}
         </>
       ) : (
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: 12 }}>
-            <label>Nom complet*<br />
-              <input type="text" name="fullName" value={form.fullName} onChange={handleChange} required style={{ width: '100%', padding: 8, borderRadius: 4, border: '1px solid #ddd' }} />
-            </label>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block font-medium mb-1">Nom complet*</label>
+            <input type="text" name="fullName" value={form.fullName} onChange={handleChange} required className="w-full p-2 rounded border border-gray-300 focus:border-orange-500" />
           </div>
-          <div style={{ marginBottom: 12 }}>
-            <label>Email*<br />
-              <input type="email" name="email" value={form.email} onChange={handleChange} required style={{ width: '100%', padding: 8, borderRadius: 4, border: '1px solid #ddd' }} />
-            </label>
+          <div>
+            <label className="block font-medium mb-1">Email*</label>
+            <input type="email" name="email" value={form.email} onChange={handleChange} required className="w-full p-2 rounded border border-gray-300 focus:border-orange-500" />
           </div>
-          <div style={{ marginBottom: 12 }}>
-            <label>Adresse*<br />
-              <input type="text" name="address" value={form.address} onChange={handleChange} required style={{ width: '100%', padding: 8, borderRadius: 4, border: '1px solid #ddd' }} />
-            </label>
+          <div>
+            <label className="block font-medium mb-1">Adresse*</label>
+            <input type="text" name="address" value={form.address} onChange={handleChange} required className="w-full p-2 rounded border border-gray-300 focus:border-orange-500" />
           </div>
-          <div style={{ marginBottom: 12 }}>
-            <label>Ville*<br />
-              <input type="text" name="city" value={form.city} onChange={handleChange} required style={{ width: '100%', padding: 8, borderRadius: 4, border: '1px solid #ddd' }} />
-            </label>
+          <div>
+            <label className="block font-medium mb-1">Ville*</label>
+            <input type="text" name="city" value={form.city} onChange={handleChange} required className="w-full p-2 rounded border border-gray-300 focus:border-orange-500" />
           </div>
-          <div style={{ marginBottom: 12 }}>
-            <label>Code postal*<br />
-              <input type="text" name="postalCode" value={form.postalCode} onChange={handleChange} required style={{ width: '100%', padding: 8, borderRadius: 4, border: '1px solid #ddd' }} />
-            </label>
+          <div>
+            <label className="block font-medium mb-1">Code postal*</label>
+            <input type="text" name="postalCode" value={form.postalCode} onChange={handleChange} required className="w-full p-2 rounded border border-gray-300 focus:border-orange-500" />
           </div>
-          <div style={{ marginBottom: 12 }}>
-            <label>Pays*<br />
-              <input type="text" name="country" value={form.country} onChange={handleChange} required style={{ width: '100%', padding: 8, borderRadius: 4, border: '1px solid #ddd' }} />
-            </label>
+          <div>
+            <label className="block font-medium mb-1">Pays*</label>
+            <input type="text" name="country" value={form.country} onChange={handleChange} required className="w-full p-2 rounded border border-gray-300 focus:border-orange-500" />
           </div>
-          <div style={{ marginBottom: 16 }}>
-            <label>Téléphone<br />
-              <input type="text" name="phone" value={form.phone} onChange={handleChange} style={{ width: '100%', padding: 8, borderRadius: 4, border: '1px solid #ddd' }} />
-            </label>
+          <div>
+            <label className="block font-medium mb-1">Téléphone</label>
+            <input type="text" name="phone" value={form.phone} onChange={handleChange} className="w-full p-2 rounded border border-gray-300 focus:border-orange-500" />
           </div>
-          <button type="submit" style={{ width: '100%', background: '#f7931a', color: '#fff', fontWeight: 600, fontSize: 18, padding: 12, border: 'none', borderRadius: 6, cursor: 'pointer' }}>
-            Procéder au paiement
-          </button>
-          {error && <div style={{ color: '#e11d48', marginTop: 12 }}>{error}</div>}
+          <button type="submit" className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg py-3 rounded-lg transition">Procéder au paiement</button>
+          {error && <div className="text-red-500 mt-3">{error}</div>}
         </form>
       )}
     </div>
   );
-}
-
-const styles = {
-  container: {
-    minHeight: '100vh',
-    background: '#FFFFFF',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '5vw',
-  },
-  title: {
-    fontSize: 'clamp(2rem, 5vw, 2.5rem)',
-    fontWeight: 'bold',
-    color: '#1A2236',
-    marginBottom: 12,
-    textAlign: 'center',
-    fontFamily: 'Inter, sans-serif',
-  },
-  subtitle: {
-    fontSize: 'clamp(1rem, 2vw, 1.25rem)',
-    color: '#6B7280',
-    marginBottom: 32,
-    textAlign: 'center',
-    fontFamily: 'Inter, sans-serif',
-    maxWidth: 400,
-  },
-  button: {
-    background: '#1A2236',
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-    border: 'none',
-    borderRadius: 8,
-    padding: '14px 32px',
-    cursor: 'pointer',
-    fontFamily: 'Inter, sans-serif',
-    transition: 'background 0.2s, box-shadow 0.2s',
-    outline: 'none',
-    boxShadow: 'none',
-    marginTop: 8,
-  },
-}; 
+} 

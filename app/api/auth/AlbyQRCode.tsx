@@ -6,7 +6,7 @@ interface AlbyQRCodeProps {
   memo?: string;
 }
 
-export default function AlbyQRCode({ value, amount, memo }: AlbyQRCodeProps) {
+export default function AlbyQRCode({ value, amount, memo }: AlbyQRCodeProps): React.ReactElement {
   const paymentRequest = `lightning:${value}?amount=${amount}${memo ? `&memo=${encodeURIComponent(memo)}` : ""}`;
 
   return (

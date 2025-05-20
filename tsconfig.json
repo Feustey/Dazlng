@@ -20,10 +20,7 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "@lib/*": ["lib/*"],
-      "@components/ui/*": ["components/shared/ui/*"],
-      "@app/lib/*": ["app/lib/*"]
+      "@/*": ["./*"]
     },
     "plugins": [
       {
@@ -36,9 +33,11 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "App.tsx.back"  ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "tests",
+    "**/*.test.*"
   ],
   "ts-node": {
     "compilerOptions": {

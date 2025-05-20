@@ -1,8 +1,9 @@
 "use client";
 
+import React from 'react';
 import { useState } from 'react';
 
-export default function ContactPage() {
+const ContactPage: React.FC = () => {
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -14,11 +15,11 @@ export default function ContactPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -74,4 +75,6 @@ export default function ContactPage() {
       </form>
     </div>
   );
-} 
+};
+
+export default ContactPage; 

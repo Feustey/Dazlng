@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Styles personnalisés pour AOS */
+[data-aos] {
+  pointer-events: none;
+}
+.aos-animate {
+  pointer-events: auto;
+}
+.mobile-aos {
+  @media screen and (max-width: 768px) {
+    [data-aos] {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+}
+
+/* Ajoutez ici uniquement les styles personnalisés qui ne peuvent pas être gérés via Tailwind */
+
+@layer base {
+  @media (max-width: 768px) {
+    html {
+      scroll-padding-top: 1rem;
+    }
+  }
+}
+
+@layer components {
+  .clickable {
+    @apply cursor-pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+}
+
+@layer utilities {
+  .mobile-aos {
+    @apply transform-gpu will-change-transform;
+  }
+} 

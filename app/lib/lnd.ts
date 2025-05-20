@@ -1,7 +1,7 @@
 import { authenticatedLndGrpc } from 'ln-service';
 import fs from 'fs';
 
-function safeReadFile(path?: string) {
+function safeReadFile(path?: string): string {
   if (!path) return '';
   try {
     return fs.readFileSync(path).toString();

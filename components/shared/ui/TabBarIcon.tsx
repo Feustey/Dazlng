@@ -11,7 +11,7 @@ interface TabBarIconProps {
   focused: boolean;
 }
 
-export default function TabBarIcon({ Icon, color, size, focused }: TabBarIconProps) {
+export default function TabBarIcon({ Icon, color, size, focused }: TabBarIconProps): React.ReactElement {
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {

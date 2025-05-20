@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
@@ -15,7 +16,7 @@ interface UserData {
   t4g_tokens: number;
 }
 
-export default function AccountPage() {
+const AccountPage: React.FC = () => {
   const [tab, setTab] = useState<'infos' | 'tokens'>('infos');
   const [userData, setUserData] = useState<UserData | null>(null);
   const [form, setForm] = useState<Omit<UserData, 'id' | 'email' | 't4g_tokens'>>({
@@ -32,7 +33,7 @@ export default function AccountPage() {
   const supabase = createClientComponentClient();
 
   useEffect(() => {
-    async function fetchUserData() {
+    async function fetchUserData(): Promise<void> {
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
       if (!token) {
@@ -60,12 +61,12 @@ export default function AccountPage() {
     fetchUserData();
   }, [router, supabase]);
 
-  const handleLogout = async () => {
+  const handleLogout = async (): Promise<void> => {
     await supabase.auth.signOut();
     router.replace('/auth/login');
   };
 
-  const handleUpdate = async (e: React.FormEvent) => {
+  const handleUpdate = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     setSaving(true);
     setMessage(null);
@@ -197,4 +198,6 @@ export default function AccountPage() {
       </button>
     </div>
   );
-} 
+};
+
+export default AccountPage; 

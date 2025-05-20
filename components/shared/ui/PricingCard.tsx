@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, Pressable, Platform } from 'react-native';
-import Colors from '../../../constants/Colors';
+import Card from "./Card";
+import GradientTitle from "./GradientTitle";
 
 export interface PricingCardProps {
   title: string;
@@ -19,118 +19,22 @@ export default function PricingCard({
   buttonText,
   onPress,
   variant = 'plan',
-}: PricingCardProps) {
+}: PricingCardProps): React.ReactElement {
   return (
-    <View style={[styles.card, variant === 'addon' && styles.addonCard]}>
-      <Text style={variant === 'plan' ? styles.planName : styles.addonTitle}>
-        {title}
-      </Text>
-      {price && (
-        <Text style={styles.price}>{price}</Text>
-      )}
-      {description && (
-        <Text style={styles.description}>{description}</Text>
-      )}
+    <Card className={variant === 'addon' ? 'border-2 border-yellow-400' : ''}>
+      <GradientTitle className="text-2xl mb-3">{title}</GradientTitle>
+      {price && <div className="text-3xl text-yellow-500 font-bold mb-4">{price}</div>}
+      {description && <div className="text-base text-gray-600 mb-4">{description}</div>}
       {features && features.map((feature, index) => (
-        <Text key={index} style={styles.feature}>
-          • {feature}
-        </Text>
+        <div key={index} className="text-base mb-1 text-gray-800">• {feature}</div>
       ))}
-      <Pressable
-        style={({ pressed }) => [
-          styles.button,
-          pressed && styles.buttonPressed
-        ]}
-        onPress={onPress}
+      <button
+        className="w-full bg-yellow-400 py-4 px-9 rounded-2xl mt-4 font-bold text-[#232336] shadow-lg transition-colors duration-200 hover:bg-yellow-300 active:opacity-85 active:scale-97"
+        onClick={onPress}
+        type="button"
       >
-        <Text style={styles.buttonText}>{buttonText}</Text>
-      </Pressable>
-    </View>
+        {buttonText}
+      </button>
+    </Card>
   );
-}
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: Colors.background,
-    borderRadius: 28,
-    padding: 32,
-    marginBottom: 28,
-    shadowColor: Colors.black,
-    shadowOpacity: 0.18,
-    shadowOffset: { width: 0, height: 8 },
-    shadowRadius: 32,
-    elevation: 8,
-    ...Platform.select({
-      web: {
-        boxShadow: '0 8px 32px 0 rgba(0,0,0,0.18)',
-        transition: 'box-shadow 0.2s',
-      },
-    }),
-  },
-  addonCard: {
-    borderWidth: 2,
-    borderColor: Colors.secondary,
-  },
-  planName: {
-    fontSize: 26,
-    fontWeight: '700',
-    color: Colors.text,
-    marginBottom: 12,
-    fontFamily: Platform.select({ web: 'Inter, sans-serif', default: 'System' }),
-  },
-  addonTitle: {
-    fontSize: 22,
-    fontWeight: '600',
-    color: Colors.secondary,
-    marginBottom: 8,
-    fontFamily: Platform.select({ web: 'Inter, sans-serif', default: 'System' }),
-  },
-  price: {
-    fontSize: 32,
-    color: Colors.secondary,
-    fontWeight: '700',
-    marginBottom: 18,
-    fontFamily: Platform.select({ web: 'Inter, sans-serif', default: 'System' }),
-  },
-  description: {
-    fontSize: 17,
-    marginBottom: 18,
-    color: Colors.muted,
-    fontFamily: Platform.select({ web: 'Inter, sans-serif', default: 'System' }),
-  },
-  feature: {
-    fontSize: 16,
-    marginBottom: 6,
-    color: Colors.text,
-    fontFamily: Platform.select({ web: 'Inter, sans-serif', default: 'System' }),
-  },
-  button: {
-    backgroundColor: Colors.secondary,
-    paddingVertical: 16,
-    paddingHorizontal: 36,
-    borderRadius: 25,
-    alignItems: 'center',
-    marginTop: 18,
-    shadowColor: Colors.secondary,
-    shadowOpacity: 0.18,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 12,
-    ...Platform.select({
-      web: {
-        transition: 'background 0.2s, color 0.2s',
-        cursor: 'pointer',
-      },
-    }),
-  },
-  buttonPressed: {
-    opacity: 0.85,
-    transform: [{ scale: 0.97 }],
-  },
-  buttonText: {
-    color: Colors.primary,
-    fontSize: 18,
-    fontWeight: '700',
-    fontFamily: Platform.select({ web: 'Inter, sans-serif', default: 'System' }),
-    letterSpacing: 0.2,
-  },
-}); 
+} 

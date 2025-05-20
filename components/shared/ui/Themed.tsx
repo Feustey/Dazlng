@@ -18,10 +18,10 @@ const styles = {
   } as ViewStyle,
 };
 
-export function Text({ style, ...otherProps }: ThemedTextProps) {
+export function Text({ style, ...otherProps }: ThemedTextProps): React.ReactElement {
   return <DefaultText style={[styles.text, style]} {...otherProps} />;
 }
 
-export function View({ style, ...otherProps }: ThemedViewProps) {
+export function View({ style, ...otherProps }: ThemedViewProps): React.ReactElement {
   return <DefaultView style={[styles.view, style]} {...otherProps} />;
 } 

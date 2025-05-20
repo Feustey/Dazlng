@@ -1,7 +1,7 @@
 "use client";
 import { useState } from 'react';
 
-export default function DaznodeCheckoutPage() {
+export default function CheckoutDaznodePage(): React.ReactElement {
   const [hover, setHover] = useState(false);
   return (
     <div

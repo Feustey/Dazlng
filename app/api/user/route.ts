@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
 // Récupérer l'utilisateur connecté (via cookie ou header Authorization)
-async function getUserFromRequest(req: NextRequest) {
+async function getUserFromRequest(req: NextRequest): Promise<unknown> {
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
   if (!token) return null;
   const { data: { user } } = await supabase.auth.getUser(token);
   return user;
 }
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   const user = await getUserFromRequest(req);
   if (!user) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
 
@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ ...data, t4g_tokens: data?.t4g_tokens ?? 1 });
 }
 
-export async function PUT(req: NextRequest) {
+export async function PUT(req: NextRequest): Promise<NextResponse> {
   const user = await getUserFromRequest(req);
   if (!user) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
 

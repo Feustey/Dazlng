@@ -1,0 +1,35 @@
+import React, { useState } from "react";
+
+interface PaymentFormProps {
+  onBack: () => void;
+  onSuccess: () => void;
+}
+
+export function PaymentForm({ onBack, onSuccess }: PaymentFormProps): React.ReactElement {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handlePay = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    // Simuler un paiement réussi
+    setTimeout(() => {
+      setLoading(false);
+      onSuccess();
+    }, 1200);
+  };
+
+  return (
+    <form onSubmit={handlePay} className="space-y-4">
+      <div className="font-bold">Paiement sécurisé</div>
+      <button type="submit" className="btn-primary w-full" disabled={loading}>
+        {loading ? "Paiement en cours..." : "Payer 399 €"}
+      </button>
+      <button type="button" className="btn-secondary w-full" onClick={onBack} disabled={loading}>
+        Retour
+      </button>
+      {error && <div className="text-red-500">{error}</div>}
+    </form>
+  );
+} 

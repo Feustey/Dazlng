@@ -1,11 +1,7 @@
 "use client";
-import { Tabs, useRootNavigation } from 'expo-router';
+import React, { useEffect, useState } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { Image, Pressable, View, StyleSheet } from 'react-native';
-import { Link } from 'expo-router';
-import Colors from '../../../constants/Colors';
-import Footer from '../ui/Footer';
-import { useEffect, useState } from 'react';
+import Footer from '../../Footer';
 import PropTypes from 'prop-types';
 
 interface TabIconProps {
@@ -27,26 +23,23 @@ const TabIcon: React.FC<TabIconProps> = ({ color, name, size }) => (
 );
 
 const TabButton: React.FC<TabButtonProps> = ({ onPress }) => (
-  <View onTouchEnd={onPress}>
-    <Image
-      source={require('@/assets/images/logo.png')}
-      alt="Logo"
-      accessibilityLabel="Logo Daznode"
-      style={styles.logo}
+  <div onClick={onPress} className="cursor-pointer">
+    <img
+      src="/assets/images/logo.png"
+      alt="Logo Daznode"
+      className="w-[120px] h-[24px] object-contain"
     />
-  </View>
+  </div>
 );
 
 const HeaderLogo: React.FC<HeaderLogoProps> = ({ onPress }) => (
-  <Pressable onPress={onPress}>
-    <Image
-      source={require('../../../assets/images/logo-daznode-white.png')}
-      style={styles.logo}
-      resizeMode="contain"
-      accessibilityLabel="Logo Daznode"
+  <button onClick={onPress} className="bg-transparent border-0 p-0 m-0 cursor-pointer">
+    <img
+      src="/assets/images/logo-daznode-white.png"
       alt="Logo Daznode"
+      className="w-[120px] h-[24px] object-contain"
     />
-  </Pressable>
+  </button>
 );
 
 TabIcon.propTypes = {
@@ -64,15 +57,12 @@ HeaderLogo.propTypes = {
 };
 
 const UserButton: React.FC = () => (
-  <Link href="/login" asChild>
-    <Pressable style={styles.userButton}>
-      <TabIcon name="user-circle" color={Colors.white} size={24} />
-    </Pressable>
-  </Link>
+  <a href="/login" className="mr-4">
+    <TabIcon name="user-circle" color="#fff" size={24} />
+  </a>
 );
 
-export default function TabLayout() {
-  const rootNavigation = useRootNavigation();
+export default function TabLayout(): React.ReactElement | null {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -91,59 +81,25 @@ export default function TabLayout() {
     { name: 'dazpay', title: 'DazPay', icon: 'cash-register' },
   ] as const;
 
-  const handleLogoPress = () => {
-    rootNavigation?.navigate('Main', { screen: 'Accueil' });
-  };
-
+  // Simule un système d'onglets web (exemple, à adapter selon le routeur web utilisé)
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <Tabs
-          screenOptions={{
-            tabBarActiveTintColor: Colors.primary,
-            tabBarInactiveTintColor: Colors.inactive,
-            headerStyle: styles.header,
-            headerTintColor: Colors.white,
-            headerTitle: () => (
-              <HeaderLogo onPress={handleLogoPress} />
-            ),
-            headerRight: () => <UserButton />,
-          }}
-        >
-          {tabs.map((tab) => (
-            <Tabs.Screen
-              key={tab.name}
-              name={tab.name}
-              options={{
-                title: tab.title,
-                tabBarIcon: ({ color }) => (
-                  <TabIcon name={tab.icon} color={color} size={24} />
-                ),
-              }}
-            />
+    <div className="flex flex-col min-h-screen">
+      <header className="bg-primary flex items-center justify-between px-6 py-3 shadow-md">
+        <HeaderLogo onPress={() => window.location.href = '/'} />
+        <nav className="flex gap-6">
+          {tabs.map(tab => (
+            <a key={tab.name} href={`/${tab.name === 'index' ? '' : tab.name}`} className="flex items-center gap-2 text-white hover:text-secondary font-semibold text-base">
+              <TabIcon name={tab.icon} color="#fff" size={20} />
+              {tab.title}
+            </a>
           ))}
-        </Tabs>
-      </View>
+        </nav>
+        <UserButton />
+      </header>
+      <main className="flex-1">
+        {/* Ici, le contenu des pages enfants sera injecté via le routeur web (Next.js, etc.) */}
+      </main>
       <Footer />
-    </View>
+    </div>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-  },
-  header: {
-    backgroundColor: Colors.primary,
-  },
-  logo: {
-    width: 120,
-    height: 24,
-  },
-  userButton: {
-    marginRight: 15,
-  },
-}); 
+} 

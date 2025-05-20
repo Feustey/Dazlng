@@ -2,7 +2,7 @@ import React from 'react';
 // import { StatusBar } from 'expo-status-bar';
 import AppNavigator from '../navigation/AppNavigator';
 
-export default function RootLayout() {
+export default function RootLayout(): React.ReactElement {
   return (
     <>
       {/* <StatusBar style="dark" /> */}

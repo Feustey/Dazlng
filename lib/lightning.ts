@@ -1,5 +1,3 @@
-import { LightningAddress } from '@getalby/lightning-tools';
-
 interface InvoiceParams {
   amount: number;
   memo: string;

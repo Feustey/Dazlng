@@ -1,16 +1,15 @@
 import React from 'react';
-import styles from './PageLayout.module.css';
 
 interface PageLayoutProps {
   children: React.ReactNode;
-  style?: React.CSSProperties;
-  contentStyle?: React.CSSProperties;
+  className?: string;
+  contentClassName?: string;
 }
 
-export default function PageLayout({ children, style, contentStyle }: PageLayoutProps) {
+export default function PageLayout({ children, className = '', contentClassName = '' }: PageLayoutProps): React.ReactElement {
   return (
-    <div className={styles.pageLayout} style={style}>
-      <div className={styles.pageContent} style={contentStyle}>
+    <div className={`flex-1 bg-[#181825] ${className}`}>
+      <div className={`flex-1 flex justify-center items-center p-8 bg-[#232336cc] rounded-[28px] border-[1.5px] border-[#F7931A] shadow-[0_8px_32px_0_rgba(0,0,0,0.18)] m-6 ${contentClassName}`}>
         {children}
       </div>
     </div>

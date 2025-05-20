@@ -1,138 +1,58 @@
-import { Pressable, Text, StyleSheet, ActivityIndicator, View, Platform } from 'react-native';
-import Colors from '../../../constants/Colors';
+import React from 'react';
 
 interface ButtonProps {
   children: string;
-  onPress: () => void;
+  onClick?: () => void;
   disabled?: boolean;
   loading?: boolean;
   variant?: 'primary' | 'secondary' | 'outline';
   size?: 'small' | 'medium' | 'large';
+  type?: 'button' | 'submit' | 'reset';
 }
 
-export default function Button({
-  children,
-  onPress,
-  disabled = false,
-  loading = false,
-  variant = 'primary',
-  size = 'medium',
-}: ButtonProps) {
-  const getBackgroundColor = () => {
-    if (disabled) return Colors.gray[500];
-    switch (variant) {
-      case 'secondary':
-        return Colors.background;
-      case 'outline':
-        return 'transparent';
-      default:
-        return Colors.secondary;
-    }
-  };
+export default function Button(props: ButtonProps): React.ReactElement {
+  const {
+    children,
+    onClick,
+    disabled = false,
+    loading = false,
+    variant = 'primary',
+    size = 'medium',
+    type = 'button',
+  } = props;
 
-  const getTextColor = () => {
-    if (disabled) return Colors.gray[700];
-    if (variant === 'outline') return Colors.secondary;
-    if (variant === 'secondary') return Colors.secondary;
-    return Colors.primary;
+  const base = 'rounded-[25px] flex items-center justify-center shadow-md transition-colors duration-200 font-semibold';
+  const variants: Record<string, string> = {
+    primary: 'bg-secondary text-primary',
+    secondary: 'bg-background border-2 border-secondary text-secondary',
+    outline: 'bg-transparent border-2 border-secondary text-secondary',
   };
-
-  const getPadding = () => {
-    switch (size) {
-      case 'small':
-        return { paddingVertical: 10, paddingHorizontal: 22 };
-      case 'large':
-        return { paddingVertical: 18, paddingHorizontal: 36 };
-      default:
-        return { paddingVertical: 14, paddingHorizontal: 28 };
-    }
+  const sizes: Record<string, string> = {
+    small: 'py-2 px-6 text-[15px]',
+    medium: 'py-3 px-7 text-[18px]',
+    large: 'py-4 px-9 text-[22px]',
   };
+  const disabledClass = disabled ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-85 active:scale-97';
 
   return (
-    <Pressable
-      style={({ pressed }) => [
-        styles.button,
-        { backgroundColor: getBackgroundColor() },
-        variant === 'outline' && styles.outlineButton,
-        getPadding(),
-        pressed && !disabled && styles.buttonPressed,
-        disabled && styles.buttonDisabled,
-        variant === 'secondary' && styles.secondaryButton,
-      ]}
-      onPress={onPress}
+    <button
+      type={type}
+      className={[
+        base,
+        variants[variant],
+        sizes[size],
+        disabledClass,
+        loading ? 'pointer-events-none' : '',
+      ].join(' ')}
+      onClick={onClick}
       disabled={disabled || loading}
     >
-      <View style={styles.content}>
-        {loading ? (
-          <ActivityIndicator 
-            color={getTextColor()} 
-            size="small"
-          />
-        ) : (
-          <Text style={[
-            styles.text,
-            { color: getTextColor() },
-            size === 'small' && styles.smallText,
-            size === 'large' && styles.largeText,
-          ]}>
-            {children}
-          </Text>
+      <span className="flex flex-row items-center gap-2">
+        {loading && (
+          <svg className="animate-spin h-5 w-5 text-inherit" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" /></svg>
         )}
-      </View>
-    </Pressable>
+        <span>{children}</span>
+      </span>
+    </button>
   );
-}
-
-const styles = StyleSheet.create({
-  button: {
-    borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: Colors.black,
-    shadowOpacity: 0.12,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 12,
-    ...Platform.select({
-      web: {
-        transition: 'background 0.2s, color 0.2s',
-        cursor: 'pointer',
-      },
-    }),
-  },
-  outlineButton: {
-    borderWidth: 2,
-    borderColor: Colors.secondary,
-    backgroundColor: 'transparent',
-  },
-  secondaryButton: {
-    borderWidth: 2,
-    borderColor: Colors.secondary,
-    backgroundColor: Colors.background,
-  },
-  buttonPressed: {
-    opacity: 0.85,
-    transform: [{ scale: 0.97 }],
-  },
-  buttonDisabled: {
-    opacity: 0.5,
-  },
-  content: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-  },
-  text: {
-    fontSize: 18,
-    fontWeight: '600',
-    fontFamily: Platform.select({ web: 'Inter, sans-serif', default: 'System' }),
-    textAlign: 'center',
-    letterSpacing: 0.2,
-  },
-  smallText: {
-    fontSize: 15,
-  },
-  largeText: {
-    fontSize: 22,
-  },
-}); 
+} 

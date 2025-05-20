@@ -1,12 +1,5 @@
-import React from 'react';
+import GradientTitle from "./GradientTitle";
 
-interface PageTitleProps {
-  children: React.ReactNode;
-  style?: React.CSSProperties;
-}
-
-export default function PageTitle({ children, style }: PageTitleProps) {
-  return (
-    <h1 style={{ fontSize: 32, fontWeight: 700, marginBottom: 24, ...style }}>{children}</h1>
-  );
+export default function PageTitle({ children }: { children: React.ReactNode }): React.ReactElement {
+  return <GradientTitle>{children}</GradientTitle>;
 } 

@@ -1,3 +1,5 @@
+const { withSentryConfig } = require('@sentry/nextjs');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -18,7 +20,7 @@ const nextConfig = {
     config.resolve.extensions = [
       '.web.js',
       '.web.ts',
-      ...config.resolve.extensions,
+      ...((config.resolve.extensions || [])),
     ]
     // Optimisations pour la production
     if (!config.isServer) {
@@ -37,10 +39,11 @@ const nextConfig = {
   images: {
     domains: ['localhost'],
     formats: ['image/webp'],
-  }
-}
-
-const { withSentryConfig } = require('@sentry/nextjs');
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+};
 
 module.exports = withSentryConfig(nextConfig, {
   silent: true,

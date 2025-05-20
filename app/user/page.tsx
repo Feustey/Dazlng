@@ -18,7 +18,7 @@ interface Order {
 
 const supabase = createClientComponentClient();
 
-export default function UserPage() {
+const UserPage: React.FC = () => {
   const [user, setUser] = useState<UserData>({ name: "", email: "" });
   const [edit, setEdit] = useState(false);
   const [form, setForm] = useState(user);
@@ -28,7 +28,7 @@ export default function UserPage() {
 
   // Récupère les infos utilisateur
   useEffect(() => {
-    async function fetchUserData() {
+    async function fetchUserData(): Promise<UserData> {
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
       const res = await fetch("/api/user", {
@@ -46,7 +46,7 @@ export default function UserPage() {
       .then(setOrders);
   }, []);
 
-  const handleSave = async () => {
+  const handleSave = async (): Promise<void> => {
     const res = await fetch("/api/user", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -59,7 +59,7 @@ export default function UserPage() {
     }
   };
 
-  const handlePwdChange = async (e: React.FormEvent) => {
+  const handlePwdChange = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     if (pwd.new !== pwd.confirm) {
       setPwdMsg("Les nouveaux mots de passe ne correspondent pas.");
@@ -199,4 +199,6 @@ export default function UserPage() {
       </section>
     </main>
   );
-}
+};
+
+export default UserPage;

@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function AboutPage() {
+export default function AboutPage(): React.ReactElement {
   return (
     <main className="max-w-3xl mx-auto py-12 px-4">
       <h1 className="text-4xl font-bold mb-6">À propos de Dazno.de</h1>

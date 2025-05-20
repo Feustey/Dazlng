@@ -1,5 +1,4 @@
 "use client";
-import { View, Text, StyleSheet, TextInput, Pressable, ScrollView, Alert } from 'react-native';
 import { useState } from 'react';
 import { Stack } from 'expo-router';
 import Colors from '../../constants/Colors';
@@ -15,7 +14,7 @@ interface OrderDetails {
   total: number;
 }
 
-export default function CheckoutScreen() {
+export default function CheckoutPage(): React.ReactElement {
   const [form, setForm] = useState({
     fullName: '',
     email: '',
@@ -35,9 +34,9 @@ export default function CheckoutScreen() {
     total: 79.97,
   };
 
-  const handleCheckout = async () => {
+  const handleCheckout = async (): Promise<void> => {
     if (!form.fullName || !form.email || !form.address || !form.city || !form.postalCode || !form.phone) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs');
+      alert('Veuillez remplir tous les champs');
       return;
     }
 
@@ -118,19 +117,14 @@ export default function CheckoutScreen() {
       });
 
       if (customerResult && adminResult) {
-        Alert.alert(
-          'Succès',
-          'Votre commande a été confirmée. Vous recevrez un email de confirmation.',
-          [{ text: 'OK', onPress: () => {
-            setForm({ fullName: '', email: '', address: '', city: '', postalCode: '', phone: '' });
-            // Ici, vous pouvez ajouter la navigation vers une page de confirmation ou le panier
-          }}]
-        );
+        alert('Votre commande a été confirmée. Vous recevrez un email de confirmation.');
+        setForm({ fullName: '', email: '', address: '', city: '', postalCode: '', phone: '' });
+        // Ici, vous pouvez ajouter la navigation vers une page de confirmation ou le panier
       } else {
         throw new Error('Échec de l\'envoi des emails de confirmation');
       }
     } catch (error) {
-      Alert.alert('Erreur', 'Une erreur est survenue lors de la confirmation de la commande. Veuillez réessayer.');
+      alert('Une erreur est survenue lors de la confirmation de la commande. Veuillez réessayer.');
       console.error('Erreur lors de l\'envoi des emails:', error);
     } finally {
       setIsSubmitting(false);
@@ -138,7 +132,7 @@ export default function CheckoutScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <div className="flex flex-col h-full bg-background">
       <Stack.Screen 
         options={{
           title: 'Finaliser la commande',
@@ -149,226 +143,114 @@ export default function CheckoutScreen() {
         }}
       />
       
-      <View style={styles.content}>
-        <Text style={styles.title}>Informations de livraison</Text>
+      <div className="flex-1 p-4">
+        <h1 className="text-2xl font-bold mb-4 text-secondary">Informations de livraison</h1>
 
-        <View style={styles.form}>
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Nom complet</Text>
-            <TextInput
-              style={styles.input}
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
+            <label htmlFor="fullName" className="text-sm font-medium text-secondary">Nom complet</label>
+            <input
+              id="fullName"
+              type="text"
               value={form.fullName}
-              onChangeText={(text) => setForm({ ...form, fullName: text })}
+              onChange={(e) => setForm({ ...form, fullName: e.target.value })}
               placeholder="Votre nom complet"
-              placeholderTextColor={Colors.gray[400]}
-              editable={!isSubmitting}
+              className="bg-white border border-gray-200 rounded-md p-2 text-secondary"
+              disabled={isSubmitting}
             />
-          </View>
+          </div>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Email</Text>
-            <TextInput
-              style={styles.input}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="email" className="text-sm font-medium text-secondary">Email</label>
+            <input
+              id="email"
+              type="email"
               value={form.email}
-              onChangeText={(text) => setForm({ ...form, email: text })}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
               placeholder="votre@email.com"
-              placeholderTextColor={Colors.gray[400]}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              editable={!isSubmitting}
+              className="bg-white border border-gray-200 rounded-md p-2 text-secondary"
+              disabled={isSubmitting}
             />
-          </View>
+          </div>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Téléphone</Text>
-            <TextInput
-              style={styles.input}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="phone" className="text-sm font-medium text-secondary">Téléphone</label>
+            <input
+              id="phone"
+              type="tel"
               value={form.phone}
-              onChangeText={(text) => setForm({ ...form, phone: text })}
+              onChange={(e) => setForm({ ...form, phone: e.target.value })}
               placeholder="Votre numéro de téléphone"
-              placeholderTextColor={Colors.gray[400]}
-              keyboardType="phone-pad"
-              editable={!isSubmitting}
+              className="bg-white border border-gray-200 rounded-md p-2 text-secondary"
+              disabled={isSubmitting}
             />
-          </View>
+          </div>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Adresse</Text>
-            <TextInput
-              style={styles.input}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="address" className="text-sm font-medium text-secondary">Adresse</label>
+            <input
+              id="address"
+              type="text"
               value={form.address}
-              onChangeText={(text) => setForm({ ...form, address: text })}
+              onChange={(e) => setForm({ ...form, address: e.target.value })}
               placeholder="Votre adresse"
-              placeholderTextColor={Colors.gray[400]}
-              editable={!isSubmitting}
+              className="bg-white border border-gray-200 rounded-md p-2 text-secondary"
+              disabled={isSubmitting}
             />
-          </View>
+          </div>
 
-          <View style={styles.row}>
-            <View style={[styles.inputGroup, styles.flex1, { marginRight: 10 }]}>
-              <Text style={styles.label}>Code postal</Text>
-              <TextInput
-                style={styles.input}
+          <div className="flex flex-row gap-2">
+            <div className="flex flex-col gap-2 flex-1 mr-2">
+              <label htmlFor="postalCode" className="text-sm font-medium text-secondary">Code postal</label>
+              <input
+                id="postalCode"
+                type="text"
                 value={form.postalCode}
-                onChangeText={(text) => setForm({ ...form, postalCode: text })}
+                onChange={(e) => setForm({ ...form, postalCode: e.target.value })}
                 placeholder="Code postal"
-                placeholderTextColor={Colors.gray[400]}
-                keyboardType="numeric"
-                editable={!isSubmitting}
+                className="bg-white border border-gray-200 rounded-md p-2 text-secondary"
+                disabled={isSubmitting}
               />
-            </View>
+            </div>
 
-            <View style={[styles.inputGroup, styles.flex2]}>
-              <Text style={styles.label}>Ville</Text>
-              <TextInput
-                style={styles.input}
+            <div className="flex flex-col gap-2 flex-2">
+              <label htmlFor="city" className="text-sm font-medium text-secondary">Ville</label>
+              <input
+                id="city"
+                type="text"
                 value={form.city}
-                onChangeText={(text) => setForm({ ...form, city: text })}
+                onChange={(e) => setForm({ ...form, city: e.target.value })}
                 placeholder="Ville"
-                placeholderTextColor={Colors.gray[400]}
-                editable={!isSubmitting}
+                className="bg-white border border-gray-200 rounded-md p-2 text-secondary"
+                disabled={isSubmitting}
               />
-            </View>
-          </View>
+            </div>
+          </div>
 
-          <View style={styles.orderSummary}>
-            <Text style={styles.summaryTitle}>Récapitulatif de la commande</Text>
+          <div className="bg-white p-4 rounded-md border border-gray-200">
+            <h2 className="text-xl font-bold mb-4 text-secondary">Récapitulatif de la commande</h2>
             {orderDetails.items.map(item => (
-              <View key={item.id} style={styles.orderItem}>
-                <Text style={styles.itemName}>{item.name}</Text>
-                <Text style={styles.itemQuantity}>x{item.quantity}</Text>
-                <Text style={styles.itemPrice}>{(item.price * item.quantity).toFixed(2)}€</Text>
-              </View>
+              <div key={item.id} className="flex flex-row justify-between mb-2">
+                <span className="text-secondary">{item.name}</span>
+                <span className="text-gray-600">{item.quantity}x</span>
+                <span className="text-secondary font-medium">{item.price.toFixed(2)}€</span>
+              </div>
             ))}
-            <View style={styles.totalRow}>
-              <Text style={styles.totalLabel}>Total</Text>
-              <Text style={styles.totalAmount}>{orderDetails.total.toFixed(2)}€</Text>
-            </View>
-          </View>
+            <div className="flex flex-row justify-between border-t border-gray-200 mt-4 pt-4">
+              <span className="text-sm font-bold text-secondary">Total</span>
+              <span className="text-sm font-bold text-primary">{orderDetails.total.toFixed(2)}€</span>
+            </div>
+          </div>
 
-          <Pressable 
-            style={[styles.button, isSubmitting && styles.buttonDisabled]} 
-            onPress={handleCheckout}
+          <button
+            className={`bg-primary text-white px-4 py-2 rounded-md ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={handleCheckout}
             disabled={isSubmitting}
           >
-            <Text style={styles.buttonText}>
-              {isSubmitting ? 'Traitement en cours...' : 'Confirmer la commande'}
-            </Text>
-          </Pressable>
-        </View>
-      </View>
-    </ScrollView>
+            {isSubmitting ? 'Traitement en cours...' : 'Confirmer la commande'}
+          </button>
+        </div>
+      </div>
+    </div>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.background,
-  },
-  content: {
-    padding: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: Colors.secondary,
-  },
-  form: {
-    gap: 20,
-  },
-  inputGroup: {
-    gap: 8,
-  },
-  row: {
-    flexDirection: 'row',
-  },
-  flex1: {
-    flex: 1,
-  },
-  flex2: {
-    flex: 2,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: Colors.secondary,
-  },
-  input: {
-    backgroundColor: Colors.white,
-    borderWidth: 1,
-    borderColor: Colors.gray[200],
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    color: Colors.secondary,
-  },
-  orderSummary: {
-    backgroundColor: Colors.white,
-    padding: 15,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: Colors.gray[200],
-    marginTop: 10,
-  },
-  summaryTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    color: Colors.secondary,
-  },
-  orderItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  itemName: {
-    flex: 2,
-    color: Colors.secondary,
-  },
-  itemQuantity: {
-    flex: 1,
-    textAlign: 'center',
-    color: Colors.gray[600],
-  },
-  itemPrice: {
-    flex: 1,
-    textAlign: 'right',
-    color: Colors.secondary,
-    fontWeight: '500',
-  },
-  totalRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderTopWidth: 1,
-    borderTopColor: Colors.gray[200],
-    marginTop: 10,
-    paddingTop: 10,
-  },
-  totalLabel: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: Colors.secondary,
-  },
-  totalAmount: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: Colors.primary,
-  },
-  button: {
-    backgroundColor: Colors.primary,
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  buttonDisabled: {
-    backgroundColor: Colors.gray[400],
-  },
-  buttonText: {
-    color: Colors.white,
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-}); 
+} 

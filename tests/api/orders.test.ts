@@ -14,22 +14,26 @@ jest.mock('resend', () => ({
 }));
 
 import { POST } from '../../app/api/orders/route';
+import { NextRequest } from 'next/server';
 
-function mockRequest(body: any) {
+function mockRequest(body: unknown): NextRequest {
   return {
     json: async () => body,
     headers: new Map(),
-  } as any;
+    method: 'POST',
+    url: '',
+    nextUrl: { searchParams: new URLSearchParams() },
+  } as unknown as NextRequest;
 }
 
-describe('POST /api/orders', () => {
-  it('retourne 400 si le body est incomplet', async () => {
+describe('POST /api/orders', (): void => {
+  it('retourne 400 si le body est incomplet', async (): Promise<void> => {
     const req = mockRequest({});
     const res = await POST(req);
     expect(res.status).toBe(400);
   });
 
-  it('retourne 200 si le body est complet', async () => {
+  it('retourne 200 si le body est complet', async (): Promise<void> => {
     const req = mockRequest({
       customer: {
         email: 'test@test.com',

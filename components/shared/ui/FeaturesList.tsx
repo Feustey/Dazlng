@@ -1,58 +1,20 @@
-import { View, Text, StyleSheet } from 'react-native';
-import Colors from '../../../constants/Colors';
+import React from 'react';
 
 interface FeaturesListProps {
   title?: string;
   features: string[];
-  backgroundColor?: string;
 }
 
 export default function FeaturesList({
   title = 'Fonctionnalités incluses :',
   features,
-  backgroundColor = '#232336cc',
-}: FeaturesListProps) {
+}: FeaturesListProps): React.ReactElement {
   return (
-    <View style={[styles.container, { backgroundColor, borderColor: Colors.secondary }]}>
-      <Text style={styles.title}>{title}</Text>
+    <div className="p-7 rounded-2xl shadow-lg mb-8 bg-white">
+      <h3 className="text-xl font-extrabold mb-4 text-[#C026D3] text-center tracking-wide">{title}</h3>
       {features.map((feature, index) => (
-        <Text 
-          key={index} 
-          style={styles.feature}
-          accessibilityRole="text"
-        >
-          • {feature}
-        </Text>
+        <div key={index} className="text-base mb-2 text-gray-700 text-center">• {feature}</div>
       ))}
-    </View>
+    </div>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 28,
-    borderRadius: 24,
-    borderWidth: 1.5,
-    borderColor: Colors.secondary,
-    shadowColor: Colors.black,
-    shadowOpacity: 0.18,
-    shadowOffset: { width: 0, height: 8 },
-    shadowRadius: 32,
-    elevation: 8,
-    marginBottom: 30,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: '800',
-    marginBottom: 15,
-    color: Colors.secondary,
-    textAlign: 'center',
-    letterSpacing: 0.2,
-  },
-  feature: {
-    fontSize: 16,
-    marginBottom: 8,
-    color: Colors.text,
-    textAlign: 'center',
-  },
-}); 
+} 

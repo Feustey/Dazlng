@@ -2,6 +2,7 @@ import * as ReactTestingLibrary from "@testing-library/react";
 const { render, screen, fireEvent, waitFor } = ReactTestingLibrary;
 import { useRouter } from "next/navigation";
 import { AuthProvider, useAuth } from "contexts/AuthContext";
+import { useToast } from "@/app/components/ui/use-toast";
 
 // } from "@features/authentication/context/AuthContext"; // TODO: Remplacer par le bon contexte ou corriger le test
 // import { useToast } from "@features/core-ui/components/use-toast"; // TODO: Remplacer par le bon hook ou corriger le test
@@ -19,7 +20,7 @@ jest.mock("@/app/components/ui/use-toast", () => ({
 global.fetch = jest.fn();
 
 // Composant de test pour accéder au contexte
-function TestComponent() {
+function TestComponent(): JSX.Element {
   const { loginWithAlby, isLoading } = useAuth();
 
   return (
@@ -34,7 +35,7 @@ function TestComponent() {
 
 describe("AuthContext - Alby", () => {
   // Réinitialiser les mocks avant chaque test
-  beforeEach(() => {
+  beforeEach((): void => {
     jest.clearAllMocks();
 
     // Mock des variables d'environnement
@@ -57,7 +58,7 @@ describe("AuthContext - Alby", () => {
     });
   });
 
-  it("devrait rediriger vers Alby lors de la connexion", async () => {
+  it("devrait rediriger vers Alby lors de la connexion", async (): Promise<void> => {
     // Rendre le composant avec le provider
     render(
       <AuthProvider>
@@ -74,7 +75,7 @@ describe("AuthContext - Alby", () => {
     expect(window.location.href).toContain("message=Connexion à Daznode");
   });
 
-  it("devrait gérer les erreurs lors de la connexion", async () => {
+  it("devrait gérer les erreurs lors de la connexion", async (): Promise<void> => {
     // Mock de window.location pour simuler une erreur
     Object.defineProperty(window, "location", {
       value: { href: "" },
@@ -108,7 +109,7 @@ describe("AuthContext - Alby", () => {
     });
   });
 
-  it("devrait afficher l'état de chargement pendant la connexion", async () => {
+  it("devrait afficher l'état de chargement pendant la connexion", async (): Promise<void> => {
     // Rendre le composant avec le provider
     render(
       <AuthProvider>

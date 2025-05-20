@@ -6,20 +6,20 @@ jest.mock('resend', () => ({
 
 import { POST } from '../../app/api/send-email/route';
 
-function mockRequest(body: any) {
+function mockRequest(body: unknown) {
   return {
     json: async () => body,
   } as unknown as Request;
 }
 
-describe('POST /api/send-email', () => {
-  it('retourne 400 si le body est incomplet', async () => {
+describe('POST /api/send-email', (): void => {
+  it('retourne 400 si le body est incomplet', async (): Promise<void> => {
     const req = mockRequest({});
     const res = await POST(req);
     expect(res.status).toBe(400);
   });
 
-  it('retourne 200 si le body est complet', async () => {
+  it('retourne 200 si le body est complet', async (): Promise<void> => {
     const req = mockRequest({
       to: 'test@test.com',
       subject: 'Sujet',

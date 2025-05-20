@@ -21,7 +21,6 @@ import HowItWorksScreen from 'mobile/app/tabs/how-it-works';
 
 import TabBarIcon from '../components/shared/ui/TabBarIcon';
 import NotificationBadge from '../components/shared/ui/NotificationBadge';
-import CustomHeader from '../components/shared/ui/CustomHeader';
 import { RootStackParamList, TabParamList } from '../types/navigation';
 import Colors from '../constants/Colors';
 
@@ -117,12 +116,12 @@ export default function AppNavigator() {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
-          header: ({ route, options }) => (
-            <CustomHeader 
-              title={options.title || route.name} 
-              showBack={route.name !== 'Main'} 
-            />
-          ),
+          // header: ({ route, options }) => (
+          //   <CustomHeader 
+          //     title={options.title || route.name} 
+          //     showBack={route.name !== 'Main'} 
+          //   />
+          // ),
           cardStyle: { backgroundColor: Colors.background },
           headerShown: true,
         }}

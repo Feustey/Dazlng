@@ -17,21 +17,21 @@ export default function HomeScreen() {
           title="DazNode"
           description="Pilotez vos revenus passifs grâce à l'IA"
           price="30 000 sats/mois"
-          onPress={() => {}}
+          onPress={() => alert('DazNode sélectionné')}
         />
 
         <ProductCard
           title="DazBox"
           description="Votre nœud clé en main, prêt à l'emploi"
           price="290 000 sats"
-          onPress={() => {}}
+          onPress={() => alert('DazBox sélectionné')}
         />
 
         <ProductCard
           title="DazPay"
           description="Le terminal de paiement nouvelle génération"
           price="30 000 sats/mois"
-          onPress={() => {}}
+          onPress={() => alert('DazPay sélectionné')}
         />
       </View>
     </ScrollView>

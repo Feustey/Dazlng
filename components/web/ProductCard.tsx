@@ -1,5 +1,8 @@
 'use client';
 
+import Card from "../shared/ui/Card";
+import GradientTitle from "../shared/ui/GradientTitle";
+
 interface ProductCardProps {
   title: string;
   subtitle: string;
@@ -7,19 +10,19 @@ interface ProductCardProps {
   features: { text: string }[];
 }
 
-export default function ProductCard({ title, subtitle, price, features }: ProductCardProps) {
+export default function ProductCard(props: ProductCardProps): React.ReactElement {
   return (
-    <div className="card">
-      <h3 className="text-xl font-bold mb-2 gradient-title">{title}</h3>
-      <p className="text-gray-600 mb-4">{subtitle}</p>
-      <p className="text-2xl font-bold mb-6">{price}</p>
+    <Card>
+      <GradientTitle>{props.title}</GradientTitle>
+      <p className="text-gray-600 mb-4">{props.subtitle}</p>
+      <p className="text-2xl font-bold mb-6">{props.price}</p>
       <ul className="space-y-3">
-        {features.map((feature, index) => (
+        {props.features.map((feature, index) => (
           <li key={index} className="flex items-start">
             <span className="text-green-500">{feature.text}</span>
           </li>
         ))}
       </ul>
-    </div>
+    </Card>
   );
 } 

@@ -1,149 +1,60 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
-import Colors from '../constants/Colors';
 
-export default function LoginScreen() {
+const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
     // TODO: Implémenter la logique de connexion
-    // console.log('Login attempt:', { email, password });
   };
 
   return (
-    <KeyboardAvoidingView 
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
-    >
-      <View style={styles.content}>
-        <Text style={styles.title}>Connexion</Text>
-        <Text style={styles.subtitle}>
-          Accédez à votre espace personnel
-        </Text>
-
-        <View style={styles.form}>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email</Text>
-            <TextInput
-              style={styles.input}
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="w-full max-w-md bg-gray-900 rounded-2xl shadow-lg p-8">
+        <h1 className="text-3xl font-bold text-white mb-2">Connexion</h1>
+        <p className="text-base text-gray-300 mb-8">Accédez à votre espace personnel</p>
+        <form className="space-y-6" onSubmit={e => { e.preventDefault(); handleLogin(); }}>
+          <div className="space-y-2">
+            <label className="text-sm text-gray-300">Email</label>
+            <input
+              className="bg-gray-800 rounded-lg p-4 text-white text-base w-full focus:outline-none focus:ring-2 focus:ring-primary"
               value={email}
-              onChangeText={setEmail}
+              onChange={e => setEmail(e.target.value)}
               placeholder="votre@email.com"
-              placeholderTextColor={Colors.gray[400]}
-              autoCapitalize="none"
-              keyboardType="email-address"
+              type="email"
+              autoComplete="email"
+              required
             />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Mot de passe</Text>
-            <TextInput
-              style={styles.input}
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm text-gray-300">Mot de passe</label>
+            <input
+              className="bg-gray-800 rounded-lg p-4 text-white text-base w-full focus:outline-none focus:ring-2 focus:ring-primary"
               value={password}
-              onChangeText={setPassword}
+              onChange={e => setPassword(e.target.value)}
               placeholder="••••••••"
-              placeholderTextColor={Colors.gray[400]}
-              secureTextEntry
+              type="password"
+              autoComplete="current-password"
+              required
             />
-          </View>
-
-          <TouchableOpacity style={styles.forgotPassword}>
-            <Text style={styles.forgotPasswordText}>
-              Mot de passe oublié ?
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={styles.button}
-            onPress={handleLogin}
+          </div>
+          <div className="flex justify-end">
+            <a href="#" className="text-primary text-sm hover:underline">Mot de passe oublié&nbsp;?</a>
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-primary rounded-lg p-4 text-lg font-semibold text-white mt-2 hover:bg-primary/90 transition"
           >
-            <Text style={styles.buttonText}>Se connecter</Text>
-          </TouchableOpacity>
-
-          <View style={styles.registerContainer}>
-            <Text style={styles.registerText}>
-              Pas encore de compte ?{' '}
-            </Text>
-            <TouchableOpacity>
-              <Text style={styles.registerLink}>S'inscrire</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    </KeyboardAvoidingView>
+            Se connecter
+          </button>
+          <div className="flex justify-center items-center mt-4 gap-1">
+            <span className="text-gray-300 text-sm">Pas encore de compte&nbsp;?</span>
+            <a href="#" className="text-primary text-sm font-semibold hover:underline">S'inscrire</a>
+          </div>
+        </form>
+      </div>
+    </div>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.background,
-  },
-  content: {
-    flex: 1,
-    padding: 20,
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: Colors.white,
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: Colors.gray[300],
-    marginBottom: 32,
-  },
-  form: {
-    gap: 20,
-  },
-  inputContainer: {
-    gap: 8,
-  },
-  label: {
-    fontSize: 14,
-    color: Colors.gray[300],
-  },
-  input: {
-    backgroundColor: Colors.gray[900],
-    borderRadius: 8,
-    padding: 16,
-    color: Colors.white,
-    fontSize: 16,
-  },
-  forgotPassword: {
-    alignSelf: 'flex-end',
-  },
-  forgotPasswordText: {
-    color: Colors.primary,
-    fontSize: 14,
-  },
-  button: {
-    backgroundColor: Colors.primary,
-    borderRadius: 8,
-    padding: 16,
-    alignItems: 'center',
-    marginTop: 12,
-  },
-  buttonText: {
-    color: Colors.white,
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  registerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 20,
-  },
-  registerText: {
-    color: Colors.gray[300],
-    fontSize: 14,
-  },
-  registerLink: {
-    color: Colors.primary,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-}); 
+export default LoginScreen; 

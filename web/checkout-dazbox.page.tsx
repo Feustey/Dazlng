@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-export default function DazboxCheckoutPage() {
+export default function DazboxCheckoutPage(): React.ReactElement {
   const [form, setForm] = useState({
     fullName: '',
     email: '',
@@ -18,11 +18,11 @@ export default function DazboxCheckoutPage() {
   const [error, setError] = useState<string | null>(null);
   const supabase = createClientComponentClient();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     setError(null);
     if (!form.fullName || !form.email || !form.address || !form.city || !form.postalCode || !form.country) {
@@ -39,7 +39,7 @@ export default function DazboxCheckoutPage() {
     quantity: 1,
   };
 
-  const handlePaymentSuccess = async () => {
+  const handlePaymentSuccess = async (): Promise<void> => {
     setError(null);
     setPaymentSuccess(true);
     const { data: { session } } = await supabase.auth.getSession();

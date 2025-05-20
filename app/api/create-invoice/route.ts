@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   const { amount, description, successUrl } = await req.json();
 
   if (!amount || !description) {
@@ -29,8 +29,10 @@ export async function POST(req: NextRequest) {
       invoice: response.data,
       paymentUrl: `lightning:${response.data.payment_request}`
     });
-  } catch (error: any) {
-    console.error('Erreur lors de la création de la facture:', error.response?.data || error.message);
+  } catch (error) {
+    const err = error as { response?: { data?: unknown }; message?: string };
+    // eslint-disable-next-line no-console
+    console.error('Erreur lors de la création de la facture:', err.response?.data || err.message);
     return NextResponse.json({ error: 'Erreur lors de la création de la facture' }, { status: 500 });
   }
 } 

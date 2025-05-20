@@ -1,16 +1,7 @@
 import { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-} from 'react-native';
 import { useEmail } from '@/hooks/useEmail';
-import { colors, spacing, typography, shared } from 'styles/shared';
 
-export default function ContactForm() {
+const ContactForm: React.FC = () => {
   const { sending, error, sendEmail } = useEmail();
   const [formData, setFormData] = useState({
     email: '',
@@ -18,132 +9,71 @@ export default function ContactForm() {
     message: ''
   });
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e?: React.FormEvent): Promise<void> => {
+    if (e) e.preventDefault();
     const success = await sendEmail({
       to: formData.email,
       subject: formData.subject,
       html: formData.message
     });
-
     if (success) {
       setFormData({ email: '', subject: '', message: '' });
-      // Ici vous pourriez utiliser une alerte native ou un toast
       alert('Email envoyé avec succès !');
     }
   };
 
   return (
-    <ScrollView 
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}
-    >
-      <View style={styles.form}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Email</Text>
-          <TextInput
-            style={styles.input}
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <form
+        className="w-full max-w-lg bg-gray-900 rounded-2xl shadow-lg p-8"
+        onSubmit={handleSubmit}
+      >
+        <div className="mb-6">
+          <label className="block text-sm font-bold text-white mb-2">Email</label>
+          <input
+            className="bg-gray-800 rounded-lg p-4 text-white text-base w-full focus:outline-none focus:ring-2 focus:ring-primary"
             value={formData.email}
-            onChangeText={(value) => setFormData(prev => ({ ...prev, email: value }))}
+            onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))}
             placeholder="Votre email"
-            keyboardType="email-address"
-            autoCapitalize="none"
+            type="email"
             autoComplete="email"
+            required
           />
-        </View>
-
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Sujet</Text>
-          <TextInput
-            style={styles.input}
+        </div>
+        <div className="mb-6">
+          <label className="block text-sm font-bold text-white mb-2">Sujet</label>
+          <input
+            className="bg-gray-800 rounded-lg p-4 text-white text-base w-full focus:outline-none focus:ring-2 focus:ring-primary"
             value={formData.subject}
-            onChangeText={(value) => setFormData(prev => ({ ...prev, subject: value }))}
+            onChange={e => setFormData(prev => ({ ...prev, subject: e.target.value }))}
             placeholder="Sujet de votre message"
+            type="text"
+            required
           />
-        </View>
-
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Message</Text>
-          <TextInput
-            style={[styles.input, styles.textArea]}
+        </div>
+        <div className="mb-6">
+          <label className="block text-sm font-bold text-white mb-2">Message</label>
+          <textarea
+            className="bg-gray-800 rounded-lg p-4 text-white text-base w-full h-32 focus:outline-none focus:ring-2 focus:ring-primary resize-none"
             value={formData.message}
-            onChangeText={(value) => setFormData(prev => ({ ...prev, message: value }))}
+            onChange={e => setFormData(prev => ({ ...prev, message: e.target.value }))}
             placeholder="Votre message"
-            multiline
-            numberOfLines={4}
-            textAlignVertical="top"
+            required
           />
-        </View>
-
+        </div>
         {error && (
-          <Text style={styles.error}>{error}</Text>
+          <div className="text-red-500 text-sm mb-4">{error}</div>
         )}
-
-        <TouchableOpacity
-          style={[
-            styles.button,
-            sending && styles.buttonDisabled
-          ]}
-          onPress={handleSubmit}
+        <button
+          type="submit"
+          className={`w-full bg-primary rounded-lg p-4 text-lg font-semibold text-white mt-2 hover:bg-primary/90 transition ${sending ? 'opacity-50 cursor-not-allowed' : ''}`}
           disabled={sending}
         >
-          <Text style={styles.buttonText}>
-            {sending ? 'Envoi en cours...' : 'Envoyer'}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+          {sending ? 'Envoi en cours...' : 'Envoyer'}
+        </button>
+      </form>
+    </div>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  contentContainer: {
-    padding: spacing.md,
-  },
-  form: {
-    marginVertical: spacing.md,
-  },
-  inputContainer: {
-    marginBottom: spacing.md,
-  },
-  label: {
-    fontSize: typography.sizes.sm,
-    fontWeight: 'bold',
-    color: colors.text,
-    marginBottom: spacing.xs,
-  },
-  input: {
-    ...shared.input.base,
-    width: '100%',
-  },
-  textArea: {
-    height: spacing.xl * 3,
-    textAlignVertical: 'top',
-  },
-  error: {
-    color: colors.error,
-    fontSize: typography.sizes.sm,
-    marginBottom: spacing.md,
-  },
-  button: {
-    ...filterButtonStyle(shared.button.primary),
-    width: '100%',
-  },
-  buttonDisabled: {
-    opacity: 0.5,
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: typography.sizes.base,
-    fontWeight: '500',
-    textAlign: 'center',
-  },
-});
-
-function filterButtonStyle(styleObj: any) {
-  const { cursor, transition, ':hover': _hover, ...rest } = styleObj;
-  return rest;
-} 
+export default ContactForm; 

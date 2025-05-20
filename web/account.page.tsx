@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Switch, Image } from 'react-native';
-import { User, Bell, ChevronRight, Shield, LogOut, Settings, CircleHelp as HelpCircle } from 'lucide-react-native';
+import { User, Bell, ChevronRight, Shield, LogOut, Settings, CircleHelp as HelpCircle } from 'lucide-react';
+import Image from 'next/image';
 
 type MenuItem = {
   icon: React.ReactNode;
@@ -17,7 +17,7 @@ type MenuSection = {
   items: MenuItem[];
 };
 
-export default function AccountScreen() {
+export default function AccountScreen(): React.ReactElement {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -26,13 +26,13 @@ export default function AccountScreen() {
   const [notifications, setNotifications] = useState(true);
   const [twoFactor, setTwoFactor] = useState(false);
   
-  const handleLogin = () => {
+  const handleLogin = (): void => {
     if (name && email) {
       setIsLoggedIn(true);
     }
   };
   
-  const handleLogout = () => {
+  const handleLogout = (): void => {
     setIsLoggedIn(false);
     setName('');
     setEmail('');
@@ -91,374 +91,171 @@ export default function AccountScreen() {
   ];
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>My Account</Text>
-        <Text style={styles.headerSubtitle}>
+    <div className="flex-1 bg-white min-h-screen">
+      <header className="p-4 bg-blue-900">
+        <h1 className="text-2xl font-bold text-white mb-2">My Account</h1>
+        <p className="text-base text-white opacity-90">
           Manage your profile and DazBox settings
-        </Text>
-      </View>
+        </p>
+      </header>
 
       {isLoggedIn ? (
         <>
-          <View style={styles.profileSection}>
-            <View style={styles.profileImageContainer}>
-              <View style={styles.profileImage}>
+          <div className="flex items-center p-6 border-b border-gray-200">
+            <div className="mr-4">
+              <div className="w-16 h-16 rounded-full bg-orange-400 flex justify-center items-center">
                 <User size={40} color="#FFFFFF" />
-              </View>
-            </View>
-            <Text style={styles.profileName}>{name}</Text>
-            <Text style={styles.profileEmail}>{email}</Text>
-          </View>
+              </div>
+            </div>
+            <div>
+              <div className="text-xl font-semibold text-gray-900 mb-1">
+                {name}
+              </div>
+              <div className="text-base text-gray-500">
+                {email}
+              </div>
+            </div>
+          </div>
 
-          <View style={styles.nodeStatus}>
-            <Text style={styles.nodeStatusTitle}>My DazBox Status</Text>
+          <section className="p-4 border-b border-gray-200">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              My DazBox Status
+            </h2>
             
-            <View style={styles.statusCard}>
-              <View style={styles.statusItem}>
-                <Text style={styles.statusLabel}>Status</Text>
-                <View style={styles.activeStatus}>
-                  <View style={styles.activeIndicator} />
-                  <Text style={styles.activeText}>Active</Text>
-                </View>
-              </View>
+            <div className="bg-gray-200 rounded-lg p-4">
+              <div className="flex flex-row justify-between items-center mb-4">
+                <span className="text-base text-gray-500">Status</span>
+                <span className="flex flex-row items-center">
+                  <span className="w-2 h-2 bg-green-500 rounded-full mr-2" />
+                  <span className="text-base font-semibold text-gray-900">Active</span>
+                </span>
+              </div>
               
-              <View style={styles.divider} />
+              <div className="h-[1px] bg-gray-300 my-4" />
               
-              <View style={styles.statusItem}>
-                <Text style={styles.statusLabel}>Channels</Text>
-                <Text style={styles.statusValue}>12</Text>
-              </View>
+              <div className="flex flex-row justify-between items-center">
+                <span className="text-base text-gray-500">Channels</span>
+                <span className="text-base font-semibold text-gray-900">12</span>
+              </div>
               
-              <View style={styles.divider} />
+              <div className="h-[1px] bg-gray-300 my-4" />
               
-              <View style={styles.statusItem}>
-                <Text style={styles.statusLabel}>Earnings (30d)</Text>
-                <Text style={styles.earnings}>0.00042 BTC</Text>
-              </View>
-            </View>
+              <div className="flex flex-row justify-between items-center">
+                <span className="text-base text-gray-500">Earnings (30d)</span>
+                <span className="text-base font-semibold text-orange-500">0.00042 BTC</span>
+              </div>
+            </div>
             
-            <TouchableOpacity style={styles.nodeDetailsButton}>
-              <Text style={styles.nodeDetailsText}>View Details</Text>
-              <ChevronRight size={16} color="#F7931A" />
-            </TouchableOpacity>
-          </View>
+            <button className="flex flex-row items-center justify-center mt-4 text-base font-semibold text-orange-500">
+              View Details
+              <ChevronRight size={16} color="#F7931A" className="ml-2" />
+            </button>
+          </section>
 
           {accountMenu.map((section, sectionIndex) => (
-            <View key={sectionIndex} style={styles.menuSection}>
-              <Text style={styles.menuSectionTitle}>{section.title}</Text>
+            <section key={sectionIndex} className="p-4 border-b border-gray-200">
+              <h3 className="text-base font-semibold text-gray-900 mb-4">
+                {section.title}
+              </h3>
               
               {section.items.map((item, itemIndex) => (
-                <TouchableOpacity 
-                  key={itemIndex} 
-                  style={styles.menuItem}
-                  onPress={item.action}
+                <div
+                  key={itemIndex}
+                  className="flex flex-row items-center justify-between py-3 border-b border-gray-200"
                 >
-                  <View style={styles.menuItemContent}>
-                    <View style={styles.menuItemIcon}>
-                      {item.icon}
-                    </View>
-                    <View style={styles.menuItemTexts}>
-                      <Text style={styles.menuItemTitle}>{item.title}</Text>
+                  <div className="flex flex-row items-center">
+                    <div className="mr-4">{item.icon}</div>
+                    <div>
+                      <div className="text-base font-semibold text-gray-900">
+                        {item.title}
+                      </div>
                       {item.description && (
-                        <Text style={styles.menuItemDescription}>{item.description}</Text>
+                        <div className="text-base text-gray-500">
+                          {item.description}
+                        </div>
                       )}
-                    </View>
-                  </View>
+                    </div>
+                  </div>
                   
                   {item.hasToggle ? (
-                    <Switch
-                      value={item.title === 'Notifications' ? notifications : twoFactor}
-                      onValueChange={(val) => {
+                    <input
+                      type="checkbox"
+                      checked={item.title === 'Notifications' ? notifications : twoFactor}
+                      onChange={e => {
                         if (item.title === 'Notifications') {
-                          setNotifications(val);
+                          setNotifications(e.target.checked);
                         } else if (item.title === 'Two-Factor Authentication') {
-                          setTwoFactor(val);
+                          setTwoFactor(e.target.checked);
                         }
                       }}
-                      trackColor={{ false: '#E5E5E5', true: '#F7931A' }}
-                      thumbColor="#FFFFFF"
+                      className="accent-orange-500 w-5 h-5"
                     />
-                  ) : item.action ? null : (
+                  ) : item.action ? (
+                    <button onClick={item.action} className="ml-2">
+                      <ChevronRight size={18} color="#999999" />
+                    </button>
+                  ) : (
                     <ChevronRight size={18} color="#999999" />
                   )}
-                </TouchableOpacity>
+                </div>
               ))}
-            </View>
+            </section>
           ))}
         </>
       ) : (
-        <View style={styles.loginContainer}>
-          <Image
-            source={{ uri: 'https://images.pexels.com/photos/6781008/pexels-photo-6781008.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' }}
-            style={styles.loginImage}
-            resizeMode="cover"
-            alt="Login background"
-          />
+        <div className="flex-1">
+          <div className="w-full h-[180px] relative">
+            <Image
+              src="https://images.pexels.com/photos/6781008/pexels-photo-6781008.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+              alt="Login background"
+              fill
+              className="object-cover rounded-b-lg"
+              priority
+            />
+          </div>
           
-          <View style={styles.formContainer}>
-            <Text style={styles.loginTitle}>Sign In</Text>
-            <Text style={styles.loginSubtitle}>
+          <div className="p-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Sign In</h2>
+            <p className="text-base text-gray-500 mb-8">
               Create or access your DazBox account
-            </Text>
+            </p>
             
-            <View style={styles.formGroup}>
-              <Text style={styles.formLabel}>Name</Text>
-              <TextInput
-                style={styles.formInput}
+            <div className="mb-4">
+              <label className="text-base font-semibold text-gray-900 mb-2 block">Name</label>
+              <input
+                className="bg-gray-200 rounded-lg p-3 text-gray-900 w-full"
                 placeholder="Enter your name"
                 value={name}
-                onChangeText={setName}
-                placeholderTextColor="#999999"
+                onChange={e => setName(e.target.value)}
+                type="text"
               />
-            </View>
+            </div>
             
-            <View style={styles.formGroup}>
-              <Text style={styles.formLabel}>Email</Text>
-              <TextInput
-                style={styles.formInput}
+            <div className="mb-4">
+              <label className="text-base font-semibold text-gray-900 mb-2 block">Email</label>
+              <input
+                className="bg-gray-200 rounded-lg p-3 text-gray-900 w-full"
                 placeholder="Enter your email address"
                 value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                placeholderTextColor="#999999"
+                onChange={e => setEmail(e.target.value)}
+                type="email"
               />
-            </View>
+            </div>
             
-            <TouchableOpacity 
-              style={[styles.loginButton, !(name && email) && styles.loginButtonDisabled]}
-              onPress={handleLogin}
+            <button
+              className={`bg-orange-500 rounded-lg p-3 w-full text-base font-semibold text-white ${!(name && email) ? 'bg-orange-300 cursor-not-allowed' : ''}`}
+              onClick={handleLogin}
               disabled={!(name && email)}
             >
-              <Text style={styles.loginButtonText}>Sign In</Text>
-            </TouchableOpacity>
+              Sign In
+            </button>
             
-            <Text style={styles.termsText}>
+            <p className="text-base text-gray-500 text-center mt-4">
               By signing in, you agree to our Terms of Service and Privacy Policy
-            </Text>
-          </View>
-        </View>
+            </p>
+          </div>
+        </div>
       )}
-    </ScrollView>
+    </div>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  header: {
-    padding: 20,
-    backgroundColor: '#0F3B82',
-  },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#FFFFFF',
-    marginBottom: 10,
-  },
-  headerSubtitle: {
-    fontSize: 16,
-    fontWeight: '400',
-    color: '#FFFFFF',
-    opacity: 0.9,
-    lineHeight: 22,
-  },
-  profileSection: {
-    alignItems: 'center',
-    paddingVertical: 30,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E5E5',
-  },
-  profileImageContainer: {
-    marginBottom: 15,
-  },
-  profileImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#F7931A',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  profileName: {
-    fontSize: 22,
-    fontWeight: '600',
-    color: '#111111',
-    marginBottom: 5,
-  },
-  profileEmail: {
-    fontSize: 16,
-    color: '#666666',
-  },
-  nodeStatus: {
-    padding: 20,
-    borderBottomWidth: 8,
-    borderBottomColor: '#F5F5F5',
-  },
-  nodeStatusTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#111111',
-    marginBottom: 15,
-  },
-  statusCard: {
-    backgroundColor: '#F5F5F5',
-    borderRadius: 12,
-    padding: 16,
-  },
-  statusItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 8,
-  },
-  statusLabel: {
-    fontSize: 14,
-    color: '#666666',
-  },
-  statusValue: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#111111',
-  },
-  activeStatus: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  activeIndicator: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#4CAF50',
-    marginRight: 6,
-  },
-  activeText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#4CAF50',
-  },
-  earnings: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#F7931A',
-  },
-  divider: {
-    height: 1,
-    backgroundColor: '#E5E5E5',
-    marginVertical: 8,
-  },
-  nodeDetailsButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 16,
-  },
-  nodeDetailsText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#F7931A',
-    marginRight: 5,
-  },
-  menuSection: {
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderBottomWidth: 8,
-    borderBottomColor: '#F5F5F5',
-  },
-  menuSectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#111111',
-    marginBottom: 15,
-  },
-  menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
-  },
-  menuItemContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  menuItemIcon: {
-    marginRight: 15,
-  },
-  menuItemTexts: {
-    flex: 1,
-  },
-  menuItemTitle: {
-    fontSize: 15,
-    fontWeight: '500',
-    color: '#111111',
-  },
-  menuItemDescription: {
-    fontSize: 13,
-    color: '#666666',
-    marginTop: 2,
-  },
-  loginContainer: {
-    flex: 1,
-  },
-  loginImage: {
-    width: '100%',
-    height: 180,
-  },
-  formContainer: {
-    padding: 20,
-  },
-  loginTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#111111',
-    marginBottom: 8,
-  },
-  loginSubtitle: {
-    fontSize: 16,
-    color: '#666666',
-    marginBottom: 24,
-  },
-  formGroup: {
-    marginBottom: 20,
-  },
-  formLabel: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#111111',
-    marginBottom: 8,
-  },
-  formInput: {
-    backgroundColor: '#F5F5F5',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    color: '#111111',
-  },
-  loginButton: {
-    backgroundColor: '#F7931A',
-    paddingVertical: 14,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  loginButtonDisabled: {
-    backgroundColor: '#F7931A80',
-  },
-  loginButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  termsText: {
-    fontSize: 12,
-    color: '#666666',
-    textAlign: 'center',
-    marginTop: 20,
-    lineHeight: 18,
-  },
-});

@@ -1,11 +1,13 @@
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../../../types/navigation';
+import { StackNavigationProp } from '@react-navigation/stack';
 import Colors from '../../../constants/Colors';
 import { cardShadow } from '../../../constants/Shadows';
 import { Terminal, BarChart3, Zap, ArrowRightLeft } from 'lucide-react-native';
 
-export default function DazPayScreen() {
-  const navigation = useNavigation();
+export default function DazPayScreen(): React.ReactElement {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   return (
     <ScrollView style={styles.container}>

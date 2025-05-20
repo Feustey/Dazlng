@@ -24,7 +24,7 @@ type NavigationProp = {
   navigate: (screen: keyof RootStackParamList, params?: Record<string, unknown>) => void;
 };
 
-function TabNavigator() {
+function TabNavigator(): React.ReactElement {
   const navigation = useNavigation<NavigationProp>();
 
   return (
@@ -92,7 +92,7 @@ function TabNavigator() {
   );
 }
 
-export default function App() {
+const App: React.FC = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -105,4 +105,6 @@ export default function App() {
       </Stack.Navigator>
     </NavigationContainer>
   );
-} 
+};
+
+export default App; 
