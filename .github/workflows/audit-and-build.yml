@@ -1,0 +1,23 @@
+name: Audit et Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  audit-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v3
+      - name: Installation des dépendances
+        run: npm ci
+      - name: Build et audit UX
+        run: bash scripts/audit-and-build.sh
+      - name: Sauvegarder le rapport Lighthouse
+        uses: actions/upload-artifact@v3
+        with:
+          name: lighthouse-report
+          path: lighthouse-report.html 
