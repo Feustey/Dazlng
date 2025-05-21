@@ -2,10 +2,11 @@ import React from 'react';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { FaFontAwesome } from 'react-icons/fa';
+import { FontAwesome } from '@expo/vector-icons';
 import { View, Image, Pressable } from 'react-native';
 import Colors from './constants/Colors';
 import Footer from './components/Footer';
+import { FaUserCircle } from 'react-icons/fa';
 
 // Import des types
 import { RootStackParamList, TabParamList } from './types/navigation';
@@ -52,7 +53,7 @@ function TabNavigator(): React.ReactElement {
                 style={{ marginRight: 15 }}
                 onPress={() => navigation.navigate('Login')}
               >
-                <FaFontAwesome name="user-circle" size={24} color={Colors.white} />
+                <FaUserCircle size={24} color={Colors.white} />
               </Pressable>
             ),
           }}
@@ -61,28 +62,28 @@ function TabNavigator(): React.ReactElement {
             name="Accueil"
             component={HomeScreen}
             options={{
-              tabBarIcon: ({ color }) => <FaFontAwesome name="home" size={24} color={color} />,
+              tabBarIcon: ({ color }) => <FontAwesome name="home" size={24} color={color} />,
             }}
           />
           <Tab.Screen
             name="Dazbox"
             component={DazboxScreen}
             options={{
-              tabBarIcon: ({ color }) => <FaFontAwesome name="box" size={24} color={color} />,
+              tabBarIcon: ({ color }) => <FontAwesome name="box" size={24} color={color} />,
             }}
           />
           <Tab.Screen
             name="Daznode"
             component={DaznodeScreen}
             options={{
-              tabBarIcon: ({ color }) => <FaFontAwesome name="network-wired" size={24} color={color} />,
+              tabBarIcon: ({ color }) => <FontAwesome name="network-wired" size={24} color={color} />,
             }}
           />
           <Tab.Screen
             name="Dazpay"
             component={DazPayScreen}
             options={{
-              tabBarIcon: ({ color }) => <FaFontAwesome name="cash-register" size={24} color={color} />,
+              tabBarIcon: ({ color }) => <FontAwesome name="cash-register" size={24} color={color} />,
             }}
           />
         </Tab.Navigator>
