@@ -5,13 +5,13 @@ interface AlertContextType {
 }
 
 const AlertContext = createContext<AlertContextType>({
-  showAlert: (type: string, message: string) => {
+  showAlert: (_type: string, _message: string) => {
     // console.log(`[Alert] ${type}: ${message}`);
   },
 });
 
 export const AlertProvider = ({ children }: { children: React.ReactNode }): JSX.Element => (
-  <AlertContext.Provider value={{ showAlert: (type: string, message: string) => {
+  <AlertContext.Provider value={{ showAlert: (_type: string, _message: string) => {
     // console.log(`[Alert] ${type}: ${message}`);
   } }}>
     {children}

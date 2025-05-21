@@ -33,12 +33,28 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/dazbox"/>
   </url>
 
+  <!-- DazNode -->
+  <url>
+    <loc>https://daznode.com/daznode</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/daznode"/>
+  </url>
+
   <!-- Commander DazBox -->
   <url>
     <loc>https://daznode.com/checkout/dazbox</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/checkout/dazbox"/>
+  </url>
+
+  <!-- Abonnement DazNode -->
+  <url>
+    <loc>https://daznode.com/checkout/daznode</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/checkout/daznode"/>
   </url>
 
   <!-- Token for Good -->

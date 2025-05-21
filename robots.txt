@@ -1,0 +1,50 @@
+# robots.txt pour daznode.com
+
+# Règles globales pour tous les robots
+User-agent: *
+Allow: /
+Sitemap: https://daznode.com/sitemap.xml
+
+# Bloquer les robots d'IA d'OpenAI
+User-agent: GPTBot
+Disallow: /
+
+# Bloquer les robots d'Anthropic (Claude)
+User-agent: Claude-Web
+Disallow: /
+User-agent: Claude-1
+Disallow: /
+User-agent: Claude-2
+Disallow: /
+User-agent: Claude-3
+Disallow: /
+User-agent: Anthropic-AI
+Disallow: /
+
+# Bloquer les robots de Deepseek
+User-agent: DeepseekSpider
+Disallow: /
+User-agent: Deepseek
+Disallow: /
+
+# Bloquer Perplexity
+User-agent: PerplexityBot
+Disallow: /
+
+# Bloquer Google Bard/Gemini
+User-agent: Google-Extended
+Disallow: /
+
+# Bloquer CommonCrawl (souvent utilisé pour entraîner des IA)
+User-agent: CCBot
+Disallow: /
+
+# Ajouts pour autres crawlers d'IA potentiels
+User-agent: ChatGPT-User
+Disallow: /
+User-agent: ChatGPT
+Disallow: /
+User-agent: cohere-ai
+Disallow: /
+User-agent: anthropic-ai
+Disallow: /

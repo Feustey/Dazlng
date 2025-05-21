@@ -6,14 +6,14 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType>({
-  loginWithAlby: async (...args: unknown[]) => {
+  loginWithAlby: async (..._args: unknown[]) => {
     // console.log('[Auth] loginWithAlby called', ...args);
   },
   isLoading: false,
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }): JSX.Element => (
-  <AuthContext.Provider value={{ loginWithAlby: async (...args: unknown[]) => {
+  <AuthContext.Provider value={{ loginWithAlby: async (..._args: unknown[]) => {
     // console.log('[Auth] loginWithAlby called', ...args);
   }, isLoading: false }}>
     {children}

@@ -15,29 +15,29 @@ class Logger {
     return Logger.instance;
   }
 
-  info(message: string, ...args: LogArgs[]): void {
+  info(_message: string, ..._args: LogArgs[]): void {
     if (isDevelopment) {
-      console.info(`[INFO] ${message}`, ...args);
+      console.info(`[INFO] ${_message}`, ..._args);
     }
   }
 
-  error(message: string, error?: Error | unknown): void {
+  error(_message: string, _error?: Error | unknown): void {
     if (isDevelopment) {
-      // console.error(`[ERROR] ${message}`, error);
+      // console.error(`[ERROR] ${_message}`, _error);
     }
     // Ici, vous pourriez ajouter une intégration avec un service de monitoring
     // comme Sentry, LogRocket, etc.
   }
 
-  warn(message: string, ...args: LogArgs[]): void {
+  warn(_message: string, ..._args: LogArgs[]): void {
     if (isDevelopment) {
-      // console.warn(`[WARN] ${message}`, ...args);
+      // console.warn(`[WARN] ${_message}`, ..._args);
     }
   }
 
-  debug(message: string, ...args: LogArgs[]): void {
+  debug(_message: string, ..._args: LogArgs[]): void {
     if (isDevelopment) {
-      console.debug(`[DEBUG] ${message}`, ...args);
+      console.debug(`[DEBUG] ${_message}`, ..._args);
     }
   }
 }

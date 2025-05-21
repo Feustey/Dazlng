@@ -1,5 +1,5 @@
 const fs = require('fs');
-const path = require('path');
+const _path = require('path');
 const { glob } = require('glob');
 
 // Mapping des anciens noms d'icônes vers les nouveaux noms AppIcon
@@ -29,7 +29,7 @@ const iconMap = {
     let modified = false;
 
     // Supprime les imports react-icons/fi et react-icons/fa
-    content = content.replace(/import\s+\{[^}]*\}\s+from\s+['"]react-icons\/(fi|fa)['"];?\n?/g, match => {
+    content = content.replace(/import\s+\{[^}]*\}\s+from\s+['"]react-icons\/(fi|fa)['"];?\n?/g, _match => {
       modified = true;
       return '';
     });
