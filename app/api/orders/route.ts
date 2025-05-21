@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { Resend } from 'resend';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
+import { validateLightningPubkey } from '../../../utils/validation';
 
 async function getUserFromRequest(req: NextRequest): Promise<SupabaseUser | null> {
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
@@ -10,7 +11,7 @@ async function getUserFromRequest(req: NextRequest): Promise<SupabaseUser | null
   return user;
 }
 
-export async function GET(req: NextRequest): Promise<NextResponse> {
+export async function GET(req: NextRequest): Promise<Response> {
   const user = await getUserFromRequest(req);
   if (!user) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
 
@@ -24,13 +25,37 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   return NextResponse.json(data);
 }
 
-export async function POST(req: NextRequest): Promise<NextResponse> {
+export async function POST(req: NextRequest): Promise<Response> {
   const body = await req.json();
   const { user_id, customer, product, total, status } = body;
 
   // Validation stricte des champs obligatoires
-  if (!customer || !product || typeof total !== 'number' || !status || !customer.email || !customer.fullName || !customer.address || !customer.city || !customer.postalCode || !product.name || typeof product.quantity !== 'number' || typeof product.priceEur !== 'number' || typeof product.priceSats !== 'number') {
-    return NextResponse.json({ error: "Champs obligatoires manquants ou invalides" }, { status: 400 });
+  if (!customer || 
+      !product || 
+      typeof total !== 'number' || 
+      !status || 
+      !customer.email || 
+      !customer.firstName ||
+      !customer.lastName ||
+      !customer.address || 
+      !customer.city || 
+      !customer.postalCode || 
+      !product.name || 
+      typeof product.quantity !== 'number' || 
+      typeof product.priceSats !== 'number'
+  ) {
+    return NextResponse.json(
+      { error: "Champs obligatoires manquants ou invalides" }, 
+      { status: 400 }
+    );
+  }
+
+  // Validation de la clé publique
+  if (!customer.pubkey || !validateLightningPubkey(customer.pubkey)) {
+    return NextResponse.json(
+      { error: "Clé publique Lightning invalide" }, 
+      { status: 400 }
+    );
   }
 
   const { data, error } = await supabase

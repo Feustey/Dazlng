@@ -3,40 +3,74 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <!-- Page d'accueil -->
   <url>
-    <loc>https://dazno.de/</loc>
+    <loc>https://daznode.com/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/"/>
   </url>
 
   <!-- À propos -->
   <url>
-    <loc>https://dazno.de/about</loc>
+    <loc>https://daznode.com/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/about"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/about"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/about"/>
+  </url>
+
+  <!-- Contact -->
+  <url>
+    <loc>https://daznode.com/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/contact"/>
+  </url>
+
+  <!-- DazBox -->
+  <url>
+    <loc>https://daznode.com/dazbox</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/dazbox"/>
+  </url>
+
+  <!-- Commander DazBox -->
+  <url>
+    <loc>https://daznode.com/checkout/dazbox</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/checkout/dazbox"/>
+  </url>
+
+  <!-- Token for Good -->
+  <url>
+    <loc>https://daznode.com/token-for-good</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/token-for-good"/>
+  </url>
+
+  <!-- Conditions Générales -->
+  <url>
+    <loc>https://daznode.com/terms</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/terms"/>
+  </url>
+
+  <!-- Abonnement -->
+  <url>
+    <loc>https://daznode.com/subscribe</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/subscribe"/>
   </url>
 
   <!-- Aide -->
   <url>
-    <loc>https://dazno.de/help</loc>
+    <loc>https://daznode.com/help</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/help"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/help"/>
-  </url>
-
-  
-
-  <!-- Abonnement (page dynamique) -->
-  <url>
-    <loc>https://dazno.de/subscribe/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/subscribe/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/subscribe/"/>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/help"/>
   </url>
 
 </urlset>

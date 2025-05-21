@@ -132,12 +132,11 @@ const ContactForm: React.FC<ContactFormProps> = ({
             Message
           </label>
           <textarea
-            className={`w-full bg-gray-100 border-2 border-gray-300 rounded-lg px-4 py-2 text-base focus:outline-none focus:border-blue-500 ${errors.message ? 'border-red-500' : ''}`}
+            className={`w-full bg-gray-100 border-2 border-gray-300 rounded-lg px-4 py-2 text-base focus:outline-none focus:border-blue-500 min-h-[120px] ${errors.message ? 'border-red-500' : ''}`}
             value={form.message}
             onChange={e => setForm({ ...form, message: e.currentTarget.value })}
             placeholder="Votre message"
             rows={6}
-            style={{ minHeight: 120 }}
             disabled={isSubmitting}
           />
           {errors.message && <div className="text-red-500 text-sm mt-1 font-medium">{errors.message}</div>}

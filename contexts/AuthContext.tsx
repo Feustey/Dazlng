@@ -12,7 +12,7 @@ const AuthContext = createContext<AuthContextType>({
   isLoading: false,
 });
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => (
+export const AuthProvider = ({ children }: { children: React.ReactNode }): JSX.Element => (
   <AuthContext.Provider value={{ loginWithAlby: async (...args: unknown[]) => {
     // console.log('[Auth] loginWithAlby called', ...args);
   }, isLoading: false }}>
@@ -20,4 +20,4 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => (
   </AuthContext.Provider>
 );
 
-export const useAuth = () => useContext(AuthContext); 
+export const useAuth = (): AuthContextType => useContext(AuthContext); 

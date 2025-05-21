@@ -1,0 +1,55 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase';
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+async function fetchDazNodeData(nodeId: string): Promise<any> {
+  const baseUrl = process.env.DAZNODE_API_URL;
+  const [summary, centralities, stats, history] = await Promise.all([
+    fetch(`${baseUrl}/network/summary`).then(res => res.json()),
+    fetch(`${baseUrl}/network/centralities`).then(res => res.json()),
+    fetch(`${baseUrl}/network/node/${nodeId}/stats`).then(res => res.json()),
+    fetch(`${baseUrl}/network/node/${nodeId}/history`).then(res => res.json()),
+  ]);
+  return { summary, centralities, stats, history };
+}
+
+function generateEmailContent(data: any): string {
+  return `
+    <h2>Rapport Hebdomadaire de votre Nœud Lightning</h2>
+    <h3>Résumé du Réseau</h3>
+    <pre>${JSON.stringify(data.summary, null, 2)}</pre>
+    <h3>Centralités</h3>
+    <pre>${JSON.stringify(data.centralities, null, 2)}</pre>
+    <h3>Statistiques de votre Nœud</h3>
+    <pre>${JSON.stringify(data.stats, null, 2)}</pre>
+    <h3>Historique</h3>
+    <pre>${JSON.stringify(data.history, null, 2)}</pre>
+  `;
+}
+
+export async function POST(req: NextRequest): Promise<Response> {
+  const authHeader = req.headers.get('authorization');
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+  }
+  // Récupérer tous les utilisateurs avec un node_id
+  const { data: users, error } = await supabase
+    .from('profiles')
+    .select('id, email, node_id')
+    .not('node_id', 'is', null);
+  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  for (const user of users) {
+    if (!user.node_id) continue;
+    const nodeData = await fetchDazNodeData(user.node_id);
+    const emailContent = generateEmailContent(nodeData);
+    await resend.emails.send({
+      from: process.env.SMTP_FROM || 'noreply@daznode.com',
+      to: user.email,
+      subject: 'Rapport Hebdomadaire de votre Nœud Lightning',
+      html: emailContent,
+    });
+  }
+  return NextResponse.json({ success: true });
+} 

@@ -1,7 +1,9 @@
 "use client";
 import { usePathname } from "next/navigation";
 import CustomHeader from "@/components/shared/ui/CustomHeader";
-import Footer from "@/components/Footer";
+import dynamic from 'next/dynamic';
+
+const Footer = dynamic(() => import('@/components/Footer'), { loading: () => <div className="h-40 bg-gray-100"></div> });
 
 export default function ClientLayout({ children }: { children: React.ReactNode }): React.ReactElement {
   const pathname = usePathname();

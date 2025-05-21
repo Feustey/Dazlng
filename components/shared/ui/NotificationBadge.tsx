@@ -13,7 +13,6 @@ export default function NotificationBadge({ count = 0, show }: NotificationBadge
   return (
     <span
       className="absolute -top-2 -right-2 min-w-[18px] h-[18px] rounded-full bg-[#F7931A] flex items-center justify-center px-1.5 animate-scale-in"
-      style={{ animation: 'scale-in 0.3s cubic-bezier(0.4,0,0.2,1)' }}
     >
       <span className="text-white text-xs font-semibold">{count}</span>
     </span>

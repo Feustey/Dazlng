@@ -44,13 +44,7 @@ const ThreeHero: React.FC = (): React.ReactElement => {
   return (
     <div
       ref={mountRef}
-      style={{
-        width: "100%",
-        height: "300px",
-        position: "relative",
-        zIndex: 1,
-        marginBottom: 32,
-      }}
+      className="w-full h-[300px] relative z-[1] mb-8"
     />
   );
 };

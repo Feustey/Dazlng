@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import { storage } from '../src/utils/storage';
+import { storage } from '../utils/storage';
 import LoginScreen from './login';
 
 

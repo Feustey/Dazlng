@@ -4,7 +4,9 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import Image from 'next/image';
 import Link from "next/link";
-import { CTASection } from './components/home/CTASection';
+import dynamic from 'next/dynamic';
+
+const CTASection = dynamic(() => import('./components/home/CTASection').then(mod => mod.CTASection), { loading: () => <div className="h-40 bg-gradient-to-r from-indigo-600 to-purple-700"></div> });
 
 export default function HomePage(): React.ReactElement {
   useEffect(() => {
@@ -18,37 +20,27 @@ export default function HomePage(): React.ReactElement {
   return (
     <main className="min-h-screen w-full overflow-x-hidden font-sans bg-gradient-to-b from-white to-gray-50">
       {/* HERO SECTION */}
-      <section className="relative w-full bg-gradient-to-r from-indigo-600 to-purple-700 text-white">
-        <div className="container mx-auto px-4 py-20 md:py-32 flex flex-col md:flex-row items-center justify-between">
-          <div className="md:w-1/2 mb-10 md:mb-0" data-aos="fade-right">
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">
-              Votre Nœud Lightning<br />
-              <span className="text-yellow-300">Clé en Main</span>
-            </h1>
-            <p className="text-xl md:text-2xl mb-8">
-              Rejoignez la révolution Bitcoin Lightning avec une solution plug & play complète. Commencez en 5 minutes, sans connaissance technique.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/contact" className="bg-transparent hover:bg-white/20 border-2 border-white py-4 px-8 rounded-lg text-center text-lg transition-all">
-                Démonstration gratuite
-              </Link>
-            </div>
-          </div>
-          <div className="md:w-1/2 relative" data-aos="fade-left">
-            <div className="relative w-full max-w-md mx-auto">
-              <div className="rounded-3xl overflow-hidden shadow-2xl bg-white p-4">
-                <Image 
-                  src="/assets/images/dazbox.png" 
-                  alt="DazBox Device" 
-                  width={500} 
-                  height={500} 
-                  className="w-full h-auto object-contain"
-                />
-              </div>
-              <div className="absolute -bottom-4 -right-4 bg-yellow-400 rounded-full p-6 shadow-lg">
-                <span className="font-bold text-gray-900 text-xl">Nouveau</span>
-              </div>
-            </div>
+      <section className="relative w-full bg-gradient-to-r from-indigo-600 to-purple-700 text-white text-center py-20">
+        <div className="container mx-auto px-6 max-w-3xl">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in">
+            Daznode, l'accès Lightning pour tous
+          </h1>
+          <p className="text-xl md:text-2xl mb-6 animate-fade-in delay-100">
+            Oubliez la complexité. Découvrez une nouvelle façon de gérer et valoriser vos transactions, en toute simplicité.
+          </p>
+          <p className="text-lg mb-6 animate-fade-in delay-200">
+            10 ans d'expertise pour un écosystème où chaque utilisateur, entreprise ou particulier, devient acteur du réseau Lightning.
+          </p>
+          <p className="italic text-white/80 mb-2 animate-fade-in delay-300">
+            Instantané • Sécurisé • Récompensé à chaque transaction
+          </p>
+          <div className="mt-10 flex justify-center">
+            <span className="flex flex-col items-center text-yellow-300">
+              <span className="mb-2">Faites défiler pour découvrir</span>
+              <svg className="w-7 h-7 animate-bounce-slow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
+            </span>
           </div>
         </div>
       </section>
@@ -147,37 +139,39 @@ export default function HomePage(): React.ReactElement {
                     Optimisez votre nœud Lightning avec l'intelligence artificielle
                   </p>
                   <div className="space-y-4 md:space-y-6">
-                    <div 
-                      className="bg-purple-50 rounded-xl p-4 sm:p-6 border-l-4 border-purple-600"
-                      data-aos="fade-left"
-                      data-aos-delay="400"
-                    >
-                      <h4 className="text-base sm:text-lg font-semibold text-purple-900 mb-2">Gratuit</h4>
-                      <p className="text-sm sm:text-base text-gray-700">Statistiques de base et monitoring essentiel</p>
-                    </div>
-                    <div 
-                      className="bg-purple-50 rounded-xl p-4 sm:p-6 border-l-4 border-purple-600"
-                      data-aos="fade-left"
-                      data-aos-delay="500"
-                    >
-                      <h4 className="text-base sm:text-lg font-semibold text-purple-900 mb-2">Premium - 10K sats/mois</h4>
-                      <p className="text-sm sm:text-base text-gray-700">Routing optimisé et analyses avancées</p>
-                    </div>
-                    <div 
-                      className="bg-purple-50 rounded-xl p-4 sm:p-6 border-l-4 border-purple-600"
-                      data-aos="fade-left"
-                      data-aos-delay="600"
-                    >
-                      <h4 className="text-base sm:text-lg font-semibold text-purple-900 mb-2">Pro - 30K sats/mois</h4>
-                      <p className="text-sm sm:text-base text-gray-700">Intégration Amboss, Sparkseer, alertes Telegram et auto-rebalancing</p>
-                    </div>
+                    <ul className="space-y-3 md:space-y-4">
+                      <li className="flex items-start" data-aos="fade-up" data-aos-delay="400">
+                        <span className="bg-purple-100 p-1 rounded-full mr-3 flex-shrink-0">
+                          <svg className="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </span>
+                        <span className="text-base sm:text-lg text-gray-700">Statistiques de base et monitoring essentiel</span>
+                      </li>
+                      <li className="flex items-start" data-aos="fade-up" data-aos-delay="500">
+                        <span className="bg-purple-100 p-1 rounded-full mr-3 flex-shrink-0">
+                          <svg className="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </span>
+                        <span className="text-base sm:text-lg text-gray-700">Routing optimisé et analyses avancées</span>
+                      </li>
+                      <li className="flex items-start" data-aos="fade-up" data-aos-delay="600">
+                        <span className="bg-purple-100 p-1 rounded-full mr-3 flex-shrink-0">
+                          <svg className="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </span>
+                        <span className="text-base sm:text-lg text-gray-700">Intégration Amboss, Sparkseer, alertes Telegram et auto-rebalancing</span>
+                      </li>
+                    </ul>
                   </div>
                   <div className="pt-6 md:pt-8" data-aos="fade-up" data-aos-delay="700">
                     <Link 
-                      href="/daznode" 
+                      href="/checkout/daznode" 
                       className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold text-white bg-purple-600 rounded-xl hover:bg-purple-700 transition-colors duration-200 shadow-lg hover:shadow-xl"
                     >
-                      <span>Découvrir DazNode</span>
+                      <span>S'abonner</span>
                       <svg className="w-5 h-5 ml-2 hidden sm:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                       </svg>

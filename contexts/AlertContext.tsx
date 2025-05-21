@@ -10,7 +10,7 @@ const AlertContext = createContext<AlertContextType>({
   },
 });
 
-export const AlertProvider = ({ children }: { children: React.ReactNode }) => (
+export const AlertProvider = ({ children }: { children: React.ReactNode }): JSX.Element => (
   <AlertContext.Provider value={{ showAlert: (type: string, message: string) => {
     // console.log(`[Alert] ${type}: ${message}`);
   } }}>
@@ -18,4 +18,4 @@ export const AlertProvider = ({ children }: { children: React.ReactNode }) => (
   </AlertContext.Provider>
 );
 
-export const useAlert = () => useContext(AlertContext); 
+export const useAlert = (): AlertContextType => useContext(AlertContext); 

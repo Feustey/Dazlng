@@ -27,7 +27,7 @@ import Colors from '../constants/Colors';
 const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
 
-function TabNavigator() {
+function TabNavigator(): React.ReactElement {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -111,7 +111,7 @@ function TabNavigator() {
   );
 }
 
-export default function AppNavigator() {
+export default function AppNavigator(): React.ReactElement {
   return (
     <NavigationContainer>
       <Stack.Navigator

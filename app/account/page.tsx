@@ -14,6 +14,31 @@ interface UserData {
   compte_x: string;
   compte_nostr: string;
   t4g_tokens: number;
+  node_id?: string;
+}
+
+// Composant pour afficher les stats du nœud Lightning
+function NodeStats({ nodeId }: { nodeId: string }): JSX.Element {
+  const [stats, setStats] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    async function fetchStats(): Promise<void> {
+      const res = await fetch(`/api/daznode/stats?node_id=${nodeId}`);
+      if (res.ok) {
+        setStats(await res.json());
+      }
+      setLoading(false);
+    }
+    fetchStats();
+  }, [nodeId]);
+  if (loading) return <div>Chargement des statistiques du nœud...</div>;
+  if (!stats) return <div>Aucune statistique disponible pour ce nœud.</div>;
+  return (
+    <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+      <h2 className="text-xl font-semibold mb-4">Statistiques du nœud Lightning</h2>
+      <pre className="text-xs overflow-x-auto bg-gray-100 p-2 rounded">{JSON.stringify(stats, null, 2)}</pre>
+    </div>
+  );
 }
 
 const AccountPage: React.FC = () => {
@@ -25,6 +50,7 @@ const AccountPage: React.FC = () => {
     pubkey: '',
     compte_x: '',
     compte_nostr: '',
+    node_id: '',
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -52,6 +78,7 @@ const AccountPage: React.FC = () => {
           pubkey: data.pubkey || '',
           compte_x: data.compte_x || '',
           compte_nostr: data.compte_nostr || '',
+          node_id: data.node_id || '',
         });
       } else {
         router.replace('/auth/login');
@@ -164,6 +191,15 @@ const AccountPage: React.FC = () => {
               />
             </div>
             <div>
+              <label className="block text-gray-600 mb-1">Node ID Lightning</label>
+              <input
+                type="text"
+                className="w-full px-3 py-2 border border-gray-300 rounded bg-white text-gray-900"
+                value={form.node_id}
+                onChange={e => setForm({ ...form, node_id: e.target.value })}
+              />
+            </div>
+            <div>
               <label className="block text-gray-600 mb-1">Email</label>
               <input
                 type="email"
@@ -188,6 +224,10 @@ const AccountPage: React.FC = () => {
           <p className="text-2xl font-bold mb-2">{userData.t4g_tokens ?? 1}</p>
           <p className="text-gray-600">Vous avez gagné 1 T4G token pour votre inscription.</p>
         </div>
+      )}
+
+      {userData.node_id && (
+        <NodeStats nodeId={userData.node_id} />
       )}
 
       <button

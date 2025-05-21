@@ -58,6 +58,3 @@ web-build/
 
 # Backup
 backup_*/
-
-# Sentry Config File
-.env.sentry-build-plugin

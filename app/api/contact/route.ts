@@ -3,7 +3,7 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function POST(request: Request): Promise<Response> {
+export async function POST(request): Promise<Response> {
   try {
     const {
       firstName,
@@ -57,7 +57,7 @@ export async function POST(request: Request): Promise<Response> {
         from: "DazNode <onboarding@resend.dev>",
         to: email,
         subject: "Confirmation de votre message - DazNode",
-        text: `Bonjour ${firstName},\n\nNous avons bien reçu votre message concernant "${interest}". Notre équipe vous répondra dans les plus brefs délais.\n\nCordialement,\nL'équipe DazNode`,
+        text: `Bonjour ${firstName},\n\nNous avons bien reçu votre message concernant \"${interest}\". Notre équipe vous répondra dans les plus brefs délais.\n\nCordialement,\nL'équipe DazNode`,
       });
     } else {
       // En mode développement ou sans clé API, juste logger

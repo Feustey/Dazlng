@@ -6,7 +6,6 @@ function safeReadFile(path?: string): string {
   try {
     return fs.readFileSync(path).toString();
   } catch (e) {
-    console.warn(`[LND] Fichier manquant ou illisible: ${path}`);
     return '';
   }
 }

@@ -35,9 +35,18 @@ export const createClient = (request: NextRequest) => {
 
 // Ajout de la fonction middleware exportée
 export function middleware(request: NextRequest) {
-  // Ici, tu peux utiliser createClient(request) si besoin
-  // const response = createClient(request);
-  // return response;
-  // Pour l'instant, on retourne juste NextResponse.next()
-  return NextResponse.next();
-} 
+  const response = NextResponse.next();
+  // Ajouter des headers de sécurité
+  response.headers.set('X-Frame-Options', 'DENY');
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  response.headers.set(
+    'Strict-Transport-Security',
+    'max-age=31536000; includeSubDomains'
+  );
+  return response;
+}
+
+export const config = {
+  matcher: '/api/:path*',
+}; 

@@ -38,27 +38,12 @@ const Footer: React.FC = () => {
           <div className="flex-1 mb-6 md:mb-0">
             <img src="/assets/images/logo-daznode.svg" alt="Daz3 Logo" className="h-10 mb-4" />
             <p className="text-gray-600 max-w-xs">Où l'imagination rencontre l'innovation - libérez votre créativité avec nous!</p>
-            <div className="flex flex-row gap-3 mt-4">
-              {socialLinks.map((link, index) => (
-                <a
-                  key={index}
-                  href={link.url}
-                  title={link.title}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 text-gray-600 hover:text-primary transition-colors"
-                >
-                  {link.icon}
-                </a>
-              ))}
-            </div>
+         
           </div>
           <div className="flex flex-row gap-12">
             <div>
               <h4 className="font-semibold mb-2">Produit</h4>
               <ul className="space-y-1 text-gray-700">
-                <li><a href="/app/dazbox">La Plateforme</a></li>
-                <li><a href="/app/subscribe">Tarification</a></li>
                 <li><a href="https://docs.dazno.de" target="_blank" rel="noopener noreferrer">DazDocs</a></li>
                 <li><a href="/app/token-for-good">Token for Good</a></li>
               </ul>
@@ -79,8 +64,25 @@ const Footer: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="mt-10 border-t pt-6 text-center text-gray-400 text-sm">
-          © 2024 - Réalisé avec 💙 par <a href="https://inoval.io" target="_blank" rel="noopener noreferrer">Inoval</a>
+      
+        <div className="mt-10 border-t pt-6 flex flex-col sm:flex-row justify-between items-center">
+          <div className="text-gray-400 text-sm mb-4 sm:mb-0">
+            © 2025 - Réalisé avec 💙 par <a href="https://inoval.io" target="_blank" rel="noopener noreferrer">Inoval</a>
+          </div>
+          <div className="flex flex-row gap-3">
+            {socialLinks.map((link, index) => (
+              <a
+                key={index}
+                href={link.url}
+                title={link.title}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 text-gray-600 hover:text-primary transition-colors"
+              >
+                {link.icon}
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </footer>

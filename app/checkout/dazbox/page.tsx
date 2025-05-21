@@ -2,6 +2,7 @@
 import React, { useState, Suspense } from 'react';
 import LightningPayment from '../../../components/web/LightningPayment';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { useRouter } from 'next/navigation';
 
 function CheckoutContent(): React.ReactElement {
   const [form, setForm] = useState({
@@ -21,9 +22,10 @@ function CheckoutContent(): React.ReactElement {
   const [useAsBilling, setUseAsBilling] = useState(true);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [showLightning, setShowLightning] = useState(false);
+  const [transactionId, setTransactionId] = useState<string | null>(null);
   const supabase = createClientComponentClient();
+  const router = useRouter();
 
   const isFormValid = (): boolean => {
     return Boolean(
@@ -61,14 +63,11 @@ function CheckoutContent(): React.ReactElement {
   const applyPromoCode = (): void => {
     if (promoCode.trim().toUpperCase() === PROMO_CODE) {
       setPromoApplied(true);
-      setError(null);
-    } else {
-      setError('Code promo invalide');
     }
   };
 
-  const handlePaymentSuccess = async (): Promise<void> => {
-    setError(null);
+  const handlePaymentSuccess = async (txId: string): Promise<void> => {
+    setTransactionId(txId);
     setPaymentSuccess(true);
     const { data: { session } } = await supabase.auth.getSession();
     const token = session?.access_token;
@@ -94,15 +93,29 @@ function CheckoutContent(): React.ReactElement {
         },
         total: productDetails.priceSats,
         status: 'payée',
+        transaction_id: txId,
       }),
     });
     if (res.ok) {
       const data = await res.json();
       setOrderId(data.id);
-    } else {
-      setError("Erreur lors de l'enregistrement de la commande.");
+      router.push('/checkout/success');
     }
   };
+
+  if (showLightning) {
+    return (
+      <div className="max-w-[480px] mx-auto my-12 p-8 bg-[rgba(20,20,40,0.85)] rounded-[24px] shadow-2xl flex flex-col gap-8">
+        <h1 className="text-2xl font-bold mb-4 text-center">Paiement Lightning</h1>
+        <LightningPayment 
+          amount={getPrice()} 
+          productName="DazBox" 
+          onSuccess={(txId: string) => handlePaymentSuccess(txId)}
+          onCancel={() => setShowLightning(false)}
+        />
+      </div>
+    );
+  }
 
   if (paymentSuccess) {
     return (
@@ -111,6 +124,7 @@ function CheckoutContent(): React.ReactElement {
         <div className="text-center text-green-500 text-lg bg-green-100/10 rounded-xl p-4 mt-4">
           Paiement réussi ! Merci pour votre commande.<br />
           {orderId && <div>Numéro de commande : <b>{orderId}</b></div>}
+          {transactionId && <div>Transaction ID : <b>{transactionId}</b></div>}
           Vous recevrez un email de confirmation sous peu.
         </div>
       </div>
@@ -118,126 +132,209 @@ function CheckoutContent(): React.ReactElement {
   }
 
   return (
-    <div className="max-w-[900px] flex flex-col md:flex-row gap-8 mx-auto my-12 p-6 bg-[rgba(20,20,40,0.85)] rounded-[24px] shadow-2xl">
-      <div className="flex-1">
-        <h1 className="text-2xl font-bold mb-4 text-center">Commander votre DazBox</h1>
-        <form className="flex flex-col gap-4" autoComplete="on">
-          <div className="flex gap-4">
-            <div className="flex flex-col gap-1 flex-1">
-              <label className="font-semibold">Prénom*<br />
-                <input type="text" name="firstName" value={form.firstName} onChange={handleChange} required className="p-3 rounded-lg bg-[#18182c] text-white text-base w-full outline-none transition-shadow shadow-sm focus:shadow-[0_0_0_2px_#5d5dfc]" />
-              </label>
-            </div>
-            <div className="flex flex-col gap-1 flex-1">
-              <label className="font-semibold">Nom*<br />
-                <input type="text" name="lastName" value={form.lastName} onChange={handleChange} required className="p-3 rounded-lg bg-[#18182c] text-white text-base w-full outline-none transition-shadow shadow-sm focus:shadow-[0_0_0_2px_#5d5dfc]" />
-              </label>
-            </div>
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="font-semibold">Email*<br />
-              <input type="email" name="email" value={form.email} onChange={handleChange} required className="p-3 rounded-lg bg-[#18182c] text-white text-base w-full outline-none transition-shadow shadow-sm focus:shadow-[0_0_0_2px_#5d5dfc]" />
-            </label>
-          </div>
-          <div className="flex flex-col gap-1 w-full">
-            <label className="font-semibold">Adresse*<br />
-              <input type="text" name="address" value={form.address} onChange={handleChange} required className="p-3 rounded-lg bg-[#18182c] text-white text-base w-full outline-none transition-shadow shadow-sm focus:shadow-[0_0_0_2px_#5d5dfc]" />
-            </label>
-            <button type="button" className="mt-1 text-sm text-[#5d5dfc] bg-none border-none cursor-pointer" onClick={() => setForm(f => ({...f, address2: ''}))}>Ajouter une ligne</button>
-            {form.address2 !== undefined && (
-              <input type="text" name="address2" value={form.address2} onChange={handleChange} placeholder="Complément d'adresse" className="mt-1 p-3 rounded-lg bg-[#18182c] text-white text-base w-full outline-none transition-shadow shadow-sm focus:shadow-[0_0_0_2px_#5d5dfc]" />
-            )}
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="font-semibold">Pays*<br />
-              <select name="country" value={form.country} onChange={handleChange} required className="p-3 rounded-lg bg-[#18182c] text-white text-base w-full outline-none transition-shadow shadow-sm focus:shadow-[0_0_0_2px_#5d5dfc]">
-                <option value="France">France</option>
-                <option value="Belgique">Belgique</option>
-                <option value="Suisse">Suisse</option>
-                <option value="États-Unis">États-Unis</option>
-                <option value="Canada">Canada</option>
-                <option value="Autre">Autre</option>
-              </select>
-            </label>
-          </div>
-          <div className="flex gap-4">
-            <div className="flex flex-col gap-1 flex-1">
-              <label className="font-semibold">Ville*<br />
-                <input type="text" name="city" value={form.city} onChange={handleChange} required className="p-3 rounded-lg bg-[#18182c] text-white text-base w-full outline-none transition-shadow shadow-sm focus:shadow-[0_0_0_2px_#5d5dfc]" />
-              </label>
-            </div>
-            <div className="flex flex-col gap-1 flex-1">
-              <label className="font-semibold">Code postal*<br />
-                <input type="text" name="postalCode" value={form.postalCode} onChange={handleChange} required className="p-3 rounded-lg bg-[#18182c] text-white text-base w-full outline-none transition-shadow shadow-sm focus:shadow-[0_0_0_2px_#5d5dfc]" />
-              </label>
-            </div>
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="font-semibold">Téléphone<br />
-              <input type="text" name="phone" value={form.phone} onChange={handleChange} className="p-3 rounded-lg bg-[#18182c] text-white text-base w-full outline-none transition-shadow shadow-sm focus:shadow-[0_0_0_2px_#5d5dfc]" />
-            </label>
-          </div>
-          <div className="flex flex-col gap-1 mt-2">
-            <label className="flex items-center gap-2 font-medium">
-              <input type="checkbox" checked={useAsBilling} onChange={() => setUseAsBilling(v => !v)} className="accent-[#5d5dfc]" />
-              Utiliser comme adresse de facturation
-            </label>
-          </div>
-          {error && <div className="text-[#ff5a5a] bg-[#ff5a5a14] rounded-lg p-3 mt-4 text-center text-base">{error}</div>}
-        </form>
-      </div>
-      <div className="flex-1 min-w-[260px] max-w-[340px] self-start bg-white/10 rounded-2xl p-6 mt-4 text-[#eaeaff] text-base shadow-lg">
-        <h2 className="text-xl font-semibold mb-2 text-white">Résumé</h2>
-        <ul className="mb-4 pl-0 list-none">
-          <li className="flex justify-between">
-            <span>{productDetails.name}</span>
-            <span><b>{BASE_PRICE_SATS.toLocaleString('fr-FR')} sats</b></span>
-          </li>
-          {promoApplied && (
-            <li className="flex justify-between text-green-400 mt-2">
-              <span>Réduction ({DISCOUNT_PERCENTAGE}%)</span>
-              <span>-{(BASE_PRICE_SATS * DISCOUNT_PERCENTAGE / 100).toLocaleString('fr-FR')} sats</span>
-            </li>
-          )}
-        </ul>
-        {!promoApplied && (
-          <div className="mb-4">
-            <div className="flex gap-2">
-              <input 
-                type="text" 
-                value={promoCode} 
-                onChange={(e) => setPromoCode(e.target.value)} 
-                placeholder="Code promo" 
-                className="p-2 rounded-lg bg-[#18182c] text-white text-sm flex-1 outline-none transition-shadow shadow-sm focus:shadow-[0_0_0_2px_#5d5dfc]"
-              />
-              <button 
-                onClick={() => applyPromoCode()} 
-                className="px-3 py-2 bg-[#5d5dfc] text-white text-sm font-semibold rounded-lg hover:bg-[#4a3dfc]"
-              >
-                Appliquer
-              </button>
-            </div>
-            <div className="text-xs mt-1 text-yellow-200">Essayez "BITCOINWEEK" pour -10% !</div>
-          </div>
-        )}
-        <div className="text-lg font-bold my-4 text-[#5d5dfc]">
-          Total : {productDetails.priceSats.toLocaleString('fr-FR')} sats
+    <div className="min-h-screen bg-gradient-to-br from-white to-indigo-50">
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-indigo-600 mb-2">Commander votre DazBox</h1>
+          <p className="text-gray-600">Finalisez votre commande en quelques étapes simples</p>
         </div>
-        {showLightning ? (
-          <LightningPayment
-            amount={productDetails.priceSats}
-            productName={productDetails.name}
-            onSuccess={handlePaymentSuccess}
-          />
-        ) : (
-          <button
-            className="mt-4 w-full p-3 rounded-lg bg-[#5d5dfc] text-white font-semibold text-base cursor-pointer transition hover:bg-[#4a3dfc] disabled:opacity-50"
-            disabled={!isFormValid()}
-            onClick={e => { e.preventDefault(); if (isFormValid()) setShowLightning(true); }}
-          >
-            Paiement (afficher le QR code)
-          </button>
-        )}
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Formulaire de commande - 2/3 de l'écran sur desktop */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">Informations personnelles</h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Prénom*</label>
+                  <input 
+                    type="text" 
+                    name="firstName" 
+                    value={form.firstName} 
+                    onChange={handleChange} 
+                    required 
+                    className="w-full rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Nom*</label>
+                  <input 
+                    type="text" 
+                    name="lastName" 
+                    value={form.lastName} 
+                    onChange={handleChange} 
+                    required 
+                    className="w-full rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm" 
+                  />
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email*</label>
+                <input 
+                  type="email" 
+                  name="email" 
+                  value={form.email} 
+                  onChange={handleChange} 
+                  required 
+                  className="w-full rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm" 
+                />
+              </div>
+              
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+                <input 
+                  type="tel" 
+                  name="phone" 
+                  value={form.phone} 
+                  onChange={handleChange} 
+                  className="w-full rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm" 
+                />
+              </div>
+            </div>
+            
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">Adresse de livraison</h2>
+              
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Adresse*</label>
+                <input 
+                  type="text" 
+                  name="address" 
+                  value={form.address} 
+                  onChange={handleChange} 
+                  required 
+                  className="w-full rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm" 
+                />
+              </div>
+              
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Complément d'adresse</label>
+                <input 
+                  type="text" 
+                  name="address2" 
+                  value={form.address2} 
+                  onChange={handleChange} 
+                  className="w-full rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm" 
+                />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Ville*</label>
+                  <input 
+                    type="text" 
+                    name="city" 
+                    value={form.city} 
+                    onChange={handleChange} 
+                    required 
+                    className="w-full rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Code postal*</label>
+                  <input 
+                    type="text" 
+                    name="postalCode" 
+                    value={form.postalCode} 
+                    onChange={handleChange} 
+                    required 
+                    className="w-full rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm" 
+                  />
+                </div>
+              </div>
+              
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Pays*</label>
+                <select 
+                  name="country" 
+                  value={form.country} 
+                  onChange={handleChange} 
+                  required 
+                  className="w-full rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
+                >
+                  <option value="France">France</option>
+                  <option value="Belgique">Belgique</option>
+                  <option value="Suisse">Suisse</option>
+                  <option value="Canada">Canada</option>
+                </select>
+              </div>
+              
+              <div className="flex items-center mb-2">
+                <input 
+                  type="checkbox" 
+                  id="billing" 
+                  name="useAsBilling" 
+                  checked={useAsBilling} 
+                  onChange={(e) => setUseAsBilling(e.target.checked)} 
+                  className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" 
+                />
+                <label htmlFor="billing" className="ml-2 block text-sm text-gray-700">
+                  Utiliser comme adresse de facturation
+                </label>
+              </div>
+            </div>
+          </div>
+          
+          {/* Récapitulatif commande - 1/3 de l'écran sur desktop */}
+          <div className="lg:col-span-1">
+            <div className="bg-gradient-to-br from-indigo-600 to-purple-600 text-white rounded-xl shadow-md p-6 sticky top-8">
+              <h2 className="text-xl font-bold mb-6 border-b border-white/20 pb-4">Résumé</h2>
+              
+              <div className="flex items-center mb-6">
+                <div>
+                  <h3 className="font-semibold text-lg">DazBox</h3>
+                  <p className="text-sm text-white/80">Votre nœud Lightning personnel</p>
+                </div>
+              </div>
+              
+              <div className="mb-6">
+                <div className="flex justify-between mb-2">
+                  <span>Prix</span>
+                  <span className="font-semibold">{BASE_PRICE_SATS.toLocaleString('fr-FR')} sats</span>
+                </div>
+                <div className="mb-4">
+                  <div className="relative mt-1">
+                    <input
+                      type="text"
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value)}
+                      placeholder="Code promo"
+                      className="w-full rounded-lg bg-white/10 border-white/20 text-white placeholder-white/50 pr-24 focus:ring-yellow-400 focus:border-yellow-400"
+                    />
+                    <button 
+                      onClick={() => applyPromoCode()} 
+                      className="absolute right-1 top-1 bg-yellow-400 text-gray-800 px-3 py-1 rounded font-medium text-sm"
+                    >
+                      Appliquer
+                    </button>
+                  </div>
+                  <p className="text-sm text-yellow-300 mt-1">Essayez "BITCOINWEEK" pour -10% !</p>
+                </div>
+                <div className="flex justify-between text-xl font-bold border-t border-white/20 pt-4 mb-6">
+                  <span>Total</span>
+                  <span className="text-yellow-300">{getPrice().toLocaleString('fr-FR')} sats</span>
+                </div>
+                
+                <button 
+                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center"
+                  onClick={() => setShowLightning(true)}
+                  disabled={!isFormValid()}
+                >
+                  <span>Paiement Lightning</span>
+                  <svg className="ml-2 w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M11 9l-6 6 1.41 1.41L11 12.83l4.59 4.58L17 16l-6-6z" />
+                    <path d="M11 4L5 10l1.41 1.41L11 7.83l4.59 4.58L17 11l-6-6z" />
+                  </svg>
+                </button>
+                
+                <p className="text-xs text-center mt-4 text-white/70">Paiement 100% sécurisé via Bitcoin Lightning Network</p>
+              </div>
+              
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

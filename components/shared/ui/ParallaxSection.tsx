@@ -1,7 +1,12 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import Animated, { 
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  interpolate,
+  useSharedValue
+} from 'react-native-reanimated';
 
 interface ParallaxSectionProps {
   title: string;
@@ -10,17 +15,33 @@ interface ParallaxSectionProps {
 }
 
 export default function ParallaxSection({ title, children, className = '' }: ParallaxSectionProps): React.ReactElement {
+  const scrollY = useSharedValue(0);
   const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
-  // Effet parallax : translation verticale de -40px à 40px selon le scroll
-  const y = useTransform(scrollYProgress, [0, 1], [-40, 40]);
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      scrollY.value = event.contentOffset.y;
+    },
+  });
+
+  const animatedStyle = useAnimatedStyle(() => {
+    const y = interpolate(
+      scrollY.value,
+      [0, 1],
+      [-40, 40],
+      'clamp'
+    );
+    return {
+      transform: [{ translateY: y }],
+    };
+  });
 
   return (
     <section ref={ref} className={`parallax-section ${className} relative overflow-hidden`}>
       {title && <h2 className="text-2xl font-bold mb-6">{title}</h2>}
-      <motion.div style={{ y }}>
+      <Animated.View style={animatedStyle}>
         {children}
-      </motion.div>
+      </Animated.View>
     </section>
   );
 } 

@@ -1,0 +1,43 @@
+import { io, Socket } from 'socket.io-client';
+
+class WebSocketService {
+  private socket: Socket | null = null;
+
+  connect() {
+    if (!this.socket) {
+      this.socket = io(process.env.NEXT_PUBLIC_MCP_WS_URL!, {
+        auth: {
+          token: localStorage.getItem('mcp_token')
+        },
+        transports: ['websocket'],
+        reconnection: true,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
+        reconnectionAttempts: 5
+      });
+
+      this.socket.on('connect', () => {
+        console.log('WebSocket connecté');
+      });
+
+      this.socket.on('disconnect', () => {
+        console.log('WebSocket déconnecté');
+      });
+    }
+  }
+
+  subscribe(event: string, callback: (data: any) => void) {
+    if (this.socket) {
+      this.socket.on(event, callback);
+    }
+  }
+
+  disconnect() {
+    if (this.socket) {
+      this.socket.disconnect();
+      this.socket = null;
+    }
+  }
+}
+
+export const wsService = new WebSocketService(); 
