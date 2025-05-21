@@ -85,7 +85,7 @@ export async function POST(req: NextRequest): Promise<Response> {
         ctaLink: 'https://dazno.de/account/orders'
       });
       await resend.emails.send({
-        from: process.env.SMTP_FROM || 'Dazno.de <noreply@dazno.de>',
+        from: 'contact@dazno.de',
         to: 'contact@dazno.de',
         subject: `Nouveau panier - ${product.name}`,
         html,

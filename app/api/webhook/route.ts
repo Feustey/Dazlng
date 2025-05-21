@@ -48,7 +48,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             ctaLink: 'https://dazno.de/account/orders'
           });
           await resend.emails.send({
-            from: process.env.SMTP_FROM || 'Dazno.de <contact@dazno.de>',
+            from: 'contact@dazno.de',
             to: order.customer.email,
             bcc: 'contact@dazno.de',
             subject: `Confirmation de commande Dazno.de - ${order.product?.name || 'Commande'}`,

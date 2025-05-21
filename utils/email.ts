@@ -87,7 +87,7 @@ export function generateEmailTemplate({
 </html>`;
 }
 
-export async function sendEmail({ to, subject, html, from = 'contact@daznode.com' }: SendEmailParams) {
+export async function sendEmail({ to, subject, html, from }: SendEmailParams) {
   let finalHtml = html;
   if (!html?.includes('<!DOCTYPE html>')) {
     finalHtml = generateEmailTemplate({
@@ -97,7 +97,7 @@ export async function sendEmail({ to, subject, html, from = 'contact@daznode.com
   }
   try {
     const { data, error } = await resend.emails.send({
-      from,
+      from: from || 'contact@dazno.de',
       to,
       subject,
       html: finalHtml,

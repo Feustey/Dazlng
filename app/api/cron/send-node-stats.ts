@@ -51,7 +51,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     const nodeData = await fetchDazNodeData(user.node_id);
     const emailContent = generateEmailContent(nodeData, user.email);
     await resend.emails.send({
-      from: process.env.SMTP_FROM || 'noreply@daznode.com',
+      from: 'contact@dazno.de',
       to: user.email,
       subject: 'Rapport Hebdomadaire de votre Nœud Lightning',
       html: emailContent,

@@ -48,7 +48,7 @@ function NodeStats({ nodeId }: { nodeId: string }): JSX.Element {
 }
 
 const AccountPage: React.FC = () => {
-  const [tab, setTab] = useState<'infos' | 'tokens'>('infos');
+  const [tab, setTab] = useState<'infos' | 'tokens' | 'daznode' | 'factures'>('infos');
   const [userData, setUserData] = useState<UserData | null>(null);
   const [form, setForm] = useState<Omit<UserData, 'id' | 'email' | 't4g_tokens'>>({
     nom: '',
@@ -61,6 +61,7 @@ const AccountPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [factures, setFactures] = useState<any[]>([]); // À remplacer par un vrai type si besoin
   const router = useRouter();
   const supabase = createClientComponentClient();
 
@@ -86,6 +87,11 @@ const AccountPage: React.FC = () => {
           compte_nostr: data.compte_nostr || '',
           node_id: data.node_id || '',
         });
+        // Simule un fetch de factures (à remplacer par un vrai appel API)
+        setFactures([
+          { id: 'FAC-2024-001', date: '2024-04-01', montant: 149.99, statut: 'Payée', url: '#' },
+          { id: 'FAC-2024-002', date: '2024-05-01', montant: 149.99, statut: 'En attente', url: '#' },
+        ]);
       } else {
         router.replace('/auth/login');
       }
@@ -132,7 +138,7 @@ const AccountPage: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Mon compte</h1>
-      <div className="flex mb-6">
+      <div className="flex mb-6 space-x-2">
         <button
           className={`px-4 py-2 rounded-t-md font-bold ${tab === 'infos' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700'}`}
           onClick={() => setTab('infos')}
@@ -140,14 +146,28 @@ const AccountPage: React.FC = () => {
           Mes informations
         </button>
         <button
-          className={`px-4 py-2 rounded-t-md font-bold ml-2 ${tab === 'tokens' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+          className={`px-4 py-2 rounded-t-md font-bold ${tab === 'tokens' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700'}`}
           onClick={() => setTab('tokens')}
         >
           Mes T4G tokens
         </button>
+        {userData?.node_id && (
+          <button
+            className={`px-4 py-2 rounded-t-md font-bold ${tab === 'daznode' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+            onClick={() => setTab('daznode')}
+          >
+            Abonnement DazNode
+          </button>
+        )}
+        <button
+          className={`px-4 py-2 rounded-t-md font-bold ${tab === 'factures' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+          onClick={() => setTab('factures')}
+        >
+          Factures
+        </button>
       </div>
 
-      {tab === 'infos' ? (
+      {tab === 'infos' && (
         <form className="bg-white rounded-lg shadow-md p-6 mb-8" onSubmit={handleUpdate}>
           <h2 className="text-xl font-semibold mb-4">Informations personnelles</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -224,7 +244,9 @@ const AccountPage: React.FC = () => {
             {saving ? 'Sauvegarde...' : 'Mettre à jour'}
           </button>
         </form>
-      ) : (
+      )}
+
+      {tab === 'tokens' && (
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <h2 className="text-xl font-semibold mb-4">Mes T4G tokens</h2>
           <p className="text-2xl font-bold mb-2">{userData.t4g_tokens ?? 1}</p>
@@ -232,8 +254,42 @@ const AccountPage: React.FC = () => {
         </div>
       )}
 
-      {userData.node_id && (
+      {tab === 'daznode' && userData?.node_id && (
         <NodeStats nodeId={userData.node_id} />
+      )}
+
+      {tab === 'factures' && (
+        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <h2 className="text-xl font-semibold mb-4">Factures</h2>
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">N° Facture</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Montant</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {factures.map((facture) => (
+                <tr key={facture.id}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{facture.date}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{facture.id}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{facture.montant} €</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${facture.statut === 'Payée' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                      {facture.statut}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <a href={facture.url} className="text-indigo-600 hover:text-indigo-900" download>Télécharger</a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
 
       <button

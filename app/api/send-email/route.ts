@@ -16,7 +16,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     }
 
     const { error } = await resend.emails.send({
-      from: process.env.SMTP_FROM || 'Dazno.de <contact@dazno.de>',
+      from: 'contact@dazno.de',
       to,
       subject,
       html: html || text,

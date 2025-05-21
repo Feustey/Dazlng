@@ -28,11 +28,11 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     // En production, nous utiliserions vraiment Resend
     // Pour le déploiement, nous simulons juste un succès
-    if (process.env.NODE_ENV === "production" && process.env.RESEND_API_KEY) {
+    if (process.env.RESEND_API_KEY) {
       // Envoyer l'email à l'administrateur
       await resend.emails.send({
-        from: "DazNode <onboarding@resend.dev>",
-        to: "contact@dazno.de",
+        from: 'contact@dazno.de',
+        to: 'contact@dazno.de',
         subject: `Nouveau message de contact - ${interest}`,
         html: generateEmailTemplate({
           title: `Nouveau message de contact - ${interest}`,
@@ -47,9 +47,9 @@ export async function POST(request: NextRequest): Promise<Response> {
 
       // Envoyer un email de confirmation à l'utilisateur
       await resend.emails.send({
-        from: "DazNode <onboarding@resend.dev>",
+        from: 'contact@dazno.de',
         to: email,
-        subject: "Confirmation de votre message - DazNode",
+        subject: 'Confirmation de votre message - DazNode',
         html: generateEmailTemplate({
           title: 'Confirmation de votre message',
           username: `${firstName} ${lastName}`,
