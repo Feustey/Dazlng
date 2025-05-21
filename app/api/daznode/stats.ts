@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest): Promise<Response> {
-  const { searchParams } = new URL(req.url!);
+  if (!req.url) {
+    return NextResponse.json({ error: 'URL manquante' }, { status: 400 });
+  }
+  const { searchParams } = new URL(req.url);
   const nodeId = searchParams.get('node_id');
   if (!nodeId) {
     return NextResponse.json({ error: 'node_id requis' }, { status: 400 });

@@ -28,7 +28,7 @@ export class MCPClient {
     return MCPClient.instance;
   }
 
-  private async fetchMCP(endpoint: string, options: RequestInit = {}): Promise<any> {
+  private async fetchMCP(endpoint: string, options: RequestInit = {}): Promise<unknown> {
     const url = `${this.baseUrl}${endpoint}`;
     const response = await fetch(url, {
       ...options,
@@ -50,7 +50,7 @@ export class MCPClient {
   }
 
   // Nouvelle méthode pour interroger le système RAG
-  async fetchRAG(question: string): Promise<any> {
+  async fetchRAG(question: string): Promise<unknown> {
     return this.fetchMCP('/rag/query', {
       method: 'POST',
       body: JSON.stringify({ question }),
@@ -59,34 +59,34 @@ export class MCPClient {
   }
 
   // Méthodes d'API mises à jour pour les nouveaux endpoints
-  async getNetworkSummary(): Promise<any> {
+  async getNetworkSummary(): Promise<import('../../lib/network-types').NetworkSummary> {
     // Utilisation du système RAG pour obtenir un résumé du réseau
-    return this.fetchRAG("Donne-moi un résumé général du réseau Lightning avec les métriques principales");
+    return this.fetchRAG("Donne-moi un résumé général du réseau Lightning avec les métriques principales") as Promise<import('../../lib/network-types').NetworkSummary>;
   }
 
-  async getNodeStats(nodeId: string): Promise<any> {
+  async getNodeStats(nodeId: string): Promise<unknown> {
     // Nouvel endpoint pour les scores/stats d'un nœud
     return this.fetchMCP(`/api/v1/lightning/scores/${nodeId}`);
   }
 
-  async getNodeRecommendations(nodeId: string): Promise<any> {
+  async getNodeRecommendations(nodeId: string): Promise<unknown> {
     // Nouvel endpoint pour les recommandations d'un nœud
     return this.fetchMCP(`/api/v1/lightning/nodes/${nodeId}/recommendations`);
   }
 
   // Méthodes existantes maintenues pour compatibilité
-  async getNodeHistory(nodeId: string): Promise<any> {
+  async getNodeHistory(nodeId: string): Promise<unknown> {
     // On peut utiliser le RAG pour obtenir l'historique
     return this.fetchRAG(`Donne-moi l'historique complet du nœud ${nodeId}`);
   }
 
-  async getNetworkCentralities(): Promise<any> {
+  async getNetworkCentralities(): Promise<unknown> {
     // On peut utiliser le RAG pour obtenir les centralités
     return this.fetchRAG("Donne-moi les mesures de centralité du réseau Lightning");
   }
 
-  async optimizeNode(nodeId: string): Promise<any> {
+  async optimizeNode(nodeId: string): Promise<import('../../lib/network-types').OptimizationResult> {
     // Utilise le nouvel endpoint de recommandations au lieu de l'ancien optimize
-    return this.getNodeRecommendations(nodeId);
+    return this.getNodeRecommendations(nodeId) as Promise<import('../../lib/network-types').OptimizationResult>;
   }
 }

@@ -62,17 +62,18 @@ export default function HomePage(): React.ReactElement {
       });
       // Script pour le défilement fluide
       document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', (e) => {
-          e.preventDefault();
-          const targetId = (anchor as HTMLAnchorElement).getAttribute('href');
-          const targetElement = document.querySelector(targetId!);
-          if (targetElement) {
+        const targetId = (anchor as HTMLAnchorElement).getAttribute('href');
+        if (!targetId) return;
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          anchor.addEventListener('click', (e) => {
+            e.preventDefault();
             window.scrollTo({
               top: targetElement.getBoundingClientRect().top + window.scrollY,
               behavior: 'smooth'
             });
-          }
-        });
+          });
+        }
       });
     }
   }, []);

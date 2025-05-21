@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import ProtonWebSDK from '@proton/web-sdk';
 // import type { ProtonSession as _ } from '@proton/web-sdk'
 
@@ -11,27 +11,27 @@ interface ProtonPaymentProps {
   productName: string;
 }
 
-type _PaymentResponse = {
-  status: string;
-  data: unknown;
-}
-
 type _EndpointConfig = {
   url: string;
   method: string;
 }
 
+type ProtonSession = {
+  auth: { actor: string };
+  transact: (args: unknown, opts: unknown) => Promise<any>;
+};
+
 const ProtonPayment: React.FC<ProtonPaymentProps> = ({ amount, productName, onSuccess, onCancel }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [link, setLink] = useState<unknown>(null);
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<ProtonSession | null>(null);
   const [status, setStatus] = useState<'pending' | 'success'>('pending');
   const [_receiverAccount] = useState<string>('dazpayreceive');
 
   const appIdentifier = 'dazpay.app';
   const chainId = '384da888112027f0321850a169f737c33e53b388aad48b5adace4bab97f437e0'; // Proton Mainnet
-  const endpoints = ['https://proton.greymass.com', 'https://proton.eoscafeblock.com'];
+  const endpoints = useMemo(() => ['https://proton.greymass.com', 'https://proton.eoscafeblock.com'], []);
 
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
@@ -64,7 +64,7 @@ const ProtonPayment: React.FC<ProtonPaymentProps> = ({ amount, productName, onSu
 
         if (localLink && localSession) {
           setLink(localLink);
-          setSession(localSession);
+          setSession(localSession as unknown as ProtonSession);
         }
       } catch (err) {
         setError(`Erreur de connexion: ${err instanceof Error ? err.message : 'Erreur inconnue'}`);
@@ -105,7 +105,7 @@ const ProtonPayment: React.FC<ProtonPaymentProps> = ({ amount, productName, onSu
 
       if (localLink && localSession) {
         setLink(localLink);
-        setSession(localSession);
+        setSession(localSession as unknown as ProtonSession);
       } else {
         throw new Error('Connexion annulée ou échouée');
       }
@@ -227,7 +227,7 @@ const ProtonPayment: React.FC<ProtonPaymentProps> = ({ amount, productName, onSu
 
       {session && (
         <div className="text-sm text-gray-600 mb-2">
-          Connecté en tant que: <span className="font-medium">{(session as any).auth.actor}</span>
+          Connecté en tant que: <span className="font-medium">{session.auth.actor}</span>
         </div>
       )}
 

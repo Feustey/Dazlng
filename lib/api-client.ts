@@ -29,7 +29,7 @@ class MCPApiClient {
     return this.token;
   }
 
-  private async fetchWithAuth(endpoint: string, options: RequestInit = {}): Promise<any> {
+  private async fetchWithAuth(endpoint: string, options: RequestInit = {}): Promise<unknown> {
     const token = await this.ensureValidToken();
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
       ...options,
@@ -46,19 +46,19 @@ class MCPApiClient {
   }
 
   async getNetworkSummary(): Promise<import('./network-types').NetworkSummary> {
-    return this.fetchWithAuth('/network/summary');
+    return this.fetchWithAuth('/network/summary') as Promise<import('./network-types').NetworkSummary>;
   }
-  async getNodeStats(nodeId: string): Promise<any> {
+  async getNodeStats(nodeId: string): Promise<unknown> {
     return this.fetchWithAuth(`/network/node/${nodeId}/stats`);
   }
-  async getNodeHistory(nodeId: string): Promise<any> {
+  async getNodeHistory(nodeId: string): Promise<unknown> {
     return this.fetchWithAuth(`/network/node/${nodeId}/history`);
   }
-  async getNetworkCentralities(): Promise<any> {
+  async getNetworkCentralities(): Promise<unknown> {
     return this.fetchWithAuth('/network/centralities');
   }
   async optimizeNode(nodeId: string): Promise<import('./network-types').OptimizationResult> {
-    return this.fetchWithAuth(`/network/node/${nodeId}/optimize`, { method: 'POST' });
+    return this.fetchWithAuth(`/network/node/${nodeId}/optimize`, { method: 'POST' }) as Promise<import('./network-types').OptimizationResult>;
   }
 }
 

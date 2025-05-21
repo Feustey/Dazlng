@@ -5,6 +5,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import { generateInvoice } from '../../../lib/lightning';
 import Image from 'next/image';
+import ProtonPayment from '../../../components/shared/ui/ProtonPayment';
 
 function CheckoutContent(): React.ReactElement {
   useEffect(() => {
@@ -36,13 +37,14 @@ function CheckoutContent(): React.ReactElement {
   const [promoCode, setPromoCode] = useState('');
   const [promoApplied, setPromoApplied] = useState(false);
   const [useAsBilling, setUseAsBilling] = useState(true);
-  const [_orderId, setOrderId] = useState<string | null>(null);
   const [showLightning, setShowLightning] = useState(false);
   const [paymentHash, setPaymentHash] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const supabase = createClientComponentClient();
   const router = useRouter();
+  const [btcCopied, setBtcCopied] = useState(false);
+  const btcAddress = 'bc1p0vyqda9uv7kad4lsfzx5s9ndawhm3e3fd5vw7pnsem22n7dpfgxq48kht7';
 
   const isFormValid = (): boolean => {
     return Boolean(
@@ -98,56 +100,43 @@ function CheckoutContent(): React.ReactElement {
         const { data: { user } } = await supabase.auth.getUser(token);
         userId = user?.id;
       }
-      // Essayer d'enregistrer la commande, mais continuer même en cas d'échec
-      try {
-        const customerInfo = {
-          firstName: form.firstName,
-          lastName: form.lastName,
-          email: form.email,
-          address: form.address,
-          address2: form.address2,
-          city: form.city,
-          state: form.state,
-          postalCode: form.postalCode,
-          country: form.country,
-          phone: form.phone,
-        };
-        const productInfo = {
-          name: productDetails.name,
-          quantity: productDetails.quantity,
-          priceSats: productDetails.priceSats,
-          promoApplied: promoApplied,
-          promoCode: promoApplied ? promoCode : null,
-          discountPercentage: promoApplied ? DISCOUNT_PERCENTAGE : 0
-        };
-        const res = await fetch('/api/orders', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-          body: JSON.stringify({
-            user_id: userId,
-            product_type: productDetails.name,
-            amount: productDetails.priceSats,
-            payment_status: 'pending',
-            payment_method: 'lightning',
-            payment_hash: invoiceData.paymentHash,
-            metadata: JSON.stringify({
-              customer: customerInfo,
-              product: productInfo,
-              invoice: invoiceData.paymentRequest
-            }),
-          }),
-        });
-        if (res.ok) {
-          const data = await res.json();
-          setOrderId(data.id);
-        } else {
-          const errorData = await res.text();
-          console.error("Erreur détaillée lors de l'enregistrement de la commande:", errorData);
-        }
-      } catch (orderError) {
-        console.error("Exception détaillée lors de l'enregistrement de la commande:", orderError);
-      }
-      // Afficher l'écran de paiement Lightning dans tous les cas
+      // Préparer les données pour les stocker temporairement
+      const customerInfo = {
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: form.email,
+        address: form.address,
+        address2: form.address2,
+        city: form.city,
+        state: form.state,
+        postalCode: form.postalCode,
+        country: form.country,
+        phone: form.phone,
+      };
+      const productInfo = {
+        name: productDetails.name,
+        quantity: productDetails.quantity,
+        priceSats: productDetails.priceSats,
+        promoApplied: promoApplied,
+        promoCode: promoApplied ? promoCode : null,
+        discountPercentage: promoApplied ? DISCOUNT_PERCENTAGE : 0
+      };
+      // Stocker les données dans le sessionStorage pour les récupérer dans la page success
+      sessionStorage.setItem('dazbox_order_data', JSON.stringify({
+        user_id: userId,
+        product_type: productDetails.name,
+        amount: productDetails.priceSats,
+        payment_status: 'pending',
+        payment_method: 'lightning',
+        payment_hash: invoiceData.paymentHash,
+        metadata: {
+          customer: customerInfo,
+          product: productInfo,
+          invoice: invoiceData.paymentRequest
+        },
+        token: token,
+      }));
+      // Afficher l'écran de paiement Lightning
       setShowLightning(true);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erreur inconnue');
@@ -465,9 +454,7 @@ function CheckoutContent(): React.ReactElement {
                     </>
                   )}
                 </button>
-                <p className="text-xs text-center mt-4 text-white/70">Paiement 100% sécurisé via Bitcoin Lightning Network</p>
-              </div>
-              <div className="bg-white/10 p-4 rounded-xl">
+                <div className="bg-white/10 p-4 rounded-xl">
                 <h4 className="font-semibold mb-3 flex items-center">
                   <svg className="w-5 h-5 mr-2 text-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -495,6 +482,49 @@ function CheckoutContent(): React.ReactElement {
                   </li>
                 </ul>
               </div>
+                <div className="flex flex-col items-center mt-6">
+                  {btcCopied && (
+                    <span className="text-green-600 text-xs font-semibold mb-1">copié</span>
+                  )}
+                  <span className="font-bold text-white text-lg mb-2">QR code BTC</span>
+                  <div className="bg-white p-4 rounded-xl mb-2 cursor-pointer" title="copier" onClick={() => {navigator.clipboard.writeText(btcAddress); setBtcCopied(true); setTimeout(() => setBtcCopied(false), 1500);}}>
+                    <Image src="/assets/images/QR-BTC-Daznode.png" alt="copier" width={160} height={160} />
+                  </div>
+                  <span className="text-white text-base mb-1">Payer 0.004 BTC et envoyez le Tx</span>
+                  <div className="flex flex-col items-center">
+                    <span className="text-xs text-white/80 break-all mb-1">{btcAddress}</span>
+                    <button
+                      className="text-xs text-yellow-300 underline hover:text-yellow-400"
+                      onClick={() => {navigator.clipboard.writeText(btcAddress); setBtcCopied(true); setTimeout(() => setBtcCopied(false), 1500);}}
+                    >
+                      copier
+                    </button>
+                  </div>
+                </div>
+                <p className="text-xs text-center mt-4 text-white font-medium" style={{ fontSize: '0.8rem' }}>
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (typeof window !== 'undefined') {
+                        const evt = new CustomEvent('openProtonPay');
+                        window.dispatchEvent(evt);
+                      }
+                    }}
+                    className="inline-flex items-center justify-center px-3 py-1 bg-purple-500/30 hover:bg-purple-500/50 rounded-lg transition-colors duration-300 shadow font-semibold"
+                  >
+                    <Image
+                      src="/assets/images/proton-wallet.png"
+                      alt="Proton Wallet"
+                      width={24}
+                      height={24}
+                      style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '8px' }}
+                    />
+                    <span>Payer avec Proton</span>
+                  </a>
+                </p>
+              </div>
+
             </div>
           </div>
         </div>
@@ -503,10 +533,42 @@ function CheckoutContent(): React.ReactElement {
   );
 }
 
+function ProtonPayModalManager({ amount }: { amount: number }): React.ReactElement | null {
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    const handler = (): void => setShow(true);
+    window.addEventListener('openProtonPay', handler);
+    return () => window.removeEventListener('openProtonPay', handler);
+  }, []);
+
+  if (!show) return null;
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-2xl max-w-sm w-full shadow-2xl border border-gray-200 relative">
+        <button
+          className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-2xl font-bold focus:outline-none"
+          aria-label="Fermer"
+          onClick={() => setShow(false)}
+        >
+          &times;
+        </button>
+        <ProtonPayment
+          sats={amount}
+          onSuccess={() => setShow(false)}
+          onCancel={() => setShow(false)}
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function CheckoutPage(): React.ReactElement {
+  const price = 400000;
   return (
     <Suspense>
       <CheckoutContent />
+      <ProtonPayModalManager amount={price} />
     </Suspense>
   );
 } 

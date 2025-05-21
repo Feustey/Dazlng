@@ -155,12 +155,14 @@ export default function LightningPayment(props: LightningPaymentProps): React.Re
   useEffect(() => {
     if (!invoice?.paymentHash) return;
     const interval = setInterval(() => {
-      checkPaymentStatus(invoice.paymentHash!);
+      if (invoice.paymentHash) {
+        checkPaymentStatus(invoice.paymentHash);
+      }
     }, 3000);
     return () => clearInterval(interval);
   }, [checkPaymentStatus, invoice]);
 
-  const _handlePayment = useCallback(() => {
+  const _handlePayment = useCallback((): void => {
     try {
       // ... le reste du code
       onSuccess?.();
@@ -169,6 +171,12 @@ export default function LightningPayment(props: LightningPaymentProps): React.Re
       onError?.(error);
     }
   }, [onSuccess, onError]);
+
+  useEffect(() => {
+    const handler = (): void => setShowProtonModal(true);
+    window.addEventListener("openProtonPay", handler);
+    return () => window.removeEventListener("openProtonPay", handler);
+  }, [setShowProtonModal]);
 
   if (isLoading) {
     return (
@@ -270,7 +278,7 @@ export default function LightningPayment(props: LightningPaymentProps): React.Re
             <ProtonPayment
               sats={props.amount}
               promoApplied={false}
-              onSuccess={() => { setShowProtonModal(false); if (onSuccess) onSuccess(); }}
+              onSuccess={() : void => { setShowProtonModal(false); if (onSuccess) onSuccess(); }}
               onCancel={() => setShowProtonModal(false)}
             />
           </div>
