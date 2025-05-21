@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface BenefitCardProps {
-  icon: React.ElementType<unknown>;
+  icon: React.ComponentType<{ size?: number; color?: string }>;
   title: string;
   description: string;
   iconColor?: string;

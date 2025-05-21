@@ -7,7 +7,30 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
-      // Votre configuration existante sera préservée
+      animation: {
+        'float': 'float 8s ease-in-out infinite',
+        'float-delayed': 'float 8s ease-in-out 4s infinite',
+        'fade-in': 'fadeIn 1s ease-out forwards',
+        'fade-in-delayed': 'fadeIn 1s ease-out 0.5s forwards',
+        'fade-in-delayed-2': 'fadeIn 1s ease-out 1s forwards',
+        'fade-in-delayed-3': 'fadeIn 1s ease-out 1.5s forwards',
+      },
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0) scale(1)' },
+          '50%': { transform: 'translateY(-20px) scale(1.1)' },
+        },
+        fadeIn: {
+          from: { 
+            opacity: '0',
+            transform: 'translateY(20px)',
+          },
+          to: { 
+            opacity: '1',
+            transform: 'translateY(0)',
+          },
+        },
+      },
     },
   },
   plugins: [],

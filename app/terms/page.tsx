@@ -2,30 +2,23 @@ import React from 'react';
 // import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import PageLayout from '../../components/shared/layout/PageLayout';
 import PageTitle from '../../components/shared/ui/PageTitle';
-import {
-  FaShieldAlt,
-  FaFileAlt,
-  FaExclamationTriangle,
-  FaCheckCircle,
-  FaTimesCircle,
-} from 'react-icons/fa';
 
 export default function TermsPage(): React.ReactElement {
   const termsSections = [
     {
-      icon: <FaFileAlt size={32} className="text-primary" />,
+      icon: <img src="/assets/images/icon-file.svg" alt="Fichier" width={32} height={32} className="text-primary" />,
       title: "Acceptation des Conditions",
       description:
         "En accédant et en utilisant les services DazLng, vous acceptez d'être lié par ces Conditions d'Utilisation. Si vous n'êtes pas d'accord, veuillez ne pas utiliser nos services.",
     },
     {
-      icon: <FaShieldAlt size={32} className="text-secondary" />,
+      icon: <img src="/assets/images/icon-shield.svg" alt="Bouclier" width={32} height={32} className="text-secondary" />,
       title: "Responsabilités de l'Utilisateur",
       description:
         "Vous êtes responsable de la sécurité de votre compte, de vos clés privées et de toutes les activités qui se produisent sous votre compte.",
     },
     {
-      icon: <FaExclamationTriangle size={32} className="text-warning" />,
+      icon: <img src="/assets/images/icon-alert.svg" alt="Alerte" width={32} height={32} className="text-warning" />,
       title: "Limitations du Service",
       description:
         "Nos services sont fournis 'tels quels' sans garanties. Nous ne sommes pas responsables des pertes encourues lors de l'utilisation de notre plateforme.",
@@ -34,30 +27,30 @@ export default function TermsPage(): React.ReactElement {
 
   const allowedActivities = [
     {
-      icon: <FaCheckCircle size={22} className="text-green-500" />,
+      icon: <img src="/assets/images/icon-check.svg" alt="Valide" width={22} height={22} className="text-green-500" />,
       text: "Utiliser la plateforme pour des transactions légitimes sur le Lightning Network",
     },
     {
-      icon: <FaCheckCircle size={22} className="text-green-500" />,
+      icon: <img src="/assets/images/icon-check.svg" alt="Valide" width={22} height={22} className="text-green-500" />,
       text: "Gérer votre propre nœud et vos canaux",
     },
     {
-      icon: <FaCheckCircle size={22} className="text-green-500" />,
+      icon: <img src="/assets/images/icon-check.svg" alt="Valide" width={22} height={22} className="text-green-500" />,
       text: "Participer à la communauté et fournir des retours d'expérience",
     },
   ];
 
   const prohibitedActivities = [
     {
-      icon: <FaTimesCircle size={22} className="text-red-500" />,
+      icon: <img src="/assets/images/icon-x.svg" alt="Interdit" width={22} height={22} className="text-red-500" />,
       text: "S'engager dans des activités illégales ou le blanchiment d'argent",
     },
     {
-      icon: <FaTimesCircle size={22} className="text-red-500" />,
+      icon: <img src="/assets/images/icon-x.svg" alt="Interdit" width={22} height={22} className="text-red-500" />,
       text: "Tenter de compromettre la sécurité du réseau",
     },
     {
-      icon: <FaTimesCircle size={22} className="text-red-500" />,
+      icon: <img src="/assets/images/icon-x.svg" alt="Interdit" width={22} height={22} className="text-red-500" />,
       text: "Utiliser le service pour du spam ou des activités malveillantes",
     },
   ];

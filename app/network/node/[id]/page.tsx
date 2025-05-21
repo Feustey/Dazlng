@@ -1,16 +1,14 @@
 import { MCPClient } from '@/lib/mcp-client';
-import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 
-async function NodeDetails({ id }: { id: string }): Promise<JSX.Element> {
+export default async function Page(): Promise<JSX.Element> {
+  const id = 'demo-id'; // Remplacer par la vraie récupération de l'id
   const client = MCPClient.getInstance();
-  
   try {
     const [stats, history] = await Promise.all([
       client.getNodeStats(id),
       client.getNodeHistory(id)
     ]);
-
     return (
       <div className="p-4">
         <h1 className="text-2xl font-bold mb-4">Node {id}</h1>
@@ -29,13 +27,4 @@ async function NodeDetails({ id }: { id: string }): Promise<JSX.Element> {
   } catch (error) {
     notFound();
   }
-}
-
-export default function Page(): JSX.Element {
-  const id = 'demo-id'; // Remplacer par la vraie récupération de l'id
-  return (
-    <Suspense fallback={<div>Chargement...</div>}>
-      <NodeDetails id={id} />
-    </Suspense>
-  );
 } 
