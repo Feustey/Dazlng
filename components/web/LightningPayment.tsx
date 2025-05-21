@@ -191,62 +191,72 @@ const LightningPayment: React.FC<LightningPaymentProps> = ({ amount, productName
   }
 
   return (
-    <div className="flex flex-col items-center justify-center p-8 bg-white/90 rounded-2xl shadow-2xl max-w-md mx-auto">
-      <h3 className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-400 mb-2">Paiement Lightning</h3>
+    <div className="flex flex-col items-center justify-center p-8 bg-gradient-to-br from-indigo-900/95 to-purple-950/95 backdrop-blur-xl rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.3)] border border-indigo-800/30 max-w-md mx-auto">
+      <h3 className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-violet-300 to-purple-300 mb-4">Paiement Lightning</h3>
       <div className="w-full">
-        {/* Desktop : QR code bien visible */}
+        {/* Desktop : QR code avec style amélioré */}
         <div className="hidden md:block">
           {invoice && qrUrl && (
-            <div className="mb-6 flex justify-center">
-              <Image src={qrUrl} alt="QR code Lightning" width={260} height={260} className="rounded-xl shadow-lg border-4 border-yellow-300" />
+            <div className="mb-2 flex flex-col items-center">
+              <div className="relative p-2 bg-white rounded-2xl shadow-[0_0_25px_rgb(79,70,229,0.4)] border-4 border-gradient-to-br from-indigo-400 to-purple-500">
+                <Image 
+                  src={qrUrl} 
+                  alt="QR code Lightning" 
+                  width={260} 
+                  height={260} 
+                  className="rounded-xl" 
+                />
+                <div className="absolute -top-3 -right-3 bg-yellow-400 text-slate-900 font-bold rounded-full w-10 h-10 flex items-center justify-center shadow-lg transform rotate-12">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+              </div>
+              <button
+                className="mt-2 flex items-center justify-center text-xs text-indigo-300 hover:text-indigo-200 transition-colors"
+                onClick={() => {navigator.clipboard.writeText(invoice.paymentRequest); alert('Facture copiée dans le presse-papier !')}}
+              >
+                <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                </svg>
+                copier
+              </button>
             </div>
           )}
-          <div className="text-center text-sm text-gray-500 mb-4">Scannez ce code avec votre wallet mobile Lightning</div>
+          <div className="text-center text-sm text-indigo-300 mb-6">Scannez ce code avec votre wallet mobile Lightning</div>
         </div>
-        {/* Mobile : bouton principal pour ouvrir le wallet */}
+        {/* Mobile : bouton principal avec design amélioré */}
         {invoice && (
           <div className="w-full flex flex-col items-center">
             <button
-              className="block md:hidden w-full px-5 py-3 bg-green-500 text-white font-bold rounded-lg shadow-md hover:bg-green-600 transition mb-3 flex items-center justify-center"
+              className="block md:hidden w-full px-5 py-4 bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-900 font-bold rounded-xl shadow-lg hover:shadow-amber-500/30 transform transition hover:scale-105 mb-4 flex items-center justify-center"
               onClick={() => {window.location.href = `lightning:${invoice.paymentRequest}`;}}
             >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-              </svg>
-              Ouvrir avec un wallet Lightning
+              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              Ouvrir avec un wallet
             </button>
-            {/* Desktop : boutons secondaires */}
-            <div className="flex flex-col md:flex-row md:space-x-2 w-full">
-              <button
-                className="w-full md:w-auto px-5 py-2 bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-500 text-white font-bold rounded-lg shadow-md hover:scale-105 transition mb-2"
-                onClick={() => {navigator.clipboard.writeText(invoice.paymentRequest); alert('Facture copiée dans le presse-papier !')}}
-              >
-                Copier la facture
-              </button>
-              <button
-                className="w-full md:w-auto px-5 py-2 bg-blue-500 text-white font-bold rounded-lg shadow-md hover:bg-blue-600 transition mb-2"
-                onClick={() => setShowWalletModal(true)}
-              >
-                Choisir un wallet
-              </button>
-              {/* Desktop : bouton ouvrir wallet aussi présent */}
-              <button
-                className="hidden md:inline-block px-5 py-2 bg-green-500 text-white font-bold rounded-lg shadow-md hover:bg-green-600 transition mb-2"
-                onClick={() => {window.location.href = `lightning:${invoice.paymentRequest}`;}}
-              >
-                Ouvrir avec un wallet Lightning
-              </button>
-            </div>
+            {/* Mobile : copier la facture en petit */}
+            <button
+              className="block md:hidden mt-2 flex items-center justify-center text-xs text-indigo-300 hover:text-indigo-200 transition-colors"
+              onClick={() => {navigator.clipboard.writeText(invoice.paymentRequest); alert('Facture copiée dans le presse-papier !')}}
+            >
+              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+              </svg>
+              copier
+            </button>
           </div>
         )}
-        {/* Desktop : instructions et montant */}
-        <div className="hidden md:block mt-4 p-3 bg-gray-50 rounded-lg">
-          <p className="text-sm text-gray-700 text-center">
-            <span className="font-medium">Montant :</span> {amount} sats
-          </p>
-          <p className="text-xs text-gray-500 text-center mt-1">
-            Si vous n'avez pas de wallet Lightning, vous pouvez en installer un comme <a href="https://phoenix.acinq.co/" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Phoenix</a> ou <a href="https://bluewallet.io/" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Blue Wallet</a>
-          </p>
+        {/* Informations de paiement avec design amélioré */}
+        <div className="mt-6 p-4 bg-white/10 rounded-xl backdrop-blur-sm border border-white/10">
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-indigo-200">Montant :</span>
+            <span className="font-bold text-white">{amount} <span className="text-yellow-400">sats</span></span>
+          </div>
+          <div className="mt-3 pt-3 border-t border-indigo-800/30">
+            <p className="text-xs text-indigo-300 flex items-center">
+              <svg className="w-3 h-3 mr-1 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+              Pas de wallet Lightning ? Essayez <a href="https://getalby.com/products/alby-go/" target="_blank" rel="noopener noreferrer" className="text-indigo-400 underline hover:text-indigo-300 ml-1">Alby</a> 
+            </p>
+          </div>
         </div>
       </div>
       {showWalletModal && (
@@ -276,18 +286,10 @@ const LightningPayment: React.FC<LightningPaymentProps> = ({ amount, productName
               className="w-full bg-green-500 text-white px-4 py-2 rounded-lg mb-2 font-semibold hover:bg-green-600 transition"
               onClick={() => { setShowWalletModal(false); if (invoice) window.location.href = `lightning:${invoice.paymentRequest}`; }}
             >
-              Ouvrir avec un wallet Lightning
+              Wallet Lightning
             </button>
           </div>
         </div>
-      )}
-      {onCancel && (
-        <button
-          className="px-5 py-2 bg-red-500 text-white font-bold rounded-lg shadow-md hover:bg-red-600 transition mt-2"
-          onClick={onCancel}
-        >
-          Annuler le paiement
-        </button>
       )}
     </div>
   );

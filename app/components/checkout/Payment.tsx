@@ -24,7 +24,7 @@ export function PaymentForm({ onBack, onSuccess }: PaymentFormProps): React.Reac
     <form onSubmit={handlePay} className="space-y-4">
       <div className="font-bold">Paiement sécurisé</div>
       <button type="submit" className="btn-primary w-full" disabled={loading}>
-        {loading ? "Paiement en cours..." : "Payer 399 €"}
+        {loading ? "Paiement en cours..." : "Payer 400 000 sats"}
       </button>
       <button type="button" className="btn-secondary w-full" onClick={onBack} disabled={loading}>
         Retour

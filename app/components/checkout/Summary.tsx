@@ -12,7 +12,7 @@ interface OrderSummaryProps {
 export function OrderSummary({ data }: OrderSummaryProps): React.ReactElement {
   const product = {
     name: "Dazbox",
-    priceEur: 399,
+    priceEur: 400000,
     quantity: 1,
   };
   return (

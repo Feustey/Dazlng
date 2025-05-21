@@ -109,12 +109,7 @@ const UserPage: React.FC = () => {
               >
                 Sauvegarder
               </button>
-              <button
-                className="bg-gray-300 text-gray-800 px-6 py-2 rounded-lg"
-                onClick={() => { setEdit(false); setForm(user); }}
-              >
-                Annuler
-              </button>
+         
             </div>
           </div>
         ) : (

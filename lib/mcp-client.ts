@@ -59,7 +59,7 @@ export class MCPClient {
   }
 
   // Méthodes d'API mises à jour pour les nouveaux endpoints
-  async getNetworkSummary(): Promise<any> {
+  async getNetworkSummary(): Promise<import('./network-types').NetworkSummary> {
     // Utilisation du système RAG pour obtenir un résumé du réseau
     return this.fetchRAG("Donne-moi un résumé général du réseau Lightning avec les métriques principales");
   }
@@ -85,7 +85,7 @@ export class MCPClient {
     return this.fetchRAG("Donne-moi les mesures de centralité du réseau Lightning");
   }
 
-  async optimizeNode(nodeId: string): Promise<any> {
+  async optimizeNode(nodeId: string): Promise<import('./network-types').OptimizationResult> {
     // Utilise le nouvel endpoint de recommandations au lieu de l'ancien optimize
     return this.getNodeRecommendations(nodeId);
   }

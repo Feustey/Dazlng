@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import { generateEmailTemplate } from '../../../utils/email';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -25,21 +26,6 @@ export async function POST(request: NextRequest): Promise<Response> {
       );
     }
 
-    const emailContent = `
-      Nouveau message de contact:
-      
-      Nom: ${firstName} ${lastName}
-      Email: ${email}
-      Entreprise: ${companyName || "Non renseigné"}
-      Fonction: ${jobTitle || "Non renseigné"}
-      Téléphone: ${companyPhone || "Non renseigné"}
-      Site web: ${companyWebsite || "Non renseigné"}
-      Sujet: ${interest}
-      
-      Message:
-      ${message}
-    `;
-
     // En production, nous utiliserions vraiment Resend
     // Pour le déploiement, nous simulons juste un succès
     if (process.env.NODE_ENV === "production" && process.env.RESEND_API_KEY) {
@@ -48,7 +34,14 @@ export async function POST(request: NextRequest): Promise<Response> {
         from: "DazNode <onboarding@resend.dev>",
         to: "contact@dazno.de",
         subject: `Nouveau message de contact - ${interest}`,
-        text: emailContent,
+        html: generateEmailTemplate({
+          title: `Nouveau message de contact - ${interest}`,
+          username: `${firstName} ${lastName}`,
+          mainContent: `Message de ${firstName} ${lastName} (${email}) : <br>${message}`,
+          detailedContent: `<b>Entreprise :</b> ${companyName || 'Non renseigné'}<br><b>Fonction :</b> ${jobTitle || 'Non renseigné'}<br><b>Téléphone :</b> ${companyPhone || 'Non renseigné'}<br><b>Site web :</b> ${companyWebsite || 'Non renseigné'}`,
+          ctaText: 'Répondre',
+          ctaLink: `mailto:${email}`
+        }),
         replyTo: email,
       });
 
@@ -57,7 +50,14 @@ export async function POST(request: NextRequest): Promise<Response> {
         from: "DazNode <onboarding@resend.dev>",
         to: email,
         subject: "Confirmation de votre message - DazNode",
-        text: `Bonjour ${firstName},\n\nNous avons bien reçu votre message concernant \"${interest}\". Notre équipe vous répondra dans les plus brefs délais.\n\nCordialement,\nL'équipe DazNode`,
+        html: generateEmailTemplate({
+          title: 'Confirmation de votre message',
+          username: `${firstName} ${lastName}`,
+          mainContent: `Nous avons bien reçu votre message concernant "${interest}".`,
+          detailedContent: `Notre équipe vous répondra dans les plus brefs délais.`,
+          ctaText: 'Consulter notre FAQ',
+          ctaLink: 'https://docs.dazno.de/faq'
+        })
       });
     } else {
       // En mode développement ou sans clé API, juste logger

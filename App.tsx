@@ -41,7 +41,7 @@ function TabNavigator(): React.ReactElement {
             headerTitle: () => (
               <Pressable onPress={() => navigation.navigate('Main', { screen: 'Accueil' })}>
                 <Image
-                  source={require('./assets/images/logo-daznode-white.png')}
+                  source={require('./assets/images/logo-daznode-white.svg')}
                   style={{ width: 120, height: 24 }}
                   resizeMode="contain"
                 />

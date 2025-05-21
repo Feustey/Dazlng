@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase";
 import { Resend } from 'resend';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { validateLightningPubkey } from '../../../utils/validation';
+import { generateEmailTemplate } from '../../../utils/email';
 
 async function getUserFromRequest(req: NextRequest): Promise<SupabaseUser | null> {
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
@@ -27,92 +28,73 @@ export async function GET(req: NextRequest): Promise<Response> {
 
 export async function POST(req: NextRequest): Promise<Response> {
   const body = await req.json();
-  const { user_id, customer, product, total, status } = body;
+  const { user_id, customer, product, total, payment_status, payment_method, payment_hash, metadata } = body;
 
   // Validation stricte des champs obligatoires
-  if (!customer || 
-      !product || 
-      typeof total !== 'number' || 
-      !status || 
-      !customer.email || 
-      !customer.firstName ||
-      !customer.lastName ||
-      !customer.address || 
-      !customer.city || 
-      !customer.postalCode || 
-      !product.name || 
-      typeof product.quantity !== 'number' || 
-      typeof product.priceSats !== 'number'
-  ) {
+  if (!customer || !product || typeof total !== 'number' || !customer.email || !customer.firstName || !customer.lastName || !customer.address || !customer.city || !customer.postalCode || !product.name || typeof product.quantity !== 'number' || typeof product.priceSats !== 'number') {
     return NextResponse.json(
-      { error: "Champs obligatoires manquants ou invalides" }, 
+      { error: "Champs obligatoires manquants ou invalides" },
       { status: 400 }
     );
   }
 
-  // Validation de la clé publique
-  if (!customer.pubkey || !validateLightningPubkey(customer.pubkey)) {
+  // Validation de la clé publique si fournie
+  if (customer.pubkey && !validateLightningPubkey(customer.pubkey)) {
     return NextResponse.json(
-      { error: "Clé publique Lightning invalide" }, 
+      { error: "Clé publique Lightning invalide" },
       { status: 400 }
     );
   }
 
-  const { data, error } = await supabase
-    .from("orders")
-    .insert([
-      {
-        user_id: user_id || null,
-        customer,
-        product,
-        total,
-        status,
-        date: new Date().toISOString(),
-      },
-    ])
-    .select()
-    .single();
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  try {
+    // Insérer la commande dans la BDD
+    const { data, error } = await supabase
+      .from("orders")
+      .insert([
+        {
+          user_id: user_id || null,
+          customer,
+          product,
+          total,
+          product_type: product.name,
+          plan: product.plan || null,
+          billing_cycle: product.billingCycle || null,
+          amount: total,
+          payment_method: payment_method || 'lightning',
+          payment_status: payment_status || 'pending',
+          payment_hash: payment_hash || null,
+          metadata: metadata || {},
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        },
+      ])
+      .select()
+      .single();
 
-  // Envoi de l'email de confirmation avec Resend (logo + copie admin)
-  if (customer?.email) {
+    if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+
+    // Envoi d'un email de notification pour le nouveau panier
     try {
       const resend = new Resend(process.env.RESEND_API_KEY);
-      const logoUrl = 'https://dazno.de/assets/images/logo-daznode-white.png';
-      const html = `
-        <div style="font-family:Inter,sans-serif;max-width:600px;margin:auto;background:#fff;border-radius:16px;padding:32px 24px;box-shadow:0 2px 8px #0001;">
-          <div style="text-align:center;margin-bottom:24px;">
-            <img src="${logoUrl}" alt="Dazno Logo" style="height:48px;max-width:180px;object-fit:contain;" />
-          </div>
-          <h2 style="color:#F7931A;font-size:28px;margin-bottom:16px;">Merci pour votre commande !</h2>
-          <p style="font-size:16px;color:#232336;">Bonjour <b>${customer.fullName}</b>,</p>
-          <p style="font-size:16px;color:#232336;">Nous avons bien reçu votre commande <b>${product.name}</b>.<br>Voici le récapitulatif :</p>
-          <ul style="font-size:16px;color:#232336;margin:16px 0 24px 0;padding:0;list-style:none;">
-            <li><b>Produit :</b> ${product.name}</li>
-            <li><b>Quantité :</b> ${product.quantity}</li>
-            <li><b>Prix unitaire :</b> ${product.priceEur}€ (~${product.priceSats} sats)</li>
-            <li><b>Total :</b> <span style="color:#F7931A;font-weight:bold;">${total} sats</span></li>
-          </ul>
-          <div style="margin-bottom:24px;">
-            <b>Adresse de livraison :</b><br>
-            ${customer.address}, ${customer.city}, ${customer.postalCode}, ${customer.country}<br>
-            ${customer.phone ? `Téléphone : ${customer.phone}` : ''}
-          </div>
-          <p style="font-size:16px;color:#232336;">Vous recevrez un email dès que votre commande sera expédiée.<br>Merci de votre confiance !</p>
-          <div style="margin-top:32px;font-size:14px;color:#888;">L'équipe Dazno.de</div>
-        </div>
-      `;
+      const html = generateEmailTemplate({
+        title: `Nouveau panier - ${product.name}`,
+        username: `${customer.firstName} ${customer.lastName}`,
+        mainContent: `Merci pour votre commande ! Voici le récapitulatif :`,
+        detailedContent: `<ul><li><b>Produit :</b> ${product.name}</li><li><b>Quantité :</b> ${product.quantity}</li><li><b>Total :</b> ${total} sats</li></ul>`,
+        ctaText: 'Suivre ma commande',
+        ctaLink: 'https://dazno.de/account/orders'
+      });
       await resend.emails.send({
-        from: process.env.SMTP_FROM || 'Dazno.de <contact@dazno.de>',
-        to: [customer.email, 'admin@dazno.de'],
-        subject: `Confirmation de commande Dazno.de - ${product.name}`,
+        from: process.env.SMTP_FROM || 'Dazno.de <noreply@dazno.de>',
+        to: 'contact@dazno.de',
+        subject: `Nouveau panier - ${product.name}`,
         html,
       });
-    } catch (e) {
-      // log erreur mais ne bloque pas la commande
-      // console.error('Erreur envoi email confirmation:', e);
-    }
-  }
+    } catch (e) { /* ... */ }
 
-  return NextResponse.json({ id: data.id });
+    return NextResponse.json({ id: data.id });
+  } catch (error) {
+    console.error('Erreur lors de la création de la commande:', error);
+    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
+  }
 }

@@ -39,7 +39,7 @@ const TabButton: React.FC<TabButtonProps> = ({ onPress }) => (
 const HeaderLogo: React.FC<HeaderLogoProps> = ({ onPress }) => (
   <button onClick={onPress} className="bg-transparent border-0 p-0 m-0 cursor-pointer">
     <Image
-      src="/assets/images/logo-daznode-white.png"
+      src="/assets/images/logo-daznode-white.svg"
       alt="Logo Daznode"
       className="w-[120px] h-[24px] object-contain"
       width={120}

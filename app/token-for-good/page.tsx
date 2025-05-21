@@ -1,69 +1,113 @@
+"use client";
+
+import React, { useEffect } from "react";
 import Image from "next/image";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 export default function TokenForGoodPage(): React.ReactElement {
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      AOS.init({ 
+        once: true, 
+        duration: 800
+      });
+
+      // Script pour le défilement fluide
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(this: HTMLAnchorElement, e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href');
+          if (targetId) {
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+              window.scrollTo({
+                top: targetElement.getBoundingClientRect().top + window.scrollY,
+                behavior: 'smooth'
+              });
+            }
+          }
+        });
+      });
+    }
+  }, []);
+  
   return (
-    <div className="bg-[#f7f7f7] min-h-screen font-sans">
-      {/* Header */}
-
-
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-purple-600 to-indigo-700 text-white py-16 rounded-2xl mb-10">
-        <div className="container mx-auto text-center">
-          <h1 className="text-4xl font-bold mb-4">Célébrer l'engagement !</h1>
-          <p className="text-lg max-w-2xl mx-auto mb-6">
-            L'ambition de Token for Good est de valoriser les actions à impacts positifs : dynamiser les échanges au sein d'une communauté et donner du sens au partage !
+    <div className="overflow-hidden">
+      {/* Hero Section avec fond violet */}
+      <section className="bg-gradient-to-b from-indigo-600 to-indigo-700 text-white pb-24 pt-10 relative">
+        <div className="container mx-auto px-4 text-center">
+          {/* Logo SVG */}
+          <div className="flex justify-center mb-8" data-aos="fade-down">
+            <Image
+              src="/assets/images/logo-token-for-good.jpeg"
+              alt="Token for Good Logo"
+              width={180}
+              height={60}
+              className="h-14 w-auto"
+            />
+          </div>
+          
+          <h1 className="text-5xl md:text-7xl font-bold mb-6" data-aos="fade-up">
+            Token for Good
+          </h1>
+          <p className="text-xl md:text-2xl max-w-3xl mx-auto mb-12" data-aos="fade-up" data-aos-delay="100">
+            La blockchain au service de l'impact social et environnemental positif
           </p>
-          <p className="text-lg max-w-2xl mx-auto mb-6">
-            En contrepartie de sa contribution, le membre reçoit des jetons numériques (tokens… for good) et devient bénéficiaire de services et de nombreux avantages.
-          </p>
-          <p className="text-lg max-w-2xl mx-auto mb-8">
-            Avec sa plate-forme collaborative, Token for Good offre donc une solution innovante d'animation de communauté et s'inscrit dans une « sharing economy » qui célèbre l'engagement !
-          </p>
-          <a href="https://app.token-for-good.com" className="inline-block bg-[#1a1a1a] text-white px-8 py-3 rounded-full font-semibold shadow hover:bg-[#333] transition">GO !</a>
+          
+          {/* Flèche de défilement vers la section "Pourquoi rejoindre" */}
+          <a 
+            href="#why-join" 
+            className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white text-indigo-700 shadow-lg hover:bg-opacity-90 transition-all duration-300 animate-bounce"
+            data-aos="fade-up" 
+            data-aos-delay="200"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </a>
+        </div>
+        
+        {/* Vague de transition violet → blanc */}
+        <div className="absolute bottom-0 left-0 right-0 w-full">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 160" className="w-full">
+            <path fill="#ffffff" fillOpacity="1" d="M0,128L80,112C160,96,320,64,480,64C640,64,800,96,960,106.7C1120,117,1280,107,1360,101.3L1440,96L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
+          </svg>
         </div>
       </section>
 
-      {/* Pourquoi rejoindre */}
-      <section className="container mx-auto py-12 px-4 rounded-2xl mb-10 bg-gradient-to-r from-green-700 to-green-900 text-white shadow">
-        <h2 className="text-3xl font-bold text-center mb-12">Pourquoi rejoindre Token for Good ?</h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          {/* Étudiants */}
-          <div className="bg-white/20 rounded-2xl shadow p-6">
-            <h3 className="font-bold text-xl mb-4 text-white">Étudiants</h3>
-            <ul className="space-y-2 text-white/90">
-              <li>Rencontrer des alumni à votre écoute</li>
-              <li>Profiter de retour d'expériences et partager les connaissances</li>
-              <li>Développer vos compétences</li>
-              <li>Valoriser un engagement auprès de partenaires à mission</li>
-              <li>Accéder à des événements inspirants</li>
-              <li>Bénéficier de différents services ciblés</li>
-              <li>Renforcer une communauté qui vous ressemble</li>
-            </ul>
-          </div>
-          {/* Alumni */}
-          <div className="bg-white/20 rounded-2xl shadow p-6">
-            <h3 className="font-bold text-xl mb-4 text-white">Alumni</h3>
-            <ul className="space-y-2 text-white/90">
-              <li>Rencontrer des alumni qui partagent vos centres d'intérêts</li>
-              <li>Croiser les expériences et partager vos connaissances</li>
-              <li>Développer vos compétences</li>
-              <li>Se former tout au long de la vie</li>
-              <li>Accéder à des événements inspirants</li>
-              <li>Bénéficier de différents services ciblés</li>
-              <li>Renforcer une communauté qui vous ressemble</li>
-            </ul>
-          </div>
-          {/* Corporate/Écoles */}
-          <div className="bg-white/20 rounded-2xl shadow p-6">
-            <h3 className="font-bold text-xl mb-4 text-white">Corporate / Écoles</h3>
-            <ul className="space-y-2 text-white/90">
-              <li>Fédérer vos parties prenantes au sein d'une communauté qui leur ressemble</li>
-              <li>Favoriser le partage de connaissances et le développement de compétences</li>
-              <li>Sécuriser et certifier la transmission des savoir-faire</li>
-              <li>Accéder à un vivier de talents et un réseau d'experts</li>
-              <li>Valoriser un engagement auprès de partenaires à mission</li>
-              <li>Développer des outils contributifs et innovants avec la technologie blockchain</li>
-            </ul>
+      {/* Section blanche minimisée */}
+      <section className="bg-white" style={{ height: '60px' }}>
+        <div className="container mx-auto relative">
+          {/* Vague de transition blanc → vert */}
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 160" className="w-full absolute bottom-0 left-0">
+            <path fill="#2b7a43" fillOpacity="1" d="M0,32L80,48C160,64,320,96,480,96C640,96,800,64,960,48C1120,32,1280,32,1360,32L1440,32L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
+          </svg>
+        </div>
+      </section>
+
+      {/* Section verte avec le contenu principal */}
+      <section id="why-join" className="bg-[#2b7a43] py-20 text-white pt-24">
+        <div className="container mx-auto px-4">
+          <h2 className="text-4xl font-bold mb-16 text-center" data-aos="fade-up">
+            Pourquoi rejoindre Token for Good ?
+          </h2>
+          
+          <div className="grid md:grid-cols-3 gap-8 mt-12">
+            <div className="bg-[#3b8953]/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300" data-aos="fade-up" data-aos-delay="100">
+              <h3 className="text-2xl font-bold mb-4 text-yellow-300">Étudiants</h3>
+              <p className="text-lg">Rejoignez un réseau engagé et développez vos compétences tout en contribuant à des causes importantes.</p>
+            </div>
+            
+            <div className="bg-[#3b8953]/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300" data-aos="fade-up" data-aos-delay="200">
+              <h3 className="text-2xl font-bold mb-4 text-yellow-300">Alumni</h3>
+              <p className="text-lg">Restez connectés à votre communauté et soutenez la nouvelle génération d'innovateurs sociaux.</p>
+            </div>
+            
+            <div className="bg-[#3b8953]/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300" data-aos="fade-up" data-aos-delay="300">
+              <h3 className="text-2xl font-bold mb-4 text-yellow-300">Corporate / Écoles</h3>
+              <p className="text-lg">Valorisez votre impact RSE et engagez vos collaborateurs dans des actions concrètes.</p>
+            </div>
           </div>
         </div>
       </section>

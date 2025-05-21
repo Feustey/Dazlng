@@ -45,7 +45,7 @@ class MCPApiClient {
     return response.json();
   }
 
-  async getNetworkSummary(): Promise<any> {
+  async getNetworkSummary(): Promise<import('./network-types').NetworkSummary> {
     return this.fetchWithAuth('/network/summary');
   }
   async getNodeStats(nodeId: string): Promise<any> {
@@ -57,7 +57,7 @@ class MCPApiClient {
   async getNetworkCentralities(): Promise<any> {
     return this.fetchWithAuth('/network/centralities');
   }
-  async optimizeNode(nodeId: string): Promise<any> {
+  async optimizeNode(nodeId: string): Promise<import('./network-types').OptimizationResult> {
     return this.fetchWithAuth(`/network/node/${nodeId}/optimize`, { method: 'POST' });
   }
 }

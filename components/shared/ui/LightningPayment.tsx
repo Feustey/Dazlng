@@ -5,6 +5,7 @@ import { generateInvoice, checkPayment } from '../../../lib/lightning';
 import Image from 'next/image';
 import ProtonPayment from './ProtonPayment';
 import { logger } from '@/lib/logger';
+import QRCode from 'qrcode';
 
 interface LightningPaymentProps {
   amount: number;
@@ -54,7 +55,7 @@ export default function LightningPayment(props: LightningPaymentProps): React.Re
       try {
         setIsLoading(true);
         const invoiceData = await generateInvoice({
-          amount: 10,
+          amount: props.amount,
           memo: `Paiement pour ${props.productName}`,
         });
         setInvoice(invoiceData);
@@ -135,7 +136,13 @@ export default function LightningPayment(props: LightningPaymentProps): React.Re
 
   useEffect(() => {
     if (invoice?.paymentRequest) {
-      setQrUrl(`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${encodeURIComponent(invoice.paymentRequest)}`);
+      QRCode.toDataURL(invoice.paymentRequest, { width: 250 })
+        .then(url => {
+          setQrUrl(url);
+        })
+        .catch(err => {
+          setError(`Erreur de génération du QR code: ${err.message}`);
+        });
     }
   }, [invoice]);
 
@@ -143,6 +150,14 @@ export default function LightningPayment(props: LightningPaymentProps): React.Re
     if (invoice?.paymentHash) {
       checkPaymentStatus(invoice.paymentHash);
     }
+  }, [checkPaymentStatus, invoice]);
+
+  useEffect(() => {
+    if (!invoice?.paymentHash) return;
+    const interval = setInterval(() => {
+      checkPaymentStatus(invoice.paymentHash!);
+    }, 3000);
+    return () => clearInterval(interval);
   }, [checkPaymentStatus, invoice]);
 
   const _handlePayment = useCallback(() => {
@@ -154,11 +169,6 @@ export default function LightningPayment(props: LightningPaymentProps): React.Re
       onError?.(error);
     }
   }, [onSuccess, onError]);
-
-  useEffect(() => {
-    const interval = setInterval(checkPaymentStatus, 3000)
-    return () => clearInterval(interval)
-  }, [checkPaymentStatus])
 
   if (isLoading) {
     return (

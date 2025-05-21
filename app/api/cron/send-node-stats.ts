@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { Resend } from 'resend';
+import { generateEmailTemplate } from '../../../utils/email';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -23,18 +24,15 @@ async function fetchDazNodeData(nodeId: string): Promise<DazNodeData> {
   return { summary, centralities, stats, history };
 }
 
-function generateEmailContent(data: DazNodeData): string {
-  return `
-    <h2>Rapport Hebdomadaire de votre Nœud Lightning</h2>
-    <h3>Résumé du Réseau</h3>
-    <pre>${JSON.stringify(data.summary, null, 2)}</pre>
-    <h3>Centralités</h3>
-    <pre>${JSON.stringify(data.centralities, null, 2)}</pre>
-    <h3>Statistiques de votre Nœud</h3>
-    <pre>${JSON.stringify(data.stats, null, 2)}</pre>
-    <h3>Historique</h3>
-    <pre>${JSON.stringify(data.history, null, 2)}</pre>
-  `;
+function generateEmailContent(data: DazNodeData, username: string): string {
+  return generateEmailTemplate({
+    title: 'Rapport Hebdomadaire de votre Nœud Lightning',
+    username,
+    mainContent: 'Voici les statistiques de votre nœud pour cette semaine :',
+    detailedContent: `<h3>Résumé du Réseau</h3><pre>${JSON.stringify(data.summary, null, 2)}</pre><h3>Centralités</h3><pre>${JSON.stringify(data.centralities, null, 2)}</pre><h3>Statistiques de votre Nœud</h3><pre>${JSON.stringify(data.stats, null, 2)}</pre><h3>Historique</h3><pre>${JSON.stringify(data.history, null, 2)}</pre>`,
+    ctaText: 'Optimiser mon nœud',
+    ctaLink: 'https://dazno.de/network/node'
+  });
 }
 
 export async function POST(req: NextRequest): Promise<Response> {
@@ -51,7 +49,7 @@ export async function POST(req: NextRequest): Promise<Response> {
   for (const user of users) {
     if (!user.node_id) continue;
     const nodeData = await fetchDazNodeData(user.node_id);
-    const emailContent = generateEmailContent(nodeData);
+    const emailContent = generateEmailContent(nodeData, user.email);
     await resend.emails.send({
       from: process.env.SMTP_FROM || 'noreply@daznode.com',
       to: user.email,

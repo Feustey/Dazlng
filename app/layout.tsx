@@ -1,10 +1,7 @@
 import './styles/globals.css';
 import { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import ClientLayout from './ClientLayout';
 import React from 'react';
-
-const inter = Inter({ subsets: ['latin'], display: 'swap', preload: true, weight: ['400', '500', '600', '700'] });
 
 export const metadata: Metadata = {
   title: {
@@ -17,17 +14,17 @@ export const metadata: Metadata = {
   creator: 'DazNode',
   publisher: 'DazNode',
   robots: 'index, follow',
-  metadataBase: new URL('https://daznode.com'),
+  metadataBase: new URL('https://dazno.de'),
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
-    url: 'https://daznode.com',
+    url: 'https://dazno.de',
     title: 'DazNode | Solutions Lightning Network pour tous',
     description: 'Daznode simplifie l\'accès au réseau Lightning avec des solutions clés en main. Nœuds personnels, services de paiement et IA dédiée pour particuliers et professionnels.',
     siteName: 'DazNode',
     images: [
       {
-        url: 'https://daznode.com/assets/images/og-image.png',
+        url: 'https://dazno.de/assets/images/og-image.png',
         width: 1200,
         height: 630,
         alt: 'DazNode - Solutions Lightning Network'
@@ -38,14 +35,14 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'DazNode | Solutions Lightning Network pour tous',
     description: 'Daznode simplifie l\'accès au réseau Lightning avec des solutions clés en main. Nœuds personnels, services de paiement et IA dédiée.',
-    images: ['https://daznode.com/assets/images/og-image.png']
+    images: ['https://dazno.de/assets/images/og-image.png']
   }
 };
 
 const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <html lang="fr">
-      <body className={inter.className + ' text-t4g-gray min-h-screen flex flex-col font-sans antialiased'}>
+      <body >
         <ClientLayout>
           {children}
         </ClientLayout>

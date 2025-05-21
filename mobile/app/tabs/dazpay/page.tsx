@@ -108,15 +108,7 @@ const DazPayPage = () => {
               productName={selectedProduct.title}
               onSuccess={handlePaymentSuccess}
             />
-            <button
-              onClick={() => {
-                setShowPayment(false);
-                setSelectedProduct(null);
-              }}
-              className="mt-6 w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-6 rounded-md transition duration-200"
-            >
-              Annuler
-            </button>
+    
           </div>
         ) : null}
       </div>
