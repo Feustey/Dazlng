@@ -1,7 +1,9 @@
 import React from 'react';
+import type { ForwardRefExoticComponent, RefAttributes } from 'react';
+import type { LucideProps } from 'lucide-react-native';
 
 interface BenefitCardProps {
-  icon: React.ComponentType<{ size?: number; color?: string }>;
+  icon: ForwardRefExoticComponent<LucideProps & RefAttributes<SVGElement>>;
   title: string;
   description: string;
   iconColor?: string;

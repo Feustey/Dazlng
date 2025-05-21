@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import ProtonWebSDK from '@proton/web-sdk';
-import type { ProtonSession as _ } from '@proton/web-sdk'
+// import type { ProtonSession as _ } from '@proton/web-sdk'
 
 interface ProtonPaymentProps {
   amount: number; // Montant en XPR

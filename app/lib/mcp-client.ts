@@ -89,4 +89,4 @@ export class MCPClient {
     // Utilise le nouvel endpoint de recommandations au lieu de l'ancien optimize
     return this.getNodeRecommendations(nodeId);
   }
-} 
+}

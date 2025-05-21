@@ -9,6 +9,7 @@ import { logger } from '@/lib/logger';
 interface LightningPaymentProps {
   amount: number;
   onSuccess?: () => void;
+  onError?: (error: unknown) => void;
   productName: string;
   onCancel?: () => void;
 }
@@ -143,10 +144,6 @@ export default function LightningPayment(props: LightningPaymentProps): React.Re
       checkPaymentStatus(invoice.paymentHash);
     }
   }, [checkPaymentStatus, invoice]);
-
-  useEffect(() => {
-    checkPaymentStatus();
-  }, [checkPaymentStatus]);
 
   const _handlePayment = useCallback(() => {
     try {

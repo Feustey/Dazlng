@@ -1,12 +1,17 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import { JWTManager } from '../utils/jwt-manager';
 
-export async function checkTokenExpiry() {
+export async function checkTokenExpiry(): Promise<void> {
   const token = process.env.MCP_JWT_TOKEN;
   const secretKey = process.env.MCP_JWT_SECRET;
+  const resendApiKey = process.env.RESEND_API_KEY;
 
   if (!token || !secretKey) {
     console.error('Configuration MCP manquante');
+    return;
+  }
+  if (!resendApiKey) {
+    console.error('Clé API Resend manquante');
     return;
   }
 
@@ -16,19 +21,8 @@ export async function checkTokenExpiry() {
     const daysRemaining = Math.floor((expiryDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
 
     if (daysRemaining <= 7) {
-      // Configuration du transporteur d'email
-      const transporter = nodemailer.createTransport({
-        host: 'smtp.mcp.dazlng.com',
-        port: 587,
-        secure: false,
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS
-        }
-      });
-
-      // Envoi de l'alerte
-      await transporter.sendMail({
+      const resend = new Resend(resendApiKey);
+      await resend.emails.send({
         from: 'monitoring@mcp.dazlng.com',
         to: 'admin@dazlng.com',
         subject: 'Alerte - Expiration Token dazno.de',

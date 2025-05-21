@@ -3,6 +3,7 @@ import { usePathname } from "next/navigation";
 import CustomHeader from "@/components/shared/ui/CustomHeader";
 import ModernLayout from "@/components/shared/layout/ModernLayout";
 import dynamic from 'next/dynamic';
+import React, { ReactNode } from 'react';
 
 const Footer = dynamic(() => import('@/components/Footer'), { loading: () => <div className="h-40 bg-gray-100"></div> });
 
