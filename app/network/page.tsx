@@ -13,7 +13,7 @@ async function NetworkSummary(): Promise<JSX.Element> {
   );
 }
 
-export default function NetworkPage() {
+export default function Page(): JSX.Element {
   return (
     <Suspense fallback={<div>Chargement...</div>}>
       <NetworkSummary />

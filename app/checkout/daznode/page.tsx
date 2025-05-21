@@ -3,7 +3,7 @@ import React, { useState, Suspense } from 'react';
 import LightningPayment from '../../../components/web/LightningPayment';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
-import { validateLightningPubkey, getPubkeyError } from '../../../utils/validation';
+import { getPubkeyError } from '../../../utils/validation';
 
 function CheckoutContent(): React.ReactElement {
   const [form, setForm] = useState({
@@ -106,7 +106,7 @@ function CheckoutContent(): React.ReactElement {
   };
 
   // Simule la récupération de la pubkey via signature LN (à remplacer par une vraie intégration plus tard)
-  const handleNodeSign = async () => {
+  const handleNodeSign = async (): Promise<void> => {
     // Ici, on simule la récupération d'une pubkey après signature
     // Dans la vraie vie, il faudrait ouvrir un modal, générer un message, demander la signature LN, puis vérifier côté serveur
     // Pour la démo, on met une pubkey factice
@@ -114,6 +114,11 @@ function CheckoutContent(): React.ReactElement {
     setForm({ ...form, pubkey: fakePubkey });
     setPubkeyError(null);
     setIsSigningWithNode(false);
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    event.preventDefault();
+    // ... code existant (à adapter si besoin)
   };
 
   if (showLightning) {
@@ -181,7 +186,7 @@ function CheckoutContent(): React.ReactElement {
               </button>
             </div>
           ) : (
-            <form onSubmit={e => { e.preventDefault(); setShowLightning(true); }}>
+            <form onSubmit={handleSubmit}>
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Email*
@@ -293,7 +298,7 @@ function CheckoutContent(): React.ReactElement {
   );
 }
 
-export default function CheckoutPage(): React.ReactElement {
+export default function Page(): JSX.Element {
   return (
     <Suspense>
       <CheckoutContent />

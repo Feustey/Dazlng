@@ -4,7 +4,15 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-async function fetchDazNodeData(nodeId: string): Promise<any> {
+// Définition du type pour les données du nœud
+interface DazNodeData {
+  summary: unknown;
+  centralities: unknown;
+  stats: unknown;
+  history: unknown;
+}
+
+async function fetchDazNodeData(nodeId: string): Promise<DazNodeData> {
   const baseUrl = process.env.DAZNODE_API_URL;
   const [summary, centralities, stats, history] = await Promise.all([
     fetch(`${baseUrl}/network/summary`).then(res => res.json()),
@@ -15,7 +23,7 @@ async function fetchDazNodeData(nodeId: string): Promise<any> {
   return { summary, centralities, stats, history };
 }
 
-function generateEmailContent(data: any): string {
+function generateEmailContent(data: DazNodeData): string {
   return `
     <h2>Rapport Hebdomadaire de votre Nœud Lightning</h2>
     <h3>Résumé du Réseau</h3>

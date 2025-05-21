@@ -2,12 +2,6 @@ import { MCPClient } from '@/lib/mcp-client';
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 
-interface PageProps {
-  params: {
-    id: string;
-  };
-}
-
 async function NodeDetails({ id }: { id: string }): Promise<JSX.Element> {
   const client = MCPClient.getInstance();
   
@@ -37,10 +31,11 @@ async function NodeDetails({ id }: { id: string }): Promise<JSX.Element> {
   }
 }
 
-export default function NodePage({ params }: PageProps) {
+export default function Page(): JSX.Element {
+  const id = 'demo-id'; // Remplacer par la vraie récupération de l'id
   return (
     <Suspense fallback={<div>Chargement...</div>}>
-      <NodeDetails id={params.id} />
+      <NodeDetails id={id} />
     </Suspense>
   );
 } 

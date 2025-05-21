@@ -16,7 +16,7 @@ export default function DazBoxCheckout(): React.ReactElement {
     { id: 3, name: 'Confirmation' }
   ];
 
-  const renderStep = () => {
+  const renderStep = (): React.ReactElement => {
     switch(step) {
       case 1:
         return (
@@ -79,6 +79,8 @@ export default function DazBoxCheckout(): React.ReactElement {
             </div>
           </motion.div>
         );
+      default:
+        return <div />;
     }
   };
 

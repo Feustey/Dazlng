@@ -1,11 +1,12 @@
-import { io, Socket } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client/build/esm';
 
 class WebSocketService {
   private socket: Socket | null = null;
 
-  connect() {
+  connect(): void {
+    const wsUrl = process.env.NEXT_PUBLIC_WS_URL ?? '';
     if (!this.socket) {
-      this.socket = io(process.env.NEXT_PUBLIC_MCP_WS_URL!, {
+      this.socket = io(wsUrl, {
         auth: {
           token: localStorage.getItem('mcp_token')
         },
@@ -26,13 +27,13 @@ class WebSocketService {
     }
   }
 
-  subscribe(event: string, callback: (data: any) => void) {
+  subscribe(event: string, callback: (data: unknown) => void): void {
     if (this.socket) {
       this.socket.on(event, callback);
     }
   }
 
-  disconnect() {
+  disconnect(): void {
     if (this.socket) {
       this.socket.disconnect();
       this.socket = null;

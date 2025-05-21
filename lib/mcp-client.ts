@@ -1,4 +1,9 @@
-import { headers } from 'next/headers';
+import type { headers as _ } from 'next/headers';
+
+type _McpResponse<T> = {
+  success: boolean;
+  data: T;
+}
 
 export class MCPClient {
   private static instance: MCPClient;
@@ -23,7 +28,7 @@ export class MCPClient {
     return MCPClient.instance;
   }
 
-  private async fetchMCP(endpoint: string, options: RequestInit = {}) {
+  private async fetchMCP(endpoint: string, options: RequestInit = {}): Promise<any> {
     const url = `${this.baseUrl}${endpoint}`;
     const response = await fetch(url, {
       ...options,
@@ -45,23 +50,23 @@ export class MCPClient {
   }
 
   // Méthodes d'API
-  async getNetworkSummary() {
+  async getNetworkSummary(): Promise<any> {
     return this.fetchMCP('/network/summary');
   }
 
-  async getNodeStats(nodeId: string) {
+  async getNodeStats(nodeId: string): Promise<any> {
     return this.fetchMCP(`/network/node/${nodeId}/stats`);
   }
 
-  async getNodeHistory(nodeId: string) {
+  async getNodeHistory(nodeId: string): Promise<any> {
     return this.fetchMCP(`/network/node/${nodeId}/history`);
   }
 
-  async getNetworkCentralities() {
+  async getNetworkCentralities(): Promise<any> {
     return this.fetchMCP('/network/centralities');
   }
 
-  async optimizeNode(nodeId: string) {
+  async optimizeNode(nodeId: string): Promise<any> {
     return this.fetchMCP(`/network/node/${nodeId}/optimize`, {
       method: 'POST',
       next: { revalidate: 0 } // Ne pas mettre en cache les POST

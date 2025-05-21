@@ -1,11 +1,11 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from "next-auth";
 
 import { authOptions } from "../../../../lib/auth";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(_request?: NextRequest): Promise<Response> {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     const session = await getServerSession(authOptions);
 
@@ -19,6 +19,6 @@ export async function GET(_request?: NextRequest): Promise<Response> {
     //   "Erreur lors de la récupération des informations utilisateur:",
     //   error
     // );
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

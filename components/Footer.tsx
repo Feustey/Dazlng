@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 const socialLinks = [
   {
@@ -36,7 +37,13 @@ const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-8">
           <div className="flex-1 mb-6 md:mb-0">
-            <img src="/assets/images/logo-daznode.svg" alt="Daz3 Logo" className="h-10 mb-4" />
+            <Image 
+              src="/assets/images/logo-daznode.svg" 
+              width={150} 
+              height={40} 
+              alt="Daz3 Logo"
+              priority 
+            />
             <p className="text-gray-600 max-w-xs">Où l'imagination rencontre l'innovation - libérez votre créativité avec nous!</p>
          
           </div>

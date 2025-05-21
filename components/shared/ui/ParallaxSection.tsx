@@ -18,7 +18,7 @@ export default function ParallaxSection({ title, children, className = '' }: Par
   const scrollY = useSharedValue(0);
   const ref = useRef<HTMLDivElement>(null);
 
-  const scrollHandler = useAnimatedScrollHandler({
+  const _scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
       scrollY.value = event.contentOffset.y;
     },

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 
 const CustomHeader: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -8,7 +9,13 @@ const CustomHeader: React.FC = () => {
       <div className="max-w-7xl mx-auto flex items-center justify-between h-16">
         {/* Logo - visible sur tous les écrans */}
         <div className="header-logo flex items-center">
-         <a href='./'> <img src="/assets/images/logo-daznode.svg" alt="Daz3 Logo" className="h-8 md:h-10" /></a>
+          <Image 
+            src="/assets/images/logo-daznode.svg" 
+            alt="Daz3 Logo" 
+            width={150} 
+            height={40} 
+            priority 
+          />
         </div>
 
         {/* Bouton menu mobile - visible uniquement sur mobile */}

@@ -1,2 +1,11 @@
 tests/
-**/*.test.* 
+**/*.test.*
+node_modules/
+.next/
+out/
+public/
+*.config.js
+*.setup.js
+build/
+dist/
+coverage/ 

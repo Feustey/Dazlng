@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { webln } from '@getalby/sdk';
 
-export async function POST(req): Promise<Response> {
+export async function POST(req: NextRequest): Promise<Response> {
   const { amount, description } = await req.json();
 
   if (!amount || !description) {
@@ -26,7 +26,7 @@ export async function POST(req): Promise<Response> {
       paymentUrl: `lightning:${result.paymentRequest}`
     });
   } catch (error) {
-    const err = error;
+    const err = error as Error;
     return NextResponse.json({ error: err.message || 'Erreur lors de la création de la facture' }, { status: 500 });
   }
 } 

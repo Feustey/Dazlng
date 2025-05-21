@@ -2,6 +2,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 
+interface ProtonAction {
+  account: string;
+  name: string;
+  data: {
+    to: string;
+    quantity: string;
+  };
+}
+
 export async function GET(req: NextRequest): Promise<Response> {
   const { searchParams } = new URL(req.url);
   const txId = searchParams.get('txId');
@@ -31,8 +40,8 @@ export async function GET(req: NextRequest): Promise<Response> {
     }
 
     // Vérifier les actions de la transaction
-    const transferActions = transaction.trx.trx.actions.filter(
-      action => action.account === 'eosio.token' && action.name === 'transfer'
+    const transferActions = (transaction.trx.trx.actions as ProtonAction[]).filter(
+      (action: ProtonAction) => action.account === 'eosio.token' && action.name === 'transfer'
     );
 
     if (transferActions.length === 0) {
@@ -43,7 +52,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     }
 
     // Vérifier le destinataire et le montant
-    const validTransfer = transferActions.some(action => {
+    const validTransfer = transferActions.some((action: ProtonAction) => {
       const { to, quantity } = action.data;
       
       // Vérifier le destinataire

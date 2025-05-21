@@ -1,7 +1,7 @@
 import { MCPClient } from '@/lib/mcp-client';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(request, context): Promise<Response> {
+export async function POST(request: NextRequest, context: { params: { id: string } }): Promise<Response> {
   try {
     const client = MCPClient.getInstance();
     const result = await client.optimizeNode(context.params.id);

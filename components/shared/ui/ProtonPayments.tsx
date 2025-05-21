@@ -2,12 +2,23 @@
 
 import { useState, useEffect } from 'react';
 import ProtonWebSDK from '@proton/web-sdk';
+import type { ProtonSession as _ } from '@proton/web-sdk'
 
 interface ProtonPaymentProps {
   amount: number; // Montant en XPR
   onSuccess?: (transactionId: string) => void;
   onCancel?: () => void;
   productName: string;
+}
+
+type _PaymentResponse = {
+  status: string;
+  data: unknown;
+}
+
+type _EndpointConfig = {
+  url: string;
+  method: string;
 }
 
 const ProtonPayment: React.FC<ProtonPaymentProps> = ({ amount, productName, onSuccess, onCancel }) => {
@@ -22,8 +33,8 @@ const ProtonPayment: React.FC<ProtonPaymentProps> = ({ amount, productName, onSu
   const chainId = '384da888112027f0321850a169f737c33e53b388aad48b5adace4bab97f437e0'; // Proton Mainnet
   const endpoints = ['https://proton.greymass.com', 'https://proton.eoscafeblock.com'];
 
-  useEffect((): void => {
-    const setupProton = async (): Promise<void> => {
+  useEffect(() => {
+    const fetchData = async (): Promise<void> => {
       try {
         // Vérifier s'il y a une session active
         const { link: localLink, session: localSession } = await ProtonWebSDK({
@@ -58,10 +69,9 @@ const ProtonPayment: React.FC<ProtonPaymentProps> = ({ amount, productName, onSu
       } catch (err) {
         setError(`Erreur de connexion: ${err instanceof Error ? err.message : 'Erreur inconnue'}`);
       }
-    };
-
-    setupProton();
-  }, []);
+    }
+    fetchData()
+  }, [endpoints])
 
   const login = async (): Promise<void> => {
     try {
@@ -217,7 +227,7 @@ const ProtonPayment: React.FC<ProtonPaymentProps> = ({ amount, productName, onSu
 
       {session && (
         <div className="text-sm text-gray-600 mb-2">
-          Connecté en tant que: <span className="font-medium">{session.auth.actor}</span>
+          Connecté en tant que: <span className="font-medium">{(session as any).auth.actor}</span>
         </div>
       )}
 

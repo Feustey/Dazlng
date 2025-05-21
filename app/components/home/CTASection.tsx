@@ -37,7 +37,7 @@ export const CTASection = (): React.ReactElement => {
           </div>
           {/* Badges de confiance */}
           <div className="mt-12 flex flex-wrap justify-center items-center gap-6">
-            {badges.map((badge, index) => (
+            {badges.map((badge, _) => (
               <div key={badge.text}>
                 <div className="flex items-center bg-white/10 rounded-full px-4 py-2">
                   <span className="w-5 h-5 mr-2 text-yellow-400">{badge.icon}</span>

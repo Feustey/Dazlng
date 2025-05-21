@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { generateInvoice, checkPayment } from '../../../lib/lightning';
 import Image from 'next/image';
 import ProtonPayment from './ProtonPayment';
-import type { WebLNProvider } from 'webln';
+import { logger } from '@/lib/logger';
 
 interface LightningPaymentProps {
   amount: number;
@@ -31,6 +31,8 @@ export default function LightningPayment(props: LightningPaymentProps): React.Re
   const [qrUrl, setQrUrl] = useState<string | null>(null);
   const [showWalletModal, setShowWalletModal] = useState(false);
   const [showProtonModal, setShowProtonModal] = useState(false);
+
+  const { onSuccess, onError } = props;
 
   useEffect(() => {
     const checkWebLN = async (): Promise<void> => {
@@ -72,14 +74,14 @@ export default function LightningPayment(props: LightningPaymentProps): React.Re
       const isPaid = await checkPayment(paymentHash);
       if (isPaid) {
         setPaymentStatus('success');
-        if (props.onSuccess) props.onSuccess();
+        onSuccess?.();
       } else if (paymentStatus === 'pending') {
         setTimeout(() => checkPaymentStatus(paymentHash), 5000);
       }
     } catch (err) {
       setError(`Erreur lors de la vérification du paiement: ${err instanceof Error ? err.message : 'Erreur inconnue'}`);
     }
-  }, [props.onSuccess, paymentStatus]);
+  }, [onSuccess, paymentStatus]);
 
   const payWithWebLN = async (): Promise<void> => {
     if (!invoice || !window.webln) {
@@ -101,7 +103,7 @@ export default function LightningPayment(props: LightningPaymentProps): React.Re
       
       if (result && result.preimage) {
         setPaymentStatus('success');
-        if (props.onSuccess) props.onSuccess();
+        onSuccess?.();
       } else {
         throw new Error("Aucun preimage retourné");
       }
@@ -141,6 +143,25 @@ export default function LightningPayment(props: LightningPaymentProps): React.Re
       checkPaymentStatus(invoice.paymentHash);
     }
   }, [checkPaymentStatus, invoice]);
+
+  useEffect(() => {
+    checkPaymentStatus();
+  }, [checkPaymentStatus]);
+
+  const _handlePayment = useCallback(() => {
+    try {
+      // ... le reste du code
+      onSuccess?.();
+    } catch (error) {
+      logger.error('Payment error:', error);
+      onError?.(error);
+    }
+  }, [onSuccess, onError]);
+
+  useEffect(() => {
+    const interval = setInterval(checkPaymentStatus, 3000)
+    return () => clearInterval(interval)
+  }, [checkPaymentStatus])
 
   if (isLoading) {
     return (
@@ -242,7 +263,7 @@ export default function LightningPayment(props: LightningPaymentProps): React.Re
             <ProtonPayment
               sats={props.amount}
               promoApplied={false}
-              onSuccess={() => { setShowProtonModal(false); if (props.onSuccess) props.onSuccess(); }}
+              onSuccess={() => { setShowProtonModal(false); if (onSuccess) onSuccess(); }}
               onCancel={() => setShowProtonModal(false)}
             />
           </div>

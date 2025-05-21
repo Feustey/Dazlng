@@ -1,11 +1,10 @@
-import apiClient from './api-client';
+import { mcpClient } from './api-client';
 import { NetworkSummary, OptimizationResult } from './network-types';
 
 export class NetworkService {
   static async getNetworkSummary(): Promise<NetworkSummary> {
     try {
-      const response = await apiClient.get<NetworkSummary>('/summary');
-      return response.data;
+      return await mcpClient.getNetworkSummary();
     } catch (error) {
       throw this.handleError(error);
     }
@@ -13,20 +12,18 @@ export class NetworkService {
 
   static async optimizeNode(nodeId: string): Promise<OptimizationResult> {
     try {
-      const response = await apiClient.post<OptimizationResult>(
-        `/node/${nodeId}/optimize`
-      );
-      return response.data;
+      return await mcpClient.optimizeNode(nodeId);
     } catch (error) {
       throw this.handleError(error);
     }
   }
 
-  private static handleError(error: any): never {
+  private static handleError(error: unknown): never {
+    const err = error as { response?: { status?: number; data?: { code?: string; message?: string } } };
     const errorResponse = {
-      status: error.response?.status || 500,
-      code: error.response?.data?.code || 'UNKNOWN_ERROR',
-      message: error.response?.data?.message || 'Une erreur est survenue'
+      status: err.response?.status || 500,
+      code: err.response?.data?.code || 'UNKNOWN_ERROR',
+      message: err.response?.data?.message || 'Une erreur est survenue'
     };
     throw errorResponse;
   }

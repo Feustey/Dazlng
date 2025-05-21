@@ -6,10 +6,10 @@ interface OptimizeButtonProps {
   nodeId: string;
 }
 
-export function OptimizeButton({ nodeId }: OptimizeButtonProps) {
+export default function OptimizeButton({ nodeId }: OptimizeButtonProps): JSX.Element {
   const [isOptimizing, setIsOptimizing] = useState(false);
 
-  const handleOptimize = async () => {
+  const handleOptimize = async (): Promise<void> => {
     setIsOptimizing(true);
     try {
       const response = await fetch(`/api/network/optimize/${nodeId}`, {

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
 import Footer from '../../Footer';
 import PropTypes from 'prop-types';
+import Image from 'next/image';
 
 interface TabIconProps {
   color: string;
@@ -24,20 +25,26 @@ const TabIcon: React.FC<TabIconProps> = ({ color, name, size }) => (
 
 const TabButton: React.FC<TabButtonProps> = ({ onPress }) => (
   <div onClick={onPress} className="cursor-pointer">
-    <img
+    <Image
       src="/assets/images/logo.png"
       alt="Logo Daznode"
       className="w-[120px] h-[24px] object-contain"
+      width={120}
+      height={24}
+      priority
     />
   </div>
 );
 
 const HeaderLogo: React.FC<HeaderLogoProps> = ({ onPress }) => (
   <button onClick={onPress} className="bg-transparent border-0 p-0 m-0 cursor-pointer">
-    <img
+    <Image
       src="/assets/images/logo-daznode-white.png"
       alt="Logo Daznode"
       className="w-[120px] h-[24px] object-contain"
+      width={120}
+      height={24}
+      priority
     />
   </button>
 );

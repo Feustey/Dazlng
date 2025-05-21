@@ -17,9 +17,15 @@ interface UserData {
   node_id?: string;
 }
 
+// Définition du type pour les stats du nœud Lightning
+interface NodeStatsData {
+  // À adapter selon la structure réelle des stats retournées par l'API
+  [key: string]: unknown;
+}
+
 // Composant pour afficher les stats du nœud Lightning
 function NodeStats({ nodeId }: { nodeId: string }): JSX.Element {
-  const [stats, setStats] = useState<any>(null);
+  const [stats, setStats] = useState<NodeStatsData | null>(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     async function fetchStats(): Promise<void> {

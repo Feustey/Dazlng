@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 // Récupérer l'utilisateur connecté (via cookie ou header Authorization)
-async function getUserFromRequest(req: NextRequest): Promise<unknown> {
+async function getUserFromRequest(req: NextRequest): Promise<SupabaseUser | null> {
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
   if (!token) return null;
   const { data: { user } } = await supabase.auth.getUser(token);

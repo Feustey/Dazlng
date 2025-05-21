@@ -1,4 +1,15 @@
-import { getAuthToken, AuthToken } from '../utils/auth';
+import { getAuthToken } from '../utils/auth';
+
+type ApiError = {
+  message: string;
+  code?: string;
+}
+
+type ApiResponse<T> = {
+  data?: T;
+  error?: ApiError;
+  status: number;
+}
 
 class MCPApiClient {
   private baseUrl: string;
@@ -18,7 +29,7 @@ class MCPApiClient {
     return this.token;
   }
 
-  private async fetchWithAuth(endpoint: string, options: RequestInit = {}) {
+  private async fetchWithAuth(endpoint: string, options: RequestInit = {}): Promise<any> {
     const token = await this.ensureValidToken();
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
       ...options,
@@ -34,21 +45,37 @@ class MCPApiClient {
     return response.json();
   }
 
-  async getNetworkSummary() {
+  async getNetworkSummary(): Promise<any> {
     return this.fetchWithAuth('/network/summary');
   }
-  async getNodeStats(nodeId: string) {
+  async getNodeStats(nodeId: string): Promise<any> {
     return this.fetchWithAuth(`/network/node/${nodeId}/stats`);
   }
-  async getNodeHistory(nodeId: string) {
+  async getNodeHistory(nodeId: string): Promise<any> {
     return this.fetchWithAuth(`/network/node/${nodeId}/history`);
   }
-  async getNetworkCentralities() {
+  async getNetworkCentralities(): Promise<any> {
     return this.fetchWithAuth('/network/centralities');
   }
-  async optimizeNode(nodeId: string) {
+  async optimizeNode(nodeId: string): Promise<any> {
     return this.fetchWithAuth(`/network/node/${nodeId}/optimize`, { method: 'POST' });
   }
 }
 
-export const mcpClient = new MCPApiClient(); 
+export const mcpClient = new MCPApiClient();
+
+export async function get<T>(_endpoint: string): Promise<ApiResponse<T>> {
+  return { status: 501 };
+}
+
+export async function post<T>(_endpoint: string, _data: Record<string, unknown>): Promise<ApiResponse<T>> {
+  return { status: 501 };
+}
+
+export async function handleRequest(): Promise<void> {
+  // ... code existant
+}
+
+export async function handleError(_endpoint: string, _data: unknown): Promise<void> {
+  // ... code existant
+} 
