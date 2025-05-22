@@ -37,6 +37,20 @@ const LightningPayment: React.FC<LightningPaymentProps> = ({ amount, productName
     }
   }, []);
 
+  const checkPaymentStatus = useCallback(async (invoiceId: string): Promise<void> => {
+    try {
+      const isPaid = await checkPayment(invoiceId);
+      if (isPaid) {
+        setPaymentStatus('success');
+        if (onSuccess) onSuccess(invoiceId);
+      } else if (paymentStatus === 'pending') {
+        setTimeout(() => checkPaymentStatus(invoiceId), 5000);
+      }
+    } catch (err) {
+      setError(`Erreur lors de la vérification du paiement: ${err instanceof Error ? err.message : 'Erreur inconnue'}`);
+    }
+  }, [onSuccess, paymentStatus]);
+
   // Générer l'invoice au chargement du composant
   useEffect(() => {
     const createInvoice = async (): Promise<void> => {
@@ -58,22 +72,7 @@ const LightningPayment: React.FC<LightningPaymentProps> = ({ amount, productName
       }
     };
     createInvoice();
-  }, [amount, productName]);
-
-  // Fonction pour vérifier l'état du paiement
-  const checkPaymentStatus = useCallback(async (invoiceId: string): Promise<void> => {
-    try {
-      const isPaid = await checkPayment(invoiceId);
-      if (isPaid) {
-        setPaymentStatus('success');
-        if (onSuccess) onSuccess(invoiceId);
-      } else if (paymentStatus === 'pending') {
-        setTimeout(() => checkPaymentStatus(invoiceId), 5000);
-      }
-    } catch (err) {
-      setError(`Erreur lors de la vérification du paiement: ${err instanceof Error ? err.message : 'Erreur inconnue'}`);
-    }
-  }, [onSuccess, paymentStatus]);
+  }, [checkPaymentStatus, amount, productName]);
 
   // Fonction pour payer avec WebLN (Alby extension)
   const payWithWebLN = async (): Promise<void> => {
@@ -232,6 +231,13 @@ const LightningPayment: React.FC<LightningPaymentProps> = ({ amount, productName
             >
               <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
               Ouvrir avec un wallet
+            </button>
+            {/* Nouveau bouton pour ouvrir la modale de choix de wallet */}
+            <button
+              className="block md:hidden w-full mt-2 px-5 py-3 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600 transition"
+              onClick={() => setShowWalletModal(true)}
+            >
+              Plus d'options de paiement
             </button>
             {/* Mobile : copier la facture en petit */}
             <button

@@ -36,6 +36,20 @@ export default function LightningPayment(props: LightningPaymentProps): React.Re
 
   const { onSuccess, onError } = props;
 
+  const checkPaymentStatus = useCallback(async (paymentHash: string): Promise<void> => {
+    try {
+      const isPaid = await checkPayment(paymentHash);
+      if (isPaid) {
+        setPaymentStatus('success');
+        onSuccess?.();
+      } else if (paymentStatus === 'pending') {
+        setTimeout(() => checkPaymentStatus(paymentHash), 5000);
+      }
+    } catch (err) {
+      setError(`Erreur lors de la vérification du paiement: ${err instanceof Error ? err.message : 'Erreur inconnue'}`);
+    }
+  }, [onSuccess, paymentStatus]);
+
   useEffect(() => {
     const checkWebLN = async (): Promise<void> => {
       try {
@@ -69,21 +83,7 @@ export default function LightningPayment(props: LightningPaymentProps): React.Re
       }
     };
     createInvoice();
-  }, [props.amount, props.productName]);
-
-  const checkPaymentStatus = useCallback(async (paymentHash: string): Promise<void> => {
-    try {
-      const isPaid = await checkPayment(paymentHash);
-      if (isPaid) {
-        setPaymentStatus('success');
-        onSuccess?.();
-      } else if (paymentStatus === 'pending') {
-        setTimeout(() => checkPaymentStatus(paymentHash), 5000);
-      }
-    } catch (err) {
-      setError(`Erreur lors de la vérification du paiement: ${err instanceof Error ? err.message : 'Erreur inconnue'}`);
-    }
-  }, [onSuccess, paymentStatus]);
+  }, [checkPaymentStatus, props.amount, props.productName]);
 
   const payWithWebLN = async (): Promise<void> => {
     if (!invoice || !window.webln) {
