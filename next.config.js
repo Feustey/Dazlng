@@ -51,6 +51,15 @@ const nextConfig = {
     domains: ['*'],
     formats: ['image/avif', 'image/webp']
   },
+  async redirects() {
+    return [
+      {
+        source: '/admin1974',
+        destination: '/admin/dashboard',
+        permanent: true,
+      },
+    ];
+  },
 }
 
 module.exports = nextConfig

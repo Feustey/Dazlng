@@ -18,7 +18,7 @@ type _EndpointConfig = {
 
 type ProtonSession = {
   auth: { actor: string };
-  transact: (args: unknown, opts: unknown) => Promise<any>;
+  transact: (args: unknown, opts: unknown) => Promise<{ processed?: unknown; transaction_id?: string }>;
 };
 
 const ProtonPayment: React.FC<ProtonPaymentProps> = ({ amount, productName, onSuccess, onCancel }) => {
@@ -117,8 +117,8 @@ const ProtonPayment: React.FC<ProtonPaymentProps> = ({ amount, productName, onSu
   };
 
   const logout = async (): Promise<void> => {
-    if (link && session) {
-      await (link as any).removeSession(appIdentifier, session.auth, chainId);
+    if (link && session && typeof appIdentifier === 'string' && typeof session.auth === 'object' && typeof chainId === 'string') {
+      await (link as { removeSession: (appIdentifier: string, auth: { actor: string }, chainId: string) => Promise<void> }).removeSession(appIdentifier, session.auth, chainId);
     }
     setSession(null);
     setLink(null);
@@ -156,7 +156,7 @@ const ProtonPayment: React.FC<ProtonPaymentProps> = ({ amount, productName, onSu
 
       if (result && result.processed) {
         setStatus('success');
-        if (onSuccess) {
+        if (onSuccess && typeof result.transaction_id === 'string') {
           onSuccess(result.transaction_id);
         }
       }

@@ -44,7 +44,7 @@ export function generateEmailTemplate({
 <body>
   <div class=\"email-container\">
     <div class=\"header\">
-      <img src=\"https://dazno.de/assets/images/logo-daznode-white.svg\" alt=\"Daznode Logo\" class=\"logo\">
+      <img src=\"https://www.dazno.de/assets/images/logo-daznode.svg\" alt=\"Daznode Logo\" class=\"logo\">
     </div>
     <div class=\"content\">
       <h1 class=\"title\">${title}</h1>
@@ -69,11 +69,6 @@ export function generateEmailTemplate({
       </div>
     </div>
     <div class=\"footer\">
-      <div class=\"social-links\">
-        <a href=\"nostr:d2d8186182cce5d40e26e7db23ea38d3bf4e10dd98642cc4f5b1fb38efaf438e\" class=\"social-icon\"><img src=\"https://dazno.de/assets/images/social/nostr.svg\" alt=\"Nostr\" width=\"20\" height=\"20\"></a>
-        <a href=\"https://t.me/daznode_bot\" class=\"social-icon\"><img src=\"https://dazno.de/assets/images/social/telegram.svg\" alt=\"Telegram\" width=\"20\" height=\"20\"></a>
-        <a href=\"https://linkedin.com/company/daznode\" class=\"social-icon\"><img src=\"https://dazno.de/assets/images/social/linkedin.svg\" alt=\"LinkedIn\" width=\"20\" height=\"20\"></a>
-      </div>
       <div class=\"footer-links\">
         <a href=\"https://dazno.de/about\" class=\"footer-link\">À propos</a>
         <a href=\"https://dazno.de/contact\" class=\"footer-link\">Contact</a>

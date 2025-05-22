@@ -49,6 +49,9 @@ export default function LoginPage(): React.ReactElement {
     const { error } = await supabase.auth.signUp({
       email: form.email,
       password: form.password,
+      options: {
+        emailRedirectTo: typeof window !== 'undefined' ? `${window.location.origin}/user` : undefined
+      }
     });
     setLoading(false);
     if (error) {

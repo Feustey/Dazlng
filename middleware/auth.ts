@@ -1,11 +1,16 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { JWTManager } from '../utils/jwt-manager';
 
+// Définir une interface étendue pour NextApiRequest
+interface NextApiRequestWithMCP extends NextApiRequest {
+  mcpPayload?: unknown;
+}
+
 export function validateMCPToken(
   req: NextApiRequest,
   res: NextApiResponse,
   next: () => void
-) {
+): void {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader?.startsWith('Bearer ')) {
@@ -22,7 +27,7 @@ export function validateMCPToken(
     const payload = JWTManager.verifyToken(token, secretKey);
 
     // Ajouter le payload vérifié à la requête pour utilisation ultérieure
-    (req as any).mcpPayload = payload;
+    (req as NextApiRequestWithMCP).mcpPayload = payload;
 
     next();
   } catch (error) {

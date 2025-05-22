@@ -47,6 +47,14 @@ function NodeStats({ nodeId }: { nodeId: string }): JSX.Element {
   );
 }
 
+interface Facture {
+  id: string;
+  date: string;
+  montant: number;
+  statut: string;
+  url: string;
+}
+
 const AccountPage: React.FC = () => {
   const [tab, setTab] = useState<'infos' | 'tokens' | 'daznode' | 'factures'>('infos');
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -61,7 +69,7 @@ const AccountPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-  const [factures, setFactures] = useState<any[]>([]); // À remplacer par un vrai type si besoin
+  const [factures, setFactures] = useState<Facture[]>([]);
   const router = useRouter();
   const supabase = createClientComponentClient();
 
