@@ -89,8 +89,8 @@ export default function HomePage(): React.ReactElement {
             <Image
               src="/assets/images/logo-daznode.svg"
               alt="Daznode"
-              width={200}
-              height={80}
+              width={230}
+              height={90}
               className="h-16 md:h-20 w-auto mx-auto"
             />
      
@@ -114,12 +114,7 @@ export default function HomePage(): React.ReactElement {
             </h4>
           </div>
           
-          <p className="italic text-white/80 mb-2 animate-fade-in delay-300 flex items-center justify-center gap-4">
-            <span className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-yellow-200">⚡️ Instantané</span>
-            <span className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-green-200">🔒 Sécurisé</span>
-            <span className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-pink-200">🎁 Récompensé à chaque transaction</span>
-          </p>
-      
+
           {/* Section de flèche de défilement */}
           <div className="mt-12 md:mt-16 flex justify-center">
             <button 
@@ -151,42 +146,50 @@ export default function HomePage(): React.ReactElement {
         <section className="relative w-full bg-gradient-to-r from-yellow-600 to-purple-700 text-white rounded-xl p-6 shadow-lg border border-indigo-500/50">
           <div className="container mx-auto px-4 py-20 md:py-32 flex flex-col md:flex-row items-center justify-between">
             <div className="bg-orange md:w-1/2 mb-10 md:mb-0" data-aos="fade-right">
-              <h1 className="text-4xl md:text-6xl font-bold mb-4">Votre Nœud Lightning<br/><span className="text-yellow-300">Clé en Main</span></h1>
-              <p className="text-xl md:text-2xl mb-8">Rejoignez la révolution Bitcoin Lightning avec une solution plug & play complète, sans connaissance technique.</p>
+              <h1 className="text-4xl md:text-6xl font-bold mb-4">Votre Coffre-Fort Bitcoin Personnel<br/><span className="text-yellow-300">Simplicité, Sécurité, Autonomie</span></h1>
+              <p className="text-xl md:text-2xl mb-8">Imaginez posséder votre propre banque Bitcoin, prête à l'emploi en 5 minutes ! La DazBox vous offre tout le pouvoir du Bitcoin sans aucune complexité. Plug & Play, elle vous garantit le contrôle total de vos finances numériques avec une sécurité maximale.</p>
               <ul className="space-y-3 md:space-y-4 from-white to-gray-50">
-                      <li className="flex items-start" data-aos="fade-up" data-aos-delay="400">
-                        <span className="bg-green-100 p-1 rounded-full mr-3 flex-shrink-0">
-                          <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                          </svg>
-                        </span>
-                        <span className="text-base sm:text-lg text-yellow-50">Installation plug & play en 5 minutes</span>
-                      </li>
-                      <li className="flex items-start" data-aos="fade-up" data-aos-delay="500">
-                        <span className="bg-green-100 p-1 rounded-full mr-3 flex-shrink-0">
-                          <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                          </svg>
-                        </span>
-                        <span className="text-base sm:text-lg text-gray-50">3 mois de Daznode Premium inclus</span>
-                      </li>
-                      <li className="flex items-start" data-aos="fade-up" data-aos-delay="600">
-                        <span className="bg-green-100 p-1 rounded-full mr-3 flex-shrink-0">
-                          <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                          </svg>
-                        </span>
-                        <span className="text-base sm:text-lg text-red-50">Support technique 24/7</span>
-                      </li>
-                      <li className="flex items-start" data-aos="fade-up" data-aos-delay="500">
-                        <span className="bg-green-100 p-1 rounded-full mr-3 flex-shrink-0">
-                          <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                          </svg>
-                        </span>
-                        <span className="text-base sm:text-lg text-red-1000">400 000 sats pour 1 nœud pré-configuré</span>
-                      </li>
-                    </ul>
+                <li className="flex items-start" data-aos="fade-up" data-aos-delay="400">
+                  <span className="bg-green-100 p-1 rounded-full mr-3 flex-shrink-0">
+                    <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </span>
+                  <span className="text-base sm:text-lg text-yellow-50">Installation ultra-simple : branchez, connectez, c'est prêt !</span>
+                </li>
+                <li className="flex items-start" data-aos="fade-up" data-aos-delay="500">
+                  <span className="bg-green-100 p-1 rounded-full mr-3 flex-shrink-0">
+                    <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </span>
+                  <span className="text-base sm:text-lg text-gray-50">Votre argent vous appartient vraiment – zéro intermédiaire</span>
+                </li>
+                <li className="flex items-start" data-aos="fade-up" data-aos-delay="600">
+                  <span className="bg-green-100 p-1 rounded-full mr-3 flex-shrink-0">
+                    <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </span>
+                  <span className="text-base sm:text-lg text-red-50">Interface intuitive pensée pour tous</span>
+                </li>
+                <li className="flex items-start" data-aos="fade-up" data-aos-delay="700">
+                  <span className="bg-green-100 p-1 rounded-full mr-3 flex-shrink-0">
+                    <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </span>
+                  <span className="text-base sm:text-lg text-red-1000">Assistant IA intégré pour vous guider</span>
+                </li>
+                <li className="flex items-start" data-aos="fade-up" data-aos-delay="800">
+                  <span className="bg-green-100 p-1 rounded-full mr-3 flex-shrink-0">
+                    <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </span>
+                  <span className="text-base sm:text-lg text-yellow-50">400 000 satoshis, soit 0,004 BTC(≈ 399€) – livraison incluse</span>
+                </li>
+              </ul>
             </div>
             <div className="md:w-1/2 relative" data-aos="fade-left">
               <div className="relative w-full max-w-md mx-auto">
@@ -200,9 +203,8 @@ export default function HomePage(): React.ReactElement {
                   />
                 </div>
                 <div className="absolute -bottom-8 -right-4 p-6 shadow-lg">
-                <a className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 transition-colors duration-200 shadow-lg hover:shadow-xl" href="/checkout/dazbox">
-                        
-                  Daz GO now !
+                  <a className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 transition-colors duration-200 shadow-lg hover:shadow-xl" href="/checkout/dazbox">
+                    Je Prends le Contrôle !
                   </a>
                 </div>
               </div>
@@ -340,10 +342,9 @@ export default function HomePage(): React.ReactElement {
           </div>
         </section>
         {/* SECTION 3 - Pourquoi choisir Daz ? */}
-        {/* Bloc Pricing inspiré de az-sweden.webflow.io */}
         <section className="py-20 bg-transparent">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl md:text-5xl font-bold text-orange-600 text-center mb-6" data-aos="fade-up">En résumé : une offre pour tous</h2><br/>
+            <h2 className="text-3xl md:text-5xl font-bold text-orange-600 text-center mb-6" data-aos="fade-up">La DazBox : Votre Première Étape vers la Liberté Financière</h2><br/>
             <div className="grid md:grid-cols-3 gap-4 md:gap-0 relative">
               {/* Carte DazBox - maintenant au centre et en avant */}
               <div className="bg-white rounded-2xl shadow-xl overflow-hidden relative z-20 flex flex-col justify-between scale-110 md:scale-110 md:col-start-2 md:row-start-1 md:row-end-3 md:translate-y-[-5%]" style={{marginLeft: '-2rem', marginRight: '-2rem'}} data-aos="fade-up">
@@ -354,32 +355,50 @@ export default function HomePage(): React.ReactElement {
                     <span className="text-5xl font-bold">400K</span>
                     <span className="text-xl text-gray-500 ml-2">sats</span>
                   </div>
-                  <p className="text-gray-600 mb-8 text-center">Votre nœud Lightning clé en main</p>
+                  <p className="text-gray-600 mb-8 text-center">La DazBox transforme votre rapport à l'argent. Plus qu'un simple appareil, c'est votre porte d'entrée vers un monde où vous êtes aux commandes. Fini les banques qui décident pour vous, les frais cachés et les restrictions ! Avec la DazBox, vos bitcoins vous appartiennent vraiment, sont accessibles 24/7, et chaque transaction est instantanée et économique.\n\nNotre solution tout-en-un inclut un assistant virtuel qui vous accompagne et vous explique chaque étape en langage clair. Que vous soyez novice ou initié, la DazBox s'adapte à vos besoins et évolue avec vous.</p>
                   <ul className="space-y-3 mb-8">
                     <li className="flex items-start">
                       <svg className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span className="text-gray-700">Installation plug & play 5 min</span>
+                      <span className="text-gray-700">Simplicité absolue : Branchez, suivez le guide, c'est prêt en 5 minutes</span>
                     </li>
                     <li className="flex items-start">
                       <svg className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span className="text-gray-700">3 mois de DazNode Premium inclus</span>
+                      <span className="text-gray-700">Protection maximale : Vos bitcoins sous votre contrôle, à l'abri des piratages</span>
                     </li>
                     <li className="flex items-start">
                       <svg className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span className="text-gray-700">Support technique 24/7</span>
+                      <span className="text-gray-700">Paiements facilités : Envoyez et recevez de l'argent instantanément, sans intermédiaire</span>
+                    </li>
+                    <li className="flex items-start">
+                      <svg className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span className="text-gray-700">Assistant personnel : L'IA DazIA répond à toutes vos questions en langage simple</span>
+                    </li>
+                    <li className="flex items-start">
+                      <svg className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span className="text-gray-700">Support humain : Une équipe réactive disponible 24/7 pour vous accompagner</span>
+                    </li>
+                    <li className="flex items-start">
+                      <svg className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span className="text-gray-700">Évolutive : Commencez simplement et découvrez de nouvelles fonctionnalités à votre rythme</span>
                     </li>
                   </ul>
                   <div className="mt-auto"></div>
                 </div>
                 <div className="p-8 bg-gray-50 border-t">
                   <a href="/checkout/dazbox" className="block w-full bg-indigo-600 text-white text-center py-4 rounded-xl font-semibold hover:bg-indigo-700 transition-colors duration-200">
-                    Daz GO now !
+                    Je Prends le Contrôle !
                   </a>
                 </div>
               </div>
@@ -467,10 +486,10 @@ export default function HomePage(): React.ReactElement {
           </div>
           <div className="container mx-auto px-4 py-16 sm:py-20 md:py-24">
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6" data-aos="fade-up">Prêt à rejoindre la révolution Lightning ?</h2>
-              <p className="text-lg sm:text-xl md:text-2xl mb-8 text-indigo-100" data-aos="fade-up" data-aos-delay="100">Commencez aujourd&apos;hui avec votre DazBox et découvrez la puissance du réseau Lightning Network.</p>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6" data-aos="fade-up">Prenez le Contrôle Dès Maintenant</h2>
+              <p className="text-lg sm:text-xl md:text-2xl mb-8 text-indigo-100" data-aos="fade-up" data-aos-delay="100">Pourquoi attendre pour découvrir la liberté financière ? La DazBox vous est livrée prête à l'emploi, avec 3 mois d'assistance premium inclus. En quelques minutes, vous ferez partie de la révolution financière qui change déjà le monde.\n\nRejoignez les milliers d'utilisateurs qui ont fait le pas vers leur indépendance financière. Commandez votre DazBox aujourd'hui et découvrez pourquoi nos clients la considèrent comme l'investissement le plus intelligent et le plus simple pour entrer dans le monde du Bitcoin.</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center" data-aos="fade-up" data-aos-delay="200">
-                <a className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold border-2 border-white text-white hover:bg-white/10 rounded-xl transition-all duration-200" href="/contact">Parler à un expert</a>
+                <a className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold border-2 border-white text-white hover:bg-white/10 rounded-xl transition-all duration-200" href="/checkout/dazbox">Je Commande Ma DazBox</a>
               </div>
               <div className="mt-12 flex flex-wrap justify-center items-center gap-6" data-aos="fade-up" data-aos-delay="300">
                 <div className="flex items-center bg-white/10 rounded-full px-4 py-2">
