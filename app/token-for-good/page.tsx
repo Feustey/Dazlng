@@ -150,7 +150,7 @@ export default function TokenForGoodPage(): React.ReactElement {
           En faisant partie et en contribuant à la plateforme Token For Good, vous aiderez d'autres utilisateurs et acteurs de la décentralisation du réseau lightning : Créez un profil, collectez des tokens, gagnez en visibilité, obtenez des certifications et bien d'autres avantages encore.
         </p>
         <div className="flex justify-center">
-          <a href="#" className="bg-[#1a1a1a] text-white px-8 py-3 rounded-full font-semibold shadow hover:bg-[#333] transition">S'inscrire</a>
+          <a href="app.token-for-good.com/login" className="bg-[#1a1a1a] text-white px-8 py-3 rounded-full font-semibold shadow hover:bg-[#333] transition">S'inscrire</a>
         </div>
       </section>
 

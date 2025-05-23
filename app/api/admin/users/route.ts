@@ -1,1 +1,21 @@
-export {}; 
+import { NextRequest, NextResponse } from "next/server";
+import { supabase } from "@/lib/supabase";
+import { validateAdminAccess } from "@/utils/adminHelpers";
+
+export async function GET(req: NextRequest): Promise<Response> {
+  const isAdmin = await validateAdminAccess(req);
+  if (!isAdmin) {
+    return NextResponse.json({ error: "Accès non autorisé" }, { status: 403 });
+  }
+  const { searchParams } = new URL(req.url);
+  const limit = parseInt(searchParams.get("limit") || "10", 10);
+  const sort = searchParams.get("sort") || "created_at:desc";
+  const [sortField, sortOrder] = sort.split(":");
+  let query = supabase.from("users").select("id, name, email, company, created_at");
+  query = query.order(sortField, { ascending: sortOrder === "asc" }).limit(limit);
+  const { data, error } = await query;
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  }
+  return NextResponse.json(data);
+} 

@@ -125,9 +125,9 @@ const ContactPage: React.FC = () => {
       </div>
 
       {/* CONTENT */}
-      <main className="w-full overflow-x-hidden font-sans bg-white">
+      <main className="w-full overflow-x-hidden font-sans bg-gradient-to-br from-indigo-100 to-purple-100">
         <div className="container mx-auto px-4 py-16 relative" style={{ marginTop: "-100px" }}>
-          <div className="bg-white rounded-2xl shadow-xl p-8 md:p-10" data-aos="fade-up">
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-8 md:p-10 border border-indigo-200" data-aos="fade-up">
             {success && (
               <div className="bg-gradient-to-r from-green-400 to-emerald-500 text-white p-6 rounded-xl mb-8 flex items-center shadow-md animate-fade-in">
                 <div className="bg-white/20 p-3 rounded-full mr-4">
@@ -311,27 +311,27 @@ const ContactPage: React.FC = () => {
           {/* Section FAQ */}
           <section className="mt-16" data-aos="fade-up" data-aos-delay="400">
             <div className="text-center mb-10">
-              <h2 className="text-3xl font-bold text-indigo-600">Questions fréquentes</h2>
-              <p className="text-gray-600 mt-2">Réponses aux questions les plus courantes</p>
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-700 text-transparent bg-clip-text">Questions fréquentes</h2>
+              <p className="text-gray-700 mt-2">Réponses aux questions les plus courantes</p>
             </div>
             
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-white rounded-xl p-6 shadow-md border-l-4 border-indigo-600" data-aos="fade-up" data-aos-delay="500">
+              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-md border-l-4 border-indigo-600 hover:shadow-lg transition-all" data-aos="fade-up" data-aos-delay="500">
                 <h3 className="font-bold text-lg mb-2 text-indigo-900">Combien de temps pour une réponse ?</h3>
                 <p className="text-gray-700">Nous nous engageons à répondre à toutes les demandes dans un délai maximum de 24 à 48h ouvrées.</p>
               </div>
               
-              <div className="bg-white rounded-xl p-6 shadow-md border-l-4 border-purple-600" data-aos="fade-up" data-aos-delay="600">
+              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-md border-l-4 border-purple-600 hover:shadow-lg transition-all" data-aos="fade-up" data-aos-delay="600">
                 <h3 className="font-bold text-lg mb-2 text-purple-900">Comment obtenir un support technique ?</h3>
                 <p className="text-gray-700">Nos clients bénéficient d'un support prioritaire 24/7 via notre portail dédié ou par email.</p>
               </div>
               
-              <div className="bg-white rounded-xl p-6 shadow-md border-l-4 border-emerald-600" data-aos="fade-up" data-aos-delay="700">
+              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-md border-l-4 border-emerald-600 hover:shadow-lg transition-all" data-aos="fade-up" data-aos-delay="700">
                 <h3 className="font-bold text-lg mb-2 text-emerald-900">Comment demander un devis personnalisé ?</h3>
                 <p className="text-gray-700">Utilisez ce formulaire en sélectionnant "Demande de conseil" comme sujet et précisez vos besoins spécifiques.</p>
               </div>
               
-              <div className="bg-white rounded-xl p-6 shadow-md border-l-4 border-yellow-600" data-aos="fade-up" data-aos-delay="800">
+              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-md border-l-4 border-yellow-600 hover:shadow-lg transition-all" data-aos="fade-up" data-aos-delay="800">
                 <h3 className="font-bold text-lg mb-2 text-yellow-900">Proposez-vous des démonstrations ?</h3>
                 <p className="text-gray-700">Absolument ! Contactez-nous pour organiser une démonstration personnalisée de nos solutions.</p>
               </div>

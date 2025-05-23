@@ -118,11 +118,11 @@ export default function DaznodePage(): React.ReactElement {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 to-purple-950">
       {/* Section Hero */}
-      <div className="relative bg-gradient-to-br from-indigo-600 to-purple-800 text-white py-20 px-4 overflow-hidden">
+      <div className="relative bg-gradient-to-br from-indigo-600 to-purple-800 text-white py-20 px-4 overflow-hidden w-full">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0 bg-[url('/assets/images/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
         </div>
-        <div className="max-w-7xl mx-auto relative z-10">
+        <div className="mx-auto relative z-10">
           <div className="text-center" data-aos="fade-up">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-300">DazNode</span>
@@ -141,8 +141,8 @@ export default function DaznodePage(): React.ReactElement {
       </div>
 
       {/* Section Caractéristiques */}
-      <div id="features" className="py-20 px-4 bg-indigo-950">
-        <div className="max-w-7xl mx-auto">
+      <div id="features" className="py-20 px-4 bg-indigo-950 w-full">
+        <div className="mx-auto">
           <div className="text-center mb-16" data-aos="fade-up">
             <h2 className="text-4xl font-bold text-white mb-6">Toute la puissance de notre IA et son heuristic</h2>
             <p className="text-xl text-indigo-200 max-w-3xl mx-auto">Une plateforme intégrant Intelligence Artificielle (IA), notamment via des systèmes RAG (Retrieval-Augmented Generation), pour la gestion des connaissances et l'optimisation du Réseau Lightning.</p>
@@ -224,8 +224,8 @@ export default function DaznodePage(): React.ReactElement {
       </div>
 
       {/* Section Tarifs */}
-      <div id="pricing" className="py-20 px-4 bg-gradient-to-br from-purple-950 to-indigo-950">
-        <div className="max-w-7xl mx-auto">
+      <div id="pricing" className="py-20 px-4 bg-gradient-to-br from-purple-950 to-indigo-950 w-full">
+        <div className="mx-auto">
           <div className="text-center mb-16" data-aos="fade-up">
             <h2 className="text-4xl font-bold text-white mb-6">Nos Formules d'Abonnement</h2>
             <p className="text-xl text-indigo-200 max-w-3xl mx-auto">Choisissez l'offre qui correspond à vos besoins et boostez les performances de votre nœud Lightning.</p>

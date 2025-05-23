@@ -3,6 +3,7 @@ import React, { useEffect, useState, Suspense } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Image from 'next/image';
+import DazBoxOffer from "@/components/shared/ui/DazBoxOffer";
 
 // Composant client séparé pour gérer les paramètres d'URL
 const SignupConfirmation: React.FC = () => {
@@ -192,22 +193,7 @@ export default function HomePage(): React.ReactElement {
               </ul>
             </div>
             <div className="md:w-1/2 relative" data-aos="fade-left">
-              <div className="relative w-full max-w-md mx-auto">
-                <div className="rounded-3xl overflow-hidden shadow-2xl bg-white p-4">
-                  <Image
-                    alt="DazBox Device"
-                    src="/assets/images/dazbox.png"
-                    width={500}
-                    height={500}
-                    className="w-full h-auto object-contain"
-                  />
-                </div>
-                <div className="absolute -bottom-8 -right-4 p-6 shadow-lg">
-                  <a className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 transition-colors duration-200 shadow-lg hover:shadow-xl" href="/checkout/dazbox">
-                    Je Prends le Contrôle !
-                  </a>
-                </div>
-              </div>
+              <DazBoxOffer />
             </div>
           </div>
         </section>

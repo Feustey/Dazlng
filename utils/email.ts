@@ -33,6 +33,26 @@ export function generateEmailTemplate({
   ctaText = '',
   ctaLink = ''
 }: EmailTemplateParams): string {
+  if (title.toLowerCase().includes('code de connexion') || mainContent.toLowerCase().includes('code de connexion')) {
+    return `<!DOCTYPE html>
+<html lang=\"fr\">
+<head>
+  <meta charset=\"UTF-8\">
+  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+  <title>Dazno.de</title>
+  <style>body{background:#f9fafb;font-family:sans-serif;margin:0;padding:0}.container{max-width:480px;margin:40px auto;background:#fff;border-radius:12px;box-shadow:0 2px 8px #0001;padding:32px 24px}.logo{text-align:center;margin-bottom:24px}.title{font-size:1.5rem;font-weight:700;margin-bottom:12px;text-align:center}.content{font-size:1.1rem;text-align:center;margin-bottom:24px}.footer{font-size:0.9rem;color:#a1a1aa;text-align:center;margin-top:32px}</style>
+</head>
+<body>
+  <div class=\"container\">
+    <div class=\"logo\">
+      <img src=\"https://www.dazno.de/assets/images/logo-daznode.svg\" alt=\"Daznode Logo\" height=\"48\" />
+    </div>
+    <div class=\"title\">${title}</div>
+    <div class=\"content\">${mainContent}</div>
+  </div>
+</body>
+</html>`;
+  }
   return `<!DOCTYPE html>
 <html lang=\"fr\">
 <head>
@@ -50,32 +70,18 @@ export function generateEmailTemplate({
       <h1 class=\"title\">${title}</h1>
       <p class=\"text\">${username ? `Cher(e) ${username},` : ''}</p>
       <p class=\"text\">${mainContent}</p>
-      <div class=\"reassurance\">
-        <h3 class=\"reassurance-title\">Pourquoi nous faire confiance?</h3>
-        <p class=\"reassurance-text\">Daznode est l'expert français en solutions Lightning Network pour particuliers et entreprises. Notre plateforme sécurisée garantit une expérience utilisateur optimale, soutenue par une équipe dédiée disponible 7j/7.</p>
-      </div>
       ${subtitle ? `<h2 class=\"subtitle\">${subtitle}</h2>` : ''}
       ${detailedContent ? `<p class=\"text\">${detailedContent}</p>` : ''}
       ${ctaText && ctaLink ? `<a href=\"${ctaLink}\" class=\"cta-button\">${ctaText}</a>` : ''}
-      <div class=\"token-section\">
-        <h3 class=\"token-title\">Découvrez Token For Good</h3>
-        <p>La blockchain au service de l'impact social et environnemental positif. Rejoignez notre communauté engagée et contribuez à des causes qui comptent.</p>
-        <a href=\"https://dazno.de/token-for-good\" style=\"color: #FFFFFF; text-decoration: underline; font-weight: 600;\">En savoir plus →</a>
+      <div class=\"footer\">
+        <div class=\"footer-links\">
+          <a href=\"https://dazno.de/about\" class=\"footer-link\">À propos</a>
+          <a href=\"https://dazno.de/contact\" class=\"footer-link\">Contact</a>
+          <a href=\"https://dazno.de/terms\" class=\"footer-link\">Conditions</a>
+          <a href=\"https://dazno.de/unsubscribe\" class=\"footer-link\">Désabonnement</a>
+        </div>
+        <p class=\"copyright\">© 2025 Dazno.de - Tous droits réservés | Réalisé avec 💙 par <a href=\"https://inoval.io\" style=\"color: #A1A1AA;\">Inoval</a></p>
       </div>
-      <div class=\"dazdocs-section\">
-        <h3 class=\"dazdocs-title\">Consultez DazDocs</h3>
-        <p>Votre base documentaire complète pour tout comprendre sur l'écosystème Daz. Guides, tutoriels et ressources à votre disposition.</p>
-        <a href=\"https://docs.dazno.de\" style=\"color: #181825; text-decoration: underline; font-weight: 600;\">Accéder à DazDocs →</a>
-      </div>
-    </div>
-    <div class=\"footer\">
-      <div class=\"footer-links\">
-        <a href=\"https://dazno.de/about\" class=\"footer-link\">À propos</a>
-        <a href=\"https://dazno.de/contact\" class=\"footer-link\">Contact</a>
-        <a href=\"https://dazno.de/terms\" class=\"footer-link\">Conditions</a>
-        <a href=\"https://dazno.de/unsubscribe\" class=\"footer-link\">Désabonnement</a>
-      </div>
-      <p class=\"copyright\">© 2025 Dazno.de - Tous droits réservés | Réalisé avec 💙 par <a href=\"https://inoval.io\" style=\"color: #A1A1AA;\">Inoval</a></p>
     </div>
   </div>
 </body>

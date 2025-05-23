@@ -1,228 +1,164 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 export default function LoginPage(): React.ReactElement {
-  const [tab, setTab] = useState<'login' | 'signup'>('login');
-  const [form, setForm] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
+  const [form, setForm] = useState({ email: '', code: '' });
+  const [step, setStep] = useState<1 | 2>(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
   const router = useRouter();
-  const supabase = createClientComponentClient();
+  const codeInputRef = useRef<HTMLInputElement>(null);
 
-  const handleLogin = async (): Promise<void> => {
+  useEffect(() => {
+    if (step === 2 && codeInputRef.current) {
+      codeInputRef.current.focus();
+    }
+  }, [step]);
+
+  const handleSendCode = async (): Promise<void> => {
     setError(null);
-    if (!form.email || !form.password) {
-      setError('Veuillez remplir tous les champs');
+    setInfo(null);
+    if (!form.email) {
+      setError('Veuillez saisir votre email');
       return;
     }
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email: form.email,
-      password: form.password,
+    const res = await fetch('/api/auth/send-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: form.email })
     });
     setLoading(false);
-    if (error) {
-      setError(error.message);
+    if (res.ok) {
+      setStep(2);
+      setInfo('Un code vient de vous être envoyé par email.');
     } else {
-      router.push('/account');
+      setError("Erreur lors de l'envoi du code");
     }
   };
 
-  const handleSignup = async (): Promise<void> => {
+  const handleVerifyCode = async (): Promise<void> => {
     setError(null);
-    if (!form.email || !form.password || !form.confirmPassword) {
-      setError('Veuillez remplir tous les champs');
-      return;
-    }
-    if (form.password !== form.confirmPassword) {
-      setError('Les mots de passe ne correspondent pas');
+    setInfo(null);
+    if (!form.email || !form.code) {
+      setError('Veuillez saisir votre email et le code reçu');
       return;
     }
     setLoading(true);
-    const { error } = await supabase.auth.signUp({
-      email: form.email,
-      password: form.password,
-      options: {
-        emailRedirectTo: typeof window !== 'undefined' ? `${window.location.origin}/user` : undefined
-      }
+    const res = await fetch('/api/auth/verify-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: form.email, code: form.code })
     });
     setLoading(false);
-    if (error) {
-      setError(error.message);
+    if (res.ok) {
+      const data = await res.json();
+      localStorage.setItem('jwt', data.token);
+      if (form.email.trim().toLowerCase() === 'contact@dazno.de') {
+        router.push('/admin/dashboard');
+      } else {
+        router.push('/user');
+      }
     } else {
-      setError("Un email de confirmation vous a été envoyé. Veuillez vérifier votre boîte mail avant de vous connecter.");
+      setError('Code invalide ou expiré');
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <div className="flex justify-center mb-6">
-            <button
-              className={`px-4 py-2 rounded-t-md font-bold ${
-                tab === 'login'
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-gray-200 text-gray-700'
-              }`}
-              onClick={() => {
-                setTab('login');
-                setForm({ email: '', password: '', confirmPassword: '' });
-                setError(null);
-              }}
-            >
-              Connexion
-            </button>
-            <button
-              className={`px-4 py-2 rounded-t-md font-bold ml-2 ${
-                tab === 'signup'
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-gray-200 text-gray-700'
-              }`}
-              onClick={() => {
-                setTab('signup');
-                setForm({ email: '', password: '', confirmPassword: '' });
-                setError(null);
-              }}
-            >
-              Créer un compte
-            </button>
-          </div>
-          <h2 className="mt-2 text-center text-3xl font-extrabold text-gray-900">
-            {tab === 'login' ? 'Connexion à votre compte' : 'Créer un compte'}
-          </h2>
-        </div>
-        {tab === 'login' ? (
-          <form className="mt-8 space-y-6" onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
-            <div className="rounded-md shadow-sm -space-y-px">
-              <div>
-                <label htmlFor="email" className="sr-only">
-                  Adresse email
-                </label>
+      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
+        <h2 className="mt-2 text-center text-2xl font-bold text-gray-900">
+          {step === 1
+            ? 'Recevez votre code de connexion'
+            : 'Entrez le code reçu par email'}
+        </h2>
+        <form
+          className="mt-8 space-y-6"
+          onSubmit={e => {
+            e.preventDefault();
+            step === 1 ? handleSendCode() : handleVerifyCode();
+          }}
+        >
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Adresse email
+              </label>
+              <div className="mt-1 relative rounded-md shadow-sm">
                 <input
                   id="email"
                   name="email"
                   type="email"
                   autoComplete="email"
                   required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 bg-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Adresse email"
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="exemple@domaine.com"
                   value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  disabled={loading}
+                  onChange={e => setForm({ ...form, email: e.target.value })}
+                  disabled={loading || step === 2}
                 />
-              </div>
-              <div>
-                <label htmlFor="password" className="sr-only">
-                  Mot de passe
-                </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 bg-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Mot de passe"
-                  value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  disabled={loading}
-                />
+                <span className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M16 12H8m8 0V8a4 4 0 00-8 0v4m8 0v4a4 4 0 01-8 0v-4" /></svg>
+                </span>
               </div>
             </div>
-            {error && <div className="text-red-600 text-sm mt-2">{error}</div>}
-            <div>
-              <button
-                type="submit"
-                disabled={loading}
-                className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${
-                  loading
-                    ? 'bg-indigo-400 cursor-not-allowed'
-                    : 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-                }`}
-              >
-                {loading ? 'Connexion en cours...' : 'Se connecter'}
-              </button>
-            </div>
-          </form>
-        ) : (
-          <form className="mt-8 space-y-6" onSubmit={(e) => { e.preventDefault(); handleSignup(); }}>
-            <div className="rounded-md shadow-sm -space-y-px">
+            {step === 2 && (
               <div>
-                <label htmlFor="signup-email" className="sr-only">
-                  Adresse email
+                <label htmlFor="code" className="block text-sm font-medium text-gray-700">
+                  Code reçu
                 </label>
                 <input
-                  id="signup-email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
+                  id="code"
+                  name="code"
+                  type="text"
+                  autoComplete="one-time-code"
                   required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 bg-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Adresse email"
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Code reçu par email"
+                  value={form.code}
+                  onChange={e => setForm({ ...form, code: e.target.value })}
                   disabled={loading}
+                  ref={codeInputRef}
                 />
-              </div>
-              <div>
-                <label htmlFor="signup-password" className="sr-only">
-                  Mot de passe
-                </label>
-                <input
-                  id="signup-password"
-                  name="password"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 bg-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Mot de passe"
-                  value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                <button
+                  type="button"
+                  className="text-xs text-indigo-600 mt-2 underline"
+                  onClick={() => {
+                    setStep(1);
+                    setForm({ ...form, code: '' });
+                  }}
                   disabled={loading}
-                />
+                >
+                  Changer d'email
+                </button>
               </div>
-              <div>
-                <label htmlFor="signup-confirm-password" className="sr-only">
-                  Confirmer le mot de passe
-                </label>
-                <input
-                  id="signup-confirm-password"
-                  name="confirmPassword"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 bg-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Confirmer le mot de passe"
-                  value={form.confirmPassword}
-                  onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
-                  disabled={loading}
-                />
-              </div>
-            </div>
-            {error && <div className="text-red-600 text-sm mt-2">{error}</div>}
-            <div>
-              <button
-                type="submit"
-                disabled={loading}
-                className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${
-                  loading
-                    ? 'bg-indigo-400 cursor-not-allowed'
-                    : 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-                }`}
-              >
-                {loading ? 'Création du compte...' : 'Créer un compte'}
-              </button>
-            </div>
-          </form>
-        )}
+            )}
+          </div>
+          {error && <div className="bg-red-100 text-red-700 px-3 py-2 rounded mt-2 text-sm">{error}</div>}
+          {info && <div className="bg-green-100 text-green-700 px-3 py-2 rounded mt-2 text-sm">{info}</div>}
+          <div>
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white transition ${
+                loading
+                  ? 'bg-indigo-400 cursor-not-allowed'
+                  : 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+              }`}
+            >
+              {loading
+                ? (step === 1 ? 'Envoi du code...' : 'Connexion...')
+                : (step === 1 ? 'Recevoir le code' : 'Se connecter')}
+            </button>
+          </div>
+        </form>
+        <div className="text-xs text-gray-400 text-center mt-4">
+          Votre email ne sera jamais partagé. <br />
+          <span className="italic">Besoin d'aide ? Contactez-nous.</span>
+        </div>
       </div>
     </div>
   );
