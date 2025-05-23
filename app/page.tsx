@@ -355,7 +355,9 @@ export default function HomePage(): React.ReactElement {
                     <span className="text-5xl font-bold">400K</span>
                     <span className="text-xl text-gray-500 ml-2">sats</span>
                   </div>
-                  <p className="text-gray-600 mb-8 text-center">La DazBox transforme votre rapport à l'argent. Plus qu'un simple appareil, c'est votre porte d'entrée vers un monde où vous êtes aux commandes. Fini les banques qui décident pour vous, les frais cachés et les restrictions ! Avec la DazBox, vos bitcoins vous appartiennent vraiment, sont accessibles 24/7, et chaque transaction est instantanée et économique.\n\nNotre solution tout-en-un inclut un assistant virtuel qui vous accompagne et vous explique chaque étape en langage clair. Que vous soyez novice ou initié, la DazBox s'adapte à vos besoins et évolue avec vous.</p>
+                  <p className="text-gray-600 mb-8 text-center">La DazBox transforme votre rapport à l'argent. Plus qu'un simple appareil, c'est votre porte d'entrée vers un monde où vous êtes aux commandes. Avec la DazBox, vos bitcoins vous appartiennent vraiment, sont accessibles 24/7, et chaque transaction est instantanée et économique.
+                  <br/>
+                  Notre solution tout-en-un inclut un assistant virtuel qui vous accompagne et vous explique chaque étape en langage clair. Que vous soyez novice ou initié, la DazBox s'adapte à vos besoins et évolue avec vous.</p>
                   <ul className="space-y-3 mb-8">
                     <li className="flex items-start">
                       <svg className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -487,7 +489,8 @@ export default function HomePage(): React.ReactElement {
           <div className="container mx-auto px-4 py-16 sm:py-20 md:py-24">
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6" data-aos="fade-up">Prenez le Contrôle Dès Maintenant</h2>
-              <p className="text-lg sm:text-xl md:text-2xl mb-8 text-indigo-100" data-aos="fade-up" data-aos-delay="100">Pourquoi attendre pour découvrir la liberté financière ? La DazBox vous est livrée prête à l'emploi, avec 3 mois d'assistance premium inclus. En quelques minutes, vous ferez partie de la révolution financière qui change déjà le monde.\n\nRejoignez les milliers d'utilisateurs qui ont fait le pas vers leur indépendance financière. Commandez votre DazBox aujourd'hui et découvrez pourquoi nos clients la considèrent comme l'investissement le plus intelligent et le plus simple pour entrer dans le monde du Bitcoin.</p>
+              <p className="text-lg sm:text-xl md:text-2xl mb-8 text-indigo-100" data-aos="fade-up" data-aos-delay="100">Pourquoi attendre pour découvrir la liberté financière ? La DazBox vous est livrée prête à l'emploi, avec 3 mois d'assistance premium inclus. En quelques minutes, vous ferez partie de la révolution financière qui change déjà le monde.</p>
+              <p className="text-lg sm:text-xl md:text-2xl mb-8 text-indigo-100" data-aos="fade-up" data-aos-delay="100">Rejoignez les milliers d'utilisateurs qui ont fait le pas vers leur indépendance financière. Commandez votre DazBox aujourd'hui et découvrez pourquoi nos clients la considèrent comme l'investissement le plus intelligent et le plus simple pour entrer dans le monde du Bitcoin.</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center" data-aos="fade-up" data-aos-delay="200">
                 <a className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold border-2 border-white text-white hover:bg-white/10 rounded-xl transition-all duration-200" href="/checkout/dazbox">Je Commande Ma DazBox</a>
               </div>
@@ -520,9 +523,9 @@ export default function HomePage(): React.ReactElement {
           <div className="container mx-auto px-4">
             <h2 className="text-center text-2xl font-bold bg-gradient-to-r from-yellow-300 via-pink-400 to-yellow-400 text-transparent bg-clip-text mb-10">Partenaires :</h2>
             <div className="flex flex-wrap justify-center items-center gap-12">
-              <Image alt="Blockchain for Good" src="/assets/images/logo-blockchain_for_good.svg" width={120} height={60} className="h-12 w-auto grayscale hover:grayscale-0 transition-all" />
-              <Image alt="Inoval" src="/assets/images/logo-inoval.png" width={120} height={60} className="h-12 w-auto grayscale hover:grayscale-0 transition-all" />
-              <Image alt="Bitcoin Meetup" src="/assets/images/logo-Meetup.jpg" width={120} height={60} className="h-12 w-auto grayscale hover:grayscale-0 transition-all" />
+              <a href="https://blockchainforgood.fr" target="_blank" rel="noopener noreferrer"><Image alt="Blockchain for Good" src="/assets/images/logo-blockchain_for_good.svg" width={120} height={60} className="h-12 w-auto grayscale hover:grayscale-0 transition-all" /></a>
+              <a href="https://inoval.fr" target="_blank" rel="noopener noreferrer"><Image alt="Inoval" src="/assets/images/logo-inoval.png" width={120} height={60} className="h-12 w-auto grayscale hover:grayscale-0 transition-all" /></a>
+              <a href="https://nantesbitcoinmeetup.notion.site/Nantes-Bitcoin-Meetup-c2202d5100754ad1b57c02c83193da96" target="_blank" rel="noopener noreferrer"><Image alt="Nantes Bitcoin Meetup" src="/assets/images/logo-meetup.jpg" width={120} height={60} className="h-12 w-auto grayscale hover:grayscale-0 transition-all" /></a>
               <br/>
             </div>
           </div>
