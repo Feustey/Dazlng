@@ -34,12 +34,13 @@ const DazBoxOffer: FC = () => {
       </ul>
 
       {/* CTA */}
-      <button
+      <a
+        href="/checkout/dazbox"
         className="flex items-center justify-center gap-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white text-lg font-bold rounded-xl shadow-lg transition w-full md:w-auto"
       >
         <FaBolt className="w-5 h-5" />
         Commander ma DazBox
-      </button>
+      </a>
       <p className="text-xs text-gray-100 mt-2 text-center">
         Livraison rapide et paiement sécurisé
       </p>
