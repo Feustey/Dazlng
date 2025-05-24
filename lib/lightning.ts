@@ -66,4 +66,6 @@ export async function checkPayment(invoiceId: string): Promise<boolean> {
 
   const data = await response.json();
   return data.status === 'settled';
-} 
+}
+
+export type { Invoice }; 

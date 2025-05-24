@@ -13,6 +13,8 @@ interface PricingCardProps {
   microcopy?: string;
   color: string; // ex: 'from-orange-400 via-pink-500 to-purple-600'
   icon: ReactNode;
+  buttonText?: string;
+  onPress?: () => void;
 }
 
 const PricingCard: FC<PricingCardProps> = ({
@@ -25,7 +27,9 @@ const PricingCard: FC<PricingCardProps> = ({
   highlight,
   microcopy,
   color,
-  icon
+  icon,
+  buttonText,
+  onPress
 }) => {
   return (
     <div className={`flex flex-col rounded-3xl shadow-2xl p-8 items-center bg-gradient-to-br ${color} relative text-white`}>
@@ -46,10 +50,20 @@ const PricingCard: FC<PricingCardProps> = ({
           </li>
         ))}
       </ul>
-      <Link href={ctaHref} className="flex items-center justify-center gap-2 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white text-base font-bold rounded-xl shadow-lg transition w-full md:w-auto">
-        <FaBolt className="w-4 h-4" />
-        {cta}
-      </Link>
+      {typeof window !== 'undefined' && navigator.product === 'ReactNative' && onPress ? (
+        <button
+          className="flex items-center justify-center gap-2 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white text-base font-bold rounded-xl shadow-lg transition w-full md:w-auto"
+          onClick={onPress}
+        >
+          <FaBolt className="w-4 h-4" />
+          {buttonText || cta}
+        </button>
+      ) : (
+        <Link href={ctaHref} className="flex items-center justify-center gap-2 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white text-base font-bold rounded-xl shadow-lg transition w-full md:w-auto">
+          <FaBolt className="w-4 h-4" />
+          {cta}
+        </Link>
+      )}
       {microcopy && <p className="text-xs text-gray-100 mt-2 text-center">{microcopy}</p>}
     </div>
   );

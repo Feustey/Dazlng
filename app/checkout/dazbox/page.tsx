@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { generateInvoice } from '../../../lib/lightning';
 import Image from 'next/image';
 import ProtonPayment from '../../../components/shared/ui/ProtonPayment';
+import type { Invoice } from '../../../lib/lightning';
 
 function CheckoutContent(): React.ReactElement {
   useEffect(() => {
@@ -38,7 +39,7 @@ function CheckoutContent(): React.ReactElement {
   const [promoApplied, setPromoApplied] = useState(false);
   const [useAsBilling, setUseAsBilling] = useState(true);
   const [showLightning, setShowLightning] = useState(false);
-  const [paymentHash, setPaymentHash] = useState<string | null>(null);
+  const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const supabase = createClientComponentClient();
@@ -89,9 +90,8 @@ function CheckoutContent(): React.ReactElement {
     setIsLoading(true);
     setError(null);
     try {
-      // Générer la facture Lightning
       const invoiceData = await generateInvoice({ amount: getPrice(), memo: `Paiement pour DazBox` });
-      setPaymentHash(invoiceData.paymentHash || null);
+      setInvoice(invoiceData);
       // Récupérer les infos de session
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
@@ -145,7 +145,25 @@ function CheckoutContent(): React.ReactElement {
     }
   };
 
-  if (showLightning && paymentHash) {
+  if (showLightning) {
+    if (isLoading) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 to-purple-800">
+          <div className="text-white text-xl animate-pulse">Génération de la facture Lightning...</div>
+        </div>
+      );
+    }
+    if (error) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 to-purple-800">
+          <div className="bg-white/10 p-8 rounded-2xl shadow-2xl">
+            <h2 className="text-2xl font-bold text-red-400 mb-4">Erreur</h2>
+            <p className="text-red-200 mb-6">{error}</p>
+            <button onClick={() => { setShowLightning(false); setInvoice(null); setError(null); }} className="px-6 py-3 bg-indigo-600 text-white rounded-xl">Retour</button>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-900 to-purple-800 py-12 px-4 flex items-center justify-center">
         <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl p-8 max-w-lg w-full" data-aos="zoom-in">
@@ -161,13 +179,14 @@ function CheckoutContent(): React.ReactElement {
             <p className="text-blue-100">Montant: {getPrice().toLocaleString('fr-FR')} sats</p>
           </div>
           <LightningPayment 
+            invoiceData={invoice}
             amount={getPrice()} 
             productName="DazBox"
             onSuccess={() => router.push('/checkout/success')}
-            onCancel={() => setShowLightning(false)}
+            onCancel={() => { setShowLightning(false); setInvoice(null); setError(null); }}
           />
           <button
-            onClick={() => setShowLightning(false)}
+            onClick={() => { setShowLightning(false); setInvoice(null); setError(null); }}
             className="mt-6 w-full py-2 px-4 border border-white/30 text-white rounded-lg hover:bg-white/10 transition-colors duration-300 flex items-center justify-center"
           >
             <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

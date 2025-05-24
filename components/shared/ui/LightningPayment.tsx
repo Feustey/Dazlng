@@ -13,6 +13,7 @@ interface LightningPaymentProps {
   onError?: (error: unknown) => void;
   productName: string;
   onCancel?: () => void;
+  invoiceData?: { id: string; paymentRequest: string; paymentHash?: string } | null;
 }
 
 declare global {
@@ -25,7 +26,7 @@ declare global {
 }
 
 export default function LightningPayment(props: LightningPaymentProps): React.ReactElement {
-  const [invoice, setInvoice] = useState<{ id: string; paymentRequest: string; paymentHash?: string } | null>(null);
+  const [invoice, setInvoice] = useState<{ id: string; paymentRequest: string; paymentHash?: string } | null>(props.invoiceData || null);
   const [paymentStatus, setPaymentStatus] = useState<'pending' | 'success'>('pending');
   const [error, setError] = useState<string | null>(null);
   const [isWebLNAvailable, setIsWebLNAvailable] = useState(false);
@@ -65,6 +66,10 @@ export default function LightningPayment(props: LightningPaymentProps): React.Re
   }, []);
 
   useEffect(() => {
+    if (props.invoiceData) {
+      setInvoice(props.invoiceData);
+      return;
+    }
     const createInvoice = async (): Promise<void> => {
       try {
         setIsLoading(true);
@@ -83,7 +88,7 @@ export default function LightningPayment(props: LightningPaymentProps): React.Re
       }
     };
     createInvoice();
-  }, [checkPaymentStatus, props.amount, props.productName]);
+  }, [checkPaymentStatus, props.amount, props.productName, props.invoiceData]);
 
   const payWithWebLN = async (): Promise<void> => {
     if (!invoice || !window.webln) {

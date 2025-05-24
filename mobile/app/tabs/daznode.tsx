@@ -5,6 +5,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import Colors from '../../../constants/Colors';
 import PricingCard from '../../../components/shared/ui/PricingCard';
 import HeroSection from '../../../components/shared/ui/HeroSection';
+import { FaBolt } from 'react-icons/fa';
 
 type PlanId = 'gratuit' | 'standard' | 'premium' | 'ai-addon';
 
@@ -60,26 +61,41 @@ export default function DaznodeScreen(): React.ReactElement {
             title={plan.name}
             price={plan.price}
             features={plan.features}
+            cta={`Choisir ${plan.name}`}
+            ctaHref=""
+            color="from-indigo-400 to-indigo-600"
+            icon={<FaBolt />}
             buttonText={`Choisir ${plan.name}`}
             onPress={() => navigation.navigate('Subscribe', { plan: plan.id })}
+            microcopy={plan.id === 'gratuit' ? 'Sans engagement' : undefined}
           />
         ))}
       </View>
 
       <View style={styles.addonsSection}>
         <PricingCard
-          variant="addon"
           title="Module IA - Prédiction des fee rates"
           price="10€/mois"
+          features={['Prédiction intelligente des frais Lightning']}
+          cta="Ajouter"
+          ctaHref=""
+          color="from-pink-400 to-pink-600"
+          icon={<FaBolt />}
           buttonText="Ajouter"
           onPress={() => navigation.navigate('Subscribe', { plan: 'ai-addon' as const })}
+          microcopy="Boostez votre node avec l'IA"
         />
         <PricingCard
-          variant="addon"
           title="Intégrations personnalisées"
-          description="Wallets ou Telegram bots sur mesure"
+          price="Sur devis"
+          features={['Wallets ou Telegram bots sur mesure']}
+          cta="Nous contacter"
+          ctaHref=""
+          color="from-yellow-400 to-yellow-600"
+          icon={<FaBolt />}
           buttonText="Nous contacter"
           onPress={() => navigation.navigate('Contact')}
+          microcopy="Projet sur mesure, parlons-en !"
         />
       </View>
     </ScrollView>
