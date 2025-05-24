@@ -8,6 +8,7 @@ const links = [
   { href: "/admin/payments", label: "Paiements" },
   { href: "/admin/products", label: "Produits" },
   { href: "/admin/settings", label: "Paramètres" },
+  { href: "/admin/analytics", label: "Analytics" },
 ];
 
 export default function Sidebar(): JSX.Element {

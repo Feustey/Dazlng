@@ -12,15 +12,6 @@ interface LightningPaymentProps {
   onCancel?: () => void;
 }
 
-declare global {
-  interface Window {
-    webln?: {
-      enable: () => Promise<void>;
-      sendPayment: (paymentRequest: string) => Promise<{ preimage: string }>;
-    };
-  }
-}
-
 const LightningPayment: React.FC<LightningPaymentProps> = ({ amount, productName, onSuccess, onCancel }) => {
   const [invoice, setInvoice] = useState<{ id: string; paymentRequest: string; paymentHash?: string } | null>(null);
   const [paymentStatus, setPaymentStatus] = useState<'pending' | 'success'>('pending');

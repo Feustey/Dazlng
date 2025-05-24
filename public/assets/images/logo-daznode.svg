@@ -1,18 +1,20 @@
-<svg width="180" height="32" viewBox="0 0 180 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Hexagonal logo -->
-  <g>
-    <!-- Hexagone externe -->
-    <path d="M16 2L2 9V23L16 30L30 23V9L16 2Z" fill="#FFFFFF"/>
-    <!-- Hexagone intermédiaire - couleur Bitcoin -->
-    <path d="M16 6L6 11V21L16 26L26 21V11L16 6Z" fill="#F7931A"/>
-    <!-- Hexagone interne avec dégradé -->
-    <path d="M16 10L10 13V19L16 22L22 19V13L16 10Z" fill="#FFFFFF"/>
-    <!-- Point central pour plus de profondeur -->
-    <circle cx="16" cy="16" r="1.5" fill="#F7931A"/>
+<svg width="260" height="64" viewBox="0 0 260 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hexagone bleu avec ombre -->
+  <g filter="url(#shadow)">
+    <polygon points="32,8 12,20 12,44 32,56 52,44 52,20" fill="#377DFF" />
+    <polygon points="32,16 20,23 20,41 32,48 44,41 44,23" fill="#FFCC4D" />
   </g>
-
-  <!-- Text "Daznode" avec léger relief -->
-  <text x="40" y="22" font-size="20" font-family="Segoe UI, sans-serif" font-weight="bold" fill="#FFFFFF" filter="drop-shadow(0px 1px 1px rgba(0,0,0,0.3))">
-    Daznode
-  </text>
+  <!-- Dégradé pour le texte -->
+  <defs>
+    <linearGradient id="daznode-gradient" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#377DFF" />
+      <stop offset="50%" stop-color="#B16CEA" />
+      <stop offset="100%" stop-color="#FF5E62" />
+    </linearGradient>
+    <filter id="shadow" x="0" y="0" width="64" height="64" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.25" />
+    </filter>
+  </defs>
+  <!-- Texte Daznode -->
+  <text x="70" y="44" font-family="Segoe UI, Arial, sans-serif" font-size="40" font-weight="bold" fill="url(#daznode-gradient)" >Daznode</text>
 </svg>

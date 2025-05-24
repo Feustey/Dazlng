@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import AlbyLoginButton from '@/app/api/auth/AlbyLoginButton';
 
 export default function LoginPage(): React.ReactElement {
   const [form, setForm] = useState({ email: '', code: '' });
@@ -64,6 +65,41 @@ export default function LoginPage(): React.ReactElement {
       }
     } else {
       setError('Code invalide ou expiré');
+    }
+  };
+
+  // --- Connexion par signature Lightning ---
+  const handleLightningLogin = async (): Promise<void> => {
+    setError(null);
+    setLoading(true);
+    try {
+      if (!window.webln) {
+        setError('Aucune extension Lightning/WebLN détectée. Installez Alby ou équivalent.');
+        setLoading(false);
+        return;
+      }
+      await window.webln.enable();
+      const info = await (window.webln as any).getInfo();
+      const pubkey = info.node?.pubkey || info.pubkey;
+      const message = `Connexion à Daznode - ${new Date().toISOString()}`;
+      const { signature } = await (window.webln as any).signMessage(message);
+      // Appel backend
+      const res = await fetch('/api/auth/login-node', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pubkey, message, signature })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem('jwt', data.token);
+        router.push('/user');
+      } else {
+        setError("Signature ou authentification Lightning invalide");
+      }
+    } catch (e) {
+      setError('Erreur lors de la connexion Lightning : ' + (e instanceof Error ? e.message : e));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -155,6 +191,12 @@ export default function LoginPage(): React.ReactElement {
             </button>
           </div>
         </form>
+        <div className="flex flex-col gap-4 mt-6">
+          <div className="flex items-center justify-center">
+            <span className="text-gray-400 text-xs mr-2">ou</span>
+            <AlbyLoginButton onClick={handleLightningLogin} />
+          </div>
+        </div>
         <div className="text-xs text-gray-400 text-center mt-4">
           Votre email ne sera jamais partagé. <br />
           <span className="italic">Besoin d'aide ? Contactez-nous.</span>

@@ -26,6 +26,9 @@ const UserPage: React.FC = () => {
   const [pwdMsg, setPwdMsg] = useState<string | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
 
+  // Validation email simple
+  const isEmailValid = (email: string): boolean => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
+
   // Récupère les infos utilisateur
   useEffect(() => {
     async function fetchUserData(): Promise<UserData> {
@@ -40,6 +43,8 @@ const UserPage: React.FC = () => {
     fetchUserData().then(data => {
       setUser(data);
       setForm(data);
+      // Si pas d'email, forcer l'édition
+      if (!data.email) setEdit(true);
     });
     fetch("/api/orders")
       .then(res => res.json())
@@ -47,6 +52,7 @@ const UserPage: React.FC = () => {
   }, []);
 
   const handleSave = async (): Promise<void> => {
+    if (!isEmailValid(form.email)) return;
     const res = await fetch("/api/user", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -79,6 +85,9 @@ const UserPage: React.FC = () => {
     }
   };
 
+  // Si pas d'email, forcer l'édition et bloquer le reste
+  const mustCompleteEmail = !user.email;
+
   return (
     <main className="max-w-3xl mx-auto py-12 px-4">
       <h1 className="text-4xl font-bold mb-8">Mon espace utilisateur</h1>
@@ -86,7 +95,7 @@ const UserPage: React.FC = () => {
       {/* Infos personnelles */}
       <section className="mb-10">
         <h2 className="text-2xl font-semibold mb-4">Informations personnelles</h2>
-        {edit ? (
+        {(edit || mustCompleteEmail) ? (
           <div className="space-y-4">
             <input
               className="w-full p-3 rounded-lg border border-gray-300"
@@ -100,17 +109,24 @@ const UserPage: React.FC = () => {
               type="email"
               value={form.email}
               onChange={e => setForm({ ...form, email: e.target.value })}
-              placeholder="Email"
+              placeholder="Email (obligatoire)"
+              required
             />
+            {!isEmailValid(form.email) && (
+              <div className="text-red-600 text-sm">Veuillez saisir un email valide</div>
+            )}
             <div className="flex gap-4">
               <button
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg"
+                className="bg-blue-600 text-white px-6 py-2 rounded-lg disabled:opacity-60"
                 onClick={handleSave}
+                disabled={!isEmailValid(form.email)}
               >
                 Sauvegarder
               </button>
-         
             </div>
+            {mustCompleteEmail && (
+              <div className="text-red-600 text-sm mt-2">Vous devez renseigner un email pour accéder à votre espace utilisateur.</div>
+            )}
           </div>
         ) : (
           <div className="space-y-2">
@@ -126,6 +142,8 @@ const UserPage: React.FC = () => {
         )}
       </section>
 
+      {/* Bloque le reste si email manquant */}
+      {!mustCompleteEmail && <>
       {/* Changement de mot de passe */}
       <section className="mb-10">
         <h2 className="text-2xl font-semibold mb-4">Changer mon mot de passe</h2>
@@ -192,6 +210,7 @@ const UserPage: React.FC = () => {
           ))}
         </div>
       </section>
+      </>}
     </main>
   );
 };
