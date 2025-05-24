@@ -8,7 +8,7 @@ const DazBoxOffer: FC = () => {
       {/* Image du produit */}
       <div className="w-64 h-40 mb-6 relative">
         <Image
-          src="/assets/images/QR-BTC-Daznode.png"
+          src="/assets/images/dazbox.png"
           alt="DazBox"
           layout="fill"
           objectFit="cover"
