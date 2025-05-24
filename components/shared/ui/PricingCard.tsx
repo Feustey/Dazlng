@@ -34,20 +34,20 @@ const PricingCard: FC<PricingCardProps> = ({
           Populaire
         </div>
       )}
-      <div className="mb-4 text-3xl font-bold flex items-center gap-2">
+      <div className="mb-4 text-2xl font-bold flex items-center gap-2">
         {icon}
         <span>{title}</span>
       </div>
-      <div className="text-5xl font-extrabold mb-2">{price}{unit && <span className="text-xl font-normal"> {unit}</span>}</div>
-      <ul className="mb-8 space-y-2 text-base text-left w-full max-w-xs">
+      <div className="text-3xl font-extrabold mb-2">{price}{unit && <span className="text-base font-normal"> {unit}</span>}</div>
+      <ul className="mb-6 space-y-1 text-sm text-left w-full max-w-xs">
         {features.map((f, i) => (
           <li key={i} className="flex items-center gap-2">
             <FaCheckCircle className="text-green-300" /> {f}
           </li>
         ))}
       </ul>
-      <Link href={ctaHref} className="flex items-center justify-center gap-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white text-lg font-bold rounded-xl shadow-lg transition w-full md:w-auto">
-        <FaBolt className="w-5 h-5" />
+      <Link href={ctaHref} className="flex items-center justify-center gap-2 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white text-base font-bold rounded-xl shadow-lg transition w-full md:w-auto">
+        <FaBolt className="w-4 h-4" />
         {cta}
       </Link>
       {microcopy && <p className="text-xs text-gray-100 mt-2 text-center">{microcopy}</p>}
