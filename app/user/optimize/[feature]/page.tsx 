@@ -1,0 +1,18 @@
+"use client";
+
+import React, { FC } from 'react';
+import { useParams } from 'next/navigation';
+
+const FeaturePage: FC = () => {
+  const params = useParams();
+  return (
+    <div className="space-y-8">
+      <h1 className="text-3xl font-bold">Optimisation : {params.feature}</h1>
+      <div className="bg-white rounded-xl shadow p-6">
+        <p>Configuration de la feature {params.feature}</p>
+      </div>
+    </div>
+  );
+};
+
+export default FeaturePage;

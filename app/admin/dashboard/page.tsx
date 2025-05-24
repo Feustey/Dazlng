@@ -14,17 +14,24 @@ interface User {
   created_at: string;
 }
 
-export default function Dashboard(): JSX.Element {
+interface Stats {
+  totalUsers: number;
+  activeSubscriptions: number;
+  totalRevenue: number;
+  pendingOrders: number;
+}
+
+export default function DashboardPage(): JSX.Element {
   const [recentUsers, setRecentUsers] = useState<User[]>([]);
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<Stats>({
     totalUsers: 0,
     activeSubscriptions: 0,
     totalRevenue: 0,
     pendingOrders: 0
   });
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  useEffect(() => {
+  useEffect((): void => {
     async function fetchData(): Promise<void> {
       try {
         // Récupérer les statistiques
@@ -58,7 +65,8 @@ export default function Dashboard(): JSX.Element {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Tableau de bord administrateur</h1>
+      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+      <p>Bienvenue sur le tableau de bord administrateur. Ici, vous pouvez visualiser les statistiques et l'activité récente.</p>
       {/* Statistiques */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatsCard 
@@ -100,7 +108,7 @@ export default function Dashboard(): JSX.Element {
               </tr>
             </thead>
             <tbody>
-              {recentUsers.map((user) => (
+              {recentUsers.map((user: User) => (
                 <tr key={user.id} className="border-b hover:bg-gray-50">
                   <td className="py-2 px-4">{user.name || "-"}</td>
                   <td className="py-2 px-4">{user.email}</td>

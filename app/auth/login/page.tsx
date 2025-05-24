@@ -79,10 +79,22 @@ export default function LoginPage(): React.ReactElement {
         return;
       }
       await window.webln.enable();
-      const info = await (window.webln as any).getInfo();
+      
+      interface WebLNInfo {
+        node?: { pubkey: string };
+        pubkey?: string;
+      }
+      
+      interface WebLNSignature {
+        signature: string;
+      }
+      
+      const webln = window.webln as unknown;
+      const info = await (webln as { getInfo(): Promise<WebLNInfo> }).getInfo();
       const pubkey = info.node?.pubkey || info.pubkey;
       const message = `Connexion à Daznode - ${new Date().toISOString()}`;
-      const { signature } = await (window.webln as any).signMessage(message);
+      const { signature } = await (webln as { signMessage(message: string): Promise<WebLNSignature> }).signMessage(message);
+      
       // Appel backend
       const res = await fetch('/api/auth/login-node', {
         method: 'POST',
@@ -97,7 +109,7 @@ export default function LoginPage(): React.ReactElement {
         setError("Signature ou authentification Lightning invalide");
       }
     } catch (e) {
-      setError('Erreur lors de la connexion Lightning : ' + (e instanceof Error ? e.message : e));
+      setError('Erreur lors de la connexion Lightning : ' + (e instanceof Error ? e.message : String(e)));
     } finally {
       setLoading(false);
     }

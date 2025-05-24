@@ -1,0 +1,59 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Architecture de l'Espace Utilisateur
+
+L'espace utilisateur (`/app/user/`) est la partie centrale de l'application pour les utilisateurs connectés, conçue pour maximiser la conversion et l'engagement.
+
+## Structure
+
+### Pages principales
+- [app/user/dashboard/page.tsx](mdc:app/user/dashboard/page.tsx) : Dashboard principal avec KPIs, recommandations et call-to-action
+- [app/user/node/page.tsx](mdc:app/user/node/page.tsx) : Gestion et connexion du nœud Lightning
+- [app/user/subscriptions/page.tsx](mdc:app/user/subscriptions/page.tsx) : Gestion des abonnements avec upgrade prompts
+- [app/user/billing/page.tsx](mdc:app/user/billing/page.tsx) : Factures et historique des paiements
+- [app/user/settings/page.tsx](mdc:app/user/settings/page.tsx) : Paramètres utilisateur et profil
+
+### Pages avancées du nœud
+- `app/user/node/stats/page.tsx` : Statistiques détaillées du nœud
+- `app/user/node/channels/page.tsx` : Gestion des canaux Lightning
+- `app/user/node/recommendations/page.tsx` : Recommandations personnalisées
+
+### Centre d'optimisation
+- `app/user/optimize/page.tsx` : Outils d'optimisation automatique
+- `app/user/optimize/[feature]/page.tsx` : Configuration de features spécifiques
+
+## Layout et Composants
+
+### Layout principal
+- [app/user/layout.tsx](mdc:app/user/layout.tsx) : Layout wrapper avec sidebar et header
+
+### Composants de layout
+- `app/user/components/layout/UserSidebar.tsx` : Navigation latérale
+- `app/user/components/layout/UserHeader.tsx` : En-tête avec état de connexion
+
+### Composants UI spécialisés
+- `app/user/components/ui/StatsWidget.tsx` : Widget de statistiques avec tendances
+- `app/user/components/ui/NodeCard.tsx` : Carte d'informations du nœud
+- `app/user/components/ui/RecommendationCard.tsx` : Carte de recommandation avec actions
+- `app/user/components/ui/UpgradePrompt.tsx` : Prompts d'upgrade vers Premium
+
+## Patterns d'Intégration
+
+### Authentification et données
+- Toutes les pages utilisent `createClientComponentClient()` de Supabase
+- Pattern de récupération : `session.access_token` dans headers Authorization
+- Gestion du loading et des états d'erreur systématique
+
+### Conversion et engagement
+- Call-to-action pour connexion du nœud si non connecté
+- Recommandations gratuites vs Premium pour pousser l'upgrade
+- Prompts d'upgrade contextuels selon les features utilisées
+
+### UX moderne
+- Design responsive avec grilles adaptatives
+- Widgets de stats avec icônes et tendances
+- Cards avec shadows et hover effects
+- Gradients pour les call-to-action importants

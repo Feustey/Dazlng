@@ -47,10 +47,6 @@ const nextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production'
   },
-  images: {
-    domains: ['*'],
-    formats: ['image/avif', 'image/webp']
-  },
   async redirects() {
     return [
       {
@@ -59,6 +55,34 @@ const nextConfig = {
         permanent: true,
       },
     ];
+  },
+  // Configuration du sous-domaine app
+  async rewrites() {
+    return {
+      beforeFiles: [
+        // Rewrites pour le sous-domaine app.dazno.de
+        {
+          source: '/:path*',
+          destination: '/user/:path*',
+          has: [
+            {
+              type: 'host',
+              value: 'app.dazno.de',
+            },
+          ],
+        },
+        {
+          source: '/',
+          destination: '/user/dashboard',
+          has: [
+            {
+              type: 'host',
+              value: 'app.dazno.de',
+            },
+          ],
+        },
+      ],
+    };
   },
 }
 

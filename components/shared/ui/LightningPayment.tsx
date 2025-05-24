@@ -67,21 +67,40 @@ export default function LightningPayment(props: LightningPaymentProps): React.Re
 
   useEffect(() => {
     if (props.invoiceData) {
+      console.log('LightningPayment - Facture reçue via props:', {
+        hasId: !!props.invoiceData.id,
+        hasPaymentRequest: !!props.invoiceData.paymentRequest,
+        hasPaymentHash: !!props.invoiceData.paymentHash,
+        paymentRequestLength: props.invoiceData.paymentRequest?.length
+      });
       setInvoice(props.invoiceData);
+      setIsLoading(false); // S'assurer que le loading est désactivé quand on reçoit une facture
       return;
     }
+    
+    console.log('LightningPayment - Aucune facture fournie, génération en cours...');
     const createInvoice = async (): Promise<void> => {
       try {
         setIsLoading(true);
+        console.log('LightningPayment - Génération facture pour:', { amount: props.amount, productName: props.productName });
+        
         const invoiceData = await generateInvoice({
           amount: props.amount,
           memo: `Paiement pour ${props.productName}`,
         });
+        
+        console.log('LightningPayment - Facture générée:', {
+          hasId: !!invoiceData.id,
+          hasPaymentRequest: !!invoiceData.paymentRequest,
+          hasPaymentHash: !!invoiceData.paymentHash
+        });
+        
         setInvoice(invoiceData);
         if (invoiceData.paymentHash) {
           await checkPaymentStatus(invoiceData.paymentHash);
         }
       } catch (err) {
+        console.error('LightningPayment - Erreur génération facture:', err);
         setError(`Erreur lors de la génération de la facture: ${err instanceof Error ? err.message : 'Erreur inconnue'}`);
       } finally {
         setIsLoading(false);

@@ -87,11 +87,29 @@ function CheckoutContent(): React.ReactElement {
   };
 
   const handleLightningClick = async (): Promise<void> => {
+    if (!isFormValid()) {
+      setError('Veuillez remplir tous les champs obligatoires');
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
+    setInvoice(null); // Reset invoice state
+    
     try {
-      const invoiceData = await generateInvoice({ amount: getPrice(), memo: `Paiement pour DazBox` });
-      setInvoice(invoiceData);
+      console.log('Début génération facture Lightning pour montant:', getPrice());
+      
+      const invoiceData = await generateInvoice({ 
+        amount: getPrice(), 
+        memo: `Paiement pour DazBox` 
+      });
+      
+      console.log('Facture générée:', invoiceData);
+      
+      if (!invoiceData || !invoiceData.paymentRequest) {
+        throw new Error('Facture invalide reçue de l\'API');
+      }
+
       // Récupérer les infos de session
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
@@ -100,6 +118,7 @@ function CheckoutContent(): React.ReactElement {
         const { data: { user } } = await supabase.auth.getUser(token);
         userId = user?.id;
       }
+      
       // Préparer les données pour les stocker temporairement
       const customerInfo = {
         firstName: form.firstName,
@@ -113,6 +132,7 @@ function CheckoutContent(): React.ReactElement {
         country: form.country,
         phone: form.phone,
       };
+      
       const productInfo = {
         name: productDetails.name,
         quantity: productDetails.quantity,
@@ -121,6 +141,7 @@ function CheckoutContent(): React.ReactElement {
         promoCode: promoApplied ? promoCode : null,
         discountPercentage: promoApplied ? DISCOUNT_PERCENTAGE : 0
       };
+      
       // Stocker les données dans le sessionStorage pour les récupérer dans la page success
       sessionStorage.setItem('dazbox_order_data', JSON.stringify({
         user_id: userId,
@@ -136,10 +157,20 @@ function CheckoutContent(): React.ReactElement {
         },
         token: token,
       }));
-      // Afficher l'écran de paiement Lightning
-      setShowLightning(true);
+      
+      // S'assurer que la facture est bien définie avant d'afficher le composant
+      setInvoice(invoiceData);
+      
+      // Petit délai pour s'assurer que l'état est mis à jour
+      setTimeout(() => {
+        setShowLightning(true);
+        console.log('Affichage du composant Lightning avec facture:', invoiceData);
+      }, 100);
+      
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Erreur inconnue');
+      console.error('Erreur lors de la génération de la facture:', e);
+      setError(e instanceof Error ? e.message : 'Erreur lors de la génération de la facture');
+      setInvoice(null);
     } finally {
       setIsLoading(false);
     }
@@ -153,6 +184,7 @@ function CheckoutContent(): React.ReactElement {
         </div>
       );
     }
+    
     if (error) {
       return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 to-purple-800">
@@ -164,6 +196,20 @@ function CheckoutContent(): React.ReactElement {
         </div>
       );
     }
+
+    // Vérifier que la facture est bien disponible avant d'afficher le composant
+    if (!invoice || !invoice.paymentRequest) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 to-purple-800">
+          <div className="bg-white/10 p-8 rounded-2xl shadow-2xl">
+            <h2 className="text-2xl font-bold text-yellow-400 mb-4">Chargement de la facture...</h2>
+            <p className="text-yellow-200 mb-6">Veuillez patienter pendant la génération de votre facture Lightning</p>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400 mx-auto"></div>
+          </div>
+        </div>
+      );
+    }
+    
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-900 to-purple-800 py-12 px-4 flex items-center justify-center">
         <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl p-8 max-w-lg w-full" data-aos="zoom-in">
