@@ -4,6 +4,8 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import Image from 'next/image';
 import DazBoxOffer from "@/components/shared/ui/DazBoxOffer";
+import PricingCard from "@/components/shared/ui/PricingCard";
+import { FaServer, FaBox, FaCreditCard } from "react-icons/fa";
 
 // Composant client séparé pour gérer les paramètres d'URL
 const SignupConfirmation: React.FC = () => {
@@ -331,138 +333,53 @@ export default function HomePage(): React.ReactElement {
         <section className="py-20 bg-transparent">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl md:text-5xl font-bold text-orange-600 text-center mb-6" data-aos="fade-up">La DazBox : Votre Première Étape vers la Liberté Financière</h2><br/>
-            <div className="grid md:grid-cols-3 gap-4 md:gap-0 relative">
-              {/* Carte DazBox - maintenant au centre et en avant */}
-              <div className="bg-white rounded-2xl shadow-xl overflow-hidden relative z-20 flex flex-col justify-between scale-110 md:scale-110 md:col-start-2 md:row-start-1 md:row-end-3 md:translate-y-[-5%]" style={{marginLeft: '-2rem', marginRight: '-2rem'}} data-aos="fade-up">
-                <div className="absolute top-0 right-0 bg-yellow-400 text-gray-900 px-4 py-1 font-medium rounded-bl-lg">Populaire</div>
-                <div className="p-8 flex-1 flex flex-col">
-                  <h3 className="text-2xl font-bold text-indigo-600 mb-4 text-center">DazBox</h3>
-                  <div className="flex items-baseline mb-6 justify-center">
-                    <span className="text-5xl font-bold">400K</span>
-                    <span className="text-xl text-gray-500 ml-2">sats</span>
-                  </div>
-                  <p className="text-gray-600 mb-8 text-center">La DazBox transforme votre rapport à l'argent. Plus qu'un simple appareil, c'est votre porte d'entrée vers un monde où vous êtes aux commandes. Avec la DazBox, vos bitcoins vous appartiennent vraiment, sont accessibles 24/7, et chaque transaction est instantanée et économique.
-                  <br/>
-                  Notre solution tout-en-un inclut un assistant virtuel qui vous accompagne et vous explique chaque étape en langage clair. Que vous soyez novice ou initié, la DazBox s'adapte à vos besoins et évolue avec vous.</p>
-                  <ul className="space-y-3 mb-8">
-                    <li className="flex items-start">
-                      <svg className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span className="text-gray-700">Simplicité absolue : Branchez, suivez le guide, c'est prêt en 5 minutes</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span className="text-gray-700">Protection maximale : Vos bitcoins sous votre contrôle, à l'abri des piratages</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span className="text-gray-700">Paiements facilités : Envoyez et recevez de l'argent instantanément, sans intermédiaire</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span className="text-gray-700">Assistant personnel : L'IA DazIA répond à toutes vos questions en langage simple</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span className="text-gray-700">Support humain : Une équipe réactive disponible 24/7 pour vous accompagner</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span className="text-gray-700">Évolutive : Commencez simplement et découvrez de nouvelles fonctionnalités à votre rythme</span>
-                    </li>
-                  </ul>
-                  <div className="mt-auto"></div>
-                </div>
-                <div className="p-8 bg-gray-50 border-t">
-                  <a href="/checkout/dazbox" className="block w-full bg-indigo-600 text-white text-center py-4 rounded-xl font-semibold hover:bg-indigo-700 transition-colors duration-200">
-                    Je Prends le Contrôle !
-                  </a>
-                </div>
-              </div>
-              {/* Carte DazNode - à gauche */}
-              <div className="bg-gradient-to-br from-green-400 via-cyan-500 to-indigo-500 rounded-2xl shadow-xl overflow-hidden flex flex-col justify-between transition-all hover:shadow-2xl hover:-translate-y-1 duration-300 md:col-start-1 md:row-start-1 md:row-end-3" data-aos="fade-up" data-aos-delay="100">
-                <div className="p-8 flex-1 flex flex-col">
-                  <h3 className="text-2xl font-bold text-white mb-4 text-center">DazNode</h3>
-                  <div className="flex items-baseline mb-6 justify-center">
-                    <span className="text-5xl font-bold text-white">10K</span>
-                    <span className="text-xl text-white/80 ml-2">sats/mois</span>
-                  </div>
-                  <p className="text-white/80 mb-8 text-center">IA pour optimiser votre nœud Lightning</p>
-                  <ul className="space-y-3 mb-8">
-                    <li className="flex items-start">
-                      <svg className="w-5 h-5 text-yellow-300 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span className="text-white">Statistiques et monitoring avancés</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg className="w-5 h-5 text-yellow-300 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span className="text-white">Routing optimisé par IA</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg className="w-5 h-5 text-yellow-300 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span className="text-white">Analyses et recommandations</span>
-                    </li>
-                  </ul>
-                  <div className="mt-auto"></div>
-                </div>
-                <div className="p-8 bg-indigo-800/30 border-t border-white/20">
-                  <a href="/daznode" className="block w-full bg-white text-indigo-600 text-center py-4 rounded-xl font-semibold hover:bg-yellow-100 transition-colors duration-200">
-                    Découvrir DazNode
-                  </a>
-                </div>
-              </div>
-              {/* Carte DazPay - à droite */}
-              <div className="bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col justify-between transition-all hover:shadow-2xl hover:-translate-y-1 duration-300 md:col-start-3 md:row-start-1 md:row-end-3" data-aos="fade-up" data-aos-delay="200">
-                <div className="p-8 flex-1 flex flex-col">
-                  <h3 className="text-2xl font-bold text-emerald-600 mb-4">DazPay</h3>
-                  <div className="flex items-baseline mb-6">
-                    <span className="text-4xl font-bold">set up offert</span>
-                  </div>
-                  <p className="text-gray-600 mb-8">Solution de paiement pour les commerces</p>
-                  <ul className="space-y-3 mb-8">
-                    <li className="flex items-start">
-                      <svg className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span className="text-gray-700">Terminal de paiement Lightning</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span className="text-gray-700">Dashboard de gestion complet</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span className="text-gray-700">Master your node DazBox</span>e
-                    </li>
-                  </ul>
-                  <div className="mt-auto"></div>
-                </div>
-                <div className="p-8 bg-gray-50 t">
-                  <a href="/contact" className="block w-full bg-emerald-600 text-white text-center py-4 rounded-xl font-semibold hover:bg-emerald-700 transition-colors duration-200">
-                    Parlons ensemble
-                  </a>
-                </div>
-              </div>
+            <div className="grid md:grid-cols-3 gap-8">
+              <PricingCard
+                title="DazNode"
+                price="10K"
+                unit="sats/mois"
+                features={[
+                  "Statistiques et monitoring avancés",
+                  "Routing optimisé par IA",
+                  "Analyses et recommandations"
+                ]}
+                cta="Découvrir DazNode"
+                ctaHref="/daznode"
+                color="from-green-400 via-cyan-500 to-indigo-500"
+                icon={<FaServer />}
+                microcopy="1 semaine offerte, sans engagement"
+              />
+              <PricingCard
+                title="DazBox"
+                price="400K"
+                unit="sats"
+                features={[
+                  "Simplicité absolue : prêt en 5 min",
+                  "Protection maximale",
+                  "Paiements instantanés",
+                  "Assistant IA inclus"
+                ]}
+                cta="Commander ma DazBox"
+                ctaHref="/checkout/dazbox"
+                highlight
+                color="from-orange-400 via-pink-500 to-purple-600"
+                icon={<FaBox />}
+                microcopy="Livraison rapide et paiement sécurisé"
+              />
+              <PricingCard
+                title="DazPay"
+                price="set up offert"
+                features={[
+                  "Terminal de paiement Lightning",
+                  "Dashboard de gestion complet",
+                  "Master your node DazBox"
+                ]}
+                cta="Parlons ensemble"
+                ctaHref="/contact"
+                color="from-emerald-400 to-emerald-600"
+                icon={<FaCreditCard />}
+                microcopy="Accompagnement personnalisé"
+              />
             </div>
           </div>
         </section>

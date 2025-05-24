@@ -1,40 +1,58 @@
-import Card from "./Card";
-import GradientTitle from "./GradientTitle";
+import { FaBolt, FaCheckCircle } from "react-icons/fa";
+import Link from "next/link";
+import type { FC, ReactNode } from "react";
 
-export interface PricingCardProps {
+interface PricingCardProps {
   title: string;
-  price?: string;
-  features?: string[];
-  description?: string;
-  buttonText: string;
-  onPress: () => void;
-  variant?: 'plan' | 'addon';
+  price: string;
+  unit?: string;
+  features: string[];
+  cta: string;
+  ctaHref: string;
+  highlight?: boolean;
+  microcopy?: string;
+  color: string; // ex: 'from-orange-400 via-pink-500 to-purple-600'
+  icon: ReactNode;
 }
 
-export default function PricingCard({
+const PricingCard: FC<PricingCardProps> = ({
   title,
   price,
+  unit,
   features,
-  description,
-  buttonText,
-  onPress,
-  variant = 'plan',
-}: PricingCardProps): React.ReactElement {
+  cta,
+  ctaHref,
+  highlight,
+  microcopy,
+  color,
+  icon
+}) => {
   return (
-    <Card className={variant === 'addon' ? 'border-2 border-yellow-400' : ''}>
-      <GradientTitle className="text-2xl mb-3">{title}</GradientTitle>
-      {price && <div className="text-3xl text-yellow-500 font-bold mb-4">{price}</div>}
-      {description && <div className="text-base text-gray-600 mb-4">{description}</div>}
-      {features && features.map((feature, index) => (
-        <div key={index} className="text-base mb-1 text-gray-800">• {feature}</div>
-      ))}
-      <button
-        className="w-full bg-yellow-400 py-4 px-9 rounded-2xl mt-4 font-bold text-[#232336] shadow-lg transition-colors duration-200 hover:bg-yellow-300 active:opacity-85 active:scale-97"
-        onClick={onPress}
-        type="button"
-      >
-        {buttonText}
-      </button>
-    </Card>
+    <div className={`flex flex-col rounded-3xl shadow-2xl p-8 items-center bg-gradient-to-br ${color} relative text-white`}>
+      {highlight && (
+        <div className="absolute top-4 right-4 bg-yellow-400 text-gray-900 px-4 py-1 font-bold rounded-bl-xl rounded-tr-3xl shadow">
+          Populaire
+        </div>
+      )}
+      <div className="mb-4 text-3xl font-bold flex items-center gap-2">
+        {icon}
+        <span>{title}</span>
+      </div>
+      <div className="text-5xl font-extrabold mb-2">{price}{unit && <span className="text-xl font-normal"> {unit}</span>}</div>
+      <ul className="mb-8 space-y-2 text-base text-left w-full max-w-xs">
+        {features.map((f, i) => (
+          <li key={i} className="flex items-center gap-2">
+            <FaCheckCircle className="text-green-300" /> {f}
+          </li>
+        ))}
+      </ul>
+      <Link href={ctaHref} className="flex items-center justify-center gap-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white text-lg font-bold rounded-xl shadow-lg transition w-full md:w-auto">
+        <FaBolt className="w-5 h-5" />
+        {cta}
+      </Link>
+      {microcopy && <p className="text-xs text-gray-100 mt-2 text-center">{microcopy}</p>}
+    </div>
   );
-} 
+};
+
+export default PricingCard; 
