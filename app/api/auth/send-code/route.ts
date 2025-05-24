@@ -9,10 +9,23 @@ export async function POST(req: Request): Promise<Response> {
   const code = Math.floor(100000 + Math.random() * 900000).toString();
   const expires_at = Date.now() + 10 * 60 * 1000;
 
-  // Stocker ou mettre à jour le code dans Supabase
+  // Nettoyer les anciens codes expirés pour cet email
+  await supabase
+    .from('otp_codes')
+    .delete()
+    .eq('email', email)
+    .lt('expires_at', Date.now());
+
+  // Créer un nouvel enregistrement avec un ID unique
   const { error } = await supabase
     .from('otp_codes')
-    .upsert({ email, code, expires_at });
+    .insert({ 
+      id: `${email}_${Date.now()}`,
+      email, 
+      code, 
+      expires_at 
+    });
+
   if (error) {
     console.log('[SEND-CODE] Erreur Supabase', { error });
     return new Response('Erreur stockage code', { status: 500 });

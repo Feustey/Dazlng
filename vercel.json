@@ -13,5 +13,11 @@
       "source": "https://app.dazno.de/",
       "destination": "/user/dashboard"
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/cleanup-otp",
+      "schedule": "0 */1 * * *"  // Toutes les heures
+    }
   ]
 } 
