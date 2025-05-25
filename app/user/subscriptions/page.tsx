@@ -1,6 +1,7 @@
 "use client";
 
 import React, { FC, useEffect, useState, useCallback } from 'react';
+import { useAuth } from '../hooks/useAuth';
 
 interface Subscription {
   id: string;
@@ -51,20 +52,15 @@ const SubscriptionsPage: FC = () => {
   const [availablePlans, setAvailablePlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const getAuthToken = (): string | null => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('token') || sessionStorage.getItem('token');
-    }
-    return null;
-  };
+  
+  const { getAccessToken } = useAuth();
 
   const fetchSubscriptionData = useCallback(async (): Promise<void> => {
     try {
       setLoading(true);
       setError(null);
 
-      const token = getAuthToken();
+      const token = await getAccessToken();
       if (!token) {
         throw new Error('Non authentifié');
       }
@@ -100,7 +96,7 @@ const SubscriptionsPage: FC = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [getAccessToken]);
 
   useEffect(() => {
     fetchSubscriptionData();

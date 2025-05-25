@@ -11,7 +11,7 @@ export async function GET(req: NextRequest): Promise<Response> {
   const limit = parseInt(searchParams.get("limit") || "10", 10);
   const sort = searchParams.get("sort") || "created_at:desc";
   const [sortField, sortOrder] = sort.split(":");
-  let query = supabase.from("users").select("id, name, email, company, created_at");
+  let query = supabase.from("profiles").select("id, nom, prenom, email, created_at");
   query = query.order(sortField, { ascending: sortOrder === "asc" }).limit(limit);
   const { data, error } = await query;
   if (error) {

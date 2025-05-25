@@ -81,11 +81,11 @@ export async function POST(req: NextRequest): Promise<Response> {
 
   // Vérifier si l'utilisateur existe, sinon le créer
   try {
-    let { data: user } = await supabase.from('users').select('*').eq('pubkey', pubkey).single();
+    let { data: user } = await supabase.from('profiles').select('*').eq('pubkey', pubkey).single();
     
     if (!user) {
       console.log('[LOGIN-NODE] Création nouvel utilisateur pour pubkey:', pubkey.substring(0, 10) + '...');
-      const { data: newUser, error: createError } = await supabase.from('users').insert([{ pubkey }]).select().single();
+      const { data: newUser, error: createError } = await supabase.from('profiles').insert([{ pubkey }]).select().single();
       if (createError) {
         console.error('[LOGIN-NODE] Erreur création utilisateur:', createError);
         return NextResponse.json({ error: 'Erreur création utilisateur' }, { status: 500 });

@@ -8,7 +8,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     return NextResponse.json({ error: "Accès non autorisé" }, { status: 403 });
   }
   // Nombre total d'utilisateurs
-  const { count: totalUsers } = await supabase.from("users").select("id", { count: "exact", head: true });
+  const { count: totalUsers } = await supabase.from("profiles").select("id", { count: "exact", head: true });
   // Nombre d'abonnements actifs
   const { count: activeSubscriptions } = await supabase.from("subscriptions").select("id", { count: "exact", head: true }).eq("status", "active");
   // Revenu total (somme des paiements status 'paid')

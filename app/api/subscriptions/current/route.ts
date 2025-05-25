@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { getUserFromRequest } from '@/utils/auth';
 
 interface Subscription {
   id: string;
@@ -28,14 +28,6 @@ interface ApiResponse<T> {
   };
 }
 
-async function getUserFromRequest(req: NextRequest): Promise<{ id: string } | null> {
-  const token = req.headers.get("Authorization")?.replace("Bearer ", "");
-  if (!token) return null;
-  
-  const { data: { user } } = await supabase.auth.getUser(token);
-  return user ? { id: user.id } : null;
-}
-
 export async function GET(req: NextRequest): Promise<Response> {
   try {
     const user = await getUserFromRequest(req);
@@ -49,13 +41,17 @@ export async function GET(req: NextRequest): Promise<Response> {
       }, { status: 401 });
     }
 
-    // Simulation des données d'abonnement
-    const mockSubscription: Subscription = {
+    // Pour l'instant, utiliser directement le mock car il n'y a pas encore de vraie table subscriptions
+    // En attendant la création d'abonnements réels, on simule un plan gratuit
+    const realSubscription = null;
+
+    // Si pas d'abonnement réel, utiliser le mock
+    const subscription = realSubscription || {
       id: `sub_${user.id}`,
       userId: user.id,
       planId: 'free',
       planName: 'Gratuit',
-      status: 'active',
+      status: 'active' as const,
       startDate: new Date(Date.now() - 30 * 86400000).toISOString(),
       endDate: new Date(Date.now() + 30 * 86400000).toISOString(),
       price: 0,
@@ -70,7 +66,7 @@ export async function GET(req: NextRequest): Promise<Response> {
 
     return NextResponse.json<ApiResponse<Subscription>>({
       success: true,
-      data: mockSubscription
+      data: subscription
     });
 
   } catch (error) {

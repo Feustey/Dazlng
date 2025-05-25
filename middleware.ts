@@ -1,7 +1,7 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 
-export const createClient = (request: NextRequest): NextResponse => {
+export const createClient = (request: NextRequest): { supabase: any; response: NextResponse } => {
   // Crée une réponse non modifiée
   let supabaseResponse = NextResponse.next({
     request: {
@@ -9,7 +9,7 @@ export const createClient = (request: NextRequest): NextResponse => {
     },
   });
 
-  const _supabase = createServerClient(
+  const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -30,19 +30,39 @@ export const createClient = (request: NextRequest): NextResponse => {
     },
   );
 
-  return supabaseResponse
+  return { supabase, response: supabaseResponse };
 };
 
 // Fonction middleware principale
-export function middleware(request: NextRequest): NextResponse {
+export async function middleware(request: NextRequest): Promise<NextResponse> {
   const url = request.nextUrl.clone();
   const hostname = request.headers.get('host') || '';
+  
+  // Créer le client Supabase
+  const { supabase, response } = createClient(request);
+  
+  // Vérifier l'authentification pour les routes protégées
+  if (url.pathname.startsWith('/user') || url.pathname.startsWith('/admin')) {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session?.user) {
+        // Redirection vers la page de connexion si non authentifié
+        const redirectUrl = new URL('/auth/login', request.url);
+        redirectUrl.searchParams.set('redirect', url.pathname);
+        return NextResponse.redirect(redirectUrl);
+      }
+    } catch (error) {
+      console.error('[MIDDLEWARE] Erreur auth:', error);
+      const redirectUrl = new URL('/auth/login', request.url);
+      return NextResponse.redirect(redirectUrl);
+    }
+  }
   
   // Gestion du sous-domaine app.dazno.de
   if (hostname === 'app.dazno.de' || hostname === 'app.localhost:3000') {
     // Si on est déjà sur une route /user, on laisse passer
     if (url.pathname.startsWith('/user')) {
-      const response = NextResponse.next();
       addSecurityHeaders(response);
       return response;
     }
@@ -50,20 +70,19 @@ export function middleware(request: NextRequest): NextResponse {
     // Si on est sur la racine, rediriger vers /user/dashboard
     if (url.pathname === '/') {
       url.pathname = '/user/dashboard';
-      const response = NextResponse.rewrite(url);
-      addSecurityHeaders(response);
-      return response;
+      const rewriteResponse = NextResponse.rewrite(url);
+      addSecurityHeaders(rewriteResponse);
+      return rewriteResponse;
     }
     
     // Pour toutes les autres routes, préfixer avec /user
     url.pathname = `/user${url.pathname}`;
-    const response = NextResponse.rewrite(url);
-    addSecurityHeaders(response);
-    return response;
+    const rewriteResponse = NextResponse.rewrite(url);
+    addSecurityHeaders(rewriteResponse);
+    return rewriteResponse;
   }
   
   // Pour le domaine principal, comportement normal
-  const response = NextResponse.next();
   addSecurityHeaders(response);
   return response;
 }

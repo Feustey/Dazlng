@@ -14,7 +14,9 @@ interface ClientLayoutProps {
 
 const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
   const pathname = usePathname();
-  const hideHeader = pathname?.startsWith("/checkout");
+  const hideHeader = pathname?.startsWith("/checkout") || 
+                    pathname?.startsWith("/auth/login") || 
+                    pathname?.startsWith("/user");
   const isFullWidth = pathname === "/" || pathname?.startsWith("/token-for-good");
 
   // Pages qui utilisent le nouveau design moderne

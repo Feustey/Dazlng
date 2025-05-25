@@ -82,11 +82,11 @@ export async function GET(req: NextRequest): Promise<Response> {
 
       // Créer ou mettre à jour l'utilisateur
       const { error: userError } = await supabase
-        .from('users')
+        .from('profiles')
         .upsert({
           pubkey: key,
-          last_login_at: new Date().toISOString(),
-          name: `Lightning User ${key.substring(0, 8)}`,
+          last_node_sync: new Date().toISOString(),
+          nom: `Lightning User ${key.substring(0, 8)}`,
           email: `${key.substring(0, 8)}@lightning.local`
         }, { 
           onConflict: 'pubkey',

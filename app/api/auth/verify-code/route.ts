@@ -60,7 +60,7 @@ export async function POST(req: NextRequest): Promise<Response> {
 
     // Vérifier/créer l'utilisateur
     let { data: user } = await supabase
-      .from('users')
+      .from('profiles')
       .select('*')
       .eq('email', email)
       .single();
@@ -70,12 +70,12 @@ export async function POST(req: NextRequest): Promise<Response> {
       const defaultName = name || email.split('@')[0] || 'Utilisateur';
       
       const { data: newUser, error: createError } = await supabase
-        .from('users')
+        .from('profiles')
         .insert([{ 
           email,
-          name: defaultName,
-          email_verified: true,
-          verified_at: new Date().toISOString()
+          nom: defaultName,
+          prenom: '',
+          t4g_tokens: 1
         }])
         .select()
         .single();
@@ -92,27 +92,14 @@ export async function POST(req: NextRequest): Promise<Response> {
       user = newUser;
       console.log('[VERIFY-CODE] Nouvel utilisateur créé:', user.email);
     } else {
-      // Mettre à jour la vérification email si pas déjà fait
-      if (!user.email_verified) {
-        const { error: updateError } = await supabase
-          .from('users')
-          .update({ 
-            email_verified: true,
-            verified_at: new Date().toISOString()
-          })
-          .eq('id', user.id);
-
-        if (updateError) {
-          console.error('[VERIFY-CODE] Erreur mise à jour vérification:', updateError);
-        }
-      }
+      console.log('[VERIFY-CODE] Utilisateur existant trouvé:', user.email);
     }
 
     const token = jwt.sign(
       { 
         id: user.id, 
         email: user.email,
-        name: user.name,
+        name: user.nom || user.email.split('@')[0],
         verified: true
       }, 
       JWT_SECRET, 
@@ -125,7 +112,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       user: { 
         id: user.id, 
         email: user.email, 
-        name: user.name,
+        name: user.nom || user.email.split('@')[0],
         verified: true
       } 
     });
