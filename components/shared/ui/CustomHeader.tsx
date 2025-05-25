@@ -8,12 +8,12 @@ const CustomHeader: React.FC = () => {
   const isModernPage = ["/", "/token-for-good", "/about", "/contact"].includes(pathname || "");
 
   return (
-    <header className={`header-container px-4 sm:px-6 z-50 transition-all duration-300 ${
+    <header className={`fixed top-0 left-0 right-0 px-4 sm:px-6 z-50 transition-all duration-300 ${
       isModernPage ? 'bg-transparent text-white' : 'bg-white text-gray-900 shadow-md'
     }`}>
       <div className="max-w-7xl mx-auto flex items-center justify-between h-16">
         {/* Logo - visible sur tous les écrans */}
-        <div className="header-logo flex items-center">
+        <div className="flex items-center">
           <a href="/" aria-label="Accueil">
             <Image 
               src={isModernPage ? "/assets/images/logo-daznode-white.svg" : "/assets/images/logo-daznode.svg"}
@@ -44,7 +44,7 @@ const CustomHeader: React.FC = () => {
   
   
         {/* Boutons d'action - visibles uniquement sur desktop */}
-        <div className={`header-actions hidden md:flex gap-2 ${isModernPage ? 'text-white' : ''}`}>
+        <div className={`hidden md:flex gap-2 ${isModernPage ? 'text-white' : ''}`}>
           <a href="/auth/login" className={`btn-secondary px-4 py-2 rounded border ${isModernPage ? 'border-white text-white hover:bg-white hover:text-indigo-700' : 'border-primary text-primary hover:bg-primary hover:text-white'} transition`}>Connexion</a>
         </div>
       </div>
