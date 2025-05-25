@@ -18,7 +18,7 @@ export default function AlbyLoginButton({ onClick }: AlbyLoginButtonProps): Reac
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       onClick={onClick ?? (() => {})}
     >
-      Se connecter avec Alby
+      Se connecter avec votre wallet
     </Button>
   );
 }
