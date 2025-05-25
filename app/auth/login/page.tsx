@@ -68,7 +68,7 @@ export default function LoginPage(): React.ReactElement {
     }
   };
 
-  // --- Connexion par signature Lightning ---
+  // --- Connexion par LNURL-auth (compatible Alby) ---
   const handleLightningLogin = async (): Promise<void> => {
     setError(null);
     setLoading(true);
@@ -78,38 +78,69 @@ export default function LoginPage(): React.ReactElement {
         setLoading(false);
         return;
       }
+      
       await window.webln.enable();
       
-      interface WebLNInfo {
-        node?: { pubkey: string };
-        pubkey?: string;
-      }
+      // Générer un challenge unique pour cette session
+      const challenge = `auth_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       
-      interface WebLNSignature {
-        signature: string;
-      }
+      // Créer l'URL LNURL-auth
+      const domain = window.location.host;
+      const authUrl = `${window.location.protocol}//${domain}/api/auth/lnurl-auth?challenge=${challenge}`;
+      const lnurlAuth = `lightning:lnurl${btoa(authUrl).replace(/=/g, '')}`;
       
-      const webln = window.webln as unknown;
-      const info = await (webln as { getInfo(): Promise<WebLNInfo> }).getInfo();
-      const pubkey = info.node?.pubkey || info.pubkey;
-      const message = `Connexion à Daznode - ${new Date().toISOString()}`;
-      const { signature } = await (webln as { signMessage(message: string): Promise<WebLNSignature> }).signMessage(message);
+             // Essayer d'utiliser l'API LNURL-auth si disponible
+       if (window.webln && 'lnurl' in window.webln) {
+         try {
+           const weblnLnurl = window.webln as any;
+           await weblnLnurl.lnurl(lnurlAuth);
+           
+           // Attendre et vérifier l'authentification
+           let attempts = 0;
+           const maxAttempts = 30; // 30 secondes max
+           
+           while (attempts < maxAttempts) {
+             await new Promise(resolve => setTimeout(resolve, 1000)); // Attendre 1 seconde
+             
+             const authCheck = await fetch(`/api/auth/check-lnurl-auth?challenge=${challenge}`);
+             if (authCheck.ok) {
+               const authData = await authCheck.json();
+               if (authData.authenticated) {
+                 // Générer le token
+                 const tokenResponse = await fetch('/api/auth/lnurl-auth', {
+                   method: 'POST',
+                   headers: { 'Content-Type': 'application/json' },
+                   body: JSON.stringify({ challenge })
+                 });
+                 
+                 if (tokenResponse.ok) {
+                   const tokenData = await tokenResponse.json();
+                   localStorage.setItem('jwt', tokenData.token);
+                   router.push('/user');
+                   return;
+                 }
+               }
+             }
+             attempts++;
+           }
+           
+           setError('Délai d\'authentification expiré. Veuillez réessayer.');
+         } catch (lnurlError) {
+           console.warn('LNURL-auth échoué, essai de fallback:', lnurlError);
+           // Fallback vers redirection manuelle
+           window.location.href = lnurlAuth;
+         }
+       } else {
+         // Pas de support LNURL, redirection manuelle
+         setError(`Votre wallet ne supporte pas LNURL-auth automatique. Cliquez ici pour vous authentifier : ${lnurlAuth}`);
+       }
       
-      // Appel backend
-      const res = await fetch('/api/auth/login-node', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pubkey, message, signature })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        localStorage.setItem('jwt', data.token);
-        router.push('/user');
-      } else {
-        setError("Signature ou authentification Lightning invalide");
-      }
     } catch (e) {
-      setError('Erreur lors de la connexion Lightning : ' + (e instanceof Error ? e.message : String(e)));
+      if (e instanceof Error && e.message.includes('SignMessage is not supported')) {
+        setError('Votre wallet Alby ne supporte pas l\'authentification par signature. Veuillez configurer une Master Key dans Alby ou utiliser l\'authentification par email.');
+      } else {
+        setError('Erreur lors de la connexion Lightning : ' + (e instanceof Error ? e.message : String(e)));
+      }
     } finally {
       setLoading(false);
     }
@@ -207,6 +238,20 @@ export default function LoginPage(): React.ReactElement {
           <div className="flex items-center justify-center">
             <span className="text-gray-400 text-xs mr-2">ou</span>
             <AlbyLoginButton onClick={handleLightningLogin} />
+          </div>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-800">
+            <div className="flex items-center mb-1">
+              <svg className="w-4 h-4 mr-1 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+              <strong>Authentification Lightning</strong>
+            </div>
+            <p>Si Alby affiche "SignMessage not supported", essayez :</p>
+            <ul className="list-disc list-inside mt-1 ml-2 space-y-1">
+              <li>Configurer une Master Key dans Alby</li>
+              <li>Utiliser un autre wallet compatible LNURL-auth</li>
+              <li>Ou utiliser l'authentification par email ci-dessus</li>
+            </ul>
           </div>
         </div>
         <div className="text-xs text-gray-400 text-center mt-4">
