@@ -14,10 +14,12 @@ const SignupConfirmation: React.FC = () => {
   
   useEffect(() => {
     setMounted(true);
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-    if (code) {
-      setShowSignupConfirmation(true);
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      if (code) {
+        setShowSignupConfirmation(true);
+      }
     }
   }, []);
   
@@ -25,7 +27,8 @@ const SignupConfirmation: React.FC = () => {
     setShowSignupConfirmation(false);
   };
   
-  if (!mounted || !showSignupConfirmation) return null;
+  if (!mounted) return null;
+  if (!showSignupConfirmation) return null;
   
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 backdrop-blur-sm">

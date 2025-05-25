@@ -19,7 +19,7 @@
 - **Sous-titre explicite** : "Solution tout-en-un sans compétences techniques"
 - **Preuves sociales rapides** : 500+ nœuds, 99.9% disponibilité, 5 min installation
 - **CTA primaire** : "Démarrer Gratuitement" + "Voir la Démo"
-- **Urgence** : Essai gratuit 14 jours, pas de carte bancaire
+- **Urgence** : Essai gratuit IA pendant 7 jours, pas de carte bancaire
 
 ### 2. Section "Comment ça marche" (`HowItWorks.tsx`)
 - **4 étapes claires** avec icônes et numérotation
@@ -28,14 +28,14 @@
 - **Réassurance** : "Aucune compétence technique requise"
 
 ### 3. Preuves Sociales (`SocialProof.tsx`)
-- **Métriques concrètes** : 500+ nœuds, 99.9% uptime
+- **Métriques concrètes** : 50+ nœuds, 99.9% uptime
 - **Témoignages clients** avec photos et étoiles
-- **Logos partenaires** (Bitcoin Toulouse, LN Markets, etc.)
+- **Logos partenaires** (Bitcoin Nantes, LN Markets, etc.)
 - **Crédibilité renforcée**
 
 ### 4. CTA Section Finale (`CTASection.tsx`)
-- **Urgence** : Offre limitée 14 jours gratuits
-- **Garanties** : Satisfait ou remboursé 30 jours
+- **Urgence** : Offre limitée 7 jours gratuits
+- **Garanties** : Satisfait ou remboursé 10 jours
 - **Contact multiple** : Email, téléphone, chat 24/7
 - **Objections traitées** : Livraison offerte, support inclus
 
@@ -44,7 +44,7 @@
 ### Métadonnées Améliorées
 ```tsx
 title: 'dazno.de | Gérez vos Nœuds Lightning en un Clic - Solution Tout-en-Un'
-description: 'Déployez, optimisez et monitorez vos nœuds Lightning Network sans compétences techniques. DazBox, DazNode et DazPay : solutions complètes pour particuliers et entreprises. Essai gratuit 14 jours.'
+description: 'Déployez, optimisez et monitorez vos nœuds Lightning Network sans compétences techniques. DazBox, DazNode et DazPay : solutions complètes pour particuliers et entreprises. Essai gratuit IA de 7 jours.'
 ```
 
 ### Mots-clés Ciblés

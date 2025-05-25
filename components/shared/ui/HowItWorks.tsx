@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaDownload, FaPlug, FaCog, FaChartLine } from 'react-icons/fa';
+import { useConversionTracking } from '../../../hooks/useConversionTracking';
 
 interface StepProps {
   number: number;
@@ -30,6 +31,16 @@ const Step: React.FC<StepProps> = ({ number, icon, title, description, delay }) 
 );
 
 export const HowItWorks: React.FC = () => {
+  const { trackCTAClick } = useConversionTracking();
+  
+  const handleOrderClick = (): void => {
+    trackCTAClick('primary', 'how_it_works_section', { action: 'order_dazbox' });
+  };
+
+  const handleQuestionClick = (): void => {
+    trackCTAClick('secondary', 'how_it_works_section', { action: 'ask_question' });
+  };
+
   const steps = [
     {
       number: 1,
@@ -113,10 +124,16 @@ export const HowItWorks: React.FC = () => {
               Rejoignez les centaines d'utilisateurs qui font déjà confiance à notre technologie
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-4 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg">
+              <button 
+                onClick={handleOrderClick}
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-4 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg"
+              >
                 Commander ma DazBox
               </button>
-              <button className="border-2 border-indigo-600 text-indigo-600 px-8 py-4 rounded-xl font-bold hover:bg-indigo-50 transition-colors">
+              <button 
+                onClick={handleQuestionClick}
+                className="border-2 border-indigo-600 text-indigo-600 px-8 py-4 rounded-xl font-bold hover:bg-indigo-50 transition-colors"
+              >
                 Poser une question
               </button>
             </div>

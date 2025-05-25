@@ -1,7 +1,18 @@
 import React from 'react';
 import { FaRocket, FaShieldAlt, FaClock } from 'react-icons/fa';
+import { useConversionTracking } from '../../../hooks/useConversionTracking';
 
 export const CTASection: React.FC = () => {
+  const { trackCTAClick } = useConversionTracking();
+
+  const handleOrderClick = (): void => {
+    trackCTAClick('primary', 'cta_section', { action: 'order_dazbox', urgency: 'limited_offer' });
+  };
+
+  const handleDemoClick = (): void => {
+    trackCTAClick('secondary', 'cta_section', { action: 'schedule_demo' });
+  };
+
   return (
     <section className="py-20 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 relative overflow-hidden">
       {/* Arrière-plan décoratif */}
@@ -59,14 +70,20 @@ export const CTASection: React.FC = () => {
           {/* CTA principal */}
           <div className="space-y-6" data-aos="fade-up" data-aos-delay="400">
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button className="group bg-gradient-to-r from-yellow-400 to-pink-500 text-black font-bold px-10 py-5 rounded-2xl text-xl shadow-2xl hover:from-yellow-500 hover:to-pink-600 transition-all transform hover:scale-105 hover:shadow-3xl">
+              <button 
+                onClick={handleOrderClick}
+                className="group bg-gradient-to-r from-yellow-400 to-pink-500 text-black font-bold px-10 py-5 rounded-2xl text-xl shadow-2xl hover:from-yellow-500 hover:to-pink-600 transition-all transform hover:scale-105 hover:shadow-3xl"
+              >
                 <span className="flex items-center gap-3">
                   <FaRocket className="group-hover:animate-bounce" />
                   Commander ma DazBox
                 </span>
               </button>
               
-              <button className="border-3 border-white text-white font-bold px-10 py-5 rounded-2xl text-xl hover:bg-white hover:text-indigo-600 transition-all">
+              <button 
+                onClick={handleDemoClick}
+                className="border-3 border-white text-white font-bold px-10 py-5 rounded-2xl text-xl hover:bg-white hover:text-indigo-600 transition-all"
+              >
                 Planifier une Démo
               </button>
             </div>
@@ -76,7 +93,7 @@ export const CTASection: React.FC = () => {
               <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                 <div className="text-center md:text-left">
                   <p className="text-yellow-300 font-bold text-lg">
-                    🔥 Offre limitée : 14 jours gratuits
+                    🔥 Offre limitée : 7 jours IA gratuits
                   </p>
                   <p className="text-indigo-100 text-sm">
                     + Livraison offerte partout en France
@@ -105,7 +122,7 @@ export const CTASection: React.FC = () => {
               </a>
               <span className="hidden sm:block text-indigo-300">•</span>
               <a href="tel:+33123456789" className="text-yellow-300 hover:text-yellow-200 font-medium">
-                📞 +33 1 23 45 67 89
+                📞 +33 2 53 55 44 47
               </a>
               <span className="hidden sm:block text-indigo-300">•</span>
               <span className="text-indigo-200">

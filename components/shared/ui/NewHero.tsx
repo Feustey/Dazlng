@@ -1,16 +1,39 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useConversionTracking } from '../../../hooks/useConversionTracking';
+import { useScrollTracking } from '../../../hooks/useScrollTracking';
 
 const NewHero: React.FC = (): React.ReactElement => {
   const router = useRouter();
+  const { trackCTAClick, trackPageView } = useConversionTracking();
+  
+  // Track scroll depth pour cette section
+  useScrollTracking({ pageName: 'landing_hero' });
+
+  // Track page view au montage du composant
+  useEffect(() => {
+    trackPageView('landing_page', { section: 'hero' });
+  }, [trackPageView]);
 
   const handleStartFree = (): void => {
+    trackCTAClick('primary', 'hero_section', { action: 'start_free' });
     router.push('/register');
   };
 
   const handleViewDemo = (): void => {
+    trackCTAClick('secondary', 'hero_section', { action: 'view_demo' });
     router.push('/daznode/demo');
+  };
+
+  const handleScrollToDemo = (): void => {
+    // Utilisation de setTimeout pour s'assurer que le DOM est prêt
+    setTimeout(() => {
+      const element = document.getElementById('how-it-works');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 0);
   };
 
   return (
@@ -23,7 +46,8 @@ const NewHero: React.FC = (): React.ReactElement => {
             alt="Daznode"
             width={280}
             height={110}
-            className="h-20 md:h-28 w-auto"
+            className="h-20 md:h-28 w-auto object-contain"
+            style={{ width: 'auto', height: 'auto' }}
             priority
           />
         </div>
@@ -63,14 +87,14 @@ const NewHero: React.FC = (): React.ReactElement => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-6">
           <button 
             onClick={handleStartFree}
-            className="bg-gradient-to-r from-yellow-400 to-pink-500 hover:from-yellow-500 hover:to-pink-600 text-black font-bold px-8 py-4 text-lg shadow-2xl transform hover:scale-105 transition-all rounded-xl cursor-pointer"
+            className="bg-gradient-to-r from-yellow-400 to-pink-500 hover:from-yellow-500 hover:to-pink-600 text-black font-bold px-8 py-4 text-lg shadow-2xl transform hover:scale-105 transition-all rounded-xl"
           >
             Démarrer Gratuitement
           </button>
           
           <button 
             onClick={handleViewDemo}
-            className="border-2 border-white text-white hover:bg-white hover:text-indigo-600 px-8 py-4 text-lg bg-transparent rounded-xl font-bold transition-all cursor-pointer"
+            className="border-2 border-white text-white hover:bg-white hover:text-indigo-600 px-8 py-4 text-lg bg-transparent rounded-xl font-bold transition-all"
           >
             Voir la Démo
           </button>
@@ -79,7 +103,7 @@ const NewHero: React.FC = (): React.ReactElement => {
         {/* Bénéfice immédiat */}
         <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 mt-12 max-w-2xl mx-auto">
           <p className="text-white font-medium">
-            <span className="text-yellow-300 font-bold">Essai gratuit de 14 jours</span> • 
+            <span className="text-yellow-300 font-bold">Essai gratuit de 7 jours</span> • 
             Pas de carte bancaire requise • 
             Support 24/7
           </p>
@@ -88,12 +112,7 @@ const NewHero: React.FC = (): React.ReactElement => {
         {/* Flèche de défilement */}
         <div className="mt-16 flex justify-center">
           <button 
-            onClick={() => {
-              const element = document.getElementById('how-it-works');
-              if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
-              }
-            }}
+            onClick={handleScrollToDemo}
             className="group text-yellow-300 hover:text-yellow-200 transition-all duration-300 flex flex-col items-center"
           >
             <span className="text-sm font-medium mb-2">Découvrir comment</span>

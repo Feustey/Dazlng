@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'dazno.de | Gérez vos Nœuds Lightning en un Clic - Solution Tout-en-Un',
-  description: 'Déployez, optimisez et monitorez vos nœuds Lightning Network sans compétences techniques. DazBox, DazNode et DazPay : solutions complètes pour particuliers et entreprises. Essai gratuit 14 jours.',
+  description: 'Déployez, optimisez et monitorez vos nœuds Lightning Network sans compétences techniques. DazBox, DazNode et DazPay : solutions complètes pour particuliers et entreprises. Essai gratuit IA de 7 jours.',
   keywords: [
     'nœud lightning network', 
     'bitcoin node management', 
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'dazno.de | Gérez vos Nœuds Lightning en un Clic',
-    description: 'Solutions Lightning Network clés en main. Installation 5 min, support 24/7, essai gratuit 14 jours.',
+    description: 'Solutions Lightning Network clés en main. Installation 5 min, support 24/7, essai gratuit 7 jours.',
     images: ['https://dazno.de/assets/images/home-og.png']
   },
   robots: {

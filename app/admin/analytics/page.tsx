@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import FunnelAnalytics from "../../../components/shared/ui/FunnelAnalytics";
 
 type UmamiStats = {
   pageviews: number;
@@ -63,17 +64,27 @@ export default function AnalyticsPage(): JSX.Element {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Analytics (Umami)</h1>
-      {loading && <div>Chargement des statistiques…</div>}
-      {error && <div className="text-red-500">{error}</div>}
-      {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard label="Visites" value={stats.pageviews} />
-          <StatCard label="Visiteurs uniques" value={stats.uniques} />
-          <StatCard label="Taux de rebond" value={stats.bouncerate.toFixed(2) + " %"} />
-          <StatCard label="Durée moyenne" value={formatDuration(stats.avgDuration)} />
-        </div>
-      )}
+      <h1 className="text-2xl font-bold mb-6">Analytics Dashboard</h1>
+      
+      {/* Funnel Analytics */}
+      <div className="mb-8">
+        <FunnelAnalytics />
+      </div>
+      
+      {/* Umami Stats */}
+      <div className="bg-white rounded-xl p-6 shadow-lg">
+        <h2 className="text-xl font-semibold mb-4">Statistiques Umami</h2>
+        {loading && <div>Chargement des statistiques…</div>}
+        {error && <div className="text-red-500">{error}</div>}
+        {stats && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatCard label="Visites" value={stats.pageviews} />
+            <StatCard label="Visiteurs uniques" value={stats.uniques} />
+            <StatCard label="Taux de rebond" value={stats.bouncerate.toFixed(2) + " %"} />
+            <StatCard label="Durée moyenne" value={formatDuration(stats.avgDuration)} />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

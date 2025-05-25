@@ -23,6 +23,7 @@ const Testimonial: React.FC<TestimonialProps> = ({ name, title, content, avatar,
           src={avatar}
           alt={name}
           fill
+          sizes="48px"
           className="object-cover"
         />
       </div>
@@ -72,21 +73,21 @@ export const SocialProof: React.FC = () => {
       name: "Marie Dubois",
       title: "Entrepreneur",
       content: "La DazBox a transformé ma façon de gérer mes paiements Bitcoin. Installation en 5 minutes, tout fonctionne parfaitement !",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       rating: 5
     },
     {
       name: "Thomas Martin",
       title: "Développeur",
       content: "DazNode m'aide à optimiser mon nœud Lightning. L'IA anticipe les besoins de routing, c'est impressionnant !",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       rating: 5
     },
     {
       name: "Sophie Leroy",
       title: "Commerçante",
       content: "DazPay a révolutionné mon commerce. Paiements instantanés et frais dérisoires, mes clients adorent !",
-      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       rating: 5
     }
   ];
@@ -144,7 +145,7 @@ export const SocialProof: React.FC = () => {
           <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
             {/* Placeholder pour logos partenaires */}
             <div className="bg-gray-200 rounded-lg px-6 py-3 text-gray-500 font-bold">
-              Bitcoin Toulouse
+              Bitcoin Nantes
             </div>
             <div className="bg-gray-200 rounded-lg px-6 py-3 text-gray-500 font-bold">
               LN Markets

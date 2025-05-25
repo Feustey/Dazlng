@@ -180,7 +180,7 @@ export default function DemoPage(): React.ReactElement {
                 Démarrer Gratuitement
               </button>
               <p className="text-indigo-200 text-sm">
-                <span className="text-yellow-300 font-bold">Essai gratuit de 14 jours</span> • 
+                <span className="text-yellow-300 font-bold">Essai gratuit IA de 7 jours</span> • 
                 Pas de carte bancaire requise
               </p>
             </div>

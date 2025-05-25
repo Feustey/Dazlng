@@ -45,9 +45,6 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <html lang="fr">
       <head>
-        <link rel="preload" href="/assets/images/logo-daznode.svg" as="image" />
-        <link rel="preload" href="/assets/images/dazia-illustration.png" as="image" />
-        <link rel="preload" href="/assets/images/dazpay-illustration.png" as="image" />
         <script defer src="https://cloud.umami.is/script.js" data-website-id="21fab8e3-a8fd-474d-9187-9739cce7c9b5"></script>
         {/* Préchargement des fonts */}
         {/* Préconnexion aux domaines externes */}
@@ -61,7 +58,7 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         {/* PWA Manifest */}
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#4f46e5" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="DazNode" />
       </head>

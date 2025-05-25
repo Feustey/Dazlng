@@ -54,7 +54,7 @@ Landing Page dazno.de:
 │   ├── Logo + Titre clair
 │   ├── Preuves sociales rapides
 │   ├── CTA primaire/secondaire
-│   └── Urgence (14 jours gratuits)
+│   └── Urgence (7 jours gratuits)
 ├── Comment ça marche (HowItWorks)
 │   ├── 4 étapes visuelles
 │   ├── Process flow desktop

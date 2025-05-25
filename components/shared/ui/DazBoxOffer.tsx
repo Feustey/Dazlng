@@ -11,6 +11,7 @@ const DazBoxOffer: FC = () => {
           src="/assets/images/dazbox.png"
           alt="DazBox"
           fill
+          sizes="(max-width: 768px) 192px, 192px"
           className="rounded-xl shadow-lg object-cover"
         />
       </div>

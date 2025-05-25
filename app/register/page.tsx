@@ -310,7 +310,7 @@ export default function RegisterPage(): React.ReactElement {
           {/* Informations sur l'essai gratuit */}
           <div className="mt-6 text-center text-indigo-200 text-sm">
             <p>
-              <span className="text-yellow-300 font-bold">✓ Essai gratuit de 14 jours</span> • 
+              <span className="text-yellow-300 font-bold">✓ Essai gratuit IA de 7 jours</span> • 
               Pas de carte bancaire requise • 
               Support 24/7
             </p>
