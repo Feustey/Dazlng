@@ -1,4 +1,22 @@
-import { supabase } from '@/lib/supabase';
+// Stockage temporaire en mémoire pour les codes OTP
+// En production, utiliser Redis ou une base de données appropriée
+interface OTPEntry {
+  code: string;
+  expiresAt: number;
+  email: string;
+}
+
+// Stockage global en mémoire
+declare global {
+  // eslint-disable-next-line no-var
+  var otpStorage: Map<string, OTPEntry> | undefined;
+}
+
+if (!global.otpStorage) {
+  global.otpStorage = new Map();
+}
+
+const otpStorage = global.otpStorage;
 
 export class OTPService {
   /**
@@ -9,37 +27,34 @@ export class OTPService {
   }
 
   /**
-   * Crée une nouvelle tentative OTP dans la base de données
+   * Crée une nouvelle tentative OTP en mémoire
    */
   async createOTPAttempt(email: string): Promise<string> {
     // Nettoyer les anciens codes pour cet email
-    await supabase
-      .from('otp_codes')
-      .delete()
-      .eq('email', email);
+    for (const [key, entry] of otpStorage.entries()) {
+      if (entry.email === email) {
+        otpStorage.delete(key);
+      }
+    }
 
     // Nettoyer les codes expirés
-    await supabase
-      .from('otp_codes')
-      .delete()
-      .lt('expires_at', Date.now());
+    this.cleanupExpiredCodes();
 
     const code = this.generateOTP();
     const expiresAt = Date.now() + (15 * 60 * 1000); // 15 minutes
+    const key = `${email}_${Date.now()}`;
 
-    const { error } = await supabase
-      .from('otp_codes')
-      .insert({
-        id: `${email}_${Date.now()}`,
-        email,
-        code,
-        expires_at: expiresAt
-      });
+    otpStorage.set(key, {
+      code,
+      expiresAt,
+      email
+    });
 
-    if (error) {
-      console.error('[OTP-SERVICE] Erreur création code:', error);
-      throw new Error('Erreur lors de la création du code OTP');
-    }
+    console.log('[OTP-SERVICE] Code créé en mémoire:', { 
+      email, 
+      code: `${code.substring(0, 2)}****`,
+      expiresAt: new Date(expiresAt).toISOString()
+    });
 
     return code;
   }
@@ -52,51 +67,49 @@ export class OTPService {
     const normalizedCode = String(code).trim().replace(/\s+/g, '');
 
     // Nettoyer les codes expirés
-    await supabase
-      .from('otp_codes')
-      .delete()
-      .lt('expires_at', Date.now());
+    this.cleanupExpiredCodes();
 
-    // Récupérer le code
-    const { data: otpEntry, error } = await supabase
-      .from('otp_codes')
-      .select('*')
-      .eq('email', email)
-      .eq('code', normalizedCode)
-      .single();
+    // Chercher le code pour cet email
+    for (const [key, entry] of otpStorage.entries()) {
+      if (entry.email === email && entry.code === normalizedCode) {
+        // Vérifier l'expiration
+        if (entry.expiresAt < Date.now()) {
+          otpStorage.delete(key);
+          console.log('[OTP-SERVICE] Code expiré supprimé:', email);
+          return false;
+        }
 
-    if (error || !otpEntry) {
-      return false;
+        // Supprimer le code après usage
+        otpStorage.delete(key);
+        console.log('[OTP-SERVICE] Code validé et supprimé:', email);
+        return true;
+      }
     }
 
-    // Vérifier l'expiration
-    if (otpEntry.expires_at < Date.now()) {
-      await supabase.from('otp_codes').delete().eq('id', otpEntry.id);
-      return false;
-    }
-
-    // Supprimer le code après usage
-    await supabase.from('otp_codes').delete().eq('id', otpEntry.id);
-    return true;
+    console.log('[OTP-SERVICE] Code non trouvé ou invalide:', email);
+    return false;
   }
 
   /**
    * Supprime tous les codes pour un email
    */
   async clearOTPForEmail(email: string): Promise<void> {
-    await supabase
-      .from('otp_codes')
-      .delete()
-      .eq('email', email);
+    for (const [key, entry] of otpStorage.entries()) {
+      if (entry.email === email) {
+        otpStorage.delete(key);
+      }
+    }
   }
 
   /**
    * Nettoie tous les codes expirés
    */
   async cleanupExpiredCodes(): Promise<void> {
-    await supabase
-      .from('otp_codes')
-      .delete()
-      .lt('expires_at', Date.now());
+    const now = Date.now();
+    for (const [key, entry] of otpStorage.entries()) {
+      if (entry.expiresAt < now) {
+        otpStorage.delete(key);
+      }
+    }
   }
 } 

@@ -30,6 +30,15 @@ export { OptimizedImage } from './OptimizedImage';
 export { LazyList } from './LazyList';
 export { PageLoader, usePageLoader } from './PageLoader';
 
+// New optimized landing page components
+export { default as NewHero } from './NewHero';
+
+// Layout components
+export { default as GradientLayout } from '../layout/GradientLayout';
+export { HowItWorks } from './HowItWorks';
+export { SocialProof } from './SocialProof';
+export { CTASection } from './CTASection';
+
 // Hooks de performance
 export { useWebVitals } from '../../../hooks/useWebVitals';
 export { useCache } from '../../../hooks/useCache';

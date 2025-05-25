@@ -2,7 +2,7 @@
 import React, { useEffect, useState, Suspense } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import NewHero from "../components/shared/ui/NewHero";
+import NewHero from "@/components/shared/ui/NewHero";
 import { HowItWorks } from "@/components/shared/ui/HowItWorks";
 import { SocialProof } from "@/components/shared/ui/SocialProof";
 import { CTASection } from "@/components/shared/ui/CTASection";
@@ -56,7 +56,7 @@ const SignupConfirmation: React.FC = () => {
   );
 };
 
-export default function OptimizedHomePage(): React.ReactElement {
+export default function NewHomePage(): React.ReactElement {
   useEffect(() => {
     AOS.init({ 
       once: false,

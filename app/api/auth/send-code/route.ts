@@ -4,7 +4,7 @@ import { RateLimitService } from '@/lib/services/RateLimitService';
 
 export async function POST(req: Request): Promise<Response> {
   try {
-    const { email } = await req.json();
+    const { email, name, pubkey } = await req.json();
     
     if (!email) {
       return new Response(JSON.stringify({ error: 'Email requis' }), { 
@@ -29,6 +29,13 @@ export async function POST(req: Request): Promise<Response> {
         headers: { 'Content-Type': 'application/json' }
       });
     }
+
+    // Log des données reçues pour l'inscription
+    console.log('[SEND-CODE] Données reçues:', { 
+      email, 
+      name: name || 'non fourni', 
+      pubkey: pubkey ? `${pubkey.substring(0, 10)}...` : 'non fourni' 
+    });
 
     // Créer le code OTP
     const otpService = new OTPService();
