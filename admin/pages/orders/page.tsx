@@ -1,3 +1,4 @@
+import React from 'react';
 "use client";
 
 import { useEffect, useState } from "react";
@@ -21,7 +22,7 @@ export default function OrdersPage(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchOrders() {
+    async function fetchOrders(): Promise<void> {
       try {
         const res = await fetch("/api/admin/orders");
         if (!res.ok) throw new Error("Erreur lors du chargement des commandes");

@@ -3,7 +3,6 @@ import './globals.css';
 import { Metadata } from 'next';
 import ClientLayout from './ClientLayout';
 import React from 'react';
-
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -46,13 +45,11 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <html lang="fr">
       <head>
+        <link rel="preload" href="/assets/images/logo-daznode.svg" as="image" />
+        <link rel="preload" href="/assets/images/dazia-illustration.png" as="image" />
+        <link rel="preload" href="/assets/images/dazpay-illustration.png" as="image" />
         <script defer src="https://cloud.umami.is/script.js" data-website-id="21fab8e3-a8fd-474d-9187-9739cce7c9b5"></script>
         {/* Préchargement des fonts */}
-        <link
-          rel="preload"
-          href="/_next/static/css/app.css"
-          as="style"
-        />
         {/* Préconnexion aux domaines externes */}
         <link rel="dns-prefetch" href="//api.dazno.de" />
         <link rel="preconnect" href="https://api.dazno.de" crossOrigin="" />

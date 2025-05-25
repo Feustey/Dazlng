@@ -1,3 +1,4 @@
+import React from 'react';
 "use client";
 
 import { useEffect, useState } from "react";
@@ -20,7 +21,7 @@ export default function SubscriptionsPage(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchSubscriptions() {
+    async function fetchSubscriptions(): Promise<void> {
       try {
         const res = await fetch("/api/admin/subscriptions");
         if (!res.ok) throw new Error("Erreur lors du chargement des abonnements");

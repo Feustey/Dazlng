@@ -57,7 +57,7 @@ const benefits = [
   },
 ];
 
-export default function HomeScreen() {
+export default function HomeScreen(): React.ReactElement {
   const navigation = useNavigation<NavigationProp>();
 
   return (

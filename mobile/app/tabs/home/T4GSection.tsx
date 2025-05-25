@@ -1,6 +1,6 @@
 import React from 'react';
 
-const T4GSection = () => {
+const T4GSection = (): React.ReactElement => {
   const rewardCategories = [
     {
       title: "Mentoring",

@@ -206,9 +206,9 @@ export default function LightningPayment(props: LightningPaymentProps): React.Re
     return (
       <div className="flex flex-col items-center justify-center p-8 animate-pulse">
         <div className="w-44 h-44 bg-gradient-to-br from-yellow-300 to-purple-400 rounded-2xl mb-6" />
-        <div className="h-6 w-2/3 bg-gray-200 rounded mb-2" />
-        <div className="h-4 w-1/2 bg-gray-100 rounded" />
-        <p className="mt-6 text-lg text-gray-400">Chargement du paiement Lightning...</p>
+        <div className="h-6 w-2/3 bg-white/20 rounded mb-2" />
+        <div className="h-4 w-1/2 bg-white/10 rounded" />
+        <p className="mt-6 text-lg text-white/70">Chargement du paiement Lightning...</p>
       </div>
     ) as React.ReactElement;
   }
@@ -235,17 +235,20 @@ export default function LightningPayment(props: LightningPaymentProps): React.Re
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <h3 className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-400 mb-2">Paiement</h3>
-      <p className="text-gray-700 mb-4 text-center">Scanne le QR code ou copie la facture pour payer avec ton wallet Lightning. Paiement instantané, sécurisé et sans frais !</p>
+      <h3 className="text-2xl font-extrabold text-white mb-2">Paiement Lightning</h3>
+      <div className="mb-2 text-center">
+        <p className="text-lg font-semibold text-white">Montant: {props.amount.toLocaleString('fr-FR')} sats</p>
+      </div>
+      <p className="text-white/90 mb-4 text-center">Scanne le QR code ou copie la facture pour payer avec ton wallet Lightning. Paiement instantané, sécurisé et sans frais !</p>
       {invoice && qrUrl && (
         <div className="mb-4 transition-transform hover:scale-105 flex flex-col items-center">
           <Image src={qrUrl} alt="QR code Lightning" width={200} height={200} className="rounded-xl shadow-lg border-4 border-yellow-300" />
           <button
-            className="bg-none border-none p-0 cursor-pointer flex items-center mt-2 text-gray-500 text-sm hover:text-gray-700 focus:outline-none"
+            className="bg-none border-none p-0 cursor-pointer flex items-center mt-2 text-white/70 text-sm hover:text-white focus:outline-none transition-colors"
             onClick={() => {navigator.clipboard.writeText(invoice.paymentRequest); alert('Facture copiée dans le presse-papier !')}}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16h8M8 12h8m-7 8h6a2 2 0 002-2V7a2 2 0 00-2-2h-2.586a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 0010.586 2H6a2 2 0 00-2 2v16a2 2 0 002 2h2" /></svg>
-            Copier la facture
+            📋 Copier la facture
           </button>
         </div>
       )}

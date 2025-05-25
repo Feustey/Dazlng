@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-export function middleware(request: NextRequest) {
+export function middleware(request: NextRequest): NextResponse {
   const response = NextResponse.next()
 
   // Ajouter des en-têtes de cache pour les assets statiques

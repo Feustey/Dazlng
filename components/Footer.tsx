@@ -139,9 +139,8 @@ const Footer: React.FC = () => {
         {/* Section copyright */}
         <div className="mt-16 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center">
           <div className="text-blue-200 text-sm mb-4 sm:mb-0 flex items-center">
-            <span className="animate-pulse mr-2">💙</span>
-            © 2025 - Réalisé avec passion par 
-            <a href="https://inoval.io" target="_blank" rel="noopener noreferrer" className="mx-1 underline decoration-dotted underline-offset-2 hover:text-white">Inoval</a>
+            © 2025 - Réalisé avec <span className="animate-pulse mr-2">💙</span> passion par 
+            <a href="https://inoval.io" target="_blank" rel="noopener noreferrer" className="mx-1 underline decoration-dotted underline-offset-2 hover:text-white">Inoval</a> - Version 0.3
           </div>
           {/* Bouton retour en haut */}
           <a 

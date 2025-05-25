@@ -1,3 +1,4 @@
+import React from 'react';
 "use client";
 
 import { useEffect, useState } from "react";
@@ -18,7 +19,7 @@ export default function PaymentsPage(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchPayments() {
+    async function fetchPayments(): Promise<void> {
       try {
         const res = await fetch("/api/admin/payments");
         if (!res.ok) throw new Error("Erreur lors du chargement des paiements");

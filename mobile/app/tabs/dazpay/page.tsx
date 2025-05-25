@@ -13,7 +13,7 @@ interface Product {
   amount: number;
 }
 
-const DazPayPage = () => {
+const DazPayPage = (): React.ReactElement => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [showPayment, setShowPayment] = useState(false);
 
@@ -62,12 +62,12 @@ const DazPayPage = () => {
     }
   ];
 
-  const handleProductSelect = (product: Product) => {
+  const handleProductSelect = (product: Product): void => {
     setSelectedProduct(product);
     setShowPayment(true);
   };
 
-  const handlePaymentSuccess = () => {
+  const handlePaymentSuccess = (): void => {
     // Ici, vous pourriez ajouter la logique pour enregistrer le paiement,
     // créer le compte marchand, envoyer un email de confirmation, etc.
     setShowPayment(false);

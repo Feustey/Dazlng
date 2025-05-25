@@ -5,7 +5,7 @@ export * from './OptimizeButton';
 export * from './CustomHeader';
 export * from './ParallaxSection';
 export * from './ThreeHero';
-export * from './ContactForm';
+// ContactForm retiré du barrel export pour éviter les conflits côté client
 export * from './NotificationBadge';
 export * from './ProtonPayment';
 export * from './FormInput';

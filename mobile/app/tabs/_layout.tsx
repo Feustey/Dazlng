@@ -1,3 +1,4 @@
+import React from 'react';
 import { Tabs, useRootNavigation } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Image, Pressable, View, StyleSheet } from 'react-native';
@@ -6,8 +7,8 @@ import Colors from '../../../constants/Colors';
 import Footer from '../../../components/Footer';
 import { useEffect, useState } from 'react';
 
-export default function TabLayout() {
-  const rootNavigation = useRootNavigation();
+export default function TabLayout(): React.ReactElement {
+  const _rootNavigation = useRootNavigation();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -16,7 +17,7 @@ export default function TabLayout() {
   }, []);
 
   if (!isMounted) {
-    return null;
+    return <View />;
   }
 
   return (

@@ -14,9 +14,13 @@ module.exports = {
       varsIgnorePattern: '^_'
     }],
     '@typescript-eslint/no-non-null-assertion': 'warn',
+    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-var-requires': 'off',
     'react-hooks/exhaustive-deps': 'warn',
     'react-native/no-unused-styles': 'off',
-    'react/no-unescaped-entities': 'off'
+    'react/no-unescaped-entities': 'off',
+    'jsx-a11y/alt-text': 'warn',
+    '@next/next/no-img-element': 'warn'
   },
   ignorePatterns: [
     '*.config.js',

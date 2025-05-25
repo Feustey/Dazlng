@@ -5,7 +5,7 @@ interface WebVitalsMetric {
   name: string;
   value: number;
   delta: number;
-  entries: any[];
+  entries: PerformanceEntry[];
 }
 
 export function useWebVitals(): void {

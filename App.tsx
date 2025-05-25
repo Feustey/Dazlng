@@ -44,6 +44,7 @@ function TabNavigator(): React.ReactElement {
                   source={require('./assets/images/logo-daznode-white.svg')}
                   style={{ width: 120, height: 24 }}
                   resizeMode="contain"
+                  alt="Logo Daznode"
                 />
               </Pressable>
             ),

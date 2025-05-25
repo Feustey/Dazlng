@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState, Suspense } from "react";
+import Image from "next/image";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import DazBoxOffer from "@/components/shared/ui/DazBoxOffer";
@@ -10,21 +11,24 @@ import { FaServer, FaBox, FaCreditCard } from "react-icons/fa";
 // Composant client séparé pour gérer les paramètres d'URL
 const SignupConfirmation: React.FC = () => {
   const [showSignupConfirmation, setShowSignupConfirmation] = useState(false);
+  const [mounted, setMounted] = useState(false);
   
   useEffect(() => {
+    setMounted(true);
     // Utiliser URLSearchParams directement côté client pour éviter les erreurs d'hydratation
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get('code');
-      if (code) {
-        setShowSignupConfirmation(true);
-      }
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    if (code) {
+      setShowSignupConfirmation(true);
     }
   }, []);
+  
   const closeConfirmation = (): void => {
     setShowSignupConfirmation(false);
   };
-  if (!showSignupConfirmation) return null;
+  
+  // Ne pas rendre pendant l'hydratation côté serveur
+  if (!mounted || !showSignupConfirmation) return null;
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 backdrop-blur-sm">
       <div 
@@ -55,6 +59,7 @@ const SignupConfirmation: React.FC = () => {
 };
 
 export default function HomePage(): React.ReactElement {
+  
   // Cache des données de testimonials et autres contenus dynamiques
   const { data: testimonials, loading: testimonialsLoading } = useCache(
     'home-testimonials',
@@ -89,30 +94,31 @@ export default function HomePage(): React.ReactElement {
   );
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      AOS.init({ 
-        once: false,
-        duration: 800,
-        easing: 'ease-out-cubic',
-        mirror: true,
-        anchorPlacement: 'top-bottom'
-      });
-      // Script pour le défilement fluide
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        const targetId = (anchor as HTMLAnchorElement).getAttribute('href');
-        if (!targetId) return;
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-          anchor.addEventListener('click', (e) => {
-            e.preventDefault();
-            window.scrollTo({
-              top: targetElement.getBoundingClientRect().top + window.scrollY,
-              behavior: 'smooth'
-            });
+    AOS.init({ 
+      once: false,
+      duration: 800,
+      easing: 'ease-out-cubic',
+      mirror: true,
+      anchorPlacement: 'top-bottom'
+    });
+    
+    // Script pour le défilement fluide
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      const targetId = (anchor as HTMLAnchorElement).getAttribute('href');
+      if (!targetId) return;
+      const targetElement = document.querySelector(targetId);
+      if (targetElement) {
+        anchor.addEventListener('click', (e) => {
+          e.preventDefault();
+          const elementTop = targetElement.getBoundingClientRect().top + window.scrollY;
+          const offset = 80; // Décalage de 80px vers le haut
+          window.scrollTo({
+            top: elementTop - offset,
+            behavior: 'smooth'
           });
-        }
-      });
-    }
+        });
+      }
+    });
   }, []);
   return (
     <>
@@ -122,24 +128,29 @@ export default function HomePage(): React.ReactElement {
       </Suspense>
       {/* HERO */}
       <div className="min-h-screen relative bg-gradient-to-br from-indigo-600 to-purple-700 flex flex-col items-center justify-center px-4 overflow-hidden">
-        {/* Préchargement des images importantes */}
-        <link rel="preload" href="/assets/images/logo-daznode.svg" as="image" />
-        <link rel="preload" href="/assets/images/dazia-illustration.png" as="image" />
-        <link rel="preload" href="/assets/images/dazpay-illustration.png" as="image" />
         
         <div className="relative z-8 text-center space-y-8">
-            <OptimizedImage
-              src="/assets/images/logo-daznode.svg"
-              alt="Daznode"
-              width={230}
-              height={90}
-              className="h-16 md:h-20 w-auto mx-auto"
-              priority={true}
-            />
-     
-          <h1 className="text-4xl md:text-6xl font-bold text-white animate-fade-in">
-            <span className="bg-gradient-to-r from-yellow-300 via-pink-400 to-yellow-400 text-transparent bg-clip-text">l'accès Lightning</span> pour tous
-          </h1>
+          {/* Logo et titre principal alignés */}
+          <div className="flex flex-col items-center justify-center space-y-6">
+            {/* Logo centré avec effet zoom */}
+            <div className="flex justify-center" data-aos="zoom-in" data-aos-duration="800">
+              <Image
+                src="/assets/images/logo-daznode.svg"
+                alt="Daznode"
+                width={280}
+                height={110}
+                className="h-20 md:h-28 w-auto transform hover:scale-105 transition-transform duration-300"
+                priority
+              />
+            </div>
+            
+            {/* Titre principal */}
+            <div className="text-center">
+              <h1 className="text-4xl md:text-6xl font-bold text-white animate-fade-in">
+                <span className="bg-gradient-to-r from-yellow-300 via-pink-400 to-yellow-400 text-transparent bg-clip-text">l'accès Lightning</span> pour tous
+              </h1>
+            </div>
+          </div>
           
           {/* Bloc texte d'introduction avec zoom-in */}
           <div 
@@ -162,10 +173,15 @@ export default function HomePage(): React.ReactElement {
           <div className="mt-12 md:mt-16 flex justify-center">
             <button 
               onClick={() => {
-                window.scrollTo({
-                  top: document.getElementById('discover')?.offsetTop || 0,
-                  behavior: 'smooth'
-                });
+                const element = document.getElementById('discover');
+                if (element) {
+                  const elementTop = element.offsetTop;
+                  const offset = 80; // Décalage de 80px vers le haut
+                  window.scrollTo({
+                    top: elementTop - offset,
+                    behavior: 'smooth'
+                  });
+                }
               }}
               className="group flex flex-col items-center text-yellow-300 hover:text-yellow-200 transition-all duration-300"
               data-aos="fade-up"
@@ -531,7 +547,7 @@ export default function HomePage(): React.ReactElement {
           <div className="container mx-auto px-4">
             <h2 className="text-center text-2xl font-bold bg-gradient-to-r from-yellow-300 via-pink-400 to-yellow-400 text-transparent bg-clip-text mb-10">Partenaires :</h2>
             <div className="flex flex-wrap justify-center items-center gap-12">
-              <a href="https://blockchainforgood.fr" target="_blank" rel="noopener noreferrer"><OptimizedImage alt="Blockchain for Good" src="/assets/images/logo-blockchain_for_good.svg" width={120} height={60} className="h-12 w-auto grayscale hover:grayscale-0 transition-all" loading="lazy" /></a>
+              <a href="https://blockchainforgood.fr" target="_blank" rel="noopener noreferrer"><Image alt="Blockchain for Good" src="/assets/images/logo-blockchain_for_good.svg" width={120} height={60} className="h-12 w-auto grayscale hover:grayscale-0 transition-all" /></a>
               <a href="https://inoval.fr" target="_blank" rel="noopener noreferrer"><OptimizedImage alt="Inoval" src="/assets/images/logo-inoval.png" width={120} height={60} className="h-12 w-auto grayscale hover:grayscale-0 transition-all" loading="lazy" /></a>
               <a href="https://nantesbitcoinmeetup.notion.site/Nantes-Bitcoin-Meetup-c2202d5100754ad1b57c02c83193da96" target="_blank" rel="noopener noreferrer"><OptimizedImage alt="Nantes Bitcoin Meetup" src="/assets/images/logo-meetup.jpg" width={120} height={60} className="h-12 w-auto grayscale hover:grayscale-0 transition-all" loading="lazy" /></a>
               <br/>

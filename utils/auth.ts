@@ -19,7 +19,7 @@ export interface UserWithOrders extends Omit<User, 'password'> {
   }>;
 }
 
-export async function registerUser(email: string, password: string, name: string) {
+export async function registerUser(email: string, password: string, name: string): Promise<User> {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
@@ -44,7 +44,7 @@ export async function registerUser(email: string, password: string, name: string
   }
 }
 
-export async function loginUser(email: string, password: string) {
+export async function loginUser(email: string, password: string): Promise<{ token: string; user: { id: string; email: string; name: string } }> {
   const { data: user, error } = await supabase
     .from('users')
     .select('*')
@@ -146,7 +146,7 @@ export async function getUserData(userId: string): Promise<UserWithOrders> {
   };
 }
 
-export function verifyToken(token: string) {
+export function verifyToken(token: string): { id: string; email: string } {
   try {
     return jwt.verify(token, JWT_SECRET) as { id: string; email: string };
   } catch {

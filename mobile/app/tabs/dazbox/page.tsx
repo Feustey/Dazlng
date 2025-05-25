@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import ProductCard from 'components/shared/ui/ProductCard';
 
-const DazboxPage = () => {
+const DazboxPage = (): React.ReactElement => {
   const features = [
     { text: "✓ Node Lightning plug & play" },
     { text: "✓ Installation facile en quelques minutes" },

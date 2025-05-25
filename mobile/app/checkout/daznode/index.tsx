@@ -3,7 +3,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function DaznodeCheckoutScreen() {
+export default function DaznodeCheckoutScreen(): React.ReactElement {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Checkout Daznode</Text>

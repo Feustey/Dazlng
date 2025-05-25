@@ -69,7 +69,8 @@ export function OptimizedImage({
         placeholder={placeholder}
         blurDataURL={blurDataURL || defaultBlurDataURL}
         sizes={sizes}
-        loading={loading}
+        // Ne pas passer loading si priority est défini (conflit entre les deux)
+        loading={priority ? undefined : loading}
         className={cn(
           'duration-700 ease-in-out',
           isLoading ? 'scale-110 blur-2xl grayscale' : 'scale-100 blur-0 grayscale-0'

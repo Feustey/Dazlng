@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 
-export default function DazboxCheckoutScreen() {
+export default function DazboxCheckoutScreen(): React.ReactElement {
   const [form, setForm] = useState({
     fullName: '',
     email: '',
@@ -18,11 +18,11 @@ export default function DazboxCheckoutScreen() {
   const [orderId, setOrderId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (name: string, value: string) => {
+  const handleChange = (name: string, value: string): void => {
     setForm({ ...form, [name]: value });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     setError(null);
     if (!form.fullName || !form.email || !form.address || !form.city || !form.postalCode || !form.country) {
       setError('Merci de remplir tous les champs obligatoires.');
@@ -38,7 +38,7 @@ export default function DazboxCheckoutScreen() {
     quantity: 1,
   };
 
-  const handlePaymentSuccess = async () => {
+  const handlePaymentSuccess = async (): Promise<void> => {
     setError(null);
     setPaymentSuccess(true);
     // Version mobile : pas d'auth, enregistre la commande sans user_id
