@@ -2,7 +2,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { Metadata } from 'next';
 import ClientLayout from './ClientLayout';
-import React from 'react';
+import React, { useEffect } from 'react';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -42,6 +42,17 @@ export const metadata: Metadata = {
 };
 
 const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Désactiver l'enregistrement du Service Worker en production
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        for (let registration of registrations) {
+          registration.unregister();
+        }
+      });
+    }
+  }, []);
+
   return (
     <html lang="fr">
       <head>

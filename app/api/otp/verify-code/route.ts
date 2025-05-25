@@ -17,12 +17,19 @@ export async function POST(req: NextRequest): Promise<Response> {
       pubkey: pubkey ? `${pubkey.substring(0, 10)}...` : 'non fourni'
     });
     
-    if (!email || !code) {
+    if (!email?.trim() || !code?.trim()) {
       return new Response(JSON.stringify({ 
-        error: 'Email et code requis' 
+        error: 'Email et code requis',
+        details: {
+          email: !email?.trim() ? 'Email manquant' : null,
+          code: !code?.trim() ? 'Code manquant' : null
+        }
       }), { 
         status: 400,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-store'
+        }
       });
     }
 
@@ -117,15 +124,23 @@ export async function POST(req: NextRequest): Promise<Response> {
         name: user.nom || user.email.split('@')[0],
         verified: true
       } 
+    }, {
+      headers: {
+        'Cache-Control': 'no-store'
+      }
     });
 
   } catch (error) {
     console.error('[VERIFY-CODE] Erreur:', error);
     return new Response(JSON.stringify({ 
-      error: 'Erreur lors de la vérification' 
+      error: 'Erreur lors de la vérification',
+      details: error instanceof Error ? error.message : 'Erreur inconnue'
     }), { 
       status: 500,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store'
+      }
     });
   }
 } 

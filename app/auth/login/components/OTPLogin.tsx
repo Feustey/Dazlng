@@ -61,7 +61,7 @@ export default function OTPLogin(): React.ReactElement {
     setLoading(true);
     
     try {
-      const res = await fetch('/api/auth/verify-code', {
+      const res = await fetch('/api/otp/verify-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
