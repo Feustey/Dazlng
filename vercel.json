@@ -6,11 +6,11 @@
   "installCommand": "npm install --legacy-peer-deps",
   "rewrites": [
     {
-      "source": "https://app.dazno.de/(.*)",
+      "source": "/app/(.*)",
       "destination": "/user/$1"
     },
     {
-      "source": "https://app.dazno.de/",
+      "source": "/app",
       "destination": "/user/dashboard"
     }
   ],
