@@ -1,7 +1,10 @@
-import './styles/globals.css';
+import { Inter } from 'next/font/google';
+import './globals.css';
 import { Metadata } from 'next';
 import ClientLayout from './ClientLayout';
 import React from 'react';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: {
@@ -44,8 +47,28 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <html lang="fr">
       <head>
         <script defer src="https://cloud.umami.is/script.js" data-website-id="21fab8e3-a8fd-474d-9187-9739cce7c9b5"></script>
+        {/* Préchargement des fonts */}
+        <link
+          rel="preload"
+          href="/_next/static/css/app.css"
+          as="style"
+        />
+        {/* Préconnexion aux domaines externes */}
+        <link rel="dns-prefetch" href="//api.dazno.de" />
+        <link rel="preconnect" href="https://api.dazno.de" crossOrigin="" />
+        
+        {/* Métadonnées pour les performances */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta httpEquiv="x-dns-prefetch-control" content="on" />
+        
+        {/* PWA Manifest */}
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#4f46e5" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="DazNode" />
       </head>
-      <body >
+      <body className={inter.className}>
         <ClientLayout>
           {children}
         </ClientLayout>

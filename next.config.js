@@ -20,21 +20,31 @@ const nextConfig = {
     'react-native-reanimated'
   ],
   images: {
-    domains: ['*'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 60,
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   compress: true,
   poweredByHeader: false,
   reactStrictMode: true,
   swcMinify: true,
+  optimizeFonts: true,
   experimental: {
     optimizeCss: true,
-    scrollRestoration: true
+    scrollRestoration: true,
   },
   headers: async () => [
     {
-      source: '/:all*(svg|jpg|png)',
+      source: '/:all*(svg|jpg|png|webp|avif|ico|gif)',
       locale: false,
       headers: [
         {
@@ -42,6 +52,24 @@ const nextConfig = {
           value: 'public, max-age=31536000, immutable',
         }
       ],
+    },
+    {
+      source: '/_next/static/:path*',
+      headers: [
+        {
+          key: 'Cache-Control',
+          value: 'public, max-age=31536000, immutable'
+        }
+      ]
+    },
+    {
+      source: '/api/:path*',
+      headers: [
+        {
+          key: 'Cache-Control',
+          value: 'public, max-age=0, must-revalidate'
+        }
+      ]
     },
   ],
   compiler: {

@@ -24,3 +24,13 @@ export * from './GradientTitle';
 // export * from './ui';
 // export * from './layout';
 export { useToast } from './use-toast';
+
+// Composants optimisés pour les performances
+export { OptimizedImage } from './OptimizedImage';
+export { LazyList } from './LazyList';
+export { PageLoader, usePageLoader } from './PageLoader';
+
+// Hooks de performance
+export { useWebVitals } from '../../../hooks/useWebVitals';
+export { useCache } from '../../../hooks/useCache';
+export { useServiceWorker } from '../../../hooks/useServiceWorker';

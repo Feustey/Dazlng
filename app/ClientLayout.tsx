@@ -2,6 +2,7 @@
 import { usePathname } from "next/navigation";
 import CustomHeader from "@/components/shared/ui/CustomHeader";
 import ModernLayout from "@/components/shared/layout/ModernLayout";
+import PerformanceProvider from './PerformanceProvider';
 import dynamic from 'next/dynamic';
 import React, { ReactNode } from 'react';
 
@@ -36,16 +37,22 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
 
   if (useModernLayout) {
     return (
-      <ModernLayout 
-        withGradientBg={pathname === "/" || pathname === "/token-for-good"}
-        withAnimatedCircles={pathname === "/"}
-      >
-        {content}
-      </ModernLayout>
+      <PerformanceProvider>
+        <ModernLayout 
+          withGradientBg={pathname === "/" || pathname === "/token-for-good"}
+          withAnimatedCircles={pathname === "/"}
+        >
+          {content}
+        </ModernLayout>
+      </PerformanceProvider>
     );
   }
 
-  return content;
+  return (
+    <PerformanceProvider>
+      {content}
+    </PerformanceProvider>
+  );
 };
 
 export default ClientLayout; 

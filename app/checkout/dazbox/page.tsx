@@ -43,7 +43,7 @@ function CheckoutContent(): React.ReactElement {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const supabase = createClientComponentClient();
-  const router = useRouter();
+  const _router = useRouter();
   const [btcCopied, setBtcCopied] = useState(false);
   const btcAddress = 'bc1p0vyqda9uv7kad4lsfzx5s9ndawhm3e3fd5vw7pnsem22n7dpfgxq48kht7';
 
@@ -80,6 +80,11 @@ function CheckoutContent(): React.ReactElement {
     quantity: 1,
   };
 
+  const handlePaymentSuccess = async (): Promise<void> => {
+    // Redirection vers la page de succès
+    window.location.href = '/checkout/success';
+  };
+
   const applyPromoCode = (): void => {
     if (promoCode.trim().toUpperCase() === PROMO_CODE) {
       setPromoApplied(true);
@@ -94,7 +99,7 @@ function CheckoutContent(): React.ReactElement {
 
     setIsLoading(true);
     setError(null);
-    setInvoice(null); // Reset invoice state
+    setInvoice(null);
     
     try {
       console.log('Début génération facture Lightning pour montant:', getPrice());
@@ -103,8 +108,6 @@ function CheckoutContent(): React.ReactElement {
         amount: getPrice(), 
         memo: `Paiement pour DazBox` 
       });
-      
-      console.log('Facture générée:', invoiceData);
       
       if (!invoiceData || !invoiceData.paymentRequest) {
         throw new Error('Facture invalide reçue de l\'API');
@@ -119,58 +122,78 @@ function CheckoutContent(): React.ReactElement {
         userId = user?.id;
       }
       
-      // Préparer les données pour les stocker temporairement
-      const customerInfo = {
-        firstName: form.firstName,
-        lastName: form.lastName,
-        email: form.email,
-        address: form.address,
-        address2: form.address2,
-        city: form.city,
-        state: form.state,
-        postalCode: form.postalCode,
-        country: form.country,
-        phone: form.phone,
-      };
+      // Créer la commande dans Supabase avec payment_status = false
+      const { data: order, error: orderError } = await supabase
+        .from('orders')
+        .insert([{
+          user_id: userId,
+          product_type: productDetails.name,
+          amount: productDetails.priceSats,
+          payment_status: false,
+          payment_method: 'lightning',
+          payment_hash: invoiceData.paymentHash,
+          metadata: {
+            customer: {
+              firstName: form.firstName,
+              lastName: form.lastName,
+              email: form.email,
+              address: form.address,
+              address2: form.address2,
+              city: form.city,
+              state: form.state,
+              postalCode: form.postalCode,
+              country: form.country,
+              phone: form.phone,
+            },
+            product: {
+              name: productDetails.name,
+              quantity: productDetails.quantity,
+              priceSats: productDetails.priceSats,
+              promoApplied: promoApplied,
+              promoCode: promoApplied ? promoCode : null,
+              discountPercentage: promoApplied ? DISCOUNT_PERCENTAGE : 0
+            },
+            invoice: invoiceData.paymentRequest
+          }
+        }])
+        .select()
+        .single();
+
+      if (orderError) {
+        throw new Error(`Erreur lors de la création de la commande: ${orderError.message}`);
+      }
+
+      // Stocker l'ID de la commande pour la mise à jour après paiement
+      sessionStorage.setItem('current_order_id', order.id);
       
-      const productInfo = {
-        name: productDetails.name,
-        quantity: productDetails.quantity,
-        priceSats: productDetails.priceSats,
-        promoApplied: promoApplied,
-        promoCode: promoApplied ? promoCode : null,
-        discountPercentage: promoApplied ? DISCOUNT_PERCENTAGE : 0
-      };
-      
-      // Stocker les données dans le sessionStorage pour les récupérer dans la page success
-      sessionStorage.setItem('dazbox_order_data', JSON.stringify({
-        user_id: userId,
-        product_type: productDetails.name,
-        amount: productDetails.priceSats,
-        payment_status: 'pending',
-        payment_method: 'lightning',
-        payment_hash: invoiceData.paymentHash,
-        metadata: {
-          customer: customerInfo,
-          product: productInfo,
-          invoice: invoiceData.paymentRequest
-        },
-        token: token,
-      }));
-      
-      // S'assurer que la facture est bien définie avant d'afficher le composant
       setInvoice(invoiceData);
-      
-      // Petit délai pour s'assurer que l'état est mis à jour
-      setTimeout(() => {
-        setShowLightning(true);
-        console.log('Affichage du composant Lightning avec facture:', invoiceData);
-      }, 100);
+      setShowLightning(true);
       
     } catch (e) {
       console.error('Erreur lors de la génération de la facture:', e);
       setError(e instanceof Error ? e.message : 'Erreur lors de la génération de la facture');
-      setInvoice(null);
+      
+      // Si erreur de génération de facture, envoyer un email
+      if (form.email) {
+        try {
+          await fetch('/api/send-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              to: 'contact@dazno.de',
+              subject: 'Échec de génération de facture Lightning',
+              text: `Un client a rencontré un problème lors de la génération de facture Lightning.
+              
+Email client: ${form.email}
+Erreur: ${e instanceof Error ? e.message : 'Erreur inconnue'}
+
+Le client devrait être recontacté pour un paiement via Wallet of Satoshi.`
+            })
+          });
+        } catch (emailError) {
+          console.error('Erreur lors de l\'envoi de l\'email:', emailError);
+        }
+      }
     } finally {
       setIsLoading(false);
     }
@@ -228,7 +251,7 @@ function CheckoutContent(): React.ReactElement {
             invoiceData={invoice}
             amount={getPrice()} 
             productName="DazBox"
-            onSuccess={() => router.push('/checkout/success')}
+            onSuccess={handlePaymentSuccess}
             onCancel={() => { setShowLightning(false); setInvoice(null); setError(null); }}
           />
           <button

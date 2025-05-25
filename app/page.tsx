@@ -2,9 +2,9 @@
 import React, { useEffect, useState, Suspense } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import Image from 'next/image';
 import DazBoxOffer from "@/components/shared/ui/DazBoxOffer";
 import PricingCard from "@/components/shared/ui/PricingCard";
+import { OptimizedImage, LazyList, useCache } from "@/components/shared/ui";
 import { FaServer, FaBox, FaCreditCard } from "react-icons/fa";
 
 // Composant client séparé pour gérer les paramètres d'URL
@@ -54,6 +54,39 @@ const SignupConfirmation: React.FC = () => {
 };
 
 export default function HomePage(): React.ReactElement {
+  // Cache des données de testimonials et autres contenus dynamiques
+  const { data: testimonials, loading: testimonialsLoading } = useCache(
+    'home-testimonials',
+    async () => {
+      // Simulation d'API call pour les témoignages
+      await new Promise(resolve => setTimeout(resolve, 500));
+      return [
+        {
+          id: 1,
+          name: "Marie Dubois",
+          title: "Entrepreneur",
+          content: "La DazBox a transformé ma façon de gérer mes paiements Bitcoin. Installation en 5 minutes, tout fonctionne parfaitement !",
+          avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+        },
+        {
+          id: 2,
+          name: "Thomas Martin",
+          title: "Développeur",
+          content: "DazNode m'aide à optimiser mon nœud Lightning. L'IA anticipe les besoins de routing, c'est impressionnant !",
+          avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+        },
+        {
+          id: 3,
+          name: "Sophie Leroy",
+          title: "Commerçante",
+          content: "DazPay a révolutionné mon commerce. Paiements instantanés et frais dérisoires, mes clients adorent !",
+          avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+        }
+      ];
+    },
+    { ttl: 10 * 60 * 1000 } // 10 minutes de cache
+  );
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       AOS.init({ 
@@ -88,13 +121,19 @@ export default function HomePage(): React.ReactElement {
       </Suspense>
       {/* HERO */}
       <div className="min-h-screen relative bg-gradient-to-br from-indigo-600 to-purple-700 flex flex-col items-center justify-center px-4 overflow-hidden">
+        {/* Préchargement des images importantes */}
+        <link rel="preload" href="/assets/images/logo-daznode.svg" as="image" />
+        <link rel="preload" href="/assets/images/dazia-illustration.png" as="image" />
+        <link rel="preload" href="/assets/images/dazpay-illustration.png" as="image" />
+        
         <div className="relative z-8 text-center space-y-8">
-            <Image
+            <OptimizedImage
               src="/assets/images/logo-daznode.svg"
               alt="Daznode"
               width={230}
               height={90}
               className="h-16 md:h-20 w-auto mx-auto"
+              priority={true}
             />
      
           <h1 className="text-4xl md:text-6xl font-bold text-white animate-fade-in">
@@ -211,13 +250,13 @@ export default function HomePage(): React.ReactElement {
                   <div className="relative order-1 mb-6 md:mb-0" data-aos="fade-right" data-aos-delay="300">
                     <div className="absolute inset-0 bg-gradient-to-r from-purple-50 to-purple-100 rounded-2xl transform -rotate-6 hidden md:block"></div>
                     <div className="relative bg-white rounded-2xl shadow-lg p-4 sm:p-6 flex items-center justify-center h-full">
-                      <Image
+                      <OptimizedImage
                         alt="Illustration DazNode"
                         src="/assets/images/dazia-illustration.png"
                         width={400}
                         height={250}
                         className="w-full h-auto object-contain"
-                        priority
+                        priority={true}
                       />
                     </div>
                   </div>
@@ -294,13 +333,13 @@ export default function HomePage(): React.ReactElement {
                   <div className="relative order-1 md:order-2 mb-6 md:mb-0" data-aos="fade-left" data-aos-delay="300">
                     <div className="absolute inset-0 bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-2xl transform -rotate-6 hidden md:block"></div>
                     <div className="relative bg-white rounded-2xl shadow-lg p-4 sm:p-6">
-                      <Image
+                      <OptimizedImage
                         alt="Illustration DazPay"
                         src="/assets/images/dazpay-illustration.png"
                         width={400}
                         height={250}
                         className="w-full h-auto object-contain"
-                        priority
+                        priority={true}
                       />
                     </div>
                   </div>
@@ -421,14 +460,79 @@ export default function HomePage(): React.ReactElement {
           </div>
         </section>
         <br/>
-        {/* SECTION 5 - Partenaires */}
+        
+        {/* SECTION 5 - Témoignages */}
+        <section className="py-20 bg-gray-50 rounded-2xl">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 bg-gradient-to-r from-indigo-600 to-purple-600 text-transparent bg-clip-text" data-aos="fade-up">
+              Ce que disent nos utilisateurs
+            </h2>
+            
+            {testimonialsLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+              </div>
+            ) : testimonials && testimonials.length > 0 ? (
+              <LazyList
+                items={testimonials}
+                pageSize={3}
+                renderItem={(testimonial, index) => (
+                  <div 
+                    key={testimonial.id} 
+                    className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300"
+                    data-aos="fade-up" 
+                    data-aos-delay={index * 100}
+                  >
+                    <div className="flex items-start space-x-4">
+                      <OptimizedImage
+                        src={testimonial.avatar}
+                        alt={testimonial.name}
+                        width={64}
+                        height={64}
+                        className="w-16 h-16 rounded-full object-cover flex-shrink-0"
+                        loading="lazy"
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-semibold text-lg text-gray-900">{testimonial.name}</h4>
+                          <div className="flex text-yellow-400">
+                            {[...Array(5)].map((_, i) => (
+                              <svg key={i} className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                              </svg>
+                            ))}
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-3">{testimonial.title}</p>
+                        <p className="text-gray-700 leading-relaxed">"{testimonial.content}"</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+                emptyComponent={
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">Aucun témoignage disponible pour le moment.</p>
+                  </div>
+                }
+              />
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-gray-500">Aucun témoignage disponible pour le moment.</p>
+              </div>
+            )}
+          </div>
+        </section>
+        <br/>
+        
+        {/* SECTION 6 - Partenaires */}
         <section className="bg-black-20 rounded-2xl shadow-xl overflow-hidden flex flex-col justify-between transition-all hover:shadow-2xl hover:-translate-y-1 duration-300" data-aos="fade-up" data-aos-delay="200">
           <div className="container mx-auto px-4">
             <h2 className="text-center text-2xl font-bold bg-gradient-to-r from-yellow-300 via-pink-400 to-yellow-400 text-transparent bg-clip-text mb-10">Partenaires :</h2>
             <div className="flex flex-wrap justify-center items-center gap-12">
-              <a href="https://blockchainforgood.fr" target="_blank" rel="noopener noreferrer"><Image alt="Blockchain for Good" src="/assets/images/logo-blockchain_for_good.svg" width={120} height={60} className="h-12 w-auto grayscale hover:grayscale-0 transition-all" /></a>
-              <a href="https://inoval.fr" target="_blank" rel="noopener noreferrer"><Image alt="Inoval" src="/assets/images/logo-inoval.png" width={120} height={60} className="h-12 w-auto grayscale hover:grayscale-0 transition-all" /></a>
-              <a href="https://nantesbitcoinmeetup.notion.site/Nantes-Bitcoin-Meetup-c2202d5100754ad1b57c02c83193da96" target="_blank" rel="noopener noreferrer"><Image alt="Nantes Bitcoin Meetup" src="/assets/images/logo-meetup.jpg" width={120} height={60} className="h-12 w-auto grayscale hover:grayscale-0 transition-all" /></a>
+              <a href="https://blockchainforgood.fr" target="_blank" rel="noopener noreferrer"><OptimizedImage alt="Blockchain for Good" src="/assets/images/logo-blockchain_for_good.svg" width={120} height={60} className="h-12 w-auto grayscale hover:grayscale-0 transition-all" loading="lazy" /></a>
+              <a href="https://inoval.fr" target="_blank" rel="noopener noreferrer"><OptimizedImage alt="Inoval" src="/assets/images/logo-inoval.png" width={120} height={60} className="h-12 w-auto grayscale hover:grayscale-0 transition-all" loading="lazy" /></a>
+              <a href="https://nantesbitcoinmeetup.notion.site/Nantes-Bitcoin-Meetup-c2202d5100754ad1b57c02c83193da96" target="_blank" rel="noopener noreferrer"><OptimizedImage alt="Nantes Bitcoin Meetup" src="/assets/images/logo-meetup.jpg" width={120} height={60} className="h-12 w-auto grayscale hover:grayscale-0 transition-all" loading="lazy" /></a>
               <br/>
             </div>
           </div>
