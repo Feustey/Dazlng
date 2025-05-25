@@ -190,7 +190,7 @@ export default function HomePage(): React.ReactElement {
           <div className="container mx-auto px-4 py-20 md:py-32 flex flex-col md:flex-row items-center justify-between">
             <div className="bg-orange md:w-1/2 mb-10 md:mb-0" data-aos="fade-right">
               <h1 className="text-4xl md:text-6xl font-bold mb-4">Votre Coffre-Fort Bitcoin Personnel<br/><span className="text-yellow-300">Simplicité, Sécurité, Autonomie</span></h1>
-              <p className="text-xl md:text-2xl mb-8">Imaginez posséder votre propre banque Bitcoin, prête à l'emploi en 5 minutes ! La DazBox vous offre tout le pouvoir du Bitcoin sans aucune complexité. Plug & Play, elle vous garantit le contrôle total de vos finances numériques avec une sécurité maximale.</p>
+              <p className="text-xl md:text-2xl mb-8">La DazBox vous offre tout le pouvoir du Bitcoin sans aucune complexité. <br />Plug & Play, elle vous garantit le contrôle total avec une sécurité maximale.</p>
               <ul className="space-y-3 md:space-y-4 from-white to-gray-50">
                 <li className="flex items-start" data-aos="fade-up" data-aos-delay="400">
                   <span className="bg-green-100 p-1 rounded-full mr-3 flex-shrink-0">
