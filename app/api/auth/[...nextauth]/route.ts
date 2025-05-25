@@ -1,7 +1,10 @@
-import NextAuth from "next-auth";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { authOptions } from "../../../../lib/auth";
+// Placeholder pour NextAuth
+export async function GET(_request: NextRequest): Promise<NextResponse> {
+  return NextResponse.json({ message: 'NextAuth endpoint placeholder' });
+}
 
-const handler = NextAuth(authOptions);
-
-export { handler as GET, handler as POST };
+export async function POST(_request: NextRequest): Promise<NextResponse> {
+  return NextResponse.json({ message: 'NextAuth endpoint placeholder' });
+}

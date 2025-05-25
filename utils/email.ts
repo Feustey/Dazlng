@@ -103,8 +103,7 @@ export function generateEmailTemplate({
           <a href="https://dazno.de/terms" class="footer-link">Conditions</a>
           <a href="https://dazno.de/unsubscribe" class="footer-link">Désabonnement</a>
         </div>
-        <p class="copyright">© 2025 Dazno.de - Tous droits réservés | Réalisé avec 💙 par <a href="https://inoval.io" style="color: #A1A1AA;">Inoval</a></p>
-      </div>
+        <p class="copyright">© 2025 Dazno.de - Tous droits réservés </p>
     </div>
   </div>
 </body>

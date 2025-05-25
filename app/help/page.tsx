@@ -19,17 +19,17 @@ export default function HelpPage(): React.ReactElement {
 
   const faqCategories = [
     {
-      icon: <Image src="/assets/images/icon-box.svg" alt="Boîte" width={32} height={32} className="text-primary" />, 
+      icon: <Image src="/assets/images/icon-box.svg" alt="Boîte" width={32} height={32} className="text-primary object-contain" />, 
       title: "Dazbox",
       description: "Questions sur l'installation et l'utilisation de votre nœud Lightning clé en main",
     },
     {
-      icon: <Image src="/assets/images/icon-node.svg" alt="Nœud" width={32} height={32} className="text-secondary" />, 
+      icon: <Image src="/assets/images/icon-node.svg" alt="Nœud" width={32} height={32} className="text-secondary object-contain" />, 
       title: "Umbrel",
       description: "Aide sur le système d'exploitation et les applications disponibles",
     },
     {
-      icon: <Image src="/assets/images/icon-lightning.svg" alt="Lightning" width={32} height={32} className="text-warning" />, 
+      icon: <Image src="/assets/images/icon-lightning.svg" alt="Lightning" width={32} height={32} className="text-warning object-contain" />, 
       title: "Lightning Network",
       description: "Comprendre et optimiser vos canaux et transactions sur le Lightning Network",
     },

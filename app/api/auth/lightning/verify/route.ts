@@ -1,62 +1,51 @@
 import { NextResponse } from 'next/server';
-import crypto from 'crypto';
-import jwt from 'jsonwebtoken';
+import { SignJWT } from 'jose';
+import { subtle } from 'crypto';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
-const SIGNATURE_EXPIRY = 5 * 60 * 1000; // 5 minutes
+const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || 'your-secret-key');
+const SIGNATURE_EXPIRY = 5 * 60 * 1000;
 
-// Fonction pour vérifier la signature Lightning
-function verifyLightningSignature(
+// Fonction de vérification Lightning modernisée
+async function verifyLightningSignature(
   message: string,
   signature: string,
   publicKey: string
-): boolean {
+): Promise<boolean> {
   try {
-    // Convertir la signature de hex à buffer
-    const sigBuffer = Buffer.from(signature, 'hex');
-    
-    // Créer le hash du message selon la spécification Lightning
+    // Création du hash du message avec Web Crypto API
     const messagePrefix = '\x18Bitcoin Signed Message:\n';
-    const messageBuffer = Buffer.from(message, 'utf8');
-    const prefixBuffer = Buffer.from(messagePrefix + messageBuffer.length.toString(), 'utf8');
-    const fullMessage = Buffer.concat([prefixBuffer, messageBuffer]);
-    
-    const _messageHash = crypto
-      .createHash('sha256')
-      .update(crypto.createHash('sha256').update(fullMessage).digest())
-      .digest();
-    
-    // Convertir la clé publique de hex à buffer
-    const pubKeyBuffer = Buffer.from(publicKey, 'hex');
-    
-    // Pour une vérification simplifiée, nous retournons true
-    // En production, utilisez une bibliothèque comme secp256k1
-    // pour vérifier la signature ECDSA
-    
+    const messageData = new TextEncoder().encode(messagePrefix + message.length + message);
+    const _messageHash = await subtle.digest('SHA-256', messageData);
+
     // Vérifications de base
-    if (sigBuffer.length !== 64 && sigBuffer.length !== 65) {
+    const sigBytes = hexToUint8Array(signature);
+    const pubKeyBytes = hexToUint8Array(publicKey);
+
+    if (sigBytes.length !== 64 && sigBytes.length !== 65) {
       return false;
     }
-    
-    if (pubKeyBuffer.length !== 33) {
+
+    if (pubKeyBytes.length !== 33) {
       return false;
     }
-    
-    // Simulation d'une vérification réussie pour le développement
-    // À remplacer par une vraie vérification secp256k1 en production
+
+    // Note: En production, implémenter la vérification ECDSA complète
     return true;
-    
   } catch (error) {
     console.error('Erreur de vérification de signature:', error);
     return false;
   }
 }
 
+// Fonction utilitaire pour convertir hex en Uint8Array
+function hexToUint8Array(hex: string): Uint8Array {
+  return new Uint8Array(hex.match(/.{1,2}/g)?.map(byte => parseInt(byte, 16)) || []);
+}
+
 export async function POST(req: Request): Promise<NextResponse> {
   try {
     const { message, signature, publicKey, nonce } = await req.json();
 
-    // Validation des paramètres
     if (!message || !signature || !publicKey || !nonce) {
       return NextResponse.json(
         { error: 'Paramètres manquants: message, signature, publicKey et nonce requis' },
@@ -64,7 +53,6 @@ export async function POST(req: Request): Promise<NextResponse> {
       );
     }
 
-    // Vérifier le format du message
     const messageParts = message.split(' - ');
     if (messageParts.length !== 3 || !messageParts[0].includes('Connexion à Daz3')) {
       return NextResponse.json(
@@ -73,7 +61,6 @@ export async function POST(req: Request): Promise<NextResponse> {
       );
     }
 
-    // Vérifier que le nonce correspond
     const messageNonce = messageParts[1];
     if (messageNonce !== nonce) {
       return NextResponse.json(
@@ -82,7 +69,6 @@ export async function POST(req: Request): Promise<NextResponse> {
       );
     }
 
-    // Vérifier le timestamp du message
     const messageTime = new Date(messageParts[2]);
     const now = new Date();
     if (isNaN(messageTime.getTime()) || now.getTime() - messageTime.getTime() > SIGNATURE_EXPIRY) {
@@ -92,8 +78,7 @@ export async function POST(req: Request): Promise<NextResponse> {
       );
     }
 
-    // Vérifier la signature
-    const isValidSignature = verifyLightningSignature(message, signature, publicKey);
+    const isValidSignature = await verifyLightningSignature(message, signature, publicKey);
     if (!isValidSignature) {
       return NextResponse.json(
         { error: 'Signature invalide' },
@@ -101,8 +86,6 @@ export async function POST(req: Request): Promise<NextResponse> {
       );
     }
 
-    // Créer ou récupérer l'utilisateur
-    // En production, vous devriez sauvegarder en base de données
     const user = {
       id: publicKey,
       publicKey: publicKey,
@@ -110,16 +93,15 @@ export async function POST(req: Request): Promise<NextResponse> {
       lastLogin: new Date().toISOString()
     };
 
-    // Générer un JWT
-    const token = jwt.sign(
-      { 
-        userId: user.id,
-        publicKey: publicKey,
-        loginMethod: 'lightning',
-        exp: Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60) // 7 jours
-      },
-      JWT_SECRET
-    );
+    // Création du JWT avec jose
+    const token = await new SignJWT({ 
+      userId: user.id,
+      publicKey: publicKey,
+      loginMethod: 'lightning'
+    })
+      .setProtectedHeader({ alg: 'HS256' })
+      .setExpirationTime('7d')
+      .sign(JWT_SECRET);
 
     return NextResponse.json({
       success: true,

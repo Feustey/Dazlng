@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f472b6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="24" cy="24" r="24" fill="url(#bg-grad)"/>
+  
+  <!-- Face -->
+  <circle cx="24" cy="20" r="8" fill="#fdf2f8"/>
+  
+  <!-- Hair -->
+  <path d="M16 12 C16 8, 20 6, 24 6 C28 6, 32 8, 32 12 L32 18 C32 14, 28 12, 24 12 C20 12, 16 14, 16 18 Z" fill="#92400e"/>
+  
+  <!-- Eyes -->
+  <circle cx="21" cy="18" r="1" fill="#374151"/>
+  <circle cx="27" cy="18" r="1" fill="#374151"/>
+  
+  <!-- Nose -->
+  <circle cx="24" cy="21" r="0.5" fill="#f3e8ff" opacity="0.8"/>
+  
+  <!-- Mouth -->
+  <path d="M22 23 Q24 25 26 23" stroke="#374151" stroke-width="1" fill="none" stroke-linecap="round"/>
+  
+  <!-- Body -->
+  <path d="M16 36 C16 32, 19 30, 24 30 C29 30, 32 32, 32 36 L32 48 L16 48 Z" fill="#fdf2f8"/>
+  
+  <!-- Clothing -->
+  <path d="M18 36 C18 34, 20 33, 24 33 C28 33, 30 34, 30 36 L30 48 L18 48 Z" fill="#6366f1"/>
+</svg> 
