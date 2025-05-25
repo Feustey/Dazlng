@@ -17,7 +17,7 @@
   "crons": [
     {
       "path": "/api/cron/cleanup-otp",
-      "schedule": "0 */1 * * *"  // Toutes les heures
+      "schedule": "0 */1 * * *"
     }
   ]
 } 
