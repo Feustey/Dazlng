@@ -10,16 +10,17 @@ import { FaServer, FaBox, FaCreditCard } from "react-icons/fa";
 // Composant client séparé pour gérer les paramètres d'URL
 const SignupConfirmation: React.FC = () => {
   const [showSignupConfirmation, setShowSignupConfirmation] = useState(false);
-  // Import dynamique dans le corps du composant
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const useSearchParams = require('next/navigation').useSearchParams;
-  const searchParams = useSearchParams();
+  
   useEffect(() => {
-    const code = searchParams?.get('code');
-    if (code) {
-      setShowSignupConfirmation(true);
+    // Utiliser URLSearchParams directement côté client pour éviter les erreurs d'hydratation
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      if (code) {
+        setShowSignupConfirmation(true);
+      }
     }
-  }, [searchParams]);
+  }, []);
   const closeConfirmation = (): void => {
     setShowSignupConfirmation(false);
   };

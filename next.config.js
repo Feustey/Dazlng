@@ -44,6 +44,15 @@ const nextConfig = {
   },
   headers: async () => [
     {
+      source: '/:path*',
+      headers: [
+        {
+          key: 'Permissions-Policy',
+          value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()'
+        }
+      ]
+    },
+    {
       source: '/:all*(svg|jpg|png|webp|avif|ico|gif)',
       locale: false,
       headers: [

@@ -1,11 +1,18 @@
 import { Resend } from 'resend';
 import 'dotenv/config';
 
-if (!process.env.RESEND_API_KEY) {
-  throw new Error('La clé API Resend n\'est pas définie dans les variables d\'environnement');
-}
+// Lazy initialization pour éviter les erreurs côté client
+let resend: Resend | null = null;
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResendInstance(): Resend {
+  if (!resend) {
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error('La clé API Resend n\'est pas définie dans les variables d\'environnement');
+    }
+    resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resend;
+}
 
 export interface SendEmailParams {
   to: string;
@@ -88,7 +95,7 @@ export function generateEmailTemplate({
 </html>`;
 }
 
-export async function sendEmail({ to, subject, html, from }: SendEmailParams) {
+export async function sendEmail({ to, subject, html, from }: SendEmailParams): Promise<any> {
   let finalHtml = html;
   if (!html?.includes('<!DOCTYPE html>')) {
     finalHtml = generateEmailTemplate({
@@ -97,7 +104,8 @@ export async function sendEmail({ to, subject, html, from }: SendEmailParams) {
     });
   }
   try {
-    const { data, error } = await resend.emails.send({
+    const resendInstance = getResendInstance();
+    const { data, error } = await resendInstance.emails.send({
       from: from || 'contact@dazno.de',
       to,
       subject,
