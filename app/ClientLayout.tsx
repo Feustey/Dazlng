@@ -28,7 +28,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
   const content = (
     <div className="flex flex-col min-h-screen">
       {!hideHeader && <CustomHeader />}
-      <main className={`flex-1 w-full ${isFullWidth ? '' : 'max-w-5xl mx-auto'} ${isFullWidth ? '' : 'px-4 sm:px-8 py-4 sm:py-8'} ${!hideHeader && !isFullWidth ? 'pt-20' : ''}`}>
+      <main className={`flex-1 w-full ${isFullWidth ? '' : 'max-w-5xl mx-auto'} ${isFullWidth ? '' : 'px-4 sm:px-8 py-4 sm:py-8'} ${!hideHeader && !isFullWidth && !pathname?.startsWith('/user') ? 'pt-20' : ''}`}>
         {children}
       </main>
       <Footer />
