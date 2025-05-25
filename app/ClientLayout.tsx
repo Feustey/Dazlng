@@ -17,14 +17,23 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
   const hideHeader = pathname?.startsWith("/checkout") || 
                     pathname?.startsWith("/auth/login") || 
                     pathname?.startsWith("/user");
-  const isFullWidth = pathname === "/" || pathname?.startsWith("/token-for-good");
+  
+  // Pages qui utilisent le layout full-width comme la home
+  const isFullWidth = pathname === "/" || 
+                     pathname?.startsWith("/token-for-good") ||
+                     pathname?.startsWith("/dazbox") ||
+                     pathname?.startsWith("/daznode") ||
+                     pathname?.startsWith("/dazpay");
 
   // Pages qui utilisent le nouveau design moderne
   const useModernLayout = [
     "/",
     "/token-for-good",
     "/about",
-    "/contact"
+    "/contact",
+    "/dazbox",
+    "/daznode", 
+    "/dazpay"
   ].includes(pathname || "");
 
   const content = (
