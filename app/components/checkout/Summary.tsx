@@ -19,9 +19,9 @@ export function OrderSummary({ data }: OrderSummaryProps): React.ReactElement {
     <div className="bg-white rounded-lg shadow p-6">
       <h3 className="font-bold mb-2">Récapitulatif</h3>
       <div>Produit : {product.name}</div>
-      <div>Prix unitaire : {product.priceEur} €</div>
+      <div>Prix unitaire : {product.priceEur} Sats</div>
       <div>Quantité : {product.quantity}</div>
-      <div className="font-bold mt-2">Total : {product.priceEur * product.quantity} €</div>
+      <div className="font-bold mt-2">Total : {product.priceEur * product.quantity} Sats</div>
       {data.fullName && (
         <div className="mt-4 text-sm text-gray-500">
           <div>Client : {data.fullName}</div>

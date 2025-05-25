@@ -61,7 +61,7 @@ useScrollTracking({ pageName: 'dazbox_landing' });
 #### Positionnement
 - **Target** : Grand public, débutants Bitcoin
 - **Value Prop** : "Plug & Play" - simplicité maximale
-- **Prix** : €299 (au lieu de €429, -30%)
+- **Prix** : Sats299 (au lieu de Sats429, -30%)
 - **Garantie** : 30 jours satisfait ou remboursé
 
 #### Composants Créés
@@ -80,7 +80,7 @@ useScrollTracking({ pageName: 'dazbox_landing' });
 #### Positionnement
 - **Target** : Professionnels, entreprises
 - **Value Prop** : "IA + Analytics" - expertise technique
-- **Prix** : €99/mois Pro, €299/mois Enterprise
+- **Prix** : Sats99/mois Pro, Sats299/mois Enterprise
 - **SLA** : 99.98% avec compensation
 
 #### Composants Créés

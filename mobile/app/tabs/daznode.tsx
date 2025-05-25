@@ -24,19 +24,19 @@ export default function DaznodeScreen(): React.ReactElement {
     {
       id: 'gratuit',
       name: 'Gratuit',
-      price: '0€',
+      price: '0Sats',
       features: ['Statistiques de base'],
     },
     {
       id: 'standard',
       name: 'Standard',
-      price: '9€/mois',
+      price: '9Sats/mois',
       features: ['Statistiques de base', 'Routage optimisé'],
     },
     {
       id: 'premium',
       name: 'Premium',
-      price: '29€/mois',
+      price: '29Sats/mois',
       features: [
         'Statistiques de base',
         'Routage optimisé',
@@ -76,7 +76,7 @@ export default function DaznodeScreen(): React.ReactElement {
       <View style={styles.addonsSection}>
         <PricingCard
           title="Module IA - Prédiction des fee rates"
-          price="10€/mois"
+          price="10Sats/mois"
           features={['Prédiction intelligente des frais Lightning']}
           cta="Ajouter"
           ctaHref=""

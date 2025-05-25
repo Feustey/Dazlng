@@ -30,7 +30,7 @@ const DazBoxOffer: FC = () => {
         <li>✅ Zéro intermédiaire : votre argent, votre contrôle</li>
         <li>✅ Interface intuitive pour tous</li>
         <li>✅ Assistant IA intégré pour vous guider</li>
-        <li>✅ 400 000 satoshis inclus (≈ 0,004 BTC ≈ 399 €), livraison offerte</li>
+        <li>✅ 400 000 satoshis inclus (≈ 0,004 BTC ≈ 399 Sats), livraison offerte</li>
       </ul>
 
       {/* CTA */}

@@ -23,9 +23,9 @@ const DazPayPage = (): React.ReactElement => {
       title: "DazPay - Standard",
       subtitle: "Solution simple pour accepter le Bitcoin",
       price: "1% par transaction",
-      amount: 100000, // 100,000 sats = ~30€
+      amount: 100000, // 100,000 sats = ~30Sats
       features: [
-        { text: "✓ 0€ de frais d'installation" },
+        { text: "✓ 0Sats de frais d'installation" },
         { text: "✓ 1% de frais par transaction" },
         { text: "✓ Interface d'encaissement simple" },
         { text: "✓ Dashboard marchand" },
@@ -36,10 +36,10 @@ const DazPayPage = (): React.ReactElement => {
       id: 'subscription',
       title: "DazPay - Abonnement",
       subtitle: "Pour les commerces à fort volume",
-      price: "15€/mois + 0.5% par transaction",
-      amount: 500000, // 500,000 sats = ~150€
+      price: "15Sats/mois + 0.5% par transaction",
+      amount: 500000, // 500,000 sats = ~150Sats
       features: [
-        { text: "✓ 15€/mois d'abonnement" },
+        { text: "✓ 15Sats/mois d'abonnement" },
         { text: "✓ 0.5% de frais par transaction" },
         { text: "✓ Interface d'encaissement avancée" },
         { text: "✓ Dashboard marchand premium" },
@@ -51,7 +51,7 @@ const DazPayPage = (): React.ReactElement => {
       title: "Option - Conversion BTC/EUR",
       subtitle: "Recevez directement en euros",
       price: "Sur devis",
-      amount: 1000000, // 1,000,000 sats = ~300€
+      amount: 1000000, // 1,000,000 sats = ~300Sats
       features: [
         { text: "✓ Conversion instantanée BTC > EUR" },
         { text: "✓ Intégration avec Strike" },

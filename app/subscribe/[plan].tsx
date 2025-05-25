@@ -4,17 +4,17 @@ import { useParams } from 'next/navigation';
 const plans = {
   gratuit: {
     name: 'Gratuit',
-    price: '0€',
+    price: '0Sats',
     features: ['Statistiques de base'],
   },
   standard: {
     name: 'Standard',
-    price: '9€/mois',
+    price: '9Sats/mois',
     features: ['Statistiques de base', 'Routage optimisé'],
   },
   premium: {
     name: 'Premium',
-    price: '29€/mois',
+    price: '29Sats/mois',
     features: [
       'Statistiques de base',
       'Routage optimisé',
@@ -26,7 +26,7 @@ const plans = {
   },
   'ai-addon': {
     name: 'Module IA',
-    price: '10€/mois',
+    price: '10Sats/mois',
     features: ['Prédiction des fee rates', 'Optimisation automatique'],
   },
 };

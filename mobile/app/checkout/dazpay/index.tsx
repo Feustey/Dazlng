@@ -74,9 +74,9 @@ export default function DazpayCheckoutScreen(): React.ReactElement {
         <View style={{ marginTop: 24 }}>
           <Text style={{ fontWeight: 'bold' }}>Récapitulatif :</Text>
           <Text>Produit : {product.name}</Text>
-          <Text>Prix : {product.priceEur}€ (~{product.priceSats} sats)</Text>
+          <Text>Prix : {product.priceEur}Sats (~{product.priceSats} sats)</Text>
           <Text>Quantité : {product.quantity}</Text>
-          <Text>Total : {product.priceEur * product.quantity}€</Text>
+          <Text>Total : {product.priceEur * product.quantity}Sats</Text>
           <Button title="Simuler le paiement" onPress={handlePaymentSuccess} color="#22c55e" />
           <Button title="Modifier les infos" onPress={() => setShowPayment(false)} color="#e11d48" />
           {error && <Text style={{ color: '#e11d48', marginTop: 12 }}>{error}</Text>}

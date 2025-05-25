@@ -24,7 +24,7 @@ const DaznodePage = (): React.ReactElement => {
   ];
 
   const addonsFeatures = [
-    { text: "✓ Modèle prédictif de fee rate (10€/mois)" },
+    { text: "✓ Modèle prédictif de fee rate (10Sats/mois)" },
     { text: "✓ Intégration Wallets personnalisée" },
     { text: "✓ Bots Telegram sur mesure" }
   ];
@@ -35,28 +35,28 @@ const DaznodePage = (): React.ReactElement => {
         <ProductCard
           title="Daznode - Gratuit"
           subtitle="Pour débuter avec Lightning"
-          price="0€/mois"
+          price="0Sats/mois"
           features={freeFeatures}
         />
 
         <ProductCard
           title="Daznode - Basic"
           subtitle="Pour les nodes actifs"
-          price="9€/mois"
+          price="9Sats/mois"
           features={basicFeatures}
         />
 
         <ProductCard
           title="Daznode - Premium"
           subtitle="Pour les nodes professionnels"
-          price="29€/mois"
+          price="29Sats/mois"
           features={premiumFeatures}
         />
 
         <ProductCard
           title="Add-ons disponibles"
           subtitle="Personnalisez votre expérience"
-          price="À partir de 10€/mois"
+          price="À partir de 10Sats/mois"
           features={addonsFeatures}
         />
       </View>

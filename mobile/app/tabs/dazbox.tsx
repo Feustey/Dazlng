@@ -47,7 +47,7 @@ export default function DazboxScreen(): React.ReactElement {
         </View>
 
         <View style={styles.pricing}>
-          <Text style={styles.price}>299€</Text>
+          <Text style={styles.price}>400 000Sats</Text>
           <Text style={styles.priceSubtext}>Prix unique - Pas d'abonnement</Text>
         </View>
 

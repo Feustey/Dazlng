@@ -65,7 +65,7 @@ useScrollTracking({ pageName: 'dazbox_landing' });
 - **Value proposition** claire : "Plug & Play"
 - **Offre limitée** : -30% sur le prix
 - **Preuves sociales** : 500+ utilisateurs
-- **CTA principal** : "Commander Maintenant" (€299)
+- **CTA principal** : "Commander Maintenant" (Sats299)
 - **Garanties** : 30 jours satisfait ou remboursé
 
 #### Features Section (`DazBoxFeatures`)

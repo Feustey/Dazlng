@@ -174,7 +174,7 @@ const SubscriptionsPage: FC = () => {
             </div>
             <div className="text-right">
               <div className="text-2xl font-bold">
-                {currentSubscription.price}€<span className="text-sm font-normal text-gray-500">/mois</span>
+                {currentSubscription.price}Sats<span className="text-sm font-normal text-gray-500">/mois</span>
               </div>
             </div>
           </div>
@@ -254,7 +254,7 @@ const SubscriptionsPage: FC = () => {
                 <div className="font-bold text-lg mb-2">{plan.name}</div>
                 <div className="text-gray-600 mb-4 text-sm">{plan.description}</div>
                 <div className="text-3xl font-bold mb-4">
-                  {plan.price}€
+                  {plan.price}Sats
                   <span className="text-sm font-normal text-gray-500">/{plan.interval === 'month' ? 'mois' : 'an'}</span>
                 </div>
 

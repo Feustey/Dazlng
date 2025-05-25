@@ -111,8 +111,8 @@ const DazBoxHero: React.FC = (): React.ReactElement => {
                 <p className="text-orange-100">-30% sur votre première DazBox</p>
               </div>
               <div className="text-right">
-                <p className="text-2xl font-bold">€299</p>
-                <p className="text-sm line-through text-orange-200">€429</p>
+                <p className="text-2xl font-bold">Sats400 000</p>
+                <p className="text-sm line-through text-orange-200">Sats429</p>
               </div>
             </div>
           </div>

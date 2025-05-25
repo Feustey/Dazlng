@@ -20,7 +20,7 @@ const jsonLd = {
     {
       "@type": "Offer",
       "name": "DazBox Starter",
-      "price": "299",
+      "price": "400 000",
       "priceCurrency": "EUR",
       "availability": "https://schema.org/InStock",
       "validFrom": "2025-01-01"
@@ -99,7 +99,7 @@ const DazBoxPage: React.FC = (): React.ReactElement => {
                 </div>
               </div>
               <p className="text-gray-600 mb-4">
-                "Ma DazBox génère 150€/mois en revenus passifs. L'installation a pris exactement 4 minutes. Incroyable !"
+                "Ma DazBox génère 150Sats/mois en revenus passifs. L'installation a pris exactement 4 minutes. Incroyable !"
               </p>
               <div className="flex items-center">
                 <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
@@ -181,7 +181,7 @@ const DazBoxPage: React.FC = (): React.ReactElement => {
             {[
               {
                 q: "Combien puis-je gagner avec ma DazBox ?",
-                a: "Les revenus dépendent de plusieurs facteurs : votre investissement initial, l'activité du réseau Lightning et votre configuration. En moyenne, nos utilisateurs gagnent entre 50€ et 200€ par mois, soit un ROI de 8% à 15% annuel."
+                a: "Les revenus dépendent de plusieurs facteurs : votre investissement initial, l'activité du réseau Lightning et votre configuration. En moyenne, nos utilisateurs gagnent entre 50Sats et 200Sats par mois, soit un ROI de 8% à 15% annuel."
               },
               {
                 q: "L'installation est-elle vraiment si simple ?",
@@ -193,7 +193,7 @@ const DazBoxPage: React.FC = (): React.ReactElement => {
               },
               {
                 q: "Y a-t-il des frais cachés ?",
-                a: "Aucun frais caché. Le prix d'achat inclut tout : livraison, installation, support et mises à jour à vie. Les seuls coûts additionnels sont l'électricité (≈2€/mois) et votre connexion internet."
+                a: "Aucun frais caché. Le prix d'achat inclut tout : livraison, installation, support et mises à jour à vie. Les seuls coûts additionnels sont l'électricité (≈2Sats/mois) et votre connexion internet."
               },
               {
                 q: "Puis-je essayer avant d'acheter ?",

@@ -27,7 +27,7 @@ const DazBoxPricing: React.FC = (): React.ReactElement => {
       id: 'starter',
       name: 'DazBox Starter',
       description: 'Parfait pour débuter sur Lightning Network',
-      price: 299,
+      price: 400000,
       originalPrice: 429,
       discount: '-30%',
       features: [
@@ -68,7 +68,7 @@ const DazBoxPricing: React.FC = (): React.ReactElement => {
       name: 'DazBox Enterprise',
       description: 'Pour les professionnels et institutions',
       price: 999,
-      originalPrice: 1299,
+      originalPrice: 100000,
       discount: '-23%',
       features: [
         'Tout de la version Pro',
@@ -175,12 +175,12 @@ const DazBoxPricing: React.FC = (): React.ReactElement => {
                 <div className="mb-4">
                   <div className="flex items-center justify-center gap-3">
                     <span className="text-4xl font-bold text-gray-900">
-                      €{plan.price}
+                      Sats{plan.price}
                     </span>
                     {plan.originalPrice && (
                       <div className="text-right">
                         <div className="text-lg text-gray-400 line-through">
-                          €{plan.originalPrice}
+                          Sats{plan.originalPrice}
                         </div>
                         <div className="text-sm font-bold text-red-500">
                           {plan.discount}

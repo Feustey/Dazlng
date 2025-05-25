@@ -18,7 +18,7 @@ export default function DazPayScreen(): React.ReactElement {
         <Text style={styles.subtitle}>
           Solution complète pour les commerçants : terminal Lightning, interface d'encaissement et dashboard de suivi.
         </Text>
-        <Text style={styles.highlight}>0€ de frais d'installation</Text>
+        <Text style={styles.highlight}>0Sats de frais d'installation</Text>
       </View>
 
       {/* Features Section */}
@@ -92,7 +92,7 @@ export default function DazPayScreen(): React.ReactElement {
           </View>
           <Text style={styles.planTitle}>Plan Pro</Text>
           <Text style={styles.planPrice}>0.5%</Text>
-          <Text style={styles.planDescription}>par transaction + 15€/mois</Text>
+          <Text style={styles.planDescription}>par transaction + 15Sats/mois</Text>
           <Text style={styles.planFeature}>• Tous les avantages du plan Standard</Text>
           <Text style={styles.planFeature}>• Taux de commission réduit</Text>
           <Text style={styles.planFeature}>• Support prioritaire 7j/7</Text>

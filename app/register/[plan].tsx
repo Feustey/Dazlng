@@ -9,12 +9,12 @@ const plans = {
       'Terminal Lightning inclus',
       "Interface d'encaissement",
       'Dashboard de suivi',
-      '0€ de frais d\'installation',
+      '0Sats de frais d\'installation',
     ],
   },
   pro: {
     name: 'Pro',
-    price: '0.5% par transaction + 15€/mois',
+    price: '0.5% par transaction + 15Sats/mois',
     features: [
       'Tous les avantages du plan Standard',
       'Taux de commission réduit',

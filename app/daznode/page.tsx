@@ -24,7 +24,7 @@ const jsonLd = {
     {
       "@type": "Offer", 
       "name": "DazNode Enterprise",
-      "price": "299",
+      "price": "400 000",
       "priceCurrency": "EUR",
       "availability": "https://schema.org/InStock",
       "validFrom": "2025-01-01"
@@ -129,7 +129,7 @@ const DazNodePage: React.FC = (): React.ReactElement => {
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Professional</h3>
                 <p className="text-gray-600 mb-6">Pour les professionnels du Lightning Network</p>
-                <div className="text-4xl font-bold text-gray-900">€99<span className="text-lg text-gray-500">/mois</span></div>
+                <div className="text-4xl font-bold text-gray-900">Sats99<span className="text-lg text-gray-500">/mois</span></div>
               </div>
               
               <ul className="space-y-4 mb-8">
@@ -175,7 +175,7 @@ const DazNodePage: React.FC = (): React.ReactElement => {
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold mb-2">Enterprise</h3>
                 <p className="text-blue-100 mb-6">Pour les entreprises et institutions</p>
-                <div className="text-4xl font-bold">€299<span className="text-lg text-blue-200">/mois</span></div>
+                <div className="text-4xl font-bold">Sats400 000<span className="text-lg text-blue-200">/mois</span></div>
               </div>
               
               <ul className="space-y-4 mb-8">

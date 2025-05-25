@@ -18,7 +18,7 @@ const products = [
     title: 'Dazbox',
     subtitle: 'Votre nœud Lightning plug & play',
     description: 'Installez, branchez, profitez. La solution matérielle la plus simple pour rejoindre le réseau Lightning.',
-    price: '299€',
+    price: '400 000Sats',
     bonus: '3 mois Daznode Premium offerts',
   },
   {
@@ -26,7 +26,7 @@ const products = [
     title: 'Daznode',
     subtitle: 'Optimisation et contrôle avancé',
     description: 'Pilotez votre nœud Lightning avec des outils professionnels : statistiques, routage optimisé, alertes.',
-    price: 'Dès 9€/mois',
+    price: 'Dès 9Sats/mois',
     bonus: 'Version gratuite disponible',
   },
   {
@@ -35,7 +35,7 @@ const products = [
     subtitle: 'Paiement Commerçants',
     description: 'Terminal Lightning simple avec interface d\'encaissement et dashboard. Solution complète pour accepter les paiements Bitcoin.',
     price: '1% par transaction',
-    bonus: 'Option Pro : 0.5% + 15€/mois',
+    bonus: 'Option Pro : 0.5% + 15Sats/mois',
   },
 ];
 

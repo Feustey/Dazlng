@@ -113,8 +113,8 @@ const DazBoxClientHero: React.FC = (): React.ReactElement => {
                 <p className="text-orange-100">-30% sur votre première DazBox</p>
               </div>
               <div className="text-right">
-                <p className="text-2xl font-bold">€299</p>
-                <p className="text-sm line-through text-orange-200">€429</p>
+                <p className="text-2xl font-bold">Sats400 000</p>
+                <p className="text-sm line-through text-orange-200">Sats429</p>
               </div>
             </div>
           </div>
@@ -157,7 +157,7 @@ const DazBoxClientHero: React.FC = (): React.ReactElement => {
             {/* Product showcase */}
             <div className="relative bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
               <Image
-                src="/assets/images/dazbox-product.png"
+                src="/assets/images/dazbox.png"
                 alt="DazBox - Nœud Lightning Network Plug & Play"
                 width={400}
                 height={300}

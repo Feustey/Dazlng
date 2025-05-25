@@ -44,8 +44,8 @@ function CheckoutContent(): React.ReactElement {
   const [error, setError] = useState<string | null>(null);
   const supabase = createClientComponentClient();
   const _router = useRouter();
-  const [btcCopied, setBtcCopied] = useState(false);
-  const btcAddress = 'bc1p0vyqda9uv7kad4lsfzx5s9ndawhm3e3fd5vw7pnsem22n7dpfgxq48kht7';
+  const [_btcCopied, _setBtcCopied] = useState(false);
+  const _btcAddress = 'bc1p0vyqda9uv7kad4lsfzx5s9ndawhm3e3fd5vw7pnsem22n7dpfgxq48kht7';
 
   const isFormValid = (): boolean => {
     return Boolean(
@@ -570,47 +570,7 @@ Le client devrait être recontacté pour un paiement via Wallet of Satoshi.`
                   </li>
                 </ul>
               </div>
-                <div className="flex flex-col items-center mt-6">
-                  {btcCopied && (
-                    <span className="text-green-600 text-xs font-semibold mb-1">copié</span>
-                  )}
-                  <span className="font-bold text-white text-lg mb-2">QR code BTC</span>
-                  <div className="bg-white p-4 rounded-xl mb-2 cursor-pointer" title="copier" onClick={() => {navigator.clipboard.writeText(btcAddress); setBtcCopied(true); setTimeout(() => setBtcCopied(false), 1500);}}>
-                    <Image src="/assets/images/QR-BTC-Daznode.png" alt="copier" width={160} height={160} />
-                  </div>
-                  <span className="text-white text-base mb-1">Payer 0.004 BTC et envoyez le Tx</span>
-                  <div className="flex flex-col items-center">
-                    <span className="text-xs text-white/80 break-all mb-1">{btcAddress}</span>
-                    <button
-                      className="text-xs text-yellow-300 underline hover:text-yellow-400"
-                      onClick={() => {navigator.clipboard.writeText(btcAddress); setBtcCopied(true); setTimeout(() => setBtcCopied(false), 1500);}}
-                    >
-                      copier
-                    </button>
-                  </div>
-                </div>
-                <p className="text-xs text-center mt-4 text-white font-medium" style={{ fontSize: '0.8rem' }}>
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (typeof window !== 'undefined') {
-                        const evt = new CustomEvent('openProtonPay');
-                        window.dispatchEvent(evt);
-                      }
-                    }}
-                    className="inline-flex items-center justify-center px-3 py-1 bg-purple-500/30 hover:bg-purple-500/50 rounded-lg transition-colors duration-300 shadow font-semibold"
-                  >
-                    <Image
-                      src="/assets/images/proton-wallet.png"
-                      alt="Proton Wallet"
-                      width={24}
-                      height={24}
-                      style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '8px' }}
-                    />
-                    <span>Payer avec Proton</span>
-                  </a>
-                </p>
+               
               </div>
 
             </div>

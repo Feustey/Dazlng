@@ -95,7 +95,7 @@ const DazBoxComparison: React.FC<DazBoxComparisonProps> = ({ userNodeStats, hasN
             <div>
               <div className="text-sm text-purple-200 mb-1">Revenus mensuels moyens</div>
               <div className="text-2xl font-bold">{formatSats(dazboxStats.monthlyRevenue)} sats</div>
-              <div className="text-sm text-purple-200">≈ {(roi.dailyRevenue * 30).toFixed(0)}€/mois</div>
+              <div className="text-sm text-purple-200">≈ {(roi.dailyRevenue * 30).toFixed(0)}Sats/mois</div>
             </div>
             <div>
               <div className="text-sm text-purple-200 mb-1">Retour sur investissement</div>

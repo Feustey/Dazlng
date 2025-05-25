@@ -21,7 +21,7 @@ const DazboxPage = (): React.ReactElement => {
       <ProductCard
         title="Dazbox - Node Lightning Plug & Play"
         subtitle="Votre porte d'entrée vers l'écosystème Lightning"
-        price="199€"
+        price="199Sats"
         features={features}
         bonusFeatures={bonusFeatures}
       />

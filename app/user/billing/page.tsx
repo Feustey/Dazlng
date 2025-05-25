@@ -168,7 +168,7 @@ const BillingPage: FC = () => {
         <div className="bg-white rounded-lg shadow p-4">
           <div className="text-sm text-gray-500">Montant total</div>
           <div className="text-2xl font-bold">
-            {invoices.reduce((sum, i) => sum + i.total, 0).toFixed(2)} €
+            {invoices.reduce((sum, i) => sum + i.total, 0).toFixed(2)} Sats
           </div>
         </div>
         <div className="bg-white rounded-lg shadow p-4">

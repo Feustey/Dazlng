@@ -24,7 +24,7 @@ const jsonLd = {
     {
       "@type": "Offer", 
       "name": "DazPay Pro",
-      "price": "15€/mois + 0.5% par transaction",
+      "price": "15Sats/mois + 0.5% par transaction",
       "priceCurrency": "EUR",
       "availability": "https://schema.org/InStock",
       "validFrom": "2025-01-01"
@@ -130,7 +130,7 @@ const DazPayPage: React.FC = (): React.ReactElement => {
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Standard</h3>
                 <p className="text-gray-600 mb-6">Parfait pour débuter</p>
                 <div className="text-4xl font-bold text-gray-900">1%<span className="text-lg text-gray-500"> par transaction</span></div>
-                <p className="text-sm text-gray-500 mt-2">0€ de frais d'installation</p>
+                <p className="text-sm text-gray-500 mt-2">0Sats de frais d'installation</p>
               </div>
               
               <ul className="space-y-4 mb-8">
@@ -176,7 +176,7 @@ const DazPayPage: React.FC = (): React.ReactElement => {
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold mb-2">Pro</h3>
                 <p className="text-orange-100 mb-6">Pour les commerces actifs</p>
-                <div className="text-3xl font-bold">15€<span className="text-lg text-orange-200">/mois</span></div>
+                <div className="text-3xl font-bold">15Sats<span className="text-lg text-orange-200">/mois</span></div>
                 <p className="text-sm text-orange-200 mt-1">+ 0.5% par transaction</p>
               </div>
               

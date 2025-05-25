@@ -70,7 +70,7 @@ const DazPayHero: React.FC = (): React.ReactElement => {
             <p className="text-xl md:text-2xl text-orange-100 leading-relaxed max-w-2xl lg:max-w-none">
               Acceptez les paiements Bitcoin en quelques minutes.{' '}
               <span className="font-bold text-yellow-300">
-                0€ d'installation
+                0Sats d'installation
               </span>{' '}
               et commencez à encaisser dès aujourd'hui.
             </p>
@@ -162,7 +162,7 @@ const DazPayHero: React.FC = (): React.ReactElement => {
               </div>
               
               <div className="absolute -bottom-4 -left-4 bg-yellow-500 text-black px-4 py-2 rounded-full text-sm font-bold shadow-lg">
-                0€ installation
+                0Sats installation
               </div>
             </div>
 

@@ -40,7 +40,7 @@ const DazBoxFeatures: React.FC = (): React.ReactElement => {
       title: 'Revenus Passifs Garantis',
       description: 'Votre DazBox génère des revenus automatiquement grâce au routage des paiements Lightning.',
       benefit: 'Jusqu\'à 15% APY',
-      stats: 'Revenus moyens: 50-200€/mois selon votre configuration'
+      stats: 'Revenus moyens: 50-200Sats/mois selon votre configuration'
     },
     {
       id: 'auto-updates',
