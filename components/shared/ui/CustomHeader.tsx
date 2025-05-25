@@ -16,7 +16,7 @@ const CustomHeader: React.FC = () => {
         <div className="flex items-center">
           <a href="/" aria-label="Accueil">
             <Image 
-              src={isModernPage ? "/assets/images/logo-daznode-white.svg" : "/assets/images/logo-daznode.svg"}
+              src="/assets/images/logo-daznode.svg"
               alt="Daz3 Logo" 
               width={150} 
               height={40} 
