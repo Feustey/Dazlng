@@ -162,7 +162,7 @@ const DazPayHero: React.FC = (): React.ReactElement => {
               </div>
               
               <div className="absolute -bottom-4 -left-4 bg-yellow-500 text-black px-4 py-2 rounded-full text-sm font-bold shadow-lg">
-                0Sats installation
+                0 Sats installation
               </div>
             </div>
 

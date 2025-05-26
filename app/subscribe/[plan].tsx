@@ -9,12 +9,12 @@ const plans = {
   },
   standard: {
     name: 'Standard',
-    price: '9Sats/mois',
+    price: '10 000 ats/mois',
     features: ['Statistiques de base', 'Routage optimisé'],
   },
   premium: {
     name: 'Premium',
-    price: '29Sats/mois',
+    price: '30 000 Sats/mois',
     features: [
       'Statistiques de base',
       'Routage optimisé',
@@ -26,7 +26,7 @@ const plans = {
   },
   'ai-addon': {
     name: 'Module IA',
-    price: '10Sats/mois',
+    price: '10 000 sats/mois',
     features: ['Prédiction des fee rates', 'Optimisation automatique'],
   },
 };
