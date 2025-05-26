@@ -68,7 +68,8 @@ export class EmailConversionService {
         </head>
         <body>
           <div class="header">
-            <h1>DAZ Node</h1>
+            <img src="https://nextjs-boilerplate-1l6z3th4v-feusteys-projects.vercel.app/assets/images/logo-daznode-white.svg" alt="DAZ Node" height="40" style="margin-bottom: 10px;" />
+            <h1 style="margin: 0; font-size: 24px;">DAZ Node</h1>
           </div>
           <div class="content">
             <h2>🎉 Félicitations ${name || 'utilisateur'} !</h2>
@@ -145,7 +146,8 @@ export class EmailConversionService {
       </head>
       <body>
         <div class="header">
-          <h1>DAZ Node</h1>
+          <img src="https://nextjs-boilerplate-1l6z3th4v-feusteys-projects.vercel.app/assets/images/logo-daznode-white.svg" alt="DAZ Node" height="40" style="margin-bottom: 10px;" />
+          <h1 style="margin: 0; font-size: 24px;">DAZ Node</h1>
         </div>
         <div class="content">
           <div class="welcome">
@@ -194,7 +196,8 @@ export class EmailConversionService {
       </head>
       <body>
         <div class="header">
-          <h1>DAZ Node</h1>
+          <img src="https://nextjs-boilerplate-1l6z3th4v-feusteys-projects.vercel.app/assets/images/logo-daznode-white.svg" alt="DAZ Node" height="40" style="margin-bottom: 10px;" />
+          <h1 style="margin: 0; font-size: 24px;">DAZ Node</h1>
         </div>
         <div class="content">
           <h2>🌟 ${name || 'Utilisateur'}, votre engagement nous impressionne !</h2>
@@ -241,7 +244,8 @@ export class EmailConversionService {
       </head>
       <body>
         <div class="header">
-          <h1>DAZ Node</h1>
+          <img src="https://nextjs-boilerplate-1l6z3th4v-feusteys-projects.vercel.app/assets/images/logo-daznode-white.svg" alt="DAZ Node" height="40" style="margin-bottom: 10px;" />
+          <h1 style="margin: 0; font-size: 24px;">DAZ Node</h1>
         </div>
         <div class="content">
           <div class="welcome-back">
@@ -282,7 +286,8 @@ export class EmailConversionService {
         </head>
         <body>
           <div class="header">
-            <h1>DAZ Node</h1>
+            <img src="https://nextjs-boilerplate-1l6z3th4v-feusteys-projects.vercel.app/assets/images/logo-daznode-white.svg" alt="DAZ Node" height="40" style="margin-bottom: 10px;" />
+            <h1 style="margin: 0; font-size: 24px;">DAZ Node</h1>
           </div>
           <div class="content">
             <div class="success">

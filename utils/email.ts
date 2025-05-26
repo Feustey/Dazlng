@@ -68,7 +68,7 @@ export function generateEmailTemplate({
 <body>
   <div class="container">
     <div class="logo">
-      <img src="https://www.dazno.de/assets/images/logo-daznode.svg" alt="Daznode Logo" height="48" />
+      <img src="https://nextjs-boilerplate-1l6z3th4v-feusteys-projects.vercel.app/assets/images/logo-daznode.svg" alt="Daznode Logo" height="48" />
     </div>
     <div class="title">${title}</div>
     <div class="content">${mainContent}</div>
@@ -87,7 +87,7 @@ export function generateEmailTemplate({
 <body>
   <div class="email-container">
     <div class="header">
-      <img src="https://www.dazno.de/assets/images/logo-daznode.svg" alt="Daznode Logo" class="logo">
+      <img src="https://nextjs-boilerplate-1l6z3th4v-feusteys-projects.vercel.app/assets/images/logo-daznode.svg" alt="Daznode Logo" class="logo">
     </div>
     <div class="content">
       <h1 class="title">${title}</h1>
