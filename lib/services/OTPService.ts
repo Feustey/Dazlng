@@ -1,4 +1,5 @@
-import { supabase } from '@/lib/supabase';
+import { supabase, supabaseAdmin } from '@/lib/supabase';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 interface EmailTrackingData {
   email: string;
@@ -19,6 +20,11 @@ interface ConversionAnalysis {
 }
 
 export class OTPService {
+  private getClient(): SupabaseClient {
+    // Utilise le client admin si disponible, sinon fallback sur le client public
+    return supabaseAdmin || supabase;
+  }
+
   /**
    * Génère un code OTP à 6 chiffres
    */
@@ -30,6 +36,7 @@ export class OTPService {
    * Crée une nouvelle tentative OTP avec tracking complet
    */
   async createOTPAttempt(email: string, source: string = 'otp_login', _userAgent?: string): Promise<string> {
+    const client = this.getClient();
     try {
       // 1. Nettoyer les codes expirés
       try {
@@ -40,7 +47,7 @@ export class OTPService {
       }
       
       // 2. Désactiver les codes existants non utilisés pour cet email
-      const { error: updateError } = await supabase
+      const { error: updateError } = await client
         .from('otp_codes')
         .update({ used: true })
         .eq('email', email)
@@ -60,7 +67,7 @@ export class OTPService {
       const expiresAtMs = Date.now() + (15 * 60 * 1000); // 15 minutes
 
       // 4. Créer le nouveau code OTP en base
-      const { error: otpError } = await supabase
+      const { error: otpError } = await client
         .from('otp_codes')
         .insert({
           email,
@@ -116,11 +123,12 @@ export class OTPService {
     isValid: boolean;
     conversionAnalysis?: ConversionAnalysis;
   }> {
+    const client = this.getClient();
     try {
       const normalizedCode = String(code).trim().replace(/\s+/g, '');
 
       // 1. Chercher le code en base
-      const { data: otpEntry, error: fetchError } = await supabase
+      const { data: otpEntry, error: fetchError } = await client
         .from('otp_codes')
         .select('*')
         .eq('email', email)
@@ -142,7 +150,7 @@ export class OTPService {
 
       // 2. Vérifier l'expiration
       if (otpEntry.expires_at < Date.now()) {
-        await supabase
+        await client
           .from('otp_codes')
           .update({ used: true })
           .eq('id', otpEntry.id);
@@ -152,7 +160,7 @@ export class OTPService {
       }
 
       // 3. Marquer le code comme utilisé
-      await supabase
+      await client
         .from('otp_codes')
         .update({ 
           used: true,

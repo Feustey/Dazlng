@@ -7,7 +7,22 @@ export async function POST(req: Request): Promise<Response> {
     const { email, name, pubkey } = await req.json();
     
     if (!email) {
-      return new Response(JSON.stringify({ error: 'Email requis' }), { 
+      return new Response(JSON.stringify({ 
+        success: false,
+        error: 'Email requis' 
+      }), { 
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Validation de l'email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return new Response(JSON.stringify({ 
+        success: false,
+        error: 'Format d\'email invalide' 
+      }), { 
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -22,11 +37,15 @@ export async function POST(req: Request): Promise<Response> {
 
     if (!rateLimit.allowed) {
       return new Response(JSON.stringify({ 
+        success: false,
         error: 'Trop de tentatives. Veuillez réessayer plus tard.',
         resetTime: rateLimit.resetTime.toISOString()
       }), { 
         status: 429,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 
+          'Content-Type': 'application/json',
+          'Retry-After': String(Math.ceil((rateLimit.resetTime.getTime() - Date.now()) / 1000))
+        }
       });
     }
 
@@ -84,16 +103,34 @@ export async function POST(req: Request): Promise<Response> {
     console.log('[SEND-CODE] Email envoyé avec succès à', email);
     return new Response(JSON.stringify({ 
       success: true,
+      message: 'Code envoyé avec succès',
       remaining: rateLimit.remaining 
     }), { 
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
 
-  } catch (error) {
-    console.error('[SEND-CODE] Erreur:', error);
+  } catch (error: any) {
+    console.error('[SEND-CODE] Erreur:', {
+      message: error.message,
+      stack: error.stack,
+      code: error.code
+    });
+    
+    // Gestion spécifique des erreurs OTP
+    if (error.message?.includes('Permissions insuffisantes')) {
+      return new Response(JSON.stringify({ 
+        success: false,
+        error: 'Service temporairement indisponible. Veuillez réessayer dans quelques minutes.' 
+      }), { 
+        status: 503,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+    
     return new Response(JSON.stringify({ 
-      error: 'Erreur lors de l\'envoi du code' 
+      success: false,
+      error: 'Erreur lors de l\'envoi du code. Veuillez réessayer.' 
     }), { 
       status: 500,
       headers: { 'Content-Type': 'application/json' }

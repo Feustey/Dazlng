@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card } from "../../../admin/components/ui/Card";
 import { StatsCard } from "../../../admin/components/ui/StatsCard";
-// import { formatDate, formatCurrency } from "../../utils/formatters";
+import { formatDate, formatSats } from "../../../utils/formatters";
 import Link from "next/link";
 
 interface User {
@@ -36,28 +36,81 @@ export default function DashboardPage(): JSX.Element {
       try {
         // Récupérer les statistiques
         const statsResponse = await fetch("/api/admin/stats");
+        console.log("Stats response status:", statsResponse.status);
+        
+        if (!statsResponse.ok) {
+          console.error("API stats error - Status:", statsResponse.status);
+          setStats({
+            totalUsers: 0,
+            activeSubscriptions: 0,
+            totalRevenue: 0,
+            pendingOrders: 0
+          });
+          return;
+        }
+        
         const statsData = await statsResponse.json();
+        console.log("Raw stats response:", statsData);
+        
+        // Validation des données statistiques
+        if (!statsData || statsData.success === false) {
+          console.error("Données de statistiques invalides:", statsData);
+          setStats({
+            totalUsers: 0,
+            activeSubscriptions: 0,
+            totalRevenue: 0,
+            pendingOrders: 0
+          });
+        } else {
+          // Les données sont dans statsData.data
+          const data = statsData.data || {};
+          console.log("Stats data received:", data);
+          // S'assurer que toutes les valeurs sont des nombres
+          const safeStats = {
+            totalUsers: Number(data.totalUsers) || 0,
+            activeSubscriptions: Number(data.activeSubscriptions) || 0,
+            totalRevenue: Number(data.totalRevenue) || 0,
+            pendingOrders: Number(data.pendingOrders) || 0
+          };
+          console.log("Setting safe stats:", safeStats);
+          setStats(safeStats);
+        }
+
         // Récupérer les utilisateurs récents
         const usersResponse = await fetch("/api/admin/users?limit=10&sort=created_at:desc");
-        const usersData = await usersResponse.json();
-        setStats(statsData);
-        setRecentUsers(usersData);
+        console.log("Users response status:", usersResponse.status);
+        
+        if (!usersResponse.ok) {
+          console.error("API users error - Status:", usersResponse.status);
+          setRecentUsers([]);
+        } else {
+          const usersData = await usersResponse.json();
+          console.log("Raw users response:", usersData);
+          
+          // Validation des données utilisateurs
+          if (usersData && usersData.success && Array.isArray(usersData.data)) {
+            setRecentUsers(usersData.data);
+          } else {
+            console.error("Données utilisateurs invalides:", usersData);
+            setRecentUsers([]);
+          }
+        }
       } catch (error) {
         console.error("Erreur lors du chargement des données:", error);
+        // Valeurs par défaut en cas d'erreur
+        setStats({
+          totalUsers: 0,
+          activeSubscriptions: 0,
+          totalRevenue: 0,
+          pendingOrders: 0
+        });
+        setRecentUsers([]);
       } finally {
         setIsLoading(false);
       }
     }
     fetchData();
   }, []);
-
-  function formatDate(date: string): string {
-    return new Date(date).toLocaleDateString("fr-FR");
-  }
-
-  function formatCurrency(amount: number, unit = "Sats"): string {
-    return amount.toLocaleString("fr-FR") + " " + unit;
-  }
 
   if (isLoading) {
     return <div className="flex justify-center items-center h-screen">Chargement...</div>;
@@ -83,7 +136,7 @@ export default function DashboardPage(): JSX.Element {
         />
         <StatsCard 
           title="Revenu total" 
-          value={formatCurrency(stats.totalRevenue, "Sats")} 
+          value={formatSats(stats?.totalRevenue)} 
           icon="💰" 
           link="/admin/payments" 
         />

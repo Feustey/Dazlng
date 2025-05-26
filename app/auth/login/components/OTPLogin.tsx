@@ -4,12 +4,6 @@ import { useState, useRef, useEffect } from 'react';
 import { AuthError, AuthErrorType, ValidationErrors } from '../../../types/errors';
 import { toast } from 'react-hot-toast';
 
-interface RegistrationFormData {
-  prenom: string;
-  nom: string;
-  pubkey?: string;
-}
-
 interface OTPLoginState {
   email: string;
   code: string;
@@ -17,9 +11,6 @@ interface OTPLoginState {
   loading: boolean;
   error: AuthError | null;
   validationErrors: ValidationErrors;
-  needsRegistration: boolean;
-  tempToken: string;
-  registrationData: RegistrationFormData;
   retryCount: number;
 }
 
@@ -31,16 +22,16 @@ const OTPLogin: React.FC = () => {
     loading: false,
     error: null,
     validationErrors: {},
-    needsRegistration: false,
-    tempToken: '',
-    registrationData: {
-      prenom: '',
-      nom: '',
-      pubkey: ''
-    },
     retryCount: 0
   });
+  
+  // Ajouter un état pour l'hydratation
+  const [isClient, setIsClient] = useState(false);
   const codeInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     if (state.step === 2 && codeInputRef.current) {
@@ -49,6 +40,8 @@ const OTPLogin: React.FC = () => {
   }, [state.step]);
 
   const handleError = (error: any): AuthError => {
+    console.error('Error details:', error);
+    
     if (!navigator.onLine) {
       return {
         type: AuthErrorType.NETWORK,
@@ -83,37 +76,31 @@ const OTPLogin: React.FC = () => {
       };
     }
 
+    // S'assurer que le message est toujours une string
+    const message = typeof error.message === 'string' 
+      ? error.message 
+      : typeof error === 'string' 
+        ? error 
+        : 'Une erreur est survenue';
+
     return {
       type: AuthErrorType.SERVER,
-      message: error.message || 'Une erreur est survenue',
+      message,
       code: error.code,
       retry: true
     };
   };
 
-  const validateRegistrationData = (): ValidationErrors => {
-    const errors: ValidationErrors = {};
-    
-    if (!state.registrationData.prenom.trim()) {
-      errors.prenom = 'Le prénom est requis';
-    }
-    
-    if (!state.registrationData.nom.trim()) {
-      errors.nom = 'Le nom est requis';
-    }
-
-    if (state.registrationData.pubkey) {
-      if (!/^[A-Za-z0-9+/=]{20,}$/.test(state.registrationData.pubkey)) {
-        errors.pubkey = 'Format de clé publique invalide';
-      }
-    }
-
-    return errors;
-  };
-
   const handleSendCode = async (): Promise<void> => {
     if (!state.email) {
-      setState(prev => ({ ...prev, error: { type: AuthErrorType.VALIDATION, message: 'Veuillez saisir votre email', details: { email: 'Email requis' } } }));
+      setState(prev => ({ 
+        ...prev, 
+        error: { 
+          type: AuthErrorType.VALIDATION, 
+          message: 'Veuillez saisir votre email', 
+          details: { email: 'Email requis' } 
+        } 
+      }));
       return;
     }
     setState(prev => ({ ...prev, loading: true, error: null }));
@@ -126,17 +113,21 @@ const OTPLogin: React.FC = () => {
       });
       
       const data = await res.json();
+      console.log('Send code response:', data);
       
       if (res.ok) {
         setState(prev => ({ ...prev, step: 2 }));
+        toast.success('Code envoyé avec succès !');
       } else {
+        const errorMessage = data.error || data.message || `Erreur ${res.status}`;
         throw {
           status: res.status,
           data,
-          message: data.error || "Erreur lors de l'envoi du code"
+          message: errorMessage
         };
       }
     } catch (error) {
+      console.error('Send code error:', error);
       const err = handleError(error);
       setState(prev => ({ ...prev, error: err, retryCount: err.retry ? prev.retryCount + 1 : prev.retryCount }));
       toast.error(err.message);
@@ -169,29 +160,21 @@ const OTPLogin: React.FC = () => {
       const data = await response.json();
 
       if (!response.ok) {
+        const errorMessage = data.error || data.message || `Erreur ${response.status}`;
         throw {
           status: response.status,
           data,
-          message: data.error
+          message: errorMessage
         };
       }
 
-      if (data.needsRegistration) {
-        setState(prev => ({
-          ...prev,
-          needsRegistration: true,
-          tempToken: data.tempToken,
-          loading: false
-        }));
-        toast.success('Code vérifié avec succès. Veuillez compléter votre inscription.');
-        return;
-      }
-
+      // Redirection directe après succès
       localStorage.setItem('token', data.token);
       toast.success('Connexion réussie !');
       window.location.href = '/user/dashboard';
 
     } catch (err) {
+      console.error('Verify code error:', err);
       const error = handleError(err);
       setState(prev => ({ 
         ...prev, 
@@ -211,74 +194,16 @@ const OTPLogin: React.FC = () => {
     }
   };
 
-  const handleRegistrationSubmit = async (e: React.FormEvent): Promise<void> => {
-    e.preventDefault();
-    
-    try {
-      const validationErrors = validateRegistrationData();
-      if (Object.keys(validationErrors).length > 0) {
-        setState(prev => ({ ...prev, validationErrors }));
-        return;
-      }
-
-      setState(prev => ({ 
-        ...prev, 
-        loading: true, 
-        error: null,
-        validationErrors: {}
-      }));
-
-      const response = await fetch('/api/user/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...state.registrationData,
-          email: state.email,
-          tempToken: state.tempToken
-        })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw {
-          status: response.status,
-          data,
-          message: data.error
-        };
-      }
-
-      localStorage.setItem('token', data.token);
-      toast.success('Compte créé avec succès !');
-      window.location.href = '/user/dashboard';
-
-    } catch (err) {
-      const error = handleError(err);
-      setState(prev => ({ ...prev, error }));
-      
-      if (error.type === AuthErrorType.VALIDATION && error.details) {
-        setState(prev => ({ 
-          ...prev, 
-          validationErrors: error.details as ValidationErrors
-        }));
-      }
-
-      toast.error(error.message);
-    } finally {
-      setState(prev => ({ ...prev, loading: false }));
-    }
-  };
-
-  const ValidationError: React.FC<{ field: string }> = ({ field }) => {
-    const error = state.validationErrors[field];
-    return error ? (
-      <p className="mt-1 text-sm text-red-600">{error}</p>
-    ) : null;
-  };
-
   const ErrorMessage: React.FC = () => {
     const { error } = state;
     if (!error) return null;
+
+    // S'assurer que le message est toujours une string
+    const errorMessage = typeof error.message === 'string' 
+      ? error.message 
+      : typeof error === 'string' 
+        ? error 
+        : 'Une erreur est survenue';
 
     return (
       <div className={`p-4 rounded-md ${
@@ -286,7 +211,7 @@ const OTPLogin: React.FC = () => {
           ? 'bg-yellow-50 text-yellow-700' 
           : 'bg-red-50 text-red-700'
       }`}>
-        <p className="font-medium">{error.message}</p>
+        <p className="font-medium">{errorMessage}</p>
         {error.retryAfter && (
           <p className="text-sm mt-1">
             Réessayez dans {Math.ceil(error.retryAfter / 60)} minutes
@@ -301,98 +226,19 @@ const OTPLogin: React.FC = () => {
     );
   };
 
-  if (state.needsRegistration) {
+  // Attendre que le composant soit hydraté pour éviter les erreurs d'hydratation
+  if (!isClient) {
     return (
-      <div className="max-w-md mx-auto">
-        <h2 className="text-2xl font-bold mb-6">Créez votre compte</h2>
-        
-        <ErrorMessage />
-
-        <form onSubmit={handleRegistrationSubmit} className="space-y-6 mt-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Prénom
-            </label>
-            <input
-              type="text"
-              required
-              className={`mt-1 block w-full rounded-md shadow-sm ${
-                state.validationErrors.prenom 
-                  ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                  : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
-              }`}
-              value={state.registrationData.prenom}
-              onChange={(e) => setState(prev => ({
-                ...prev,
-                registrationData: {
-                  ...prev.registrationData,
-                  prenom: e.target.value
-                }
-              }))}
-            />
-            <ValidationError field="prenom" />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Nom
-            </label>
-            <input
-              type="text"
-              required
-              className={`mt-1 block w-full rounded-md shadow-sm ${
-                state.validationErrors.nom 
-                  ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                  : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
-              }`}
-              value={state.registrationData.nom}
-              onChange={(e) => setState(prev => ({
-                ...prev,
-                registrationData: {
-                  ...prev.registrationData,
-                  nom: e.target.value
-                }
-              }))}
-            />
-            <ValidationError field="nom" />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Clé publique (optionnel)
-            </label>
-            <input
-              type="text"
-              className={`mt-1 block w-full rounded-md shadow-sm ${
-                state.validationErrors.pubkey 
-                  ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                  : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
-              }`}
-              value={state.registrationData.pubkey || ''}
-              onChange={(e) => setState(prev => ({
-                ...prev,
-                registrationData: {
-                  ...prev.registrationData,
-                  pubkey: e.target.value
-                }
-              }))}
-            />
-            <ValidationError field="pubkey" />
-          </div>
-
-          <button
-            type="submit"
-            disabled={state.loading}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
-          >
-            {state.loading ? (
-              <>
-                <span className="animate-spin mr-2">⚪</span>
-                Création en cours...
-              </>
-            ) : 'Créer mon compte'}
-          </button>
-        </form>
+      <div className="space-y-6">
+        <div className="text-center">
+          <div className="text-4xl mb-4">📧</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Connexion par Email
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Chargement...
+          </p>
+        </div>
       </div>
     );
   }
