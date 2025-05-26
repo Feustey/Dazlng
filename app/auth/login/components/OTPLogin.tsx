@@ -76,16 +76,23 @@ const OTPLogin: React.FC = () => {
       };
     }
 
-    // S'assurer que le message est toujours une string
-    const message = typeof error.message === 'string' 
-      ? error.message 
-      : typeof error === 'string' 
-        ? error 
-        : 'Une erreur est survenue';
+    // S'assurer que le message est toujours une string, même si error ou error.message sont des objets
+    let errorMessage: string;
+    if (typeof error === 'string') {
+      errorMessage = error;
+    } else if (error && typeof error.message === 'string') {
+      errorMessage = error.message;
+    } else if (error && typeof error.message === 'object') {
+      errorMessage = JSON.stringify(error.message);
+    } else if (typeof error === 'object') {
+      errorMessage = JSON.stringify(error);
+    } else {
+      errorMessage = 'Une erreur est survenue';
+    }
 
     return {
       type: AuthErrorType.SERVER,
-      message,
+      message: errorMessage,
       code: error.code,
       retry: true
     };
@@ -130,7 +137,12 @@ const OTPLogin: React.FC = () => {
       console.error('Send code error:', error);
       const err = handleError(error);
       setState(prev => ({ ...prev, error: err, retryCount: err.retry ? prev.retryCount + 1 : prev.retryCount }));
-      toast.error(err.message);
+      const safeErr = error as any;
+      toast.error(
+        typeof safeErr.message === 'string'
+          ? safeErr.message
+          : JSON.stringify(safeErr.message ?? safeErr)
+      );
     } finally {
       setState(prev => ({ ...prev, loading: false }));
     }
@@ -181,8 +193,12 @@ const OTPLogin: React.FC = () => {
         error,
         retryCount: error.retry ? prev.retryCount + 1 : prev.retryCount
       }));
-
-      toast.error(error.message);
+      const safeErr = err as any;
+      toast.error(
+        typeof safeErr.message === 'string'
+          ? safeErr.message
+          : JSON.stringify(safeErr.message ?? safeErr)
+      );
 
       if (error.retry && state.retryCount < 3) {
         setTimeout(() => {
@@ -198,12 +214,19 @@ const OTPLogin: React.FC = () => {
     const { error } = state;
     if (!error) return null;
 
-    // S'assurer que le message est toujours une string
-    const errorMessage = typeof error.message === 'string' 
-      ? error.message 
-      : typeof error === 'string' 
-        ? error 
-        : 'Une erreur est survenue';
+    // S'assurer que le message est toujours une string, même si error ou error.message sont des objets
+    let errorMessage: string;
+    if (typeof error === 'string') {
+      errorMessage = error;
+    } else if (error && typeof error.message === 'string') {
+      errorMessage = error.message;
+    } else if (error && typeof error.message === 'object') {
+      errorMessage = JSON.stringify(error.message);
+    } else if (typeof error === 'object') {
+      errorMessage = JSON.stringify(error);
+    } else {
+      errorMessage = 'Une erreur est survenue';
+    }
 
     return (
       <div className={`p-4 rounded-md ${

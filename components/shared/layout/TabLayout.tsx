@@ -64,7 +64,7 @@ HeaderLogo.propTypes = {
 };
 
 const UserButton: React.FC = () => (
-  <a href="/login" className="mr-4">
+  <a href="/auth/login" className="mr-4">
     <TabIcon name="user-circle" color="#fff" size={24} />
   </a>
 );

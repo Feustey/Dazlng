@@ -2,11 +2,10 @@
 
 import { useState } from 'react';
 import OTPLogin from './components/OTPLogin';
-import LightningLogin from './components/LightningLogin';
-import WalletLogin from './components/WalletLogin';
 import AlgorandWalletLogin from './components/AlgorandWalletLogin';
+import NWCLogin from './components/NWCLogin';
 
-type LoginMethod = 'otp' | 'lightning' | 'wallet' | 'algorand' | null;
+type LoginMethod = 'otp' | 'nwc' | 'algorand' | null;
 
 export default function LoginPage(): React.ReactElement {
   const [selectedMethod, setSelectedMethod] = useState<LoginMethod>('otp');
@@ -37,30 +36,14 @@ export default function LoginPage(): React.ReactElement {
               
               <div className="space-y-3">
                 <button
-                  onClick={() => setSelectedMethod('lightning')}
+                  onClick={() => setSelectedMethod('nwc')}
                   className="w-full p-3 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-colors group"
                 >
                   <div className="flex items-center space-x-3">
-                    <div className="text-xl group-hover:scale-110 transition-transform">⚡</div>
+                    <div className="text-xl group-hover:scale-110 transition-transform">🔑</div>
                     <div className="text-left flex-1">
-                      <h4 className="font-medium text-gray-900">Lightning Network</h4>
-                      <p className="text-xs text-gray-500">Via Alby ou autre wallet Lightning</p>
-                    </div>
-                    <svg className="w-4 h-4 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                </button>
-
-                <button
-                  onClick={() => setSelectedMethod('wallet')}
-                  className="w-full p-3 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-colors group"
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="text-xl group-hover:scale-110 transition-transform">👛</div>
-                    <div className="text-left flex-1">
-                      <h4 className="font-medium text-gray-900">Wallet / Node</h4>
-                      <p className="text-xs text-gray-500">Connexion via votre node Lightning</p>
+                      <h4 className="font-medium text-gray-900">Connexion Wallet</h4>
+                      <p className="text-xs text-gray-500">Via Nostr Wallet Connect (Alby Hub, Zeus...)</p>
                     </div>
                     <svg className="w-4 h-4 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -105,8 +88,7 @@ export default function LoginPage(): React.ReactElement {
               Retour aux options de connexion
             </button>
             
-            {selectedMethod === 'lightning' && <LightningLogin />}
-            {selectedMethod === 'wallet' && <WalletLogin />}
+            {selectedMethod === 'nwc' && <NWCLogin />}
             {selectedMethod === 'algorand' && <AlgorandWalletLogin />}
           </div>
         )}

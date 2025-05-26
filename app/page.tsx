@@ -3,8 +3,11 @@ import React, { useEffect, useState, Suspense } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import NewHero from "../components/shared/ui/NewHero";
+import { TechnicalProof } from "../components/shared/ui/TechnicalProof";
+import { UniqueFeature } from "../components/shared/ui/UniqueFeature";
+import RealMetrics from "../components/shared/ui/RealMetrics";
+import RealTestimonials from "../components/shared/ui/RealTestimonials";
 import { HowItWorks } from "@/components/shared/ui/HowItWorks";
-import { SocialProof } from "@/components/shared/ui/SocialProof";
 import { CTASection } from "@/components/shared/ui/CTASection";
 
 // Composant client séparé pour gérer les paramètres d'URL
@@ -95,16 +98,25 @@ export default function OptimizedHomePage(): React.ReactElement {
         <SignupConfirmation />
       </Suspense>
 
-      {/* Page structure optimisée */}
+      {/* Page structure optimisée avec nouveaux composants */}
       <main className="min-h-screen w-full overflow-x-hidden">
-        {/* Hero Section avec proposition de valeur claire */}
+        {/* Hero Section avec la vraie douleur technique */}
         <NewHero />
+
+        {/* Section Preuves techniques - Ce que l'IA détecte */}
+        <TechnicalProof />
+
+        {/* Section Fonctionnalité unique - IA prédictive */}
+        <UniqueFeature />
+
+        {/* Section Métriques réelles de production */}
+        <RealMetrics />
 
         {/* Section Comment ça marche */}
         <HowItWorks />
 
-        {/* Section Preuves sociales et témoignages */}
-        <SocialProof />
+        {/* Section Témoignages de vrais devs Lightning */}
+        <RealTestimonials />
 
         {/* Section CTA finale */}
         <CTASection />

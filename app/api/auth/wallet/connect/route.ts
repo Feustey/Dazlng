@@ -5,23 +5,14 @@ import crypto from 'crypto';
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 // Interfaces pour le typage des wallets
-interface LndWalletInfo {
-  type: 'lnd';
-  host: string;
-  port: number;
-  credentials: string;
-}
-
-interface CLightningWalletInfo {
-  type: 'clightning';
-  host: string;
-  port: number;
-  rune: string;
-}
-
 interface NWCWalletInfo {
   type: 'nwc';
   connectionString: string;
+}
+
+interface AlgorandWalletInfo {
+  type: 'algorand';
+  address: string;
 }
 
 interface LnurlWalletInfo {
@@ -29,7 +20,7 @@ interface LnurlWalletInfo {
   lnurl: string;
 }
 
-type WalletInfo = LndWalletInfo | CLightningWalletInfo | NWCWalletInfo | LnurlWalletInfo | Record<string, never>;
+type WalletInfo = NWCWalletInfo | AlgorandWalletInfo | LnurlWalletInfo | Record<string, never>;
 
 export async function POST(req: Request): Promise<NextResponse> {
   try {
@@ -47,38 +38,6 @@ export async function POST(req: Request): Promise<NextResponse> {
     let isValid = false;
 
     switch (walletType) {
-      case 'lnd':
-        if (connectionString.includes('@')) {
-          const [credentials, hostPort] = connectionString.split('@');
-          const [host, port] = hostPort.split(':');
-          if (host && port) {
-            walletInfo = {
-              type: 'lnd',
-              host,
-              port: parseInt(port),
-              credentials: credentials.replace('lnd://', '')
-            };
-            isValid = true;
-          }
-        }
-        break;
-        
-      case 'clightning':
-        if (connectionString.includes('@') && connectionString.includes('rune')) {
-          const [credentials, hostPort] = connectionString.split('@');
-          const [host, port] = hostPort.split(':');
-          if (host && port) {
-            walletInfo = {
-              type: 'clightning',
-              host,
-              port: parseInt(port),
-              rune: credentials.replace('c-lightning://', '')
-            };
-            isValid = true;
-          }
-        }
-        break;
-        
       case 'nwc':
         if (connectionString.startsWith('nostr+walletconnect://')) {
           walletInfo = {
@@ -88,7 +47,15 @@ export async function POST(req: Request): Promise<NextResponse> {
           isValid = true;
         }
         break;
-        
+      case 'algorand':
+        if (typeof connectionString === 'string' && connectionString.length === 58) {
+          walletInfo = {
+            type: 'algorand',
+            address: connectionString
+          };
+          isValid = true;
+        }
+        break;
       case 'lnurl':
         if (connectionString.toUpperCase().startsWith('LNURL') || connectionString.startsWith('lightning:')) {
           walletInfo = {
@@ -108,25 +75,24 @@ export async function POST(req: Request): Promise<NextResponse> {
     }
 
     // Simulation de connexion et récupération d'informations du wallet
-    const connectToWallet = async (): Promise<{ success: boolean; nodeId?: string; alias?: string }> => {
-      // Simulation d'un délai de connexion
+    const connectToWallet = async (): Promise<{ success: boolean; nodeId?: string; alias?: string; address?: string }> => {
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // En production, ici vous devriez :
-      // 1. Établir une vraie connexion au wallet/node
-      // 2. Vérifier les permissions
-      // 3. Récupérer les informations du node (ID, alias, etc.)
-      
-      // Simulation de récupération d'informations
-      const nodeId = crypto.randomBytes(33).toString('hex');
-      const aliases = ['DazNode', 'LightningPro', 'BitcoinNode', 'ThunderHub'];
-      const alias = aliases[Math.floor(Math.random() * aliases.length)];
-      
-      return {
-        success: true,
-        nodeId,
-        alias
-      };
+      if (walletType === 'algorand') {
+        return {
+          success: true,
+          address: connectionString,
+          alias: 'Algorand Wallet'
+        };
+      } else {
+        const nodeId = crypto.randomBytes(33).toString('hex');
+        const aliases = ['DazNode', 'LightningPro', 'BitcoinNode', 'ThunderHub'];
+        const alias = aliases[Math.floor(Math.random() * aliases.length)];
+        return {
+          success: true,
+          nodeId,
+          alias
+        };
+      }
     };
 
     const connectionResult = await connectToWallet();
@@ -138,46 +104,33 @@ export async function POST(req: Request): Promise<NextResponse> {
       );
     }
 
-    // Créer un identifiant unique pour cet utilisateur basé sur les informations du wallet
     const userId = crypto
       .createHash('sha256')
-      .update(JSON.stringify(walletInfo) + (connectionResult.nodeId || ''))
+      .update(JSON.stringify(walletInfo) + (connectionResult.nodeId || connectionResult.address || ''))
       .digest('hex');
 
-    // Créer l'objet utilisateur
     const user = {
       id: userId,
       walletType,
       nodeId: connectionResult.nodeId,
+      address: connectionResult.address,
       alias: connectionResult.alias,
       loginMethod: 'wallet',
       lastLogin: new Date().toISOString()
     };
 
-    // Générer un JWT
-    const token = jwt.sign(
-      { 
-        userId: user.id,
-        walletType,
-        nodeId: connectionResult.nodeId,
-        loginMethod: 'wallet',
-        exp: Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60) // 7 jours
-      },
-      JWT_SECRET
-    );
-
-    // En production, sauvegarder les informations de connexion chiffrées en base
-    // Ne jamais stocker les clés privées ou macaroons en plain text
+    const token = jwt.sign(user, JWT_SECRET, { expiresIn: '7d' });
 
     return NextResponse.json({
       success: true,
+      message: 'Connexion wallet réussie',
       token,
       user: {
         id: user.id,
         walletType: user.walletType,
-        nodeId: user.nodeId,
         alias: user.alias,
-        loginMethod: user.loginMethod
+        nodeId: user.nodeId,
+        address: user.address
       }
     });
 

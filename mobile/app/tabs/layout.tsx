@@ -43,7 +43,7 @@ export default function TabLayout(): React.ReactElement {
               </Link>
             ),
             headerRight: () => (
-              <Link href="/login" asChild>
+              <Link href="/auth/login" asChild>
                 <Pressable style={styles.userIcon}>
                   <FontAwesome5 name="user-circle" size={24} color={Colors.white} />
                 </Pressable>

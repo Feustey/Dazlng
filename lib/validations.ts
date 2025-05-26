@@ -49,7 +49,7 @@ export const createUserSchema = z.object({
 })
 
 export const walletTestSchema = z.object({
-  walletType: z.enum(['lnd', 'clightning', 'nwc', 'lnurl'], {
+  walletType: z.enum(['nwc', 'lnurl', 'algorand'], {
     errorMap: () => ({ message: 'Type de wallet non supporté' })
   }),
   connectionString: z.string().min(1, 'Chaîne de connexion requise')

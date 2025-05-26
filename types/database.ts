@@ -247,11 +247,12 @@ export interface NodeInfo {
 }
 
 export interface WalletConnection {
-  type: 'nwc' | 'lnd' | 'clightning' | 'lnurl'
+  type: 'nwc' | 'lnurl' | 'algorand'
   connectionString: string
   isValid: boolean
   alias?: string
   pubkey?: string
+  address?: string // Pour Algorand
 }
 
 // ============================================================================

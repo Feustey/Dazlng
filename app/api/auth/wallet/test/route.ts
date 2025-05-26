@@ -16,26 +16,18 @@ export async function POST(req: Request): Promise<NextResponse> {
     let errorMessage = '';
 
     switch (walletType) {
-      case 'lnd':
-        isValid = connectionString.startsWith('lnd://') || connectionString.includes('@');
-        errorMessage = 'Format LND invalide. Attendu: lnd://admin:macaroon@host:port';
-        break;
-        
-      case 'clightning':
-        isValid = connectionString.startsWith('c-lightning://') || connectionString.includes('rune');
-        errorMessage = 'Format Core Lightning invalide. Attendu: c-lightning://rune@host:port';
-        break;
-        
       case 'nwc':
         isValid = connectionString.startsWith('nostr+walletconnect://');
         errorMessage = 'Format NWC invalide. Attendu: nostr+walletconnect://...';
         break;
-        
+      case 'algorand':
+        isValid = typeof connectionString === 'string' && connectionString.length === 58;
+        errorMessage = 'Format d\'adresse Algorand invalide. Attendu: 58 caractères';
+        break;
       case 'lnurl':
         isValid = connectionString.toUpperCase().startsWith('LNURL') || connectionString.startsWith('lightning:');
         errorMessage = 'Format LNURL invalide. Attendu: LNURL... ou lightning:lnurl...';
         break;
-        
       default:
         return NextResponse.json(
           { error: 'Type de wallet non supporté' },
@@ -58,19 +50,11 @@ export async function POST(req: Request): Promise<NextResponse> {
       
       // Validation supplémentaire selon le type
       switch (walletType) {
-        case 'lnd':
-          // Vérifier le format host:port
-          if (connectionString.includes('@')) {
-            const hostPart = connectionString.split('@')[1];
-            return hostPart && hostPart.includes(':');
-          }
-          return false;
-          
-        case 'clightning':
-          return connectionString.includes('rune') && connectionString.includes('@');
-          
         case 'nwc':
           return connectionString.length > 50; // NWC URLs sont longues
+          
+        case 'algorand':
+          return connectionString.length === 58;
           
         case 'lnurl':
           return connectionString.length > 10;

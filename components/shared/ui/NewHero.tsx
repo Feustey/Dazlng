@@ -55,15 +55,18 @@ const NewHero: React.FC = (): React.ReactElement => {
         {/* Titre principal - Proposition de valeur claire */}
         <div className="space-y-6">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight">
-            Gérez vos nœuds Lightning{' '}
-            <span className="bg-gradient-to-r from-yellow-300 to-pink-400 text-transparent bg-clip-text">
-              en un clic
+            Fini les nuits blanches à{' '}
+            <span className="bg-gradient-to-r from-red-400 to-orange-500 text-transparent bg-clip-text">
+              débugger vos canaux
             </span>
           </h1>
           
           <p className="text-xl md:text-2xl text-indigo-100 max-w-3xl mx-auto leading-relaxed">
-            La solution tout-en-un pour déployer, optimiser et monitorer vos nœuds Lightning Network{' '}
-            <strong className="text-yellow-300">sans compétences techniques</strong>
+            <strong className="text-red-300">Channel force-close à 3h du matin ?</strong> 
+            <strong className="text-orange-300">Liquidity stuck pendant des heures ?</strong>
+            <strong className="text-yellow-300">Routing fees qui plombent votre ROI ?</strong>
+            <br />
+            Notre IA surveille, optimise et répare automatiquement.
           </p>
         </div>
 
