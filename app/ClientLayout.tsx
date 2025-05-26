@@ -4,6 +4,7 @@ import CustomHeader from "@/components/shared/ui/CustomHeader";
 import ModernLayout from "@/components/shared/layout/ModernLayout";
 import PerformanceProvider from './PerformanceProvider';
 import { CustomWalletProvider } from './providers/WalletProvider';
+import { Toaster } from 'react-hot-toast';
 import dynamic from 'next/dynamic';
 import React, { ReactNode } from 'react';
 
@@ -57,6 +58,30 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
           >
             {content}
           </ModernLayout>
+          <Toaster 
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: '#363636',
+                color: '#fff',
+              },
+              success: {
+                duration: 3000,
+                iconTheme: {
+                  primary: '#4ade80',
+                  secondary: '#fff',
+                },
+              },
+              error: {
+                duration: 5000,
+                iconTheme: {
+                  primary: '#ef4444',
+                  secondary: '#fff',
+                },
+              },
+            }}
+          />
         </CustomWalletProvider>
       </PerformanceProvider>
     );
@@ -66,6 +91,30 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
     <PerformanceProvider>
       <CustomWalletProvider>
         {content}
+        <Toaster 
+          position="top-right"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: '#363636',
+              color: '#fff',
+            },
+            success: {
+              duration: 3000,
+              iconTheme: {
+                primary: '#4ade80',
+                secondary: '#fff',
+              },
+            },
+            error: {
+              duration: 5000,
+              iconTheme: {
+                primary: '#ef4444',
+                secondary: '#fff',
+              },
+            },
+          }}
+        />
       </CustomWalletProvider>
     </PerformanceProvider>
   );

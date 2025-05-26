@@ -67,66 +67,34 @@ export async function POST(req: NextRequest): Promise<Response> {
     console.log('[VERIFY-CODE] Code validé et supprimé pour', email);
     const { conversionAnalysis } = verificationResult;
 
-    // Vérifier/créer l'utilisateur dans profiles
-    let { data: user } = await supabase
+    // Vérifier si l'utilisateur existe dans profiles
+    const { data: user } = await supabase
       .from('profiles')
       .select('*')
       .eq('email', email)
       .single();
 
-    let isNewUser = false;
     if (!user) {
-      // Traiter le nom - séparer prénom et nom si possible
-      let prenom = '';
-      let nom = '';
-      
-      if (name?.trim()) {
-        const nameParts = name.trim().split(' ');
-        if (nameParts.length >= 2) {
-          prenom = nameParts[0];
-          nom = nameParts.slice(1).join(' ');
-        } else {
-          prenom = nameParts[0];
-          nom = '';
-        }
-      } else {
-        // Générer un nom par défaut basé sur l'email
-        prenom = email.split('@')[0] || 'Utilisateur';
-        nom = '';
-      }
-      
-      const { data: newUser, error: createError } = await supabase
-        .from('profiles')
-        .insert([{ 
-          email,
-          nom,
-          prenom,
-          t4g_tokens: 1,
-          pubkey: pubkey || null,
-          // Marquer le type d'authentification utilisé
-          auth_method: 'otp'
-        }])
-        .select()
-        .single();
-
-      if (createError) {
-        console.error('[VERIFY-CODE] Erreur création utilisateur:', createError);
-        return new Response(JSON.stringify({ 
-          error: 'Erreur lors de la création du compte' 
-        }), { 
-          status: 500,
-          headers: { 'Content-Type': 'application/json' }
-        });
-      }
-      user = newUser;
-      isNewUser = true;
-      console.log('[VERIFY-CODE] Nouvel utilisateur créé:', user.email);
-
-      // Marquer comme converti si création de compte complet
-      await otpService.markAsConverted(email, 'Compte créé via OTP');
-    } else {
-      console.log('[VERIFY-CODE] Utilisateur existant trouvé:', user.email);
+      console.log('[VERIFY-CODE] Nouvel utilisateur détecté, inscription requise:', email);
+      // On retourne un statut spécial indiquant que l'utilisateur doit être créé
+      return NextResponse.json({
+        success: true,
+        needsRegistration: true,
+        email,
+        tempToken: jwt.sign(
+          { 
+            email,
+            verified: true,
+            temp: true,
+            auth_method: 'otp'
+          }, 
+          JWT_SECRET, 
+          { expiresIn: '1h' } // Token temporaire plus court
+        )
+      });
     }
+
+    console.log('[VERIFY-CODE] Utilisateur existant trouvé:', user.email);
 
     // Construire le nom complet pour l'affichage
     const fullName = user.prenom && user.nom 
@@ -158,7 +126,7 @@ export async function POST(req: NextRequest): Promise<Response> {
         nom: user.nom,
         verified: true,
         auth_method: 'otp',
-        isNewUser
+        isNewUser: false
       },
       // Informations pour le workflow de conversion
       conversionInfo: conversionAnalysis ? {
@@ -167,23 +135,19 @@ export async function POST(req: NextRequest): Promise<Response> {
         daysSinceFirstLogin: conversionAnalysis.daysSinceFirstLogin,
         conversionStatus: conversionAnalysis.conversionStatus,
         // Messages personnalisés selon le statut
-        welcomeMessage: isNewUser 
-          ? 'Bienvenue ! Votre compte temporaire a été créé.'
-          : conversionAnalysis.shouldPromptForAccount
-            ? `Bon retour ! Vous avez utilisé DAZ Node ${conversionAnalysis.loginCount} fois. Voulez-vous créer un compte permanent pour sauvegarder vos données ?`
-            : `Bon retour ! Connexion ${conversionAnalysis.loginCount}.`,
+        welcomeMessage: conversionAnalysis.shouldPromptForAccount 
+          ? `Bon retour ! Vous avez utilisé DAZ Node ${conversionAnalysis.loginCount} fois. Voulez-vous créer un compte permanent pour sauvegarder vos données ?`
+          : `Bon retour ! Connexion ${conversionAnalysis.loginCount}.`,
         // Suggestions d'actions
         suggestedActions: conversionAnalysis.shouldPromptForAccount 
           ? ['create_full_account', 'setup_password', 'enable_notifications']
-          : isNewUser 
-            ? ['explore_features', 'setup_preferences']
-            : ['continue_session']
+          : ['continue_session']
       } : null
     };
 
     console.log('[VERIFY-CODE] Connexion réussie avec analytics:', {
       email: user.email,
-      isNewUser,
+      isNewUser: false,
       conversionStatus: conversionAnalysis?.conversionStatus,
       shouldPrompt: conversionAnalysis?.shouldPromptForAccount
     });
