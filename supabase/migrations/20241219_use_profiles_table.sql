@@ -151,6 +151,23 @@ DROP POLICY IF EXISTS "Anyone can insert prospects" ON public.prospects;
 CREATE POLICY "Anyone can insert prospects" ON public.prospects
     FOR INSERT WITH CHECK (true);
 
+-- Politiques pour otp_codes (accès public pour authentification)
+DROP POLICY IF EXISTS "Anyone can insert OTP codes" ON public.otp_codes;
+CREATE POLICY "Anyone can insert OTP codes" ON public.otp_codes
+    FOR INSERT WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Anyone can read OTP codes" ON public.otp_codes;
+CREATE POLICY "Anyone can read OTP codes" ON public.otp_codes
+    FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Anyone can update OTP codes" ON public.otp_codes;
+CREATE POLICY "Anyone can update OTP codes" ON public.otp_codes
+    FOR UPDATE USING (true);
+
+DROP POLICY IF EXISTS "Anyone can delete expired OTP codes" ON public.otp_codes;
+CREATE POLICY "Anyone can delete expired OTP codes" ON public.otp_codes
+    FOR DELETE USING (true);
+
 -- Politiques pour user_email_tracking (accès système uniquement)
 DROP POLICY IF EXISTS "System can manage email tracking" ON public.user_email_tracking;
 CREATE POLICY "System can manage email tracking" ON public.user_email_tracking

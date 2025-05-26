@@ -3,6 +3,7 @@ import { usePathname } from "next/navigation";
 import CustomHeader from "@/components/shared/ui/CustomHeader";
 import ModernLayout from "@/components/shared/layout/ModernLayout";
 import PerformanceProvider from './PerformanceProvider';
+import { CustomWalletProvider } from './providers/WalletProvider';
 import dynamic from 'next/dynamic';
 import React, { ReactNode } from 'react';
 
@@ -49,19 +50,23 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
   if (useModernLayout) {
     return (
       <PerformanceProvider>
-        <ModernLayout 
-          withGradientBg={pathname === "/" || pathname === "/token-for-good"}
-          withAnimatedCircles={pathname === "/"}
-        >
-          {content}
-        </ModernLayout>
+        <CustomWalletProvider>
+          <ModernLayout 
+            withGradientBg={pathname === "/" || pathname === "/token-for-good"}
+            withAnimatedCircles={pathname === "/"}
+          >
+            {content}
+          </ModernLayout>
+        </CustomWalletProvider>
       </PerformanceProvider>
     );
   }
 
   return (
     <PerformanceProvider>
-      {content}
+      <CustomWalletProvider>
+        {content}
+      </CustomWalletProvider>
     </PerformanceProvider>
   );
 };

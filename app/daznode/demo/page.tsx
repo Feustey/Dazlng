@@ -153,8 +153,14 @@ export default function DemoPage(): React.ReactElement {
                 </ul>
               </div>
               <div className="bg-white/5 rounded-xl p-6 border border-white/20">
-                <div className="h-48 bg-gradient-to-br from-pink-500 to-orange-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white text-lg font-medium">Interface de gestion</span>
+                <div className="h-48 rounded-lg overflow-hidden">
+                  <Image
+                    src="/assets/images/gestion-daznode.png"
+                    alt="Interface de gestion Daznode"
+                    width={400}
+                    height={192}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </div>
             </div>
