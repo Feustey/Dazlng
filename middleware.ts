@@ -1,5 +1,6 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
+import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 
 export const createClient = (request: NextRequest): { supabase: any; response: NextResponse } => {
   // Crée une réponse non modifiée
@@ -34,90 +35,34 @@ export const createClient = (request: NextRequest): { supabase: any; response: N
 };
 
 // Fonction middleware principale
-export async function middleware(request: NextRequest): Promise<NextResponse> {
-  const url = request.nextUrl.clone();
-  const hostname = request.headers.get('host') || '';
+export async function middleware(req: NextRequest): Promise<NextResponse> {
+  const res = NextResponse.next()
+  const supabase = createMiddlewareClient({ req, res })
   
-  // Créer le client Supabase
-  const { supabase, response } = createClient(request);
-  
-  // Vérifier l'authentification pour les routes protégées
-  if (url.pathname.startsWith('/user') || url.pathname.startsWith('/admin')) {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session?.user) {
-        console.log('[MIDDLEWARE] Pas de session utilisateur, redirection vers login');
-        const redirectUrl = new URL('/auth/login', request.url);
-        redirectUrl.searchParams.set('redirect', url.pathname);
-        return NextResponse.redirect(redirectUrl);
-      }
-
-      // Vérification spéciale pour les routes admin
-      if (url.pathname.startsWith('/admin')) {
-        console.log('[MIDDLEWARE] Vérification des droits admin pour:', session.user.id);
-        
-        // Vérifier si l'utilisateur a des droits admin
-        const { data: adminRole, error: adminError } = await supabase
-          .from('admin_roles')
-          .select('role')
-          .eq('user_id', session.user.id)
-          .single();
-
-        if (adminError || !adminRole) {
-          console.log('[MIDDLEWARE] Utilisateur sans droits admin:', session.user.email);
-          // Rediriger vers le tableau de bord utilisateur
-          const redirectUrl = new URL('/user/dashboard', request.url);
-          redirectUrl.searchParams.set('error', 'access_denied');
-          return NextResponse.redirect(redirectUrl);
-        }
-
-        console.log('[MIDDLEWARE] Accès admin autorisé pour:', session.user.email, 'avec le rôle:', adminRole.role);
-      }
-    } catch (error) {
-      console.error('[MIDDLEWARE] Erreur auth:', error);
-      const redirectUrl = new URL('/auth/login', request.url);
-      redirectUrl.searchParams.set('error', 'auth_error');
-      return NextResponse.redirect(redirectUrl);
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    
+    if (!session && req.nextUrl.pathname.startsWith('/api/')) {
+      return new NextResponse(
+        JSON.stringify({
+          success: false,
+          error: {
+            code: 'UNAUTHORIZED',
+            message: 'Non authentifié'
+          }
+        }),
+        { status: 401 }
+      )
     }
+  } catch (err) {
+    console.error('Erreur middleware:', err)
   }
   
-  // Gestion du sous-domaine app.dazno.de
-  if (hostname === 'app.dazno.de' || hostname === 'app.localhost:3000') {
-    // Si on est déjà sur une route /user, on laisse passer
-    if (url.pathname.startsWith('/user')) {
-      addSecurityHeaders(response);
-      return response;
-    }
-    
-    // Si on est sur la racine, rediriger vers /user/dashboard
-    if (url.pathname === '/') {
-      url.pathname = '/user/dashboard';
-      const rewriteResponse = NextResponse.rewrite(url);
-      addSecurityHeaders(rewriteResponse);
-      return rewriteResponse;
-    }
-    
-    // Pour toutes les autres routes, préfixer avec /user
-    url.pathname = `/user${url.pathname}`;
-    const rewriteResponse = NextResponse.rewrite(url);
-    addSecurityHeaders(rewriteResponse);
-    return rewriteResponse;
-  }
-  
-  // Pour le domaine principal, comportement normal
-  addSecurityHeaders(response);
-
-  // Ajouter les headers CORS
-  response.headers.set('Access-Control-Allow-Origin', '*');
-  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-  return response;
+  return res
 }
 
 // Fonction pour ajouter les headers de sécurité
-function addSecurityHeaders(response: NextResponse): void {
+function _addSecurityHeaders(response: NextResponse): void {
   response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');

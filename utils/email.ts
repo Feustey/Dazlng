@@ -62,13 +62,13 @@ export function generateEmailTemplate({
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dazno.de</title>
-  <style>body{background:#f9fafb;font-family:sans-serif;margin:0;padding:0}.container{max-width:480px;margin:40px auto;background:#fff;border-radius:12px;box-shadow:0 2px 8px #0001;padding:32px 24px}.logo{text-align:center;margin-bottom:24px}.title{font-size:1.5rem;font-weight:700;margin-bottom:12px;text-align:center}.content{font-size:1.1rem;text-align:center;margin-bottom:24px}.footer{font-size:0.9rem;color:#a1a1aa;text-align:center;margin-top:32px}</style>
+  <title>DAZ Node</title>
+  <style>body{background:#f9fafb;font-family:sans-serif;margin:0;padding:0}.container{max-width:480px;margin:40px auto;background:#fff;border-radius:12px;box-shadow:0 2px 8px #0001;padding:32px 24px}.logo{text-align:center;margin-bottom:24px}.logo img{max-width:120px;height:auto}.title{font-size:1.5rem;font-weight:700;margin-bottom:12px;text-align:center;color:#1976d2}.content{font-size:1.1rem;text-align:center;margin-bottom:24px;color:#495057}.footer{font-size:0.9rem;color:#a1a1aa;text-align:center;margin-top:32px}</style>
 </head>
 <body>
   <div class="container">
     <div class="logo">
-      <img src="https://nextjs-boilerplate-1l6z3th4v-feusteys-projects.vercel.app/assets/images/logo-daznode.svg" alt="Daznode Logo" height="48" />
+      <img src="/assets/images/logo-daznode.svg" alt="DAZ Node" />
     </div>
     <div class="title">${title}</div>
     <div class="content">${mainContent}</div>
@@ -87,7 +87,7 @@ export function generateEmailTemplate({
 <body>
   <div class="email-container">
     <div class="header">
-      <img src="https://nextjs-boilerplate-1l6z3th4v-feusteys-projects.vercel.app/assets/images/logo-daznode.svg" alt="Daznode Logo" class="logo">
+      <img src="/assets/images/logo-daznode.svg" alt="DAZ Node" class="logo">
     </div>
     <div class="content">
       <h1 class="title">${title}</h1>

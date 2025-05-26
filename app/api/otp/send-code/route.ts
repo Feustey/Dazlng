@@ -85,31 +85,34 @@ export async function POST(req: Request): Promise<Response> {
             <head>
               <meta charset="utf-8">
               <style>
-                body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background: #1a1a1a; color: white; padding: 20px; text-align: center; }
-                .content { padding: 30px; background: #f9f9f9; }
-                .code { font-size: 32px; font-weight: bold; background: #fff; padding: 15px; text-align: center; margin: 20px 0; border: 2px solid #e0e0e0; border-radius: 8px; letter-spacing: 4px; }
-                .footer { padding: 20px; text-align: center; color: #666; font-size: 12px; }
-                .welcome { background: #f0f7ff; padding: 15px; border-radius: 5px; margin: 20px 0; }
+                body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #f9f9f9; }
+                .container { background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+                .header { padding: 30px 20px; text-align: center; background: #ffffff; }
+                .content { padding: 30px; background: #ffffff; }
+                .code { font-size: 32px; font-weight: bold; background: #f8f9fa; padding: 20px; text-align: center; margin: 20px 0; border: 2px solid #e9ecef; border-radius: 8px; letter-spacing: 4px; color: #495057; }
+                .footer { padding: 20px; text-align: center; color: #6c757d; font-size: 12px; background: #f8f9fa; }
+                .welcome { background: #e3f2fd; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #2196f3; }
+                .logo { max-width: 120px; height: auto; }
               </style>
             </head>
             <body>
-              <div class="header">
-                <img src="https://nextjs-boilerplate-1l6z3th4v-feusteys-projects.vercel.app/assets/images/logo-daznode-white.svg" alt="DAZ Node" height="40" style="margin-bottom: 10px;" />
-                <h1 style="margin: 0; font-size: 24px;">DAZ Node</h1>
-              </div>
-              <div class="content">
-                <div class="welcome">
-                  <h2>${welcomeMessage}</h2>
+              <div class="container">
+                <div class="header">
+                  <img src="/assets/images/logo-daznode.svg" alt="DAZ Node" class="logo" />
                 </div>
-                <p>Utilisez le code ci-dessous pour vous connecter à votre compte :</p>
-                <div class="code">${code}</div>
-                <p><strong>Ce code expire dans 15 minutes.</strong></p>
-                ${encouragementMessage}
-                <p>Si vous n'avez pas demandé ce code, ignorez cet email ou contactez notre support.</p>
-              </div>
-              <div class="footer">
-                <p>© 2024 DAZ Node. Tous droits réservés.</p>
+                <div class="content">
+                  <div class="welcome">
+                    <h2 style="margin: 0; color: #1976d2;">${welcomeMessage}</h2>
+                  </div>
+                  <p style="font-size: 16px; line-height: 1.6; color: #495057;">Utilisez le code ci-dessous pour vous connecter à votre compte :</p>
+                  <div class="code">${code}</div>
+                  <p style="font-size: 14px; color: #dc3545;"><strong>⏰ Ce code expire dans 15 minutes.</strong></p>
+                  ${encouragementMessage}
+                  <p style="font-size: 14px; color: #6c757d;">Si vous n'avez pas demandé ce code, ignorez cet email ou contactez notre support.</p>
+                </div>
+                <div class="footer">
+                  <p>© 2024 DAZ Node. Tous droits réservés.</p>
+                </div>
               </div>
             </body>
             </html>
