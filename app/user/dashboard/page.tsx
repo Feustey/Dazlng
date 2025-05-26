@@ -1,11 +1,12 @@
 "use client";
 
-import React, { FC } from 'react';
+import React, { FC, Suspense } from 'react';
 import { useUserData } from '../hooks/useUserData';
 import ProfileCompletion from '../components/ui/ProfileCompletion';
 import DazBoxComparison from '../components/ui/DazBoxComparison';
 import EnhancedRecommendations from '../components/ui/EnhancedRecommendations';
 import PerformanceMetrics from '../components/ui/PerformanceMetrics';
+import AccessDeniedAlert from '../components/ui/AccessDeniedAlert';
 
 const UserDashboard: FC = () => {
   const {
@@ -24,6 +25,8 @@ const UserDashboard: FC = () => {
     upgradeToPremium
   } = useUserData();
 
+
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -37,6 +40,10 @@ const UserDashboard: FC = () => {
 
   return (
     <div className="space-y-8 pb-8">
+      <Suspense fallback={null}>
+        <AccessDeniedAlert />
+      </Suspense>
+
       {/* Header avec salutation personnalisée */}
       <div className="flex justify-between items-center">
         <div>

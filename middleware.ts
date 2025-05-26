@@ -47,14 +47,37 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session?.user) {
-        // Redirection vers la page de connexion si non authentifié
+        console.log('[MIDDLEWARE] Pas de session utilisateur, redirection vers login');
         const redirectUrl = new URL('/auth/login', request.url);
         redirectUrl.searchParams.set('redirect', url.pathname);
         return NextResponse.redirect(redirectUrl);
       }
+
+      // Vérification spéciale pour les routes admin
+      if (url.pathname.startsWith('/admin')) {
+        console.log('[MIDDLEWARE] Vérification des droits admin pour:', session.user.id);
+        
+        // Vérifier si l'utilisateur a des droits admin
+        const { data: adminRole, error: adminError } = await supabase
+          .from('admin_roles')
+          .select('role')
+          .eq('user_id', session.user.id)
+          .single();
+
+        if (adminError || !adminRole) {
+          console.log('[MIDDLEWARE] Utilisateur sans droits admin:', session.user.email);
+          // Rediriger vers le tableau de bord utilisateur
+          const redirectUrl = new URL('/user/dashboard', request.url);
+          redirectUrl.searchParams.set('error', 'access_denied');
+          return NextResponse.redirect(redirectUrl);
+        }
+
+        console.log('[MIDDLEWARE] Accès admin autorisé pour:', session.user.email, 'avec le rôle:', adminRole.role);
+      }
     } catch (error) {
       console.error('[MIDDLEWARE] Erreur auth:', error);
       const redirectUrl = new URL('/auth/login', request.url);
+      redirectUrl.searchParams.set('error', 'auth_error');
       return NextResponse.redirect(redirectUrl);
     }
   }
