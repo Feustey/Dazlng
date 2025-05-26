@@ -9,10 +9,6 @@ interface ProtonPaymentProps {
 
 const BTC_ADDRESS = 'bc1qnap8sadc650h3a2w9s6z3chen3fzxftqnlr26h';
 
-function satsToBtc(sats: number): string {
-  return (sats / 1e8).toFixed(8); // 8 décimales pour BTC
-}
-
 export default function ProtonPayment({ sats: _sats, promoApplied, onSuccess, onCancel }: ProtonPaymentProps): JSX.Element {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -20,7 +16,10 @@ export default function ProtonPayment({ sats: _sats, promoApplied, onSuccess, on
   const [success, setSuccess] = useState(false);
   const [txId, setTxId] = useState<string | null>(null);
 
-  const btcAmount = promoApplied ? satsToBtc(360000) : satsToBtc(400000);
+  // Prix BTC de base pour DazBox (0.004 BTC)
+  const basePriceBTC = 0.004;
+  const baseDiscountedBTC = basePriceBTC * 0.9; // -10% de réduction
+  const btcAmount = promoApplied ? baseDiscountedBTC.toFixed(8) : basePriceBTC.toFixed(8);
 
   // Simule l'envoi d'un email Proton Wallet (à remplacer par l'intégration réelle Proton API)
   const handlePay = async (): Promise<void> => {

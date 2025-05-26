@@ -18,7 +18,7 @@ const products = [
     title: 'Dazbox',
     subtitle: 'Votre nœud Lightning plug & play',
     description: 'Installez, branchez, profitez. La solution matérielle la plus simple pour rejoindre le réseau Lightning.',
-    price: '400 000Sats',
+    price: '₿0.004',
     bonus: '3 mois Daznode Premium offerts',
   },
   {

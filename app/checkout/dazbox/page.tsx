@@ -63,7 +63,9 @@ function CheckoutContent(): React.ReactElement {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const BASE_PRICE_SATS = 400000;
+  // Prix en BTC et conversion en sats
+  const BASE_PRICE_BTC = 0.004;
+  const BASE_PRICE_SATS = Math.round(BASE_PRICE_BTC * 100000000); // Conversion BTC vers sats
   const PROMO_CODE = 'BITCOINWEEK';
   const DISCOUNT_PERCENTAGE = 10;
 
@@ -612,7 +614,8 @@ function ProtonPayModalManager({ amount }: { amount: number }): React.ReactEleme
 }
 
 export default function CheckoutPage(): React.ReactElement {
-  const price = 400000;
+  const BASE_PRICE_BTC = 0.004;
+  const price = Math.round(BASE_PRICE_BTC * 100000000); // 400000 sats
   return (
     <Suspense>
       <CheckoutContent />

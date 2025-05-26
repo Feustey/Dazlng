@@ -8,8 +8,8 @@ interface PricingPlan {
   id: string;
   name: string;
   description: string;
-  price: number;
-  originalPrice?: number;
+  price: number; // Prix en BTC (ex: 0.004)
+  originalPrice?: number; // Prix original en BTC
   discount?: string;
   features: string[];
   recommended?: boolean;
@@ -22,13 +22,18 @@ const DazBoxPricing: React.FC = (): React.ReactElement => {
   const router = useRouter();
   const { trackCTAClick, trackProductInterest } = useConversionTracking();
 
+  // Fonction pour formater le prix en BTC
+  const formatBTCPrice = (price: number): string => {
+    return price.toFixed(3); // Affiche 3 décimales
+  };
+
   const plans: PricingPlan[] = [
     {
       id: 'starter',
       name: 'DazBox Starter',
       description: 'Parfait pour débuter sur Lightning Network',
-      price: 400000,
-      originalPrice: 429,
+      price: 0.004,
+      originalPrice: 0.0057,
       discount: '-30%',
       features: [
         'Configuration automatique',
@@ -45,8 +50,8 @@ const DazBoxPricing: React.FC = (): React.ReactElement => {
       id: 'pro',
       name: 'DazBox Pro',
       description: 'Solution complète pour maximiser vos revenus',
-      price: 449,
-      originalPrice: 649,
+      price: 0.005,
+      originalPrice: 0.0072,
       discount: '-31%',
       recommended: true,
       badge: 'Le Plus Populaire',
@@ -67,8 +72,8 @@ const DazBoxPricing: React.FC = (): React.ReactElement => {
       id: 'enterprise',
       name: 'DazBox Enterprise',
       description: 'Pour les professionnels et institutions',
-      price: 999,
-      originalPrice: 100000,
+      price: 0.01,
+      originalPrice: 0.013,
       discount: '-23%',
       features: [
         'Tout de la version Pro',
@@ -133,7 +138,7 @@ const DazBoxPricing: React.FC = (): React.ReactElement => {
             className="inline-flex items-center bg-green-100 text-green-800 px-6 py-3 rounded-full font-semibold hover:bg-green-200 transition-colors"
           >
             <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 002 2z" />
             </svg>
             Calculer Mon Retour sur Investissement
           </button>
@@ -174,13 +179,13 @@ const DazBoxPricing: React.FC = (): React.ReactElement => {
                 {/* Price */}
                 <div className="mb-4">
                   <div className="flex items-center justify-center gap-3">
-                    <span className="text-4xl font-bold text-gray-900">
-                      Sats{plan.price}
+                    <span className="text-4xl font-bold text-orange-500">
+                      ₿{formatBTCPrice(plan.price)}
                     </span>
                     {plan.originalPrice && (
                       <div className="text-right">
                         <div className="text-lg text-gray-400 line-through">
-                          Sats{plan.originalPrice}
+                          ₿{formatBTCPrice(plan.originalPrice)}
                         </div>
                         <div className="text-sm font-bold text-red-500">
                           {plan.discount}
