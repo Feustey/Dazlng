@@ -1,0 +1,15 @@
+{
+  "name": "DazNode",
+  "short_name": "DazNode",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff",
+  "description": "DazNode - Lightning & Web3",
+  "icons": [
+    {
+      "src": "/assets/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+} 
