@@ -50,11 +50,11 @@ export async function POST(req: NextRequest): Promise<Response> {
       });
     }
 
-    // Vérifier le code OTP
+    // Vérifier le code OTP avec le nouveau service
     const otpService = new OTPService();
-    const isValidCode = await otpService.verifyOTP(email, code);
+    const verificationResult = await otpService.verifyOTP(email, code);
     
-    if (!isValidCode) {
+    if (!verificationResult.isValid) {
       console.log('[VERIFY-CODE] Code invalide pour', email);
       return new Response(JSON.stringify({ 
         error: 'Code invalide ou expiré' 
@@ -65,26 +65,46 @@ export async function POST(req: NextRequest): Promise<Response> {
     }
 
     console.log('[VERIFY-CODE] Code validé et supprimé pour', email);
+    const { conversionAnalysis } = verificationResult;
 
-    // Vérifier/créer l'utilisateur
+    // Vérifier/créer l'utilisateur dans profiles
     let { data: user } = await supabase
       .from('profiles')
       .select('*')
       .eq('email', email)
       .single();
 
+    let isNewUser = false;
     if (!user) {
-      // Générer un nom par défaut si non fourni
-      const defaultName = name || email.split('@')[0] || 'Utilisateur';
+      // Traiter le nom - séparer prénom et nom si possible
+      let prenom = '';
+      let nom = '';
+      
+      if (name?.trim()) {
+        const nameParts = name.trim().split(' ');
+        if (nameParts.length >= 2) {
+          prenom = nameParts[0];
+          nom = nameParts.slice(1).join(' ');
+        } else {
+          prenom = nameParts[0];
+          nom = '';
+        }
+      } else {
+        // Générer un nom par défaut basé sur l'email
+        prenom = email.split('@')[0] || 'Utilisateur';
+        nom = '';
+      }
       
       const { data: newUser, error: createError } = await supabase
         .from('profiles')
         .insert([{ 
           email,
-          nom: defaultName,
-          prenom: '',
+          nom,
+          prenom,
           t4g_tokens: 1,
-          pubkey: pubkey || null // Ajouter la pubkey si fournie
+          pubkey: pubkey || null,
+          // Marquer le type d'authentification utilisé
+          auth_method: 'otp'
         }])
         .select()
         .single();
@@ -99,32 +119,76 @@ export async function POST(req: NextRequest): Promise<Response> {
         });
       }
       user = newUser;
+      isNewUser = true;
       console.log('[VERIFY-CODE] Nouvel utilisateur créé:', user.email);
+
+      // Marquer comme converti si création de compte complet
+      await otpService.markAsConverted(email, 'Compte créé via OTP');
     } else {
       console.log('[VERIFY-CODE] Utilisateur existant trouvé:', user.email);
     }
 
+    // Construire le nom complet pour l'affichage
+    const fullName = user.prenom && user.nom 
+      ? `${user.prenom} ${user.nom}`.trim()
+      : user.prenom || user.nom || user.email.split('@')[0];
+
+    // Générer le token JWT
     const token = jwt.sign(
       { 
         id: user.id, 
         email: user.email,
-        name: user.nom || user.email.split('@')[0],
-        verified: true
+        name: fullName,
+        verified: true,
+        auth_method: 'otp'
       }, 
       JWT_SECRET, 
       { expiresIn: '24h' }
     );
 
-    return NextResponse.json({ 
+    // Préparer les données de réponse avec informations de conversion
+    const responseData = {
       success: true,
       token, 
       user: { 
         id: user.id, 
         email: user.email, 
-        name: user.nom || user.email.split('@')[0],
-        verified: true
-      } 
-    }, {
+        name: fullName,
+        prenom: user.prenom,
+        nom: user.nom,
+        verified: true,
+        auth_method: 'otp',
+        isNewUser
+      },
+      // Informations pour le workflow de conversion
+      conversionInfo: conversionAnalysis ? {
+        shouldPromptForAccount: conversionAnalysis.shouldPromptForAccount,
+        loginCount: conversionAnalysis.loginCount,
+        daysSinceFirstLogin: conversionAnalysis.daysSinceFirstLogin,
+        conversionStatus: conversionAnalysis.conversionStatus,
+        // Messages personnalisés selon le statut
+        welcomeMessage: isNewUser 
+          ? 'Bienvenue ! Votre compte temporaire a été créé.'
+          : conversionAnalysis.shouldPromptForAccount
+            ? `Bon retour ! Vous avez utilisé DAZ Node ${conversionAnalysis.loginCount} fois. Voulez-vous créer un compte permanent pour sauvegarder vos données ?`
+            : `Bon retour ! Connexion ${conversionAnalysis.loginCount}.`,
+        // Suggestions d'actions
+        suggestedActions: conversionAnalysis.shouldPromptForAccount 
+          ? ['create_full_account', 'setup_password', 'enable_notifications']
+          : isNewUser 
+            ? ['explore_features', 'setup_preferences']
+            : ['continue_session']
+      } : null
+    };
+
+    console.log('[VERIFY-CODE] Connexion réussie avec analytics:', {
+      email: user.email,
+      isNewUser,
+      conversionStatus: conversionAnalysis?.conversionStatus,
+      shouldPrompt: conversionAnalysis?.shouldPromptForAccount
+    });
+
+    return NextResponse.json(responseData, {
       headers: {
         'Cache-Control': 'no-store'
       }

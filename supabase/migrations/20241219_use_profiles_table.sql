@@ -9,6 +9,7 @@ ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS node_network TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS dazbox_serial TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS last_node_sync TIMESTAMP WITH TIME ZONE;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS node_stats JSONB DEFAULT '{}';
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS auth_method TEXT DEFAULT 'password';
 
 -- S'assurer que la table profiles a un champ created_at et updated_at
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW();
@@ -50,6 +51,8 @@ CREATE TABLE IF NOT EXISTS public.otp_codes (
     email TEXT NOT NULL,
     code TEXT NOT NULL,
     expires_at BIGINT NOT NULL,
+    used BOOLEAN DEFAULT FALSE,
+    attempts INTEGER DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -76,6 +79,21 @@ CREATE TABLE IF NOT EXISTS public.payments (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Table user_email_tracking pour analytics
+CREATE TABLE IF NOT EXISTS public.user_email_tracking (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    first_seen_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    last_seen_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    total_logins INTEGER DEFAULT 0,
+    conversion_status TEXT DEFAULT 'new',
+    marketing_consent BOOLEAN DEFAULT FALSE,
+    source TEXT,
+    notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- Index pour les performances
 CREATE INDEX IF NOT EXISTS idx_profiles_email ON public.profiles(email);
 CREATE INDEX IF NOT EXISTS idx_profiles_pubkey ON public.profiles(pubkey);
@@ -92,12 +110,17 @@ CREATE INDEX IF NOT EXISTS idx_payments_status ON public.payments(status);
 CREATE INDEX IF NOT EXISTS idx_prospects_email ON public.prospects(email);
 CREATE INDEX IF NOT EXISTS idx_otp_codes_email ON public.otp_codes(email);
 CREATE INDEX IF NOT EXISTS idx_otp_codes_expires_at ON public.otp_codes(expires_at);
+CREATE INDEX IF NOT EXISTS idx_otp_codes_used ON public.otp_codes(used);
+
+CREATE INDEX IF NOT EXISTS idx_user_email_tracking_email ON public.user_email_tracking(email);
+CREATE INDEX IF NOT EXISTS idx_user_email_tracking_conversion_status ON public.user_email_tracking(conversion_status);
 
 -- Activer RLS sur toutes les tables
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.prospects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.otp_codes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_email_tracking ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.payments ENABLE ROW LEVEL SECURITY;
 
@@ -127,6 +150,11 @@ CREATE POLICY "Users can insert own orders" ON public.orders
 DROP POLICY IF EXISTS "Anyone can insert prospects" ON public.prospects;
 CREATE POLICY "Anyone can insert prospects" ON public.prospects
     FOR INSERT WITH CHECK (true);
+
+-- Politiques pour user_email_tracking (accès système uniquement)
+DROP POLICY IF EXISTS "System can manage email tracking" ON public.user_email_tracking;
+CREATE POLICY "System can manage email tracking" ON public.user_email_tracking
+    FOR ALL USING (true);
 
 -- Politiques pour subscriptions
 DROP POLICY IF EXISTS "Users can view own subscriptions" ON public.subscriptions;
@@ -175,6 +203,12 @@ CREATE TRIGGER update_subscriptions_updated_at
 DROP TRIGGER IF EXISTS update_payments_updated_at ON public.payments;
 CREATE TRIGGER update_payments_updated_at
     BEFORE UPDATE ON public.payments
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_user_email_tracking_updated_at ON public.user_email_tracking;
+CREATE TRIGGER update_user_email_tracking_updated_at
+    BEFORE UPDATE ON public.user_email_tracking
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 

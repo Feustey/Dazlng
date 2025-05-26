@@ -43,8 +43,11 @@ export async function POST(req: Request): Promise<Response> {
     });
 
     // Créer le code OTP avec tracking amélioré
+    console.log('[SEND-CODE] Création du service OTP...');
     const otpService = new OTPService();
+    console.log('[SEND-CODE] Tentative de création du code OTP...');
     const code = await otpService.createOTPAttempt(email, requestSource, userAgent);
+    console.log('[SEND-CODE] Code OTP créé avec succès:', code ? 'OUI' : 'NON');
 
     // Récupérer les stats de l'utilisateur pour personnaliser l'email
     const emailStats = await otpService.getEmailStats(email);

@@ -73,8 +73,14 @@ export default function DemoPage(): React.ReactElement {
                 </ul>
               </div>
               <div className="bg-white/5 rounded-xl p-6 border border-white/20">
-                <div className="h-48 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white text-lg font-medium">Écran d'inscription</span>
+                <div className="h-48 rounded-lg overflow-hidden">
+                  <Image
+                    src="/assets/images/onboarding-daznode.png"
+                    alt="Écran d'inscription Daznode"
+                    width={400}
+                    height={192}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </div>
             </div>
@@ -82,8 +88,14 @@ export default function DemoPage(): React.ReactElement {
             {/* Étape 2 */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
               <div className="bg-white/5 rounded-xl p-6 border border-white/20 order-2 lg:order-1">
-                <div className="h-48 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white text-lg font-medium">Dashboard de gestion</span>
+                <div className="h-48 rounded-lg overflow-hidden">
+                  <Image
+                    src="/assets/images/dashboard-daznode.png"
+                    alt="Dashboard de gestion Daznode"
+                    width={400}
+                    height={192}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </div>
               <div className="space-y-4 order-1 lg:order-2">

@@ -155,8 +155,8 @@ const ContactPage: React.FC = () => {
                       </svg>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
-                      <a href="mailto:contact@dazno.de" className="text-indigo-600 hover:underline">contact@dazno.de</a>
+                      <h3 className="font-semibold text-gray-900 mb-1">Telegram</h3>
+                      <a href="https://t.me/+_tiT3od1q_Q0MjI0" className="text-indigo-600 hover:underline">Canal Daznode</a>
                     </div>
                   </div>
                 </div>
