@@ -1,9 +1,20 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { Resend } from 'resend';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
-import { validateLightningPubkey } from '../../../utils/validation';
 import { generateEmailTemplate } from '../../../utils/email';
+import {
+  successResponse,
+  errorResponse,
+  unauthorizedResponse,
+  handleApiError,
+  logApiRequest
+} from '@/lib/api-response';
+import {
+  createOrderSchema,
+  validateData
+} from '@/lib/validations';
+import { ErrorCodes } from '@/types/database';
 
 async function getUserFromRequest(req: NextRequest): Promise<SupabaseUser | null> {
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
@@ -12,89 +23,149 @@ async function getUserFromRequest(req: NextRequest): Promise<SupabaseUser | null
   return user;
 }
 
+/**
+ * GET /api/orders - Récupère les commandes de l'utilisateur connecté
+ */
 export async function GET(req: NextRequest): Promise<Response> {
-  const user = await getUserFromRequest(req);
-  if (!user) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
-
-  const { data, error } = await supabase
-    .from("orders")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("date", { ascending: false });
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
-  return NextResponse.json(data);
-}
-
-export async function POST(req: NextRequest): Promise<Response> {
-  const body = await req.json();
-  const { user_id, customer, product, total, payment_status, payment_method, payment_hash, metadata } = body;
-
-  // Validation stricte des champs obligatoires
-  if (!customer || !product || typeof total !== 'number' || !customer.email || !customer.firstName || !customer.lastName || !customer.address || !customer.city || !customer.postalCode || !product.name || typeof product.quantity !== 'number' || typeof product.priceSats !== 'number') {
-    return NextResponse.json(
-      { error: "Champs obligatoires manquants ou invalides" },
-      { status: 400 }
-    );
-  }
-
-  // Validation de la clé publique si fournie
-  if (customer.pubkey && !validateLightningPubkey(customer.pubkey)) {
-    return NextResponse.json(
-      { error: "Clé publique Lightning invalide" },
-      { status: 400 }
-    );
-  }
-
   try {
-    // Insérer la commande dans la BDD
+    const user = await getUserFromRequest(req);
+    if (!user) {
+      return unauthorizedResponse();
+    }
+
+    logApiRequest('GET', '/api/orders', user.id);
+
     const { data, error } = await supabase
       .from("orders")
-      .insert([
-        {
-          user_id: user_id || null,
-          customer,
-          product,
-          total,
-          product_type: product.name,
-          plan: product.plan || null,
-          billing_cycle: product.billingCycle || null,
-          amount: total,
-          payment_method: payment_method || 'lightning',
-          payment_status: payment_status || 'pending',
-          payment_hash: payment_hash || null,
-          metadata: metadata || {},
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        },
-      ])
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error('Erreur lors de la récupération des commandes:', error);
+      return errorResponse(ErrorCodes.DATABASE_ERROR, 'Erreur lors de la récupération des commandes');
+    }
+
+    return successResponse(data || []);
+
+  } catch (error) {
+    return handleApiError(error, 'GET /api/orders');
+  }
+}
+
+/**
+ * POST /api/orders - Crée une nouvelle commande
+ */
+export async function POST(req: NextRequest): Promise<Response> {
+  try {
+    const body = await req.json();
+    
+    // Validation des données avec Zod
+    const validationResult = validateData(createOrderSchema, body);
+    if (!validationResult.success) {
+      return errorResponse(
+        ErrorCodes.VALIDATION_ERROR, 
+        'Données de commande invalides', 
+        validationResult.error.details
+      );
+    }
+
+    const { user_id, product_type, plan, billing_cycle, amount, payment_method, customer, product, metadata } = validationResult.data;
+
+    logApiRequest('POST', '/api/orders', user_id, { product_type, amount });
+
+    // Préparer les données de la commande pour la base de données
+    const orderData = {
+      user_id: user_id || null,
+      product_type,
+      plan: plan || null,
+      billing_cycle: billing_cycle || null,
+      amount,
+      payment_method,
+      payment_status: 'pending' as const,
+      payment_hash: null,
+      metadata: {
+        customer,
+        product,
+        ...metadata
+      }
+    };
+
+    // Insérer la commande dans la base de données
+    const { data, error } = await supabase
+      .from("orders")
+      .insert([orderData])
       .select()
       .single();
 
-    if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+    if (error) {
+      console.error('Erreur lors de la création de la commande:', error);
+      return errorResponse(ErrorCodes.DATABASE_ERROR, 'Erreur lors de la création de la commande');
+    }
 
-    // Envoi d'un email de notification pour le nouveau panier
+    // Envoi d'un email de notification (en arrière-plan)
     try {
       const resend = new Resend(process.env.RESEND_API_KEY);
-      const html = generateEmailTemplate({
-        title: `Nouveau panier - ${product.name}`,
-        username: `${customer.firstName} ${customer.lastName}`,
-        mainContent: `Merci pour votre commande ! Voici le récapitulatif :`,
-        detailedContent: `<ul><li><b>Produit :</b> ${product.name}</li><li><b>Quantité :</b> ${product.quantity}</li><li><b>Total :</b> ${total} sats</li></ul>`,
-        ctaText: 'Suivre ma commande',
-        ctaLink: 'https://dazno.de/account/orders'
-      });
-      await resend.emails.send({
-        from: 'contact@dazno.de',
-        to: 'contact@dazno.de',
-        subject: `Nouveau panier - ${product.name}`,
-        html,
-      });
-    } catch (e) { /* ... */ }
+      if (process.env.RESEND_API_KEY) {
+        const html = generateEmailTemplate({
+          title: `Nouvelle commande - ${product.name}`,
+          username: `${customer.firstName} ${customer.lastName}`,
+          mainContent: `Merci pour votre commande ! Voici le récapitulatif :`,
+          detailedContent: `
+            <ul>
+              <li><b>Produit :</b> ${product.name}</li>
+              <li><b>Type :</b> ${product_type}</li>
+              <li><b>Quantité :</b> ${product.quantity}</li>
+              <li><b>Prix unitaire :</b> ${product.priceSats} sats</li>
+              <li><b>Total :</b> ${amount} sats</li>
+              <li><b>Méthode de paiement :</b> ${payment_method}</li>
+            </ul>
+          `,
+          ctaText: 'Suivre ma commande',
+          ctaLink: 'https://dazno.de/user/dashboard'
+        });
 
-    return NextResponse.json({ id: data.id });
+        // Email à l'équipe
+        await resend.emails.send({
+          from: 'contact@dazno.de',
+          to: 'contact@dazno.de',
+          subject: `Nouvelle commande #${data.id} - ${product_type}`,
+          html,
+        });
+
+        // Email de confirmation au client
+        await resend.emails.send({
+          from: 'contact@dazno.de',
+          to: customer.email,
+          subject: `Confirmation de commande #${data.id}`,
+          html: generateEmailTemplate({
+            title: 'Commande confirmée',
+            username: customer.firstName,
+            mainContent: 'Votre commande a été reçue et est en cours de traitement.',
+            detailedContent: `
+              <p>Numéro de commande : <b>#${data.id}</b></p>
+              <p>Montant : <b>${amount} sats</b></p>
+              <p>Vous recevrez un email dès que votre commande sera traitée.</p>
+            `,
+            ctaText: 'Mon compte',
+            ctaLink: 'https://dazno.de/user/dashboard'
+          })
+        });
+      }
+    } catch (emailError) {
+      // L'échec de l'email ne doit pas faire échouer la commande
+      console.error('Erreur lors de l\'envoi de l\'email:', emailError);
+    }
+
+    return successResponse({
+      id: data.id,
+      order_number: data.id,
+      status: data.payment_status,
+      amount: data.amount,
+      created_at: data.created_at
+    }, 201);
+
   } catch (error) {
-    console.error('Erreur lors de la création de la commande:', error);
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
+    return handleApiError(error, 'POST /api/orders');
   }
 }

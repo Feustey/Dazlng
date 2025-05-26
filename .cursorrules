@@ -1,0 +1,318 @@
+# DazNode - Règles de développement Cursor
+
+## Architecture du projet
+- Next.js 14+ avec App Router
+- TypeScript strict
+- Tailwind CSS pour le styling
+- Supabase pour la base de données PostgreSQL
+- Lightning Network pour les paiements
+
+## Structure de la base de données
+
+### Table `profiles` (utilisateurs)
+```typescript
+interface Profile {
+  id: string              // UUID primary key
+  email: string           // Email unique
+  nom: string            // Nom de famille
+  prenom: string         // Prénom
+  pubkey?: string        // Clé publique Lightning (optionnel)
+  compte_x?: string      // Compte X/Twitter (optionnel)
+  compte_nostr?: string  // Compte Nostr (optionnel)
+  t4g_tokens: number     // Tokens Token4Good (défaut: 1)
+  node_id?: string       // ID du nœud Lightning (optionnel)
+  created_at: string     // Date de création
+  updated_at: string     // Date de mise à jour
+  settings: json         // Paramètres utilisateur
+  email_verified: boolean // Email vérifié
+  verified_at?: string   // Date de vérification
+}
+```
+
+### Table `orders` (commandes)
+```typescript
+interface Order {
+  id: string             // UUID primary key
+  user_id: string        // Référence vers profiles.id
+  product_type: string   // Type de produit (daznode, dazbox, dazpay)
+  plan?: string          // Plan d'abonnement (optionnel)
+  billing_cycle?: string // Cycle de facturation (optionnel)
+  amount: number         // Montant en satoshis
+  payment_method: string // Méthode de paiement
+  payment_status: string // Statut du paiement (pending, paid, failed)
+  payment_hash?: string  // Hash du paiement Lightning (optionnel)
+  metadata: json         // Métadonnées de la commande
+  created_at: string     // Date de création
+  updated_at: string     // Date de mise à jour
+}
+```
+
+### Table `subscriptions` (abonnements)
+```typescript
+interface Subscription {
+  id: string            // UUID primary key
+  user_id: string       // Référence vers profiles.id
+  plan_id: string       // ID du plan (free, basic, premium, enterprise)
+  status: string        // Statut (active, inactive, cancelled, expired)
+  start_date: string    // Date de début
+  end_date?: string     // Date de fin (optionnel)
+  created_at: string    // Date de création
+  updated_at: string    // Date de mise à jour
+}
+```
+
+### Table `payments` (paiements)
+```typescript
+interface Payment {
+  id: string            // UUID primary key
+  order_id: string      // Référence vers orders.id
+  amount: number        // Montant en satoshis
+  status: string        // Statut (pending, paid, failed, refunded)
+  payment_hash?: string // Hash du paiement Lightning (optionnel)
+  created_at: string    // Date de création
+  updated_at: string    // Date de mise à jour
+}
+```
+
+### Table `deliveries` (livraisons)
+```typescript
+interface Delivery {
+  id: string              // UUID primary key
+  order_id: string        // Référence vers orders.id
+  address: string         // Adresse de livraison
+  city: string           // Ville
+  zip_code: string       // Code postal
+  country: string        // Pays
+  shipping_status: string // Statut de livraison
+  tracking_number?: string // Numéro de suivi (optionnel)
+  created_at: string     // Date de création
+  updated_at: string     // Date de mise à jour
+}
+```
+
+### Table `network_stats` (statistiques réseau)
+```typescript
+interface NetworkStats {
+  id: string            // UUID primary key
+  timestamp: string     // Horodatage
+  value: number         // Valeur de la statistique
+}
+```
+
+### Table `prospects` (prospects)
+```typescript
+interface Prospect {
+  id: string            // UUID primary key
+  email: string         // Email du prospect
+  pubkey?: string       // Clé publique (optionnel)
+  chaos?: string        // Données chaos (optionnel)
+  source: string        // Source du prospect
+  prospect: boolean     // Est un prospect
+  date: string          // Date de création
+}
+```
+
+### Table `users` (système d'auth)
+```typescript
+interface User {
+  id: string            // UUID primary key
+  name?: string         // Nom complet (optionnel)
+  email: string         // Email unique
+  phone?: string        // Téléphone (optionnel)
+  company?: string      // Entreprise (optionnel)
+  created_at: string    // Date de création
+  settings: json        // Paramètres
+  updated_at: string    // Date de mise à jour
+  email_verified: boolean // Email vérifié
+  verified_at?: string  // Date de vérification
+}
+```
+
+## Standards API
+
+### Format de réponse standardisé
+```typescript
+interface ApiResponse<T> {
+  success: boolean
+  data?: T
+  error?: {
+    code: string
+    message: string
+    details?: any
+  }
+  meta?: {
+    pagination?: {
+      total: number
+      page: number
+      limit: number
+    }
+    timestamp: string
+    version: string
+  }
+}
+```
+
+### Codes d'erreur standardisés
+```typescript
+const ErrorCodes = {
+  // Client errors (4xx)
+  BAD_REQUEST: 'BAD_REQUEST',
+  UNAUTHORIZED: 'UNAUTHORIZED',
+  FORBIDDEN: 'FORBIDDEN',
+  NOT_FOUND: 'NOT_FOUND',
+  VALIDATION_ERROR: 'VALIDATION_ERROR',
+  RATE_LIMIT_EXCEEDED: 'RATE_LIMIT_EXCEEDED',
+  
+  // Server errors (5xx)
+  INTERNAL_ERROR: 'INTERNAL_ERROR',
+  DATABASE_ERROR: 'DATABASE_ERROR',
+  EXTERNAL_API_ERROR: 'EXTERNAL_API_ERROR'
+} as const
+```
+
+## Routes API
+
+### Authentification (`/api/auth/*`)
+- `POST /api/auth/send-code` - Envoi code OTP
+- `POST /api/auth/verify-code` - Vérification code OTP
+- `POST /api/auth/login-node` - Connexion nœud Lightning
+- `GET /api/auth/me` - Informations utilisateur connecté
+- `POST /api/auth/wallet/connect` - Connexion portefeuille
+- `POST /api/auth/wallet/test` - Test connexion portefeuille
+
+### Administration (`/api/admin/*`)
+- `GET /api/admin/stats` - Statistiques globales
+- `GET /api/admin/users` - Liste des utilisateurs
+- `GET /api/admin/orders` - Liste des commandes
+- `GET /api/admin/payments` - Liste des paiements
+- `GET /api/admin/subscriptions` - Liste des abonnements
+
+### Utilisateurs (`/api/user/*`)
+- `GET /api/user` - Profil utilisateur
+- `POST /api/user/create` - Création utilisateur
+- `PUT /api/user/password` - Changement mot de passe
+
+### Commandes (`/api/orders/*`)
+- `GET /api/orders` - Liste des commandes utilisateur
+- `POST /api/orders` - Création nouvelle commande
+
+### Abonnements (`/api/subscriptions/*`)
+- `GET /api/subscriptions/current` - Abonnement actuel
+- `GET /api/subscriptions/plans` - Plans disponibles
+
+### Réseau Lightning (`/api/network/*`)
+- `GET /api/network/node/[nodeId]/channels` - Canaux du nœud
+- `POST /api/network/node/[nodeId]/channels` - Ouvrir nouveau canal
+- `GET /api/network/node/[nodeId]/channels/[channelId]` - Détails du canal
+
+### Paiements
+- `POST /api/create-invoice` - Création facture Lightning
+- `POST /api/check-payment` - Vérification paiement
+- `POST /api/check-invoice` - Vérification facture
+
+### Utilitaires
+- `POST /api/contact` - Formulaire de contact
+- `POST /api/send-email` - Envoi d'email
+
+## Règles de développement
+
+### TypeScript
+- Utiliser `strict: true` dans tsconfig.json
+- Typer toutes les fonctions et variables
+- Éviter `any`, utiliser `unknown` si nécessaire
+- Utiliser les interfaces pour les objets complexes
+
+### API Routes
+- Toujours valider les données d'entrée
+- Utiliser le format de réponse standardisé
+- Implémenter la gestion d'erreurs appropriée
+- Ajouter des logs pour le debugging
+- Implémenter le rate limiting sur les routes sensibles
+
+### Base de données
+- Utiliser les transactions pour les opérations critiques
+- Valider les données avant insertion
+- Utiliser les index appropriés pour les performances
+- Respecter les contraintes de clés étrangères
+
+### Sécurité
+- Valider toutes les entrées utilisateur
+- Utiliser HTTPS en production
+- Implémenter CORS approprié
+- Protéger contre les injections SQL
+- Utiliser des tokens JWT sécurisés
+- Implémenter le rate limiting
+
+### Performance
+- Utiliser la mise en cache appropriée
+- Optimiser les requêtes de base de données
+- Implémenter la pagination pour les listes
+- Utiliser la compression des réponses
+
+### Validation Zod
+```typescript
+import { z } from 'zod'
+
+const CreateOrderSchema = z.object({
+  user_id: z.string().uuid(),
+  product_type: z.enum(['daznode', 'dazbox', 'dazpay']),
+  amount: z.number().positive(),
+  payment_method: z.string().min(1),
+  metadata: z.record(z.any()).optional()
+})
+```
+
+### Middleware
+- Authentification pour routes protégées
+- Validation des schémas pour toutes les routes POST/PUT
+- Rate limiting pour prévenir les abus
+- Logging des requêtes importantes
+
+### Tests
+- Tester toutes les routes API
+- Tester les cas d'erreur
+- Utiliser des données de test cohérentes
+- Mocker les services externes
+
+## Lightning Network
+
+### Intégrations supportées
+- Alby (NWC - Nostr Wallet Connect)
+- LND (Lightning Network Daemon)
+- Core Lightning (c-lightning)
+- LNURL-Auth pour l'authentification
+
+### Formats de connexion
+- NWC: `nostr+walletconnect://...`
+- LND: `lnd://admin:macaroon@host:port`
+- Core Lightning: `c-lightning://rune@host:port`
+- LNURL: `LNURL...` ou `lightning:lnurl...`
+
+### Validation des clés publiques
+```typescript
+const isValidLightningPubkey = (pubkey: string): boolean => {
+  return /^[0-9a-fA-F]{66}$/.test(pubkey)
+}
+```
+
+## Déploiement
+
+### Variables d'environnement requises
+```env
+SUPABASE_URL=
+SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=
+RESEND_API_KEY=
+ALBY_API_TOKEN=
+JWT_SECRET=
+```
+
+### Commandes de déploiement
+```bash
+npm run build        # Build de production
+npm run start        # Démarrage production
+npm run lint         # Vérification du code
+npm run type-check   # Vérification TypeScript
+``` 

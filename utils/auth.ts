@@ -151,6 +151,8 @@ export async function getUserData(userId: string): Promise<UserWithOrders> {
     name: user.name,
     created_at: user.created_at,
     updated_at: user.updated_at,
+    email_verified: true, // Par défaut car récupéré depuis la base
+    settings: {}, // Objet vide par défaut
     orders,
     subscriptions
   };
