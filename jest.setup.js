@@ -1,4 +1,5 @@
-import '@testing-library/jest-dom';
+require('dotenv').config();
+// Setup Jest pour les tests node uniquement
 
 // Mock IntersectionObserver
 class IntersectionObserver {

@@ -4,7 +4,11 @@ module.exports = {
     '^.+\\.(ts|tsx)$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'json'],
-  testMatch: ['**/tests/api/**/*.test.(ts|tsx|js)'],
+  testMatch: [
+    '**/__tests__/**/*.test.(ts|tsx|js)',
+    '**/tests/api/**/*.test.(ts|tsx|js)'
+  ],
+  setupFiles: ['<rootDir>/jest.setup.js'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
   },

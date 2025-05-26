@@ -42,4 +42,3 @@ export { CTASection } from './CTASection';
 // Hooks de performance
 export { useWebVitals } from '../../../hooks/useWebVitals';
 export { useCache } from '../../../hooks/useCache';
-export { useServiceWorker } from '../../../hooks/useServiceWorker';

@@ -1,8 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useWebVitals } from '../hooks/useWebVitals';
-import { useServiceWorker } from '../hooks/useServiceWorker';
 import { PageLoader } from '../components/shared/ui/PageLoader';
 
 interface PerformanceProviderProps {
@@ -12,16 +10,6 @@ interface PerformanceProviderProps {
 export default function PerformanceProvider({ children }: PerformanceProviderProps): JSX.Element {
   // Initialiser les Web Vitals
   useWebVitals();
-  
-  // Initialiser le Service Worker
-  const { register } = useServiceWorker();
-
-  useEffect(() => {
-    // Enregistrer le service worker en production
-    if (process.env.NODE_ENV === 'production') {
-      register();
-    }
-  }, [register]);
 
   return (
     <>
