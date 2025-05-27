@@ -2,6 +2,7 @@
 
 import React, { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function LoginPage(): JSX.Element {
   return (
@@ -25,18 +26,15 @@ function LoginPageContent(): JSX.Element {
     setPending(true);
     setError(null);
 
-    const callbackUrl = searchParams?.get("callbackUrl");
-
     try {
-      const res = await fetch("/api/auth/send-code", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, callbackUrl }),
+      const result = await signIn('email', {
+        email,
+        redirect: false,
+        callbackUrl: '/user/dashboard'
       });
 
-      const data = await res.json();
-      if (!res.ok) {
-        setError(typeof data?.error?.message === 'string' ? data.error.message : 'Erreur lors de l\'envoi du code.');
+      if (result?.error) {
+        setError("Erreur lors de l'envoi du code");
       } else {
         setSuccess(true);
         setTimeout(() => {

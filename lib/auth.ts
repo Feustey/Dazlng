@@ -2,7 +2,7 @@ import type { NextAuthOptions } from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
 import { SupabaseAdapter } from '@next-auth/supabase-adapter';
 import { createClient } from '@supabase/supabase-js';
-import { Resend } from 'resend';
+import { sendEmail } from '@/utils/email';
 import { z } from "zod";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { verifyLnurlAuth } from "@/lib/lnurl-auth";
@@ -12,9 +12,6 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
-
-// Instance Resend
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 // --- Rate limiting en mémoire (à remplacer par Redis en prod) ---
 const emailRateLimit = new Map<string, number[]>();
@@ -56,9 +53,11 @@ export const authOptions: NextAuthOptions = {
           pass: process.env.RESEND_API_KEY,
         },
       },
-      from: process.env.EMAIL_FROM,
-      // Optionnel : personnaliser l'email de connexion
-      sendVerificationRequest: async ({ identifier: email, url, provider }) => {
+      from: process.env.EMAIL_FROM || 'contact@dazno.de',
+      // ✅ INTÉGRER VOTRE LOGIQUE OTP
+      sendVerificationRequest: async ({ identifier: email, url: _url, provider: _provider }) => {
+        console.log("[NEXTAUTH-OTP] Envoi code OTP à:", email);
+
         // --- Validation stricte de l'email ---
         try {
           allowedEmailSchema.parse(email);
@@ -73,33 +72,59 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Trop de tentatives, réessayez plus tard.");
         }
 
-        // --- Log tentative d'envoi ---
-        console.info(`[AUTH] Envoi email de connexion à: ${email}`);
-
         try {
-          await resend.emails.send({
-            from: provider.from as string,
+          // Nettoyage des anciens codes expirés
+          console.log("[NEXTAUTH-OTP] Suppression des anciens codes expirés");
+          await supabase.from('otp_codes').delete().lt('expires_at', Date.now());
+
+          // Générer un code OTP à 6 chiffres
+          const code = String(Math.floor(100000 + Math.random() * 900000));
+          const expiresAt = Date.now() + 15 * 60 * 1000; // 15 minutes
+          console.log("[NEXTAUTH-OTP] Code OTP généré:", code);
+
+          // Désactiver les anciens codes non utilisés pour cet email
+          console.log("[NEXTAUTH-OTP] Désactivation des anciens codes non utilisés");
+          await supabase.from('otp_codes').update({ used: true }).eq('email', email).eq('used', false);
+
+          // Insérer le nouveau code
+          console.log("[NEXTAUTH-OTP] Insertion du nouveau code OTP");
+          const { error: insertError } = await supabase.from('otp_codes').insert([{
+            email,
+            code,
+            expires_at: expiresAt,
+            used: false,
+            attempts: 0
+          }]);
+
+          if (insertError) {
+            console.error("[NEXTAUTH-OTP] Erreur insertion:", insertError);
+            throw new Error('Erreur lors de la création du code OTP');
+          }
+
+          // Envoyer l'email avec le code OTP
+          console.log("[NEXTAUTH-OTP] Envoi de l'email OTP à", email);
+          await sendEmail({
             to: email,
-            subject: "Connexion à DazNode",
+            subject: 'Votre code de connexion DazNode',
             html: `
               <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                 <h1 style="color: #4F46E5;">Connexion à DazNode</h1>
-                <p>Cliquez sur le lien ci-dessous pour vous connecter :</p>
-                <a href="${url}" style="background-color: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block;">
-                  Se connecter
-                </a>
-                <p style="margin-top: 20px; color: #666;">
-                  Ce lien expire dans 24 heures. Si vous n'avez pas demandé cette connexion, ignorez cet email.
+                <p>Votre code de connexion est :</p>
+                <div style="background-color: #f3f4f6; padding: 20px; text-align: center; margin: 20px 0; border-radius: 8px;">
+                  <span style="font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #4F46E5;">${code}</span>
+                </div>
+                <p>Ce code expire dans 15 minutes.</p>
+                <p style="color: #666; font-size: 14px;">
+                  Si vous n'avez pas demandé cette connexion, ignorez cet email.
                 </p>
               </div>
-            `,
+            `
           });
-          // Log succès
-          console.info(`[AUTH] Email envoyé avec succès à: ${email}`);
+
+          console.log("[NEXTAUTH-OTP] Code envoyé avec succès");
         } catch (error) {
-          // Log échec
-          console.error(`[AUTH] Erreur envoi email à ${email}:`, error);
-          throw new Error("Impossible d'envoyer l'email de connexion");
+          console.error("[NEXTAUTH-OTP] Erreur:", error);
+          throw new Error("Impossible d'envoyer le code de connexion");
         }
       },
     }),
@@ -149,7 +174,8 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: '/auth/login',
-    verifyRequest: '/auth/verify-request',
+    verifyRequest: '/auth/verify-code',
+    error: '/auth/error'
   },
   session: {
     strategy: 'database',

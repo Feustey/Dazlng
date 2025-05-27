@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import type { 
   UserProfile, 
   NodeStats, 
@@ -34,8 +35,11 @@ interface UseUserDataReturn {
 }
 
 export const useUserData = (): UseUserDataReturn => {
+  const sessionResult = useSession();
+  const { data: session, status } = sessionResult || { data: null, status: 'loading' };
+  
   const [userProfile, setUserProfile] = useState<UserProfile>({
-    email: 'user@example.com',
+    email: '',
     firstName: undefined,
     lastName: undefined,
     pubkey: undefined,
@@ -49,25 +53,33 @@ export const useUserData = (): UseUserDataReturn => {
   const [isPremium, setIsPremium] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Mock data - À remplacer par de vrais appels API
+  // ✅ UTILISER LES DONNÉES DE SESSION NEXTAUTH
   useEffect(() => {
     const fetchUserData = async (): Promise<void> => {
+      if (status === 'loading') {
+        return; // Attendre que la session soit chargée
+      }
+
+      if (status === 'unauthenticated') {
+        setIsLoading(false);
+        return;
+      }
+
       try {
-        // Simuler un appel API
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // ✅ RÉCUPÉRER LES DONNÉES DEPUIS LA SESSION
+        if (session?.user) {
+          setUserProfile({
+            email: session.user.email || '',
+            firstName: session.user.prenom || undefined,
+            lastName: session.user.nom || undefined,
+            pubkey: undefined, // À récupérer depuis l'API
+            twitterHandle: undefined,
+            nostrPubkey: undefined,
+            phoneVerified: false
+          });
+        }
 
-        // Simuler la récupération des données utilisateur
-        setUserProfile({
-          email: 'user@example.com',
-          firstName: undefined, // Volontairement manquant pour déclencher le CRM
-          lastName: undefined,
-          pubkey: '02a1b2c3d4e5f6...',
-          twitterHandle: undefined, // Volontairement manquant
-          nostrPubkey: undefined,
-          phoneVerified: false
-        });
-
-        // Simuler des stats de nœud
+        // Simuler des stats de nœud (à remplacer par de vrais appels API)
         setNodeStats({
           monthlyRevenue: 12450,
           totalCapacity: 2100000,
@@ -90,7 +102,7 @@ export const useUserData = (): UseUserDataReturn => {
     };
 
     fetchUserData();
-  }, []);
+  }, [session, status]);
 
   // Calcul de la complétude du profil pour le CRM
   const calculateProfileCompletion = (): { percentage: number; fields: ProfileField[] } => {
@@ -270,7 +282,7 @@ export const useUserData = (): UseUserDataReturn => {
     nodeStats,
     hasNode,
     isPremium,
-    isLoading,
+    isLoading: isLoading || status === 'loading',
     
     // CRM data
     profileCompletion,

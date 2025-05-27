@@ -1,6 +1,8 @@
 "use client";
 
 import React, { FC, Suspense } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { useUserData } from '../hooks/useUserData';
 import ProfileCompletion from '../components/ui/ProfileCompletion';
 import DazBoxComparison from '../components/ui/DazBoxComparison';
@@ -9,6 +11,8 @@ import PerformanceMetrics from '../components/ui/PerformanceMetrics';
 import AccessDeniedAlert from '../components/ui/AccessDeniedAlert';
 
 const UserDashboard: FC = () => {
+  const sessionResult = useSession();
+  const router = useRouter();
   const {
     userProfile,
     nodeStats,
@@ -25,9 +29,21 @@ const UserDashboard: FC = () => {
     upgradeToPremium
   } = useUserData();
 
+  // ✅ PROTECTION CONTRE LE PRE-RENDERING
+  const { data: session, status } = sessionResult || { data: null, status: 'loading' };
 
+  // ✅ PROTECTION D'ACCÈS AVEC NEXTAUTH
+  React.useEffect(() => {
+    if (status === 'loading') return; // Attendre le chargement de la session
+    
+    if (status === 'unauthenticated') {
+      router.push('/auth/login?callbackUrl=/user/dashboard');
+      return;
+    }
+  }, [status, router]);
 
-  if (isLoading) {
+  // Afficher un loader pendant la vérification de la session
+  if (!sessionResult || status === 'loading' || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -36,6 +52,11 @@ const UserDashboard: FC = () => {
         </div>
       </div>
     );
+  }
+
+  // Rediriger si pas authentifié
+  if (status === 'unauthenticated') {
+    return null; // Le useEffect va rediriger
   }
 
   return (
@@ -48,7 +69,7 @@ const UserDashboard: FC = () => {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">
-            👋 Bonjour{userProfile.firstName ? ` ${userProfile.firstName}` : ''} !
+            👋 Bonjour{userProfile.firstName ? ` ${userProfile.firstName}` : session?.user?.email ? ` ${session.user.email.split('@')[0]}` : ''} !
           </h1>
           <p className="text-gray-600 mt-1">
             Voici un aperçu de vos performances Lightning
