@@ -17,7 +17,7 @@ jobs:
       - name: Build et audit UX
         run: bash scripts/audit-and-build.sh
       - name: Sauvegarder le rapport Lighthouse
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: lighthouse-report
           path: lighthouse-report.html 
