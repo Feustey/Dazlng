@@ -1,4 +1,5 @@
 import { createClient } from '@/utils/supabase/server';
+import { cookies } from 'next/headers';
 
 // Définition de l'interface Instrument selon la table SQL
 interface Instrument {
@@ -8,7 +9,7 @@ interface Instrument {
 }
 
 export default async function Instruments(): Promise<JSX.Element> {
-  const supabase = await createClient();
+  const supabase = await createClient(cookies());
   
   try {
     const { data: instruments, error } = await supabase
