@@ -7,9 +7,9 @@
   "description": "DazNode - Lightning & Web3",
   "icons": [
     {
-      "src": "/assets/images/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
     }
   ]
 } 

@@ -15,7 +15,7 @@ import HomeScreen from './mobile/app/tabs/index';
 import DazboxScreen from './mobile/app/tabs/dazbox';
 import DaznodeScreen from './mobile/app/tabs/daznode';
 import DazPayScreen from './mobile/app/tabs/dazpay';
-import LoginScreen from './app/auth/login/page';
+// import LoginScreen from './app/auth/login/page';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
@@ -102,7 +102,7 @@ const App: React.FC = () => {
           component={TabNavigator}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Login" component={LoginScreen} />
+        {/* <Stack.Screen name="Login" component={LoginScreen} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

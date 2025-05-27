@@ -20,6 +20,7 @@
     "@expo/next-adapter": "^6.0.0",
     "@expo/vector-icons": "^14.1.0",
     "@getalby/sdk": "^5.0.0",
+    "@next-auth/supabase-adapter": "^0.2.1",
     "@perawallet/connect": "^1.4.2",
     "@proton/web-sdk": "^4.2.19",
     "@randlabs/myalgo-connect": "^1.4.2",

@@ -24,7 +24,7 @@ export default function RegisterPage(): React.ReactElement {
 
   const [step, setStep] = useState<'form' | 'verification'>('form');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | { code?: string; message: string } | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const [verificationCode, setVerificationCode] = useState('');
 
@@ -149,7 +149,7 @@ export default function RegisterPage(): React.ReactElement {
           {/* Messages d'erreur et d'information */}
           {error && (
             <div className="bg-red-500/20 backdrop-blur-sm border border-red-300/30 text-red-200 px-4 py-3 rounded-xl text-sm">
-              {error}
+              {typeof error === 'string' ? error : (error && typeof error === 'object' && 'message' in error ? `${error.code ? error.code + ': ' : ''}${error.message}` : JSON.stringify(error))}
             </div>
           )}
           

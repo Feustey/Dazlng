@@ -1,86 +1,74 @@
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
-import { type NextRequest, NextResponse } from "next/server";
-import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
+import { withAuth } from 'next-auth/middleware'
+import { NextResponse } from 'next/server'
 
-export const createClient = (request: NextRequest): { supabase: any; response: NextResponse } => {
-  // Crée une réponse non modifiée
-  let supabaseResponse = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  });
+export default withAuth(
+  function middleware(req) {
+    const { pathname } = req.nextUrl
+    const token = req.nextauth.token
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll()
-        },
-        setAll(cookiesToSet: { name: string; value: string; options?: CookieOptions }[]) {
-          cookiesToSet.forEach(({ name, value, options: _options }) => request.cookies.set(name, value))
-          supabaseResponse = NextResponse.next({
-            request,
-          })
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          )
-        },
-      },
-    },
-  );
-
-  return { supabase, response: supabaseResponse };
-};
-
-// Fonction middleware principale
-export async function middleware(req: NextRequest): Promise<NextResponse> {
-  const res = NextResponse.next()
-  const supabase = createMiddlewareClient({ req, res })
-  
-  try {
-    const { data: { session } } = await supabase.auth.getSession()
-    
-    if (!session && req.nextUrl.pathname.startsWith('/api/')) {
-      return new NextResponse(
-        JSON.stringify({
-          success: false,
-          error: {
-            code: 'UNAUTHORIZED',
-            message: 'Non authentifié'
-          }
-        }),
-        { status: 401 }
-      )
+    // Routes admin - vérifier les permissions
+    if (pathname.startsWith('/admin')) {
+      if (!token?.email?.includes('@dazno.de')) {
+        return NextResponse.redirect(new URL('/auth/login?error=access_denied', req.url))
+      }
     }
-  } catch (err) {
-    console.error('Erreur middleware:', err)
-  }
-  
-  return res
-}
 
-// Fonction pour ajouter les headers de sécurité
-function _addSecurityHeaders(response: NextResponse): void {
-  response.headers.set('X-Frame-Options', 'DENY');
-  response.headers.set('X-Content-Type-Options', 'nosniff');
-  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-  response.headers.set(
-    'Strict-Transport-Security',
-    'max-age=31536000; includeSubDomains'
-  );
-}
+    // Routes utilisateur - authentification requise
+    if (pathname.startsWith('/user')) {
+      if (!token) {
+        return NextResponse.redirect(new URL('/auth/login?callbackUrl=' + encodeURIComponent(req.url), req.url))
+      }
+    }
+
+    // API routes protégées
+    if (pathname.startsWith('/api/user') || pathname.startsWith('/api/admin')) {
+      if (!token) {
+        return new NextResponse(
+          JSON.stringify({
+            success: false,
+            error: {
+              code: 'UNAUTHORIZED',
+              message: 'Authentification requise'
+            }
+          }),
+          { 
+            status: 401,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        )
+      }
+    }
+
+    return NextResponse.next()
+  },
+  {
+    callbacks: {
+      authorized: ({ token, req }) => {
+        const { pathname } = req.nextUrl
+        // Routes publiques
+        if (
+          pathname.startsWith('/api/auth') ||
+          pathname.startsWith('/auth') ||
+          pathname === '/' ||
+          pathname.startsWith('/about') ||
+          pathname.startsWith('/contact') ||
+          pathname.startsWith('/dazbox') ||
+          pathname.startsWith('/daznode') ||
+          pathname.startsWith('/dazpay') ||
+          pathname.startsWith('/_next') ||
+          pathname.includes('.')
+        ) {
+          return true
+        }
+        // Routes protégées - token requis
+        return !!token
+      }
+    }
+  }
+)
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - api routes (already handled separately)
-     */
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    '/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)',
   ],
-}; 
+} 
