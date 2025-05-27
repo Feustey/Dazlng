@@ -30,6 +30,9 @@
       {
         "name": "next"
       }
+    ],
+    "types": [
+      "./types/next-auth"
     ]
   },
   "include": [

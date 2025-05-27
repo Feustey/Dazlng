@@ -45,7 +45,10 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <html lang="fr">
       <head>
-        <script defer src="https://cloud.umami.is/script.js" data-website-id="21fab8e3-a8fd-474d-9187-9739cce7c9b5"></script>
+        {/* Script Umami conditionnel */}
+        {typeof window !== 'undefined' && window.localStorage.getItem('cookie_consent') === 'true' && (
+          <script defer src="https://cloud.umami.is/script.js" data-website-id="21fab8e3-a8fd-474d-9187-9739cce7c9b5"></script>
+        )}
         {/* Préchargement des fonts */}
         {/* Préconnexion aux domaines externes */}
         <link rel="dns-prefetch" href="//api.dazno.de" />

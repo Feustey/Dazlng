@@ -13,7 +13,8 @@
     "lint:strict": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "lint:fix": "node scripts/fix-linter.js && npm run lint",
     "type-check": "tsc --noEmit",
-    "test:api": "jest --config=jest.api.config.js __tests__/"
+    "test:api": "jest --config=jest.api.config.js __tests__/",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@expo/metro-config": "^0.20.14",
@@ -21,6 +22,7 @@
     "@expo/vector-icons": "^14.1.0",
     "@getalby/sdk": "^5.0.0",
     "@next-auth/supabase-adapter": "^0.2.1",
+    "@noble/secp256k1": "^2.2.3",
     "@perawallet/connect": "^1.4.2",
     "@proton/web-sdk": "^4.2.19",
     "@randlabs/myalgo-connect": "^1.4.2",
