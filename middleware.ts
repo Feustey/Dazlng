@@ -57,7 +57,8 @@ export default withAuth(
           pathname.startsWith('/daznode') ||
           pathname.startsWith('/dazpay') ||
           pathname.startsWith('/_next') ||
-          pathname.includes('.')
+          pathname.includes('.') ||
+          pathname.startsWith('/api/auth/send-code')
         ) {
           return true
         }
