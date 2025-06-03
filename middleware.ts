@@ -48,6 +48,7 @@ export default withAuth(
         // Routes publiques
         if (
           pathname.startsWith('/api/auth') ||
+          pathname.startsWith('/api/otp') ||
           pathname.startsWith('/auth') ||
           pathname === '/' ||
           pathname.startsWith('/about') ||
