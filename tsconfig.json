@@ -32,7 +32,7 @@
       }
     ],
     "types": [
-      "./types/next-auth"
+      // "./types/next-auth"
     ]
   },
   "include": [

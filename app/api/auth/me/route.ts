@@ -1,24 +1,36 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from "next-auth";
-
-import { authOptions } from "../../../../lib/auth";
+import { createSupabaseServerClient } from '@/lib/supabase-auth'
+import { NextResponse } from 'next/server'
 
 export const dynamic = "force-dynamic";
 
-export async function GET(_request: NextRequest): Promise<NextResponse> {
+export async function GET(): Promise<ReturnType<typeof NextResponse.json>> {
   try {
-    const session = await getServerSession(authOptions);
+    const supabase = createSupabaseServerClient()
+    const { data: { user }, error } = await supabase.auth.getUser()
 
-    if (!session?.user) {
-      return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+    if (error || !user) {
+      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
     }
 
-    return NextResponse.json(session.user);
+    // Récupérer le profil depuis la table profiles
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single()
+
+    return NextResponse.json({
+      user: {
+        id: user.id,
+        email: user.email,
+        ...profile
+      }
+    })
   } catch (error) {
     // console.error(
     //   "Erreur lors de la récupération des informations utilisateur:",
     //   error
     // );
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

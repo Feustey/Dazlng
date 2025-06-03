@@ -17,12 +17,10 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
-    "@auth/supabase-adapter": "^1.9.1",
     "@expo/metro-config": "^0.20.14",
     "@expo/next-adapter": "^6.0.0",
     "@expo/vector-icons": "^14.1.0",
     "@getalby/sdk": "^5.0.0",
-    "@next-auth/supabase-adapter": "^0.2.1",
     "@noble/secp256k1": "^2.2.3",
     "@perawallet/connect": "^1.4.2",
     "@proton/web-sdk": "^4.2.19",
@@ -57,7 +55,6 @@
     "lucide-react": "^0.510.0",
     "lucide-react-native": "^0.510.0",
     "next": "^14.2.29",
-    "next-auth": "^4.24.11",
     "next-intl": "^4.1.0",
     "prop-types": "^15.8.1",
     "qrcode": "^1.5.4",

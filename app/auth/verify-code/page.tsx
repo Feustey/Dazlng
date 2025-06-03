@@ -2,7 +2,7 @@
 
 import React, { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { createSupabaseBrowserClient } from '@/lib/supabase';
 
 function VerifyCodeForm(): JSX.Element {
   const router = useRouter();
@@ -13,46 +13,25 @@ function VerifyCodeForm(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
+  const supabase = createSupabaseBrowserClient();
+
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     setPending(true);
     setError(null);
     setSuccess(false);
 
-    try {
-      // ✅ VÉRIFIER LE CODE OTP AVANT LA CONNEXION
-      const verifyResponse = await fetch("/api/auth/verify-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, code }),
-      });
+    const { error: verifyError } = await supabase.auth.verifyOtp({
+      email,
+      token: code,
+      type: 'email',
+    });
 
-      const verifyData = await verifyResponse.json();
-
-      if (!verifyResponse.ok || !verifyData.success) {
-        setError(verifyData?.error?.message || "Code invalide ou expiré.");
-        return;
-      }
-
-      // ✅ SI LE CODE EST VALIDE, CONNECTER AVEC NEXTAUTH
-      const result = await signIn('email', {
-        email,
-        redirect: false,
-        callbackUrl: '/user/dashboard'
-      });
-
-      if (result?.error) {
-        setError("Erreur lors de la connexion");
-      } else {
-        setSuccess(true);
-        setTimeout(() => {
-          router.push("/user/dashboard");
-        }, 1000);
-      }
-    } catch (err) {
-      setError("Erreur réseau.");
-    } finally {
-      setPending(false);
+    if (verifyError) {
+      setError('Code invalide ou expiré.');
+    } else {
+      setSuccess(true);
+      router.push('/user/dashboard');
     }
   };
 

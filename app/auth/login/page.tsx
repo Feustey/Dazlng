@@ -2,18 +2,20 @@
 
 import React, { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { signIn } from "next-auth/react";
 import Image from "next/image";
+import { createSupabaseBrowserClient } from '@/lib/supabase';
 
 export default function LoginPage(): JSX.Element {
+  const supabase = createSupabaseBrowserClient();
+
   return (
     <Suspense fallback={<div>Chargement...</div>}>
-      <LoginPageContent />
+      <LoginPageContent supabase={supabase} />
     </Suspense>
   );
 }
 
-function LoginPageContent(): JSX.Element {
+function LoginPageContent({ supabase }: { supabase: any }): JSX.Element {
   const searchParams = useSearchParams();
   const urlError = searchParams?.get("error");
   const urlEmail = searchParams?.get("email") || "";
@@ -28,10 +30,9 @@ function LoginPageContent(): JSX.Element {
     setError(null);
 
     try {
-      const result = await signIn('email', {
+      const result = await supabase.auth.signInWithOtp({
         email,
-        redirect: false,
-        callbackUrl: '/user/dashboard'
+        redirectTo: '/user/dashboard'
       });
 
       if (result?.error) {

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSupabase } from '@/app/providers/SupabaseProvider'
+import { useState, useEffect } from 'react'
 import type { 
   UserProfile, 
   NodeStats, 
@@ -34,75 +34,57 @@ interface UseUserDataReturn {
   upgradeToPremium: () => void;
 }
 
-export const useUserData = (): UseUserDataReturn => {
-  const sessionResult = useSession();
-  const { data: session, status } = sessionResult || { data: null, status: 'loading' };
-  
-  const [userProfile, setUserProfile] = useState<UserProfile>({
-    email: '',
-    firstName: undefined,
-    lastName: undefined,
-    pubkey: undefined,
-    twitterHandle: undefined,
-    nostrPubkey: undefined,
-    phoneVerified: false
-  });
-
+export function useUserData(): UseUserDataReturn {
+  const { user, loading } = useSupabase()
+  const [profile, setProfile] = useState<UserProfile | null>(null)
   const [nodeStats, setNodeStats] = useState<NodeStats | null>(null);
   const [hasNode, setHasNode] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // ✅ UTILISER LES DONNÉES DE SESSION NEXTAUTH
+  useEffect(() => {
+    if (user) {
+      // Récupérer le profil utilisateur
+      fetch('/api/auth/me')
+        .then(res => res.json())
+        .then(data => {
+          setProfile(data.user as UserProfile);
+          setIsLoading(false);
+        })
+    } else {
+      setIsLoading(false);
+    }
+  }, [user])
+
   useEffect(() => {
     const fetchUserData = async (): Promise<void> => {
-      if (status === 'loading') {
-        return; // Attendre que la session soit chargée
-      }
-
-      if (status === 'unauthenticated') {
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        // ✅ RÉCUPÉRER LES DONNÉES DEPUIS LA SESSION
-        if (session?.user) {
-          setUserProfile({
-            email: session.user.email || '',
-            firstName: session.user.prenom || undefined,
-            lastName: session.user.nom || undefined,
-            pubkey: undefined, // À récupérer depuis l'API
-            twitterHandle: undefined,
-            nostrPubkey: undefined,
-            phoneVerified: false
+      if (user) {
+        try {
+          // Simuler des stats de nœud (à remplacer par de vrais appels API)
+          setNodeStats({
+            monthlyRevenue: 12450,
+            totalCapacity: 2100000,
+            activeChannels: 8,
+            uptime: 99.8,
+            healthScore: 85,
+            routingEfficiency: 78,
+            revenueGrowth: 15.2,
+            rankInNetwork: 892,
+            totalNodes: 18650
           });
+
+          setHasNode(true);
+          setIsPremium(false);
+          setIsLoading(false);
+        } catch (error) {
+          console.error('Erreur lors du chargement des données:', error);
+          setIsLoading(false);
         }
-
-        // Simuler des stats de nœud (à remplacer par de vrais appels API)
-        setNodeStats({
-          monthlyRevenue: 12450,
-          totalCapacity: 2100000,
-          activeChannels: 8,
-          uptime: 99.8,
-          healthScore: 85,
-          routingEfficiency: 78,
-          revenueGrowth: 15.2,
-          rankInNetwork: 892,
-          totalNodes: 18650
-        });
-
-        setHasNode(true);
-        setIsPremium(false);
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Erreur lors du chargement des données:', error);
-        setIsLoading(false);
       }
     };
 
     fetchUserData();
-  }, [session, status]);
+  }, [user]);
 
   // Calcul de la complétude du profil pour le CRM
   const calculateProfileCompletion = (): { percentage: number; fields: ProfileField[] } => {
@@ -110,42 +92,42 @@ export const useUserData = (): UseUserDataReturn => {
       { 
         name: 'firstName', 
         label: 'Nom complet', 
-        completed: !!(userProfile.firstName && userProfile.lastName),
+        completed: !!(profile?.firstName && profile?.lastName),
         priority: 'high',
         href: '/user/settings'
       },
       { 
         name: 'email', 
         label: 'Email vérifié', 
-        completed: !!userProfile.email,
+        completed: !!profile?.email,
         priority: 'low',
         href: '/user/settings'
       },
       { 
         name: 'pubkey', 
         label: 'Nœud connecté', 
-        completed: !!userProfile.pubkey,
+        completed: !!profile?.pubkey,
         priority: 'high',
         href: '/user/node'
       },
       { 
         name: 'twitter', 
         label: 'Compte Twitter', 
-        completed: !!userProfile.twitterHandle,
+        completed: !!profile?.twitterHandle,
         priority: 'medium',
         href: '/user/settings'
       },
       { 
         name: 'nostr', 
         label: 'Compte Nostr', 
-        completed: !!userProfile.nostrPubkey,
+        completed: !!profile?.nostrPubkey,
         priority: 'low',
         href: '/user/settings'
       },
       { 
         name: 'phone', 
         label: 'Téléphone vérifié', 
-        completed: userProfile.phoneVerified,
+        completed: !!profile?.phoneVerified,
         priority: 'medium',
         href: '/user/settings'
       }
@@ -262,7 +244,7 @@ export const useUserData = (): UseUserDataReturn => {
 
   // Actions
   const updateProfile = (profile: Partial<UserProfile>): void => {
-    setUserProfile(prev => ({ ...prev, ...profile }));
+    setProfile(prev => ({ ...prev, ...profile } as UserProfile));
   };
 
   const applyRecommendation = (id: string): void => {
@@ -278,11 +260,11 @@ export const useUserData = (): UseUserDataReturn => {
 
   return {
     // User data
-    userProfile,
+    userProfile: profile as UserProfile,
     nodeStats,
     hasNode,
     isPremium,
-    isLoading: isLoading || status === 'loading',
+    isLoading: isLoading || loading,
     
     // CRM data
     profileCompletion,
@@ -300,4 +282,4 @@ export const useUserData = (): UseUserDataReturn => {
     applyRecommendation: applyRecommendation,
     upgradeToPremium
   };
-}; 
+} 

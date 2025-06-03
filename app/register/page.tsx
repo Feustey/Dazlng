@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import GradientLayout from '../../components/shared/layout/GradientLayout';
+import { createSupabaseBrowserClient } from '@/lib/supabase';
 
 export default function RegisterPage(): React.ReactElement {
   const router = useRouter();
@@ -28,90 +29,77 @@ export default function RegisterPage(): React.ReactElement {
   const [info, setInfo] = useState<string | null>(null);
   const [verificationCode, setVerificationCode] = useState('');
 
+  const supabase = createSupabaseBrowserClient();
+
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
-    
-    // Validation de l'email
     if (!formData.email || !formData.firstName || !formData.lastName) {
       setError('Veuillez remplir tous les champs obligatoires');
       return;
     }
-    
     setError(null);
     setLoading(true);
-    
     try {
-      // Envoyer le code OTP pour l'inscription
-      const res = await fetch('/api/otp/send-code', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          email: formData.email,
-          name: `${formData.firstName} ${formData.lastName}`.trim(),
-          pubkey: formData.pubkey || undefined // Inclure la pubkey si fournie
-        })
+      // Utiliser Supabase Auth pour envoyer le code OTP
+      const { error: signUpError } = await supabase.auth.signInWithOtp({
+        email: formData.email,
+        options: {
+          data: {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            pubkey: formData.pubkey || undefined
+          },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
       });
-      
-      const data = await res.json();
-      
-      if (res.ok) {
+      if (signUpError) {
+        setError(signUpError.message);
+      } else {
         setStep('verification');
         setInfo('Un code de vérification vient de vous être envoyé par email (valide 15 minutes).');
-      } else if (res.status === 429) {
-        setError(`${data.error} Réessayez dans quelques minutes.`);
-      } else {
-        setError(data.error || "Erreur lors de l'envoi du code");
       }
     } catch (error) {
       setError("Erreur de connexion. Veuillez réessayer.");
     }
-    
     setLoading(false);
   };
 
   const handleVerifyCode = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
-    
     if (!verificationCode) {
       setError('Veuillez saisir le code reçu');
       return;
     }
-    
     setError(null);
     setLoading(true);
-    
     try {
-      const res = await fetch('/api/otp/verify-code', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          email: formData.email, 
-          code: verificationCode,
-          name: `${formData.firstName} ${formData.lastName}`.trim(),
-          pubkey: formData.pubkey || undefined
-        })
+      // Vérifier le code OTP avec Supabase
+      const { error: verifyError } = await supabase.auth.verifyOtp({
+        email: formData.email,
+        token: verificationCode,
+        type: 'email',
       });
-      
-      const data = await res.json();
-      
-      if (res.ok) {
-        // Stocker le token JWT
-        localStorage.setItem('jwt', data.token);
-        
-        // Afficher un message de succès et rediriger
-        setInfo('Compte créé avec succès ! Redirection...');
+      if (verifyError) {
+        setError('Code invalide ou expiré.');
+      } else {
+        // Synchroniser le profil personnalisé
+        await fetch('/api/user/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            pubkey: formData.pubkey,
+          }),
+        });
+        setInfo('Compte créé et vérifié ! Redirection...');
         setTimeout(() => {
           router.push('/user/dashboard');
         }, 1500);
-      } else if (res.status === 429) {
-        setError(`${data.error} Réessayez dans quelques minutes.`);
-      } else {
-        setError(data.error || 'Code invalide ou expiré');
       }
     } catch (error) {
       setError("Erreur de connexion. Veuillez réessayer.");
     }
-    
     setLoading(false);
   };
 

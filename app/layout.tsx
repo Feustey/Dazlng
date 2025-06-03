@@ -3,6 +3,7 @@ import './globals.css';
 import { Metadata } from 'next';
 import ClientLayout from './ClientLayout';
 import React from 'react';
+import { SupabaseProvider } from './providers/SupabaseProvider'
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -66,9 +67,11 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <meta name="apple-mobile-web-app-title" content="DazNode" />
       </head>
       <body className={inter.className}>
-        <ClientLayout>
-          {children}
-        </ClientLayout>
+        <SupabaseProvider>
+          <ClientLayout>
+            {children}
+          </ClientLayout>
+        </SupabaseProvider>
       </body>
     </html>
   );
