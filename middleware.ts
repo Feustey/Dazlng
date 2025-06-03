@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server'
 export default withAuth(
   function middleware(req) {
     const { pathname } = req.nextUrl
+    console.log('[MIDDLEWARE] Pathname intercepté :', pathname)
     const token = req.nextauth.token
 
     // Routes admin - vérifier les permissions
@@ -58,7 +59,8 @@ export default withAuth(
           pathname.startsWith('/dazpay') ||
           pathname.startsWith('/_next') ||
           pathname.includes('.') ||
-          pathname.startsWith('/api/auth/send-code')
+          pathname.startsWith('/api/auth/send-code') ||
+          pathname.startsWith('/register')
         ) {
           return true
         }
