@@ -17,6 +17,7 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
+    "@auth/supabase-adapter": "^1.9.1",
     "@expo/metro-config": "^0.20.14",
     "@expo/next-adapter": "^6.0.0",
     "@expo/vector-icons": "^14.1.0",
@@ -32,7 +33,7 @@
     "@react-navigation/stack": "^6.3.20",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "^0.6.1",
-    "@supabase/supabase-js": "^2.39.7",
+    "@supabase/supabase-js": "^2.49.9",
     "@txnlab/use-wallet": "^4.1.0",
     "algosdk": "^3.3.0",
     "aos": "^2.3.4",
