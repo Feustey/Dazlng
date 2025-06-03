@@ -3,6 +3,7 @@
 import React, { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
+import Image from "next/image";
 
 export default function LoginPage(): JSX.Element {
   return (
@@ -50,6 +51,14 @@ function LoginPageContent(): JSX.Element {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
+      <Image
+        src="/assets/images/logo-daznode.svg"
+        alt="Logo DazNode"
+        width={64}
+        height={64}
+        className="mb-4"
+        priority
+      />
       <h1 className="text-2xl font-bold mb-4" tabIndex={0}>Connexion par Email</h1>
       {error && (
         <div

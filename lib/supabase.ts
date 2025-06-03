@@ -1,5 +1,6 @@
 // lib/supabaseClient.ts
 import { createClient } from '@supabase/supabase-js';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -33,3 +34,11 @@ export const supabaseAdmin = supabaseServiceKey
       }
     })
   : null;
+
+// Utilitaire pour usage côté serveur (API routes)
+export function createServerClient(): SupabaseClient {
+  if (!supabaseAdmin) {
+    throw new Error('Le client Supabase admin n\'est pas configuré. Vérifiez SUPABASE_SERVICE_ROLE_KEY.');
+  }
+  return supabaseAdmin;
+}

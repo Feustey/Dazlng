@@ -296,4 +296,18 @@ export async function getAccessToken(): Promise<string | null> {
     console.error('[AUTH] Erreur lors de la récupération du token:', error);
     return null;
   }
+}
+
+/**
+ * Middleware pour protéger une route API Next.js avec JWT
+ * Usage :
+ *   const user = requireAuth(req) // lève une erreur 401 si non authentifié
+ */
+export function requireAuth(req: import('next/server').NextRequest): { id: string; email: string } {
+  const authHeader = req.headers.get('authorization');
+  if (!authHeader?.startsWith('Bearer ')) {
+    throw new Error('Token manquant');
+  }
+  const token = authHeader.replace('Bearer ', '');
+  return verifyToken(token);
 } 
