@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request: Request): Promise<Response> {
   const supabase = createSupabaseServerClient();
-  const { firstName, lastName, pubkey } = await request.json();
+  const { pubkey } = await request.json();
 
   // Récupérer l'utilisateur connecté
   const { data: { user }, error: userError } = await supabase.auth.getUser();
@@ -17,8 +17,6 @@ export async function POST(request: Request): Promise<Response> {
     .upsert({
       id: user.id,
       email: user.email,
-      prenom: firstName,
-      nom: lastName,
       pubkey,
       updated_at: new Date().toISOString(),
     }, { onConflict: 'id' });

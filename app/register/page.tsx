@@ -10,8 +10,6 @@ export default function RegisterPage(): React.ReactElement {
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: '',
-    firstName: '',
-    lastName: '',
     pubkey: ''
   });
 
@@ -33,8 +31,8 @@ export default function RegisterPage(): React.ReactElement {
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
-    if (!formData.email || !formData.firstName || !formData.lastName) {
-      setError('Veuillez remplir tous les champs obligatoires');
+    if (!formData.email) {
+      setError('Veuillez saisir votre email');
       return;
     }
     setError(null);
@@ -45,8 +43,6 @@ export default function RegisterPage(): React.ReactElement {
         email: formData.email,
         options: {
           data: {
-            firstName: formData.firstName,
-            lastName: formData.lastName,
             pubkey: formData.pubkey || undefined
           },
           emailRedirectTo: `${window.location.origin}/auth/callback`,
@@ -87,8 +83,6 @@ export default function RegisterPage(): React.ReactElement {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            firstName: formData.firstName,
-            lastName: formData.lastName,
             pubkey: formData.pubkey,
           }),
         });
@@ -149,42 +143,6 @@ export default function RegisterPage(): React.ReactElement {
 
           {step === 'form' ? (
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="firstName" className="block text-sm font-medium text-white mb-2">
-                    Prénom
-                  </label>
-                  <input
-                    type="text"
-                    id="firstName"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 text-white placeholder-indigo-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
-                    placeholder="Votre prénom"
-                    required
-                    disabled={loading}
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="lastName" className="block text-sm font-medium text-white mb-2">
-                    Nom
-                  </label>
-                  <input
-                    type="text"
-                    id="lastName"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 text-white placeholder-indigo-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
-                    placeholder="Votre nom"
-                    required
-                    disabled={loading}
-                  />
-                </div>
-              </div>
-              
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
                   Adresse email *
@@ -201,7 +159,6 @@ export default function RegisterPage(): React.ReactElement {
                   disabled={loading}
                 />
               </div>
-              
               <div>
                 <label htmlFor="pubkey" className="block text-sm font-medium text-white mb-2">
                   Clé publique (optionnel)
@@ -220,7 +177,6 @@ export default function RegisterPage(): React.ReactElement {
                   Votre clé publique Bitcoin/Lightning pour l'authentification avancée
                 </p>
               </div>
-              
               <button
                 type="submit"
                 disabled={loading}
