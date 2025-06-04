@@ -11,13 +11,15 @@ export async function POST(request: Request): Promise<Response> {
     return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
   }
 
-  // Mettre à jour ou insérer le profil
+  // Mettre à jour ou insérer le profil avec des valeurs par défaut
   const { error: upsertError } = await supabase
     .from('profiles')
     .upsert({
       id: user.id,
       email: user.email,
       pubkey,
+      nom: '', // Valeur par défaut pour éviter les erreurs
+      prenom: '', // Valeur par défaut pour éviter les erreurs
       updated_at: new Date().toISOString(),
     }, { onConflict: 'id' });
 

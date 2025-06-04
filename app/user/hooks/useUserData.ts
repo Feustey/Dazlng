@@ -90,31 +90,24 @@ export function useUserData(): UseUserDataReturn {
   const calculateProfileCompletion = (): { percentage: number; fields: ProfileField[] } => {
     const fields: ProfileField[] = [
       { 
-        name: 'firstName', 
-        label: 'Nom complet', 
-        completed: !!(profile?.firstName && profile?.lastName),
-        priority: 'high',
-        href: '/user/settings'
-      },
-      { 
         name: 'email', 
         label: 'Email vérifié', 
         completed: !!profile?.email,
-        priority: 'low',
+        priority: 'high',
         href: '/user/settings'
       },
       { 
         name: 'pubkey', 
         label: 'Nœud connecté', 
         completed: !!profile?.pubkey,
-        priority: 'high',
+        priority: 'medium',
         href: '/user/node'
       },
       { 
         name: 'twitter', 
         label: 'Compte Twitter', 
         completed: !!profile?.twitterHandle,
-        priority: 'medium',
+        priority: 'low',
         href: '/user/settings'
       },
       { 
@@ -128,7 +121,7 @@ export function useUserData(): UseUserDataReturn {
         name: 'phone', 
         label: 'Téléphone vérifié', 
         completed: !!profile?.phoneVerified,
-        priority: 'medium',
+        priority: 'low',
         href: '/user/settings'
       }
     ];
