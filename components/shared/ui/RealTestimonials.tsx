@@ -12,7 +12,7 @@ export default function RealTestimonials(): React.ReactElement {
           <div className="bg-white p-6 rounded-xl shadow-lg">
             <div className="flex items-center mb-4">
               <img
-                src="/assets/images/testimonial1.jpg"
+                src="/assets/images/avatar-male.svg"
                 alt="Utilisateur 1"
                 className="w-12 h-12 rounded-full mr-4"
               />
@@ -29,7 +29,7 @@ export default function RealTestimonials(): React.ReactElement {
           <div className="bg-white p-6 rounded-xl shadow-lg">
             <div className="flex items-center mb-4">
               <img
-                src="/assets/images/testimonial2.jpg"
+                src="/assets/images/avatar-female.svg"
                 alt="Utilisateur 2"
                 className="w-12 h-12 rounded-full mr-4"
               />
@@ -46,7 +46,7 @@ export default function RealTestimonials(): React.ReactElement {
           <div className="bg-white p-6 rounded-xl shadow-lg">
             <div className="flex items-center mb-4">
               <img
-                src="/assets/images/testimonial3.jpg"
+                src="/assets/images/avatar-leaticia.png"
                 alt="Utilisateur 3"
                 className="w-12 h-12 rounded-full mr-4"
               />
