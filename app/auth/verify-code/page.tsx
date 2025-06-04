@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { createSupabaseBrowserClient } from '@/lib/supabase';
 
 function VerifyCodeForm(): JSX.Element {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams?.get("email") || "";
   const [code, setCode] = useState("");
@@ -22,7 +21,7 @@ function VerifyCodeForm(): JSX.Element {
     setSuccess(false);
 
     try {
-      const { error: verifyError } = await supabase.auth.verifyOtp({
+      const { data, error: verifyError } = await supabase.auth.verifyOtp({
         email,
         token: code,
         type: 'email',
@@ -30,9 +29,14 @@ function VerifyCodeForm(): JSX.Element {
 
       if (verifyError) {
         setError('Code invalide ou expiré.');
-      } else {
+      } else if (data?.user) {
         setSuccess(true);
-        router.push('/user/dashboard');
+        // Attendre un peu pour s'assurer que la session est établie
+        await new Promise(resolve => setTimeout(resolve, 500));
+        // Forcer un refresh de la page pour que le middleware détecte la session
+        window.location.href = '/user/dashboard';
+      } else {
+        setError('Erreur lors de la vérification du code.');
       }
     } catch (error) {
       setError('Une erreur inattendue s\'est produite.');

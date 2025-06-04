@@ -57,6 +57,15 @@ export async function middleware(request: NextRequest): Promise<Response> {
   const { data: { user } } = await supabase.auth.getUser()
   const { pathname } = request.nextUrl
 
+  // Log pour debugging
+  if (pathname.startsWith('/user') && process.env.NODE_ENV === 'development') {
+    console.log('[Middleware] User auth check:', {
+      pathname,
+      hasUser: !!user,
+      userId: user?.id
+    });
+  }
+
   // Routes admin - vérifier les permissions
   if (pathname.startsWith('/admin')) {
     if (!user?.email?.includes('@dazno.de')) {

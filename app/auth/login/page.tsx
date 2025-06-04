@@ -32,7 +32,9 @@ function LoginPageContent({ supabase }: { supabase: any }): JSX.Element {
     try {
       const result = await supabase.auth.signInWithOtp({
         email,
-        redirectTo: '/user/dashboard'
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=/user/dashboard`
+        }
       });
 
       if (result?.error) {
