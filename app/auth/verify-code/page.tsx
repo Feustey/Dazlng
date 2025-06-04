@@ -21,17 +21,23 @@ function VerifyCodeForm(): JSX.Element {
     setError(null);
     setSuccess(false);
 
-    const { error: verifyError } = await supabase.auth.verifyOtp({
-      email,
-      token: code,
-      type: 'email',
-    });
+    try {
+      const { error: verifyError } = await supabase.auth.verifyOtp({
+        email,
+        token: code,
+        type: 'email',
+      });
 
-    if (verifyError) {
-      setError('Code invalide ou expiré.');
-    } else {
-      setSuccess(true);
-      router.push('/user/dashboard');
+      if (verifyError) {
+        setError('Code invalide ou expiré.');
+      } else {
+        setSuccess(true);
+        router.push('/user/dashboard');
+      }
+    } catch (error) {
+      setError('Une erreur inattendue s\'est produite.');
+    } finally {
+      setPending(false);
     }
   };
 
