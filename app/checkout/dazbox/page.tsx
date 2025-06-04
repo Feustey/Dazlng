@@ -7,23 +7,77 @@ import { generateInvoice } from '../../../lib/lightning';
 import Image from 'next/image';
 import ProtonPayment from '../../../components/shared/ui/ProtonPayment';
 import type { Invoice } from '../../../lib/lightning';
+import { z } from 'zod';
+
+// ✅ Configuration centralisée
+const PRODUCT_CONFIG = {
+  DAZBOX: {
+    name: 'DazBox',
+    type: 'dazbox' as const,
+    basePriceBTC: 0.004,
+    get basePriceSats(): number { return Math.round(this.basePriceBTC * 100000000); }
+  }
+} as const;
+
+const PROMO_CONFIG = {
+  code: 'BITCOINWEEK',
+  discount: 10
+} as const;
+
+// ✅ Validation Zod
+const CheckoutFormSchema = z.object({
+  firstName: z.string().min(1, 'Le prénom est requis'),
+  lastName: z.string().min(1, 'Le nom est requis'),
+  email: z.string().email('Email invalide'),
+  address: z.string().min(1, 'L\'adresse est requise'),
+  address2: z.string().optional(),
+  city: z.string().min(1, 'La ville est requise'),
+  state: z.string().optional(),
+  postalCode: z.string().min(1, 'Le code postal est requis'),
+  country: z.string().min(1, 'Le pays est requis'),
+  phone: z.string().optional(),
+});
+
+type CheckoutForm = z.infer<typeof CheckoutFormSchema>;
+
+// ✅ Type pour l'insertion de commande
+type OrderInsert = {
+  user_id: string | null;
+  product_type: 'daznode' | 'dazbox' | 'dazpay';
+  amount: number;
+  payment_status: 'pending' | 'paid' | 'failed' | 'cancelled';
+  payment_method: string;
+  payment_hash?: string;
+  metadata: Record<string, any>;
+};
 
 function CheckoutContent(): React.ReactElement {
+  // ✅ Initialiser AOS une seule fois
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      import('aos').then(AOS => {
-        AOS.init({ 
-          once: false,
+    let aos: any;
+    const initAOS = async (): Promise<void> => {
+      if (typeof window !== 'undefined') {
+        aos = await import('aos');
+        aos.init({ 
+          once: true, // ✅ Animer une seule fois
           duration: 800,
           easing: 'ease-out-cubic',
-          mirror: true,
+          mirror: false, // ✅ Pas de re-animation
           anchorPlacement: 'top-bottom'
         });
-      });
-    }
+      }
+    };
+    
+    initAOS();
+    
+    return () => {
+      if (aos) {
+        aos.refresh?.();
+      }
+    };
   }, []);
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<CheckoutForm>({
     firstName: '',
     lastName: '',
     email: '',
@@ -43,59 +97,140 @@ function CheckoutContent(): React.ReactElement {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const supabase = createClientComponentClient();
-  const _router = useRouter();
+  const router = useRouter(); // ✅ Utiliser Next.js router
   const [_btcCopied, _setBtcCopied] = useState(false);
   const _btcAddress = 'bc1p0vyqda9uv7kad4lsfzx5s9ndawhm3e3fd5vw7pnsem22n7dpfgxq48kht7';
 
+  // ✅ Validation améliorée avec Zod
   const isFormValid = (): boolean => {
-    return Boolean(
-      form.firstName &&
-      form.lastName &&
-      form.email &&
-      form.address &&
-      form.city &&
-      form.postalCode &&
-      form.country
-    );
+    try {
+      CheckoutFormSchema.parse(form);
+      return true;
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setError(error.errors[0].message);
+      }
+      return false;
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
+    // Effacer l'erreur quand l'utilisateur commence à corriger
+    if (error) setError(null);
   };
 
-  // Prix en BTC et conversion en sats
-  const BASE_PRICE_BTC = 0.004;
-  const BASE_PRICE_SATS = Math.round(BASE_PRICE_BTC * 100000000); // Conversion BTC vers sats
-  const PROMO_CODE = 'BITCOINWEEK';
-  const DISCOUNT_PERCENTAGE = 10;
-
+  // ✅ Prix calculé avec la configuration centralisée
   const getPrice = (): number => {
+    const basePrice = PRODUCT_CONFIG.DAZBOX.basePriceSats;
     if (promoApplied) {
-      return Math.round(BASE_PRICE_SATS * (1 - DISCOUNT_PERCENTAGE / 100));
+      return Math.round(basePrice * (1 - PROMO_CONFIG.discount / 100));
     }
-    return BASE_PRICE_SATS;
+    return basePrice;
   };
 
-  const productDetails = {
-    name: 'DazBox',
+  const _productDetails = {
+    name: PRODUCT_CONFIG.DAZBOX.name,
+    type: PRODUCT_CONFIG.DAZBOX.type,
     priceSats: getPrice(),
     quantity: 1,
   };
 
+  // ✅ Amélioration de la gestion de succès
   const handlePaymentSuccess = async (): Promise<void> => {
-    // Redirection vers la page de succès
-    window.location.href = '/checkout/success';
+    try {
+      // Mettre à jour le statut de la commande
+      const orderId = sessionStorage.getItem('current_order_id');
+      if (orderId) {
+        const { error: updateError } = await supabase
+          .from('orders')
+          .update({ payment_status: true }) // Temporaire : utiliser true au lieu de 'paid' pour la compatibilité
+          .eq('id', orderId);
+        
+        if (updateError) {
+          console.error('Erreur lors de la mise à jour du paiement:', updateError);
+        }
+      }
+      
+      // ✅ Utiliser Next.js router au lieu de window.location
+      router.push('/checkout/success');
+    } catch (error) {
+      console.error('Erreur lors de la finalisation du paiement:', error);
+      setError('Erreur lors de la finalisation du paiement');
+    }
   };
 
   const applyPromoCode = (): void => {
-    if (promoCode.trim().toUpperCase() === PROMO_CODE) {
+    if (promoCode.trim().toUpperCase() === PROMO_CONFIG.code) {
       setPromoApplied(true);
+      setError(null);
+    } else {
+      setError('Code promo invalide');
+    }
+  };
+
+  // ✅ Fonction pour créer les données de commande typées
+  const createOrderData = (
+    userId: string | null,
+    invoiceData: Invoice,
+    form: CheckoutForm
+  ): OrderInsert => ({
+    user_id: userId,
+    product_type: PRODUCT_CONFIG.DAZBOX.type, // ✅ Conforme au schéma
+    amount: getPrice(),
+    payment_status: 'pending', // ✅ String au lieu de boolean
+    payment_method: 'lightning',
+    payment_hash: invoiceData.paymentHash,
+    metadata: {
+      customer: form,
+      product: {
+        name: PRODUCT_CONFIG.DAZBOX.name,
+        quantity: 1,
+        priceSats: getPrice(),
+        promoApplied,
+        promoCode: promoApplied ? promoCode : null,
+        discountPercentage: promoApplied ? PROMO_CONFIG.discount : 0
+      },
+      invoice: invoiceData.paymentRequest
+    }
+  });
+
+  // ✅ Fonction pour créer une session de checkout
+  const createCheckoutSession = async (orderData: OrderInsert): Promise<string | null> => {
+    try {
+      const { data: session, error } = await supabase
+        .from('checkout_sessions')
+        .insert([{
+          user_id: orderData.user_id,
+          amount: orderData.amount,
+          currency: 'BTC',
+          payment_method: 'lightning',
+          status: 'pending',
+          metadata: orderData.metadata
+        }])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Erreur lors de la création de la session de checkout:', error);
+        // Si la table checkout_sessions n'existe pas encore, ce n'est pas critique
+        if (error.message?.includes('relation "checkout_sessions" does not exist')) {
+          console.log('Table checkout_sessions pas encore créée, continuons sans session de checkout');
+          return null;
+        }
+        return null;
+      }
+      return session.id;
+    } catch (error) {
+      console.error('Erreur lors de la création de la session de checkout:', error);
+      return null;
     }
   };
 
   const handleLightningClick = async (): Promise<void> => {
+    // ✅ Validation avec Zod
     if (!isFormValid()) {
-      setError('Veuillez remplir tous les champs obligatoires');
       return;
     }
 
@@ -108,7 +243,7 @@ function CheckoutContent(): React.ReactElement {
       
       const invoiceData = await generateInvoice({ 
         amount: getPrice(), 
-        memo: `Paiement pour DazBox` 
+        memo: `Paiement pour ${PRODUCT_CONFIG.DAZBOX.name}` 
       });
       
       if (!invoiceData || !invoiceData.paymentRequest) {
@@ -118,46 +253,25 @@ function CheckoutContent(): React.ReactElement {
       // Récupérer les infos de session
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
-      let userId = null;
+      let userId: string | null = null;
       if (token) {
         const { data: { user } } = await supabase.auth.getUser(token);
-        userId = user?.id;
+        userId = user?.id || null;
       }
       
-      // Créer la commande dans Supabase avec payment_status = false
+      // ✅ Créer les données de commande typées
+      const orderData = createOrderData(userId, invoiceData, form);
+      
+      // Adapter le payment_status pour la compatibilité avec l'ancien schéma BOOLEAN
+      const compatibleOrderData = {
+        ...orderData,
+        payment_status: false // Temporaire : utiliser false au lieu de 'pending' pour la compatibilité
+      };
+      
+      // Créer la commande dans Supabase
       const { data: order, error: orderError } = await supabase
         .from('orders')
-        .insert([{
-          user_id: userId,
-          product_type: productDetails.name,
-          amount: productDetails.priceSats,
-          payment_status: false,
-          payment_method: 'lightning',
-          payment_hash: invoiceData.paymentHash,
-          metadata: {
-            customer: {
-              firstName: form.firstName,
-              lastName: form.lastName,
-              email: form.email,
-              address: form.address,
-              address2: form.address2,
-              city: form.city,
-              state: form.state,
-              postalCode: form.postalCode,
-              country: form.country,
-              phone: form.phone,
-            },
-            product: {
-              name: productDetails.name,
-              quantity: productDetails.quantity,
-              priceSats: productDetails.priceSats,
-              promoApplied: promoApplied,
-              promoCode: promoApplied ? promoCode : null,
-              discountPercentage: promoApplied ? DISCOUNT_PERCENTAGE : 0
-            },
-            invoice: invoiceData.paymentRequest
-          }
-        }])
+        .insert([compatibleOrderData])
         .select()
         .single();
 
@@ -167,6 +281,12 @@ function CheckoutContent(): React.ReactElement {
 
       // Stocker l'ID de la commande pour la mise à jour après paiement
       sessionStorage.setItem('current_order_id', order.id);
+      
+      // ✅ Créer une session de checkout
+      const sessionId = await createCheckoutSession(orderData);
+      if (sessionId) {
+        sessionStorage.setItem('current_checkout_session_id', sessionId);
+      }
       
       setInvoice(invoiceData);
       setShowLightning(true);
@@ -252,7 +372,7 @@ Le client devrait être recontacté pour un paiement via Wallet of Satoshi.`
           <LightningPayment 
             invoiceData={invoice}
             amount={getPrice()} 
-            productName="DazBox"
+            productName={PRODUCT_CONFIG.DAZBOX.name}
             onSuccess={handlePaymentSuccess}
             onCancel={() => { setShowLightning(false); setInvoice(null); setError(null); }}
           />
@@ -283,7 +403,7 @@ Le client devrait être recontacté pour un paiement via Wallet of Satoshi.`
             <h1 className="text-2xl font-bold text-white mb-2">Erreur</h1>
             <p className="text-red-300 mb-6">{error}</p>
             <button
-              onClick={() => window.location.reload()}
+              onClick={() => setError(null)}
               className="px-6 py-3 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-colors duration-300"
             >
               Réessayer
@@ -482,7 +602,7 @@ Le client devrait être recontacté pour un paiement via Wallet of Satoshi.`
                   />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg">DazBox</h3>
+                  <h3 className="font-semibold text-lg">{PRODUCT_CONFIG.DAZBOX.name}</h3>
                   <p className="text-sm text-white/80">Votre nœud Lightning personnel</p>
                   <div className="flex items-center mt-1">
                     <span className="bg-yellow-400/20 text-yellow-300 text-xs px-2 py-1 rounded-full">✓ 3 mois de DazNode Premium inclus</span>
@@ -492,7 +612,7 @@ Le client devrait être recontacté pour un paiement via Wallet of Satoshi.`
               <div className="mb-6 space-y-4">
                 <div className="flex justify-between mb-2">
                   <span>Prix</span>
-                  <span className="font-semibold">{BASE_PRICE_SATS.toLocaleString('fr-FR')} sats</span>
+                  <span className="font-semibold">{PRODUCT_CONFIG.DAZBOX.basePriceSats.toLocaleString('fr-FR')} sats</span>
                 </div>
                 <div className="mb-4">
                   <div className="relative mt-1">
@@ -510,12 +630,12 @@ Le client devrait être recontacté pour un paiement via Wallet of Satoshi.`
                       Appliquer
                     </button>
                   </div>
-                  <p className="text-sm text-yellow-300 mt-1">Essayez "BITCOINWEEK" pour -10% !</p>
+                  <p className="text-sm text-yellow-300 mt-1">Essayez "{PROMO_CONFIG.code}" pour -{PROMO_CONFIG.discount}% !</p>
                 </div>
                 {promoApplied && (
                   <div className="flex justify-between text-sm">
                     <span>Réduction</span>
-                    <span className="text-yellow-300">-{DISCOUNT_PERCENTAGE}%</span>
+                    <span className="text-yellow-300">-{PROMO_CONFIG.discount}%</span>
                   </div>
                 )}
                 <div className="flex justify-between text-xl font-bold border-t border-white/20 pt-4 mt-4">
@@ -523,7 +643,7 @@ Le client devrait être recontacté pour un paiement via Wallet of Satoshi.`
                   <span className="text-yellow-300">{getPrice().toLocaleString('fr-FR')} sats</span>
                 </div>
                 <button 
-                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center shadow-lg transform hover:scale-105"
+                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center shadow-lg transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   onClick={handleLightningClick}
                   disabled={!isFormValid() || isLoading}
                 >
@@ -614,8 +734,8 @@ function ProtonPayModalManager({ amount }: { amount: number }): React.ReactEleme
 }
 
 export default function CheckoutPage(): React.ReactElement {
-  const BASE_PRICE_BTC = 0.004;
-  const price = Math.round(BASE_PRICE_BTC * 100000000); // 400000 sats
+  // ✅ Utiliser la configuration centralisée
+  const price = PRODUCT_CONFIG.DAZBOX.basePriceSats;
   return (
     <Suspense>
       <CheckoutContent />
