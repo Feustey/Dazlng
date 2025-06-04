@@ -23,7 +23,7 @@ interface Contact {
   created_at: string
 }
 
-export default function CommunicationsPage() {
+export default function CommunicationsPage(): JSX.Element {
   const [emailLogs, setEmailLogs] = useState<EmailLog[]>([])
   const [contacts, setContacts] = useState<Contact[]>([])
   const [loading, setLoading] = useState(true)
@@ -32,7 +32,7 @@ export default function CommunicationsPage() {
     loadData()
   }, [])
 
-  const loadData = async () => {
+  const loadData = async (): Promise<void> => {
     try {
       const [emailResult, contactResult] = await Promise.all([
         supabaseAdmin

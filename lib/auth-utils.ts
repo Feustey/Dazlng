@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
-import type { User } from '@supabase/supabase-js'
+
 
 interface AuthUser {
   id: string
@@ -54,7 +54,7 @@ export async function getAuthenticatedUser(): Promise<AuthResult> {
     const isAdmin = user.email?.includes('@dazno.de') || false
 
     // Vérifier que le profil existe
-    const { data: profile, error: profileError } = await supabase
+    const { data: _profile, error: profileError } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', user.id)

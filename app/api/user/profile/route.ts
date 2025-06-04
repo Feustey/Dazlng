@@ -3,7 +3,7 @@ import { requireAuth } from '@/lib/auth-utils'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { ErrorCodes } from '@/types/database'
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const { user, error, isAdmin } = await requireAuth(request)
     
@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function PUT(request: NextRequest) {
+export async function PUT(request: NextRequest): Promise<NextResponse> {
   try {
     const { user, error } = await requireAuth(request)
     

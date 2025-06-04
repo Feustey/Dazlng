@@ -9,7 +9,7 @@ interface SecurityEvent {
   details?: any
 }
 
-export async function logSecurityEvent(event: SecurityEvent) {
+export async function logSecurityEvent(event: SecurityEvent): Promise<void> {
   try {
     await supabaseAdmin
       .from('security_logs')
@@ -28,7 +28,7 @@ export async function logSecurityEvent(event: SecurityEvent) {
 }
 
 // À ajouter dans votre middleware
-export function getClientInfo(request: Request) {
+export function getClientInfo(request: Request): { ipAddress: string; userAgent: string } {
   return {
     ipAddress: request.headers.get('x-forwarded-for') || 
                request.headers.get('x-real-ip') || 

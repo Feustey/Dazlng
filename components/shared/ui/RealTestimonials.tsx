@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 export default function RealTestimonials(): React.ReactElement {
   return (
@@ -11,9 +12,11 @@ export default function RealTestimonials(): React.ReactElement {
         <div className="grid md:grid-cols-3 gap-8">
           <div className="bg-white p-6 rounded-xl shadow-lg">
             <div className="flex items-center mb-4">
-              <img
+              <Image
                 src="/assets/images/avatar-male.svg"
-                alt="Utilisateur 1"
+                alt="Jean D."
+                width={48}
+                height={48}
                 className="w-12 h-12 rounded-full mr-4"
               />
               <div>
@@ -28,9 +31,11 @@ export default function RealTestimonials(): React.ReactElement {
           
           <div className="bg-white p-6 rounded-xl shadow-lg">
             <div className="flex items-center mb-4">
-              <img
+              <Image
                 src="/assets/images/avatar-female.svg"
-                alt="Utilisateur 2"
+                alt="Marie L."
+                width={48}
+                height={48}
                 className="w-12 h-12 rounded-full mr-4"
               />
               <div>
@@ -45,9 +50,11 @@ export default function RealTestimonials(): React.ReactElement {
           
           <div className="bg-white p-6 rounded-xl shadow-lg">
             <div className="flex items-center mb-4">
-              <img
+              <Image
                 src="/assets/images/avatar-leaticia.png"
-                alt="Utilisateur 3"
+                alt="Pierre M."
+                width={48}
+                height={48}
                 className="w-12 h-12 rounded-full mr-4"
               />
               <div>

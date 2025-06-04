@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
-import { generateEmailTemplate } from '../../../utils/email';
-import { contactFormSchema, checkRateLimit } from '@/lib/contact-validation'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { RateLimitService } from '@/lib/services/RateLimitService'
 import { ErrorCodes } from '@/types/database'
@@ -30,7 +28,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       lastName,
       email,
       companyName,
-      jobTitle,
+      _jobTitle,
       companyPhone,
       companyWebsite,
       interest,
