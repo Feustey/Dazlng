@@ -12,6 +12,8 @@ const SettingsPage: FC = () => {
     pubkey: '',
     compte_x: '',
     compte_nostr: '',
+    phone: '',
+    phone_verified: false,
   });
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -43,6 +45,8 @@ const SettingsPage: FC = () => {
             pubkey: userData.pubkey || '',
             compte_x: userData.compte_x || '',
             compte_nostr: userData.compte_nostr || '',
+            phone: userData.phone || '',
+            phone_verified: userData.phone_verified || false,
           });
         } else {
           console.error('Erreur lors du chargement du profil:', res.status);

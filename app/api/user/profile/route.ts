@@ -16,7 +16,8 @@ const UpdateProfileSchema = z.object({
   ]).optional(),
   compte_x: z.string().optional(),
   compte_nostr: z.string().optional(),
-  phone: z.string().optional(),
+  phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, 'Format de téléphone invalide').optional(),
+  phone_verified: z.boolean().optional(),
 })
 
 export async function GET(request: NextRequest): Promise<ReturnType<typeof NextResponse.json>> {

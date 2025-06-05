@@ -2,12 +2,20 @@
 
 export interface UserProfile {
   email: string;
-  firstName?: string;
-  lastName?: string;
+  nom?: string;
+  prenom?: string;
+  firstName?: string; // Alias pour compatibilité
+  lastName?: string;  // Alias pour compatibilité
   pubkey?: string;
-  twitterHandle?: string;
-  nostrPubkey?: string;
-  phoneVerified: boolean;
+  compte_x?: string;
+  compte_nostr?: string;
+  twitterHandle?: string; // Alias pour compatibilité
+  nostrPubkey?: string;   // Alias pour compatibilité
+  phone?: string;
+  phone_verified?: boolean;
+  phoneVerified?: boolean; // Alias pour compatibilité
+  profile_score?: number;
+  email_verified?: boolean;
 }
 
 export interface NodeStats {

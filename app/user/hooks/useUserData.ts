@@ -154,21 +154,21 @@ export function useUserData(): UseUserDataReturn {
       { 
         name: 'twitter', 
         label: 'Compte Twitter', 
-        completed: !!profile?.twitterHandle,
+        completed: !!profile?.compte_x,
         priority: 'low',
         href: '/user/settings'
       },
       { 
         name: 'nostr', 
         label: 'Compte Nostr', 
-        completed: !!profile?.nostrPubkey,
+        completed: !!profile?.compte_nostr,
         priority: 'low',
         href: '/user/settings'
       },
       { 
         name: 'phone', 
         label: 'Téléphone vérifié', 
-        completed: !!profile?.phoneVerified,
+        completed: !!profile?.phone_verified,
         priority: 'low',
         href: '/user/settings'
       }
