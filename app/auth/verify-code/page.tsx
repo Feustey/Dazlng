@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { createSupabaseBrowserClient } from '@/lib/supabase';
 
 function VerifyCodeForm(): JSX.Element {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const email = searchParams?.get("email") || "";
   const [code, setCode] = useState("");
   const [pending, setPending] = useState(false);
@@ -31,10 +32,14 @@ function VerifyCodeForm(): JSX.Element {
         setError('Code invalide ou expiré.');
       } else if (data?.user) {
         setSuccess(true);
-        // Attendre un peu pour s'assurer que la session est établie
-        await new Promise(resolve => setTimeout(resolve, 500));
-        // Forcer un refresh de la page pour que le middleware détecte la session
-        window.location.href = '/user/dashboard';
+        
+        // ✅ CORRECTIF : Laisser Supabase gérer la session
+        // Attendre que la session soit établie
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Utiliser router.push au lieu de window.location.href
+        router.push('/user/dashboard');
+        router.refresh(); // Force un refresh pour que le middleware détecte la session
       } else {
         setError('Erreur lors de la vérification du code.');
       }

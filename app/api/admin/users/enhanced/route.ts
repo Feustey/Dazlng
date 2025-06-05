@@ -8,6 +8,7 @@ import {
 import { supabase } from '@/lib/supabase';
 import { ErrorCodes } from '@/types/database';
 
+export const dynamic = "force-dynamic";
 export const runtime = 'nodejs';
 
 /**

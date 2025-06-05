@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { AdminResponseBuilder, withEnhancedAdminAuth } from '@/lib/admin-utils';
 import { supabase } from '@/lib/supabase';
 
+export const dynamic = "force-dynamic";
 export const runtime = 'nodejs';
 
 /**

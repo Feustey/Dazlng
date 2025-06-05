@@ -2,10 +2,12 @@
 
 import { createContext, useContext, useEffect, useState } from 'react'
 import { createSupabaseBrowserClient } from '@/lib/supabase'
-import type { User } from '@supabase/supabase-js'
+import type { User, Session } from '@supabase/supabase-js'
+import { useRouter } from 'next/navigation'
 
 interface SupabaseContext {
   user: User | null
+  session: Session | null
   loading: boolean
   signOut: () => Promise<void>
 }
@@ -14,34 +16,58 @@ const Context = createContext<SupabaseContext | undefined>(undefined)
 
 export function SupabaseProvider({ children }: { children: React.ReactNode }): JSX.Element {
   const [user, setUser] = useState<User | null>(null)
+  const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const router = useRouter()
   const supabase = createSupabaseBrowserClient()
 
   useEffect(() => {
-    const getUser = async (): Promise<void> => {
-      const { data: { user } } = await supabase.auth.getUser()
-      setUser(user)
-      setLoading(false)
+    const getSession = async (): Promise<void> => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession()
+        
+        if (error) {
+          console.error('Erreur lors de la récupération de la session:', error)
+        }
+        
+        setSession(session)
+        setUser(session?.user ?? null)
+      } catch (error) {
+        console.error('Erreur session:', error)
+      } finally {
+        setLoading(false)
+      }
     }
 
-    getUser()
+    getSession()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('Auth state change:', event, session?.user?.id)
+        
+        setSession(session)
         setUser(session?.user ?? null)
         setLoading(false)
+        
+        if (event === 'SIGNED_IN' && session?.user) {
+          router.refresh()
+        }
+        
+        if (event === 'SIGNED_OUT') {
+          router.push('/auth/login')
+        }
       }
     )
 
     return () => subscription.unsubscribe()
-  }, [supabase])
+  }, [supabase, router])
 
   const signOut = async (): Promise<void> => {
     await supabase.auth.signOut()
   }
 
   return (
-    <Context.Provider value={{ user, loading, signOut }}>
+    <Context.Provider value={{ user, session, loading, signOut }}>
       {children}
     </Context.Provider>
   )

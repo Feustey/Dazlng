@@ -87,9 +87,10 @@ export default function RegisterPage(): React.ReactElement {
           }),
         });
         setInfo('Compte créé et vérifié ! Redirection...');
-        setTimeout(() => {
-          router.push('/user/dashboard');
-        }, 1500);
+        // ✅ CORRECTIF : Attendre que la session soit établie
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        router.push('/user/dashboard');
+        router.refresh(); // Force un refresh pour que le middleware détecte la session
       }
     } catch (error) {
       setError("Erreur de connexion. Veuillez réessayer.");

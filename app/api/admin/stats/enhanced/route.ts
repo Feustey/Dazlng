@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { AdminResponseBuilder, getEnhancedStats, withEnhancedAdminAuth } from '@/lib/admin-utils';
 import { ErrorCodes } from '@/types/database';
 
+export const dynamic = "force-dynamic";
 export const runtime = 'nodejs';
 
 /**

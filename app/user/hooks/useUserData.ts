@@ -35,7 +35,7 @@ interface UseUserDataReturn {
 }
 
 export function useUserData(): UseUserDataReturn {
-  const { user, loading } = useSupabase()
+  const { user, session, loading } = useSupabase()
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [nodeStats, setNodeStats] = useState<NodeStats | null>(null);
   const [hasNode, setHasNode] = useState(false);
@@ -43,18 +43,37 @@ export function useUserData(): UseUserDataReturn {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (user) {
-      // Récupérer le profil utilisateur
-      fetch('/api/auth/me')
-        .then(res => res.json())
-        .then(data => {
-          setProfile(data.user as UserProfile);
+    const fetchUserData = async (): Promise<void> => {
+      if (loading) return; // Attendre que la session soit chargée
+      
+      if (user && session) {
+        try {
+          // ✅ CORRECTIF : Utiliser le token de session pour l'authentification
+          const response = await fetch('/api/auth/me', {
+            headers: {
+              'Authorization': `Bearer ${session.access_token}`,
+              'Content-Type': 'application/json'
+            }
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            setProfile(data.user as UserProfile);
+          } else {
+            console.error('Erreur lors de la récupération du profil:', response.status);
+          }
+        } catch (error) {
+          console.error('Erreur lors du chargement des données utilisateur:', error);
+        } finally {
           setIsLoading(false);
-        })
-    } else {
-      setIsLoading(false);
-    }
-  }, [user])
+        }
+      } else {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [user, session, loading])
 
   useEffect(() => {
     const fetchUserData = async (): Promise<void> => {
