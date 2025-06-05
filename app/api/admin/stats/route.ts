@@ -2,6 +2,9 @@ import { NextRequest } from 'next/server';
 import { AdminResponseBuilder, withEnhancedAdminAuth } from '@/lib/admin-utils';
 import { supabase } from '@/lib/supabase';
 
+export const dynamic = "force-dynamic";
+export const runtime = 'nodejs';
+
 /**
  * GET /api/admin/stats - Statistiques basiques pour l'interface admin
  */

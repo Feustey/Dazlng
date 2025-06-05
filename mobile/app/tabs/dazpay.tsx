@@ -90,18 +90,18 @@ export default function DazPayScreen(): React.ReactElement {
           <View style={styles.proTag}>
             <Text style={styles.proTagText}>POPULAIRE</Text>
           </View>
-          <Text style={styles.planTitle}>Plan Pro</Text>
-          <Text style={styles.planPrice}>0.5%</Text>
-          <Text style={styles.planDescription}>par transaction + 15Sats/mois</Text>
+          <Text style={styles.planTitle}>Plan Business</Text>
+          <Text style={styles.planPrice}>0,5%</Text>
+          <Text style={styles.planDescription}>par transaction + 15 000 Sats/mois</Text>
           <Text style={styles.planFeature}>• Tous les avantages du plan Standard</Text>
           <Text style={styles.planFeature}>• Taux de commission réduit</Text>
           <Text style={styles.planFeature}>• Support prioritaire 7j/7</Text>
           <Text style={styles.planFeature}>• Formation personnalisée</Text>
           <Pressable 
             style={styles.button}
-            onPress={() => navigation.navigate('Register', { plan: 'pro' })}
+            onPress={() => navigation.navigate('Register', { plan: 'business' })}
           >
-            <Text style={styles.buttonText}>Choisir Pro</Text>
+            <Text style={styles.buttonText}>Choisir Business</Text>
           </Pressable>
         </View>
       </View>

@@ -1,6 +1,6 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
 
-export type PlanId = 'gratuit' | 'standard' | 'premium' | 'ai-addon';
+export type PlanId = 'gratuit' | 'basic' | 'premium' | 'business' | 'ai-addon';
 
 export type TabParamList = {
   Accueil: undefined;
@@ -22,7 +22,7 @@ export type RootStackParamList = {
     plan: PlanId;
   };
   Register: {
-    plan: 'standard' | 'pro';
+    plan: 'standard' | 'business';
   };
 };
 

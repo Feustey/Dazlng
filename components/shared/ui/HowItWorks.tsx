@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaDownload, FaPlug, FaCog, FaChartLine } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
 import { useConversionTracking } from '../../../hooks/useConversionTracking';
 
 interface StepProps {
@@ -31,14 +32,25 @@ const Step: React.FC<StepProps> = ({ number, icon, title, description, delay }) 
 );
 
 export const HowItWorks: React.FC = () => {
+  const router = useRouter();
   const { trackCTAClick } = useConversionTracking();
   
   const handleOrderClick = (): void => {
-    trackCTAClick('primary', 'how_it_works_section', { action: 'order_dazbox' });
+    try {
+      trackCTAClick('primary', 'how_it_works_section', { action: 'order_dazbox' });
+    } catch (error) {
+      console.warn('Tracking error:', error);
+    }
+    router.push('/checkout/dazbox');
   };
 
   const handleQuestionClick = (): void => {
-    trackCTAClick('secondary', 'how_it_works_section', { action: 'ask_question' });
+    try {
+      trackCTAClick('secondary', 'how_it_works_section', { action: 'ask_question' });
+    } catch (error) {
+      console.warn('Tracking error:', error);
+    }
+    router.push('/contact');
   };
 
   const steps = [

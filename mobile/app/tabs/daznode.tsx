@@ -8,7 +8,7 @@ import PricingCard from '../../../components/shared/ui/PricingCard';
 import HeroSection from '../../../components/shared/ui/HeroSection';
 import { FaBolt } from 'react-icons/fa';
 
-type PlanId = 'gratuit' | 'standard' | 'premium' | 'ai-addon';
+type PlanId = 'gratuit' | 'basic' | 'premium' | 'business' | 'ai-addon';
 
 interface Plan {
   id: PlanId;
@@ -24,19 +24,19 @@ export default function DaznodeScreen(): React.ReactElement {
     {
       id: 'gratuit',
       name: 'Gratuit',
-      price: '0Sats',
+      price: '0 Sats',
       features: ['Statistiques de base'],
     },
     {
-      id: 'standard',
-      name: 'Standard',
-      price: '9Sats/mois',
+      id: 'basic',
+      name: 'Basic',
+      price: '10 000 Sats/mois',
       features: ['Statistiques de base', 'Routage optimisé'],
     },
     {
       id: 'premium',
       name: 'Premium',
-      price: '29Sats/mois',
+      price: '30 000 Sats/mois',
       features: [
         'Statistiques de base',
         'Routage optimisé',
@@ -44,6 +44,17 @@ export default function DaznodeScreen(): React.ReactElement {
         'Sparkseer',
         'Alertes Telegram',
         'Auto-rebalancing',
+      ],
+    },
+    {
+      id: 'business',
+      name: 'Business',
+      price: '15 000 Sats/mois',
+      features: [
+        'Tout du plan Premium',
+        'Commissions réduites à 0,5%',
+        'Support dédié',
+        'Nœuds illimités',
       ],
     },
   ];

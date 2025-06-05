@@ -8,6 +8,9 @@ import {
 import { supabase } from '@/lib/supabase';
 import { ErrorCodes } from '@/types/database';
 
+export const dynamic = "force-dynamic";
+export const runtime = 'nodejs';
+
 /**
  * GET /api/admin/users/enhanced - Liste enrichie des utilisateurs avec filtres avancés
  */

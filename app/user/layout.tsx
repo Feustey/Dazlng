@@ -1,14 +1,41 @@
 'use client';
 
 import React, { ReactNode } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useSupabase } from '@/app/providers/SupabaseProvider';
 
 interface UserLayoutProps {
   children: ReactNode;
 }
 
 const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
+  const { user, loading } = useSupabase();
+  const router = useRouter();
   const pathname = usePathname();
+
+  // ✅ CORRECTIF : Protection côté client aussi
+  React.useEffect(() => {
+    if (!loading && !user) {
+      router.push(`/auth/login?callbackUrl=${encodeURIComponent(pathname)}`);
+    }
+  }, [user, loading, router, pathname]);
+
+  // Afficher un loader pendant la vérification
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin h-12 w-12 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-gray-600">Vérification de l'authentification...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Rediriger si pas authentifié
+  if (!user) {
+    return null; // Le useEffect va rediriger
+  }
 
   const navItems = [
     { href: '/user/dashboard', label: 'Dashboard', color: 'indigo' },

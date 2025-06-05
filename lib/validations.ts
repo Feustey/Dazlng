@@ -112,7 +112,7 @@ export const updateOrderSchema = z.object({
 
 export const createSubscriptionSchema = z.object({
   user_id: uuidSchema,
-  plan_id: z.enum(['free', 'basic', 'premium', 'enterprise'], {
+  plan_id: z.enum(['free', 'basic', 'premium', 'business'], {
     errorMap: () => ({ message: 'Plan d\'abonnement invalide' })
   }),
   status: z.enum(['active', 'inactive', 'cancelled', 'expired']).default('active'),

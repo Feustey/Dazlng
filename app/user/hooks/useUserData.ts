@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSupabase } from '@/app/providers/SupabaseProvider'
+import { useState, useEffect } from 'react'
 import type { 
   UserProfile, 
   NodeStats, 
@@ -11,7 +11,7 @@ import type {
 
 interface UseUserDataReturn {
   // User data
-  userProfile: UserProfile;
+  userProfile: UserProfile | null;
   nodeStats: NodeStats | null;
   hasNode: boolean;
   isPremium: boolean;
@@ -34,119 +34,122 @@ interface UseUserDataReturn {
   upgradeToPremium: () => void;
 }
 
-export const useUserData = (): UseUserDataReturn => {
-  const sessionResult = useSession();
-  const { data: session, status } = sessionResult || { data: null, status: 'loading' };
-  
-  const [userProfile, setUserProfile] = useState<UserProfile>({
-    email: '',
-    firstName: undefined,
-    lastName: undefined,
-    pubkey: undefined,
-    twitterHandle: undefined,
-    nostrPubkey: undefined,
-    phoneVerified: false
-  });
-
+export function useUserData(): UseUserDataReturn {
+  const { user, session, loading } = useSupabase()
+  const [profile, setProfile] = useState<UserProfile | null>(null)
   const [nodeStats, setNodeStats] = useState<NodeStats | null>(null);
   const [hasNode, setHasNode] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // ✅ UTILISER LES DONNÉES DE SESSION NEXTAUTH
   useEffect(() => {
     const fetchUserData = async (): Promise<void> => {
-      if (status === 'loading') {
-        return; // Attendre que la session soit chargée
-      }
-
-      if (status === 'unauthenticated') {
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        // ✅ RÉCUPÉRER LES DONNÉES DEPUIS LA SESSION
-        if (session?.user) {
-          setUserProfile({
-            email: session.user.email || '',
-            firstName: session.user.prenom || undefined,
-            lastName: session.user.nom || undefined,
-            pubkey: undefined, // À récupérer depuis l'API
-            twitterHandle: undefined,
-            nostrPubkey: undefined,
-            phoneVerified: false
+      if (loading) return; // Attendre que la session soit chargée
+      
+      if (user && session) {
+        try {
+          // ✅ CORRECTIF : Utiliser le token de session pour l'authentification
+          const response = await fetch('/api/auth/me', {
+            headers: {
+              'Authorization': `Bearer ${session.access_token}`,
+              'Content-Type': 'application/json'
+            }
           });
+          
+          if (response.ok) {
+            const data = await response.json();
+            // ✅ CORRECTIF : Vérifier que data.user existe avant de l'assigner
+            if (data.user) {
+              setProfile(data.user as UserProfile);
+            } else {
+              console.warn('Aucune donnée utilisateur reçue de l\'API');
+              setProfile(null);
+            }
+          } else {
+            console.error('Erreur lors de la récupération du profil:', response.status);
+            setProfile(null);
+          }
+        } catch (error) {
+          console.error('Erreur lors du chargement des données utilisateur:', error);
+          setProfile(null);
+        } finally {
+          setIsLoading(false);
         }
-
-        // Simuler des stats de nœud (à remplacer par de vrais appels API)
-        setNodeStats({
-          monthlyRevenue: 12450,
-          totalCapacity: 2100000,
-          activeChannels: 8,
-          uptime: 99.8,
-          healthScore: 85,
-          routingEfficiency: 78,
-          revenueGrowth: 15.2,
-          rankInNetwork: 892,
-          totalNodes: 18650
-        });
-
-        setHasNode(true);
-        setIsPremium(false);
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Erreur lors du chargement des données:', error);
+      } else {
+        setProfile(null);
         setIsLoading(false);
       }
     };
 
     fetchUserData();
-  }, [session, status]);
+  }, [user, session, loading])
+
+  useEffect(() => {
+    const fetchUserData = async (): Promise<void> => {
+      if (user) {
+        try {
+          // Simuler des stats de nœud (à remplacer par de vrais appels API)
+          setNodeStats({
+            monthlyRevenue: 12450,
+            totalCapacity: 2100000,
+            activeChannels: 8,
+            uptime: 99.8,
+            healthScore: 85,
+            routingEfficiency: 78,
+            revenueGrowth: 15.2,
+            rankInNetwork: 892,
+            totalNodes: 18650
+          });
+
+          setHasNode(true);
+          setIsPremium(false);
+          setIsLoading(false);
+        } catch (error) {
+          console.error('Erreur lors du chargement des données:', error);
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [user]);
 
   // Calcul de la complétude du profil pour le CRM
   const calculateProfileCompletion = (): { percentage: number; fields: ProfileField[] } => {
     const fields: ProfileField[] = [
       { 
-        name: 'firstName', 
-        label: 'Nom complet', 
-        completed: !!(userProfile.firstName && userProfile.lastName),
-        priority: 'high',
-        href: '/user/settings'
-      },
-      { 
         name: 'email', 
         label: 'Email vérifié', 
-        completed: !!userProfile.email,
-        priority: 'low',
+        completed: !!profile?.email,
+        priority: 'high',
         href: '/user/settings'
       },
       { 
         name: 'pubkey', 
         label: 'Nœud connecté', 
-        completed: !!userProfile.pubkey,
-        priority: 'high',
+        completed: !!profile?.pubkey,
+        priority: 'medium',
         href: '/user/node'
       },
       { 
         name: 'twitter', 
         label: 'Compte Twitter', 
-        completed: !!userProfile.twitterHandle,
-        priority: 'medium',
+        completed: !!profile?.twitterHandle,
+        priority: 'low',
         href: '/user/settings'
       },
       { 
         name: 'nostr', 
         label: 'Compte Nostr', 
-        completed: !!userProfile.nostrPubkey,
+        completed: !!profile?.nostrPubkey,
         priority: 'low',
         href: '/user/settings'
       },
       { 
         name: 'phone', 
         label: 'Téléphone vérifié', 
-        completed: userProfile.phoneVerified,
-        priority: 'medium',
+        completed: !!profile?.phoneVerified,
+        priority: 'low',
         href: '/user/settings'
       }
     ];
@@ -262,7 +265,7 @@ export const useUserData = (): UseUserDataReturn => {
 
   // Actions
   const updateProfile = (profile: Partial<UserProfile>): void => {
-    setUserProfile(prev => ({ ...prev, ...profile }));
+    setProfile(prev => ({ ...prev, ...profile } as UserProfile));
   };
 
   const applyRecommendation = (id: string): void => {
@@ -278,11 +281,11 @@ export const useUserData = (): UseUserDataReturn => {
 
   return {
     // User data
-    userProfile,
+    userProfile: profile,
     nodeStats,
     hasNode,
     isPremium,
-    isLoading: isLoading || status === 'loading',
+    isLoading: isLoading || loading,
     
     // CRM data
     profileCompletion,
@@ -300,4 +303,4 @@ export const useUserData = (): UseUserDataReturn => {
     applyRecommendation: applyRecommendation,
     upgradeToPremium
   };
-}; 
+} 

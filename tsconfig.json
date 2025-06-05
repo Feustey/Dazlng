@@ -32,7 +32,7 @@
       }
     ],
     "types": [
-      "./types/next-auth"
+      // "./types/next-auth"
     ]
   },
   "include": [
@@ -44,7 +44,8 @@
   "exclude": [
     "node_modules",
     "tests",
-    "**/*.test.*"
+    "**/*.test.*",
+    "supabase/functions/**"
   ],
   "ts-node": {
     "compilerOptions": {

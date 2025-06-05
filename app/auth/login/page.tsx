@@ -1,20 +1,23 @@
 'use client'
 
 import React, { useState, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
+import { createSupabaseBrowserClient } from '@/lib/supabase';
 
 export default function LoginPage(): JSX.Element {
+  const supabase = createSupabaseBrowserClient();
+
   return (
     <Suspense fallback={<div>Chargement...</div>}>
-      <LoginPageContent />
+      <LoginPageContent supabase={supabase} />
     </Suspense>
   );
 }
 
-function LoginPageContent(): JSX.Element {
+function LoginPageContent({ supabase }: { supabase: any }): JSX.Element {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const urlError = searchParams?.get("error");
   const urlEmail = searchParams?.get("email") || "";
   const [email, setEmail] = useState(urlEmail);
@@ -28,18 +31,20 @@ function LoginPageContent(): JSX.Element {
     setError(null);
 
     try {
-      const result = await signIn('email', {
+      const result = await supabase.auth.signInWithOtp({
         email,
-        redirect: false,
-        callbackUrl: '/user/dashboard'
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=/user/dashboard`
+        }
       });
 
       if (result?.error) {
         setError("Erreur lors de l'envoi du code");
       } else {
         setSuccess(true);
+        // ✅ CORRECTIF : Rediriger vers verify-code avec router
         setTimeout(() => {
-          window.location.href = `/auth/verify-code?email=${encodeURIComponent(email)}`;
+          router.push(`/auth/verify-code?email=${encodeURIComponent(email)}`);
         }, 1000);
       }
     } catch (err) {

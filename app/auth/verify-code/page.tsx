@@ -1,17 +1,19 @@
 "use client";
 
 import React, { useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { createSupabaseBrowserClient } from '@/lib/supabase';
 
 function VerifyCodeForm(): JSX.Element {
-  const router = useRouter();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const email = searchParams?.get("email") || "";
   const [code, setCode] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  const supabase = createSupabaseBrowserClient();
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
@@ -20,37 +22,29 @@ function VerifyCodeForm(): JSX.Element {
     setSuccess(false);
 
     try {
-      // ✅ VÉRIFIER LE CODE OTP AVANT LA CONNEXION
-      const verifyResponse = await fetch("/api/auth/verify-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, code }),
-      });
-
-      const verifyData = await verifyResponse.json();
-
-      if (!verifyResponse.ok || !verifyData.success) {
-        setError(verifyData?.error?.message || "Code invalide ou expiré.");
-        return;
-      }
-
-      // ✅ SI LE CODE EST VALIDE, CONNECTER AVEC NEXTAUTH
-      const result = await signIn('email', {
+      const { data, error: verifyError } = await supabase.auth.verifyOtp({
         email,
-        redirect: false,
-        callbackUrl: '/user/dashboard'
+        token: code,
+        type: 'email',
       });
 
-      if (result?.error) {
-        setError("Erreur lors de la connexion");
-      } else {
+      if (verifyError) {
+        setError('Code invalide ou expiré.');
+      } else if (data?.user) {
         setSuccess(true);
-        setTimeout(() => {
-          router.push("/user/dashboard");
-        }, 1000);
+        
+        // ✅ CORRECTIF : Laisser Supabase gérer la session
+        // Attendre que la session soit établie
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Utiliser router.push au lieu de window.location.href
+        router.push('/user/dashboard');
+        router.refresh(); // Force un refresh pour que le middleware détecte la session
+      } else {
+        setError('Erreur lors de la vérification du code.');
       }
-    } catch (err) {
-      setError("Erreur réseau.");
+    } catch (error) {
+      setError('Une erreur inattendue s\'est produite.');
     } finally {
       setPending(false);
     }

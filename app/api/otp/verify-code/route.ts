@@ -1,131 +1,70 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { createServerClient } from 'lib/supabase'
-import jwt from 'jsonwebtoken'
-
-const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret' // Mets ta vraie clé en prod !
+import { createClient } from '@supabase/supabase-js'
 
 const VerifyCodeSchema = z.object({
   email: z.string().email(),
-  code: z.string().min(4).max(8)
+  code: z.string().min(6).max(6),
+  name: z.string().optional()
 })
 
-export async function POST(req: NextRequest): Promise<NextResponse> {
-  const timestamp = new Date().toISOString()
+export async function POST(req: NextRequest): Promise<Response> {
   try {
     const body = await req.json()
     const parsed = VerifyCodeSchema.safeParse(body)
+    
     if (!parsed.success) {
       return NextResponse.json({
         success: false,
         error: {
           code: 'VALIDATION_ERROR',
-          message: 'Entrée invalide',
+          message: 'Données invalides',
           details: parsed.error.flatten()
-        },
-        meta: { timestamp, version: '1.0.0' }
+        }
       }, { status: 400 })
     }
 
-    const { email, code } = parsed.data
-    const supabase = createServerClient()
+    // Utiliser Supabase Auth pour vérifier le code OTP
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+    
+    const { data, error: verifyError } = await supabase.auth.verifyOtp({
+      email: parsed.data.email,
+      token: parsed.data.code,
+      type: 'email',
+    })
 
-    // Recherche du code OTP valide
-    const { data: otp, error } = await supabase
-      .from('otp_codes')
-      .select('*')
-      .eq('email', email)
-      .eq('code', code)
-      .eq('used', false)
-      .single()
-
-    const now = Date.now()
-    if (
-      error ||
-      !otp ||
-      !otp.expires_at ||
-      Number(otp.expires_at) < now
-    ) {
+    if (verifyError) {
+      console.error('[VERIFY-CODE] Erreur Supabase:', verifyError)
       return NextResponse.json({
         success: false,
         error: {
-          code: 'UNAUTHORIZED',
-          message: 'Code OTP invalide ou expiré'
-        },
-        meta: { timestamp, version: '1.0.0' }
-      }, { status: 401 })
+          code: 'VERIFICATION_ERROR',
+          message: 'Code invalide ou expiré'
+        }
+      }, { status: 400 })
     }
 
-    // Marquer le code comme utilisé
-    await supabase
-      .from('otp_codes')
-      .update({ used: true })
-      .eq('id', otp.id)
+    console.log('[VERIFY-CODE] Code vérifié avec succès pour:', parsed.data.email)
 
-    // Récupérer ou créer le profil utilisateur
-    let { data: profile } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('email', email)
-      .single()
-
-    if (!profile) {
-      // Création du profil minimal
-      const { data: newProfile } = await supabase
-        .from('profiles')
-        .insert({
-          email,
-          nom: '',
-          prenom: '',
-          t4g_tokens: 1,
-          settings: {},
-          email_verified: true,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          verified_at: new Date().toISOString()
-        })
-        .select('*')
-        .single()
-      profile = newProfile
-    }
-
-    // Générer le JWT
-    const token = jwt.sign(
-      {
-        id: profile.id,
-        email: profile.email,
-        nom: profile.nom,
-        prenom: profile.prenom
-      },
-      JWT_SECRET,
-      { expiresIn: '7d' }
-    )
-
-    // Retourner le token et le profil
     return NextResponse.json({
       success: true,
-      data: {
-        token,
-        profile
-      },
-      meta: { timestamp, version: '1.0.0' }
+      data: { 
+        message: 'Code vérifié avec succès',
+        user: data.user 
+      }
     })
-  } catch (err) {
+
+  } catch (e) {
+    console.error("[VERIFY-CODE] Erreur:", e)
     return NextResponse.json({
       success: false,
       error: {
         code: 'INTERNAL_ERROR',
-        message: 'Erreur serveur',
-        details: err instanceof Error ? err.message : err
-      },
-      meta: { timestamp, version: '1.0.0' }
+        message: 'Erreur serveur'
+      }
     }, { status: 500 })
   }
-}
-
-export function GET(): NextResponse {
-  return NextResponse.json(
-    { success: false, error: { code: 'METHOD_NOT_ALLOWED', message: 'Méthode non autorisée' } },
-    { status: 405 }
-  )
-}
+} 

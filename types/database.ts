@@ -269,16 +269,6 @@ export interface AuthSession {
   expires: string
 }
 
-export interface OTPAttempt {
-  id: string
-  email: string
-  code: string
-  attempts: number
-  expires_at: string
-  created_at: string
-  verified: boolean
-}
-
 export interface JWTPayload {
   sub: string // user id
   email: string

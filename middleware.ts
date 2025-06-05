@@ -1,75 +1,106 @@
-import { withAuth } from 'next-auth/middleware'
-import { NextResponse } from 'next/server'
+import { createServerClient } from '@supabase/ssr'
+import { NextResponse, type NextRequest } from 'next/server'
 
-export default withAuth(
-  function middleware(req) {
-    const { pathname } = req.nextUrl
-    console.log('[MIDDLEWARE] Pathname intercepté :', pathname)
-    const token = req.nextauth.token
+export async function middleware(request: NextRequest): Promise<Response> {
+  let response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  })
 
-    // Routes admin - vérifier les permissions
-    if (pathname.startsWith('/admin')) {
-      if (!token?.email?.includes('@dazno.de')) {
-        return NextResponse.redirect(new URL('/auth/login?error=access_denied', req.url))
-      }
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return request.cookies.get(name)?.value
+        },
+        set(name: string, value: string, options: any) {
+          request.cookies.set({
+            name,
+            value,
+            ...options,
+          })
+          response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          })
+          response.cookies.set({
+            name,
+            value,
+            ...options,
+          })
+        },
+        remove(name: string, options: any) {
+          request.cookies.set({
+            name,
+            value: '',
+            ...options,
+          })
+          response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          })
+          response.cookies.set({
+            name,
+            value: '',
+            ...options,
+          })
+        },
+      },
     }
+  )
 
-    // Routes utilisateur - authentification requise
-    if (pathname.startsWith('/user')) {
-      if (!token) {
-        return NextResponse.redirect(new URL('/auth/login?callbackUrl=' + encodeURIComponent(req.url), req.url))
-      }
-    }
+  const { data: { user } } = await supabase.auth.getUser()
+  const { pathname } = request.nextUrl
 
-    // API routes protégées
-    if (pathname.startsWith('/api/user') || pathname.startsWith('/api/admin')) {
-      if (!token) {
-        return new NextResponse(
-          JSON.stringify({
-            success: false,
-            error: {
-              code: 'UNAUTHORIZED',
-              message: 'Authentification requise'
-            }
-          }),
-          { 
-            status: 401,
-            headers: { 'Content-Type': 'application/json' }
-          }
-        )
-      }
-    }
+  // Log pour debugging
+  if (pathname.startsWith('/user') && process.env.NODE_ENV === 'development') {
+    console.log('[Middleware] User auth check:', {
+      pathname,
+      hasUser: !!user,
+      userId: user?.id
+    });
+  }
 
-    return NextResponse.next()
-  },
-  {
-    callbacks: {
-      authorized: ({ token, req }) => {
-        const { pathname } = req.nextUrl
-        // Routes publiques
-        if (
-          pathname.startsWith('/api/auth') ||
-          pathname.startsWith('/api/otp') ||
-          pathname.startsWith('/auth') ||
-          pathname === '/' ||
-          pathname.startsWith('/about') ||
-          pathname.startsWith('/contact') ||
-          pathname.startsWith('/dazbox') ||
-          pathname.startsWith('/daznode') ||
-          pathname.startsWith('/dazpay') ||
-          pathname.startsWith('/_next') ||
-          pathname.includes('.') ||
-          pathname.startsWith('/api/auth/send-code') ||
-          pathname.startsWith('/register')
-        ) {
-          return true
-        }
-        // Routes protégées - token requis
-        return !!token
-      }
+  // Routes admin - vérifier les permissions
+  if (pathname.startsWith('/admin')) {
+    if (!user?.email?.includes('@dazno.de')) {
+      return NextResponse.redirect(new URL('/auth/login?error=access_denied', request.url))
     }
   }
-)
+
+  // Routes utilisateur - authentification requise
+  if (pathname.startsWith('/user')) {
+    if (!user) {
+      return NextResponse.redirect(new URL('/auth/login?callbackUrl=' + encodeURIComponent(request.url), request.url))
+    }
+  }
+
+  // API routes protégées
+  if (pathname.startsWith('/api/user') || pathname.startsWith('/api/admin')) {
+    if (!user) {
+      return new NextResponse(
+        JSON.stringify({
+          success: false,
+          error: {
+            code: 'UNAUTHORIZED',
+            message: 'Authentification requise'
+          }
+        }),
+        { 
+          status: 401,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      )
+    }
+  }
+
+  return response
+}
 
 export const config = {
   matcher: [

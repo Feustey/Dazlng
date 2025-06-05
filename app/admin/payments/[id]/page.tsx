@@ -27,8 +27,8 @@ export default function PaymentDetailPage(): JSX.Element {
         if (!res.ok) throw new Error("Erreur lors du chargement du paiement");
         const data = await res.json();
         setPayment(Array.isArray(data) ? data[0] : data);
-      } catch (e: any) {
-        setError(e.message);
+      } catch (e: unknown) {
+        setError(e instanceof Error ? e.message : 'Erreur inconnue');
       } finally {
         setIsLoading(false);
       }

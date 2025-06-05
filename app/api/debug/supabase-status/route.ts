@@ -3,44 +3,27 @@ import { supabase } from '@/lib/supabase';
 
 export async function GET(): Promise<Response> {
   try {
-    // Test 1: Vérifier la connexion basique
+    // Test 1: Vérifier la connexion basique avec une table existante
     const { data: connectionTest, error: connectionError } = await supabase
-      .from('information_schema.tables')
-      .select('table_name')
+      .from('profiles')
+      .select('id')
       .limit(1);
 
-    // Test 2: Vérifier l'accès aux tables auth
-    let authTablesTest = null;
-    let authError = null;
-    try {
-      const { data, error } = await supabase.rpc('get_auth_tables');
-      authTablesTest = data;
-      authError = error;
-    } catch (e) {
-      authError = e;
-    }
-
-    // Test 3: Vérifier les tables personnalisées
-    const { data: customTables, error: customTablesError } = await supabase
-      .from('information_schema.tables')
-      .select('table_name')
-      .eq('table_schema', 'public');
-
-    // Test 4: Vérifier l'authentification actuelle
+    // Test 2: Vérifier l'authentification actuelle
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
-    // Test 5: Essayer de lister les utilisateurs (test des permissions)
-    let usersTest = null;
-    let usersError = null;
+    // Test 3: Vérifier l'accès aux profils avec gestion des erreurs
+    let profilesTest = null;
+    let profilesError: unknown = null;
     try {
       const { data, error } = await supabase
-        .from('auth.users')
-        .select('id')
+        .from('profiles')
+        .select('id, email')
         .limit(1);
-      usersTest = data;
-      usersError = error;
+      profilesTest = data;
+      profilesError = error;
     } catch (e) {
-      usersError = e;
+      profilesError = e;
     }
 
     return NextResponse.json({
@@ -52,26 +35,16 @@ export async function GET(): Promise<Response> {
           error: connectionError?.message,
           result: connectionTest
         },
-        auth_tables: {
-          success: !authError,
-          error: authError instanceof Error ? authError.message : String(authError),
-          result: authTablesTest
-        },
-        custom_tables: {
-          success: !customTablesError,
-          error: customTablesError?.message,
-          tables: customTables?.map(t => t.table_name)
-        },
         session: {
           success: !sessionError,
           error: sessionError?.message,
           has_session: !!session,
           user_id: session?.user?.id
         },
-        users_access: {
-          success: !usersError,
-          error: usersError instanceof Error ? usersError.message : String(usersError),
-          result: usersTest
+        profiles_access: {
+          success: !profilesError,
+          error: profilesError instanceof Error ? profilesError.message : String(profilesError),
+          result: profilesTest
         }
       },
       environment: {

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { supabase } from '@/lib/supabase'
-import { sendEmail } from '@/utils/email'
+import { createClient } from '@supabase/supabase-js'
 
 const SendCodeSchema = z.object({
   email: z.string().email()
@@ -22,48 +21,29 @@ export async function POST(req: NextRequest): Promise<Response> {
         meta: { timestamp: new Date().toISOString(), version: '1.0.0' }
       }, { status: 400 })
     }
-    // Nettoyage des anciens codes expirés
-    await supabase.from('otp_codes').delete().lt('expires_at', Date.now())
 
-    // Générer un code OTP à 6 chiffres
-    const code = String(Math.floor(100000 + Math.random() * 900000))
-    const expiresAt = Date.now() + 15 * 60 * 1000 // 15 minutes
-
-    // Désactiver les anciens codes non utilisés pour cet email
-    await supabase.from('otp_codes').update({ used: true }).eq('email', parsed.data.email).eq('used', false)
-
-    // Insérer le nouveau code
-    const { error: insertError } = await supabase.from('otp_codes').insert([
-      {
-        email: parsed.data.email,
-        code,
-        expires_at: expiresAt,
-        used: false,
-        attempts: 0
-      }
-    ])
-    if (insertError) {
+    // Utiliser Supabase Auth natif pour envoyer le code OTP
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+    const { error } = await supabase.auth.signInWithOtp({
+      email: parsed.data.email
+    })
+    if (error) {
       return NextResponse.json({
         success: false,
         error: {
-          code: 'DATABASE_ERROR',
-          message: 'Erreur lors de la création du code OTP',
-          details: insertError
+          code: 'SUPABASE_ERROR',
+          message: error.message
         },
         meta: { timestamp: new Date().toISOString(), version: '1.0.0' }
       }, { status: 500 })
     }
 
-    // Envoi de l'email avec le code OTP
-    await sendEmail({
-      to: parsed.data.email,
-      subject: 'Votre code de connexion',
-      html: `<p>Votre code de connexion est : <b>${code}</b></p><p>Ce code expire dans 15 minutes.</p>`
-    })
-
     return NextResponse.json({
       success: true,
-      data: { message: 'Code envoyé' },
+      data: { message: 'Code envoyé via Supabase Auth' },
       meta: { timestamp: new Date().toISOString(), version: '1.0.0' }
     })
   } catch (e) {

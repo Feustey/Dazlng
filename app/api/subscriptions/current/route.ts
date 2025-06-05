@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromRequest } from '@/utils/auth';
 
+export const dynamic = "force-dynamic";
+export const runtime = 'nodejs';
+
 interface Subscription {
   id: string;
   userId: string;

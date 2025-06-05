@@ -2,6 +2,9 @@ import { NextRequest } from 'next/server';
 import { AdminResponseBuilder, getEnhancedStats, withEnhancedAdminAuth } from '@/lib/admin-utils';
 import { ErrorCodes } from '@/types/database';
 
+export const dynamic = "force-dynamic";
+export const runtime = 'nodejs';
+
 /**
  * GET /api/admin/stats/enhanced - Statistiques enrichies pour l'interface admin
  * Nécessite des droits d'administration

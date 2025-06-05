@@ -1,16 +1,18 @@
 "use client";
-import React, { useState, Suspense } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import LightningPayment from '../../../components/web/LightningPayment';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { useSupabase } from '@/app/providers/SupabaseProvider';
 import { useRouter } from 'next/navigation';
 import { getPubkeyError } from '../../../utils/validation';
 import Image from 'next/image';
 
 function CheckoutContent(): React.ReactElement {
+  const { user, session } = useSupabase();
   const [form, setForm] = useState({
     email: '',
     pubkey: '',
   });
+  const [_isLoadingUserData, setIsLoadingUserData] = useState(false);
   const [pubkeyError, setPubkeyError] = useState<string | null>(null);
   const [showLightning, setShowLightning] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
@@ -18,8 +20,38 @@ function CheckoutContent(): React.ReactElement {
   const [transactionId, setTransactionId] = useState<string | null>(null);
   const [isAnnual, setIsAnnual] = useState(true);
   const [isSigningWithNode, setIsSigningWithNode] = useState(false);
-  const supabase = createClientComponentClient();
   const router = useRouter();
+
+  // Pré-remplissage automatique pour les utilisateurs connectés
+  useEffect(() => {
+    const loadUserData = async (): Promise<void> => {
+      if (user && session?.access_token) {
+        setIsLoadingUserData(true);
+        try {
+          const response = await fetch('/api/auth/me', {
+            headers: {
+              'Authorization': `Bearer ${session.access_token}`
+            }
+          });
+          
+          if (response.ok) {
+            const userData = await response.json();
+            setForm(prev => ({
+              ...prev,
+              email: userData.email || '',
+              pubkey: userData.pubkey || ''
+            }));
+          }
+        } catch (error) {
+          console.error('Erreur lors du chargement des données utilisateur:', error);
+        } finally {
+          setIsLoadingUserData(false);
+        }
+      }
+    };
+
+    loadUserData();
+  }, [user, session]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -59,13 +91,8 @@ function CheckoutContent(): React.ReactElement {
   const handlePaymentSuccess = async (txId: string): Promise<void> => {
     setTransactionId(txId);
     setPaymentSuccess(true);
-    const { data: { session } } = await supabase.auth.getSession();
     const token = session?.access_token;
-    let userId = null;
-    if (token) {
-      const { data: { user } } = await supabase.auth.getUser(token);
-      userId = user?.id;
-    }
+    const userId = user?.id || null;
     const res = await fetch('/api/orders', {
       method: 'POST',
       headers: {

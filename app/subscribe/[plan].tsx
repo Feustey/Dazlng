@@ -4,12 +4,12 @@ import { useParams } from 'next/navigation';
 const plans = {
   gratuit: {
     name: 'Gratuit',
-    price: '0Sats',
+    price: '0 Sats',
     features: ['Statistiques de base'],
   },
-  standard: {
-    name: 'Standard',
-    price: '10 000 ats/mois',
+  basic: {
+    name: 'Basic',
+    price: '10 000 Sats/mois',
     features: ['Statistiques de base', 'Routage optimisé'],
   },
   premium: {
@@ -24,9 +24,19 @@ const plans = {
       'Auto-rebalancing',
     ],
   },
+  business: {
+    name: 'Business',
+    price: '15 000 Sats/mois',
+    features: [
+      'Tout du plan Premium',
+      'Commissions réduites à 0,5%',
+      'Support dédié',
+      'Nœuds illimités',
+    ],
+  },
   'ai-addon': {
     name: 'Module IA',
-    price: '10 000 sats/mois',
+    price: '10 000 Sats/mois',
     features: ['Prédiction des fee rates', 'Optimisation automatique'],
   },
 };

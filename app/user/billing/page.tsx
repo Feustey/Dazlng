@@ -1,6 +1,7 @@
 "use client";
 
 import React, { FC, useEffect, useState, useCallback } from 'react';
+import { useSupabase } from '@/app/providers/SupabaseProvider';
 
 interface Invoice {
   id: string;
@@ -45,33 +46,31 @@ interface ApiResponse<T> {
 }
 
 const BillingPage: FC = () => {
+  const { user, session, loading: authLoading } = useSupabase();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<string>('all');
 
-  const getAuthToken = (): string | null => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('token') || sessionStorage.getItem('token');
-    }
-    return null;
-  };
-
   const fetchInvoices = useCallback(async (): Promise<void> => {
+    if (authLoading) return; // Attendre que l'auth soit chargée
+    
+    if (!user || !session) {
+      setError('Vous devez être connecté pour voir vos factures');
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
-
-      const token = getAuthToken();
-      if (!token) {
-        throw new Error('Non authentifié');
-      }
 
       const statusFilter = filter !== 'all' ? `?status=${filter}` : '';
       
       const response = await fetch(`/api/billing/invoices${statusFilter}`, {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json'
         }
       });
 
@@ -92,7 +91,7 @@ const BillingPage: FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [filter]);
+  }, [filter, user, session, authLoading]);
 
   useEffect(() => {
     fetchInvoices();
@@ -126,12 +125,29 @@ const BillingPage: FC = () => {
     return new Date(dateString).toLocaleDateString('fr-FR');
   };
 
-  if (loading) {
+  // États de chargement
+  if (authLoading || loading) {
     return (
       <div className="max-w-4xl mx-auto space-y-8">
-        <h1 className="text-3xl font-bold mb-6">Factures & Paiements</h1>
-        <div className="flex justify-center p-8">
-          <div className="animate-spin h-8 w-8 border-4 border-purple-500 border-t-transparent rounded-full" />
+        <div className="flex items-center justify-center min-h-96">
+          <div className="text-center">
+            <div className="animate-spin h-12 w-12 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p className="text-gray-600">Chargement de vos factures...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Vérification de l'authentification
+  if (!user) {
+    return (
+      <div className="max-w-4xl mx-auto space-y-8">
+        <div className="text-center p-8">
+          <p className="text-red-600">Vous devez être connecté pour accéder à cette page.</p>
+          <a href="/auth/login" className="text-indigo-600 hover:underline mt-2 inline-block">
+            Se connecter
+          </a>
         </div>
       </div>
     );
@@ -140,10 +156,21 @@ const BillingPage: FC = () => {
   if (error) {
     return (
       <div className="max-w-4xl mx-auto space-y-8">
-        <h1 className="text-3xl font-bold mb-6">Factures & Paiements</h1>
-        <div className="bg-red-50 text-red-700 p-4 rounded-md">
-          <h3 className="font-semibold">Erreur</h3>
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold text-gray-900">Factures & Paiements</h1>
+          <div className="text-sm text-gray-500">
+            Connecté en tant que {user.email}
+          </div>
+        </div>
+        <div className="bg-red-50 text-red-700 p-4 rounded-lg border border-red-200">
+          <h3 className="font-semibold mb-2">❌ Erreur</h3>
           <p>{error}</p>
+          <button 
+            onClick={fetchInvoices}
+            className="mt-3 text-sm bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+          >
+            Réessayer
+          </button>
         </div>
       </div>
     );
@@ -151,7 +178,12 @@ const BillingPage: FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-      <h1 className="text-3xl font-bold mb-6">Factures & Paiements</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold text-gray-900">Factures & Paiements</h1>
+        <div className="text-sm text-gray-500">
+          Connecté en tant que {user.email}
+        </div>
+      </div>
 
       {/* Statistiques rapides */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -198,69 +230,67 @@ const BillingPage: FC = () => {
           ))}
         </div>
 
-        {/* Table des factures */}
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  N° Facture
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Description
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Montant
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Statut
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {invoices.map((invoice) => (
-                <tr key={invoice.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {formatDate(invoice.date)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-mono">
-                    {invoice.number}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {invoice.description}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {invoice.total.toFixed(2)} {invoice.currency}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {getStatusBadge(invoice.status)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+        {/* Liste des factures */}
+        {invoices.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="text-gray-400 text-6xl mb-4">📄</div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Aucune facture</h3>
+            <p className="text-gray-600">
+              {filter === 'all' 
+                ? 'Vous n\'avez pas encore de factures.'
+                : `Aucune facture ${filter === 'paid' ? 'payée' : filter === 'sent' ? 'envoyée' : 'en retard'}.`
+              }
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {invoices.map((invoice) => (
+              <div key={invoice.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <h3 className="font-semibold">Facture #{invoice.number}</h3>
+                      {getStatusBadge(invoice.status)}
+                    </div>
+                    <p className="text-gray-600 text-sm mb-2">{invoice.description}</p>
+                    <div className="text-xs text-gray-500 space-x-4">
+                      <span>Date: {formatDate(invoice.date)}</span>
+                      <span>Échéance: {formatDate(invoice.dueDate)}</span>
+                      {invoice.paymentDate && (
+                        <span>Payée le: {formatDate(invoice.paymentDate)}</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-lg font-bold">{invoice.total.toFixed(2)} Sats</div>
                     {invoice.downloadUrl && (
                       <a 
-                        href={invoice.downloadUrl} 
-                        className="text-purple-600 hover:text-purple-900"
-                        download
+                        href={invoice.downloadUrl}
+                        className="text-xs text-indigo-600 hover:underline"
+                        target="_blank" 
+                        rel="noopener noreferrer"
                       >
-                        Télécharger
+                        📄 Télécharger
                       </a>
                     )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {invoices.length === 0 && (
-          <div className="text-center py-8">
-            <div className="text-gray-500">Aucune facture trouvée</div>
+                  </div>
+                </div>
+                
+                {/* Détails des items */}
+                {invoice.items.length > 0 && (
+                  <div className="mt-4 pt-4 border-t border-gray-100">
+                    <div className="text-xs text-gray-500 space-y-1">
+                      {invoice.items.map((item) => (
+                        <div key={item.id} className="flex justify-between">
+                          <span>{item.description} x{item.quantity}</span>
+                          <span>{item.total.toFixed(2)} Sats</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         )}
       </div>

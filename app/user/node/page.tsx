@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, FC, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSupabase } from '@/app/providers/SupabaseProvider';
 
 interface NodeStats {
   // Statistiques de base
@@ -41,6 +42,7 @@ interface NodeHistory {
 }
 
 const NodeManagement: FC = () => {
+  const { session } = useSupabase();
   const [pubkey, setPubkey] = useState<string | null>(null);
   const [stats, setStats] = useState<NodeStats | null>(null);
   const [_history, setHistory] = useState<NodeHistory | null>(null);
@@ -48,22 +50,14 @@ const NodeManagement: FC = () => {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const getAuthToken = (): string | null => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('token') || sessionStorage.getItem('token');
-    }
-    return null;
-  };
-
   const fetchNodeData = useCallback(async (nodeId: string): Promise<void> => {
     try {
       setLoading(true);
       setError(null);
 
-      const token = getAuthToken();
       const response = await fetch(`https://api.dazno.de/network/analyze/${nodeId}`, {
         headers: {
-          ...(token && { 'Authorization': `Bearer ${token}` })
+          ...(session?.access_token && { 'Authorization': `Bearer ${session.access_token}` })
         }
       });
 
@@ -85,7 +79,7 @@ const NodeManagement: FC = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [session]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

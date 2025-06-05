@@ -34,13 +34,13 @@ const DazPayPage = (): React.ReactElement => {
     },
     {
       id: 'subscription',
-      title: "DazPay - Abonnement",
+      title: "DazPay - Business",
       subtitle: "Pour les commerces à fort volume",
-      price: "15Sats/mois + 0.5% par transaction",
+      price: "15 000 Sats/mois + 0,5% par transaction",
       amount: 500000, // 500,000 sats = ~150Sats
       features: [
-        { text: "✓ 15Sats/mois d'abonnement" },
-        { text: "✓ 0.5% de frais par transaction" },
+        { text: "✓ 15 000 Sats/mois d'abonnement" },
+        { text: "✓ 0,5% de frais par transaction" },
         { text: "✓ Interface d'encaissement avancée" },
         { text: "✓ Dashboard marchand premium" },
         { text: "✓ Support prioritaire" }

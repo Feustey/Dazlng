@@ -1,6 +1,7 @@
 // lib/supabaseClient.ts
 import { createClient } from '@supabase/supabase-js';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { createBrowserClient } from '@supabase/ssr'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -15,15 +16,33 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Variables d\'environnement Supabase manquantes. Veuillez configurer NEXT_PUBLIC_SUPABASE_URL et NEXT_PUBLIC_SUPABASE_ANON_KEY');
 }
 
-// Client public pour l'authentification et les opérations côté client
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true,
-    flowType: 'pkce'
+// ✅ CORRECTIF : Client browser unique pour éviter les multiples instances
+let browserClient: SupabaseClient | null = null;
+
+export function createSupabaseBrowserClient(): SupabaseClient {
+  if (typeof window === 'undefined') {
+    // Côté serveur, créer un nouveau client à chaque fois
+    return createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
   }
-});
+
+  // Côté client, réutiliser le même client (singleton)
+  if (!browserClient) {
+    browserClient = createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+  }
+  
+  return browserClient;
+}
+
+// Client legacy pour compatibilité (à supprimer progressivement)
+import { supabaseClientConfig } from './supabase-config';
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, supabaseClientConfig);
 
 // Client administrateur pour les opérations serveur qui nécessitent plus de permissions
 export const supabaseAdmin = supabaseServiceKey 
@@ -42,3 +61,6 @@ export function createServerClient(): SupabaseClient {
   }
   return supabaseAdmin;
 }
+
+// Export du client browser principal
+export const supabaseBrowser = createSupabaseBrowserClient()

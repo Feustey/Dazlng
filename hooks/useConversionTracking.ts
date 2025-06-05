@@ -48,16 +48,25 @@ interface TrackingHook {
 export const useConversionTracking = (): TrackingHook => {
   // Fonction pour générer un ID de session unique
   const getSessionId = useCallback((): string => {
-    let sessionId = sessionStorage.getItem('daz_session_id');
-    if (!sessionId) {
-      sessionId = `daz_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      sessionStorage.setItem('daz_session_id', sessionId);
+    if (typeof window === 'undefined') return 'ssr-session';
+    
+    try {
+      let sessionId = sessionStorage.getItem('daz_session_id');
+      if (!sessionId) {
+        sessionId = `daz_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        sessionStorage.setItem('daz_session_id', sessionId);
+      }
+      return sessionId;
+    } catch (error) {
+      console.warn('Session storage error:', error);
+      return `daz_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     }
-    return sessionId;
   }, []);
 
   // Stockage local pour l'analyse du funnel
   const saveToLocalAnalytics = useCallback((event: TrackingEvent): void => {
+    if (typeof window === 'undefined') return;
+    
     try {
       const existingData = localStorage.getItem('daz_analytics') || '[]';
       const analytics = JSON.parse(existingData);
@@ -144,6 +153,8 @@ export const useConversionTracking = (): TrackingHook => {
 
   // Fonction pour récupérer les analytics locales
   const getLocalAnalytics = useCallback((): TrackingEvent[] => {
+    if (typeof window === 'undefined') return [];
+    
     try {
       const data = localStorage.getItem('daz_analytics') || '[]';
       return JSON.parse(data);
