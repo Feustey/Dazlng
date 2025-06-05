@@ -42,15 +42,27 @@ const DaznodePage = (): React.ReactElement => {
         <ProductCard
           title="Daznode - Basic"
           subtitle="Pour les nodes actifs"
-          price="9Sats/mois"
+          price="10 000 Sats/mois"
           features={basicFeatures}
         />
 
         <ProductCard
           title="Daznode - Premium"
           subtitle="Pour les nodes professionnels"
-          price="29Sats/mois"
+          price="30 000 Sats/mois"
           features={premiumFeatures}
+        />
+
+        <ProductCard
+          title="Daznode - Business"
+          subtitle="Pour les entreprises"
+          price="15 000 Sats/mois"
+          features={[
+            { text: "✓ Tout du plan Premium" },
+            { text: "✓ Commissions réduites à 0,5%" },
+            { text: "✓ Support dédié" },
+            { text: "✓ Nœuds illimités" }
+          ]}
         />
 
         <ProductCard

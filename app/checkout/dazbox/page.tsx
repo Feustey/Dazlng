@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, Suspense, useEffect } from 'react';
 import LightningPayment from '../../../components/shared/ui/LightningPayment';
+import { useSupabase } from '@/app/providers/SupabaseProvider';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import { generateInvoice } from '../../../lib/lightning';
@@ -48,13 +49,16 @@ type OrderInsert = {
   payment_status: 'pending' | 'paid' | 'failed' | 'cancelled';
   payment_method: string;
   payment_hash?: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 };
 
 function CheckoutContent(): React.ReactElement {
+  const { user: _user, session: _session } = useSupabase();
+  const supabase = createClientComponentClient();
+  
   // ✅ Initialiser AOS une seule fois
   useEffect(() => {
-    let aos: any;
+    let aos: typeof import('aos') | undefined;
     const initAOS = async (): Promise<void> => {
       if (typeof window !== 'undefined') {
         aos = await import('aos');
@@ -96,7 +100,6 @@ function CheckoutContent(): React.ReactElement {
   const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const supabase = createClientComponentClient();
   const router = useRouter(); // ✅ Utiliser Next.js router
   const [_btcCopied, _setBtcCopied] = useState(false);
   const _btcAddress = 'bc1p0vyqda9uv7kad4lsfzx5s9ndawhm3e3fd5vw7pnsem22n7dpfgxq48kht7';
