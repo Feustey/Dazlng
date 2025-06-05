@@ -11,7 +11,7 @@ import type {
 
 interface UseUserDataReturn {
   // User data
-  userProfile: UserProfile;
+  userProfile: UserProfile | null;
   nodeStats: NodeStats | null;
   hasNode: boolean;
   isPremium: boolean;
@@ -272,7 +272,7 @@ export function useUserData(): UseUserDataReturn {
 
   return {
     // User data
-    userProfile: profile as UserProfile,
+    userProfile: profile,
     nodeStats,
     hasNode,
     isPremium,

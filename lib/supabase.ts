@@ -16,7 +16,30 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Variables d\'environnement Supabase manquantes. Veuillez configurer NEXT_PUBLIC_SUPABASE_URL et NEXT_PUBLIC_SUPABASE_ANON_KEY');
 }
 
-// Client public pour l'authentification et les opérations côté client
+// ✅ CORRECTIF : Client browser unique pour éviter les multiples instances
+let browserClient: SupabaseClient | null = null;
+
+export function createSupabaseBrowserClient(): SupabaseClient {
+  if (typeof window === 'undefined') {
+    // Côté serveur, créer un nouveau client à chaque fois
+    return createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+  }
+
+  // Côté client, réutiliser le même client (singleton)
+  if (!browserClient) {
+    browserClient = createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+  }
+  
+  return browserClient;
+}
+
+// Client legacy pour compatibilité (à supprimer progressivement)
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
@@ -44,11 +67,5 @@ export function createServerClient(): SupabaseClient {
   return supabaseAdmin;
 }
 
-export function createSupabaseBrowserClient(): SupabaseClient {
-  return createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
-}
-
+// Export du client browser principal
 export const supabaseBrowser = createSupabaseBrowserClient()

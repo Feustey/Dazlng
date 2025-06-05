@@ -49,6 +49,18 @@ const UserDashboard: FC = () => {
     );
   }
 
+  // ✅ CORRECTIF : Protéger contre le rendu si pas de profil utilisateur
+  if (!userProfile) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin h-12 w-12 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-gray-600">Chargement de votre profil...</p>
+        </div>
+      </div>
+    );
+  }
+
   // Rediriger si pas authentifié
   if (!hasNode) {
     return null; // Le useEffect va rediriger
@@ -64,7 +76,7 @@ const UserDashboard: FC = () => {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">
-            👋 Bonjour{userProfile.firstName ? ` ${userProfile.firstName}` : userProfile.email ? ` ${userProfile.email.split('@')[0]}` : ''} !
+            👋 Bonjour{userProfile?.firstName ? ` ${userProfile.firstName}` : userProfile?.email ? ` ${userProfile.email.split('@')[0]}` : ''} !
           </h1>
           <p className="text-gray-600 mt-1">
             Voici un aperçu de vos performances Lightning
