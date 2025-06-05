@@ -1,5 +1,6 @@
 import { useSupabase } from '@/app/providers/SupabaseProvider'
 import { useState, useEffect } from 'react'
+import { daznoApi, mapDaznoRecommendationToLocal, mapNodeInfoToStats, isValidLightningPubkey } from '@/lib/dazno-api'
 import type { 
   UserProfile, 
   NodeStats, 
@@ -86,33 +87,54 @@ export function useUserData(): UseUserDataReturn {
 
   useEffect(() => {
     const fetchUserData = async (): Promise<void> => {
-      if (user) {
+      if (user && profile?.pubkey) {
         try {
-          // Simuler des stats de nœud (à remplacer par de vrais appels API)
-          setNodeStats({
-            monthlyRevenue: 12450,
-            totalCapacity: 2100000,
-            activeChannels: 8,
-            uptime: 99.8,
-            healthScore: 85,
-            routingEfficiency: 78,
-            revenueGrowth: 15.2,
-            rankInNetwork: 892,
-            totalNodes: 18650
-          });
+          // Vérifier si la pubkey est valide
+          if (isValidLightningPubkey(profile.pubkey)) {
+            try {
+              // Récupérer les informations du nœud depuis l'API DazNo
+              const nodeInfo = await daznoApi.getNodeInfo(profile.pubkey);
+              const stats = mapNodeInfoToStats(nodeInfo);
+              setNodeStats(stats);
+              setHasNode(true);
+            } catch (apiError) {
+              console.warn('API DazNo indisponible, utilisation de données par défaut:', apiError);
+              // Fallback vers des données par défaut si l'API est indisponible
+              setNodeStats({
+                monthlyRevenue: 0,
+                totalCapacity: 0,
+                activeChannels: 0,
+                uptime: 0,
+                healthScore: 0,
+                routingEfficiency: 0,
+                revenueGrowth: 0,
+                rankInNetwork: 0,
+                totalNodes: 0
+              });
+              setHasNode(true); // Même si l'API est down, on considère que le nœud existe
+            }
+          } else {
+            // Pas de pubkey valide
+            setNodeStats(null);
+            setHasNode(false);
+          }
 
-          setHasNode(true);
           setIsPremium(false);
           setIsLoading(false);
         } catch (error) {
           console.error('Erreur lors du chargement des données:', error);
           setIsLoading(false);
         }
+      } else {
+        // Pas d'utilisateur ou pas de profil
+        setNodeStats(null);
+        setHasNode(false);
+        setIsLoading(false);
       }
     };
 
     fetchUserData();
-  }, [user]);
+  }, [user, profile]);
 
   // Calcul de la complétude du profil pour le CRM
   const calculateProfileCompletion = (): { percentage: number; fields: ProfileField[] } => {
@@ -172,53 +194,74 @@ export function useUserData(): UseUserDataReturn {
     lastActivity: new Date()
   };
 
-  // Mock recommendations data
-  const recommendations: Recommendation[] = [
-    {
-      id: '1',
-      title: 'Ouvrir un canal avec ACINQ',
-      description: 'Améliorer votre connectivité en vous connectant à un hub majeur du réseau',
-      impact: 'high',
-      difficulty: 'easy',
-      isFree: true,
-      estimatedGain: 5000,
-      timeToImplement: '10 minutes',
-      category: 'liquidity'
-    },
-    {
-      id: '2',
-      title: 'Optimiser les frais de routage',
-      description: 'Ajuster automatiquement vos frais en fonction des conditions du marché',
-      impact: 'high',
-      difficulty: 'medium',
-      isFree: false,
-      estimatedGain: 15000,
-      timeToImplement: 'Automatique',
-      category: 'routing'
-    },
-    {
-      id: '3',
-      title: 'Rééquilibrer les canaux',
-      description: 'Optimiser la distribution de liquidité pour maximiser les revenus',
-      impact: 'medium',
-      difficulty: 'easy',
-      isFree: false,
-      estimatedGain: 8000,
-      timeToImplement: '5 minutes',
-      category: 'efficiency'
-    },
-    {
-      id: '4',
-      title: 'Configurer le backup automatique',
-      description: 'Sécuriser votre nœud avec des sauvegardes régulières',
-      impact: 'low',
-      difficulty: 'easy',
-      isFree: true,
-      estimatedGain: 0,
-      timeToImplement: '15 minutes',
-      category: 'security'
-    }
-  ];
+  // Recommandations from DazNo API or fallback data
+  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
+
+  // Fetch recommendations when user has a valid pubkey
+  useEffect(() => {
+    const fetchRecommendations = async (): Promise<void> => {
+      if (profile?.pubkey && isValidLightningPubkey(profile.pubkey)) {
+        try {
+          const apiRecs = await daznoApi.getRecommendations(profile.pubkey);
+          const mappedRecs = apiRecs.map(mapDaznoRecommendationToLocal);
+          setRecommendations(mappedRecs);
+        } catch (error) {
+          console.warn('Impossible de récupérer les recommandations depuis l\'API, utilisation des données par défaut:', error);
+          // Fallback vers des recommandations par défaut
+          setRecommendations([
+            {
+              id: '1',
+              title: 'Ouvrir un canal avec ACINQ',
+              description: 'Améliorer votre connectivité en vous connectant à un hub majeur du réseau',
+              impact: 'high',
+              difficulty: 'easy',
+              isFree: true,
+              estimatedGain: 5000,
+              timeToImplement: '10 minutes',
+              category: 'liquidity'
+            },
+            {
+              id: '2',
+              title: 'Optimiser les frais de routage',
+              description: 'Ajuster automatiquement vos frais en fonction des conditions du marché',
+              impact: 'high',
+              difficulty: 'medium',
+              isFree: false,
+              estimatedGain: 15000,
+              timeToImplement: 'Automatique',
+              category: 'routing'
+            },
+            {
+              id: '3',
+              title: 'Rééquilibrer les canaux',
+              description: 'Optimiser la distribution de liquidité pour maximiser les revenus',
+              impact: 'medium',
+              difficulty: 'easy',
+              isFree: false,
+              estimatedGain: 8000,
+              timeToImplement: '5 minutes',
+              category: 'efficiency'
+            },
+            {
+              id: '4',
+              title: 'Configurer le backup automatique',
+              description: 'Sécuriser votre nœud avec des sauvegardes régulières',
+              impact: 'low',
+              difficulty: 'easy',
+              isFree: true,
+              estimatedGain: 0,
+              timeToImplement: '15 minutes',
+              category: 'security'
+            }
+          ]);
+        }
+      } else {
+        setRecommendations([]);
+      }
+    };
+
+    fetchRecommendations();
+  }, [profile?.pubkey]);
 
   // Mock achievements data
   const achievements: Achievement[] = [
