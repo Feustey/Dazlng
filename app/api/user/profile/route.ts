@@ -28,6 +28,46 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       .single()
 
     if (profileError) {
+      // Si le profil n'existe pas, le créer
+      if (profileError.code === 'PGRST116') {
+        console.log('[API] Création automatique du profil pour utilisateur:', user.id)
+        
+        const { data: newProfile, error: createError } = await supabaseAdmin
+          .from('profiles')
+          .insert({
+            id: user.id,
+            email: user.email,
+            t4g_tokens: 1, // Valeur par défaut
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          })
+          .select('*')
+          .single()
+
+        if (createError) {
+          console.error('[API] Erreur création profil automatique:', createError)
+          return NextResponse.json({
+            success: false,
+            error: {
+              code: ErrorCodes.DATABASE_ERROR,
+              message: 'Erreur lors de la création du profil'
+            }
+          }, { status: 500 })
+        }
+
+        return NextResponse.json({
+          success: true,
+          data: {
+            ...newProfile,
+            isAdmin
+          },
+          meta: {
+            timestamp: new Date().toISOString(),
+            version: '1.0'
+          }
+        })
+      }
+
       console.error('[API] Erreur récupération profil:', profileError)
       return NextResponse.json({
         success: false,
@@ -97,31 +137,71 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
       }, { status: 400 })
     }
 
-    // Mettre à jour le profil
-    const { data: updatedProfile, error: updateError } = await supabaseAdmin
+    // Vérifier si le profil existe déjà
+    const { data: existingProfile } = await supabaseAdmin
       .from('profiles')
-      .update({
-        ...filteredData,
-        updated_at: new Date().toISOString()
-      })
+      .select('id')
       .eq('id', user.id)
-      .select()
       .single()
 
-    if (updateError) {
-      console.error('[API] Erreur mise à jour profil:', updateError)
-      return NextResponse.json({
-        success: false,
-        error: {
-          code: ErrorCodes.DATABASE_ERROR,
-          message: 'Erreur lors de la mise à jour du profil'
-        }
-      }, { status: 500 })
+    let result;
+
+    if (existingProfile) {
+      // Mettre à jour le profil existant
+      const { data: updatedProfile, error: updateError } = await supabaseAdmin
+        .from('profiles')
+        .update({
+          ...filteredData,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', user.id)
+        .select()
+        .single()
+
+      if (updateError) {
+        console.error('[API] Erreur mise à jour profil:', updateError)
+        return NextResponse.json({
+          success: false,
+          error: {
+            code: ErrorCodes.DATABASE_ERROR,
+            message: 'Erreur lors de la mise à jour du profil'
+          }
+        }, { status: 500 })
+      }
+
+      result = updatedProfile
+    } else {
+      // Créer un nouveau profil
+      const { data: newProfile, error: createError } = await supabaseAdmin
+        .from('profiles')
+        .insert({
+          id: user.id,
+          email: user.email,
+          ...filteredData,
+          t4g_tokens: 1, // Valeur par défaut
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .select()
+        .single()
+
+      if (createError) {
+        console.error('[API] Erreur création profil:', createError)
+        return NextResponse.json({
+          success: false,
+          error: {
+            code: ErrorCodes.DATABASE_ERROR,
+            message: 'Erreur lors de la création du profil'
+          }
+        }, { status: 500 })
+      }
+
+      result = newProfile
     }
 
     return NextResponse.json({
       success: true,
-      data: updatedProfile,
+      data: result,
       meta: {
         timestamp: new Date().toISOString(),
         version: '1.0'
