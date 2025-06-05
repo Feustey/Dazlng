@@ -40,14 +40,9 @@ export function createSupabaseBrowserClient(): SupabaseClient {
 }
 
 // Client legacy pour compatibilité (à supprimer progressivement)
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true,
-    flowType: 'pkce'
-  }
-});
+import { supabaseClientConfig } from './supabase-config';
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, supabaseClientConfig);
 
 // Client administrateur pour les opérations serveur qui nécessitent plus de permissions
 export const supabaseAdmin = supabaseServiceKey 

@@ -58,16 +58,25 @@ export function useUserData(): UseUserDataReturn {
           
           if (response.ok) {
             const data = await response.json();
-            setProfile(data.user as UserProfile);
+            // ✅ CORRECTIF : Vérifier que data.user existe avant de l'assigner
+            if (data.user) {
+              setProfile(data.user as UserProfile);
+            } else {
+              console.warn('Aucune donnée utilisateur reçue de l\'API');
+              setProfile(null);
+            }
           } else {
             console.error('Erreur lors de la récupération du profil:', response.status);
+            setProfile(null);
           }
         } catch (error) {
           console.error('Erreur lors du chargement des données utilisateur:', error);
+          setProfile(null);
         } finally {
           setIsLoading(false);
         }
       } else {
+        setProfile(null);
         setIsLoading(false);
       }
     };

@@ -3,6 +3,7 @@
 import React, { FC, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUserData } from '../hooks/useUserData';
+import { useSupabase } from '@/app/providers/SupabaseProvider';
 import ProfileCompletion from '../components/ui/ProfileCompletion';
 import DazBoxComparison from '../components/ui/DazBoxComparison';
 import EnhancedRecommendations from '../components/ui/EnhancedRecommendations';
@@ -26,6 +27,9 @@ const UserDashboard: FC = () => {
     applyRecommendation,
     upgradeToPremium
   } = useUserData();
+
+  // Récupérer l'utilisateur directement depuis le provider pour fallback
+  const { user } = useSupabase();
 
   // ✅ PROTECTION D'ACCÈS AVEC NEXTAUTH
   React.useEffect(() => {
@@ -76,7 +80,7 @@ const UserDashboard: FC = () => {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">
-            👋 Bonjour{userProfile?.firstName ? ` ${userProfile.firstName}` : userProfile?.email ? ` ${userProfile.email.split('@')[0]}` : ''} !
+            👋 Bonjour{userProfile?.firstName ? ` ${userProfile.firstName}` : userProfile?.email ? ` ${userProfile.email.split('@')[0]}` : user?.email ? ` ${user.email.split('@')[0]}` : ''} !
           </h1>
           <p className="text-gray-600 mt-1">
             Voici un aperçu de vos performances Lightning

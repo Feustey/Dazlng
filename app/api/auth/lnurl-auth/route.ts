@@ -133,7 +133,7 @@ export async function POST(req: NextRequest): Promise<Response> {
         iat: Math.floor(Date.now() / 1000)
       },
       JWT_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: '1h' }
     );
 
     // Nettoyer le challenge utilisé
