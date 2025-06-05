@@ -31,7 +31,7 @@ interface PriorityAction {
   reasoning: string;
 }
 
-const API_BASE_URL = 'https://api.dazno.de';
+const API_BASE_URL = process.env.NEXT_PUBLIC_DAZNO_API_URL || 'http://localhost:8080';
 
 class DaznoApiClient {
   private async makeRequest<T>(endpoint: string, options?: RequestInit): Promise<T> {
