@@ -1,7 +1,7 @@
 "use client";
 
 import React, { FC, useEffect, useState, useCallback } from 'react';
-import { useAuth } from '../hooks/useAuth';
+import { useSupabase } from '@/app/providers/SupabaseProvider';
 
 interface Subscription {
   id: string;
@@ -48,27 +48,32 @@ interface ApiResponse<T> {
 }
 
 const SubscriptionsPage: FC = () => {
+  const { user, session, loading: authLoading } = useSupabase();
   const [currentSubscription, setCurrentSubscription] = useState<Subscription | null>(null);
   const [availablePlans, setAvailablePlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
-  const { getAccessToken } = useAuth();
 
   const fetchSubscriptionData = useCallback(async (): Promise<void> => {
+    if (authLoading) return; // Attendre que l'auth soit chargée
+    
+    if (!user || !session) {
+      setError('Vous devez être connecté pour voir vos abonnements');
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
 
-      const token = await getAccessToken();
-      if (!token) {
-        throw new Error('Non authentifié');
-      }
-
       // Récupérer l'abonnement actuel et les plans disponibles en parallèle
       const [subscriptionRes, plansRes] = await Promise.all([
         fetch('/api/subscriptions/current', {
-          headers: { 'Authorization': `Bearer ${token}` }
+          headers: { 
+            'Authorization': `Bearer ${session.access_token}`,
+            'Content-Type': 'application/json'
+          }
         }),
         fetch('/api/subscriptions/plans')
       ]);
@@ -96,7 +101,7 @@ const SubscriptionsPage: FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [getAccessToken]);
+  }, [user, session, authLoading]);
 
   useEffect(() => {
     fetchSubscriptionData();
@@ -134,12 +139,29 @@ const SubscriptionsPage: FC = () => {
     alert('Fonctionnalité en développement');
   };
 
-  if (loading) {
+  // États de chargement
+  if (authLoading || loading) {
     return (
       <div className="max-w-4xl mx-auto space-y-8">
-        <h1 className="text-3xl font-bold mb-6">Mon abonnement</h1>
-        <div className="flex justify-center p-8">
-          <div className="animate-spin h-8 w-8 border-4 border-purple-500 border-t-transparent rounded-full" />
+        <div className="flex items-center justify-center min-h-96">
+          <div className="text-center">
+            <div className="animate-spin h-12 w-12 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p className="text-gray-600">Chargement de vos abonnements...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Vérification de l'authentification
+  if (!user) {
+    return (
+      <div className="max-w-4xl mx-auto space-y-8">
+        <div className="text-center p-8">
+          <p className="text-red-600">Vous devez être connecté pour accéder à cette page.</p>
+          <a href="/auth/login" className="text-indigo-600 hover:underline mt-2 inline-block">
+            Se connecter
+          </a>
         </div>
       </div>
     );
@@ -148,10 +170,21 @@ const SubscriptionsPage: FC = () => {
   if (error) {
     return (
       <div className="max-w-4xl mx-auto space-y-8">
-        <h1 className="text-3xl font-bold mb-6">Mon abonnement</h1>
-        <div className="bg-red-50 text-red-700 p-4 rounded-md">
-          <h3 className="font-semibold">Erreur</h3>
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold text-gray-900">Mon abonnement</h1>
+          <div className="text-sm text-gray-500">
+            Connecté en tant que {user.email}
+          </div>
+        </div>
+        <div className="bg-red-50 text-red-700 p-4 rounded-lg border border-red-200">
+          <h3 className="font-semibold mb-2">❌ Erreur</h3>
           <p>{error}</p>
+          <button 
+            onClick={fetchSubscriptionData}
+            className="mt-3 text-sm bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+          >
+            Réessayer
+          </button>
         </div>
       </div>
     );
@@ -159,7 +192,12 @@ const SubscriptionsPage: FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-      <h1 className="text-3xl font-bold mb-6">Mon abonnement</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold text-gray-900">Mon abonnement</h1>
+        <div className="text-sm text-gray-500">
+          Connecté en tant que {user.email}
+        </div>
+      </div>
 
       {/* Abonnement actuel */}
       {currentSubscription && (
@@ -204,99 +242,81 @@ const SubscriptionsPage: FC = () => {
             </div>
           </div>
 
-          <div className="flex gap-4">
-            <button className="bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition">
-              Gérer mon abonnement
-            </button>
-            {currentSubscription.status === 'active' && (
-              <button className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg font-semibold hover:bg-gray-300 transition">
-                Annuler l'abonnement
-              </button>
-            )}
-          </div>
+          {currentSubscription.status === 'cancelled' && (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <h3 className="font-semibold text-yellow-800 mb-1">Abonnement annulé</h3>
+              <p className="text-yellow-700 text-sm">
+                Votre abonnement se terminera le {formatDate(currentSubscription.endDate)}.
+                {currentSubscription.cancelReason && (
+                  <span> Raison: {currentSubscription.cancelReason}</span>
+                )}
+              </p>
+            </div>
+          )}
         </div>
       )}
 
       {/* Plans disponibles */}
-      <div>
-        <h2 className="text-2xl font-bold mb-6">Plans disponibles</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {availablePlans.map((plan) => {
-            const isCurrentPlan = currentSubscription?.planId === plan.id;
-            
-            return (
-              <div 
-                key={plan.id} 
-                className={`rounded-xl p-6 border text-center relative ${
-                  plan.popular 
-                    ? 'border-purple-500 bg-purple-50' 
-                    : isCurrentPlan 
-                      ? 'border-green-500 bg-green-50' 
-                      : 'border-gray-200 bg-white'
-                } ${plan.popular ? 'shadow-lg' : 'shadow'}`}
-              >
+      {availablePlans.length > 0 && (
+        <div className="bg-white rounded-xl shadow p-6">
+          <h2 className="text-xl font-semibold mb-6">Plans disponibles</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {availablePlans.map((plan) => (
+              <div key={plan.id} className={`border-2 rounded-xl p-6 relative ${plan.popular ? 'border-purple-500 bg-purple-50' : 'border-gray-200'}`}>
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-medium">
+                    <span className="bg-purple-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
                       Populaire
                     </span>
                   </div>
                 )}
                 
-                {isCurrentPlan && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-medium">
-                      Actuel
-                    </span>
+                <div className="text-center mb-6">
+                  <h3 className="text-lg font-semibold mb-2">{plan.name}</h3>
+                  <div className="text-3xl font-bold mb-1">
+                    {plan.price}Sats
+                    <span className="text-sm font-normal text-gray-500">/{plan.interval === 'month' ? 'mois' : 'an'}</span>
                   </div>
-                )}
-
-                <div className="font-bold text-lg mb-2">{plan.name}</div>
-                <div className="text-gray-600 mb-4 text-sm">{plan.description}</div>
-                <div className="text-3xl font-bold mb-4">
-                  {plan.price}Sats
-                  <span className="text-sm font-normal text-gray-500">/{plan.interval === 'month' ? 'mois' : 'an'}</span>
+                  <p className="text-gray-600 text-sm">{plan.description}</p>
                 </div>
 
-                <ul className="text-sm text-left mb-6 space-y-2">
+                <ul className="space-y-2 mb-6">
                   {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-start gap-2">
-                      <span className="text-green-500 mt-0.5">✓</span>
-                      <span>{feature}</span>
+                    <li key={index} className="flex items-center gap-2 text-sm">
+                      <span className="text-green-500">✓</span>
+                      {feature}
                     </li>
                   ))}
                 </ul>
 
-                <div className="text-xs text-gray-500 mb-4">
-                  <div>Nœuds: {plan.limits.nodes === -1 ? 'Illimité' : plan.limits.nodes}</div>
-                  <div>API: {plan.limits.apiCalls === -1 ? 'Illimité' : plan.limits.apiCalls.toLocaleString()}/mois</div>
-                  <div>Stockage: {plan.limits.storage}</div>
-                </div>
-
                 <button
                   onClick={() => handlePlanChange(plan.id)}
-                  disabled={isCurrentPlan}
-                  className={`w-full px-4 py-2 rounded-lg font-semibold transition ${
-                    isCurrentPlan
-                      ? 'bg-gray-200 text-gray-600 cursor-not-allowed'
+                  disabled={currentSubscription?.planId === plan.id}
+                  className={`w-full py-3 px-4 rounded-lg font-semibold transition ${
+                    currentSubscription?.planId === plan.id
+                      ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
                       : plan.popular
-                        ? 'bg-purple-600 text-white hover:bg-purple-700'
-                        : 'bg-gray-900 text-white hover:bg-gray-800'
+                      ? 'bg-purple-600 text-white hover:bg-purple-700'
+                      : 'bg-indigo-600 text-white hover:bg-indigo-700'
                   }`}
                 >
-                  {isCurrentPlan ? 'Plan actuel' : 'Choisir ce plan'}
+                  {currentSubscription?.planId === plan.id ? 'Plan actuel' : 'Choisir ce plan'}
                 </button>
-
-                {plan.trialDays && !isCurrentPlan && (
-                  <div className="text-xs text-gray-500 mt-2">
-                    Essai gratuit de {plan.trialDays} jours
-                  </div>
-                )}
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* Pas d'abonnement actuel */}
+      {!currentSubscription && availablePlans.length > 0 && (
+        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 text-white text-center">
+          <h2 className="text-2xl font-bold mb-4">🚀 Choisissez votre plan</h2>
+          <p className="mb-6 text-lg">
+            Démarrez avec un plan adapté à vos besoins et évoluez à votre rythme
+          </p>
+        </div>
+      )}
     </div>
   );
 };
