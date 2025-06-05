@@ -44,6 +44,36 @@ interface NodeHistory {
 const NodeManagement: FC = () => {
   const { session } = useSupabase();
   const [pubkey, setPubkey] = useState<string | null>(null);
+
+  // Fonction pour sauvegarder la pubkey dans le profil utilisateur
+  const savePubkeyToProfile = async (pubkeyValue: string): Promise<void> => {
+    try {
+      if (!session?.access_token) {
+        console.warn('Pas de session disponible pour sauvegarder la pubkey');
+        return;
+      }
+
+      const response = await fetch('/api/user/profile', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ pubkey: pubkeyValue })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Erreur lors de la sauvegarde de la pubkey:', errorData);
+        throw new Error(errorData.error || 'Erreur lors de la sauvegarde');
+      }
+
+      console.log('Pubkey sauvegardée avec succès dans le profil');
+    } catch (error) {
+      console.error('Erreur lors de la sauvegarde de la pubkey:', error);
+      // Ne pas bloquer l'expérience utilisateur, juste logger l'erreur
+    }
+  };
   const [stats, setStats] = useState<NodeStats | null>(null);
   const [_history, setHistory] = useState<NodeHistory | null>(null);
   const [loading, setLoading] = useState(false);
@@ -68,7 +98,9 @@ const NodeManagement: FC = () => {
       const data = await response.json();
       setStats(data);
       
-      // Sauvegarder la pubkey dans localStorage
+      // Sauvegarder la pubkey dans la base de données ET localStorage
+      await savePubkeyToProfile(nodeId);
+      
       if (typeof window !== 'undefined') {
         localStorage.setItem('user_pubkey', nodeId);
       }
@@ -125,7 +157,7 @@ const NodeManagement: FC = () => {
     }
   };
 
-  const handleManualPubkey = (): void => {
+  const handleManualPubkey = async (): Promise<void> => {
     const pubkey = prompt('Entrez votre clé publique Lightning (66 caractères hexadécimaux):');
     if (pubkey) {
       // Validation basique du format
@@ -135,11 +167,28 @@ const NodeManagement: FC = () => {
       }
       
       setPubkey(pubkey);
-      fetchNodeData(pubkey);
+      await savePubkeyToProfile(pubkey);
+      await fetchNodeData(pubkey);
     }
   };
 
-  const handleDisconnect = (): void => {
+  const handleDisconnect = async (): Promise<void> => {
+    try {
+      // Supprimer la pubkey du profil
+      if (session?.access_token) {
+        await fetch('/api/user/profile', {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${session.access_token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ pubkey: null })
+        });
+      }
+    } catch (error) {
+      console.error('Erreur lors de la suppression de la pubkey:', error);
+    }
+
     setPubkey(null);
     setStats(null);
     setHistory(null);

@@ -73,21 +73,19 @@ export function useUserData(): UseUserDataReturn {
         } catch (error) {
           console.error('Erreur lors du chargement des données utilisateur:', error);
           setProfile(null);
-        } finally {
-          setIsLoading(false);
         }
       } else {
         setProfile(null);
-        setIsLoading(false);
       }
+      setIsLoading(false);
     };
 
     fetchUserData();
   }, [user, session, loading])
 
   useEffect(() => {
-    const fetchUserData = async (): Promise<void> => {
-      if (user && profile?.pubkey) {
+    const fetchNodeData = async (): Promise<void> => {
+      if (profile?.pubkey) {
         try {
           // Vérifier si la pubkey est valide
           if (isValidLightningPubkey(profile.pubkey)) {
@@ -133,8 +131,8 @@ export function useUserData(): UseUserDataReturn {
       }
     };
 
-    fetchUserData();
-  }, [user, profile]);
+    fetchNodeData();
+  }, [profile]);
 
   // Calcul de la complétude du profil pour le CRM
   const calculateProfileCompletion = (): { percentage: number; fields: ProfileField[] } => {
