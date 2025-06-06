@@ -5,7 +5,7 @@ const TechnicalCTA: React.FC = () => {
   const router = useRouter();
 
   const handleStartTrial = (): void => {
-    router.push('/register');
+    router.push('/auth/login');
   };
 
   const handleViewDemo = (): void => {

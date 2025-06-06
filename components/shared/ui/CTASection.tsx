@@ -7,7 +7,7 @@ export const CTASection: React.FC = (): React.ReactElement => {
   const router = useRouter();
 
   const handleGetStarted = (): void => {
-    router.push('/register');
+    router.push('/auth/login');
   };
 
   const handleContact = (): void => {
