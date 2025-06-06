@@ -52,7 +52,37 @@ export async function GET(request: NextRequest): Promise<ReturnType<typeof NextR
       .eq('id', user.id)
       .single()
 
-    if (profileError) {
+    // Si le profil n'existe pas, le créer automatiquement
+    if (profileError && profileError.code === 'PGRST116') {
+      console.log('[API] Création automatique du profil pour utilisateur:', user.id)
+      
+      try {
+        const { data: profileData, error: createError } = await supabaseAdmin.rpc(
+          'ensure_profile_exists', 
+          { 
+            user_id: user.id, 
+            user_email: user.email 
+          }
+        )
+
+        if (createError) {
+          console.error('[API] Erreur création profil via fonction:', createError)
+          return NextResponse.json({ error: 'Erreur lors de la création du profil' }, { status: 500 })
+        }
+
+        return NextResponse.json({
+          profile: {
+            id: user.id,
+            email: user.email,
+            ...profileData
+          }
+        })
+        
+      } catch (funcError) {
+        console.error('[API] Erreur appel fonction ensure_profile_exists:', funcError)
+        return NextResponse.json({ error: 'Erreur lors de la création du profil' }, { status: 500 })
+      }
+    } else if (profileError) {
       console.error('[API] Erreur récupération profil:', profileError)
       return NextResponse.json({ error: 'Erreur lors de la récupération du profil' }, { status: 500 })
     }
@@ -99,14 +129,18 @@ export async function PUT(request: NextRequest): Promise<ReturnType<typeof NextR
     const body = await request.json()
     const validatedData = UpdateProfileSchema.parse(body)
 
-    // Mise à jour du profil
+    // Mise à jour du profil (ou création s'il n'existe pas)
     const { data: updatedProfile, error: updateError } = await supabaseAdmin
       .from('profiles')
-      .update({
+      .upsert({
+        id: user.id,
+        email: user.email,
         ...validatedData,
         updated_at: new Date().toISOString()
+      }, { 
+        onConflict: 'id',
+        ignoreDuplicates: false 
       })
-      .eq('id', user.id)
       .select('*')
       .single()
 
