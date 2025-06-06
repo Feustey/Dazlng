@@ -1,10 +1,12 @@
 "use client";
 
 import React, { FC, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
 
 const SettingsPage: FC = () => {
   const { user, session, loading: authLoading } = useSupabase();
+  const router = useRouter();
   const [form, setForm] = useState({
     nom: '',
     prenom: '',
@@ -219,6 +221,48 @@ const SettingsPage: FC = () => {
           💾 Enregistrer les modifications
         </button>
       </form>
+
+      {/* CTA DazBox pour les utilisateurs sans nœud */}
+      {!form.pubkey && (
+        <div className="bg-gradient-to-br from-orange-50 to-red-50 border border-orange-200 rounded-xl p-6 shadow-sm">
+          <div className="flex items-start space-x-4">
+            <div className="flex-shrink-0">
+              <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-red-500 rounded-lg flex items-center justify-center">
+                <span className="text-2xl">📦</span>
+              </div>
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                🚀 Vous n'avez pas encore votre propre nœud Lightning ?
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Découvrez la <strong>DazBox</strong> - un nœud Lightning Network prêt à l'emploi, 
+                livré configuré et optimisé par nos experts. Installation en 5 minutes, maintenance zéro !
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={() => router.push('/checkout/dazbox')}
+                  className="bg-gradient-to-r from-orange-500 to-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-orange-600 hover:to-red-700 transition-all duration-200 shadow-md"
+                >
+                  📦 Commander ma DazBox
+                </button>
+                <button
+                  onClick={() => router.push('/dazbox')}
+                  className="border border-orange-300 text-orange-700 px-6 py-3 rounded-lg font-semibold hover:bg-orange-50 transition-colors"
+                >
+                  📖 En savoir plus
+                </button>
+              </div>
+              <div className="mt-3 flex items-center text-sm text-gray-500">
+                <svg className="w-4 h-4 mr-1 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                </svg>
+                Livraison gratuite • Support 24/7 • Garantie 2 ans
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

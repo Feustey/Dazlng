@@ -1,5 +1,6 @@
 import { createSupabaseServerClient } from '@/lib/supabase-auth'
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { sendWelcomeEmail } from '@/lib/welcome-email'
 import { NextRequest, NextResponse } from 'next/server'
 
 export const dynamic = "force-dynamic";
@@ -61,6 +62,20 @@ export async function GET(request: NextRequest): Promise<ReturnType<typeof NextR
         }
 
         userProfile = profileData;
+        
+        // 🎉 Envoyer l'email de bienvenue pour les nouveaux utilisateurs
+        console.log('[API] Envoi email de bienvenue pour nouveau profil:', user.email)
+        try {
+          await sendWelcomeEmail({
+            email: user.email || '',
+            nom: userProfile?.nom,
+            prenom: userProfile?.prenom
+          });
+        } catch (emailError) {
+          console.error('[API] Erreur envoi email de bienvenue:', emailError);
+          // Ne pas faire échouer la création du profil si l'email échoue
+        }
+        
       } catch (funcError) {
         console.error('[API] Erreur appel fonction ensure_profile_exists:', funcError)
         return NextResponse.json({ error: 'Erreur lors de la création du profil' }, { status: 500 })
