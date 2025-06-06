@@ -136,6 +136,6 @@ COMMENT ON COLUMN public.profiles.address IS 'Adresse complète sur une ligne';
 COMMENT ON COLUMN public.profiles.ville IS 'Ville de résidence';
 COMMENT ON COLUMN public.profiles.code_postal IS 'Code postal (format français 5 chiffres)';
 COMMENT ON COLUMN public.profiles.pays IS 'Pays de résidence';
-COMMENT ON COLUMN public.profiles.compte_telegram IS 'Nom d\'utilisateur Telegram (format @username)';
+COMMENT ON COLUMN public.profiles.compte_telegram IS 'Nom d''utilisateur Telegram (format @username)';
 COMMENT ON CONSTRAINT valid_telegram_format ON public.profiles IS 'Validation du format Telegram @username (5-32 caractères)';
 COMMENT ON CONSTRAINT valid_postal_code_format ON public.profiles IS 'Validation du code postal français (5 chiffres)'; 

@@ -1,13 +1,14 @@
 import React from 'react';
 
 interface ButtonProps {
-  children: string;
+  children: React.ReactNode;
   onClick?: () => void;
   disabled?: boolean;
   loading?: boolean;
-  variant?: 'primary' | 'secondary' | 'outline';
-  size?: 'small' | 'medium' | 'large';
+  variant?: 'primary' | 'secondary' | 'outline' | 'default';
+  size?: 'small' | 'medium' | 'large' | 'sm';
   type?: 'button' | 'submit' | 'reset';
+  className?: string;
 }
 
 export default function Button(props: ButtonProps): React.ReactElement {
@@ -19,6 +20,7 @@ export default function Button(props: ButtonProps): React.ReactElement {
     variant = 'primary',
     size = 'medium',
     type = 'button',
+    className = '',
   } = props;
 
   const base = 'rounded-[25px] flex items-center justify-center shadow-md transition-colors duration-200 font-semibold';
@@ -26,9 +28,11 @@ export default function Button(props: ButtonProps): React.ReactElement {
     primary: 'bg-secondary text-primary',
     secondary: 'bg-background border-2 border-secondary text-secondary',
     outline: 'bg-transparent border-2 border-secondary text-secondary',
+    default: 'bg-blue-600 text-white hover:bg-blue-700',
   };
   const sizes: Record<string, string> = {
     small: 'py-2 px-6 text-[15px]',
+    sm: 'py-2 px-4 text-sm',
     medium: 'py-3 px-7 text-[18px]',
     large: 'py-4 px-9 text-[22px]',
   };
@@ -43,6 +47,7 @@ export default function Button(props: ButtonProps): React.ReactElement {
         sizes[size],
         disabledClass,
         loading ? 'pointer-events-none' : '',
+        className,
       ].join(' ')}
       onClick={onClick}
       disabled={disabled || loading}

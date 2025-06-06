@@ -1,10 +1,9 @@
 // Export all UI components
-export * from './ProtonPayments';
 export * from './LightningPayment';
 export * from './OptimizeButton';
 export * from './CustomHeader';
 export * from './ParallaxSection';
-export * from './ThreeHero';
+
 // ContactForm retiré du barrel export pour éviter les conflits côté client
 export * from './NotificationBadge';
 export * from './ProtonPayment';

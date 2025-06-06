@@ -21,7 +21,7 @@ const PRODUCT_CONFIG = {
 } as const;
 
 const PROMO_CONFIG = {
-  code: 'BITCOINWEEK',
+  code: 'MEETUPBITCOIN',
   discount: 10
 } as const;
 

@@ -58,7 +58,7 @@ export async function POST(_request: NextRequest): Promise<ReturnType<typeof Nex
               sql = 'ALTER TABLE public.profiles ADD COLUMN code_postal TEXT'
               break
             case 'pays':
-              sql = 'ALTER TABLE public.profiles ADD COLUMN pays TEXT DEFAULT \'France\''
+              sql = 'ALTER TABLE public.profiles ADD COLUMN pays TEXT DEFAULT \'\'France\'\''
               break
           }
 

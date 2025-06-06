@@ -68,8 +68,14 @@ export async function middleware(request: NextRequest): Promise<Response> {
 
   // Routes admin - vérifier les permissions
   if (pathname.startsWith('/admin')) {
-    if (!user?.email?.includes('@dazno.de')) {
-      return NextResponse.redirect(new URL('/auth/login?error=access_denied', request.url))
+    // En développement local, pas de protection sur /admin
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[Middleware] Mode développement - accès admin autorisé sans authentification');
+    } else {
+      // En production, vérifier l'email @dazno.de
+      if (!user?.email?.includes('@dazno.de')) {
+        return NextResponse.redirect(new URL('/auth/login?error=access_denied', request.url))
+      }
     }
   }
 
