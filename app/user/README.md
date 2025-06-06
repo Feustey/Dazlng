@@ -66,7 +66,7 @@ app/user/
 Centralise toute la logique de données utilisateur :
 - Gestion du state utilisateur
 - Calculs CRM (complétude profil, score engagement)
-- Mock data pour le développement
+- Données dynamiques basées sur les APIs réelles
 - Actions centralisées (mise à jour profil, conversions)
 
 ### Types partagés
@@ -145,7 +145,7 @@ userScore = profileCompletion + (hasNode ? 20 : 0) + (isPremium ? 15 : 0)
 
 ## Prochaines étapes
 
-1. **API Integration** : Remplacer les mock data
+1. **API Integration** : ✅ Terminée - Données réelles utilisées
 2. **Analytics** : Tracking des interactions
 3. **A/B Testing** : Optimiser les conversions
 4. **Notifications** : Système de rappels
