@@ -1,221 +1,171 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/auth-utils'
+import { createSupabaseServerClient } from '@/lib/supabase-auth'
 import { supabaseAdmin } from '@/lib/supabase-admin'
-import { ErrorCodes } from '@/types/database'
+import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
 
 export const dynamic = "force-dynamic";
 export const runtime = 'nodejs';
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+// Schéma de validation pour la mise à jour du profil
+const UpdateProfileSchema = z.object({
+  nom: z.string().optional(),
+  prenom: z.string().optional(),
+  pubkey: z.union([
+    z.string().regex(/^[0-9a-fA-F]{66}$/, 'Pubkey invalide'),
+    z.null()
+  ]).optional(),
+  compte_x: z.string().optional(),
+  compte_nostr: z.string().optional(),
+  phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, 'Format de téléphone invalide').optional(),
+  phone_verified: z.boolean().optional(),
+})
+
+export async function GET(request: NextRequest): Promise<ReturnType<typeof NextResponse.json>> {
   try {
-    const { user, error, isAdmin } = await requireAuth(request)
+    const supabase = createSupabaseServerClient()
     
-    if (error || !user) {
-      return NextResponse.json({
-        success: false,
-        error: {
-          code: ErrorCodes.UNAUTHORIZED,
-          message: error || 'Non authentifié'
-        }
-      }, { status: 401 })
+    // Récupération de l'utilisateur
+    const authHeader = request.headers.get('authorization');
+    let user = null;
+    
+    if (authHeader?.startsWith('Bearer ')) {
+      const token = authHeader.substring(7);
+      const { data: { user: tokenUser }, error } = await supabase.auth.getUser(token);
+      
+      if (error || !tokenUser) {
+        return NextResponse.json({ error: 'Token invalide' }, { status: 401 })
+      }
+      user = tokenUser;
+    } else {
+      const { data: { user: sessionUser }, error } = await supabase.auth.getUser()
+      
+      if (error || !sessionUser) {
+        return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+      }
+      user = sessionUser;
     }
 
-    // Récupérer le profil complet
+    // Récupérer le profil depuis la table profiles
     const { data: profile, error: profileError } = await supabaseAdmin
       .from('profiles')
       .select('*')
       .eq('id', user.id)
       .single()
 
-    if (profileError) {
-      // Si le profil n'existe pas, le créer
-      if (profileError.code === 'PGRST116') {
-        console.log('[API] Création automatique du profil pour utilisateur:', user.id)
-        
-        const { data: newProfile, error: createError } = await supabaseAdmin
-          .from('profiles')
-          .insert({
-            id: user.id,
-            email: user.email,
-            t4g_tokens: 1, // Valeur par défaut
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          })
-          .select('*')
-          .single()
+    // Si le profil n'existe pas, le créer automatiquement
+    if (profileError && profileError.code === 'PGRST116') {
+      console.log('[API] Création automatique du profil pour utilisateur:', user.id)
+      
+      try {
+        const { data: profileData, error: createError } = await supabaseAdmin.rpc(
+          'ensure_profile_exists', 
+          { 
+            user_id: user.id, 
+            user_email: user.email 
+          }
+        )
 
         if (createError) {
-          console.error('[API] Erreur création profil automatique:', createError)
-          return NextResponse.json({
-            success: false,
-            error: {
-              code: ErrorCodes.DATABASE_ERROR,
-              message: 'Erreur lors de la création du profil'
-            }
-          }, { status: 500 })
+          console.error('[API] Erreur création profil via fonction:', createError)
+          return NextResponse.json({ error: 'Erreur lors de la création du profil' }, { status: 500 })
         }
 
         return NextResponse.json({
-          success: true,
-          data: {
-            ...newProfile,
-            isAdmin
-          },
-          meta: {
-            timestamp: new Date().toISOString(),
-            version: '1.0'
+          profile: {
+            id: user.id,
+            email: user.email,
+            ...profileData
           }
         })
+        
+      } catch (funcError) {
+        console.error('[API] Erreur appel fonction ensure_profile_exists:', funcError)
+        return NextResponse.json({ error: 'Erreur lors de la création du profil' }, { status: 500 })
       }
-
+    } else if (profileError) {
       console.error('[API] Erreur récupération profil:', profileError)
-      return NextResponse.json({
-        success: false,
-        error: {
-          code: ErrorCodes.DATABASE_ERROR,
-          message: 'Erreur lors de la récupération du profil'
-        }
-      }, { status: 500 })
+      return NextResponse.json({ error: 'Erreur lors de la récupération du profil' }, { status: 500 })
     }
 
     return NextResponse.json({
-      success: true,
-      data: {
-        ...profile,
-        isAdmin
-      },
-      meta: {
-        timestamp: new Date().toISOString(),
-        version: '1.0'
+      profile: {
+        id: user.id,
+        email: user.email,
+        ...profile
       }
     })
-
   } catch (error) {
-    console.error('[API] Erreur inattendue:', error)
-    return NextResponse.json({
-      success: false,
-      error: {
-        code: ErrorCodes.INTERNAL_ERROR,
-        message: 'Erreur interne du serveur'
-      }
-    }, { status: 500 })
+    console.error("Erreur lors de la récupération du profil:", error);
+    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 
-export async function PUT(request: NextRequest): Promise<NextResponse> {
+export async function PUT(request: NextRequest): Promise<ReturnType<typeof NextResponse.json>> {
   try {
-    const { user, error } = await requireAuth(request)
+    const supabase = createSupabaseServerClient()
     
-    if (error || !user) {
-      return NextResponse.json({
-        success: false,
-        error: {
-          code: ErrorCodes.UNAUTHORIZED,
-          message: error || 'Non authentifié'
-        }
-      }, { status: 401 })
+    // Récupération de l'utilisateur
+    const authHeader = request.headers.get('authorization');
+    let user = null;
+    
+    if (authHeader?.startsWith('Bearer ')) {
+      const token = authHeader.substring(7);
+      const { data: { user: tokenUser }, error } = await supabase.auth.getUser(token);
+      
+      if (error || !tokenUser) {
+        return NextResponse.json({ error: 'Token invalide' }, { status: 401 })
+      }
+      user = tokenUser;
+    } else {
+      const { data: { user: sessionUser }, error } = await supabase.auth.getUser()
+      
+      if (error || !sessionUser) {
+        return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+      }
+      user = sessionUser;
     }
 
-    const updateData = await request.json()
-    
-    // Validation des données (exemple basique)
-    const allowedFields = ['nom', 'prenom', 'pubkey', 'compte_x', 'compte_nostr']
-    const filteredData = Object.keys(updateData)
-      .filter(key => allowedFields.includes(key))
-      .reduce((obj, key) => {
-        obj[key] = updateData[key]
-        return obj
-      }, {} as any)
+    // Parse et validation des données
+    const body = await request.json()
+    const validatedData = UpdateProfileSchema.parse(body)
 
-    if (Object.keys(filteredData).length === 0) {
-      return NextResponse.json({
-        success: false,
-        error: {
-          code: ErrorCodes.VALIDATION_ERROR,
-          message: 'Aucune donnée valide à mettre à jour'
-        }
-      }, { status: 400 })
-    }
-
-    // Vérifier si le profil existe déjà
-    const { data: existingProfile } = await supabaseAdmin
+    // Mise à jour du profil (ou création s'il n'existe pas)
+    const { data: updatedProfile, error: updateError } = await supabaseAdmin
       .from('profiles')
-      .select('id')
-      .eq('id', user.id)
+      .upsert({
+        id: user.id,
+        email: user.email,
+        ...validatedData,
+        updated_at: new Date().toISOString()
+      }, { 
+        onConflict: 'id',
+        ignoreDuplicates: false 
+      })
+      .select('*')
       .single()
 
-    let result;
-
-    if (existingProfile) {
-      // Mettre à jour le profil existant
-      const { data: updatedProfile, error: updateError } = await supabaseAdmin
-        .from('profiles')
-        .update({
-          ...filteredData,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', user.id)
-        .select()
-        .single()
-
-      if (updateError) {
-        console.error('[API] Erreur mise à jour profil:', updateError)
-        return NextResponse.json({
-          success: false,
-          error: {
-            code: ErrorCodes.DATABASE_ERROR,
-            message: 'Erreur lors de la mise à jour du profil'
-          }
-        }, { status: 500 })
-      }
-
-      result = updatedProfile
-    } else {
-      // Créer un nouveau profil
-      const { data: newProfile, error: createError } = await supabaseAdmin
-        .from('profiles')
-        .insert({
-          id: user.id,
-          email: user.email,
-          ...filteredData,
-          t4g_tokens: 1, // Valeur par défaut
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        })
-        .select()
-        .single()
-
-      if (createError) {
-        console.error('[API] Erreur création profil:', createError)
-        return NextResponse.json({
-          success: false,
-          error: {
-            code: ErrorCodes.DATABASE_ERROR,
-            message: 'Erreur lors de la création du profil'
-          }
-        }, { status: 500 })
-      }
-
-      result = newProfile
+    if (updateError) {
+      console.error('[API] Erreur mise à jour profil:', updateError)
+      return NextResponse.json({ error: 'Erreur lors de la mise à jour du profil' }, { status: 500 })
     }
 
     return NextResponse.json({
       success: true,
-      data: result,
-      meta: {
-        timestamp: new Date().toISOString(),
-        version: '1.0'
+      profile: {
+        id: user.id,
+        email: user.email,
+        ...updatedProfile
       }
     })
-
-  } catch (error) {
-    console.error('[API] Erreur inattendue:', error)
-    return NextResponse.json({
-      success: false,
-      error: {
-        code: ErrorCodes.INTERNAL_ERROR,
-        message: 'Erreur interne du serveur'
-      }
-    }, { status: 500 })
+  } catch (error: any) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ 
+        error: 'Données invalides', 
+        details: error.errors 
+      }, { status: 400 })
+    }
+    
+    console.error("Erreur lors de la mise à jour du profil:", error);
+    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
 } 

@@ -18,7 +18,7 @@ const NewHero: React.FC = (): React.ReactElement => {
 
   const handleStartFree = (): void => {
     trackCTAClick('primary', 'hero_section', { action: 'start_free' });
-    router.push('/register');
+    router.push('/auth/login');
   };
 
   const handleViewDemo = (): void => {
