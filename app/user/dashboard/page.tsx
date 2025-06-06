@@ -1,7 +1,6 @@
 "use client";
 
 import React, { FC, Suspense } from 'react';
-import { useRouter } from 'next/navigation';
 import { useUserData } from '../hooks/useUserData';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
 import ProfileCompletion from '../components/ui/ProfileCompletion';
@@ -11,7 +10,6 @@ import PerformanceMetrics from '../components/ui/PerformanceMetrics';
 import AccessDeniedAlert from '../components/ui/AccessDeniedAlert';
 
 const UserDashboard: FC = () => {
-  const router = useRouter();
   const {
     userProfile,
     nodeStats,
@@ -31,15 +29,9 @@ const UserDashboard: FC = () => {
   // Récupérer l'utilisateur directement depuis le provider pour fallback
   const { user } = useSupabase();
 
-  // ✅ PROTECTION D'ACCÈS AVEC NEXTAUTH
-  React.useEffect(() => {
-    if (isLoading) return; // Attendre le chargement de la session
-    
-    if (!hasNode) {
-      router.push('/user/node');
-      return;
-    }
-  }, [hasNode, router, isLoading]);
+  // ✅ SUPPRESSION DE LA REDIRECTION AUTOMATIQUE
+  // Le dashboard est maintenant accessible même sans nœud connecté
+  // L'utilisateur verra des prompts pour connecter son nœud
 
   // Afficher un loader pendant la vérification de la session
   if (isLoading) {
@@ -65,10 +57,7 @@ const UserDashboard: FC = () => {
     );
   }
 
-  // Rediriger si pas authentifié
-  if (!hasNode) {
-    return null; // Le useEffect va rediriger
-  }
+  // Plus de redirection automatique - accessible même sans nœud
 
   return (
     <div className="space-y-8 pb-8">
@@ -103,13 +92,43 @@ const UserDashboard: FC = () => {
         userScore={userScore}
       />
 
-      {/* Section 2: Performance du nœud (si connecté) */}
-      {hasNode && nodeStats && (
+      {/* Section 2: Performance du nœud (si connecté) ou Onboarding */}
+      {hasNode && nodeStats ? (
         <PerformanceMetrics
           metrics={nodeStats}
           achievements={achievements}
           trendData={trendData}
         />
+      ) : (
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-200">
+          <div className="text-center">
+            <div className="mb-6">
+              <div className="w-20 h-20 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-3xl">⚡</span>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                Connectez votre nœud Lightning
+              </h3>
+              <p className="text-gray-600 text-lg">
+                Débloquez l'analyse de performance et les recommandations personnalisées
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a 
+                href="/user/node" 
+                className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition"
+              >
+                🔗 Connecter mon nœud
+              </a>
+              <a 
+                href="/dazbox" 
+                className="bg-white text-indigo-600 border-2 border-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-indigo-50 transition"
+              >
+                📦 Découvrir DazBox
+              </a>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Section 3: Comparaison DazBox */}
