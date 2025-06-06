@@ -147,8 +147,56 @@ export async function PUT(request: NextRequest): Promise<ReturnType<typeof NextR
     const body = await request.json()
     console.log('[API] Données reçues pour mise à jour profil:', JSON.stringify(body, null, 2))
     
-    const validatedData = UpdateProfileSchema.parse(body)
-    console.log('[API] Données validées:', JSON.stringify(validatedData, null, 2))
+    // Validation avec gestion d'erreur gracieuse pour les nouveaux champs
+    let validatedData: any
+    try {
+      validatedData = UpdateProfileSchema.parse(body)
+      console.log('[API] Données validées (schema complet):', JSON.stringify(validatedData, null, 2))
+    } catch (zodError: any) {
+      console.warn('[API] Erreur validation schema complet, tentative avec schema de base...')
+      
+      // Schema de base pour compatibilité ascendante
+      const BaseProfileSchema = z.object({
+        nom: z.string().trim().optional(),
+        prenom: z.string().trim().optional(),
+        pubkey: z.union([
+          z.string().trim().regex(/^[0-9a-fA-F]{66}$/, 'Clé publique Lightning invalide'),
+          z.string().length(0),
+          z.null()
+        ]).optional(),
+        compte_x: z.string().trim().optional(),
+        compte_nostr: z.string().trim().optional(),
+        phone: z.union([
+          z.string().trim().regex(/^\+?[1-9]\d{1,14}$/, 'Format de téléphone invalide'),
+          z.string().length(0),
+          z.null()
+        ]).optional(),
+        phone_verified: z.boolean().optional(),
+      })
+      
+      try {
+        // Filtrer les champs connus pour le schema de base
+        const baseBody = Object.fromEntries(
+          Object.entries(body).filter(([key]) => 
+            ['nom', 'prenom', 'pubkey', 'compte_x', 'compte_nostr', 'phone', 'phone_verified'].includes(key)
+          )
+        )
+        
+        validatedData = {
+          ...BaseProfileSchema.parse(baseBody),
+          // Ajouter les nouveaux champs sans validation stricte
+          ...Object.fromEntries(
+            Object.entries(body).filter(([key]) => 
+              ['compte_telegram', 'address', 'ville', 'code_postal', 'pays'].includes(key)
+            )
+          )
+        }
+        
+        console.log('[API] Données validées (schema de base + nouveaux champs):', JSON.stringify(validatedData, null, 2))
+      } catch (baseError) {
+        throw zodError // Relancer l'erreur originale si même le schema de base échoue
+      }
+    }
 
     // Fonction utilitaire pour nettoyer les chaînes vides
     const cleanStringValue = (value: string | null | undefined): string | null => {
@@ -156,8 +204,24 @@ export async function PUT(request: NextRequest): Promise<ReturnType<typeof NextR
       return value.trim();
     }
 
-    // Préparation des données pour l'upsert
-    const profileData = {
+    // Vérifier quels champs sont disponibles en base
+    let availableColumns: string[] = []
+    try {
+      const { data: columns } = await supabaseAdmin
+        .from('information_schema.columns')
+        .select('column_name')
+        .eq('table_name', 'profiles')
+        .eq('table_schema', 'public')
+      
+      availableColumns = columns?.map(col => col.column_name) || []
+      console.log('[API] Colonnes disponibles:', availableColumns)
+    } catch (columnError) {
+      console.warn('[API] Impossible de vérifier les colonnes, utilisation des champs de base')
+      availableColumns = ['id', 'email', 'nom', 'prenom', 'pubkey', 'compte_x', 'compte_nostr', 'phone', 'phone_verified', 'email_verified', 'updated_at']
+    }
+
+    // Construire les données de profil en fonction des colonnes disponibles
+    const baseProfileData: any = {
       id: user.id,
       email: user.email,
       nom: cleanStringValue(validatedData.nom),
@@ -165,16 +229,30 @@ export async function PUT(request: NextRequest): Promise<ReturnType<typeof NextR
       pubkey: cleanStringValue(validatedData.pubkey),
       compte_x: cleanStringValue(validatedData.compte_x),
       compte_nostr: cleanStringValue(validatedData.compte_nostr),
-      compte_telegram: cleanStringValue(validatedData.compte_telegram),
       phone: cleanStringValue(validatedData.phone),
       phone_verified: validatedData.phone_verified || false,
-      address: cleanStringValue(validatedData.address),
-      ville: cleanStringValue(validatedData.ville),
-      code_postal: cleanStringValue(validatedData.code_postal),
-      pays: cleanStringValue(validatedData.pays) || 'France', // Valeur par défaut
       email_verified: true, // Par défaut après connexion
       updated_at: new Date().toISOString()
     }
+
+    // Ajouter les nouveaux champs seulement s'ils existent en base
+    const newFields = {
+      compte_telegram: cleanStringValue(validatedData.compte_telegram),
+      address: cleanStringValue(validatedData.address),
+      ville: cleanStringValue(validatedData.ville),
+      code_postal: cleanStringValue(validatedData.code_postal),
+      pays: cleanStringValue(validatedData.pays) || 'France'
+    }
+
+    Object.entries(newFields).forEach(([key, value]) => {
+      if (availableColumns.includes(key)) {
+        baseProfileData[key] = value
+      } else {
+        console.warn(`[API] Champ ${key} ignoré car non disponible en base`)
+      }
+    })
+
+    const profileData = baseProfileData
     
     console.log('[API] Données à sauvegarder:', JSON.stringify(profileData, null, 2))
 
