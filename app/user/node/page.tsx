@@ -111,7 +111,7 @@ const NodeManagement: FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [session]);
+  }, [session, savePubkeyToProfile]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

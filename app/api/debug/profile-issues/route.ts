@@ -8,11 +8,16 @@ export async function GET(_request: NextRequest): Promise<ReturnType<typeof Next
   try {
     const supabase = createSupabaseServerClient()
     
-    // Vérifier l'authentification admin
-    const { data: { user }, error } = await supabase.auth.getUser()
-    
-    if (error || !user) {
-      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+    // En développement, permettre l'accès sans auth pour diagnostic
+    if (process.env.NODE_ENV === 'development') {
+      // Pas d'auth requise en dev
+    } else {
+      // En production, vérifier l'authentification admin
+      const { data: { user }, error } = await supabase.auth.getUser()
+      
+      if (error || !user) {
+        return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+      }
     }
 
     // Diagnostiquer les problèmes de profil
