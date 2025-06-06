@@ -14,8 +14,13 @@ const SettingsPage: FC = () => {
     pubkey: '',
     compte_x: '',
     compte_nostr: '',
+    compte_telegram: '',
     phone: '',
     phone_verified: false,
+    address: '',
+    ville: '',
+    code_postal: '',
+    pays: 'France',
   });
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -47,8 +52,13 @@ const SettingsPage: FC = () => {
             pubkey: userData.pubkey || '',
             compte_x: userData.compte_x || '',
             compte_nostr: userData.compte_nostr || '',
+            compte_telegram: userData.compte_telegram || '',
             phone: userData.phone || '',
             phone_verified: userData.phone_verified || false,
+            address: userData.address || '',
+            ville: userData.ville || '',
+            code_postal: userData.code_postal || '',
+            pays: userData.pays || 'France',
           });
         } else {
           console.error('Erreur lors du chargement du profil:', res.status);
@@ -91,6 +101,22 @@ const SettingsPage: FC = () => {
       const phonePattern = /^\+?[1-9]\d{1,14}$/;
       if (!phonePattern.test(form.phone.trim())) {
         setMessage('❌ Format de téléphone invalide (ex: +33123456789)');
+        return;
+      }
+    }
+
+    if (form.compte_telegram && form.compte_telegram.trim() !== '') {
+      const telegramPattern = /^@[a-zA-Z0-9_]{5,32}$/;
+      if (!telegramPattern.test(form.compte_telegram.trim())) {
+        setMessage('❌ Format Telegram invalide (ex: @moncompte, 5-32 caractères)');
+        return;
+      }
+    }
+
+    if (form.code_postal && form.code_postal.trim() !== '') {
+      const postalPattern = /^[0-9]{5}$/;
+      if (!postalPattern.test(form.code_postal.trim())) {
+        setMessage('❌ Code postal invalide (5 chiffres requis)');
         return;
       }
     }
@@ -232,6 +258,92 @@ const SettingsPage: FC = () => {
               onChange={handleChange}
               placeholder="npub1..." 
             />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Compte Telegram</label>
+            <input 
+              type="text" 
+              name="compte_telegram" 
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+              value={form.compte_telegram} 
+              onChange={handleChange}
+              placeholder="@votre_username" 
+            />
+            <p className="text-xs text-gray-500 mt-1">Format: @username (5-32 caractères)</p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
+            <input 
+              type="tel" 
+              name="phone" 
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+              value={form.phone} 
+              onChange={handleChange}
+              placeholder="+33123456789" 
+            />
+            <p className="text-xs text-gray-500 mt-1">Format international recommandé (ex: +33123456789)</p>
+          </div>
+        </div>
+
+        {/* Section Adresse */}
+        <div className="border-t pt-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">📍 Adresse</h3>
+          <div className="grid grid-cols-1 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Adresse complète</label>
+              <input 
+                type="text" 
+                name="address" 
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+                value={form.address} 
+                onChange={handleChange}
+                placeholder="123 rue de la Paix" 
+              />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Ville</label>
+                <input 
+                  type="text" 
+                  name="ville" 
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+                  value={form.ville} 
+                  onChange={handleChange}
+                  placeholder="Paris" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Code postal</label>
+                <input 
+                  type="text" 
+                  name="code_postal" 
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+                  value={form.code_postal} 
+                  onChange={handleChange}
+                  placeholder="75001" 
+                  maxLength={5}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Pays</label>
+                <select 
+                  name="pays" 
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+                  value={form.pays} 
+                  onChange={(e) => setForm({ ...form, pays: e.target.value })}
+                >
+                  <option value="France">France</option>
+                  <option value="Belgique">Belgique</option>
+                  <option value="Suisse">Suisse</option>
+                  <option value="Canada">Canada</option>
+                  <option value="Luxembourg">Luxembourg</option>
+                  <option value="Allemagne">Allemagne</option>
+                  <option value="Espagne">Espagne</option>
+                  <option value="Italie">Italie</option>
+                  <option value="Autre">Autre</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
         

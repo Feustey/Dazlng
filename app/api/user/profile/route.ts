@@ -17,12 +17,25 @@ const UpdateProfileSchema = z.object({
   ]).optional(),
   compte_x: z.string().trim().optional(),
   compte_nostr: z.string().trim().optional(),
+  compte_telegram: z.union([
+    z.string().trim().regex(/^@[a-zA-Z0-9_]{5,32}$/, 'Format Telegram invalide (doit commencer par @ et contenir 5-32 caractères)'),
+    z.string().length(0), // Permet une chaîne vide
+    z.null()
+  ]).optional(),
   phone: z.union([
     z.string().trim().regex(/^\+?[1-9]\d{1,14}$/, 'Format de téléphone invalide'),
     z.string().length(0), // Permet une chaîne vide
     z.null()
   ]).optional(),
   phone_verified: z.boolean().optional(),
+  address: z.string().trim().optional(),
+  ville: z.string().trim().optional(),
+  code_postal: z.union([
+    z.string().trim().regex(/^[0-9]{5}$/, 'Code postal invalide (5 chiffres requis)'),
+    z.string().length(0), // Permet une chaîne vide
+    z.null()
+  ]).optional(),
+  pays: z.string().trim().optional(),
 })
 
 export async function GET(request: NextRequest): Promise<ReturnType<typeof NextResponse.json>> {
@@ -152,8 +165,13 @@ export async function PUT(request: NextRequest): Promise<ReturnType<typeof NextR
       pubkey: cleanStringValue(validatedData.pubkey),
       compte_x: cleanStringValue(validatedData.compte_x),
       compte_nostr: cleanStringValue(validatedData.compte_nostr),
+      compte_telegram: cleanStringValue(validatedData.compte_telegram),
       phone: cleanStringValue(validatedData.phone),
       phone_verified: validatedData.phone_verified || false,
+      address: cleanStringValue(validatedData.address),
+      ville: cleanStringValue(validatedData.ville),
+      code_postal: cleanStringValue(validatedData.code_postal),
+      pays: cleanStringValue(validatedData.pays) || 'France', // Valeur par défaut
       email_verified: true, // Par défaut après connexion
       updated_at: new Date().toISOString()
     }
