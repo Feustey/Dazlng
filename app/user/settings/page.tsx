@@ -78,6 +78,23 @@ const SettingsPage: FC = () => {
       return;
     }
 
+    // Validation côté client
+    if (form.pubkey && form.pubkey.trim() !== '') {
+      const pubkeyPattern = /^[0-9a-fA-F]{66}$/;
+      if (!pubkeyPattern.test(form.pubkey.trim())) {
+        setMessage('❌ La clé publique Lightning doit contenir exactement 66 caractères hexadécimaux');
+        return;
+      }
+    }
+
+    if (form.phone && form.phone.trim() !== '') {
+      const phonePattern = /^\+?[1-9]\d{1,14}$/;
+      if (!phonePattern.test(form.phone.trim())) {
+        setMessage('❌ Format de téléphone invalide (ex: +33123456789)');
+        return;
+      }
+    }
+
     try {
       const res = await fetch('/api/user/profile', {
         method: 'PUT',
@@ -93,7 +110,17 @@ const SettingsPage: FC = () => {
         setTimeout(() => setMessage(null), 3000);
       } else {
         const errorData = await res.json();
-        setMessage(`❌ Erreur: ${errorData.error?.message || 'Erreur lors de la sauvegarde'}`);
+        console.error('Erreur API:', errorData);
+        
+        let errorMessage = 'Erreur lors de la sauvegarde';
+        if (errorData.error) {
+          if (typeof errorData.error === 'string') {
+            errorMessage = errorData.error;
+          } else if (errorData.error.message) {
+            errorMessage = errorData.error.message;
+          }
+        }
+        setMessage(`❌ ${errorMessage}`);
       }
     } catch (error) {
       console.error('Erreur lors de la sauvegarde:', error);

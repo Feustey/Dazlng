@@ -8,15 +8,20 @@ export const runtime = 'nodejs';
 
 // Schéma de validation pour la mise à jour du profil
 const UpdateProfileSchema = z.object({
-  nom: z.string().optional(),
-  prenom: z.string().optional(),
+  nom: z.string().trim().optional(),
+  prenom: z.string().trim().optional(),
   pubkey: z.union([
-    z.string().regex(/^[0-9a-fA-F]{66}$/, 'Pubkey invalide'),
+    z.string().trim().regex(/^[0-9a-fA-F]{66}$/, 'Clé publique Lightning invalide (66 caractères hexadécimaux requis)'),
+    z.string().length(0), // Permet une chaîne vide
     z.null()
   ]).optional(),
-  compte_x: z.string().optional(),
-  compte_nostr: z.string().optional(),
-  phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, 'Format de téléphone invalide').optional(),
+  compte_x: z.string().trim().optional(),
+  compte_nostr: z.string().trim().optional(),
+  phone: z.union([
+    z.string().trim().regex(/^\+?[1-9]\d{1,14}$/, 'Format de téléphone invalide'),
+    z.string().length(0), // Permet une chaîne vide
+    z.null()
+  ]).optional(),
   phone_verified: z.boolean().optional(),
 })
 
@@ -127,17 +132,38 @@ export async function PUT(request: NextRequest): Promise<ReturnType<typeof NextR
 
     // Parse et validation des données
     const body = await request.json()
+    console.log('[API] Données reçues pour mise à jour profil:', JSON.stringify(body, null, 2))
+    
     const validatedData = UpdateProfileSchema.parse(body)
+    console.log('[API] Données validées:', JSON.stringify(validatedData, null, 2))
+
+    // Fonction utilitaire pour nettoyer les chaînes vides
+    const cleanStringValue = (value: string | null | undefined): string | null => {
+      if (!value || value.trim() === '') return null;
+      return value.trim();
+    }
+
+    // Préparation des données pour l'upsert
+    const profileData = {
+      id: user.id,
+      email: user.email,
+      nom: cleanStringValue(validatedData.nom),
+      prenom: cleanStringValue(validatedData.prenom),
+      pubkey: cleanStringValue(validatedData.pubkey),
+      compte_x: cleanStringValue(validatedData.compte_x),
+      compte_nostr: cleanStringValue(validatedData.compte_nostr),
+      phone: cleanStringValue(validatedData.phone),
+      phone_verified: validatedData.phone_verified || false,
+      email_verified: true, // Par défaut après connexion
+      updated_at: new Date().toISOString()
+    }
+    
+    console.log('[API] Données à sauvegarder:', JSON.stringify(profileData, null, 2))
 
     // Mise à jour du profil (ou création s'il n'existe pas)
     const { data: updatedProfile, error: updateError } = await supabaseAdmin
       .from('profiles')
-      .upsert({
-        id: user.id,
-        email: user.email,
-        ...validatedData,
-        updated_at: new Date().toISOString()
-      }, { 
+      .upsert(profileData, { 
         onConflict: 'id',
         ignoreDuplicates: false 
       })
@@ -159,13 +185,21 @@ export async function PUT(request: NextRequest): Promise<ReturnType<typeof NextR
     })
   } catch (error: any) {
     if (error instanceof z.ZodError) {
+      console.error('[API] Erreur de validation:', error.errors)
+      const errorMessage = error.errors.map(err => `${err.path.join('.')}: ${err.message}`).join(', ')
       return NextResponse.json({ 
-        error: 'Données invalides', 
-        details: error.errors 
+        error: { 
+          message: `Données invalides: ${errorMessage}`,
+          details: error.errors
+        }
       }, { status: 400 })
     }
     
     console.error("Erreur lors de la mise à jour du profil:", error);
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return NextResponse.json({ 
+      error: { 
+        message: error.message || 'Erreur serveur lors de la mise à jour du profil'
+      }
+    }, { status: 500 })
   }
 } 
