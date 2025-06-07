@@ -15,6 +15,7 @@
     "type-check": "tsc --noEmit",
     "test": "jest",
     "test:api": "jest --config jest.api.config.js",
+    "test:dazno": "tsx scripts/test-dazno-api.js",
     "verify-migration": "tsx scripts/verify-post-migration.ts",
     "test-apis": "tsx scripts/test-apis-post-migration.ts",
     "health-check": "tsx scripts/quick-health-check.ts",

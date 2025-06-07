@@ -40,7 +40,7 @@ const UpdateProfileSchema = z.object({
 
 export async function GET(request: NextRequest): Promise<ReturnType<typeof NextResponse.json>> {
   try {
-    const supabase = createSupabaseServerClient()
+    const supabase = await createSupabaseServerClient()
     
     // Récupération de l'utilisateur
     const authHeader = request.headers.get('authorization');
@@ -120,7 +120,7 @@ export async function GET(request: NextRequest): Promise<ReturnType<typeof NextR
 
 export async function PUT(request: NextRequest): Promise<ReturnType<typeof NextResponse.json>> {
   try {
-    const supabase = createSupabaseServerClient()
+    const supabase = await createSupabaseServerClient()
     
     // Récupération de l'utilisateur
     const authHeader = request.headers.get('authorization');

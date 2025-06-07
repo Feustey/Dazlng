@@ -144,7 +144,7 @@ export async function rateLimit(
 }> {
   const key = config.keyGenerator 
     ? config.keyGenerator(req)
-    : req.ip || req.headers.get('x-forwarded-for') || 'unknown'
+    : req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown'
   
   const now = Date.now()
   
@@ -203,7 +203,7 @@ export function createIPRateLimit(maxAttempts = 100, windowMs = 60 * 60 * 1000) 
     rateLimit(req, {
       maxAttempts,
       windowMs,
-      keyGenerator: (req) => `ip:${req.ip || req.headers.get('x-forwarded-for') || 'unknown'}`
+      keyGenerator: (req) => `ip:${req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown'}`
     })
 }
 

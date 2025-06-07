@@ -5,10 +5,11 @@ import { DaznoRecommendationsResponse } from '@/types/dazno-api'
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { pubkey: string } }
+  { params }: { params: Promise<{ pubkey: string }> }
 ): Promise<Response> {
   try {
-    const pubkey = params.pubkey
+    const resolvedParams = await params
+    const pubkey = resolvedParams.pubkey
 
     if (!daznoAPI.isValidPubkey(pubkey)) {
       return NextResponse.json<ApiResponse<null>>({

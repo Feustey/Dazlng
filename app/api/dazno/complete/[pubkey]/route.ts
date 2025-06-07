@@ -5,14 +5,15 @@ import { DaznoCompleteResponse, DaznoPriorityRequest } from '@/types/dazno-api'
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { pubkey: string } }
+  { params }: { params: Promise<{ pubkey: string }> }
 ): Promise<Response> {
   try {
     const { searchParams } = new URL(req.url)
     const context = searchParams.get('context') as DaznoPriorityRequest['context'] || 'intermediate'
     const goals = searchParams.getAll('goals') as DaznoPriorityRequest['goals'] || ['increase_revenue']
 
-    const pubkey = params.pubkey
+    const resolvedParams = await params
+    const pubkey = resolvedParams.pubkey
 
     if (!daznoAPI.isValidPubkey(pubkey)) {
       return NextResponse.json<ApiResponse<null>>({

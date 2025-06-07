@@ -9,7 +9,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function POST(request: NextRequest): Promise<Response> {
   try {
     // Rate limiting
-    const clientIP = request.ip || request.headers.get('x-forwarded-for') || 'unknown'
+    const clientIP = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
     const rateLimiter = new RateLimitService()
     const rateLimitResult = await rateLimiter.checkRateLimit(clientIP, { maxAttempts: 5, windowMs: 60 * 15 * 1000 }) // 5 tentatives par 15 min
     

@@ -68,6 +68,10 @@ const NodeManagement: FC = () => {
       setLoading(true);
       setError(null);
 
+      // Vérifier d'abord la disponibilité de l'API
+      const apiHealth = await daznoApi.checkHealth();
+      const isApiAvailable = apiHealth.status !== 'unavailable';
+
       // Appels parallèles à l'API DazNo réelle
       const [nodeInfoResponse, recommendationsResponse, prioritiesResponse] = await Promise.allSettled([
         daznoApi.getNodeInfo(nodePubkey),
@@ -92,6 +96,11 @@ const NodeManagement: FC = () => {
         setPriorityActions(prioritiesResponse.value);
       } else {
         console.error('Erreur lors du chargement des actions prioritaires:', prioritiesResponse.reason);
+      }
+
+      // Afficher un avertissement si l'API n'est pas disponible
+      if (!isApiAvailable) {
+        setError('⚠️ L\'API d\'analyse n\'est pas disponible. Les données affichées sont des exemples génériques. Vérifiez votre connexion réseau ou réessayez plus tard.');
       }
 
     } catch (err) {
@@ -136,8 +145,6 @@ const NodeManagement: FC = () => {
     setPubkey(pubkeyInput);
     await savePubkeyToProfile(pubkeyInput);
   };
-
-
 
   const handleDisconnect = async (): Promise<void> => {
     try {
@@ -290,9 +297,35 @@ const NodeManagement: FC = () => {
           </form>
 
           {error && (
-            <div className="mt-6 p-4 bg-red-50 text-red-700 rounded-lg">
-              <h4 className="font-medium mb-1">Erreur</h4>
-              <p className="text-sm">{error}</p>
+            <div className={`p-4 rounded-lg border ${
+              error.includes('⚠️') 
+                ? 'bg-yellow-50 border-yellow-200 text-yellow-800' 
+                : 'bg-red-50 border-red-200 text-red-800'
+            }`}>
+              <div className="flex items-start">
+                <div className="flex-shrink-0">
+                  {error.includes('⚠️') ? (
+                    <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  ) : (
+                    <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm font-medium">
+                    {error.includes('⚠️') ? 'Mode démonstration' : 'Erreur'}
+                  </p>
+                  <p className="text-sm">{error}</p>
+                  {error.includes('⚠️') && (
+                    <p className="text-xs mt-1 opacity-75">
+                      Les données affichées sont des exemples pour tester l'interface.
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -727,15 +760,35 @@ const NodeManagement: FC = () => {
       </div>
 
       {error && (
-        <div className="p-4 bg-red-50 text-red-700 rounded-lg">
-          <h3 className="font-semibold mb-1">Erreur</h3>
-          <p className="text-sm">{error}</p>
-          <button
-            onClick={() => setError(null)}
-            className="mt-2 text-sm underline hover:no-underline"
-          >
-            Masquer
-          </button>
+        <div className={`p-4 rounded-lg border ${
+          error.includes('⚠️') 
+            ? 'bg-yellow-50 border-yellow-200 text-yellow-800' 
+            : 'bg-red-50 border-red-200 text-red-800'
+        }`}>
+          <div className="flex items-start">
+            <div className="flex-shrink-0">
+              {error.includes('⚠️') ? (
+                <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              ) : (
+                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              )}
+            </div>
+            <div className="ml-3">
+              <p className="text-sm font-medium">
+                {error.includes('⚠️') ? 'Mode démonstration' : 'Erreur'}
+              </p>
+              <p className="text-sm">{error}</p>
+              {error.includes('⚠️') && (
+                <p className="text-xs mt-1 opacity-75">
+                  Les données affichées sont des exemples pour tester l'interface.
+                </p>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>

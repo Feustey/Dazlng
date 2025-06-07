@@ -31,10 +31,11 @@ interface ApiResponse<T> {
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { nodeId: string; channelId: string } }
+  { params }: { params: Promise<{ nodeId: string; channelId: string }> }
 ): Promise<Response> {
   try {
-    const { nodeId, channelId } = params;
+    const resolvedParams = await params;
+    const { nodeId, channelId } = resolvedParams;
     
     // Validation de la pubkey
     if (!/^[0-9a-fA-F]{66}$/.test(nodeId)) {
@@ -87,10 +88,11 @@ export async function GET(
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { nodeId: string; channelId: string } }
+  { params }: { params: Promise<{ nodeId: string; channelId: string }> }
 ): Promise<Response> {
   try {
-    const { nodeId, channelId } = params;
+    const resolvedParams = await params;
+    const { nodeId, channelId } = resolvedParams;
     const body = await req.json();
     
     // Validation de la pubkey
@@ -157,10 +159,11 @@ export async function PATCH(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { nodeId: string; channelId: string } }
+  { params }: { params: Promise<{ nodeId: string; channelId: string }> }
 ): Promise<Response> {
   try {
-    const { nodeId, channelId } = params;
+    const resolvedParams = await params;
+    const { nodeId, channelId } = resolvedParams;
     const { searchParams } = new URL(req.url);
     const force = searchParams.get('force') === 'true';
     

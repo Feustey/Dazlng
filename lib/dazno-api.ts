@@ -115,22 +115,101 @@ class DaznoApiClient {
     }
   }
 
-  async checkHealth(): Promise<{ status: string; timestamp: string; services?: any }> {
-    return this.makeRequest('/health');
+  async checkHealth(): Promise<{ status: string; timestamp: string; services?: any; error?: string }> {
+    try {
+      return await this.makeRequest('/health');
+    } catch (error) {
+      // Fallback pour le health check
+      console.warn('[DaznoAPI] Health check failed, API may be unavailable:', error);
+      return {
+        status: 'unavailable',
+        timestamp: new Date().toISOString(),
+        error: 'API not available'
+      };
+    }
   }
 
   async getNodeInfo(pubkey: string): Promise<NodeInfo> {
     if (!pubkey || pubkey.length !== 66) {
       throw new Error('Invalid pubkey format');
     }
-    return this.makeRequest(`/api/v1/node/${pubkey}/info`);
+    
+    try {
+      return await this.makeRequest(`/api/v1/node/${pubkey}/info`);
+    } catch (error) {
+      console.warn('[DaznoAPI] Node info not available, using fallback data:', error);
+      // Données de fallback basiques
+      return {
+        pubkey,
+        alias: 'Nœud inconnu',
+        capacity: 0,
+        channels: 0,
+        active_channels: 0,
+        inactive_channels: 0,
+        health_score: 0,
+        liquidity_score: 0,
+        connectivity_score: 0,
+        uptime_percentage: 0,
+        routing_revenue_7d: 0,
+        forwarding_efficiency: 0,
+        network_rank: 0,
+        total_network_nodes: 0
+      };
+    }
   }
 
   async getRecommendations(pubkey: string): Promise<DaznoRecommendation[]> {
     if (!pubkey || pubkey.length !== 66) {
       throw new Error('Invalid pubkey format');
     }
-    return this.makeRequest(`/api/v1/node/${pubkey}/recommendations`);
+    
+    try {
+      return await this.makeRequest(`/api/v1/node/${pubkey}/recommendations`);
+    } catch (error) {
+      console.warn('[DaznoAPI] Recommendations not available, using fallback data:', error);
+      // Données de fallback avec recommandations génériques
+      return [
+        {
+          id: 'fallback-1',
+          type: 'channel_optimization',
+          title: 'Optimiser la gestion des canaux',
+          description: 'Analysez vos canaux pour identifier les opportunités d\'optimisation.',
+          impact: 'medium' as const,
+          difficulty: 'medium' as const,
+          priority: 1,
+          category: 'channel_management' as const,
+          action_type: 'other' as const,
+          free: true,
+          estimated_gain_sats: 1000
+        },
+        {
+          id: 'fallback-2',
+          type: 'fee_adjustment',
+          title: 'Ajuster les frais de routing',
+          description: 'Optimisez vos frais pour améliorer la rentabilité.',
+          impact: 'high' as const,
+          difficulty: 'easy' as const,
+          priority: 2,
+          category: 'fee_optimization' as const,
+          action_type: 'adjust_fees' as const,
+          free: true,
+          estimated_gain_sats: 2500
+        },
+        {
+          id: 'fallback-3',
+          type: 'liquidity_management',
+          title: 'Équilibrer la liquidité',
+          description: 'Rééquilibrez vos canaux pour améliorer le routing.',
+          impact: 'medium' as const,
+          difficulty: 'hard' as const,
+          priority: 3,
+          category: 'liquidity' as const,
+          action_type: 'rebalance' as const,
+          free: true,
+          estimated_gain_sats: 1500
+        }
+      ];
+    }
   }
 
   async getPriorityActions(pubkey: string, actions?: string[]): Promise<PriorityAction[]> {
@@ -138,16 +217,56 @@ class DaznoApiClient {
       throw new Error('Invalid pubkey format');
     }
     
-    const response = await this.makeRequest<any[]>(`/api/v1/node/${pubkey}/priorities`, {
-      method: 'POST',
-      body: JSON.stringify({ actions: actions || [] }),
-    });
-    
-    // Ajouter un ID si manquant dans la réponse de l'API
-    return response.map((action: any, index: number) => ({
-      id: action.id || `action-${index}`,
-      ...action
-    }));
+    try {
+      const response = await this.makeRequest<any[]>(`/api/v1/node/${pubkey}/priorities`, {
+        method: 'POST',
+        body: JSON.stringify({ actions: actions || [] }),
+      });
+      
+      // Ajouter un ID si manquant dans la réponse de l'API
+      return response.map((action: any, index: number) => ({
+        id: action.id || `action-${index}`,
+        ...action
+      }));
+    } catch (error) {
+      console.warn('[DaznoAPI] Priority actions not available, using fallback data:', error);
+      // Actions prioritaires de fallback
+      return [
+        {
+          id: 'priority-1',
+          action: 'Vérifier la connectivité de votre nœud',
+          priority: 1,
+          estimated_impact: 85,
+          reasoning: 'Un nœud bien connecté améliore significativement les performances de routing.',
+          timeline: 'Immédiat',
+          complexity: 'low' as const,
+          category: 'connectivity',
+          urgency: 'high' as const
+        },
+        {
+          id: 'priority-2',
+          action: 'Optimiser les frais de vos canaux actifs',
+          priority: 2,
+          estimated_impact: 70,
+          reasoning: 'Des frais bien calibrés attirent plus de transactions tout en maximisant les revenus.',
+          timeline: '1-2 heures',
+          complexity: 'medium' as const,
+          category: 'fees',
+          urgency: 'medium' as const
+        },
+        {
+          id: 'priority-3',
+          action: 'Analyser la distribution de liquidité',
+          priority: 3,
+          estimated_impact: 60,
+          reasoning: 'Une liquidité bien répartie permet un routing plus efficace.',
+          timeline: '2-4 heures',
+          complexity: 'medium' as const,
+          category: 'liquidity',
+          urgency: 'medium' as const
+        }
+      ];
+    }
   }
 }
 

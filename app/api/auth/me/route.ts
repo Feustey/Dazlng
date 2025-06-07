@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest): Promise<ReturnType<typeof NextResponse.json>> {
   try {
-    const supabase = createSupabaseServerClient()
+    const supabase = await createSupabaseServerClient()
     let user = null;
     
     // ✅ CORRECTIF : Vérifier aussi le token Authorization

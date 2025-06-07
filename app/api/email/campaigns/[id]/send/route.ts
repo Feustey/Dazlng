@@ -6,10 +6,11 @@ const emailService = new EmailMarketingService();
 // POST /api/email/campaigns/[id]/send - Envoie une campagne
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   try {
-    const campaignId = params.id;
+    const resolvedParams = await params;
+    const campaignId = resolvedParams.id;
 
     if (!campaignId) {
       return NextResponse.json(
@@ -50,10 +51,11 @@ export async function POST(
 // POST /api/email/campaigns/[id]/test - Envoie un email de test
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   try {
-    const campaignId = params.id;
+    const resolvedParams = await params;
+    const campaignId = resolvedParams.id;
     const { testEmail } = await request.json();
 
     if (!campaignId || !testEmail) {

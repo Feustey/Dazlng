@@ -2,7 +2,7 @@ import { createSupabaseServerClient } from '@/lib/supabase-auth';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request): Promise<Response> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { pubkey } = await request.json();
 
   // Récupérer l'utilisateur connecté

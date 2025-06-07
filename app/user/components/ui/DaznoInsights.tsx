@@ -1,8 +1,22 @@
 import React from 'react';
 import { DaznoSparkSeerRecommendation } from '@/types/dazno-api';
 
+// Type étendu pour le composant avec propriétés optionnelles
+interface ExtendedRecommendation extends DaznoSparkSeerRecommendation {
+  id?: string;
+  title?: string;
+  description?: string;
+  confidence_score?: number;
+  estimated_gain_sats?: number;
+  estimated_timeframe?: string;
+  target_alias?: string;
+  suggested_amount?: number;
+  current_value?: number;
+  suggested_value?: number;
+}
+
 interface DaznoInsightsProps {
-  recommendations: DaznoSparkSeerRecommendation[];
+  recommendations: ExtendedRecommendation[];
   onApplyRecommendation: (id: string) => void;
 }
 
@@ -10,15 +24,15 @@ export const DaznoInsights: React.FC<DaznoInsightsProps> = ({
   recommendations,
   onApplyRecommendation,
 }) => {
-  // Grouper les recommandations par catégorie
+  // Grouper les recommandations par type
   const groupedRecommendations = recommendations.reduce((acc, rec) => {
-    const category = rec.category || 'other';
+    const category = rec.type || 'other';
     if (!acc[category]) {
       acc[category] = [];
     }
     acc[category].push(rec);
     return acc;
-  }, {} as Record<string, DaznoSparkSeerRecommendation[]>);
+  }, {} as Record<string, ExtendedRecommendation[]>);
 
   // Calculer le score moyen de confiance par catégorie
   const categoryScores = Object.entries(groupedRecommendations).map(([category, recs]) => {
@@ -81,7 +95,7 @@ export const DaznoInsights: React.FC<DaznoInsightsProps> = ({
                     <div className="flex items-center gap-2 mb-2">
                       <h5 className="font-medium text-gray-900">{rec.title}</h5>
                       <span className="px-2 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-medium">
-                        {Math.round(rec.confidence_score * 100)}% confiance
+                        {Math.round((rec.confidence_score || 0) * 100)}% confiance
                       </span>
                     </div>
 
@@ -128,7 +142,7 @@ export const DaznoInsights: React.FC<DaznoInsightsProps> = ({
                   </div>
 
                   <button
-                    onClick={() => onApplyRecommendation(rec.id)}
+                    onClick={() => onApplyRecommendation(rec.id || rec.type)}
                     className="bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700 transition text-sm"
                   >
                     Appliquer

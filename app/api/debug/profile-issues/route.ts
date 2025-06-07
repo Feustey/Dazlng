@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET(_request: NextRequest): Promise<ReturnType<typeof NextResponse.json>> {
   try {
-    const supabase = createSupabaseServerClient()
+    const supabase = await createSupabaseServerClient()
     
     // En développement, permettre l'accès sans auth pour diagnostic
     if (process.env.NODE_ENV === 'development') {

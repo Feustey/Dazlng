@@ -38,7 +38,7 @@ interface ApiResponse<T> {
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { nodeId: string } }
+  { params }: { params: Promise<{ nodeId: string }> }
 ): Promise<Response> {
   try {
     const { searchParams } = new URL(req.url);
@@ -47,7 +47,8 @@ export async function GET(
     const status = searchParams.get('status');
     const sort = searchParams.get('sort') || 'capacity:desc';
     
-    const nodeId = params.nodeId;
+    const resolvedParams = await params;
+    const nodeId = resolvedParams.nodeId;
     
     // Validation de la pubkey
     if (!/^[0-9a-fA-F]{66}$/.test(nodeId)) {
@@ -138,7 +139,7 @@ export async function GET(
 
 export async function POST(
   req: NextRequest,
-  { params: _params }: { params: { nodeId: string } }
+  { params: _params }: { params: Promise<{ nodeId: string }> }
 ): Promise<Response> {
   try {
     const body = await req.json();

@@ -1,8 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
 
 export default async function TestSupabase(): Promise<JSX.Element> {
-  const supabase = await createClient(cookies());
+  const supabase = await createClient();
   
   // Test de connexion basique
   const connectionTest = async (): Promise<{ success: boolean; error: string | null }> => {
