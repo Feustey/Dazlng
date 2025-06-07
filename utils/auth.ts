@@ -228,7 +228,7 @@ export async function getUserFromRequest(req: NextRequest): Promise<AuthUser | n
  */
 export async function getUserFromSession(): Promise<AuthUser | null> {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const supabaseServer = createServerComponentClient({ cookies: () => cookieStore });
     
     const { data: { session }, error } = await supabaseServer.auth.getSession();

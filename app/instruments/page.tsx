@@ -9,7 +9,7 @@ interface Instrument {
 }
 
 export default async function Instruments(): Promise<JSX.Element> {
-  const supabase = await createClient(cookies());
+  const supabase = await createClient(await cookies());
   
   try {
     const { data: instruments, error } = await supabase
