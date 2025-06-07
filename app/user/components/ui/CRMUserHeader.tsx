@@ -17,7 +17,7 @@ export const CRMUserHeader: React.FC<CRMUserHeaderProps> = ({
   isPremium
 }) => {
   const getSegmentData = () => {
-    const { userScore, engagementLevel } = crmData;
+    const { userScore } = crmData;
     
     if (userScore >= 80) return {
       segment: 'Champion',

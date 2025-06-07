@@ -1,12 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
 export async function GET(request: NextRequest) {
+  // Créer le client Supabase dans la fonction pour éviter les erreurs de build
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!supabaseUrl || !supabaseKey) {
+    console.warn('Variables Supabase manquantes pour /api/user/crm-data');
+    return NextResponse.json(
+      { success: false, error: { code: 'CONFIG_ERROR', message: 'Configuration Supabase manquante' } },
+      { status: 500 }
+    );
+  }
+  
+  const supabase = createClient(supabaseUrl, supabaseKey);
   try {
     // Récupérer l'utilisateur connecté depuis le header Authorization
     const authHeader = request.headers.get('authorization');

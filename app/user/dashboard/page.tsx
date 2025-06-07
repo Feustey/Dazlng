@@ -1,13 +1,13 @@
 "use client";
 
-import React, { FC, Suspense, useEffect, useState } from 'react';
+import React, { FC, Suspense, useState } from 'react';
 import { useUserData } from '../hooks/useUserData';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
 import DazBoxComparison from '../components/ui/DazBoxComparison';
-import EnhancedRecommendations from '../components/ui/EnhancedRecommendations';
+// import EnhancedRecommendations from '../components/ui/EnhancedRecommendations'; // Remplacé par SmartConversionCenter
 import PerformanceMetrics from '../components/ui/PerformanceMetrics';
 import AccessDeniedAlert from '../components/ui/AccessDeniedAlert';
-import { useDaznoAPI } from '@/hooks/useDaznoAPI';
+// import { useDaznoAPI } from '@/hooks/useDaznoAPI'; // DÉSACTIVÉ TEMPORAIREMENT
 // Nouveaux composants CRM
 import { CRMHeaderDashboard } from '../components/ui/CRMHeaderDashboard';
 import { ProfileCompletionEnhanced } from '../components/ui/ProfileCompletionEnhanced';
@@ -39,15 +39,16 @@ const UserDashboard: FC = () => {
     userProfile: userProfile as any 
   });
 
-  // AJOUTER : Hook Dazno pour analyse complète
-  const { complete: daznoData, getCompleteAnalysis } = useDaznoAPI();
+  // DÉSACTIVÉ TEMPORAIREMENT : Hook Dazno pour analyse complète (API non disponible en dev)
+  // const { complete: daznoData, getCompleteAnalysis } = useDaznoAPI();
+  const daznoData: any = null; // Temporaire - sera réactivé une fois l'API déployée
 
-  // AJOUTER : Récupérer l'analyse complète si l'utilisateur a un nœud
-  useEffect(() => {
-    if (userProfile?.pubkey) {
-      getCompleteAnalysis(userProfile.pubkey);
-    }
-  }, [userProfile?.pubkey, getCompleteAnalysis]);
+  // DÉSACTIVÉ TEMPORAIREMENT : Récupérer l'analyse complète si l'utilisateur a un nœud
+  // useEffect(() => {
+  //   if (userProfile?.pubkey) {
+  //     getCompleteAnalysis(userProfile.pubkey);
+  //   }
+  // }, [userProfile?.pubkey, getCompleteAnalysis]);
 
   // Afficher un loader pendant la vérification de la session
   if (isLoading) {
@@ -242,13 +243,7 @@ const UserDashboard: FC = () => {
         hasNode={hasNode}
       />
 
-      {/* Section 4: Recommandations Dazia */}
-      <EnhancedRecommendations
-        recommendations={recommendations}
-        isPremium={isPremium}
-        onApplyRecommendation={applyRecommendation}
-        onUpgradeToPremium={upgradeToPremium}
-      />
+      {/* Section 4: Recommandations Dazia - Maintenant dans SmartConversionCenter */}
 
       {/* Call to action final si pas de nœud */}
       {!hasNode && (

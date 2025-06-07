@@ -74,7 +74,7 @@ export const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
 
   // Recommandations personnalisées selon le segment CRM
   const getPersonalizedMessage = () => {
-    const { userScore, engagementLevel } = crmData;
+    const { userScore } = crmData;
     
     if (userScore >= 80) {
       return {

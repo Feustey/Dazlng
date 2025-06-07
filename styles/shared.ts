@@ -1,4 +1,3 @@
-import { Platform } from 'react-native';
 import Colors from '../constants/Colors';
 
 // Couleurs de l'application (importées depuis Colors.ts)
@@ -15,10 +14,7 @@ export const spacing = {
 
 // Typographie
 export const typography = {
-  fontFamily: Platform.select({
-    web: 'Inter, sans-serif',
-    default: 'System',
-  }),
+  fontFamily: 'Inter, sans-serif', // Web uniquement
   sizes: {
     xs: 13,
     sm: 15,
@@ -40,7 +36,7 @@ export const typography = {
   },
 };
 
-// Styles partagés
+// Styles partagés pour web
 export const shared = {
   // Container principal
   container: {
@@ -56,20 +52,9 @@ export const shared = {
       paddingVertical: spacing.sm,
       paddingHorizontal: spacing.lg,
       borderRadius: 25,
-      shadowColor: colors.black,
-      shadowOpacity: 0.12,
-      shadowOffset: { width: 0, height: 4 },
-      shadowRadius: 12,
-      ...Platform.select({
-        web: {
-          cursor: 'pointer',
-          transition: 'background 0.2s',
-          ':hover': {
-            backgroundColor: colors.text,
-            color: colors.secondary,
-          },
-        },
-      }),
+      boxShadow: `0 4px 12px ${colors.black}20`, // Web shadow
+      cursor: 'pointer',
+      transition: 'background 0.2s',
     },
     outline: {
       backgroundColor: 'transparent',
