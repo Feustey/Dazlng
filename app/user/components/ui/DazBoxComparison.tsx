@@ -57,17 +57,29 @@ const DazBoxComparison: React.FC<DazBoxComparisonProps> = ({ userNodeStats, hasN
 
   if (!hasNode) {
     return (
-      <div className="bg-gradient-to-br from-purple-600 to-indigo-700 rounded-2xl p-8 text-white">
+      <div className="bg-gradient-to-br from-purple-600 to-indigo-700 rounded-2xl p-8 text-white relative overflow-hidden">
+        {/* Badge urgence */}
+        <div className="absolute top-4 right-4 bg-yellow-400 text-gray-900 px-3 py-1 rounded-full text-xs font-bold animate-pulse">
+          🔥 OFFRE LIMITÉE
+        </div>
+        
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-2xl font-bold mb-2">🚀 Découvrez DazBox</h2>
-            <p className="text-purple-100">
+            <p className="text-purple-100 mb-2">
               Le nœud Lightning clé en main pour générer des revenus passifs
             </p>
+            <div className="flex items-center gap-2 text-sm text-yellow-300">
+              <span>⭐</span>
+              <span>Livraison en 48h • Installation incluse • Support 24/7</span>
+            </div>
           </div>
           <div className="text-right">
             <div className="text-3xl font-bold">{formatSats(dazboxStats.monthlyRevenue)}</div>
             <div className="text-sm text-purple-200">sats/mois en moyenne</div>
+            <div className="text-xs text-yellow-300 mt-1">
+              +{Math.round(dazboxStats.revenueGrowth)}% vs nœuds traditionnels
+            </div>
           </div>
         </div>
 
