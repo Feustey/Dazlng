@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { DaznoSparkSeerRecommendation } from '@/types/dazno-api';
 
 interface Recommendation {
   id: string;
@@ -13,7 +14,7 @@ interface Recommendation {
 }
 
 interface EnhancedRecommendationsProps {
-  recommendations: Recommendation[];
+  recommendations: (Recommendation | DaznoSparkSeerRecommendation)[];
   isPremium: boolean;
   onApplyRecommendation: (id: string) => void;
   onUpgradeToPremium: () => void;
@@ -199,31 +200,81 @@ const EnhancedRecommendations: React.FC<EnhancedRecommendationsProps> = ({
             </span>
           </div>
 
-          <div className="grid grid-cols-1 gap-4">
+          <div className="space-y-4">
             {freeRecommendations.map((rec) => (
-              <div key={rec.id} className="border border-green-200 rounded-lg p-4 hover:shadow-md transition">
+              <div key={rec.id} className="border border-gray-200 rounded-lg p-4 hover:border-purple-300 hover:shadow-md transition">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <h4 className="font-semibold">{rec.title}</h4>
+                      <h4 className="font-semibold text-gray-900">{rec.title}</h4>
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${getImpactColor(rec.impact)}`}>
                         {getImpactIcon(rec.impact)} {rec.impact}
                       </span>
-                      <span className="text-sm">{getDifficultyIcon(rec.difficulty)}</span>
+                      <span className="text-lg">{getDifficultyIcon(rec.difficulty)}</span>
+                      
+                      {'confidence_score' in rec && rec.confidence_score && (
+                        <span className="px-2 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-medium">
+                          {Math.round(rec.confidence_score * 100)}% confiance
+                        </span>
+                      )}
+                      
+                      {'category' in rec && (
+                        <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">
+                          {rec.category.replace('_', ' ')}
+                        </span>
+                      )}
                     </div>
-                    <p className="text-gray-600 text-sm mb-2">{rec.description}</p>
-                    <div className="flex items-center gap-4 text-xs text-gray-500">
-                      <span>⏱️ {rec.timeToImplement}</span>
-                      <span>💰 +{formatSats(rec.estimatedGain)} sats/mois</span>
+                    
+                    <p className="text-gray-600 text-sm mb-3">{rec.description}</p>
+                    
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs text-gray-500">
+                      {'estimated_gain_sats' in rec && rec.estimated_gain_sats && (
+                        <div>
+                          <span className="block font-medium text-green-600">Gain estimé</span>
+                          <span>{formatSats(rec.estimated_gain_sats)} sats</span>
+                        </div>
+                      )}
+                      
+                      {'estimated_timeframe' in rec && rec.estimated_timeframe && (
+                        <div>
+                          <span className="block font-medium text-blue-600">Délai</span>
+                          <span>{rec.estimated_timeframe}</span>
+                        </div>
+                      )}
+                      
+                      {'target_alias' in rec && rec.target_alias && (
+                        <div>
+                          <span className="block font-medium text-purple-600">Cible</span>
+                          <span>{rec.target_alias}</span>
+                        </div>
+                      )}
+                      
+                      {'suggested_amount' in rec && rec.suggested_amount && (
+                        <div>
+                          <span className="block font-medium text-orange-600">Montant</span>
+                          <span>{formatSats(rec.suggested_amount)} sats</span>
+                        </div>
+                      )}
                     </div>
+                    
+                    {'current_value' in rec && 'suggested_value' in rec && 
+                     rec.current_value !== undefined && rec.suggested_value !== undefined && (
+                      <div className="mt-2 p-2 bg-gray-50 rounded text-xs">
+                        <span className="font-medium">Ajustement suggéré:</span>
+                        <span className="ml-2">
+                          {rec.current_value} → <span className="text-green-600 font-medium">{rec.suggested_value}</span>
+                        </span>
+                      </div>
+                    )}
                   </div>
+                  
+                  <button
+                    onClick={() => onApplyRecommendation(rec.id)}
+                    className="bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700 transition text-sm"
+                  >
+                    Appliquer
+                  </button>
                 </div>
-                <button
-                  onClick={() => onApplyRecommendation(rec.id)}
-                  className="w-full bg-green-600 text-white py-2 px-4 rounded-lg font-medium text-sm hover:bg-green-700 transition"
-                >
-                  Appliquer maintenant
-                </button>
               </div>
             ))}
           </div>

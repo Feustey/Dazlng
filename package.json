@@ -66,7 +66,7 @@
     "ln-service": "^57.25.0",
     "lucide-react": "^0.510.0",
     "lucide-react-native": "^0.510.0",
-    "next": "^14.2.29",
+    "next": "^15.3.3",
     "next-intl": "^4.1.0",
     "node-fetch": "^3.3.2",
     "prop-types": "^15.8.1",
@@ -74,9 +74,9 @@
     "qrcode.react": "^4.2.0",
     "ra-input-rich-text": "^5.8.3",
     "ra-supabase-core": "^3.5.0",
-    "react": "18.2.0",
+    "react": "^19.1.0",
     "react-admin": "^5.8.3",
-    "react-dom": "18.2.0",
+    "react-dom": "^19.1.0",
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
     "react-native": "^0.72.17",
@@ -100,10 +100,10 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.9",
-    "@types/node": "^20.11.0",
+    "@types/node": "^20.19.0",
     "@types/qrcode": "^1.5.5",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
+    "@types/react": "^18.3.23",
+    "@types/react-dom": "^18.3.7",
     "@types/react-native": "0.72.0",
     "@types/socket.io-client": "^1.4.4",
     "@types/three": "^0.176.0",
@@ -129,7 +129,7 @@
     "ts-jest": "^29.0.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.4",
-    "typescript": "^5.3.3"
+    "typescript": "^5.8.3"
   },
   "overrides": {
     "react-test-renderer": "18.2.0"

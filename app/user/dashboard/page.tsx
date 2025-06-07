@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, Suspense } from 'react';
+import React, { FC, Suspense, useEffect } from 'react';
 import { useUserData } from '../hooks/useUserData';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
 import ProfileCompletion from '../components/ui/ProfileCompletion';
@@ -8,6 +8,7 @@ import DazBoxComparison from '../components/ui/DazBoxComparison';
 import EnhancedRecommendations from '../components/ui/EnhancedRecommendations';
 import PerformanceMetrics from '../components/ui/PerformanceMetrics';
 import AccessDeniedAlert from '../components/ui/AccessDeniedAlert';
+import { useDaznoAPI } from '@/hooks/useDaznoAPI';
 
 const UserDashboard: FC = () => {
   const {
@@ -29,9 +30,15 @@ const UserDashboard: FC = () => {
   // Récupérer l'utilisateur directement depuis le provider pour fallback
   const { user } = useSupabase();
 
-  // ✅ SUPPRESSION DE LA REDIRECTION AUTOMATIQUE
-  // Le dashboard est maintenant accessible même sans nœud connecté
-  // L'utilisateur verra des prompts pour connecter son nœud
+  // AJOUTER : Hook Dazno pour analyse complète
+  const { complete: daznoData, getCompleteAnalysis } = useDaznoAPI();
+
+  // AJOUTER : Récupérer l'analyse complète si l'utilisateur a un nœud
+  useEffect(() => {
+    if (userProfile?.pubkey) {
+      getCompleteAnalysis(userProfile.pubkey);
+    }
+  }, [userProfile?.pubkey, getCompleteAnalysis]);
 
   // Afficher un loader pendant la vérification de la session
   if (isLoading) {
@@ -94,11 +101,86 @@ const UserDashboard: FC = () => {
 
       {/* Section 2: Performance du nœud (si connecté) ou Onboarding */}
       {hasNode && nodeStats ? (
-        <PerformanceMetrics
-          metrics={nodeStats}
-          achievements={achievements}
-          trendData={trendData}
-        />
+        <>
+          <PerformanceMetrics
+            metrics={nodeStats}
+            achievements={achievements}
+            trendData={trendData}
+          />
+          
+          {/* AJOUTER : Analyse Dazno complète */}
+          {daznoData && (
+            <div className="bg-white rounded-xl shadow p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-xl font-semibold flex items-center gap-2">
+                    🧠 Analyse IA Complète
+                    <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium">
+                      Dazia
+                    </span>
+                  </h2>
+                  <p className="text-gray-600 text-sm">
+                    Score de santé: {daznoData.health_score}/100
+                  </p>
+                </div>
+                <div className={`px-4 py-2 rounded-lg font-semibold ${
+                  daznoData.health_score >= 80 ? 'bg-green-100 text-green-800' :
+                  daznoData.health_score >= 60 ? 'bg-yellow-100 text-yellow-800' :
+                  'bg-red-100 text-red-800'
+                }`}>
+                  {daznoData.health_score >= 80 ? '🟢 Excellent' :
+                   daznoData.health_score >= 60 ? '🟡 Bon' : '🔴 À améliorer'}
+                </div>
+              </div>
+
+              {/* Prochaines étapes recommandées */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div className="space-y-3">
+                  <h3 className="font-medium text-gray-700">🎯 Prochaines étapes</h3>
+                  {daznoData.next_steps.slice(0, 3).map((step: string, index: number) => (
+                    <div key={index} className="flex items-start gap-2 text-sm">
+                      <span className="bg-purple-100 text-purple-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+                        {index + 1}
+                      </span>
+                      <span className="text-gray-700">{step}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="space-y-3">
+                  <h3 className="font-medium text-gray-700">📊 Actions prioritaires</h3>
+                  {daznoData.openai_actions.actions.slice(0, 3).map((action: any, index: number) => (
+                    <div key={index} className="flex items-center justify-between text-sm">
+                      <span className="text-gray-700 truncate">{action.action}</span>
+                      <div className="flex items-center gap-2">
+                        <span className={`px-2 py-1 rounded text-xs ${
+                          action.difficulty === 'facile' ? 'bg-green-100 text-green-600' :
+                          action.difficulty === 'moyen' ? 'bg-yellow-100 text-yellow-600' :
+                          'bg-red-100 text-red-600'
+                        }`}>
+                          {action.difficulty}
+                        </span>
+                        <span className="text-purple-600 font-medium">+{action.impact}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <a 
+                  href="/user/node" 
+                  className="bg-purple-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-purple-700 transition"
+                >
+                  Voir l'analyse détaillée
+                </a>
+                <button className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-200 transition">
+                  Télécharger le rapport
+                </button>
+              </div>
+            </div>
+          )}
+        </>
       ) : (
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-200">
           <div className="text-center">
