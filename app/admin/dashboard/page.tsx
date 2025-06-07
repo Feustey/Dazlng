@@ -186,6 +186,12 @@ export default function DashboardPage(): JSX.Element {
             <option value="90">90 derniers jours</option>
           </select>
           <Link
+            href="/user/dashboard"
+            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2"
+          >
+            🚀 Nouveau CRM
+          </Link>
+          <Link
             href="/admin/analytics"
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
@@ -408,14 +414,24 @@ export default function DashboardPage(): JSX.Element {
       </Card>
 
       {/* Actions Rapides */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <Link
+          href="/user/dashboard"
+          className="bg-gradient-to-br from-purple-600 to-purple-700 text-white p-4 rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all transform hover:scale-105 text-center border border-purple-500"
+        >
+          <div className="text-2xl mb-2">🚀</div>
+          <div className="font-semibold">Nouveau CRM</div>
+          <div className="text-sm opacity-90">Interface optimisée</div>
+          <div className="text-xs bg-white/20 px-2 py-1 rounded mt-2 inline-block">Nouveau</div>
+        </Link>
+        
         <Link
           href="/admin/crm"
           className="bg-purple-600 text-white p-4 rounded-lg hover:bg-purple-700 transition-colors text-center"
         >
           <div className="text-2xl mb-2">🎯</div>
-          <div className="font-semibold">CRM Avancé</div>
-          <div className="text-sm opacity-90">Segmentation & Campagnes</div>
+          <div className="font-semibold">CRM Legacy</div>
+          <div className="text-sm opacity-90">React Admin</div>
         </Link>
         
         <Link
