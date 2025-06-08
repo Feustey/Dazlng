@@ -7,6 +7,9 @@ import { daznoApi, isValidLightningPubkey } from '@/lib/dazno-api';
 import type { NodeInfo, DaznoRecommendation, PriorityAction } from '@/lib/dazno-api';
 import ApiStatusWidget from '@/app/user/components/ui/ApiStatusWidget';
 
+// Hook pour les données enrichies
+import { useEnrichedNodeData } from '@/app/user/node/hooks/useEnrichedNodeData';
+
 const NodeManagement: FC = () => {
   const { session } = useSupabase();
   const router = useRouter();
@@ -20,6 +23,15 @@ const NodeManagement: FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pubkeyInput, setPubkeyInput] = useState('');
+
+  // Nouveau hook pour les données enrichies
+  const { 
+    enrichedData, 
+    alerts, 
+    networkStatus, 
+    refreshInterval, 
+    setRefreshInterval: _setRefreshInterval 
+  } = useEnrichedNodeData(pubkey);
 
   // Charger le profil utilisateur au démarrage
   useEffect(() => {
@@ -125,12 +137,17 @@ const NodeManagement: FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la sauvegarde');
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage = errorData.error?.message || errorData.error || 'Erreur lors de la sauvegarde';
+        console.error('Erreur API sauvegarde pubkey:', { status: response.status, error: errorData });
+        throw new Error(errorMessage);
       }
 
-      console.log('Pubkey sauvegardée avec succès');
+      const result = await response.json();
+      console.log('Pubkey sauvegardée avec succès:', result);
     } catch (error) {
       console.error('Erreur lors de la sauvegarde de la pubkey:', error);
+      throw error; // Re-propager l'erreur pour l'afficher à l'utilisateur
     }
   };
 
@@ -142,8 +159,25 @@ const NodeManagement: FC = () => {
       return;
     }
 
-    setPubkey(pubkeyInput);
-    await savePubkeyToProfile(pubkeyInput);
+    try {
+      setError(null); // Clear previous errors
+      setLoading(true);
+      
+      setPubkey(pubkeyInput);
+      await savePubkeyToProfile(pubkeyInput);
+      
+      // Si on arrive ici, tout s'est bien passé
+      console.log('✅ Nœud connecté avec succès');
+    } catch (error) {
+      // En cas d'erreur de sauvegarde, revenir à l'état précédent
+      setPubkey(null);
+      
+      const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue lors de la sauvegarde';
+      setError(`❌ Impossible de sauvegarder votre nœud: ${errorMessage}`);
+      console.error('❌ Erreur connexion nœud:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDisconnect = async (): Promise<void> => {
@@ -345,6 +379,27 @@ const NodeManagement: FC = () => {
           </p>
         </div>
         <div className="flex items-center gap-4">
+          <div className="text-right">
+            <div className={`text-xs font-medium ${
+              alerts.filter(a => a.severity === 'critical').length > 0 ? 'text-red-600' :
+              alerts.filter(a => a.severity === 'warning').length > 0 ? 'text-yellow-600' :
+              'text-green-600'
+            }`}>
+              {alerts.filter(a => a.severity === 'critical').length > 0 ? 'Surveillance critique' :
+               alerts.filter(a => a.severity === 'warning').length > 0 ? 'Surveillance accrue' :
+               'Surveillance normale'}
+            </div>
+            <div className="text-xs text-gray-500">
+              🔄 Actualisation : {refreshInterval/1000}s
+            </div>
+            <button
+              onClick={() => _setRefreshInterval(alerts.filter(a => a.severity === 'critical').length > 0 ? 10000 : 60000)}
+              className="text-xs px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 transition"
+              title="Ajuster surveillance"
+            >
+              ⚙️
+            </button>
+          </div>
           <ApiStatusWidget />
           <button
             onClick={handleDisconnect}
@@ -359,6 +414,170 @@ const NodeManagement: FC = () => {
         <div className="text-center py-12">
           <div className="animate-spin h-12 w-12 mx-auto border-4 border-indigo-500 border-t-transparent rounded-full mb-4" />
           <p className="text-gray-600">Chargement des données du nœud...</p>
+        </div>
+      )}
+
+      {/* Alertes intelligentes enrichies */}
+      {alerts.length > 0 && (
+        <div className="bg-white rounded-xl shadow-lg p-6" id="alerts-section">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold flex items-center">
+              🚨 Alertes Intelligentes
+              {alerts.filter(a => a.severity === 'critical').length > 0 && (
+                <span className="ml-2 px-3 py-1 bg-red-100 text-red-800 text-sm rounded-full font-medium">
+                  {alerts.filter(a => a.severity === 'critical').length} critique(s)
+                </span>
+              )}
+            </h2>
+          </div>
+          
+          <div className="space-y-3">
+            {alerts.map((alert, index) => (
+              <div key={index} className={`border-l-4 p-4 rounded-r-lg ${
+                alert.severity === 'critical' ? 'border-red-500 bg-red-50' :
+                alert.severity === 'warning' ? 'border-yellow-500 bg-yellow-50' :
+                'border-blue-500 bg-blue-50'
+              }`}>
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <div className="flex items-center mb-2">
+                      <span className="text-lg mr-2">
+                        {alert.severity === 'critical' ? '🚨' : alert.severity === 'warning' ? '⚠️' : 'ℹ️'}
+                      </span>
+                      <h3 className="font-medium text-gray-900">{alert.message}</h3>
+                    </div>
+                    {alert.suggested_action && (
+                      <p className="text-sm text-gray-600 mt-1">
+                        💡 <strong>Action suggérée :</strong> {alert.suggested_action}
+                      </p>
+                    )}
+                  </div>
+                  <span className={`px-2 py-1 text-xs rounded-full font-medium ${
+                    alert.severity === 'critical' ? 'bg-red-100 text-red-800' :
+                    alert.severity === 'warning' ? 'bg-yellow-100 text-yellow-800' :
+                    'bg-blue-100 text-blue-800'
+                  }`}>
+                    {alert.severity.toUpperCase()}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Informations enrichies LND + SparkSeer */}
+      {enrichedData && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Statut LND */}
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <h3 className="text-lg font-semibold mb-4 flex items-center">
+              🔌 État LND Temps Réel
+              <span className={`ml-2 px-2 py-1 text-xs rounded-full ${
+                enrichedData.lnd_data?.lnd_available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+              }`}>
+                {enrichedData.lnd_data?.lnd_available ? 'Connecté' : 'Déconnecté'}
+              </span>
+            </h3>
+            
+            {enrichedData.lnd_data?.lnd_available && enrichedData.lnd_data.local_node_info ? (
+              <div className="space-y-3 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Version LND:</span>
+                  <span className="font-medium">{enrichedData.lnd_data.local_node_info.version}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Canaux actifs:</span>
+                  <span className="font-medium text-green-600">{enrichedData.lnd_data.local_node_info.num_active_channels}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Peers connectés:</span>
+                  <span className="font-medium text-blue-600">{enrichedData.lnd_data.local_node_info.num_peers}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Sync Blockchain:</span>
+                  <span className={`font-medium ${enrichedData.lnd_data.local_node_info.synced_to_chain ? 'text-green-600' : 'text-red-600'}`}>
+                    {enrichedData.lnd_data.local_node_info.synced_to_chain ? '✅ Synchronisé' : '❌ En cours...'}
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-4">
+                <p className="text-gray-500">LND non disponible ou déconnecté</p>
+              </div>
+            )}
+          </div>
+
+          {/* Insights combinés */}
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <h3 className="text-lg font-semibold mb-4">🧠 Analyse Intelligente</h3>
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Classification:</span>
+                <span className="font-medium">{enrichedData.combined_insights.node_classification.replace('_', ' ')}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Liquidité:</span>
+                <span className={`font-medium ${
+                  enrichedData.combined_insights.liquidity_status === 'well_balanced' ? 'text-green-600' : 'text-orange-600'
+                }`}>
+                  {enrichedData.combined_insights.liquidity_status.replace('_', ' ')}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Routage:</span>
+                <span className={`font-medium ${
+                  enrichedData.combined_insights.routing_capability === 'excellent' ? 'text-green-600' : 'text-yellow-600'
+                }`}>
+                  {enrichedData.combined_insights.routing_capability}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Position réseau:</span>
+                <span className="font-medium">{enrichedData.combined_insights.network_position.replace('_', ' ')}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Contexte réseau */}
+      {networkStatus && (
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <h3 className="text-lg font-semibold mb-4">🌐 Contexte Réseau Lightning</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+            <div>
+              <h4 className="font-medium text-gray-700 mb-2">État Global</h4>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Nœuds actifs:</span>
+                  <span className="font-medium">{networkStatus.network_stats.num_nodes.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Canaux totaux:</span>
+                  <span className="font-medium">{networkStatus.network_stats.num_channels.toLocaleString()}</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h4 className="font-medium text-gray-700 mb-2">Ma Position</h4>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Rang réseau:</span>
+                  <span className="font-medium">#{enrichedData?.sparkseer_data?.betweenness_rank?.toLocaleString()}</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h4 className="font-medium text-gray-700 mb-2">Santé Réseau</h4>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Diamètre:</span>
+                  <span className="font-medium">{networkStatus.network_stats.graph_diameter} sauts</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
