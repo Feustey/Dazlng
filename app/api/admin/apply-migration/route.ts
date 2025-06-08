@@ -8,6 +8,14 @@ export async function POST(_request: NextRequest): Promise<ReturnType<typeof Nex
   try {
     console.log('[MIGRATION] Début de l\'application de la migration des champs contact...')
     
+    if (!supabaseAdmin) {
+      return NextResponse.json({
+        success: false,
+        error: 'Configuration Supabase Admin manquante',
+        message: 'Impossible d\'exécuter la migration sans Supabase Admin'
+      }, { status: 500 })
+    }
+    
     const migrationSteps = []
     const errors = []
 

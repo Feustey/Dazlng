@@ -54,6 +54,12 @@ export default function UsersPage(): JSX.Element {
     try {
       setLoading(true);
 
+      if (!supabaseAdmin) {
+        console.log('Supabase Admin non disponible');
+        setCustomers([]);
+        return;
+      }
+
       // Construire la requête avec filtres
       let query = supabaseAdmin
         .from('profiles')
@@ -140,6 +146,19 @@ export default function UsersPage(): JSX.Element {
 
   const loadStats = async () => {
     try {
+      if (!supabaseAdmin) {
+        console.log('Supabase Admin non disponible pour les stats');
+        setStats({
+          total_customers: 0,
+          active_customers: 0,
+          premium_customers: 0,
+          lightning_users: 0,
+          total_revenue: 0,
+          avg_order_value: 0
+        });
+        return;
+      }
+
       const { data: profilesCount } = await supabaseAdmin
         .from('profiles')
         .select('id', { count: 'exact', head: true });

@@ -1,18 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
-import { EmailMarketingService } from '@/lib/email/resend-service';
-
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !supabaseServiceKey) {
-  throw new Error('Variables d\'environnement Supabase manquantes');
+// Ne pas lancer d'erreur pendant le build
+let supabase: any = null;
+
+// Initialiser Supabase seulement si les variables sont disponibles
+function getSupabaseClient() {
+  if (!supabase && supabaseUrl && supabaseServiceKey) {
+    try {
+      supabase = createClient(supabaseUrl, supabaseServiceKey);
+    } catch (error) {
+      console.error('Erreur initialisation Supabase:', error);
+      return null;
+    }
+  }
+  return supabase;
 }
-
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
-const _emailService = new EmailMarketingService();
 
 const createCampaignSchema = z.object({
   name: z.string().min(1).max(255),
@@ -26,14 +32,22 @@ const createCampaignSchema = z.object({
 // GET /api/crm/campaigns - Liste toutes les campagnes
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
+    const client = getSupabaseClient();
+    if (!client) {
+      return NextResponse.json(
+        { success: false, error: { code: 'CONFIG_ERROR', message: 'Configuration Supabase manquante' } },
+        { status: 500 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status');
     const includeStats = searchParams.get('includeStats') === 'true';
 
-    let query = supabase.from('crm_email_campaigns').select('*');
+    let query = client.from('crm_email_campaigns').select('*');
 
     if (includeStats) {
-      query = supabase.from('crm_campaign_stats').select('*');
+      query = client.from('crm_campaign_stats').select('*');
     }
 
     if (status && status !== 'all') {
@@ -73,13 +87,21 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 // POST /api/crm/campaigns - Crée une nouvelle campagne
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
+    const client = getSupabaseClient();
+    if (!client) {
+      return NextResponse.json(
+        { success: false, error: { code: 'CONFIG_ERROR', message: 'Configuration Supabase manquante' } },
+        { status: 500 }
+      );
+    }
+
     const body = await request.json();
 
     // Validation des données
     const validatedData = createCampaignSchema.parse(body);
 
     // Vérification que les segments existent
-    const { data: segments, error: segmentError } = await supabase
+    const { data: segments, error: segmentError } = await client
       .from('crm_customer_segments')
       .select('id, name')
       .in('id', validatedData.segment_ids);
@@ -114,7 +136,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       stats: {}
     };
 
-    const { data: campaign, error } = await supabase
+    const { data: campaign, error } = await client
       .from('crm_email_campaigns')
       .insert(campaignData)
       .select()

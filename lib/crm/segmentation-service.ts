@@ -1,12 +1,28 @@
 import { SegmentCriteria } from '@/app/types/crm';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
 export class SegmentationService {
+  private supabase: any = null;
+
+  private getSupabaseClient() {
+    if (!this.supabase) {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+      
+      if (!supabaseUrl || !supabaseServiceKey) {
+        console.error('Configuration Supabase manquante pour SegmentationService');
+        return null;
+      }
+      
+      try {
+        this.supabase = createClient(supabaseUrl, supabaseServiceKey);
+      } catch (error) {
+        console.error('Erreur initialisation Supabase dans SegmentationService:', error);
+        return null;
+      }
+    }
+    return this.supabase;
+  }
   
   /**
    * Construit une requête SQL à partir des critères de segmentation
@@ -142,6 +158,11 @@ export class SegmentationService {
    */
   async updateSegmentMembers(segmentId: string, criteria: SegmentCriteria): Promise<void> {
     try {
+      const supabase = this.getSupabaseClient();
+      if (!supabase) {
+        throw new Error('Configuration Supabase manquante');
+      }
+
       // Génère la requête SQL
       const sqlQuery = await this.buildSegmentQuery(criteria);
       
@@ -194,6 +215,11 @@ export class SegmentationService {
    */
   async updateAutoSegments(): Promise<void> {
     try {
+      const supabase = this.getSupabaseClient();
+      if (!supabase) {
+        throw new Error('Configuration Supabase manquante');
+      }
+
       // Récupère tous les segments avec auto_update activé
       const { data: segments, error } = await supabase
         .from('crm_customer_segments')
@@ -226,6 +252,11 @@ export class SegmentationService {
    * Obtient les membres d'un segment avec leurs informations détaillées
    */
   async getSegmentMembers(segmentId: string, limit: number = 50, offset: number = 0): Promise<any[]> {
+    const supabase = this.getSupabaseClient();
+    if (!supabase) {
+      throw new Error('Configuration Supabase manquante');
+    }
+
     const { data, error } = await supabase
       .from('crm_customer_segment_members')
       .select(`
@@ -251,7 +282,7 @@ export class SegmentationService {
       throw error;
     }
 
-    return data?.map(member => ({
+    return data?.map((member: any) => ({
       ...member.profiles,
       added_to_segment_at: member.added_at
     })) || [];
@@ -261,6 +292,11 @@ export class SegmentationService {
    * Obtient le nombre total de membres d'un segment
    */
   async getSegmentMemberCount(segmentId: string): Promise<number> {
+    const supabase = this.getSupabaseClient();
+    if (!supabase) {
+      throw new Error('Configuration Supabase manquante');
+    }
+
     const { count, error } = await supabase
       .from('crm_customer_segment_members')
       .select('*', { count: 'exact', head: true })
@@ -279,6 +315,11 @@ export class SegmentationService {
    */
   async testSegmentCriteria(criteria: SegmentCriteria): Promise<{ count: number; preview: any[] }> {
     try {
+      const supabase = this.getSupabaseClient();
+      if (!supabase) {
+        throw new Error('Configuration Supabase manquante');
+      }
+
       const sqlQuery = await this.buildSegmentQuery(criteria);
       
       // Exécute la requête avec une limite pour l'aperçu

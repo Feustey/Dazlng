@@ -34,6 +34,10 @@ export async function GET(request: NextRequest): Promise<ReturnType<typeof NextR
       return NextResponse.json({ error: 'Utilisateur non trouvé' }, { status: 401 })
     }
 
+    if (!supabaseAdmin) {
+      return NextResponse.json({ error: 'Configuration Supabase Admin manquante' }, { status: 500 })
+    }
+
     // Récupérer le profil depuis la table profiles
     const { data: profile, error: profileError } = await supabaseAdmin
       .from('profiles')

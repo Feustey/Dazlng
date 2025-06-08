@@ -4,14 +4,17 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-// Vérification côté serveur uniquement
-if (typeof window === 'undefined') {
+// Vérification côté serveur uniquement (sauf pendant le build)
+if (typeof window === 'undefined' && process.env.NODE_ENV !== 'production') {
   if (!supabaseUrl || !supabaseServiceKey) {
-    console.error('Configuration Supabase Admin manquante :', {
+    console.warn('Configuration Supabase Admin manquante :', {
       url: !!supabaseUrl,
       serviceKey: !!supabaseServiceKey
     });
-    throw new Error('Variables d\'environnement Supabase Service Role manquantes');
+    // Ne pas lancer d'erreur pendant le build
+    if (process.env.NEXT_PHASE !== 'phase-production-build') {
+      console.error('Variables d\'environnement Supabase Service Role manquantes');
+    }
   }
 }
 

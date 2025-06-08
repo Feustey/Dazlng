@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { EmailMarketingService } from '@/lib/email/resend-service';
 
-const emailService = new EmailMarketingService();
+// Import différé pour éviter l'initialisation au niveau du module
+function getEmailService() {
+  const { EmailMarketingService } = require('@/lib/email/resend-service');
+  return new EmailMarketingService();
+}
 
 // POST /api/webhooks/resend - Traite les webhooks Resend
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -19,6 +22,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     });
 
     // Traite l'événement selon son type
+    const emailService = getEmailService();
     await emailService.handleResendWebhook(body);
 
     return NextResponse.json({

@@ -8,6 +8,13 @@ export async function GET(_request: NextRequest): Promise<ReturnType<typeof Next
   try {
     console.log('[DEBUG] Vérification des colonnes de la table profiles...')
     
+    if (!supabaseAdmin) {
+      return NextResponse.json({
+        success: false,
+        error: 'Configuration Supabase Admin manquante'
+      }, { status: 500 });
+    }
+    
     // Requête pour obtenir la structure de la table profiles
     const { data: columns, error: columnsError } = await supabaseAdmin
       .from('information_schema.columns')

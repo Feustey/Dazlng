@@ -20,6 +20,13 @@ export async function GET(_request: NextRequest): Promise<ReturnType<typeof Next
       }
     }
 
+    if (!supabaseAdmin) {
+      return NextResponse.json({
+        success: false,
+        error: 'Configuration Supabase Admin manquante'
+      }, { status: 500 });
+    }
+
     // Diagnostiquer les problèmes de profil
     const { data: issues, error: diagError } = await supabaseAdmin.rpc('diagnose_profile_issues')
 

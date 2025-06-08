@@ -104,6 +104,26 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 }
 
 async function getBusinessMetrics(_startDate: Date): Promise<BusinessMetrics> {
+  if (!supabaseAdmin) {
+    // Return default/empty metrics if supabaseAdmin is not available
+    return {
+      monthly_signups: 0,
+      weekly_signups: 0,
+      conversion_rate: 0,
+      customer_acquisition_cost: 0,
+      churn_rate: 0,
+      customer_lifetime_value: 0,
+      monthly_recurring_revenue: 0,
+      daznode_adoption: 0,
+      lightning_connection_rate: 0,
+      premium_conversion_rate: 0,
+      total_revenue: 0,
+      monthly_revenue: 0,
+      avg_order_value: 0,
+      revenue_per_user: 0
+    };
+  }
+
   const now = new Date();
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
   const weekStart = new Date();
@@ -190,6 +210,21 @@ async function getBusinessMetrics(_startDate: Date): Promise<BusinessMetrics> {
 }
 
 async function getFunnelMetrics(startDate: Date): Promise<FunnelMetrics> {
+  if (!supabaseAdmin) {
+    // Return default/empty metrics if supabaseAdmin is not available
+    return {
+      visitors: 0,
+      signups: 0,
+      verified_users: 0,
+      first_purchase: 0,
+      premium_users: 0,
+      signup_rate: 0,
+      verification_rate: 0,
+      purchase_rate: 0,
+      premium_rate: 0
+    };
+  }
+
   // Étape 1: Visiteurs (approximation basée sur les signups)
   const { count: totalSignups } = await supabaseAdmin
     .from('profiles')
@@ -243,6 +278,11 @@ async function getFunnelMetrics(startDate: Date): Promise<FunnelMetrics> {
 }
 
 async function getCohortAnalysis(): Promise<CohortData[]> {
+  if (!supabaseAdmin) {
+    // Return empty array if supabaseAdmin is not available
+    return [];
+  }
+
   // Analyse de cohorte simplifiée - utilisateurs par mois d'inscription
   const { data: cohorts } = await supabaseAdmin
     .from('profiles')

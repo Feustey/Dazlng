@@ -74,6 +74,15 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     // Sauvegarder en base
     console.log('[CONTACT] Enregistrement en base de données...');
+    
+    if (!supabaseAdmin) {
+      console.error('[CONTACT] Supabase Admin non disponible');
+      return NextResponse.json({
+        success: false,
+        error: 'Configuration Supabase Admin manquante'
+      }, { status: 500 });
+    }
+    
     const { data: contact, error: dbError } = await supabaseAdmin
       .from('contacts')
       .insert({

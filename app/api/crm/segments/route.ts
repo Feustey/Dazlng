@@ -6,11 +6,21 @@ import { SegmentationService } from '@/lib/crm/segmentation-service';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !supabaseServiceKey) {
-  throw new Error('Variables d\'environnement Supabase manquantes');
-}
+// Ne pas lancer d'erreur pendant le build
+let supabase: any = null;
 
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+// Initialiser Supabase seulement si les variables sont disponibles
+function getSupabaseClient() {
+  if (!supabase && supabaseUrl && supabaseServiceKey) {
+    try {
+      supabase = createClient(supabaseUrl, supabaseServiceKey);
+    } catch (error) {
+      console.error('Erreur initialisation Supabase:', error);
+      return null;
+    }
+  }
+  return supabase;
+}
 
 const segmentationService = new SegmentationService();
 
@@ -62,14 +72,22 @@ const createSegmentSchema = z.object({
 // GET /api/crm/segments - Liste tous les segments
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
+    const client = getSupabaseClient();
+    if (!client) {
+      return NextResponse.json(
+        { success: false, error: { code: 'CONFIG_ERROR', message: 'Configuration Supabase manquante' } },
+        { status: 500 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const includeStats = searchParams.get('includeStats') === 'true';
 
-    let query = supabase.from('crm_customer_segments').select('*');
+    let query = client.from('crm_customer_segments').select('*');
 
     if (includeStats) {
       // Utilise la vue avec les statistiques
-      query = supabase.from('crm_segment_stats').select('*');
+      query = client.from('crm_segment_stats').select('*');
     }
 
     const { data: segments, error } = await query.order('created_at', { ascending: false });
@@ -113,7 +131,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { count, preview } = await segmentationService.testSegmentCriteria(validatedData.criteria);
 
     // Création du segment
-    const { data: segment, error } = await supabase
+    const client = getSupabaseClient();
+    if (!client) {
+      return NextResponse.json(
+        { success: false, error: { code: 'CONFIG_ERROR', message: 'Configuration Supabase manquante' } },
+        { status: 500 }
+      );
+    }
+
+    const { data: segment, error } = await client
       .from('crm_customer_segments')
       .insert({
         name: validatedData.name,

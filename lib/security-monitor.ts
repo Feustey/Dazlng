@@ -11,6 +11,11 @@ interface SecurityEvent {
 
 export async function logSecurityEvent(event: SecurityEvent): Promise<void> {
   try {
+    if (!supabaseAdmin) {
+      console.error('[SECURITY] Supabase Admin non disponible pour logging');
+      return;
+    }
+    
     await supabaseAdmin
       .from('security_logs')
       .insert({

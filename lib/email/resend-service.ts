@@ -4,10 +4,28 @@ import { createClient } from '@supabase/supabase-js';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Initialisation différée pour éviter les erreurs pendant le build
+let supabase: any = null;
+
+function getSupabaseClient() {
+  if (!supabase) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    
+    if (!supabaseUrl || !supabaseServiceKey) {
+      console.error('Configuration Supabase manquante pour EmailMarketingService');
+      return null;
+    }
+    
+    try {
+      supabase = createClient(supabaseUrl, supabaseServiceKey);
+    } catch (error) {
+      console.error('Erreur initialisation Supabase dans EmailMarketingService:', error);
+      return null;
+    }
+  }
+  return supabase;
+}
 
 export class EmailMarketingService {
   
@@ -16,6 +34,11 @@ export class EmailMarketingService {
    */
   async sendCampaign(campaignId: string): Promise<{ success: number; failed: number; errors: any[] }> {
     try {
+      const supabase = getSupabaseClient();
+      if (!supabase) {
+        throw new Error('Configuration Supabase manquante');
+      }
+
       // Récupère les détails de la campagne
       const { data: campaign, error } = await supabase
         .from('crm_email_campaigns')
@@ -227,7 +250,7 @@ export class EmailMarketingService {
         .eq('segment_id', segmentId);
 
       if (!error && members) {
-        recipients.push(...members.map(m => m.profiles as any as Customer));
+        recipients.push(...members.map((m: any) => m.profiles as Customer));
       }
     }
 

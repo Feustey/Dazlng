@@ -1,10 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-);
+// Initialisation différée pour éviter les erreurs pendant le build
+let supabase: any = null;
+
+function getSupabaseClient() {
+  if (!supabase) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    
+    if (!supabaseUrl || !supabaseServiceKey) {
+      console.error('Configuration Supabase manquante pour webhook lnbits');
+      return null;
+    }
+    
+    try {
+      supabase = createClient(supabaseUrl, supabaseServiceKey);
+    } catch (error) {
+      console.error('Erreur initialisation Supabase dans webhook lnbits:', error);
+      return null;
+    }
+  }
+  return supabase;
+}
 
 interface LNbitsWebhookPayload {
   payment_hash: string;
@@ -45,6 +63,12 @@ export async function POST(req: NextRequest): Promise<Response> {
     const amountSats = Math.floor(payload.amount / 1000);
     
     // Rechercher la commande correspondante
+    const supabase = getSupabaseClient();
+    if (!supabase) {
+      console.error('LNbits Webhook - Configuration Supabase manquante');
+      return NextResponse.json({ error: 'Configuration error' }, { status: 500 });
+    }
+
     const { data: orders, error: ordersError } = await supabase
       .from('orders')
       .select('*')

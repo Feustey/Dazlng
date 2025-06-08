@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { EmailMarketingService } from '@/lib/email/resend-service';
 
-const emailService = new EmailMarketingService();
+// Import différé pour éviter l'initialisation au niveau du module
+function getEmailService() {
+  const { EmailMarketingService } = require('@/lib/email/resend-service');
+  return new EmailMarketingService();
+}
 
 // POST /api/email/campaigns/[id]/send - Envoie une campagne
 export async function POST(
@@ -20,6 +23,7 @@ export async function POST(
     }
 
     // Envoie la campagne
+    const emailService = getEmailService();
     const result = await emailService.sendCampaign(campaignId);
 
     return NextResponse.json({
@@ -75,6 +79,7 @@ export async function PUT(
     }
 
     // Envoie l'email de test
+    const emailService = getEmailService();
     await emailService.sendTestEmail(campaignId, testEmail);
 
     return NextResponse.json({
