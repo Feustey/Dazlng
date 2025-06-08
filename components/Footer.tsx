@@ -12,7 +12,7 @@ const socialLinks = [
     ),
   },
   {
-    url: 'https://t.me/daznode_bot',
+    url: 'https://t.me/+_tiT3od1q_Q0MjI0',
     title: 'Rejoignez-nous sur Telegram',
     icon: (
       <svg width={24} height={24} viewBox="0 0 24 24" fill="currentColor">
