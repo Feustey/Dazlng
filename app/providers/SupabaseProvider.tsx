@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState, useMemo } from 'react'
 import { createSupabaseBrowserClient } from '@/lib/supabase'
 import type { User, Session } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
@@ -19,7 +19,9 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }): J
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
-  const supabase = createSupabaseBrowserClient()
+  
+  // Mémoriser le client Supabase pour éviter les multiples instances
+  const supabase = useMemo(() => createSupabaseBrowserClient(), [])
 
   useEffect(() => {
     const getSession = async (): Promise<void> => {

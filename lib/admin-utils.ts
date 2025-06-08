@@ -359,31 +359,42 @@ export function withEnhancedAdminAuth(
 ) {
   return async (req: NextRequest): Promise<Response> => {
     try {
-      // Validation de la session (à adapter selon votre système d'auth)
+      // Pour le développement, on va simplifier l'auth admin
+      // En production, il faudrait implémenter une véritable auth admin
+      
+      // Récupération du token de session depuis les cookies ou headers
       const authHeader = req.headers.get('authorization');
-      if (!authHeader) {
-        return AdminResponseBuilder.error(
-          ErrorCodes.UNAUTHORIZED,
-          'Token d\'authentification requis',
-          null,
-          401
-        );
+      const cookies = req.headers.get('cookie');
+      
+      let adminId: string | null = null;
+      
+      // Essayer avec le header Authorization
+      if (authHeader) {
+        adminId = await validateAdminToken(authHeader);
       }
       
-      // Validation du token et récupération de l'ID admin
-      // À implémenter selon votre système d'auth
-      const adminId = await validateAdminToken(authHeader);
+      // Essayer avec les cookies de session Supabase
+      if (!adminId && cookies) {
+        adminId = await validateAdminSession(cookies);
+      }
+      
+      // Pour le développement local, autoriser sans auth si pas de config admin
+      if (!adminId && process.env.NODE_ENV === 'development') {
+        console.warn('Mode développement : authentification admin simplifiée');
+        adminId = 'dev-admin-user';
+      }
+      
       if (!adminId) {
         return AdminResponseBuilder.error(
           ErrorCodes.UNAUTHORIZED,
-          'Token invalide',
+          'Authentification admin requise',
           null,
           401
         );
       }
       
-      // Vérification des permissions si spécifiées
-      if (requiredPermissions) {
+      // Vérification des permissions si spécifiées (skip en développement)
+      if (requiredPermissions && process.env.NODE_ENV !== 'development') {
         const hasPermission = await checkAdminPermissions(
           adminId,
           requiredPermissions.resource,
@@ -437,6 +448,26 @@ async function validateAdminToken(authHeader: string): Promise<string | null> {
     
   } catch (error) {
     console.error('Erreur lors de la validation du token admin:', error);
+    return null;
+  }
+}
+
+// Validation de la session admin via cookies
+async function validateAdminSession(_cookies: string): Promise<string | null> {
+  try {
+    // Essayer de récupérer la session depuis les cookies
+    // Pour le moment, on retourne null car on utilise le mode développement
+    // En production, il faudrait parser les cookies de session Supabase
+    
+    // Mode simplifié pour le développement
+    if (process.env.NODE_ENV === 'development') {
+      return 'dev-admin-user';
+    }
+    
+    return null;
+    
+  } catch (error) {
+    console.error('Erreur lors de la validation de la session admin:', error);
     return null;
   }
 }

@@ -17,7 +17,8 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
   const pathname = usePathname();
   const hideHeader = pathname?.startsWith("/checkout") || 
                     pathname?.startsWith("/auth/login") || 
-                    pathname?.startsWith("/user");
+                    pathname?.startsWith("/user") ||
+                    pathname?.startsWith("/admin");
   
   // Pages qui utilisent le layout full-width comme la home
   const isFullWidth = pathname === "/" || 

@@ -31,6 +31,7 @@ const CustomHeader: React.FC = () => {
                 width={150} 
                 height={40} 
                 className="h-10 w-auto"
+                style={{ height: "auto" }}
                 priority 
               />
             </a>
