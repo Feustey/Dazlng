@@ -246,7 +246,7 @@ export default function HomePage(): React.ReactElement {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                     </svg>
                   </span>
-                  <span className="text-base sm:text-lg text-yellow-50">400 000 satoshis, soit 0,004 BTC(≈ 399 €) – livraison incluse</span>
+                  <span className="text-base sm:text-lg text-yellow-50">400 000 satoshis – livraison incluse</span>
                 </li>
               </ul>
             </div>

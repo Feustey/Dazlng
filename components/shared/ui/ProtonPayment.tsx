@@ -16,10 +16,11 @@ export default function ProtonPayment({ sats: _sats, promoApplied, onSuccess, on
   const [success, setSuccess] = useState(false);
   const [txId, setTxId] = useState<string | null>(null);
 
-  // Prix BTC de base pour DazBox (0.004 BTC)
-  const basePriceBTC = 0.004;
-  const baseDiscountedBTC = basePriceBTC * 0.9; // -10% de réduction
-  const btcAmount = promoApplied ? baseDiscountedBTC.toFixed(8) : basePriceBTC.toFixed(8);
+  // Prix de base pour DazBox (400 000 satoshis)
+  const basePriceSats = 400000;
+  const baseDiscountedSats = basePriceSats * 0.9; // -10% de réduction
+  const satsAmount = promoApplied ? baseDiscountedSats : basePriceSats;
+  const btcAmount = (satsAmount / 100000000).toFixed(8);
 
   // Simule l'envoi d'un email Proton Wallet (à remplacer par l'intégration réelle Proton API)
   const handlePay = async (): Promise<void> => {

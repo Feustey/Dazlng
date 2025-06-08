@@ -20,16 +20,24 @@ const jsonLd = {
     {
       "@type": "Offer",
       "name": "DazBox Starter",
-      "price": "400 000",
-      "priceCurrency": "EUR",
+      "price": "400000",
+      "priceCurrency": "XBT",
       "availability": "https://schema.org/InStock",
       "validFrom": "2025-01-01"
     },
     {
       "@type": "Offer",
       "name": "DazBox Pro",
-      "price": "449",
-      "priceCurrency": "EUR",
+      "price": "500000",
+      "priceCurrency": "XBT",
+      "availability": "https://schema.org/InStock",
+      "validFrom": "2025-01-01"
+    },
+    {
+      "@type": "Offer",
+      "name": "DazBox Enterprise",
+      "price": "1000000",
+      "priceCurrency": "XBT",
       "availability": "https://schema.org/InStock",
       "validFrom": "2025-01-01"
     }

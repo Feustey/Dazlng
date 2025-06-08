@@ -26,11 +26,11 @@ const DazBoxOffer: FC = () => {
 
       {/* Liste des avantages */}
       <ul className="mb-6 space-y-1 text-sm text-left w-full max-w-md mx-auto">
-        <li>✅ Installation plug & play : branchez, connectez, c'est prêt !</li>
-        <li>✅ Zéro intermédiaire : votre argent, votre contrôle</li>
+        <li>✅ Installation plug & play : branchez, connectez, c'est prêt !</li>
+        <li>✅ Zéro intermédiaire : votre argent, votre contrôle</li>
         <li>✅ Interface intuitive pour tous</li>
         <li>✅ Assistant IA intégré pour vous guider</li>
-        <li>✅ 400 000 satoshis inclus (≈ 0,004 BTC ≈ 399 Sats), livraison offerte</li>
+        <li>✅ Prix : 400 000 satoshis, livraison offerte</li>
       </ul>
 
       {/* CTA */}

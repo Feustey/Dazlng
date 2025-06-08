@@ -16,8 +16,7 @@ const PRODUCT_CONFIG = {
   DAZBOX: {
     name: 'DazBox',
     type: 'dazbox' as const,
-    basePriceBTC: 0.004,
-    get basePriceSats(): number { return Math.round(this.basePriceBTC * 100000000); }
+    basePriceSats: 400000
   }
 } as const;
 

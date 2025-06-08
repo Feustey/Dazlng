@@ -12,8 +12,8 @@ interface OrderSummaryProps {
 export function OrderSummary({ data }: OrderSummaryProps): React.ReactElement {
   const product = {
     name: "Dazbox",
-    priceBTC: 0.004,
-    priceSats: Math.round(0.004 * 100000000), // 400000 sats
+    priceSats: 400000, // 400 000 sats
+    get priceBTC() { return this.priceSats / 100000000; },
     quantity: 1,
   };
   return (

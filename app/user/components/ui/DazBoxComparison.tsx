@@ -32,15 +32,13 @@ const DazBoxComparison: React.FC<DazBoxComparisonProps> = ({ userNodeStats, hasN
   };
 
   const calculateROI = (): { months: number; dailyRevenue: number } => {
-    const dazboxPrice = 599; // Prix en euros
-    const btcPrice = 45000; // Prix BTC approximatif
-    const dailyRevenueBTC = (dazboxStats.monthlyRevenue / 30) / 100000000; // en BTC
-    const dailyRevenueEUR = dailyRevenueBTC * btcPrice;
-    const months = Math.ceil(dazboxPrice / (dailyRevenueEUR * 30));
+    const dazboxPriceSats = 400000; // Prix DazBox en satoshis
+    const dailyRevenueSats = dazboxStats.monthlyRevenue / 30; // Revenus quotidiens en sats
+    const months = Math.ceil(dazboxPriceSats / (dailyRevenueSats * 30));
     
     return {
       months,
-      dailyRevenue: dailyRevenueEUR
+      dailyRevenue: dailyRevenueSats
     };
   };
 
@@ -107,7 +105,7 @@ const DazBoxComparison: React.FC<DazBoxComparisonProps> = ({ userNodeStats, hasN
             <div>
               <div className="text-sm text-purple-200 mb-1">Revenus mensuels moyens</div>
               <div className="text-2xl font-bold">{formatSats(dazboxStats.monthlyRevenue)} sats</div>
-              <div className="text-sm text-purple-200">≈ {(roi.dailyRevenue * 30).toFixed(0)}Sats/mois</div>
+              <div className="text-sm text-purple-200">≈ {formatSats(Math.round(roi.dailyRevenue * 30))} sats/mois</div>
             </div>
             <div>
               <div className="text-sm text-purple-200 mb-1">Retour sur investissement</div>

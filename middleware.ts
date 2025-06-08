@@ -1,6 +1,32 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+// Fonction pour vérifier les permissions admin
+function checkAdminEmail(email: string | null | undefined): boolean {
+  if (!email) return false
+
+  // Liste des emails admin autorisés
+  const adminEmails = [
+    'admin@dazno.de',
+    'contact@dazno.de',
+    'stephane@dazno.de',
+    'support@dazno.de'
+  ]
+
+  // En développement, autoriser aussi certains emails de test
+  if (process.env.NODE_ENV === 'development') {
+    const devEmails = [
+      'test@dazno.de',
+      'dev@dazno.de', 
+      'admin@test.com'
+    ]
+    return adminEmails.includes(email) || devEmails.includes(email) || email.endsWith('@dazno.de')
+  }
+
+  // En production, seulement les emails explicitement autorisés
+  return adminEmails.includes(email) || email.endsWith('@dazno.de')
+}
+
 export async function middleware(request: NextRequest): Promise<Response> {
   let response = NextResponse.next({
     request: {
@@ -68,15 +94,20 @@ export async function middleware(request: NextRequest): Promise<Response> {
 
   // Routes admin - vérifier les permissions
   if (pathname.startsWith('/admin')) {
-    // En développement local, pas de protection sur /admin
-    if (process.env.NODE_ENV === 'development') {
-      console.log('[Middleware] Mode développement - accès admin autorisé sans authentification');
-    } else {
-      // En production, vérifier l'email @dazno.de
-      if (!user?.email?.includes('@dazno.de')) {
-        return NextResponse.redirect(new URL('/auth/login?error=access_denied', request.url))
-      }
+    if (!user) {
+      console.log('[Middleware] Accès admin refusé - utilisateur non authentifié');
+      return NextResponse.redirect(new URL('/auth/login?error=admin_access_required', request.url))
     }
+
+    // Vérifier les permissions admin
+    const isAdminEmail = checkAdminEmail(user.email)
+    
+    if (!isAdminEmail) {
+      console.log('[Middleware] Accès admin refusé pour:', user.email);
+      return NextResponse.redirect(new URL('/auth/login?error=admin_access_denied', request.url))
+    }
+    
+    console.log('[Middleware] Accès admin autorisé pour:', user.email);
   }
 
   // Routes utilisateur - authentification requise

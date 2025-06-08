@@ -1,5 +1,6 @@
 import Sidebar from "./Sidebar";
 import Header from "./Header";
+import AuthGuard from "./AuthGuard";
 import { ReactNode } from "react";
 
 interface LayoutProps {
@@ -8,12 +9,14 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps): JSX.Element {
   return (
-    <div className="flex h-screen">
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
-        <Header />
-        <main className="flex-1 bg-gray-50 overflow-y-auto p-6">{children}</main>
+    <AuthGuard>
+      <div className="flex h-screen">
+        <Sidebar />
+        <div className="flex-1 flex flex-col">
+          <Header />
+          <main className="flex-1 bg-gray-50 overflow-y-auto p-6">{children}</main>
+        </div>
       </div>
-    </div>
+    </AuthGuard>
   );
 } 
