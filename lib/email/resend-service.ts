@@ -4,10 +4,22 @@ import { createClient } from '@supabase/supabase-js';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Configuration Supabase avec gestion du mode développement
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+// ⚠️ Mode développement : permettre le build même sans service key
+const isDevelopment = process.env.NODE_ENV === 'development';
+const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
+
+if (!supabaseUrl || (!supabaseServiceKey && !isDevelopment && !isBuild)) {
+  throw new Error('Variables d\'environnement Supabase manquantes pour EmailMarketingService');
+}
+
+// Utiliser une clé factice en développement si nécessaire
+const effectiveServiceKey = supabaseServiceKey || (isDevelopment || isBuild ? 'dummy-key-for-build' : '');
+
+const supabase = createClient(supabaseUrl!, effectiveServiceKey);
 
 export class EmailMarketingService {
   

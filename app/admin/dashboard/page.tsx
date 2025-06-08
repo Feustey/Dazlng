@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Card } from "../components/ui/Card";
 import { StatsCard } from "../components/ui/StatsCard";
 import { formatDate, formatSats } from "../../../utils/formatters";
+import AnalyticsOverview from "../components/ui/AnalyticsOverview";
 import Link from "next/link";
 
 interface User {
@@ -200,34 +201,46 @@ export default function DashboardPage(): JSX.Element {
         </div>
       </div>
 
-      {/* KPIs Principaux */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatsCard 
-          title="Utilisateurs Totaux" 
-          value={stats.totalUsers} 
-          icon="👥" 
-          link="/admin/users"
-          trend={businessMetrics ? `+${businessMetrics.weekly_signups} cette semaine` : undefined}
-        />
-        <StatsCard 
-          title="Abonnements Actifs" 
-          value={stats.activeSubscriptions} 
-          icon="🔄" 
-          link="/admin/subscriptions" 
-        />
-        <StatsCard 
-          title="Revenu Total" 
-          value={formatSats(stats.totalRevenue)} 
-          icon="💰" 
-          link="/admin/payments"
-          trend={businessMetrics ? `${formatCurrency(businessMetrics.monthly_revenue)} ce mois` : undefined}
-        />
-        <StatsCard 
-          title="Commandes en Attente" 
-          value={stats.pendingOrders} 
-          icon="🛒" 
-          link="/admin/orders?status=pending" 
-        />
+      {/* Analytics Overview avec Umami */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <AnalyticsOverview period={parseInt(selectedPeriod)} />
+        </div>
+        
+        {/* KPIs Principaux (format compact) */}
+        <div className="space-y-4">
+          <div className="bg-white rounded-xl p-6 shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">KPIs Principaux</h2>
+            <div className="grid grid-cols-2 gap-4">
+              <StatsCard 
+                title="Utilisateurs" 
+                value={stats.totalUsers} 
+                icon="👥" 
+                link="/admin/users"
+                trend={businessMetrics ? `+${businessMetrics.weekly_signups}` : undefined}
+              />
+              <StatsCard 
+                title="Abonnements" 
+                value={stats.activeSubscriptions} 
+                icon="🔄" 
+                link="/admin/subscriptions" 
+              />
+              <StatsCard 
+                title="Revenus" 
+                value={formatSats(stats.totalRevenue)} 
+                icon="💰" 
+                link="/admin/payments"
+                trend={businessMetrics ? `${formatCurrency(businessMetrics.monthly_revenue)}` : undefined}
+              />
+              <StatsCard 
+                title="Commandes" 
+                value={stats.pendingOrders} 
+                icon="🛒" 
+                link="/admin/orders?status=pending" 
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Business Metrics Avancés */}

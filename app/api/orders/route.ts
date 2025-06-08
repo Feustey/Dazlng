@@ -15,6 +15,7 @@ import {
   validateData
 } from '@/lib/validations';
 import { ErrorCodes } from '@/types/database';
+import { mapProductTypeForDb, isValidProductType } from '@/lib/product-type-mapper';
 
 async function getUserFromRequest(req: NextRequest): Promise<SupabaseUser | null> {
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
@@ -75,9 +76,14 @@ export async function POST(req: NextRequest): Promise<Response> {
     logApiRequest('POST', '/api/orders', user_id, { product_type, amount });
 
     // Préparer les données de la commande pour la base de données
+    // FIX TEMPORAIRE : Mapper le product_type vers la valeur DB attendue
+    const dbProductType = isValidProductType(product_type) 
+      ? mapProductTypeForDb(product_type)
+      : product_type;
+
     const orderData = {
       user_id: user_id || null,
-      product_type,
+      product_type: dbProductType, // Utiliser la valeur mappée
       plan: plan || null,
       billing_cycle: billing_cycle || null,
       amount,

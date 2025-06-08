@@ -50,6 +50,17 @@ interface CohortData {
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
+    // Vérifier si nous sommes en mode build ou si la config est disponible
+    if (process.env.NODE_ENV === 'development' && !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return NextResponse.json({
+        success: false,
+        error: {
+          code: 'DEVELOPMENT_MODE',
+          message: 'Stats non disponibles en mode développement sans service key'
+        }
+      }, { status: 503 });
+    }
+
     const { searchParams } = new URL(request.url);
     const period = searchParams.get('period') || '30'; // 7, 30, 90 jours
     const type = searchParams.get('type') || 'business'; // business, funnel, cohort

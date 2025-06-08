@@ -15,17 +15,17 @@ const jsonLd = {
   "offers": [
     {
       "@type": "Offer",
-      "name": "DazNode Professional",
-      "price": "99",
-      "priceCurrency": "EUR",
+      "name": "DazNode Premium",
+      "price": "30000",
+      "priceCurrency": "SATS",
       "availability": "https://schema.org/InStock",
       "validFrom": "2025-01-01"
     },
     {
       "@type": "Offer", 
       "name": "DazNode Enterprise",
-      "price": "400 000",
-      "priceCurrency": "EUR",
+      "price": "15000",
+      "priceCurrency": "SATS",
       "availability": "https://schema.org/InStock",
       "validFrom": "2025-01-01"
     }
@@ -124,12 +124,12 @@ const DazNodePage: React.FC = (): React.ReactElement => {
           </div>
           
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* Plan Professional */}
+            {/* Plan Premium */}
             <div className="bg-white rounded-3xl p-8 relative">
               <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Professional</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Premium</h3>
                 <p className="text-gray-600 mb-6">Pour les professionnels du Lightning Network</p>
-                <div className="text-4xl font-bold text-gray-900">99 Satoshis<span className="text-lg text-gray-500">/mois</span></div>
+                <div className="text-4xl font-bold text-gray-900">30K Sats<span className="text-lg text-gray-500">/mois</span></div>
               </div>
               
               <ul className="space-y-4 mb-8">
@@ -137,30 +137,30 @@ const DazNodePage: React.FC = (): React.ReactElement => {
                   <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-gray-700">Jusqu'à 5 nœuds</span>
+                  <span className="text-gray-700">Jusqu'à 10 nœuds</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-gray-700">IA d'optimisation avancée</span>
+                  <span className="text-gray-700">IA avancée pour optimisation</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-gray-700">Analytics temps réel</span>
+                  <span className="text-gray-700">API complète</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-gray-700">Support prioritaire</span>
+                  <span className="text-gray-700">Support 24/7</span>
                 </li>
               </ul>
               
               <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-xl transition-colors">
-                Commencer l'Essai Gratuit
+                Essai Gratuit 30 Jours
               </button>
             </div>
 
@@ -175,7 +175,7 @@ const DazNodePage: React.FC = (): React.ReactElement => {
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold mb-2">Enterprise</h3>
                 <p className="text-blue-100 mb-6">Pour les entreprises et institutions</p>
-                <div className="text-4xl font-bold">400 000 Satoshis<span className="text-lg text-blue-200">/mois</span></div>
+                <div className="text-4xl font-bold">15K Sats<span className="text-lg text-blue-200">/mois</span></div>
               </div>
               
               <ul className="space-y-4 mb-8">

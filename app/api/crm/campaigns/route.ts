@@ -6,13 +6,28 @@ import { EmailMarketingService } from '@/lib/email/resend-service';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !supabaseServiceKey) {
+// ⚠️ Mode développement : permettre le build même sans service key
+const isDevelopment = process.env.NODE_ENV === 'development';
+const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
+
+if (!supabaseUrl || (!supabaseServiceKey && !isDevelopment && !isBuild)) {
   throw new Error('Variables d\'environnement Supabase manquantes');
 }
 
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+// Utiliser une clé factice en développement si nécessaire
+const effectiveServiceKey = supabaseServiceKey || (isDevelopment || isBuild ? 'dummy-key-for-build' : '');
 
-const _emailService = new EmailMarketingService();
+const supabase = createClient(supabaseUrl!, effectiveServiceKey);
+
+// Initialisation différée pour éviter les erreurs de build
+let _emailService: EmailMarketingService | null = null;
+
+function _getEmailService(): EmailMarketingService {
+  if (!_emailService) {
+    _emailService = new EmailMarketingService();
+  }
+  return _emailService;
+}
 
 const createCampaignSchema = z.object({
   name: z.string().min(1).max(255),
@@ -26,6 +41,17 @@ const createCampaignSchema = z.object({
 // GET /api/crm/campaigns - Liste toutes les campagnes
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
+    // Vérifier si nous sommes en mode build ou si la config est disponible
+    if (process.env.NODE_ENV === 'development' && !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return NextResponse.json({
+        success: false,
+        error: {
+          code: 'DEVELOPMENT_MODE',
+          message: 'CRM campaigns non disponibles en mode développement sans service key'
+        }
+      }, { status: 503 });
+    }
+
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status');
     const includeStats = searchParams.get('includeStats') === 'true';
@@ -73,6 +99,17 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 // POST /api/crm/campaigns - Crée une nouvelle campagne
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
+    // Vérifier si nous sommes en mode build ou si la config est disponible
+    if (process.env.NODE_ENV === 'development' && !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return NextResponse.json({
+        success: false,
+        error: {
+          code: 'DEVELOPMENT_MODE',
+          message: 'CRM campaigns non disponibles en mode développement sans service key'
+        }
+      }, { status: 503 });
+    }
+
     const body = await request.json();
 
     // Validation des données

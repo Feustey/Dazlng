@@ -35,9 +35,14 @@ const UserDashboard: FC = () => {
   const [showPremiumModal, setShowPremiumModal] = useState(false);
 
   // Hook CRM pour les données optimisées
-  const { crmData, profileFields, profileCompletion, userScore, recommendations } = useCRMData({ 
+  const { crmData, profileFields } = useCRMData({ 
     userProfile: userProfile as any 
   });
+
+  // Calculer profileCompletion et userScore depuis crmData
+  const profileCompletion = crmData?.profileCompletion ?? 0;
+  const userScore = crmData?.userScore ?? 0;
+  const recommendations = crmData?.recommendations ?? [];
 
   // DÉSACTIVÉ TEMPORAIREMENT : Hook Dazno pour analyse complète (API non disponible en dev)
   // const { complete: daznoData, getCompleteAnalysis } = useDaznoAPI();

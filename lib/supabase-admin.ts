@@ -4,16 +4,25 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !supabaseServiceKey) {
+// ⚠️ Mode développement : permettre le build même sans service key
+const isDevelopment = process.env.NODE_ENV === 'development';
+const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
+
+if (!supabaseUrl || (!supabaseServiceKey && !isDevelopment && !isBuild)) {
   console.error('Configuration Supabase Admin manquante :', {
     url: !!supabaseUrl,
-    serviceKey: !!supabaseServiceKey
+    serviceKey: !!supabaseServiceKey,
+    isDevelopment,
+    isBuild
   });
   throw new Error('Variables d\'environnement Supabase Service Role manquantes');
 }
 
+// Utiliser une clé factice en développement si nécessaire
+const effectiveServiceKey = supabaseServiceKey || (isDevelopment || isBuild ? 'dummy-key-for-build' : '');
+
 // Client avec clé de service (bypass RLS)
-export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+export const supabaseAdmin = createClient(supabaseUrl!, effectiveServiceKey, {
   auth: {
     autoRefreshToken: false,
     persistSession: false
@@ -21,7 +30,7 @@ export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
 });
 
 // Client pour l'authentification côté serveur
-export const supabaseServerAuth = createClient(supabaseUrl, supabaseServiceKey, {
+export const supabaseServerAuth = createClient(supabaseUrl!, effectiveServiceKey, {
   auth: {
     autoRefreshToken: false,
     persistSession: false

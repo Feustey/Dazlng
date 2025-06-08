@@ -6,13 +6,28 @@ import { SegmentationService } from '@/lib/crm/segmentation-service';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !supabaseServiceKey) {
+// ⚠️ Mode développement : permettre le build même sans service key
+const isDevelopment = process.env.NODE_ENV === 'development';
+const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
+
+if (!supabaseUrl || (!supabaseServiceKey && !isDevelopment && !isBuild)) {
   throw new Error('Variables d\'environnement Supabase manquantes');
 }
 
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+// Utiliser une clé factice en développement si nécessaire
+const effectiveServiceKey = supabaseServiceKey || (isDevelopment || isBuild ? 'dummy-key-for-build' : '');
 
-const segmentationService = new SegmentationService();
+const supabase = createClient(supabaseUrl!, effectiveServiceKey);
+
+// Initialisation différée du service pour éviter les erreurs de build
+let segmentationService: SegmentationService | null = null;
+
+function getSegmentationService(): SegmentationService {
+  if (!segmentationService) {
+    segmentationService = new SegmentationService();
+  }
+  return segmentationService;
+}
 
 // Schéma de validation pour les critères de segment
 const segmentCriteriaSchema = z.object({
@@ -62,6 +77,17 @@ const createSegmentSchema = z.object({
 // GET /api/crm/segments - Liste tous les segments
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
+    // Vérifier si nous sommes en mode build ou si la config est disponible
+    if (process.env.NODE_ENV === 'development' && !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return NextResponse.json({
+        success: false,
+        error: {
+          code: 'DEVELOPMENT_MODE',
+          message: 'CRM segments non disponibles en mode développement sans service key'
+        }
+      }, { status: 503 });
+    }
+
     const { searchParams } = new URL(request.url);
     const includeStats = searchParams.get('includeStats') === 'true';
 
@@ -104,13 +130,24 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 // POST /api/crm/segments - Crée un nouveau segment
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
+    // Vérifier si nous sommes en mode build ou si la config est disponible
+    if (process.env.NODE_ENV === 'development' && !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return NextResponse.json({
+        success: false,
+        error: {
+          code: 'DEVELOPMENT_MODE',
+          message: 'CRM segments non disponibles en mode développement sans service key'
+        }
+      }, { status: 503 });
+    }
+
     const body = await request.json();
 
     // Validation des données
     const validatedData = createSegmentSchema.parse(body);
 
     // Test des critères avant création
-    const { count, preview } = await segmentationService.testSegmentCriteria(validatedData.criteria);
+    const { count, preview } = await getSegmentationService().testSegmentCriteria(validatedData.criteria);
 
     // Création du segment
     const { data: segment, error } = await supabase
@@ -135,7 +172,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // Calcul initial des membres si auto_update est activé
     if (validatedData.auto_update) {
       try {
-        await segmentationService.updateSegmentMembers(segment.id, validatedData.criteria);
+        await getSegmentationService().updateSegmentMembers(segment.id, validatedData.criteria);
       } catch (updateError) {
         console.warn('Erreur lors de la mise à jour initiale des membres:', updateError);
         // On continue même si la mise à jour échoue

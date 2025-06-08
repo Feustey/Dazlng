@@ -1,12 +1,32 @@
 import { SegmentCriteria } from '@/app/types/crm';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
 export class SegmentationService {
+  private supabase: any;
+
+  constructor() {
+    // Initialisation différée pour éviter les erreurs de build
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    
+    // Mode développement : permettre le build même sans service key
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
+    
+    if (supabaseUrl && (supabaseServiceKey || isDevelopment || isBuild)) {
+      const effectiveServiceKey = supabaseServiceKey || 'dummy-key-for-build';
+      this.supabase = createClient(supabaseUrl, effectiveServiceKey);
+    } else {
+      // Supabase null en cas de configuration manquante
+      this.supabase = null;
+    }
+  }
+
+  private checkSupabase() {
+    if (!this.supabase) {
+      throw new Error('Service de segmentation non disponible - configuration Supabase manquante');
+    }
+  }
   
   /**
    * Construit une requête SQL à partir des critères de segmentation
@@ -142,17 +162,19 @@ export class SegmentationService {
    */
   async updateSegmentMembers(segmentId: string, criteria: SegmentCriteria): Promise<void> {
     try {
+      this.checkSupabase();
+      
       // Génère la requête SQL
       const sqlQuery = await this.buildSegmentQuery(criteria);
       
       // Supprime les anciens membres du segment
-      await supabase
+      await this.supabase
         .from('crm_customer_segment_members')
         .delete()
         .eq('segment_id', segmentId);
 
       // Exécute la requête pour obtenir les nouveaux membres
-      const { data: customers, error } = await supabase.rpc('execute_raw_sql', { 
+      const { data: customers, error } = await this.supabase.rpc('execute_raw_sql', { 
         query: sqlQuery 
       });
 
@@ -170,7 +192,7 @@ export class SegmentationService {
         }));
 
         // Insère les nouveaux membres
-        const { error: insertError } = await supabase
+        const { error: insertError } = await this.supabase
           .from('crm_customer_segment_members')
           .insert(members);
 
@@ -194,8 +216,10 @@ export class SegmentationService {
    */
   async updateAutoSegments(): Promise<void> {
     try {
+      this.checkSupabase();
+      
       // Récupère tous les segments avec auto_update activé
-      const { data: segments, error } = await supabase
+      const { data: segments, error } = await this.supabase
         .from('crm_customer_segments')
         .select('id, criteria')
         .eq('auto_update', true);
@@ -226,7 +250,9 @@ export class SegmentationService {
    * Obtient les membres d'un segment avec leurs informations détaillées
    */
   async getSegmentMembers(segmentId: string, limit: number = 50, offset: number = 0): Promise<any[]> {
-    const { data, error } = await supabase
+    this.checkSupabase();
+    
+    const { data: members, error } = await this.supabase
       .from('crm_customer_segment_members')
       .select(`
         customer_id,
@@ -251,7 +277,7 @@ export class SegmentationService {
       throw error;
     }
 
-    return data?.map(member => ({
+    return members?.map((member: any) => ({
       ...member.profiles,
       added_to_segment_at: member.added_at
     })) || [];
@@ -261,7 +287,9 @@ export class SegmentationService {
    * Obtient le nombre total de membres d'un segment
    */
   async getSegmentMemberCount(segmentId: string): Promise<number> {
-    const { count, error } = await supabase
+    this.checkSupabase();
+    
+    const { count, error } = await this.supabase
       .from('crm_customer_segment_members')
       .select('*', { count: 'exact', head: true })
       .eq('segment_id', segmentId);
@@ -279,12 +307,14 @@ export class SegmentationService {
    */
   async testSegmentCriteria(criteria: SegmentCriteria): Promise<{ count: number; preview: any[] }> {
     try {
+      this.checkSupabase();
+      
       const sqlQuery = await this.buildSegmentQuery(criteria);
       
       // Exécute la requête avec une limite pour l'aperçu
       const previewQuery = sqlQuery + ' LIMIT 10';
       
-      const { data: preview, error } = await supabase.rpc('execute_raw_sql', { 
+      const { data: preview, error } = await this.supabase.rpc('execute_raw_sql', { 
         query: previewQuery 
       });
 
@@ -299,7 +329,7 @@ export class SegmentationService {
         'SELECT COUNT(DISTINCT p.id) as count'
       );
       
-      const { data: countResult, error: countError } = await supabase.rpc('execute_raw_sql', { 
+      const { data: countResult, error: countError } = await this.supabase.rpc('execute_raw_sql', { 
         query: countQuery 
       });
 

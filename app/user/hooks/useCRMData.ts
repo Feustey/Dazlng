@@ -10,6 +10,73 @@ export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Récupérer les données CRM depuis l'API
+  const fetchCRMData = async () => {
+    if (!userProfile) {
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const response = await fetch('/api/user/crm-data', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          // En production, utiliser le vrai token JWT
+          'Authorization': 'Bearer fake-token',
+          'x-user-id': userProfile.id
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erreur API: ${response.status}`);
+      }
+
+      const result = await response.json();
+      
+      if (!result.success) {
+        throw new Error(result.error?.message || 'Erreur lors de la récupération des données CRM');
+      }
+
+      setCrmData(result.data.crmData);
+
+    } catch (err) {
+      console.error('Erreur récupération CRM data:', err);
+      setError(err instanceof Error ? err.message : 'Erreur inconnue');
+      
+      // Fallback sur les données locales en cas d'erreur API
+      const fallbackData = generateLocalCRMData(userProfile);
+      setCrmData(fallbackData);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Fallback local en cas d'erreur API
+  const generateLocalCRMData = (profile: UserProfile): CRMData => {
+    const score = calculateUserScore(profile);
+    const segment = determineSegment(score, profile);
+    const profileCompletion = calculateProfileCompletion(profile);
+
+    return {
+      userScore: score,
+      segment,
+      engagementLevel: Math.min(100, score + 10),
+      conversionProbability: calculateConversionProbability(score, profile),
+      lastActivity: profile.updated_at || new Date().toISOString(),
+      totalOrders: 0, // Données non disponibles côté client
+      totalSpent: 0,
+      isPremium: false,
+      hasNode: !!profile.node_id,
+      profileCompletion,
+      lightningAdoption: !!profile.pubkey,
+      recommendations: generateBasicRecommendations(profile, score)
+    };
+  };
+
   // Calculer le score utilisateur localement
   const calculateUserScore = (profile: UserProfile): number => {
     let score = 0;
@@ -49,9 +116,36 @@ export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
     return 'prospect';
   };
 
-  // Générer les recommandations
-  const generateRecommendations = (profile: UserProfile, score: number): SmartRecommendation[] => {
+  // Calculer la probabilité de conversion
+  const calculateConversionProbability = (score: number, profile: UserProfile): number => {
+    let probability = score * 0.6;
+    
+    if (profile.email_verified) probability += 10;
+    if (profile.pubkey) probability += 15;
+    
+    const accountAge = profile.created_at ? 
+      (Date.now() - new Date(profile.created_at).getTime()) / (1000 * 60 * 60 * 24) : 0;
+    if (accountAge < 7) probability -= 20;
+    
+    return Math.max(0, Math.min(100, Math.round(probability)));
+  };
+
+  // Recommandations basiques pour le fallback (sans données hard-codées d'usage)
+  const generateBasicRecommendations = (profile: UserProfile, score: number): SmartRecommendation[] => {
     const recommendations: SmartRecommendation[] = [];
+    const segment = determineSegment(score, profile);
+
+    // Gains estimés basés sur le segment (valeurs conservative sans données réelles)
+    const getEstimatedGain = (actionType: string): number => {
+      const baseGains: Record<string, Record<string, number>> = {
+        'verify-email': { 'prospect': 5000, 'lead': 8000, 'client': 12000, 'premium': 15000, 'champion': 20000 },
+        'add-pubkey': { 'prospect': 15000, 'lead': 20000, 'client': 25000, 'premium': 30000, 'champion': 35000 },
+        'connect-node': { 'prospect': 50000, 'lead': 60000, 'client': 75000, 'premium': 90000, 'champion': 100000 },
+        'upgrade-premium': { 'prospect': 100000, 'lead': 120000, 'client': 150000, 'premium': 180000, 'champion': 200000 },
+        'dazbox-offer': { 'prospect': 150000, 'lead': 180000, 'client': 200000, 'premium': 250000, 'champion': 300000 }
+      };
+      return baseGains[actionType]?.[segment] || 10000;
+    };
 
     if (!profile.email_verified) {
       recommendations.push({
@@ -60,12 +154,12 @@ export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
         description: 'Débloquez toutes les fonctionnalités en vérifiant votre adresse email',
         category: 'security',
         impact: 'high',
-        estimatedGain: 10000,
+        estimatedGain: getEstimatedGain('verify-email'),
         timeToImplement: '2 minutes',
         isPremium: false,
         priority: 'high',
         href: '/user/settings',
-        appliedBy: 1250
+        appliedBy: 0 // Sera remplacé par les vraies données de l'API
       });
     }
 
@@ -76,12 +170,12 @@ export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
         description: 'Accédez aux fonctionnalités Lightning et améliorez votre score',
         category: 'growth',
         impact: 'high',
-        estimatedGain: 25000,
+        estimatedGain: getEstimatedGain('add-pubkey'),
         timeToImplement: '5 minutes',
         isPremium: false,
         priority: 'high',
         href: '/user/settings',
-        appliedBy: 890
+        appliedBy: 0
       });
     }
 
@@ -92,44 +186,12 @@ export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
         description: 'Obtenez des analytics détaillées et des recommandations IA',
         category: 'efficiency',
         impact: 'high',
-        estimatedGain: 75000,
+        estimatedGain: getEstimatedGain('connect-node'),
         timeToImplement: '10 minutes',
         isPremium: false,
         priority: 'medium',
         href: '/user/node',
-        appliedBy: 456
-      });
-    }
-
-    if (score >= 50) {
-      recommendations.push({
-        id: 'upgrade-premium',
-        title: 'Passez à Premium',
-        description: 'Débloquez les optimisations IA et le support prioritaire',
-        category: 'revenue',
-        impact: 'high',
-        estimatedGain: 150000,
-        timeToImplement: '1 minute',
-        isPremium: true,
-        priority: 'high',
-        href: '/subscribe',
-        appliedBy: 678
-      });
-    }
-
-    if (!profile.node_id && score >= 60) {
-      recommendations.push({
-        id: 'dazbox-offer',
-        title: 'Découvrez DazBox',
-        description: 'Nœud Lightning clé en main pour des revenus passifs optimisés',
-        category: 'revenue',
-        impact: 'high',
-        estimatedGain: 200000,
-        timeToImplement: '48h livraison',
-        isPremium: true,
-        priority: 'medium',
-        href: '/dazbox',
-        appliedBy: 234
+        appliedBy: 0
       });
     }
 
@@ -200,7 +262,7 @@ export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
         priority: 'low',
         href: '/user/settings',
         points: 5,
-        description: 'Partagez vos performances'
+        description: 'Connectez votre compte X'
       },
       {
         name: 'compte_nostr',
@@ -209,54 +271,21 @@ export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
         priority: 'low',
         href: '/user/settings',
         points: 5,
-        description: 'Rejoignez la communauté décentralisée'
+        description: 'Connectez votre compte Nostr'
       }
     ];
   };
 
-  // Calculer les données CRM
+  // Effect pour charger les données CRM
   useEffect(() => {
-    if (userProfile) {
-      setIsLoading(true);
-      try {
-        const userScore = calculateUserScore(userProfile);
-        const segment = determineSegment(userScore, userProfile);
-        const recommendations = generateRecommendations(userProfile, userScore);
-        const profileCompletion = calculateProfileCompletion(userProfile);
-
-        const data: CRMData = {
-          userScore,
-          segment,
-          engagementLevel: Math.min(100, userScore + 10),
-          conversionProbability: Math.max(0, Math.min(100, userScore * 0.8 + (userProfile.email_verified ? 10 : 0))),
-          lastActivity: userProfile.updated_at,
-          totalOrders: 0, // À récupérer depuis l'API
-          totalSpent: 0, // À récupérer depuis l'API
-          isPremium: false, // À récupérer depuis l'API
-          hasNode: !!userProfile.node_id,
-          profileCompletion,
-          lightningAdoption: !!userProfile.pubkey,
-          recommendations
-        };
-
-        setCrmData(data);
-        setError(null);
-      } catch (err) {
-        setError('Erreur lors du calcul des données CRM');
-        console.error('CRM calculation error:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-  }, [userProfile]);
+    fetchCRMData();
+  }, [userProfile?.id]); // Recharger si l'utilisateur change
 
   return {
     crmData,
     isLoading,
     error,
-    profileFields: userProfile ? generateProfileFields(userProfile) : [],
-    profileCompletion: userProfile ? calculateProfileCompletion(userProfile) : 0,
-    userScore: userProfile ? calculateUserScore(userProfile) : 0,
-    recommendations: crmData?.recommendations || []
+    refetch: fetchCRMData,
+    profileFields: userProfile ? generateProfileFields(userProfile) : []
   };
 }; 

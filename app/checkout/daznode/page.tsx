@@ -189,12 +189,12 @@ function CheckoutContent(): React.ReactElement {
                 <span className="block text-slate-700">Statistiques de base et monitoring essentiel</span>
               </li>
               <li className="bg-white rounded-xl px-6 py-4 shadow border-l-4 border-[#38bdf8]">
-                <span className="block font-bold text-lg text-[#0ea5e9] mb-1">Premium - 10K sats/mois</span>
-                <span className="block text-slate-700">Routing optimisé et analyses avancées</span>
+                <span className="block font-bold text-lg text-[#0ea5e9] mb-1">Basic - 10K sats/mois</span>
+                <span className="block text-slate-700">Optimisation automatique et statistiques avancées</span>
               </li>
               <li className="bg-white rounded-xl px-6 py-4 shadow border-l-4 border-[#f472b6]">
-                <span className="block font-bold text-lg text-[#be185d] mb-1">Pro - 30K sats/mois</span>
-                <span className="block text-slate-700">Intégration Amboss, Sparkseer, alertes Telegram et auto-rebalancing</span>
+                <span className="block font-bold text-lg text-[#be185d] mb-1">Premium - 30K sats/mois</span>
+                <span className="block text-slate-700">IA avancée, API complète et intégrations tierces</span>
               </li>
             </ul>
             <a href="#" className="inline-block mt-2 px-8 py-3 rounded-xl bg-[#a78bfa] text-white font-bold text-lg shadow hover:bg-[#7c3aed] transition">Découvrir DazNode &rarr;</a>

@@ -9,6 +9,7 @@ import Image from 'next/image';
 import ProtonPayment from '../../../components/shared/ui/ProtonPayment';
 import type { Invoice } from '../../../lib/lightning';
 import { z } from 'zod';
+import { mapProductTypeForDb, isValidProductType } from '@/lib/product-type-mapper';
 
 // ✅ Configuration centralisée
 const PRODUCT_CONFIG = {
@@ -272,9 +273,15 @@ function CheckoutContent(): React.ReactElement {
       // ✅ Créer les données de commande typées
       const orderData = createOrderData(userId, invoiceData, form);
       
-      // Adapter le payment_status pour la compatibilité avec l'ancien schéma BOOLEAN
+      // SOLUTION TEMPORAIRE : Adapter pour la contrainte product_type
+      // Utiliser l'utilitaire de mapping pour respecter la contrainte existante
+      const dbProductType = isValidProductType(orderData.product_type) 
+        ? mapProductTypeForDb(orderData.product_type)
+        : orderData.product_type;
+
       const compatibleOrderData = {
         ...orderData,
+        product_type: dbProductType, // Utiliser la valeur mappée pour la DB
         payment_status: false // Temporaire : utiliser false au lieu de 'pending' pour la compatibilité
       };
       
