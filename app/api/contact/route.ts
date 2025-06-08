@@ -4,10 +4,24 @@ import { supabaseAdmin } from '@/lib/supabase-admin'
 import { RateLimitService } from '@/lib/services/RateLimitService'
 import { ErrorCodes } from '@/types/database'
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resendApiKey = process.env.RESEND_API_KEY;
+const resend = new Resend(resendApiKey);
+const isDevelopment = process.env.NODE_ENV === 'development';
 
 export async function POST(request: NextRequest): Promise<Response> {
   try {
+    // Vérifier la clé API Resend
+    if (!resendApiKey) {
+      console.error('[CONTACT] RESEND_API_KEY non configurée');
+      return NextResponse.json({
+        success: false,
+        error: {
+          code: ErrorCodes.INTERNAL_ERROR,
+          message: 'Configuration email manquante'
+        }
+      }, { status: 500 })
+    }
+
     // Rate limiting
     const clientIP = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
     const rateLimiter = new RateLimitService()
@@ -23,44 +37,51 @@ export async function POST(request: NextRequest): Promise<Response> {
       }, { status: 429 })
     }
 
+    const body = await request.json();
+    console.log('[CONTACT] Données reçues:', { 
+      firstName: body.firstName, 
+      lastName: body.lastName,
+      email: body.email,
+      interest: body.interest,
+      messageLength: body.message?.length 
+    });
+
     const {
       firstName,
       lastName,
       email,
-      companyName,
-      _jobTitle,
-      companyPhone,
-      companyWebsite,
       interest,
       message,
-    } = await request.json();
+    } = body;
 
     // Validation stricte des champs obligatoires
     if (!firstName || !lastName || !email || !interest || !message) {
+      console.error('[CONTACT] Champs manquants:', { firstName: !!firstName, lastName: !!lastName, email: !!email, interest: !!interest, message: !!message });
       return NextResponse.json(
         { error: "Champs obligatoires manquants" },
         { status: 400 }
       );
     }
 
-    // Vérification honeypot
-    if (companyWebsite) {
-      console.warn(`[SECURITY] Tentative de spam détectée depuis ${clientIP}`)
-      return NextResponse.json({
-        success: true,
-        message: 'Message envoyé avec succès'
-      }) // Réponse factice pour tromper les bots
+    // Validation email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json(
+        { error: "Email invalide" },
+        { status: 400 }
+      );
     }
 
     // Sauvegarder en base
+    console.log('[CONTACT] Enregistrement en base de données...');
     const { data: contact, error: dbError } = await supabaseAdmin
       .from('contacts')
       .insert({
         first_name: firstName,
         last_name: lastName,
         email: email,
-        company_name: companyName,
-        phone: companyPhone,
+        company_name: null,
+        phone: null,
         subject: interest,
         message: message,
         ip_address: clientIP,
@@ -77,49 +98,51 @@ export async function POST(request: NextRequest): Promise<Response> {
         success: false,
         error: {
           code: ErrorCodes.DATABASE_ERROR,
-          message: 'Erreur lors de l\'enregistrement'
+          message: 'Erreur lors de l\'enregistrement',
+          details: isDevelopment ? dbError.message : undefined
         }
       }, { status: 500 })
     }
 
+    console.log('[CONTACT] Contact enregistré avec ID:', contact.id);
+
     // Envoyer les emails (admin + confirmation utilisateur)
     try {
-      await Promise.all([
+      console.log('[CONTACT] Envoi des emails...');
+      
+      const [adminEmailResult, userEmailResult] = await Promise.all([
         // Email à l'admin
         resend.emails.send({
-          from: 'contact@dazno.de',
-          to: 'admin@dazno.de',
+          from: 'DazNode Contact <contact@dazno.de>',
+          to: ['admin@dazno.de', 'contact@dazno.de'],
           subject: `Nouveau contact - ${interest}`,
           html: generateAdminNotificationEmail({
             firstName,
             lastName,
             email,
-            companyName,
-            phone: companyPhone,
             subject: interest,
-            message,
-            companyWebsite
+            message
           }),
           replyTo: email
         }),
         
         // Email de confirmation à l'utilisateur
         resend.emails.send({
-          from: 'noreply@dazno.de',
+          from: 'DazNode <noreply@dazno.de>',
           to: email,
           subject: 'Confirmation de votre message - DazNode',
           html: generateUserConfirmationEmail({
             firstName,
-            lastName,
-            email,
-            companyName,
-            phone: companyPhone,
             subject: interest,
-            message,
-            companyWebsite
+            message
           })
         })
       ])
+
+      console.log('[CONTACT] Résultats envoi emails:', {
+        admin: { id: adminEmailResult.data?.id, error: adminEmailResult.error },
+        user: { id: userEmailResult.data?.id, error: userEmailResult.error }
+      });
 
       // Logger l'envoi
       await supabaseAdmin
@@ -129,19 +152,35 @@ export async function POST(request: NextRequest): Promise<Response> {
             type: 'contact_admin',
             recipient: 'admin@dazno.de',
             contact_id: contact.id,
-            status: 'sent'
+            status: adminEmailResult.data?.id ? 'sent' : 'failed',
+            error_message: adminEmailResult.error?.message,
+            sent_at: adminEmailResult.data?.id ? new Date().toISOString() : null
           },
           {
             type: 'contact_confirmation',
             recipient: email,
             contact_id: contact.id,
-            status: 'sent'
+            status: userEmailResult.data?.id ? 'sent' : 'failed',
+            error_message: userEmailResult.error?.message,
+            sent_at: userEmailResult.data?.id ? new Date().toISOString() : null
           }
         ])
 
-    } catch (emailError) {
+    } catch (emailError: any) {
       console.error('[CONTACT] Erreur envoi email:', emailError)
-      // Ne pas faire échouer la requête si l'email échoue
+      console.error('[CONTACT] Détails erreur:', emailError?.message, emailError?.stack)
+      // Ne pas faire échouer la requête si l'email échoue, mais logger l'erreur
+      await supabaseAdmin
+        .from('email_logs')
+        .insert([
+          {
+            type: 'contact_error',
+            recipient: email,
+            contact_id: contact.id,
+            status: 'failed',
+            error_message: emailError?.message || 'Erreur inconnue'
+          }
+        ])
     }
 
     return NextResponse.json({
@@ -150,49 +189,124 @@ export async function POST(request: NextRequest): Promise<Response> {
       data: { id: contact.id }
     })
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('[CONTACT] Erreur inattendue:', error)
+    console.error('[CONTACT] Stack trace:', error?.stack)
     return NextResponse.json({
       success: false,
       error: {
         code: ErrorCodes.INTERNAL_ERROR,
-        message: 'Erreur interne du serveur'
+        message: 'Erreur interne du serveur',
+        details: isDevelopment ? error?.message : undefined
       }
     }, { status: 500 })
   }
 }
 
 function generateAdminNotificationEmail(data: any): string {
+  const subjectLabels: Record<string, string> = {
+    'dazpay': 'Dazpay - Solution de paiement',
+    'support': 'Support technique',
+    'conseil': 'Demande de conseil',
+    'partenariat': 'Proposition de partenariat',
+    'autre': 'Autre sujet'
+  };
+
   return `
-    <h2>Nouveau message de contact</h2>
-    <p><strong>De :</strong> ${data.firstName} ${data.lastName}</p>
-    <p><strong>Email :</strong> ${data.email}</p>
-    <p><strong>Société :</strong> ${data.companyName || 'Non renseigné'}</p>
-    <p><strong>Téléphone :</strong> ${data.phone || 'Non renseigné'}</p>
-    <p><strong>Sujet :</strong> ${data.subject}</p>
-    <p><strong>Message :</strong></p>
-    <div style="background: #f5f5f5; padding: 15px; border-radius: 5px;">
-      ${data.message.replace(/\n/g, '<br>')}
-    </div>
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(to right, #4F46E5, #7C3AED); color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+        .content { background: #f8f9fa; padding: 20px; border-radius: 0 0 8px 8px; }
+        .field { margin-bottom: 15px; }
+        .label { font-weight: bold; color: #4F46E5; }
+        .message-box { background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #4F46E5; margin-top: 20px; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h2>📧 Nouveau message de contact</h2>
+        </div>
+        <div class="content">
+          <div class="field">
+            <span class="label">De :</span> ${data.firstName} ${data.lastName}
+          </div>
+          <div class="field">
+            <span class="label">Email :</span> <a href="mailto:${data.email}">${data.email}</a>
+          </div>
+          <div class="field">
+            <span class="label">Sujet :</span> ${subjectLabels[data.subject] || data.subject}
+          </div>
+          <div class="message-box">
+            <h3 style="margin-top: 0;">Message :</h3>
+            ${data.message.replace(/\n/g, '<br>')}
+          </div>
+        </div>
+      </div>
+    </body>
+    </html>
   `
 }
 
 function generateUserConfirmationEmail(data: any): string {
+  const subjectLabels: Record<string, string> = {
+    'dazpay': 'Dazpay - Solution de paiement',
+    'support': 'Support technique',
+    'conseil': 'Demande de conseil',
+    'partenariat': 'Proposition de partenariat',
+    'autre': 'Autre sujet'
+  };
+
   return `
-    <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
-      <div style="background: #f7931a; color: white; padding: 20px; text-align: center;">
-        <h1>Message bien reçu !</h1>
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .header { background: linear-gradient(to right, #4F46E5, #7C3AED); color: white; padding: 30px; text-align: center; }
+        .content { padding: 30px; background: #f8f9fa; }
+        .message-preview { background: white; padding: 20px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #4F46E5; }
+        .footer { background: #2d3748; color: white; padding: 20px; text-align: center; }
+        .button { display: inline-block; background: #4F46E5; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; margin-top: 20px; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1 style="margin: 0;">✅ Message bien reçu !</h1>
+        </div>
+        <div class="content">
+          <p>Bonjour ${data.firstName},</p>
+          <p>Nous avons bien reçu votre message concernant "<strong>${subjectLabels[data.subject] || data.subject}</strong>".</p>
+          <p>Notre équipe examine attentivement chaque demande et vous répondra dans les plus brefs délais (généralement sous 24h ouvrées).</p>
+          
+          <div class="message-preview">
+            <h3 style="margin-top: 0;">Rappel de votre message :</h3>
+            <p>${data.message.replace(/\n/g, '<br>')}</p>
+          </div>
+          
+          <p>En attendant, n'hésitez pas à :</p>
+          <ul>
+            <li>Rejoindre notre <a href="https://t.me/+_tiT3od1q_Q0MjI0">canal Telegram</a></li>
+            <li>Consulter notre documentation</li>
+            <li>Découvrir nos solutions sur <a href="https://dazno.de">dazno.de</a></li>
+          </ul>
+          
+          <center>
+            <a href="https://dazno.de" class="button">Visiter notre site</a>
+          </center>
+        </div>
+        <div class="footer">
+          <p style="margin: 5px 0;">L'équipe DazNode</p>
+          <p style="margin: 5px 0;">⚡ Propulsé par Lightning Network</p>
+        </div>
       </div>
-      <div style="padding: 20px;">
-        <p>Bonjour ${data.firstName},</p>
-        <p>Nous avons bien reçu votre message concernant "${data.subject}".</p>
-        <p>Notre équipe vous répondra dans les plus brefs délais (généralement sous 24h).</p>
-        <p>Merci de votre intérêt pour DazNode !</p>
-        <p>
-          L'équipe DazNode<br>
-          <a href="https://dazno.de">dazno.de</a>
-        </p>
-      </div>
-    </div>
+    </body>
+    </html>
   `
 }
