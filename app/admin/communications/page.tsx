@@ -109,7 +109,7 @@ export default function CommunicationsPage(): JSX.Element {
   const loadEmailLogs = async () => {
     try {
       // Pour le moment, utiliser la table existante ou créer une simulation
-      const { data, error } = await supabaseAdmin
+      const { data, error } = await supabaseAdmin!
         .from('email_logs')
         .select('*')
         .order('created_at', { ascending: false })
@@ -145,7 +145,7 @@ export default function CommunicationsPage(): JSX.Element {
 
   const loadContacts = async () => {
     try {
-      const { data, error } = await supabaseAdmin
+      const { data, error } = await supabaseAdmin!
         .from('contacts')
         .select('*')
         .order('created_at', { ascending: false })
@@ -165,7 +165,7 @@ export default function CommunicationsPage(): JSX.Element {
 
   const loadCampaigns = async () => {
     try {
-      const { data, error } = await supabaseAdmin
+      const { data, error } = await supabaseAdmin!
         .from('crm_email_campaigns')
         .select('*')
         .order('created_at', { ascending: false })
@@ -201,7 +201,7 @@ export default function CommunicationsPage(): JSX.Element {
 
   const loadTemplates = async () => {
     try {
-      const { data, error } = await supabaseAdmin
+      const { data, error } = await supabaseAdmin!
         .from('crm_email_templates')
         .select('*')
         .order('created_at', { ascending: false })
