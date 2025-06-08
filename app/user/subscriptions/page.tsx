@@ -200,7 +200,20 @@ const SubscriptionsPage: FC = () => {
         throw new Error('Erreur lors de la création de la facture');
       }
 
-      const invoiceData: InvoiceData = await invoiceResponse.json();
+      const responseData = await invoiceResponse.json();
+      
+      // Vérifier la structure de la réponse et extraire les données de la facture
+      if (!responseData.invoice) {
+        throw new Error('Réponse API invalide: propriété invoice manquante');
+      }
+      
+      const invoiceData: InvoiceData = {
+        paymentRequest: responseData.invoice.payment_request,
+        paymentHash: responseData.invoice.payment_hash,
+        amount: responseData.invoice.amount || amount, // Fallback au montant demandé
+        description: description,
+        expiresAt: responseData.invoice.expires_at || new Date(Date.now() + 3600000).toISOString()
+      };
       
       // Ouvrir la facture Lightning dans une nouvelle fenêtre
       const lightningUrl = `lightning:${invoiceData.paymentRequest}`;
@@ -214,6 +227,34 @@ const SubscriptionsPage: FC = () => {
       alert('Erreur lors de la création de la facture. Veuillez réessayer.');
     } finally {
       setProcessingPlan(null);
+    }
+  };
+
+  // Fonction pour générer le QR code
+  const generateQRCode = async (paymentRequest: string): Promise<void> => {
+    try {
+      // Dynamiquement importer QRCode pour éviter les erreurs SSR
+      const QRCode = (await import('qrcode')).default;
+      
+      const qrDataUrl = await QRCode.toDataURL(paymentRequest, {
+        width: 200,
+        margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#FFFFFF'
+        }
+      });
+      
+      const container = document.getElementById('qr-code-container');
+      if (container) {
+        container.innerHTML = `<img src="${qrDataUrl}" alt="QR Code Lightning" class="rounded-lg border-2 border-purple-200" />`;
+      }
+    } catch (error) {
+      console.error('Erreur lors de la génération du QR code:', error);
+      const container = document.getElementById('qr-code-container');
+      if (container) {
+        container.innerHTML = `<div class="bg-red-100 text-red-600 p-4 rounded-lg">Erreur lors de la génération du QR code</div>`;
+      }
     }
   };
 
@@ -235,8 +276,16 @@ const SubscriptionsPage: FC = () => {
         
         <div class="bg-gray-50 rounded-lg p-4 mb-6">
           <div class="text-center">
-            <div class="text-2xl font-bold text-purple-600 mb-2">${formatSats(invoice.amount)} sats</div>
-            <div class="text-sm text-gray-500 break-all font-mono">${invoice.paymentRequest}</div>
+            <div class="text-2xl font-bold text-purple-600 mb-4">${formatSats(invoice.amount)} sats</div>
+            
+            <!-- QR Code Container -->
+            <div id="qr-code-container" class="mb-4 flex justify-center">
+              <div class="animate-pulse bg-gray-200 w-48 h-48 rounded-lg flex items-center justify-center">
+                <span class="text-gray-500">Génération du QR code...</span>
+              </div>
+            </div>
+            
+            <div class="text-sm text-gray-500 break-all font-mono max-h-20 overflow-y-auto">${invoice.paymentRequest}</div>
           </div>
         </div>
         
@@ -262,6 +311,9 @@ const SubscriptionsPage: FC = () => {
     `;
     
     document.body.appendChild(modal);
+    
+    // Générer le QR code après l'ajout au DOM
+    generateQRCode(invoice.paymentRequest);
   };
 
   // États de chargement
