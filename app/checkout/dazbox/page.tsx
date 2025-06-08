@@ -100,17 +100,18 @@ function CheckoutContent(): React.ReactElement {
   const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const router = useRouter(); // ✅ Utiliser Next.js router
   const [_btcCopied, _setBtcCopied] = useState(false);
   const _btcAddress = 'bc1p0vyqda9uv7kad4lsfzx5s9ndawhm3e3fd5vw7pnsem22n7dpfgxq48kht7';
 
   // ✅ Validation améliorée avec Zod
-  const isFormValid = (): boolean => {
+  const isFormValid = (showErrors: boolean = false): boolean => {
     try {
       CheckoutFormSchema.parse(form);
       return true;
     } catch (error) {
-      if (error instanceof z.ZodError) {
+      if (error instanceof z.ZodError && showErrors) {
         setError(error.errors[0].message);
       }
       return false;
@@ -122,6 +123,10 @@ function CheckoutContent(): React.ReactElement {
     setForm(prev => ({ ...prev, [name]: value }));
     // Effacer l'erreur quand l'utilisateur commence à corriger
     if (error) setError(null);
+    // Si le formulaire a déjà été soumis, valider en temps réel
+    if (formSubmitted) {
+      isFormValid(false);
+    }
   };
 
   // ✅ Prix calculé avec la configuration centralisée
@@ -232,8 +237,10 @@ function CheckoutContent(): React.ReactElement {
   };
 
   const handleLightningClick = async (): Promise<void> => {
-    // ✅ Validation avec Zod
-    if (!isFormValid()) {
+    setFormSubmitted(true);
+    
+    // ✅ Validation avec affichage des erreurs
+    if (!isFormValid(true)) {
       return;
     }
 
@@ -648,7 +655,7 @@ Le client devrait être recontacté pour un paiement via Wallet of Satoshi.`
                 <button 
                   className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center shadow-lg transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   onClick={handleLightningClick}
-                  disabled={!isFormValid() || isLoading}
+                  disabled={isLoading}
                 >
                   {isLoading ? (
                     <>
