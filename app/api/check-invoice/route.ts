@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createUnifiedLightningService } from '@/lib/services/unified-lightning-service';
+import { createDazNodeLightningService } from '@/lib/services/daznode-lightning-service';
 
 // Headers CORS pour permettre les requêtes depuis le navigateur
 const corsHeaders = {
@@ -22,12 +22,12 @@ interface ApiResponse<T> {
   };
   meta?: {
     timestamp: string;
-    version: string;
+    provider: string;
   };
 }
 
 export async function GET(req: NextRequest): Promise<Response> {
-  console.log('check-invoice v2.0 - Nouvelle requête');
+  console.log('🔍 check-invoice - Vérification via daznode@getalby.com');
   
   try {
     const { searchParams } = new URL(req.url);
@@ -44,20 +44,20 @@ export async function GET(req: NextRequest): Promise<Response> {
         },
         meta: {
           timestamp: new Date().toISOString(),
-          version: '2.0'
+          provider: 'daznode@getalby.com'
         }
       }, { status: 400 });
     }
 
-    console.log('check-invoice v2.0 - Paramètres validés:', { invoiceId, paymentHash });
+    console.log('✅ check-invoice - Paramètres validés:', { invoiceId, paymentHash });
 
-    // Utilisation du service Lightning unifié (DazNode ou LND)
-    const lightningService = createUnifiedLightningService();
+    // Utilisation du service Lightning daznode@getalby.com
+    const lightningService = createDazNodeLightningService();
     
     // Vérifier le statut du paiement
     const paymentStatus = await lightningService.checkInvoiceStatus(invoiceId || paymentHash!);
     
-    console.log('check-invoice v2.0 - Statut vérifié avec succès:', {
+    console.log('✅ check-invoice - Statut vérifié via daznode@getalby.com:', {
       identifier: invoiceId || paymentHash,
       status: paymentStatus.status,
       settled: paymentStatus.status === 'settled'
@@ -72,27 +72,28 @@ export async function GET(req: NextRequest): Promise<Response> {
         payment_hash: paymentHash,
         settled_at: paymentStatus.settledAt,
         invoice_id: invoiceId,
-        details: paymentStatus
+        details: paymentStatus,
+        provider: 'daznode@getalby.com'
       },
       meta: {
         timestamp: new Date().toISOString(),
-        version: '2.0'
+        provider: 'daznode@getalby.com'
       }
     });
     
   } catch (error) {
-    console.error('check-invoice v2.0 - Erreur:', error);
+    console.error('❌ check-invoice - Erreur daznode@getalby.com:', error);
     
     return NextResponse.json<ApiResponse<null>>({
       success: false,
       error: {
-        code: 'INTERNAL_ERROR',
-        message: 'Erreur lors de la vérification du paiement',
+        code: 'LIGHTNING_ERROR',
+        message: 'Erreur lors de la vérification via daznode@getalby.com',
         details: error instanceof Error ? error.message : 'Erreur inconnue'
       },
       meta: {
         timestamp: new Date().toISOString(),
-        version: '2.0'
+        provider: 'daznode@getalby.com'
       }
     }, { status: 500 });
   }

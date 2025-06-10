@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createUnifiedLightningService } from '@/lib/services/unified-lightning-service';
+import { createDazNodeLightningService } from '@/lib/services/daznode-lightning-service';
 
 export const dynamic = "force-dynamic";
 export const runtime = 'nodejs';
 
-// Méthode GET pour diagnostics (à supprimer en production)
+// Méthode GET pour diagnostics
 export async function GET(): Promise<Response> {
   return NextResponse.json({
     success: true,
-    message: 'create-invoice endpoint v2.0 actif',
+    message: 'create-invoice endpoint - daznode@getalby.com',
+    provider: 'lightning + daznode@getalby.com',
     methods: ['POST'],
     timestamp: new Date().toISOString()
   });
@@ -30,12 +31,12 @@ interface ApiResponse<T> {
   };
   meta?: {
     timestamp: string;
-    version: string;
+    provider: string;
   };
 }
 
 export async function POST(req: NextRequest): Promise<Response> {
-  console.log('create-invoice v2.0 - Nouvelle requête');
+  console.log('🚀 create-invoice - Nouvelle requête via daznode@getalby.com');
   
   try {
     const body: CreateInvoiceRequest = await req.json();
@@ -51,7 +52,7 @@ export async function POST(req: NextRequest): Promise<Response> {
         },
         meta: {
           timestamp: new Date().toISOString(),
-          version: '2.0'
+          provider: 'daznode@getalby.com'
         }
       }, { status: 400 });
     }
@@ -65,15 +66,15 @@ export async function POST(req: NextRequest): Promise<Response> {
         },
         meta: {
           timestamp: new Date().toISOString(),
-          version: '2.0'
+          provider: 'daznode@getalby.com'
         }
       }, { status: 400 });
     }
 
-    console.log('create-invoice v2.0 - Paramètres validés:', { amount, description });
+    console.log('✅ create-invoice - Paramètres validés:', { amount, description });
 
-    // Utilisation du service Lightning unifié (DazNode ou LND)
-    const lightningService = createUnifiedLightningService();
+    // Utilisation du service Lightning daznode@getalby.com
+    const lightningService = createDazNodeLightningService();
     
     const invoice = await lightningService.generateInvoice({
       amount,
@@ -81,7 +82,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       expiry: 3600 // 1 heure
     });
     
-    console.log('create-invoice v2.0 - Facture créée avec succès:', {
+    console.log('✅ create-invoice - Facture créée via daznode@getalby.com:', {
       id: invoice.id,
       paymentHash: invoice.paymentHash,
       paymentRequestLength: invoice.paymentRequest?.length
@@ -96,29 +97,30 @@ export async function POST(req: NextRequest): Promise<Response> {
           payment_hash: invoice.paymentHash,
           amount,
           description,
-          expires_at: new Date(Date.now() + 3600 * 1000).toISOString(),
+          expires_at: invoice.expiresAt,
           metadata
-        }
+        },
+        provider: 'daznode@getalby.com'
       },
       meta: {
         timestamp: new Date().toISOString(),
-        version: '2.0'
+        provider: 'daznode@getalby.com'
       }
     });
     
   } catch (error) {
-    console.error('create-invoice v2.0 - Erreur:', error);
+    console.error('❌ create-invoice - Erreur daznode@getalby.com:', error);
     
     return NextResponse.json<ApiResponse<null>>({
       success: false,
       error: {
-        code: 'INTERNAL_ERROR',
-        message: 'Erreur lors de la génération de la facture',
+        code: 'LIGHTNING_ERROR',
+        message: 'Erreur lors de la génération de la facture via daznode@getalby.com',
         details: error instanceof Error ? error.message : 'Erreur inconnue'
       },
       meta: {
         timestamp: new Date().toISOString(),
-        version: '2.0'
+        provider: 'daznode@getalby.com'
       }
     }, { status: 500 });
   }
