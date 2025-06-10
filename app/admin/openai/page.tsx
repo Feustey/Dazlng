@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import Card, { CardContent, CardHeader, CardTitle, CardDescription } from "@/components/shared/ui/Card";
+import Card, { CardContent, CardHeader, CardTitle } from "@/components/shared/ui/Card";
 import { Alert, AlertDescription } from "@/components/shared/ui/Alert";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/Select";
+import { Select, SelectItem } from "../components/ui/Select";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
-import { AlertCircle, TrendingUp, DollarSign, Activity, Users, Zap } from "lucide-react";
+import { AlertCircle, DollarSign, Activity, Users, Zap } from "lucide-react";
 
 interface OpenAIMetrics {
   timestamp: string;
@@ -107,11 +107,23 @@ interface RealtimeMetrics {
   }>;
 }
 
+interface SystemHealth {
+  timestamp: string;
+  status: string;
+  components: {
+    database: { status: string; message: string };
+    cache: { status: string; message: string };
+    sparkseer: { status: string; message: string };
+    openai: { status: string; message: string };
+  };
+}
+
 const COLORS = ['#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899'];
 
 export default function OpenAIPage(): JSX.Element {
   const [metrics, setMetrics] = useState<OpenAIMetrics | null>(null);
   const [realtimeMetrics, setRealtimeMetrics] = useState<RealtimeMetrics | null>(null);
+  const [systemHealth, setSystemHealth] = useState<SystemHealth | null>(null);
   const [periodDays, setPeriodDays] = useState<string>("30");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -140,14 +152,30 @@ export default function OpenAIPage(): JSX.Element {
     }
   }, []);
 
+  const fetchSystemHealth = useCallback(async () => {
+    try {
+      const response = await fetch("/api/admin/openai/health");
+      if (response.ok) {
+        const data = await response.json();
+        setSystemHealth(data);
+      }
+    } catch (err) {
+      console.error("Erreur santé système:", err);
+    }
+  }, []);
+
   useEffect(() => {
     fetchMetrics();
     fetchRealtimeMetrics();
+    fetchSystemHealth();
     
     // Rafraîchir les métriques temps réel toutes les 60 secondes
-    const interval = setInterval(fetchRealtimeMetrics, 60000);
+    const interval = setInterval(() => {
+      fetchRealtimeMetrics();
+      fetchSystemHealth();
+    }, 60000);
     return () => clearInterval(interval);
-  }, [fetchMetrics, fetchRealtimeMetrics]);
+  }, [fetchMetrics, fetchRealtimeMetrics, fetchSystemHealth]);
 
   if (loading) {
     return (
@@ -418,6 +446,39 @@ export default function OpenAIPage(): JSX.Element {
         </CardContent>
       </Card>
 
+      {/* État de santé du système */}
+      {systemHealth && (
+        <Card>
+          <CardHeader>
+            <CardTitle>État de santé du système</CardTitle>
+            <p className="text-sm text-gray-600">
+              Statut global: {" "}
+              <span className={`font-semibold ${systemHealth.status === 'healthy' ? 'text-green-600' : 'text-red-600'}`}>
+                {systemHealth.status === 'healthy' ? '✅ Opérationnel' : '⚠️ Dégradé'}
+              </span>
+            </p>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {Object.entries(systemHealth.components).map(([component, status]) => (
+                <div key={component} className="p-3 border rounded-lg">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-medium capitalize">{component}</span>
+                    <span className={(status as any).status === 'healthy' ? 'text-green-600' : 'text-red-600'}>
+                      {(status as any).status === 'healthy' ? '✅' : '❌'}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-600">{(status as any).message}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 text-xs text-gray-500">
+              Dernière vérification: {new Date(systemHealth.timestamp).toLocaleTimeString()}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Performances API */}
       <Card>
         <CardHeader>
@@ -435,9 +496,9 @@ export default function OpenAIPage(): JSX.Element {
                     <p className="text-sm font-mono">{endpoint}</p>
                   </div>
                   <div className="flex gap-4 text-sm">
-                    <span className="text-muted-foreground">{stats.count} appels</span>
-                    <span className={`font-semibold ${stats.avg_response_time_ms > 1000 ? 'text-orange-600' : 'text-green-600'}`}>
-                      {stats.avg_response_time_ms}ms
+                    <span className="text-muted-foreground">{(stats as any).count} appels</span>
+                    <span className={`font-semibold ${(stats as any).avg_response_time_ms > 1000 ? 'text-orange-600' : 'text-green-600'}`}>
+                      {(stats as any).avg_response_time_ms}ms
                     </span>
                   </div>
                 </div>
