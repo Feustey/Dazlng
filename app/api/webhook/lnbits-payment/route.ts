@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 // Initialisation différée pour éviter les erreurs pendant le build
-let supabase: any = null;
+let supabase: ReturnType<typeof createClient> | null = null;
 
 function getSupabaseClient() {
   if (!supabase) {

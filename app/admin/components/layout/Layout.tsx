@@ -2,7 +2,7 @@
 
 import Sidebar from "./Sidebar";
 import Header from "./Header";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
 
 interface LayoutProps {
@@ -15,17 +15,7 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
   const router = useRouter();
   const pathname = usePathname();
 
-  useEffect(() => {
-    // Ne pas vérifier l'authentification sur la page d'auth
-    if (pathname === '/admin/auth') {
-      setIsLoading(false);
-      return;
-    }
-
-    checkAuthStatus();
-  }, [pathname]);
-
-  const checkAuthStatus = async (): Promise<void> => {
+  const checkAuthStatus = useCallback(async (): Promise<void> => {
     try {
       // Vérifier si l'utilisateur admin est connecté
       // Pour l'instant, on va vérifier s'il y a une session Supabase active
@@ -47,7 +37,17 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [router]);
+
+  useEffect(() => {
+    // Ne pas vérifier l'authentification sur la page d'auth
+    if (pathname === '/admin/auth') {
+      setIsLoading(false);
+      return;
+    }
+
+    checkAuthStatus();
+  }, [pathname, checkAuthStatus]);
 
   // Page d'authentification - pas de layout
   if (pathname === '/admin/auth') {

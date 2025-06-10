@@ -1,3 +1,27 @@
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Réseau Lightning | DazNode - Explorer le Réseau Bitcoin',
+  description: 'Explorez le réseau Lightning Network en temps réel. Découvrez les statistiques des nœuds, canaux, capacité et performances du réseau Bitcoin avec DazNode.',
+  keywords: ['réseau Lightning Network', 'explorer Bitcoin', 'statistiques Lightning', 'nœuds Bitcoin', 'canaux Lightning', 'capacité réseau'],
+  openGraph: {
+    title: 'Explorer le Réseau Lightning | DazNode',
+    description: 'Découvrez les statistiques en temps réel du réseau Lightning Network : nœuds, canaux, capacité et performances.',
+    url: 'https://dazno.de/network',
+    images: [
+      {
+        url: 'https://dazno.de/assets/images/network-og.png',
+        width: 1200,
+        height: 630,
+        alt: 'Réseau Lightning Network'
+      }
+    ]
+  },
+  alternates: {
+    canonical: 'https://dazno.de/network'
+  }
+};
+
 export const dynamic = 'force-dynamic';
 import { MCPClient } from '@/lib/mcp-client';
 

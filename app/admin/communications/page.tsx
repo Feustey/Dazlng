@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import Link from 'next/link'
 
@@ -75,11 +75,7 @@ export default function CommunicationsPage(): JSX.Element {
   const [showNewCampaign, setShowNewCampaign] = useState(false)
   const [showNewTemplate, setShowNewTemplate] = useState(false)
 
-  useEffect(() => {
-    loadData()
-  }, [activeTab])
-
-  const loadData = async (): Promise<void> => {
+  const loadData = useCallback(async (): Promise<void> => {
     try {
       setLoading(true)
       
@@ -104,7 +100,11 @@ export default function CommunicationsPage(): JSX.Element {
     } finally {
       setLoading(false)
     }
-  }
+  }, [activeTab])
+
+  useEffect(() => {
+    loadData()
+  }, [loadData])
 
   const loadEmailLogs = async () => {
     try {
@@ -414,7 +414,7 @@ export default function CommunicationsPage(): JSX.Element {
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() => setActiveTab(tab.id as 'dashboard' | 'campaigns' | 'templates' | 'logs')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === tab.id
                   ? 'border-blue-500 text-blue-600'

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Card } from "../components/ui/Card";
 import { StatsCard } from "../components/ui/StatsCard";
 import { formatDate, formatSats } from "../../../utils/formatters";
@@ -99,11 +99,7 @@ export default function DashboardPage(): JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedPeriod, setSelectedPeriod] = useState<string>('30');
 
-  useEffect((): void => {
-    fetchData();
-  }, [selectedPeriod]);
-
-  async function fetchData(): Promise<void> {
+  const fetchData = useCallback(async (): Promise<void> => {
     try {
       setIsLoading(true);
 
@@ -225,7 +221,11 @@ export default function DashboardPage(): JSX.Element {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [selectedPeriod]);
+
+  useEffect((): void => {
+    fetchData();
+  }, [fetchData]);
 
   const formatPercentage = (value: number): string => {
     return `${value.toFixed(1)}%`;
