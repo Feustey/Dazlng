@@ -20,6 +20,11 @@ interface CardContentProps {
   className?: string;
 }
 
+interface CardDescriptionProps {
+  children: ReactNode;
+  className?: string;
+}
+
 export default function Card({ children, className = "" }: CardProps): React.ReactElement {
   return (
     <div className={`bg-white rounded-2xl shadow p-8 ${className}`}>
@@ -49,5 +54,13 @@ export function CardContent({ children, className = "" }: CardContentProps): Rea
     <div className={`pt-4 ${className}`}>
       {children}
     </div>
+  );
+}
+
+export function CardDescription({ children, className = "" }: CardDescriptionProps): React.ReactElement {
+  return (
+    <p className={`text-sm text-gray-600 ${className}`}>
+      {children}
+    </p>
   );
 } 

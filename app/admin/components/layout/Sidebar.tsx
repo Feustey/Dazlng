@@ -3,6 +3,7 @@ import Link from "next/link";
 const links = [
   { href: "/admin/dashboard", label: "Dashboard", icon: "📊", section: "main" },
   { href: "/admin/analytics", label: "Analytics", icon: "📈", section: "main" },
+  { href: "/admin/openai", label: "OpenAI", icon: "🤖", section: "main" },
   { href: "/admin/users", label: "Utilisateurs", icon: "👥", section: "crm" },
   { href: "/admin/communications", label: "Communications", icon: "💬", section: "crm" },
   { href: "/admin/crm", label: "CRM (Legacy)", icon: "📧", section: "crm" },
