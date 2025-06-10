@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import FunnelAnalytics from "../../../components/shared/ui/FunnelAnalytics";
 
 type UmamiStats = {
@@ -10,7 +10,7 @@ type UmamiStats = {
   avgDuration: number;
 };
 
-export default function AnalyticsPage(): JSX.Element {
+export default function AnalyticsPage(): React.ReactElement {
   const [stats, setStats] = useState<UmamiStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -89,7 +89,7 @@ export default function AnalyticsPage(): JSX.Element {
   );
 }
 
-function StatCard({ label, value }: { label: string; value: string | number }): JSX.Element {
+function StatCard({ label, value }: { label: string; value: string | number }): React.ReactElement {
   return (
     <div className="bg-white rounded shadow p-4 flex flex-col items-center">
       <div className="text-lg font-semibold">{label}</div>

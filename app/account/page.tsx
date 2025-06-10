@@ -1,9 +1,9 @@
 "use client";
 
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 
-export default function AccountPage(): JSX.Element {
+export default function AccountPage(): React.ReactElement {
   const router = useRouter();
 
   useEffect(() => {

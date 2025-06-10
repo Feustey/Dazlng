@@ -9,26 +9,6 @@ import RealMetrics from "../components/shared/ui/RealMetrics";
 import RealTestimonials from "../components/shared/ui/RealTestimonials";
 import { HowItWorks } from "@/components/shared/ui/HowItWorks";
 import { CTASection } from "@/components/shared/ui/CTASection";
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'DazNode | Votre infrastructure Lightning Network clé en main',
-  description: 'Découvrez DazNode : solutions Lightning Network complètes avec IA prédictive, nœuds personnalisés DazBox et services de paiement DazPay. Infrastructure Bitcoin pour particuliers et entreprises.',
-  keywords: ['Lightning Network', 'Bitcoin', 'nœud Lightning', 'DazNode', 'DazBox', 'DazPay', 'paiements Bitcoin', 'infrastructure crypto', 'IA Bitcoin'],
-  openGraph: {
-    title: 'DazNode | Votre infrastructure Lightning Network clé en main',
-    description: 'Solutions Lightning Network complètes avec IA prédictive, nœuds personnalisés et services de paiement. Rejoignez la révolution Bitcoin.',
-    url: 'https://dazno.de',
-    images: [
-      {
-        url: 'https://dazno.de/assets/images/daznode-hero-og.png',
-        width: 1200,
-        height: 630,
-        alt: 'DazNode - Infrastructure Lightning Network'
-      }
-    ]
-  }
-};
 
 // Composant client séparé pour gérer les paramètres d'URL
 const SignupConfirmation: React.FC = () => {

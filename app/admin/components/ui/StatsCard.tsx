@@ -1,3 +1,4 @@
+import React from "react";
 import Link from "next/link";
 
 interface StatsCardProps {
@@ -9,7 +10,7 @@ interface StatsCardProps {
   trend?: string;
 }
 
-export function StatsCard({ title, value, icon, link, className = "", trend }: StatsCardProps): JSX.Element {
+export function StatsCard({ title, value, icon, link, className = "", trend }: StatsCardProps): React.ReactElement {
   const content = (
     <div className={`bg-white rounded-lg shadow p-6 ${className}`}>
       <div className="flex items-center justify-between">

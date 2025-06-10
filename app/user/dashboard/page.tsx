@@ -16,14 +16,6 @@ import { PremiumConversionModal } from '../components/ui/PremiumConversionModal'
 import { useCRMData } from '../hooks/useCRMData';
 import { TrendingUp } from 'lucide-react';
 import Link from 'next/link';
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Tableau de Bord | DazNode - Gérez votre Nœud Lightning',
-  description: 'Accédez à votre tableau de bord DazNode personnalisé. Gérez vos nœuds Lightning, consultez vos performances et optimisez vos revenus Bitcoin avec l\'IA Dazia.',
-  keywords: ['dashboard Lightning Network', 'gestion nœud Bitcoin', 'tableau de bord crypto', 'performance Lightning', 'revenus Bitcoin', 'DazNode dashboard'],
-  robots: 'noindex, nofollow' // Page privée nécessitant une connexion
-};
 
 const UserDashboard: FC = () => {
   const {

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import Link from 'next/link'
 
@@ -64,7 +64,7 @@ interface EmailStats {
   bounce_rate: number
 }
 
-export default function CommunicationsPage(): JSX.Element {
+export default function CommunicationsPage(): React.ReactElement {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'campaigns' | 'templates' | 'logs'>('dashboard')
   const [emailLogs, setEmailLogs] = useState<EmailLog[]>([])
   const [contacts, setContacts] = useState<Contact[]>([])

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Card } from "../components/ui/Card";
 import { StatsCard } from "../components/ui/StatsCard";
 import { formatDate, formatSats } from "../../../utils/formatters";
@@ -83,7 +83,7 @@ interface LightningNetworkStats {
   health_score: number;
 }
 
-export default function DashboardPage(): JSX.Element {
+export default function DashboardPage(): React.ReactElement {
   const [recentUsers, setRecentUsers] = useState<User[]>([]);
   const [stats, setStats] = useState<Stats>({
     totalUsers: 0,

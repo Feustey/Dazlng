@@ -8,15 +8,16 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: {
-    default: 'DazNode | Solutions Lightning Network pour tous',
+    default: 'DazNode | Votre infrastructure Lightning Network clé en main',
     template: '%s | DazNode'
   },
-  description: 'DazNode simplifie l\'accès au réseau Lightning avec des solutions clés en main : nœuds personnalisés DazBox, plateforme DazNode Pro et terminal DazPay. Infrastructure Bitcoin complète avec IA prédictive pour particuliers et professionnels.',
+  description: 'Découvrez DazNode : solutions Lightning Network complètes avec IA prédictive, nœuds personnalisés DazBox et services de paiement DazPay. Infrastructure Bitcoin pour particuliers et entreprises avec support expert.',
   keywords: [
     'Lightning Network', 'Bitcoin', 'DazNode', 'DazBox', 'DazPay', 
     'nœud Lightning', 'paiement Bitcoin', 'infrastructure crypto', 
     'finance décentralisée', 'IA Bitcoin', 'routing fees', 'canaux Lightning',
-    'wallet Bitcoin', 'terminal paiement', 'solution Bitcoin entreprise'
+    'wallet Bitcoin', 'terminal paiement', 'solution Bitcoin entreprise',
+    'nœud Lightning personnalisé', 'optimisation IA', 'revenus Bitcoin'
   ],
   authors: [{ name: 'DazNode' }],
   creator: 'DazNode',
@@ -42,8 +43,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'fr_FR',
     url: 'https://dazno.de',
-    title: 'DazNode | Solutions Lightning Network pour tous',
-    description: 'Solutions Lightning Network complètes : nœuds personnalisés, plateforme pro et terminal de paiement. Infrastructure Bitcoin avec IA prédictive pour particuliers et entreprises.',
+    title: 'DazNode | Votre infrastructure Lightning Network clé en main',
+    description: 'Solutions Lightning Network complètes avec IA prédictive : nœuds personnalisés DazBox, plateforme pro DazNode et terminal DazPay. Rejoignez la révolution Bitcoin.',
     siteName: 'DazNode',
     images: [
       {
@@ -56,7 +57,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'DazNode | Solutions Lightning Network pour tous',
+    title: 'DazNode | Votre infrastructure Lightning Network clé en main',
     description: 'Solutions Lightning Network complètes avec IA prédictive : nœuds personnalisés, plateforme pro et terminal de paiement.',
     images: ['/assets/images/og-image.png'],
     creator: '@daznode',

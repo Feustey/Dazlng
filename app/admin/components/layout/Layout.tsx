@@ -2,14 +2,14 @@
 
 import Sidebar from "./Sidebar";
 import Header from "./Header";
-import { ReactNode, useEffect, useState, useCallback } from "react";
+import React, { ReactNode, useEffect, useState, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
 
 interface LayoutProps {
   children: ReactNode;
 }
 
-export default function Layout({ children }: LayoutProps): JSX.Element {
+export default function Layout({ children }: LayoutProps): React.ReactElement {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();

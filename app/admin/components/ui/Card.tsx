@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 
 interface CardProps {
   title?: string;
@@ -6,7 +6,7 @@ interface CardProps {
   className?: string;
 }
 
-export function Card({ title, children, className = "" }: CardProps): JSX.Element {
+export function Card({ title, children, className = "" }: CardProps): React.ReactElement {
   return (
     <div className={`bg-white rounded-lg shadow overflow-hidden ${className}`}>
       {title && (

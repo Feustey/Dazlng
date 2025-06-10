@@ -1,6 +1,6 @@
 import Layout from "./components/layout/Layout";
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 
-export default function AdminLayout({ children }: { children: ReactNode }): JSX.Element {
+export default function AdminLayout({ children }: { children: ReactNode }): React.ReactElement {
   return <Layout>{children}</Layout>;
 } 

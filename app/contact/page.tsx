@@ -4,29 +4,6 @@ import React, { useState, useEffect } from 'react';
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Image from 'next/image';
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Contact | DazNode - Support Lightning Network Expert',
-  description: 'Contactez l\'équipe DazNode pour vos questions sur nos solutions Lightning Network. Support 24/7, conseil personnalisé et accompagnement technique pour vos projets Bitcoin.',
-  keywords: ['contact DazNode', 'support Lightning Network', 'aide Bitcoin', 'conseil crypto', 'support technique', 'assistance DazBox', 'contact nœud Lightning'],
-  openGraph: {
-    title: 'Contact DazNode | Support Lightning Network Expert',
-    description: 'Contactez nos experts Lightning Network. Support 24/7, conseil personnalisé et accompagnement technique pour tous vos projets Bitcoin.',
-    url: 'https://dazno.de/contact',
-    images: [
-      {
-        url: 'https://dazno.de/assets/images/contact-og.png',
-        width: 1200,
-        height: 630,
-        alt: 'Contact DazNode - Support Lightning Network'
-      }
-    ]
-  },
-  alternates: {
-    canonical: 'https://dazno.de/contact'
-  }
-};
 
 const ContactPage: React.FC = () => {
   const [form, setForm] = useState({

@@ -1,3 +1,4 @@
+import React from "react";
 import Link from "next/link";
 
 const links = [
@@ -20,7 +21,7 @@ const sections = {
   config: "Configuration"
 };
 
-export default function Sidebar(): JSX.Element {
+export default function Sidebar(): React.ReactElement {
   const groupedLinks = Object.entries(sections).map(([sectionKey, sectionName]) => ({
     name: sectionName,
     links: links.filter(link => link.section === sectionKey)

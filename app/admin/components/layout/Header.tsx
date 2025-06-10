@@ -1,9 +1,10 @@
 "use client";
 
+import React from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from '@supabase/supabase-js';
 
-export default function Header(): JSX.Element {
+export default function Header(): React.ReactElement {
   const router = useRouter();
 
   const handleLogout = async (): Promise<void> => {
