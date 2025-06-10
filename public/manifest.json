@@ -1,15 +1,31 @@
 {
   "name": "DazNode",
   "short_name": "DazNode",
+  "description": "Daznode simplifie l'accès au réseau Lightning avec des solutions clés en main",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#fff",
-  "description": "DazNode - Lightning & Web3",
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5",
   "icons": [
     {
       "src": "/favicon.ico",
       "sizes": "any",
       "type": "image/x-icon"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
   ]
 } 
