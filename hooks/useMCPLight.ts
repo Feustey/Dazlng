@@ -4,7 +4,12 @@ import mcpLightAPI, {
   MCPLightCredentials,
   type MCPNodeInfo,
   type MCPRecommendationsResponse,
-  type MCPPrioritiesResponse
+  type MCPPrioritiesResponse,
+  // Nouveaux types v2.0 Enhanced
+  type EnrichedNodeData,
+  type IntelligentAlert,
+  type LNDStatus,
+  type NetworkStatus
 } from '@/lib/services/mcp-light-api';
 
 export interface UseMCPLightState {
@@ -22,6 +27,17 @@ export interface UseMCPLightActions {
   checkHealth: () => Promise<{ status: string; timestamp: string; services?: any }>;
   reinitialize: () => Promise<boolean>;
   clearError: () => void;
+  // 🆕 Nouvelles actions v2.0 Enhanced
+  getEnrichedStatus: (pubkey: string) => Promise<EnrichedNodeData>;
+  getLNDStatus: (pubkey: string) => Promise<LNDStatus>;
+  getIntelligentAlerts: (pubkey: string, severity?: 'info' | 'warning' | 'critical') => Promise<IntelligentAlert[]>;
+  getNetworkStatus: () => Promise<NetworkStatus>;
+  performCompleteAnalysis: (pubkey: string) => Promise<{
+    enriched_data: EnrichedNodeData;
+    alerts: IntelligentAlert[];
+    network_status: NetworkStatus;
+    analysis_timestamp: string;
+  }>;
 }
 
 export interface UseMCPLightReturn extends UseMCPLightState, UseMCPLightActions {
@@ -172,6 +188,71 @@ export const useMCPLight = (): UseMCPLightReturn => {
     return mcpLightAPI.isValidPubkey(pubkey);
   }, []);
 
+  const getIntelligentAlerts = useCallback(async (
+    pubkey: string,
+    severity?: 'info' | 'warning' | 'critical'
+  ): Promise<IntelligentAlert[]> => {
+    setState(prev => ({ ...prev, error: null }));
+    
+    try {
+      return await mcpLightAPI.getIntelligentAlerts(pubkey, severity);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de la récupération des alertes';
+      setState(prev => ({ ...prev, error: errorMessage }));
+      throw err;
+    }
+  }, []);
+
+  const getEnrichedStatus = useCallback(async (pubkey: string): Promise<EnrichedNodeData> => {
+    setState(prev => ({ ...prev, error: null }));
+    
+    try {
+      return await mcpLightAPI.getEnrichedStatus(pubkey);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de la récupération du statut enrichi';
+      setState(prev => ({ ...prev, error: errorMessage }));
+      throw err;
+    }
+  }, []);
+
+  const getLNDStatus = useCallback(async (pubkey: string): Promise<LNDStatus> => {
+    setState(prev => ({ ...prev, error: null }));
+    
+    try {
+      return await mcpLightAPI.getLNDStatus(pubkey);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de la récupération du statut LND';
+      setState(prev => ({ ...prev, error: errorMessage }));
+      throw err;
+    }
+  }, []);
+
+  const getNetworkStatus = useCallback(async (): Promise<NetworkStatus> => {
+    setState(prev => ({ ...prev, error: null }));
+    
+    try {
+      return await mcpLightAPI.getNetworkStatus();
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de la récupération du statut réseau';
+      setState(prev => ({ ...prev, error: errorMessage }));
+      throw err;
+    }
+  }, []);
+
+  const performCompleteAnalysis = useCallback(async (pubkey: string) => {
+    setState(prev => ({ ...prev, loading: true, error: null }));
+    
+    try {
+      const result = await mcpLightAPI.performCompleteAnalysis(pubkey);
+      setState(prev => ({ ...prev, loading: false }));
+      return result;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de l\'analyse complète';
+      setState(prev => ({ ...prev, error: errorMessage, loading: false }));
+      throw err;
+    }
+  }, []);
+
   return {
     // État
     initialized: state.initialized,
@@ -187,6 +268,13 @@ export const useMCPLight = (): UseMCPLightReturn => {
     checkHealth,
     reinitialize,
     clearError,
+    
+    // 🆕 Nouvelles actions v2.0 Enhanced
+    getEnrichedStatus,
+    getLNDStatus,
+    getIntelligentAlerts,
+    getNetworkStatus,
+    performCompleteAnalysis,
     
     // Utilitaires
     api: mcpLightAPI,

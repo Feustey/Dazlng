@@ -14,6 +14,8 @@ import { ProfileCompletionEnhanced } from '../components/ui/ProfileCompletionEnh
 import { SmartConversionCenter } from '../components/ui/SmartConversionCenter';
 import { PremiumConversionModal } from '../components/ui/PremiumConversionModal';
 import { useCRMData } from '../hooks/useCRMData';
+import { TrendingUp } from 'lucide-react';
+import Link from 'next/link';
 
 const UserDashboard: FC = () => {
   const {
@@ -268,6 +270,39 @@ const UserDashboard: FC = () => {
           </div>
         </div>
       )}
+
+      {/* Action principale */}
+      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg shadow-lg p-6 text-white">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold mb-2">🚀 Optimisez votre nœud Lightning</h2>
+            <p className="text-indigo-100 mb-4">
+              Accédez aux recommandations IA et analyses avancées pour maximiser vos revenus
+            </p>
+            <div className="flex space-x-3">
+              <Link
+                href="/user/node/recommendations"
+                className="bg-white text-indigo-600 px-4 py-2 rounded-lg font-medium hover:bg-indigo-50 transition-colors"
+              >
+                📊 Voir Recommandations
+              </Link>
+              {userProfile?.pubkey && (
+                <Link
+                  href={`/user/node/enhanced-dashboard?pubkey=${userProfile.pubkey}`}
+                  className="bg-indigo-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-400 transition-colors"
+                >
+                  🔬 Diagnostics Avancés
+                </Link>
+              )}
+            </div>
+          </div>
+          <div className="hidden md:block">
+            <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+              <TrendingUp className="h-10 w-10" />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

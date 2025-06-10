@@ -9,6 +9,198 @@ export interface MCPLightCredentials {
   token_type: string;
 }
 
+// ============================================================================
+// NOUVEAUX TYPES POUR LES ENDPOINTS LIGHTNING
+// ============================================================================
+
+export interface LightningNode {
+  pubkey: string;
+  alias: string;
+  capacity: number;
+  channel_count: number;
+  uptime_percentage: number;
+  last_update: string;
+  color: string;
+  addresses: string[];
+  is_verified: boolean;
+  rank: {
+    capacity: number;
+    channels: number;
+    centrality: number;
+  };
+}
+
+export interface ExplorerParams {
+  search?: string;
+  sort?: 'capacity:desc' | 'channels:desc' | 'uptime:desc' | 'alias:asc';
+  page?: number;
+  limit?: number;
+  verified_only?: boolean;
+}
+
+export interface NodesResponse {
+  nodes: LightningNode[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface RankingNode {
+  pubkey: string;
+  alias: string;
+  rank: number;
+  value: number;
+  change_24h: number;
+  is_verified: boolean;
+  color: string;
+}
+
+export interface RankingsParams {
+  metric: 'capacity' | 'channels' | 'revenue' | 'centrality' | 'growth';
+  period?: 'current' | 'daily' | 'weekly' | 'monthly';
+  limit?: number;
+}
+
+export interface RankingsResponse {
+  metric: string;
+  period: string;
+  updated_at: string;
+  nodes: RankingNode[];
+}
+
+export interface GlobalStatsResponse {
+  timestamp: string;
+  network_overview: {
+    total_nodes: number;
+    total_channels: number;
+    total_capacity_btc: number;
+    avg_channel_size_btc: number;
+    network_diameter: number;
+  };
+  growth_metrics: {
+    nodes_24h: number;
+    channels_24h: number;
+    capacity_24h_btc: number;
+    nodes_7d: number;
+    channels_7d: number;
+    capacity_7d_btc: number;
+  };
+  health_indicators: {
+    reachability_score: number;
+    avg_uptime_percentage: number;
+    active_channels_ratio: number;
+  };
+  big_movers: {
+    capacity_gainers: Array<{
+      pubkey: string;
+      alias: string;
+      change_btc: number;
+      change_percentage: number;
+    }>;
+    capacity_losers: Array<{
+      pubkey: string;
+      alias: string;
+      change_btc: number;
+      change_percentage: number;
+    }>;
+    new_nodes: Array<{
+      pubkey: string;
+      alias: string;
+      initial_capacity_btc: number;
+      channels_count: number;
+    }>;
+  };
+  fee_analysis: {
+    avg_base_fee_msat: number;
+    avg_fee_rate_ppm: number;
+    median_base_fee_msat: number;
+    median_fee_rate_ppm: number;
+    fee_revenue_24h_btc: number;
+  };
+}
+
+export interface StatsParams {
+  include_movers?: boolean;
+  include_fees?: boolean;
+}
+
+export interface EnhancedPriorityAction {
+  id: string;
+  title: string;
+  description: string;
+  category: 'revenue' | 'connectivity' | 'efficiency' | 'security' | 'growth' | 'liquidity';
+  priority: number;
+  impact_score: number;
+  implementation_effort: 'low' | 'medium' | 'high';
+  estimated_time: string;
+  revenue_potential: number;
+  risk_level: 'low' | 'medium' | 'high';
+  prerequisites: string[];
+  steps: string[];
+  metrics_to_track: string[];
+  amboss_inspired: boolean;
+}
+
+export interface PrioritiesEnhancedResponse {
+  pubkey: string;
+  alias: string;
+  timestamp: string;
+  node_metrics: {
+    capacity_btc: number;
+    channel_count: number;
+    routing_revenue_7d_sats: number;
+    centrality_rank: number;
+    uptime_percentage: number;
+    fee_rate_avg_ppm: number;
+    success_rate: number;
+  };
+  priority_actions: EnhancedPriorityAction[];
+  ai_analysis: {
+    overall_score: number;
+    strengths: string[];
+    weaknesses: string[];
+    market_position: 'leader' | 'competitive' | 'emerging' | 'struggling';
+    recommended_focus: string;
+  };
+  amboss_features: {
+    available_features: string[];
+    subscription_tier_required: 'free' | 'basic' | 'premium' | 'enterprise';
+    competitive_analysis: boolean;
+  };
+}
+
+export interface CalculatorParams {
+  amount: number;
+  from: 'sats' | 'btc' | 'fiat';
+  to: 'sats' | 'btc' | 'fiat';
+  currency?: 'USD' | 'EUR';
+}
+
+export interface CalculatorResponse {
+  input: {
+    amount: number;
+    unit: string;
+  };
+  output: {
+    amount: number;
+    unit: string;
+  };
+  rate: {
+    btc_usd: number;
+    timestamp: string;
+  };
+}
+
+export interface DecoderResponse {
+  type: 'bolt11' | 'lnurl' | 'node_id' | 'lightning_address' | 'unknown';
+  valid: boolean;
+  decoded: any; // Structure dépendante du type
+}
+
+// ============================================================================
+// TYPES EXISTANTS
+// ============================================================================
+
 export interface NodeStats {
   alias: string;
   capacity: number;
@@ -74,6 +266,131 @@ export interface NodeAnalysisResult {
   recommendations: MCPRecommendationsResponse;
   priorities: MCPPrioritiesResponse;
   summary: NodeSummary;
+}
+
+// Nouveaux types pour v2.0 Enhanced
+export interface EnrichedNodeData {
+  pubkey: string;
+  timestamp: string;
+  sparkseer_data: {
+    alias: string;
+    total_capacity: number;
+    num_channels: number;
+    betweenness_rank: number;
+    mean_outbound_fee_rate: number;
+    htlc_success_rate: number;
+    liquidity_flexibility_score: number;
+  };
+  lnd_data: {
+    lnd_available: boolean;
+    timestamp: string;
+    local_node_info: {
+      pubkey: string;
+      alias: string;
+      version: string;
+      block_height: number;
+      synced_to_chain: boolean;
+      synced_to_graph: boolean;
+      num_active_channels: number;
+      num_inactive_channels: number;
+      num_pending_channels: number;
+      num_peers: number;
+    } | null;
+    network_position: {
+      num_nodes: number;
+      num_channels: number;
+      total_network_capacity: string;
+      avg_channel_size: string;
+      graph_diameter: number;
+    } | null;
+    channel_details: Array<{
+      channel_id: string;
+      remote_pubkey: string;
+      capacity: string;
+      local_balance: string;
+      remote_balance: string;
+      total_satoshis_sent: string;
+      total_satoshis_received: string;
+      num_updates: string;
+      private: boolean;
+      initiator: boolean;
+      uptime: string;
+    }>;
+    derived_stats: {
+      payment_activity: {
+        available: boolean;
+        total_sent_sats: number;
+        total_received_sats: number;
+        total_updates: number;
+        avg_updates_per_channel: number;
+      };
+      routing_stats: {
+        available: boolean;
+        active_channels: number;
+        total_channels: number;
+        routing_efficiency: number;
+        total_capacity: number;
+      };
+      liquidity_distribution: {
+        available: boolean;
+        total_local_balance: number;
+        total_remote_balance: number;
+        local_ratio: number;
+        remote_ratio: number;
+        balance_score: number;
+      };
+    } | null;
+  };
+  combined_insights: {
+    data_sources: {
+      sparkseer_available: boolean;
+      lnd_available: boolean;
+    };
+    node_classification: string;
+    liquidity_status: string;
+    routing_capability: string;
+    network_position: string;
+    maintenance_priority: string;
+  };
+  enhanced_alerts: IntelligentAlert[];
+}
+
+export interface IntelligentAlert {
+  type: string;
+  severity: 'info' | 'warning' | 'critical';
+  message: string;
+  suggested_action: string;
+  channel_id?: string;
+  metric_value: number;
+  threshold: number;
+}
+
+export interface LNDStatus {
+  lnd_available: boolean;
+  timestamp: string;
+  local_node_info: any;
+  network_position: any;
+  channel_details: any[];
+  derived_stats: any;
+}
+
+export interface NetworkStatus {
+  source: string;
+  timestamp: string;
+  network_stats: {
+    num_nodes: number;
+    num_channels: number;
+    total_network_capacity: string;
+    avg_channel_size: string;
+    graph_diameter: number;
+    avg_out_degree: number;
+  };
+  health_indicators: {
+    total_capacity_btc: number;
+    avg_channel_size_btc: number;
+    node_density: number;
+    network_reach: number;
+  };
 }
 
 export interface NodeSummary {
@@ -348,6 +665,194 @@ class MCPLightAPI {
     this.initialized = false;
     this.credentials = null;
     return this.initialize();
+  }
+
+  /**
+   * �� Récupère le statut enrichi complet d'un nœud (v2.0 Enhanced)
+   * Combine SparkSeer + LND + IA pour une vue complète
+   */
+  async getEnrichedStatus(pubkey: string): Promise<EnrichedNodeData> {
+    if (!this.isValidPubkey(pubkey)) {
+      throw new Error('Pubkey invalide');
+    }
+    
+    return this.makeRequest<EnrichedNodeData>(`/api/v1/node/${pubkey}/status/complete`);
+  }
+
+  /**
+   * 🆕 Récupère les données LND temps réel (v2.0 Enhanced)
+   * Données pures du nœud Lightning local
+   */
+  async getLNDStatus(pubkey: string): Promise<LNDStatus> {
+    if (!this.isValidPubkey(pubkey)) {
+      throw new Error('Pubkey invalide');
+    }
+    
+    return this.makeRequest<LNDStatus>(`/api/v1/node/${pubkey}/lnd/status`);
+  }
+
+  /**
+   * 🆕 Récupère les alertes intelligentes automatiques (v2.0 Enhanced)
+   * Alertes proactives avec actions suggérées
+   */
+  async getIntelligentAlerts(pubkey: string, severity?: 'info' | 'warning' | 'critical'): Promise<IntelligentAlert[]> {
+    if (!this.isValidPubkey(pubkey)) {
+      throw new Error('Pubkey invalide');
+    }
+    
+    const params = severity ? `?severity=${severity}` : '';
+    return this.makeRequest<IntelligentAlert[]>(`/api/v1/node/${pubkey}/alerts${params}`);
+  }
+
+  /**
+   * 🆕 Récupère le statut global du réseau Lightning (v2.0 Enhanced)
+   * Vue d'ensemble des métriques réseau
+   */
+  async getNetworkStatus(): Promise<NetworkStatus> {
+    return this.makeRequest<NetworkStatus>('/api/v1/network/status');
+  }
+
+  /**
+   * 🆕 Analyse complète enrichie avec toutes les sources de données (v2.0 Enhanced)
+   * SparkSeer + LND + Alertes + Réseau en une seule requête optimisée
+   */
+  async performCompleteAnalysis(pubkey: string): Promise<{
+    enriched_data: EnrichedNodeData;
+    alerts: IntelligentAlert[];
+    network_status: NetworkStatus;
+    analysis_timestamp: string;
+  }> {
+    if (!this.isValidPubkey(pubkey)) {
+      throw new Error('Pubkey invalide');
+    }
+
+    try {
+      // Exécution parallèle pour optimiser les performances
+      const [enrichedData, alerts, networkStatus] = await Promise.all([
+        this.getEnrichedStatus(pubkey),
+        this.getIntelligentAlerts(pubkey),
+        this.getNetworkStatus()
+      ]);
+
+      return {
+        enriched_data: enrichedData,
+        alerts: alerts,
+        network_status: networkStatus,
+        analysis_timestamp: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error('Erreur lors de l\'analyse complète:', error);
+      throw error;
+    }
+  }
+
+  // ============================================================================
+  // NOUVEAUX ENDPOINTS LIGHTNING
+  // ============================================================================
+
+  /**
+   * 🔍 Lightning Network Explorer
+   * Recherche et filtrage des nœuds Lightning
+   */
+  async getLightningNodes(params: ExplorerParams = {}): Promise<NodesResponse> {
+    if (!this.initialized) {
+      await this.initialize();
+    }
+
+    const searchParams = new URLSearchParams();
+    if (params.search) searchParams.append('search', params.search);
+    if (params.sort) searchParams.append('sort', params.sort);
+    if (params.page) searchParams.append('page', params.page.toString());
+    if (params.limit) searchParams.append('limit', params.limit.toString());
+    if (params.verified_only) searchParams.append('verified_only', params.verified_only.toString());
+
+    return this.makeRequest<NodesResponse>(`/api/v1/lightning/explorer/nodes?${searchParams}`);
+  }
+
+  /**
+   * 🏆 Rankings des Nœuds Lightning
+   * Classements par différentes métriques
+   */
+  async getLightningRankings(params: RankingsParams): Promise<RankingsResponse> {
+    if (!this.initialized) {
+      await this.initialize();
+    }
+
+    const searchParams = new URLSearchParams();
+    searchParams.append('metric', params.metric);
+    if (params.period) searchParams.append('period', params.period);
+    if (params.limit) searchParams.append('limit', params.limit.toString());
+
+    return this.makeRequest<RankingsResponse>(`/api/v1/lightning/rankings?${searchParams}`);
+  }
+
+  /**
+   * 📊 Statistiques Globales du Réseau Lightning
+   * Vue d'ensemble complète du réseau
+   */
+  async getNetworkGlobalStats(params: StatsParams = {}): Promise<GlobalStatsResponse> {
+    if (!this.initialized) {
+      await this.initialize();
+    }
+
+    const searchParams = new URLSearchParams();
+    if (params.include_movers !== undefined) {
+      searchParams.append('include_movers', params.include_movers.toString());
+    }
+    if (params.include_fees !== undefined) {
+      searchParams.append('include_fees', params.include_fees.toString());
+    }
+
+    return this.makeRequest<GlobalStatsResponse>(`/api/v1/lightning/network/global-stats?${searchParams}`);
+  }
+
+  /**
+   * 🎯 Priorities Enhanced - Analyse Avancée des Nœuds
+   * Actions prioritaires avec IA inspirées d'Amboss.space
+   */
+  async getNodePrioritiesEnhanced(pubkey: string): Promise<PrioritiesEnhancedResponse> {
+    if (!this.isValidPubkey(pubkey)) {
+      throw new Error('Pubkey invalide: doit faire 66 caractères hexadécimaux');
+    }
+
+    if (!this.initialized) {
+      await this.initialize();
+    }
+
+    return this.makeRequest<PrioritiesEnhancedResponse>(`/api/v1/node/${pubkey}/priorities-enhanced`);
+  }
+
+  /**
+   * 🧮 Calculateur Lightning
+   * Conversion entre sats, BTC et devises fiat
+   */
+  async getLightningCalculator(params: CalculatorParams): Promise<CalculatorResponse> {
+    if (!this.initialized) {
+      await this.initialize();
+    }
+
+    const searchParams = new URLSearchParams();
+    searchParams.append('amount', params.amount.toString());
+    searchParams.append('from', params.from);
+    searchParams.append('to', params.to);
+    if (params.currency) searchParams.append('currency', params.currency);
+
+    return this.makeRequest<CalculatorResponse>(`/api/v1/lightning/calculator?${searchParams}`);
+  }
+
+  /**
+   * 🔓 Décodeur Lightning
+   * Décode les invoices BOLT11, LNURL, adresses Lightning, etc.
+   */
+  async decodeLightningData(data: string): Promise<DecoderResponse> {
+    if (!this.initialized) {
+      await this.initialize();
+    }
+
+    return this.makeRequest<DecoderResponse>('/api/v1/lightning/decoder', {
+      method: 'POST',
+      body: JSON.stringify({ data })
+    });
   }
 }
 

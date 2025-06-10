@@ -5,6 +5,7 @@ import { Card } from "../components/ui/Card";
 import { StatsCard } from "../components/ui/StatsCard";
 import { formatDate, formatSats } from "../../../utils/formatters";
 import Link from "next/link";
+import { mcpLightAPI } from '@/lib/services/mcp-light-api';
 
 interface User {
   id: string;
@@ -50,6 +51,38 @@ interface FunnelMetrics {
   premium_rate: number;
 }
 
+interface DPOStatistics {
+  total_analyses: number;
+  successful_analyses: number;
+  failed_analyses: number;
+  average_processing_time: number;
+  nodes_analyzed_24h: number;
+  recommendations_generated: number;
+  feedback_received: number;
+  success_rate: number;
+}
+
+interface NetworkMetrics {
+  api_response_time: number;
+  api_uptime: number;
+  database_connections: number;
+  cache_hit_rate: number;
+  active_sessions: number;
+  requests_per_minute: number;
+}
+
+interface LightningNetworkStats {
+  total_nodes: number;
+  total_channels: number;
+  total_capacity_btc: number;
+  network_growth_24h: {
+    nodes: number;
+    channels: number;
+    capacity_btc: number;
+  };
+  health_score: number;
+}
+
 export default function DashboardPage(): JSX.Element {
   const [recentUsers, setRecentUsers] = useState<User[]>([]);
   const [stats, setStats] = useState<Stats>({
@@ -60,6 +93,9 @@ export default function DashboardPage(): JSX.Element {
   });
   const [businessMetrics, setBusinessMetrics] = useState<BusinessMetrics | null>(null);
   const [funnelMetrics, setFunnelMetrics] = useState<FunnelMetrics | null>(null);
+  const [dpoStats, setDpoStats] = useState<DPOStatistics | null>(null);
+  const [networkMetrics, setNetworkMetrics] = useState<NetworkMetrics | null>(null);
+  const [lightningStats, setLightningStats] = useState<LightningNetworkStats | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedPeriod, setSelectedPeriod] = useState<string>('30');
 
@@ -126,6 +162,54 @@ export default function DashboardPage(): JSX.Element {
         }
       } catch (error) {
         console.error('Erreur chargement funnel metrics:', error);
+      }
+
+      // NOUVEAU: Statistiques DPO depuis api.dazno.de
+      try {
+        const dpoResponse = await fetch('/api/admin/dpo-stats');
+        if (dpoResponse.ok) {
+          const dpoData = await dpoResponse.json();
+          if (dpoData.success) {
+            setDpoStats(dpoData.data);
+          }
+        }
+      } catch (error) {
+        console.error('Erreur chargement DPO stats:', error);
+      }
+
+      // NOUVEAU: Métriques système depuis api.dazno.de
+      try {
+        const metricsResponse = await fetch('/api/admin/system-metrics');
+        if (metricsResponse.ok) {
+          const metricsData = await metricsResponse.json();
+          if (metricsData.success) {
+            setNetworkMetrics(metricsData.data);
+          }
+        }
+      } catch (error) {
+        console.error('Erreur chargement system metrics:', error);
+      }
+
+      // NOUVEAU: Statistiques réseau Lightning via MCP
+      try {
+        const lightningData = await mcpLightAPI.getNetworkGlobalStats({
+          include_movers: true,
+          include_fees: true
+        });
+        
+        setLightningStats({
+          total_nodes: lightningData.network_overview.total_nodes,
+          total_channels: lightningData.network_overview.total_channels,
+          total_capacity_btc: lightningData.network_overview.total_capacity_btc,
+          network_growth_24h: {
+            nodes: lightningData.growth_metrics.nodes_24h,
+            channels: lightningData.growth_metrics.channels_24h,
+            capacity_btc: lightningData.growth_metrics.capacity_24h_btc
+          },
+          health_score: lightningData.health_indicators.reachability_score * 100
+        });
+      } catch (error) {
+        console.error('Erreur chargement Lightning stats:', error);
       }
 
     } catch (error) {
@@ -199,6 +283,102 @@ export default function DashboardPage(): JSX.Element {
           </Link>
         </div>
       </div>
+
+      {/* NOUVEAU: Section Lightning Network */}
+      {lightningStats && (
+        <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg p-6 border border-yellow-200">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            ⚡ Lightning Network Global
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <StatsCard
+              title="Nœuds Total"
+              value={lightningStats.total_nodes.toLocaleString()}
+              trend={`${lightningStats.network_growth_24h.nodes > 0 ? '+' : ''}${lightningStats.network_growth_24h.nodes} (24h)`}
+              icon="🏗️"
+            />
+            <StatsCard
+              title="Canaux"
+              value={lightningStats.total_channels.toLocaleString()}
+              trend={`${lightningStats.network_growth_24h.channels > 0 ? '+' : ''}${lightningStats.network_growth_24h.channels} (24h)`}
+              icon="🔗"
+            />
+            <StatsCard
+              title="Capacité BTC"
+              value={`${lightningStats.total_capacity_btc.toFixed(0)} BTC`}
+              trend={`${lightningStats.network_growth_24h.capacity_btc > 0 ? '+' : ''}${lightningStats.network_growth_24h.capacity_btc.toFixed(1)} BTC (24h)`}
+              icon="⚡"
+            />
+            <StatsCard
+              title="Santé Réseau"
+              value={`${lightningStats.health_score.toFixed(1)}%`}
+              icon="❤️"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* NOUVEAU: Section DPO Analytics */}
+      {dpoStats && (
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            🤖 Analytics IA & DPO
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <StatsCard
+              title="Analyses Totales"
+              value={dpoStats.total_analyses.toLocaleString()}
+              icon="📊"
+            />
+            <StatsCard
+              title="Taux de Succès"
+              value={`${dpoStats.success_rate.toFixed(1)}%`}
+              icon="✅"
+            />
+            <StatsCard
+              title="Nœuds/24h"
+              value={dpoStats.nodes_analyzed_24h.toLocaleString()}
+              icon="📈"
+            />
+            <StatsCard
+              title="Recommandations"
+              value={dpoStats.recommendations_generated.toLocaleString()}
+              icon="💡"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* NOUVEAU: Section System Metrics */}
+      {networkMetrics && (
+        <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-6 border border-green-200">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            🔧 Métriques Système
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <StatsCard
+              title="Temps Réponse API"
+              value={`${networkMetrics.api_response_time}ms`}
+              icon="⚡"
+            />
+            <StatsCard
+              title="Uptime API"
+              value={`${networkMetrics.api_uptime.toFixed(2)}%`}
+              icon="🟢"
+            />
+            <StatsCard
+              title="Taux Cache"
+              value={`${networkMetrics.cache_hit_rate.toFixed(1)}%`}
+              icon="💾"
+            />
+            <StatsCard
+              title="Req/Min"
+              value={networkMetrics.requests_per_minute.toLocaleString()}
+              icon="📡"
+            />
+          </div>
+        </div>
+      )}
 
       {/* KPIs Principaux */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

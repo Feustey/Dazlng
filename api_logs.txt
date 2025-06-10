@@ -1,0 +1,42 @@
+INFO:     Started server process [50392]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+/Users/stephanecourant/Documents/DAZ/Daz3/api_dazno_endpoints.py:333: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "timestamp": datetime.utcnow().isoformat() + "Z",
+🚀 Démarrage de l'API Dazno Lightning Network
+📡 Endpoints disponibles:
+   GET  /health
+   GET  /api/v1/network/nodes
+   GET  /api/v1/network/stats
+   GET  /api/v1/network/rankings
+   GET  /api/v1/network/history
+
+🔗 Documentation: http://localhost:8001/docs
+INFO:     127.0.0.1:61266 - "GET /health HTTP/1.1" 200 OK
+/Users/stephanecourant/Documents/DAZ/Daz3/api_dazno_endpoints.py:96: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  last_update=datetime.utcnow().isoformat() + "Z",
+/Users/stephanecourant/Documents/DAZ/Daz3/api_dazno_endpoints.py:108: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  last_update=datetime.utcnow().isoformat() + "Z",
+INFO:     127.0.0.1:61293 - "GET /api/v1/network/nodes?search=ACINQ HTTP/1.1" 200 OK
+/Users/stephanecourant/Documents/DAZ/Daz3/api_dazno_endpoints.py:173: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "timestamp": datetime.utcnow().isoformat() + "Z",
+INFO:     127.0.0.1:61321 - "GET /api/v1/network/stats HTTP/1.1" 200 OK
+/Users/stephanecourant/Documents/DAZ/Daz3/api_dazno_endpoints.py:296: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  updated_at=datetime.utcnow().isoformat() + "Z",
+INFO:     127.0.0.1:61350 - "GET /api/v1/network/rankings?metric=capacity&limit=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61409 - "GET /api/v1/network/nodes?search=ACINQ&sort=capacity%3Adesc&page=1&limit=3&verified_only=false HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61434 - "GET /api/v1/network/stats?include_movers=true&include_fees=true HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50315 - "GET /api/v1/network/rankings?metric=capacity&period=current&limit=2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51586 - "GET /api/v1/network/nodes?search=ACINQ&sort=capacity%3Adesc&page=1&limit=20&verified_only=false HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51617 - "GET /api/v1/network/rankings?metric=capacity&period=current&limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51649 - "GET /api/v1/network/stats?include_movers=true&include_fees=true HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51693 - "GET /auth/credentials HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52209 - "GET /auth/credentials HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52244 - "GET /auth/credentials HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52333 - "GET / HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52407 - "GET / HTTP/1.1" 404 Not Found
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [50392]

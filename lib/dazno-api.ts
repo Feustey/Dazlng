@@ -268,6 +268,115 @@ class DaznoApiClient {
       ];
     }
   }
+
+  // ================================
+  // NOUVELLES MÉTHODES RÉSEAU GLOBAL
+  // ================================
+
+  async getNetworkNodes(options: {
+    search?: string;
+    sort?: string;
+    page?: number;
+    limit?: number;
+    verified_only?: boolean;
+  } = {}): Promise<{
+    nodes: any[];
+    total: number;
+    page: number;
+    limit: number;
+  }> {
+    try {
+      const params = new URLSearchParams();
+      if (options.search) params.append('search', options.search);
+      if (options.sort) params.append('sort', options.sort);
+      if (options.page) params.append('page', options.page.toString());
+      if (options.limit) params.append('limit', options.limit.toString());
+      if (options.verified_only !== undefined) params.append('verified_only', options.verified_only.toString());
+
+      const response = await this.makeRequest<{
+        nodes: any[];
+        pagination: {
+          total: number;
+          page: number;
+          limit: number;
+        };
+      }>(`/api/v1/network/nodes?${params}`);
+
+      return {
+        nodes: response.nodes,
+        total: response.pagination.total,
+        page: response.pagination.page,
+        limit: response.pagination.limit
+      };
+    } catch (error) {
+      console.warn('[DaznoAPI] Network nodes not available, using fallback:', error);
+      throw error; // On laisse l'API DazNode gérer le fallback
+    }
+  }
+
+  async getNetworkStats(options: {
+    include_movers?: boolean;
+    include_fees?: boolean;
+  } = {}): Promise<any> {
+    try {
+      const params = new URLSearchParams();
+      if (options.include_movers !== undefined) params.append('include_movers', options.include_movers.toString());
+      if (options.include_fees !== undefined) params.append('include_fees', options.include_fees.toString());
+
+      return await this.makeRequest(`/api/v1/network/stats?${params}`);
+    } catch (error) {
+      console.warn('[DaznoAPI] Network stats not available, using fallback:', error);
+      throw error; // On laisse l'API DazNode gérer le fallback
+    }
+  }
+
+  async getNetworkRankings(
+    metric: 'capacity' | 'channels' | 'revenue' | 'centrality' | 'growth' = 'capacity',
+    period: 'current' | 'daily' | 'weekly' | 'monthly' = 'current',
+    limit: number = 50
+  ): Promise<{
+    metric: string;
+    period: string;
+    updated_at: string;
+    nodes: any[];
+  }> {
+    try {
+      const params = new URLSearchParams({
+        metric,
+        period,
+        limit: limit.toString()
+      });
+
+      return await this.makeRequest(`/api/v1/network/rankings?${params}`);
+    } catch (error) {
+      console.warn('[DaznoAPI] Network rankings not available, using fallback:', error);
+      throw error; // On laisse l'API DazNode gérer le fallback
+    }
+  }
+
+  async getNetworkHistory(
+    metric: 'nodes' | 'channels' | 'capacity' = 'nodes',
+    period: '1h' | '24h' | '7d' | '30d' = '24h'
+  ): Promise<{
+    metric: string;
+    period: string;
+    data: Array<{
+      timestamp: string;
+      value: number;
+    }>;
+  }> {
+    try {
+      const params = new URLSearchParams({
+        metric,
+        period
+      });
+
+      return await this.makeRequest(`/api/v1/network/history?${params}`);
+    } catch (error) {
+      console.warn('[DaznoAPI] Network history not available:', error);
+      throw error;
+    }
+  }
 }
 
 // Instance singleton de l'API client
