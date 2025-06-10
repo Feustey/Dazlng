@@ -54,6 +54,10 @@ export default function UsersPage(): JSX.Element {
     try {
       setLoading(true);
 
+      if (!supabaseAdmin) {
+        throw new Error('Supabase admin client not available');
+      }
+
       // Construire la requête avec filtres
       let query = supabaseAdmin
         .from('profiles')
@@ -140,6 +144,10 @@ export default function UsersPage(): JSX.Element {
 
   const loadStats = async () => {
     try {
+      if (!supabaseAdmin) {
+        throw new Error('Supabase admin client not available');
+      }
+
       const { data: profilesCount } = await supabaseAdmin
         .from('profiles')
         .select('id', { count: 'exact', head: true });

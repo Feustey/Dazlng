@@ -120,7 +120,7 @@ interface SystemHealth {
 
 const COLORS = ['#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899'];
 
-export default function OpenAIPage(): JSX.Element {
+export default function OpenAIPage(): JSX.Element | null {
   const [metrics, setMetrics] = useState<OpenAIMetrics | null>(null);
   const [realtimeMetrics, setRealtimeMetrics] = useState<RealtimeMetrics | null>(null);
   const [systemHealth, setSystemHealth] = useState<SystemHealth | null>(null);

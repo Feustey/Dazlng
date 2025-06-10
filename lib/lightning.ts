@@ -10,7 +10,7 @@ interface Invoice {
 }
 
 export async function generateInvoice({ amount, memo }: InvoiceParams): Promise<Invoice> {
-  console.log('generateInvoice - Début génération facture:', { amount, memo });
+  console.log('generateInvoice v2.0 - Génération via API Lightning:', { amount, memo });
   
   // Validation des paramètres d'entrée
   if (!amount || typeof amount !== 'number' || amount <= 0) {
@@ -21,92 +21,61 @@ export async function generateInvoice({ amount, memo }: InvoiceParams): Promise<
     throw new Error(`Memo invalide: ${memo}`);
   }
 
-  // Ajout d'un timeout et d'un système de retry
-  const fetchWithTimeout = (url: string, options: RequestInit, timeout = 15000): Promise<Response> => {
-    return new Promise((resolve, reject) => {
-      const timer = setTimeout(() => reject(new Error('Timeout de la requête (15s)')), timeout);
-      fetch(url, options)
-        .then(response => {
-          clearTimeout(timer);
-          resolve(response);
-        })
-        .catch(err => {
-          clearTimeout(timer);
-          reject(err);
-        });
+  try {
+    // Utilisation uniquement de l'API pour éviter les problèmes côté client
+    const response = await fetch('/api/create-invoice', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount, description: memo }),
     });
-  };
-
-  const maxRetries = 3;
-  let lastError: Error | null = null;
-  
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      console.log(`generateInvoice - Tentative ${attempt}/${maxRetries}`);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Erreur API: ${response.status} - ${errorText}`);
+    }
+    
+    const data = await response.json();
+    
+    // Support du nouveau format de réponse
+    if (data.success && data.data?.invoice) {
+      const result = {
+        id: data.data.invoice.id,
+        paymentRequest: data.data.invoice.payment_request,
+        paymentHash: data.data.invoice.payment_hash,
+      };
       
-      const response = await fetchWithTimeout('/api/create-invoice', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount, description: memo }),
+      console.log('generateInvoice v2.0 - Facture créée avec succès:', {
+        id: result.id,
+        paymentHash: result.paymentHash,
+        paymentRequestLength: result.paymentRequest?.length
       });
       
-      console.log('generateInvoice - Réponse reçue:', response.status, response.statusText);
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('generateInvoice - Erreur HTTP:', response.status, errorText);
-        throw new Error(`Erreur HTTP ${response.status}: ${errorText}`);
-      }
-      
-      const data = await response.json();
-      console.log('generateInvoice - Données reçues:', {
-        hasInvoice: !!data.invoice,
-        hasId: !!data.invoice?.id,
-        hasPaymentRequest: !!data.invoice?.payment_request,
-        hasPaymentHash: !!data.invoice?.payment_hash
-      });
-      
-      // Vérification de la structure des données
-      if (!data.invoice) {
-        throw new Error('Réponse invalide: propriété "invoice" manquante');
-      }
-      
-      if (!data.invoice.id) {
-        throw new Error('Réponse invalide: propriété "id" manquante');
-      }
-      
-      if (!data.invoice.payment_request) {
-        throw new Error('Réponse invalide: propriété "payment_request" manquante');
-      }
-      
-      const invoice = {
+      return result;
+    }
+    
+    // Support de l'ancien format pour compatibilité
+    if (data.invoice) {
+      const result = {
         id: data.invoice.id,
         paymentRequest: data.invoice.payment_request,
         paymentHash: data.invoice.payment_hash,
       };
       
-      console.log('generateInvoice - Facture créée avec succès:', {
-        id: invoice.id,
-        paymentHash: invoice.paymentHash,
-        paymentRequestLength: invoice.paymentRequest?.length
+      console.log('generateInvoice v2.0 - Facture créée avec succès (format legacy):', {
+        id: result.id,
+        paymentHash: result.paymentHash,
+        paymentRequestLength: result.paymentRequest?.length
       });
       
-      return invoice;
-    } catch (err) {
-      lastError = err instanceof Error ? err : new Error(String(err));
-      console.error(`generateInvoice - Erreur tentative ${attempt}:`, lastError.message);
-      
-      if (attempt < maxRetries) {
-        const delay = 500 * attempt;
-        console.log(`generateInvoice - Attente ${delay}ms avant nouvelle tentative`);
-        await new Promise(res => setTimeout(res, delay));
-      }
+      return result;
     }
+    
+    throw new Error('Format de réponse API invalide');
+    
+  } catch (error) {
+    console.error('generateInvoice v2.0 - Erreur:', error);
+    throw error;
   }
-  
-  const finalError = new Error(`Erreur lors de la création de la facture après ${maxRetries} tentatives: ${lastError?.message || lastError}`);
-  console.error('generateInvoice - Échec final:', finalError.message);
-  throw finalError;
 }
 
 export async function checkPayment(invoiceId: string): Promise<boolean> {

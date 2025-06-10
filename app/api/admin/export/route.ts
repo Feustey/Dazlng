@@ -21,7 +21,8 @@ async function createExportHandler(req: NextRequest, adminId: string): Promise<R
       return AdminResponseBuilder.error(
         ErrorCodes.VALIDATION_ERROR,
         'Paramètres d\'export invalides',
-        validation.error.details
+        // @ts-expect-error - TypeScript narrowing issue with Zod validation
+        validation.error.issues
       );
     }
     

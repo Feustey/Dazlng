@@ -1,3 +1,258 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities; 
+@tailwind utilities;
+
+/* Optimisations de performance */
+@layer base {
+  /* Optimisation des fonts */
+  html {
+    font-display: swap;
+    scroll-behavior: smooth;
+  }
+  
+  /* Optimisation du rendu */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  
+  /* Préparation GPU pour les animations */
+  .will-animate {
+    will-change: transform, opacity;
+  }
+}
+
+/* Animations optimisées pour remplacer AOS */
+@layer utilities {
+  /* Animation de base - fade in */
+  .animate-fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+  
+  /* Animation slide up */
+  .animate-slide-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: slideUp 0.5s ease-out forwards;
+  }
+  
+  /* Animation slide down */
+  .animate-slide-down {
+    opacity: 0;
+    transform: translateY(-30px);
+    animation: slideDown 0.5s ease-out forwards;
+  }
+  
+  /* Animation slide left */
+  .animate-slide-left {
+    opacity: 0;
+    transform: translateX(30px);
+    animation: slideLeft 0.5s ease-out forwards;
+  }
+  
+  /* Animation slide right */
+  .animate-slide-right {
+    opacity: 0;
+    transform: translateX(-30px);
+    animation: slideRight 0.5s ease-out forwards;
+  }
+  
+  /* Animation zoom in */
+  .animate-zoom-in {
+    opacity: 0;
+    transform: scale(0.9);
+    animation: zoomIn 0.4s ease-out forwards;
+  }
+  
+  /* Animation zoom out */
+  .animate-zoom-out {
+    opacity: 0;
+    transform: scale(1.1);
+    animation: zoomOut 0.4s ease-out forwards;
+  }
+  
+  /* Animation pulse douce */
+  .animate-pulse-gentle {
+    animation: pulseGentle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  /* Animation de chargement skeleton */
+  .animate-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton 1.5s infinite;
+  }
+  
+  /* Délais pour les animations en cascade */
+  .animate-delay-100 { animation-delay: 100ms; }
+  .animate-delay-200 { animation-delay: 200ms; }
+  .animate-delay-300 { animation-delay: 300ms; }
+  .animate-delay-400 { animation-delay: 400ms; }
+  .animate-delay-500 { animation-delay: 500ms; }
+}
+
+/* Keyframes optimisées */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes zoomOut {
+  from {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulseGentle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes skeleton {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Classes utilitaires pour les performances */
+@layer utilities {
+  /* Optimisation GPU */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+  
+  /* Anti-aliasing optimisé */
+  .text-smooth {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Scroll optimisé */
+  .scroll-smooth {
+    scroll-behavior: smooth;
+  }
+  
+  /* États de chargement */
+  .loading-skeleton {
+    @apply animate-skeleton bg-gray-200 rounded;
+  }
+  
+  /* Intersection observer helpers */
+  .fade-in-on-scroll {
+    opacity: 0;
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    transform: translateY(20px);
+  }
+  
+  .fade-in-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* États hover optimisés */
+  .hover-lift {
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Media queries pour les performances sur mobile */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Optimisations pour les écrans haute résolution */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .high-dpi-optimized {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+} 

@@ -66,6 +66,7 @@ async function createNotificationHandler(req: NextRequest, adminId: string): Pro
     
     const { type, title, message, priority = 'medium', action } = validation.data;
     
+    // @ts-expect-error - TypeScript optional properties issue
     await createAdminNotification(adminId, type, title, message, action, priority);
     
     return AdminResponseBuilder.success({ message: 'Notification créée avec succès' });

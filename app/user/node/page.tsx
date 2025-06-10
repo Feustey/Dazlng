@@ -6,6 +6,78 @@ import { useSupabase } from '@/app/providers/SupabaseProvider';
 import { daznoApi, isValidLightningPubkey } from '@/lib/dazno-api';
 import type { NodeInfo, DaznoRecommendation, PriorityAction } from '@/lib/dazno-api';
 import ApiStatusWidget from '@/app/user/components/ui/ApiStatusWidget';
+import { 
+  savePubkeyToCookie, 
+  getValidPubkeyFromCookie, 
+  clearPubkeyCookie,
+  updatePubkeyAlias 
+} from '@/lib/utils/cookies';
+
+// Nouvelles interfaces pour les endpoints avancés
+interface AmbossNodeInfo {
+  pubkey: string;
+  alias: string;
+  capacity: number;
+  channels: number;
+  performance_score: number;
+  connectivity_metrics: {
+    centrality: number;
+    reachability: number;
+    stability: number;
+  };
+  fee_analysis: {
+    median_fee_rate: number;
+    fee_competitiveness: string;
+    optimization_score: number;
+  };
+  liquidity_metrics: {
+    total_liquidity: number;
+    local_balance: number;
+    remote_balance: number;
+    balance_ratio: number;
+  };
+}
+
+interface AmbossRecommendation {
+  id: string;
+  type: 'channel_management' | 'fee_optimization' | 'liquidity_management';
+  title: string;
+  description: string;
+  priority: 'high' | 'medium' | 'low';
+  expected_impact: {
+    revenue_increase: number;
+    liquidity_improvement: number;
+    routing_efficiency: number;
+  };
+  amboss_score: number;
+  suggested_actions: string[];
+  target_nodes?: {
+    pubkey: string;
+    alias: string;
+    score: number;
+  }[];
+}
+
+interface UnifiedRecommendation {
+  id: string;
+  source: 'amboss' | 'sparkseer' | 'openai' | 'hybrid';
+  title: string;
+  description: string;
+  priority_score: number;
+  confidence: number;
+  category: string;
+  expected_benefits: {
+    revenue_gain: number;
+    efficiency_boost: number;
+    risk_reduction: number;
+  };
+  implementation: {
+    difficulty: 'easy' | 'medium' | 'hard';
+    estimated_time: string;
+    required_capital: number;
+  };
+  unified_score: number;
+}
 
 const NodeManagement: FC = () => {
   const { session } = useSupabase();
@@ -21,10 +93,105 @@ const NodeManagement: FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [pubkeyInput, setPubkeyInput] = useState('');
 
-  // Charger le profil utilisateur au démarrage
+  // Nouveaux états pour les endpoints avancés
+  const [ambossNodeInfo, setAmbossNodeInfo] = useState<AmbossNodeInfo | null>(null);
+  const [ambossRecommendations, setAmbossRecommendations] = useState<AmbossRecommendation[]>([]);
+  const [unifiedRecommendations, setUnifiedRecommendations] = useState<UnifiedRecommendation[]>([]);
+  const [recommendationType, setRecommendationType] = useState<'standard' | 'amboss' | 'unified'>('unified');
+  const [loadingAdvanced, setLoadingAdvanced] = useState(false);
+
+  // API Base URL
+  const API_BASE = process.env.NEXT_PUBLIC_DAZNO_API_URL || 'https://api.dazno.de';
+
+  // Fonctions pour les nouveaux endpoints
+  const fetchAmbossNodeInfo = async (nodePubkey: string): Promise<AmbossNodeInfo | null> => {
+    try {
+      const response = await fetch(`${API_BASE}/api/v1/node/${nodePubkey}/info/amboss`, {
+        headers: {
+          'Authorization': `Bearer ${session?.access_token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.success ? data.data : null;
+    } catch (error) {
+      console.error('Erreur fetch Amboss node info:', error);
+      return null;
+    }
+  };
+
+  const fetchAmbossRecommendations = async (nodePubkey: string): Promise<AmbossRecommendation[]> => {
+    try {
+      const response = await fetch(`${API_BASE}/api/v1/channels/recommendations/amboss`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session?.access_token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          pubkey: nodePubkey,
+          analysis_type: 'comprehensive',
+          max_recommendations: 10
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.success ? data.data.recommendations || [] : [];
+    } catch (error) {
+      console.error('Erreur fetch Amboss recommendations:', error);
+      return [];
+    }
+  };
+
+  const fetchUnifiedRecommendations = async (nodePubkey: string): Promise<UnifiedRecommendation[]> => {
+    try {
+      const response = await fetch(`${API_BASE}/api/v1/channels/recommendations/unified`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session?.access_token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          pubkey: nodePubkey,
+          sources: ['amboss', 'sparkseer', 'openai'],
+          prioritize_by: 'revenue_potential',
+          max_recommendations: 15
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.success ? data.data.recommendations || [] : [];
+    } catch (error) {
+      console.error('Erreur fetch unified recommendations:', error);
+      return [];
+    }
+  };
+
+  // Charger le profil utilisateur et vérifier le cookie au démarrage
   useEffect(() => {
     const loadUserProfile = async (): Promise<void> => {
+      // D'abord, vérifier s'il y a une pubkey dans le cookie
+      const cookiePubkey = getValidPubkeyFromCookie();
+      
       if (!session?.access_token) {
+        // Pas de session mais peut-être un cookie
+        if (cookiePubkey) {
+          setPubkey(cookiePubkey);
+          setPubkeyInput(cookiePubkey);
+        }
         setLoading(false);
         return;
       }
@@ -41,13 +208,30 @@ const NodeManagement: FC = () => {
           const data = await response.json();
           setUserProfile(data.profile);
           
-          // Si l'utilisateur a déjà une pubkey, la charger
-          if (data.profile?.pubkey) {
+          // Prioriser la pubkey du profil si disponible
+          if (data.profile?.pubkey && isValidLightningPubkey(data.profile.pubkey)) {
             setPubkey(data.profile.pubkey);
+            setPubkeyInput(data.profile.pubkey);
+            // Sauvegarder dans le cookie avec l'alias
+            savePubkeyToCookie(data.profile.pubkey, data.profile.alias);
+          } 
+          // Sinon utiliser celle du cookie si disponible
+          else if (cookiePubkey) {
+            setPubkey(cookiePubkey);
+            setPubkeyInput(cookiePubkey);
           }
+        } else if (cookiePubkey) {
+          // Si l'API échoue mais qu'on a un cookie, l'utiliser
+          setPubkey(cookiePubkey);
+          setPubkeyInput(cookiePubkey);
         }
       } catch (error) {
         console.error('Erreur lors du chargement du profil:', error);
+        // En cas d'erreur, essayer quand même le cookie
+        if (cookiePubkey) {
+          setPubkey(cookiePubkey);
+          setPubkeyInput(cookiePubkey);
+        }
       } finally {
         setLoading(false);
       }
@@ -82,6 +266,10 @@ const NodeManagement: FC = () => {
       // Traitement des résultats
       if (nodeInfoResponse.status === 'fulfilled') {
         setNodeInfo(nodeInfoResponse.value);
+        // Mettre à jour l'alias dans le cookie si disponible
+        if (nodeInfoResponse.value?.alias) {
+          updatePubkeyAlias(nodeInfoResponse.value.alias);
+        }
       } else {
         console.error('Erreur lors du chargement des infos du nœud:', nodeInfoResponse.reason);
       }
@@ -98,6 +286,9 @@ const NodeManagement: FC = () => {
         console.error('Erreur lors du chargement des actions prioritaires:', prioritiesResponse.reason);
       }
 
+      // Charger les données avancées en parallèle
+      await loadAdvancedData(nodePubkey);
+
       // Afficher un avertissement si l'API n'est pas disponible
       if (!isApiAvailable) {
         setError('⚠️ L\'API d\'analyse n\'est pas disponible. Les données affichées sont des exemples génériques. Vérifiez votre connexion réseau ou réessayez plus tard.');
@@ -108,6 +299,38 @@ const NodeManagement: FC = () => {
       setError('Impossible de charger les données du nœud. Vérifiez que la clé publique est correcte.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadAdvancedData = async (nodePubkey: string): Promise<void> => {
+    if (!session?.access_token) return;
+
+    setLoadingAdvanced(true);
+    
+    try {
+      // Appels parallèles pour les nouveaux endpoints
+      const [ambossInfo, ambossRecs, unifiedRecs] = await Promise.allSettled([
+        fetchAmbossNodeInfo(nodePubkey),
+        fetchAmbossRecommendations(nodePubkey),
+        fetchUnifiedRecommendations(nodePubkey)
+      ]);
+
+      if (ambossInfo.status === 'fulfilled' && ambossInfo.value) {
+        setAmbossNodeInfo(ambossInfo.value);
+      }
+
+      if (ambossRecs.status === 'fulfilled') {
+        setAmbossRecommendations(ambossRecs.value);
+      }
+
+      if (unifiedRecs.status === 'fulfilled') {
+        setUnifiedRecommendations(unifiedRecs.value);
+      }
+
+    } catch (error) {
+      console.error('Erreur lors du chargement des données avancées:', error);
+    } finally {
+      setLoadingAdvanced(false);
     }
   };
 
@@ -143,10 +366,17 @@ const NodeManagement: FC = () => {
     }
 
     setPubkey(pubkeyInput);
-    await savePubkeyToProfile(pubkeyInput);
+    
+    // Sauvegarder dans le cookie immédiatement
+    savePubkeyToCookie(pubkeyInput);
+    
+    // Également sauvegarder dans le profil si connecté
+    if (session?.access_token) {
+      await savePubkeyToProfile(pubkeyInput);
+    }
   };
 
-  const handleDisconnect = async (): Promise<void> => {
+  const _handleDisconnect = async (): Promise<void> => {
     try {
       if (session?.access_token) {
         await fetch('/api/user/profile', {
@@ -162,10 +392,16 @@ const NodeManagement: FC = () => {
       console.error('Erreur lors de la suppression de la pubkey:', error);
     }
 
+    // Nettoyer le cookie également
+    clearPubkeyCookie();
+
     setPubkey(null);
     setNodeInfo(null);
     setRecommendations([]);
     setPriorityActions([]);
+    setAmbossNodeInfo(null);
+    setAmbossRecommendations([]);
+    setUnifiedRecommendations([]);
     setError(null);
     setPubkeyInput('');
   };
@@ -199,6 +435,15 @@ const NodeManagement: FC = () => {
       case 'medium': return '🟡';
       case 'hard': return '🔴';
       default: return '⚪';
+    }
+  };
+
+  const getPriorityColor = (priority: string): string => {
+    switch (priority) {
+      case 'high': return 'text-red-600 bg-red-100 border-red-200';
+      case 'medium': return 'text-yellow-600 bg-yellow-100 border-yellow-200';
+      case 'low': return 'text-green-600 bg-green-100 border-green-200';
+      default: return 'text-gray-600 bg-gray-100 border-gray-200';
     }
   };
 
@@ -346,12 +591,7 @@ const NodeManagement: FC = () => {
         </div>
         <div className="flex items-center gap-4">
           <ApiStatusWidget />
-          <button
-            onClick={handleDisconnect}
-            className="text-gray-600 hover:text-gray-900 px-4 py-2 rounded-md border hover:bg-gray-50 transition"
-          >
-            Changer de nœud
-          </button>
+      
         </div>
       </div>
 
@@ -362,7 +602,7 @@ const NodeManagement: FC = () => {
         </div>
       )}
 
-      {/* Informations générales du nœud */}
+      {/* Informations générales du nœud avec Amboss */}
       <div className="bg-white rounded-xl shadow p-6">
         <h2 className="text-xl font-semibold mb-4">📋 Informations générales</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -370,7 +610,7 @@ const NodeManagement: FC = () => {
             <div className="space-y-3">
               <div>
                 <span className="text-sm font-medium text-gray-500">Alias: </span>
-                <span className="text-gray-900">{nodeInfo?.alias || 'Non défini'}</span>
+                <span className="text-gray-900">{nodeInfo?.alias || ambossNodeInfo?.alias || 'Non défini'}</span>
               </div>
               <div>
                 <span className="text-sm font-medium text-gray-500">Clé publique: </span>
@@ -385,32 +625,110 @@ const NodeManagement: FC = () => {
             </div>
           </div>
           
-          {nodeInfo?.health_score && (
-            <div className="flex items-center justify-center">
-              <div className="text-center">
+          <div className="flex items-center justify-center">
+            <div className="text-center">
+              {nodeInfo?.health_score ? (
                 <div className={`text-6xl font-bold mb-2 px-6 py-4 rounded-xl border-2 ${getHealthScoreColor(nodeInfo.health_score)}`}>
                   {nodeInfo.health_score}%
                 </div>
-                <div className="text-sm font-medium text-gray-700">Score de santé</div>
-                {nodeInfo.network_rank && nodeInfo.total_network_nodes && (
-                  <div className="text-xs text-gray-500 mt-1">
-                    Classé #{nodeInfo.network_rank} / {nodeInfo.total_network_nodes.toLocaleString()}
+              ) : ambossNodeInfo?.performance_score ? (
+                <div className={`text-6xl font-bold mb-2 px-6 py-4 rounded-xl border-2 ${getHealthScoreColor(ambossNodeInfo.performance_score)}`}>
+                  {ambossNodeInfo.performance_score}%
+                </div>
+              ) : (
+                <div className="text-6xl font-bold mb-2 px-6 py-4 rounded-xl border-2 text-gray-400 bg-gray-50 border-gray-200">
+                  N/A
+                </div>
+              )}
+              <div className="text-sm font-medium text-gray-700">
+                {ambossNodeInfo ? 'Score Performance Amboss' : 'Score de santé'}
+              </div>
+              {nodeInfo?.network_rank && nodeInfo?.total_network_nodes && (
+                <div className="text-xs text-gray-500 mt-1">
+                  Classé #{nodeInfo.network_rank} / {nodeInfo.total_network_nodes.toLocaleString()}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Métriques Amboss enrichies */}
+        {ambossNodeInfo && (
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <h3 className="text-lg font-semibold mb-4 text-purple-600">📊 Métriques Amboss</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="space-y-3">
+                <h4 className="font-medium text-gray-700">Connectivité</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Centralité:</span>
+                    <span className="font-medium">{(ambossNodeInfo.connectivity_metrics.centrality * 100).toFixed(2)}%</span>
                   </div>
-                )}
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Accessibilité:</span>
+                    <span className="font-medium">{(ambossNodeInfo.connectivity_metrics.reachability * 100).toFixed(2)}%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Stabilité:</span>
+                    <span className="font-medium">{(ambossNodeInfo.connectivity_metrics.stability * 100).toFixed(2)}%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <h4 className="font-medium text-gray-700">Analyse des frais</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Taux médian:</span>
+                    <span className="font-medium">{ambossNodeInfo.fee_analysis.median_fee_rate} ppm</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Compétitivité:</span>
+                    <span className={`font-medium ${
+                      ambossNodeInfo.fee_analysis.fee_competitiveness === 'high' ? 'text-green-600' :
+                      ambossNodeInfo.fee_analysis.fee_competitiveness === 'medium' ? 'text-yellow-600' :
+                      'text-red-600'
+                    }`}>
+                      {ambossNodeInfo.fee_analysis.fee_competitiveness}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Score optimisation:</span>
+                    <span className="font-medium">{ambossNodeInfo.fee_analysis.optimization_score}/100</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <h4 className="font-medium text-gray-700">Liquidité</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Liquidité totale:</span>
+                    <span className="font-medium">{formatSats(ambossNodeInfo.liquidity_metrics.total_liquidity)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Balance locale:</span>
+                    <span className="font-medium">{formatSats(ambossNodeInfo.liquidity_metrics.local_balance)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Ratio d'équilibre:</span>
+                    <span className="font-medium">{(ambossNodeInfo.liquidity_metrics.balance_ratio * 100).toFixed(1)}%</span>
+                  </div>
+                </div>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Métriques principales */}
-      {nodeInfo && (
+      {(nodeInfo || ambossNodeInfo) && (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="bg-white rounded-xl shadow p-6 text-center">
               <div className="text-3xl mb-2">⚡</div>
               <div className="text-2xl font-bold text-indigo-600 mb-1">
-                {formatSats(nodeInfo.capacity || 0)}
+                {formatSats((nodeInfo?.capacity || ambossNodeInfo?.capacity) || 0)}
               </div>
               <div className="text-sm text-gray-600">Capacité totale</div>
             </div>
@@ -418,10 +736,10 @@ const NodeManagement: FC = () => {
             <div className="bg-white rounded-xl shadow p-6 text-center">
               <div className="text-3xl mb-2">🔗</div>
               <div className="text-2xl font-bold text-green-600 mb-1">
-                {nodeInfo.active_channels || nodeInfo.channels || 0}
+                {nodeInfo?.active_channels || nodeInfo?.channels || ambossNodeInfo?.channels || 0}
               </div>
               <div className="text-sm text-gray-600">Canaux actifs</div>
-              {nodeInfo.inactive_channels && (
+              {nodeInfo?.inactive_channels && (
                 <div className="text-xs text-gray-500 mt-1">
                   {nodeInfo.inactive_channels} inactifs
                 </div>
@@ -431,7 +749,7 @@ const NodeManagement: FC = () => {
             <div className="bg-white rounded-xl shadow p-6 text-center">
               <div className="text-3xl mb-2">⏱️</div>
               <div className="text-2xl font-bold text-blue-600 mb-1">
-                {nodeInfo.uptime_percentage ? `${nodeInfo.uptime_percentage.toFixed(1)}%` : 'N/A'}
+                {nodeInfo?.uptime_percentage ? `${nodeInfo.uptime_percentage.toFixed(1)}%` : 'N/A'}
               </div>
               <div className="text-sm text-gray-600">Uptime</div>
             </div>
@@ -439,15 +757,15 @@ const NodeManagement: FC = () => {
             <div className="bg-white rounded-xl shadow p-6 text-center">
               <div className="text-3xl mb-2">📈</div>
               <div className="text-2xl font-bold text-purple-600 mb-1">
-                {nodeInfo.forwarding_efficiency ? `${nodeInfo.forwarding_efficiency.toFixed(1)}%` : 'N/A'}
+                {nodeInfo?.forwarding_efficiency ? `${nodeInfo.forwarding_efficiency.toFixed(1)}%` : 'N/A'}
               </div>
               <div className="text-sm text-gray-600">Efficacité de routage</div>
             </div>
           </div>
 
-          {/* Métriques SparkSeer avancées */}
+          {/* Métriques avancées */}
           <div className="bg-white rounded-xl shadow p-6">
-            <h2 className="text-xl font-semibold mb-6">📊 Métriques Avancées SparkSeer</h2>
+            <h2 className="text-xl font-semibold mb-6">📊 Métriques</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               
               {/* Centralité */}
@@ -553,83 +871,236 @@ const NodeManagement: FC = () => {
         </div>
       )}
 
-      {/* Recommandations IA */}
-      {recommendations.length > 0 && (
-        <div className="bg-white rounded-xl shadow p-6">
-          <h2 className="text-xl font-semibold mb-6">🤖 Recommandations IA</h2>
-          <div className="space-y-4">
-            {recommendations.slice(0, 5).map((rec) => (
-              <div key={rec.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <h3 className="font-semibold text-gray-900">{rec.title}</h3>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getImpactColor(rec.impact)}`}>
-                        {rec.impact}
-                      </span>
-                      <span className="text-sm">
-                        {getDifficultyIcon(rec.difficulty)}
-                      </span>
-                      {rec.free && (
-                        <span className="px-2 py-1 bg-green-100 text-green-600 rounded-full text-xs font-medium">
-                          Gratuit
-                        </span>
-                      )}
-                      {rec.confidence_score && (
-                        <span className="px-2 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-medium">
-                          {(rec.confidence_score * 100).toFixed(0)}% confiance
-                        </span>
-                      )}
+      {/* Recommandations IA Avancées */}
+      <div className="bg-white rounded-xl shadow p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-semibold">🤖 Recommandations IA</h2>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setRecommendationType('standard')}
+              className={`px-3 py-1 rounded-lg text-sm font-medium transition ${
+                recommendationType === 'standard'
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              Standard
+            </button>
+            <button
+              onClick={() => setRecommendationType('amboss')}
+              className={`px-3 py-1 rounded-lg text-sm font-medium transition ${
+                recommendationType === 'amboss'
+                  ? 'bg-purple-100 text-purple-700'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              Amboss
+            </button>
+            <button
+              onClick={() => setRecommendationType('unified')}
+              className={`px-3 py-1 rounded-lg text-sm font-medium transition ${
+                recommendationType === 'unified'
+                  ? 'bg-green-100 text-green-700'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              Unifiées
+            </button>
+          </div>
+        </div>
+
+        {loadingAdvanced && (
+          <div className="text-center py-8">
+            <div className="animate-spin h-8 w-8 mx-auto border-4 border-indigo-500 border-t-transparent rounded-full mb-4" />
+            <p className="text-gray-600">Chargement des recommandations avancées...</p>
+          </div>
+        )}
+
+        <div className="space-y-4">
+          {/* Recommandations Amboss */}
+          {recommendationType === 'amboss' && ambossRecommendations.map((rec) => (
+            <div key={rec.id} className="border border-purple-200 rounded-lg p-4 hover:shadow-md transition">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <h3 className="font-semibold text-gray-900">{rec.title}</h3>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getPriorityColor(rec.priority)}`}>
+                      {rec.priority}
+                    </span>
+                    <span className="px-2 py-1 bg-purple-100 text-purple-600 rounded-full text-xs font-medium">
+                      Amboss Score: {rec.amboss_score}/100
+                    </span>
+                  </div>
+                  <p className="text-gray-600 text-sm mb-3">{rec.description}</p>
+                  
+                  <div className="grid grid-cols-3 gap-4 mb-3 text-xs">
+                    <div className="text-center p-2 bg-green-50 rounded">
+                      <div className="font-medium text-green-600">+{rec.expected_impact.revenue_increase}%</div>
+                      <div className="text-gray-600">Revenus</div>
                     </div>
-                    <p className="text-gray-600 text-sm mb-2">{rec.description}</p>
-                    
-                    {/* Détails SparkSeer enrichis */}
-                    <div className="text-xs text-gray-500 space-y-1">
-                      <div>
-                        Catégorie: {rec.category} • Type: {rec.action_type} • Priorité: {rec.priority}
-                      </div>
-                      
-                      <div className="flex items-center gap-4">
-                        {rec.estimated_gain_sats && (
-                          <span>Gain estimé: {formatSats(rec.estimated_gain_sats)}</span>
-                        )}
-                        {rec.estimated_timeframe && (
-                          <span>Délai: {rec.estimated_timeframe}</span>
-                        )}
-                      </div>
-                      
-                      {rec.target_alias && (
-                        <div>Cible recommandée: {rec.target_alias}</div>
-                      )}
-                      
-                      {rec.suggested_amount && (
-                        <div>Montant suggéré: {formatSats(rec.suggested_amount)}</div>
-                      )}
-                      
-                      {rec.current_value !== undefined && rec.suggested_value !== undefined && (
-                        <div>
-                          Ajustement: {rec.current_value} → {rec.suggested_value}
-                        </div>
-                      )}
+                    <div className="text-center p-2 bg-blue-50 rounded">
+                      <div className="font-medium text-blue-600">+{rec.expected_impact.liquidity_improvement}%</div>
+                      <div className="text-gray-600">Liquidité</div>
                     </div>
+                    <div className="text-center p-2 bg-purple-50 rounded">
+                      <div className="font-medium text-purple-600">+{rec.expected_impact.routing_efficiency}%</div>
+                      <div className="text-gray-600">Efficacité</div>
+                    </div>
+                  </div>
+
+                  <div className="text-xs text-gray-500">
+                    <div className="font-medium mb-1">Actions suggérées:</div>
+                    <ul className="list-disc list-inside space-y-1">
+                      {rec.suggested_actions.map((action, index) => (
+                        <li key={index}>{action}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {rec.target_nodes && rec.target_nodes.length > 0 && (
+                    <div className="mt-3 text-xs">
+                      <div className="font-medium text-gray-700 mb-1">Nœuds cibles recommandés:</div>
+                      <div className="space-y-1">
+                        {rec.target_nodes.slice(0, 3).map((node, index) => (
+                          <div key={index} className="flex justify-between items-center">
+                            <span className="text-gray-600">{node.alias}</span>
+                            <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs">
+                              Score: {node.score}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* Recommandations Unifiées */}
+          {recommendationType === 'unified' && unifiedRecommendations.map((rec) => (
+            <div key={rec.id} className="border border-green-200 rounded-lg p-4 hover:shadow-md transition">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <h3 className="font-semibold text-gray-900">{rec.title}</h3>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      rec.source === 'amboss' ? 'bg-purple-100 text-purple-600' :
+                      rec.source === 'sparkseer' ? 'bg-blue-100 text-blue-600' :
+                      rec.source === 'openai' ? 'bg-red-100 text-red-600' :
+                      'bg-gray-100 text-gray-600'
+                    }`}>
+                      {rec.source}
+                    </span>
+                    <span className="px-2 py-1 bg-green-100 text-green-600 rounded-full text-xs font-medium">
+                      Score: {rec.unified_score}/100
+                    </span>
+                    <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">
+                      {(rec.confidence * 100).toFixed(0)}% confiance
+                    </span>
+                  </div>
+                  <p className="text-gray-600 text-sm mb-3">{rec.description}</p>
+
+                  <div className="grid grid-cols-3 gap-4 mb-3 text-xs">
+                    <div className="text-center p-2 bg-green-50 rounded">
+                      <div className="font-medium text-green-600">+{formatSats(rec.expected_benefits.revenue_gain)}</div>
+                      <div className="text-gray-600">Gain revenus</div>
+                    </div>
+                    <div className="text-center p-2 bg-blue-50 rounded">
+                      <div className="font-medium text-blue-600">+{rec.expected_benefits.efficiency_boost}%</div>
+                      <div className="text-gray-600">Efficacité</div>
+                    </div>
+                    <div className="text-center p-2 bg-yellow-50 rounded">
+                      <div className="font-medium text-yellow-600">-{rec.expected_benefits.risk_reduction}%</div>
+                      <div className="text-gray-600">Risque</div>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between items-center text-xs text-gray-500">
+                    <div className="flex items-center gap-4">
+                      <span>Difficulté: {getDifficultyIcon(rec.implementation.difficulty)} {rec.implementation.difficulty}</span>
+                      <span>Temps: {rec.implementation.estimated_time}</span>
+                    </div>
+                    {rec.implementation.required_capital > 0 && (
+                      <span className="font-medium">Capital: {formatSats(rec.implementation.required_capital)}</span>
+                    )}
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-          
-          {recommendations.length > 5 && (
-            <div className="text-center mt-6">
-              <button
-                onClick={() => router.push('/user/node/recommendations')}
-                className="text-indigo-600 hover:text-indigo-700 font-medium"
-              >
-                Voir toutes les recommandations ({recommendations.length})
-              </button>
             </div>
-          )}
+          ))}
+
+          {/* Recommandations Standard */}
+          {recommendationType === 'standard' && recommendations.slice(0, 5).map((rec) => (
+            <div key={rec.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <h3 className="font-semibold text-gray-900">{rec.title}</h3>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getImpactColor(rec.impact)}`}>
+                      {rec.impact}
+                    </span>
+                    <span className="text-sm">
+                      {getDifficultyIcon(rec.difficulty)}
+                    </span>
+                    {rec.free && (
+                      <span className="px-2 py-1 bg-green-100 text-green-600 rounded-full text-xs font-medium">
+                        Gratuit
+                      </span>
+                    )}
+                    {rec.confidence_score && (
+                      <span className="px-2 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-medium">
+                        {(rec.confidence_score * 100).toFixed(0)}% confiance
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-gray-600 text-sm mb-2">{rec.description}</p>
+                  
+                  <div className="text-xs text-gray-500 space-y-1">
+                    <div>
+                      Catégorie: {rec.category} • Type: {rec.action_type} • Priorité: {rec.priority}
+                    </div>
+                    
+                    <div className="flex items-center gap-4">
+                      {rec.estimated_gain_sats && (
+                        <span>Gain estimé: {formatSats(rec.estimated_gain_sats)}</span>
+                      )}
+                      {rec.estimated_timeframe && (
+                        <span>Délai: {rec.estimated_timeframe}</span>
+                      )}
+                    </div>
+                    
+                    {rec.target_alias && (
+                      <div>Cible recommandée: {rec.target_alias}</div>
+                    )}
+                    
+                    {rec.suggested_amount && (
+                      <div>Montant suggéré: {formatSats(rec.suggested_amount)}</div>
+                    )}
+                    
+                    {rec.current_value !== undefined && rec.suggested_value !== undefined && (
+                      <div>
+                        Ajustement: {rec.current_value} → {rec.suggested_value}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-      )}
+        
+        {recommendationType === 'standard' && recommendations.length > 5 && (
+          <div className="text-center mt-6">
+            <button
+              onClick={() => router.push('/user/node/recommendations')}
+              className="text-indigo-600 hover:text-indigo-700 font-medium"
+            >
+              Voir toutes les recommandations ({recommendations.length})
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Actions prioritaires */}
       {priorityActions.length > 0 && (
@@ -750,12 +1221,20 @@ const NodeManagement: FC = () => {
         </button>
 
         <button
-          onClick={() => router.push('/user/node/recommendations')}
-          className="p-6 bg-white rounded-xl shadow border-2 border-transparent hover:border-indigo-200 hover:shadow-lg transition group"
+          onClick={() => router.push('/user/dazia')}
+          className="p-6 bg-gradient-to-br from-yellow-400 to-orange-500 text-white rounded-xl shadow border-2 border-transparent hover:shadow-xl transition group relative overflow-hidden"
         >
-          <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">💡</div>
-          <h3 className="font-semibold mb-2">Optimisations IA</h3>
-          <p className="text-sm text-gray-600">Recommandations personnalisées</p>
+          <div className="absolute inset-0 bg-white/10 transform -skew-y-6 group-hover:skew-y-6 transition-transform duration-500"></div>
+          <div className="relative z-10">
+            <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">✨</div>
+            <h3 className="font-semibold mb-2">Dazia IA</h3>
+            <p className="text-sm opacity-90">
+              Recommandations intelligentes activables
+            </p>
+            <div className="mt-3 text-xs bg-white/20 rounded-full px-3 py-1 inline-block">
+              Assistant IA Premium
+            </div>
+          </div>
         </button>
       </div>
 

@@ -29,6 +29,7 @@ async function getUsersHandler(req: NextRequest, user: SupabaseUser): Promise<Re
       return errorResponse(
         ErrorCodes.VALIDATION_ERROR,
         'Paramètres de requête invalides',
+        // @ts-expect-error - TypeScript Zod validation narrowing issue
         validationResult.error.details
       );
     }

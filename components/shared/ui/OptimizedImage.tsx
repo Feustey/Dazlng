@@ -1,7 +1,8 @@
 'use client';
 
+import React from 'react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { cn } from '../../../lib/utils';
 
 interface OptimizedImageProps {
@@ -18,7 +19,21 @@ interface OptimizedImageProps {
   fill?: boolean;
   loading?: 'lazy' | 'eager';
   style?: React.CSSProperties;
+  onLoad?: () => void;
+  onError?: () => void;
 }
+
+// Placeholder SVG pour les images qui ne chargent pas
+const generatePlaceholderSVG = (width: number = 400, height: number = 300) => {
+  return `data:image/svg+xml;base64,${btoa(`
+    <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100%" height="100%" fill="#f3f4f6"/>
+      <text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="#9ca3af" font-family="system-ui, sans-serif" font-size="14">
+        Image non disponible
+      </text>
+    </svg>
+  `)}`;
+};
 
 export function OptimizedImage({
   src,
@@ -27,15 +42,17 @@ export function OptimizedImage({
   height,
   className,
   priority = false,
-  quality = 75,
+  quality = 85,
   placeholder = 'empty',
   blurDataURL,
   sizes,
   fill = false,
   loading = 'lazy',
   style,
+  onLoad,
+  onError,
   ...props
-}: OptimizedImageProps): JSX.Element {
+}: OptimizedImageProps): React.ReactElement {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
@@ -44,80 +61,77 @@ export function OptimizedImage({
     ? '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
     : sizes;
 
-  // Génération d'un placeholder blur simple si non fourni
-  const defaultBlurDataURL = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q==';
+  // Placeholder blur par défaut si non fourni
+  const defaultBlurDataURL = blurDataURL || `data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q==`;
 
+  const handleLoad = useCallback(() => {
+    setIsLoading(false);
+    onLoad?.();
+  }, [onLoad]);
+
+  const handleError = useCallback(() => {
+    setHasError(true);
+    setIsLoading(false);
+    onError?.();
+  }, [onError]);
+
+  // Affichage d'erreur avec placeholder SVG
   if (hasError) {
     return (
       <div 
         className={cn(
-          'flex items-center justify-center bg-gray-100 text-gray-400',
+          'flex items-center justify-center bg-gray-50 border border-gray-200 rounded-lg overflow-hidden',
           className
         )}
-        style={{ width: !fill ? width : undefined, height: !fill ? height : undefined, ...style }}
+        style={{ 
+          width: !fill ? width : undefined, 
+          height: !fill ? height : undefined, 
+          ...style 
+        }}
       >
-        <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-          <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-        </svg>
-      </div>
-    );
-  }
-
-  // Configuration de base pour Next/Image
-  const imageProps = {
-    src,
-    alt,
-    priority,
-    quality,
-    placeholder,
-    blurDataURL: blurDataURL || defaultBlurDataURL,
-    className: cn(
-      'duration-700 ease-in-out',
-      isLoading ? 'scale-110 blur-2xl grayscale' : 'scale-100 blur-0 grayscale-0',
-      className
-    ),
-    onLoad: () => setIsLoading(false),
-    onError: () => setHasError(true),
-    style,
-    ...props,
-  };
-
-  if (fill) {
-    return (
-      <div className="relative overflow-hidden w-full h-full">
-        <Image
-          {...imageProps}
-          fill
-          sizes={defaultSizes}
-          alt={alt}
-          // Ne pas passer loading si priority est défini (conflit entre les deux)
-          loading={priority ? undefined : loading}
+        <img
+          src={generatePlaceholderSVG(width, height)}
+          alt={`Erreur de chargement: ${alt}`}
+          className="w-full h-full object-cover"
         />
-        
-        {/* Skeleton loader pendant le chargement */}
-        {isLoading && (
-          <div className="absolute inset-0 bg-gray-200 animate-pulse" />
-        )}
       </div>
     );
   }
 
-  // Mode normal avec width/height
   return (
-    <div className="relative overflow-hidden">
+    <div 
+      className={cn(
+        'relative overflow-hidden',
+        isLoading && 'animate-pulse bg-gray-200',
+        className
+      )}
+      style={!fill ? { width, height } : undefined}
+    >
       <Image
-        {...imageProps}
-        width={width}
-        height={height}
-        sizes={defaultSizes}
+        src={src}
         alt={alt}
-        // Ne pas passer loading si priority est défini (conflit entre les deux)
-        loading={priority ? undefined : loading}
+        width={fill ? undefined : width}
+        height={fill ? undefined : height}
+        fill={fill}
+        priority={priority}
+        quality={quality}
+        placeholder={placeholder}
+        blurDataURL={placeholder === 'blur' ? defaultBlurDataURL : undefined}
+        sizes={defaultSizes}
+        loading={priority ? 'eager' : loading}
+        onLoad={handleLoad}
+        onError={handleError}
+        className={cn(
+          'transition-opacity duration-300 object-cover',
+          isLoading ? 'opacity-0' : 'opacity-100'
+        )}
+        style={style}
+        {...props}
       />
       
       {/* Skeleton loader pendant le chargement */}
       {isLoading && (
-        <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-pulse" />
       )}
     </div>
   );

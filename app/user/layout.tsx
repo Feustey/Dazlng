@@ -40,8 +40,8 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
   const navItems = [
     { href: '/user/dashboard', label: 'Dashboard', color: 'indigo' },
     { href: '/user/node', label: 'Mon Nœud', color: 'purple' },
+    { href: '/user/dazia', label: 'Dazia IA', color: 'yellow' },
     { href: '/user/subscriptions', label: 'Abonnements', color: 'green' },
-    { href: '/user/billing', label: 'Factures', color: 'yellow' },
     { href: '/user/settings', label: 'Paramètres', color: 'blue' }
   ];
 

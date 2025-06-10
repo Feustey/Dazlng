@@ -2,7 +2,7 @@
 
 import { Admin, Resource } from 'react-admin';
 import { supabaseDataProvider } from 'ra-supabase-core';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabase';
 import { customerResource } from '../resources/customers';
 import { segmentResource } from '../resources/segments';
 import { campaignResource } from '../resources/campaigns';
@@ -19,17 +19,8 @@ if (!supabaseUrl || !supabaseKey) {
   console.error('Variables d\'environnement Supabase manquantes pour le CRM');
 }
 
-// Utiliser une instance Supabase partagée ou créer une instance dédiée au CRM
-let crmSupabaseClient: ReturnType<typeof createClient> | undefined;
-
-if (typeof window !== 'undefined' && supabaseUrl && supabaseKey) {
-  // Côté client uniquement
-  crmSupabaseClient = createClient(supabaseUrl, supabaseKey, {
-    auth: {
-      persistSession: false, // Pas de session persistante pour éviter les conflits
-    },
-  });
-}
+// Utiliser l'instance Supabase partagée
+const crmSupabaseClient = supabase;
 
 // Configuration du data provider
 const dataProvider = supabaseDataProvider({

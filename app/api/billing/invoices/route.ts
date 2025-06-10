@@ -6,6 +6,7 @@ export const runtime = 'nodejs';
 
 interface Invoice {
   id: string;
+  order_id: string;
   userId: string;
   number: string;
   date: string;
@@ -14,20 +15,14 @@ interface Invoice {
   currency: string;
   status: 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled';
   description: string;
-  items: InvoiceItem[];
-  tax: number;
-  total: number;
-  paymentMethod?: string;
+  product_type: string;
+  plan?: string;
+  billing_cycle?: string;
+  payment_method?: string;
+  payment_hash?: string;
   paymentDate?: string;
-  downloadUrl?: string;
-}
-
-interface InvoiceItem {
-  id: string;
-  description: string;
-  quantity: number;
-  unitPrice: number;
   total: number;
+  downloadUrl?: string;
 }
 
 interface ApiResponse<T> {
@@ -54,6 +49,24 @@ async function getUserFromRequest(req: NextRequest): Promise<{ id: string } | nu
   return user ? { id: user.id } : null;
 }
 
+function getInvoiceStatus(paymentStatus: string, createdAt: string): Invoice['status'] {
+  const now = Date.now();
+  const created = new Date(createdAt).getTime();
+  const daysSinceCreated = (now - created) / (1000 * 60 * 60 * 24);
+
+  switch (paymentStatus) {
+    case 'paid':
+      return 'paid';
+    case 'failed':
+      return 'cancelled';
+    case 'pending':
+      // Si la commande date de plus de 30 jours et n'est pas payée, elle est en retard
+      return daysSinceCreated > 30 ? 'overdue' : 'sent';
+    default:
+      return 'draft';
+  }
+}
+
 export async function GET(req: NextRequest): Promise<Response> {
   try {
     const user = await getUserFromRequest(req);
@@ -71,77 +84,109 @@ export async function GET(req: NextRequest): Promise<Response> {
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '20');
     const status = searchParams.get('status');
-    const sort = searchParams.get('sort') || 'date:desc';
 
-    // Simulation des données de factures
-    const mockInvoices: Invoice[] = Array.from({ length: 10 }, (_, i) => {
-      const date = new Date(Date.now() - Math.random() * 86400000 * 90);
-      const amount = [9, 29, 99][Math.floor(Math.random() * 3)];
-      const statuses: Invoice['status'][] = ['paid', 'sent', 'overdue'];
-      const invoiceStatus = statuses[Math.floor(Math.random() * statuses.length)];
-      
-      return {
-        id: `inv_${Date.now()}_${i}`,
-        userId: user.id,
-        number: `INV-${date.getFullYear()}-${String(i + 1).padStart(4, '0')}`,
-        date: date.toISOString().split('T')[0],
-        dueDate: new Date(date.getTime() + 30 * 86400000).toISOString().split('T')[0],
+    // Construction de la requête Supabase
+    let query = supabase
+      .from('orders')
+      .select(`
+        id,
+        user_id,
+        product_type,
+        plan,
+        billing_cycle,
         amount,
-        currency: 'EUR',
-        status: invoiceStatus,
-        description: `Abonnement ${amount === 9 ? 'Basic' : amount === 29 ? 'Premium' : 'Enterprise'}`,
-        items: [{
-          id: `item_${i}`,
-          description: `Abonnement mensuel ${amount === 9 ? 'Basic' : amount === 29 ? 'Premium' : 'Enterprise'}`,
-          quantity: 1,
-          unitPrice: amount,
-          total: amount
-        }],
-        tax: amount * 0.2,
-        total: amount * 1.2,
-        paymentMethod: invoiceStatus === 'paid' ? 'Lightning' : undefined,
-        paymentDate: invoiceStatus === 'paid' ? date.toISOString() : undefined,
-        downloadUrl: `/api/billing/invoices/inv_${Date.now()}_${i}/pdf`
-      };
-    });
+        payment_method,
+        payment_status,
+        payment_hash,
+        metadata,
+        created_at,
+        updated_at
+      `)
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
 
-    // Filtrage par statut
-    let filteredInvoices = mockInvoices;
-    if (status) {
-      filteredInvoices = mockInvoices.filter(invoice => invoice.status === status);
+    // Filtrage par statut si spécifié
+    if (status && status !== 'all') {
+      // Pour le filtrage par statut, on utilise le payment_status de la table orders
+      const dbStatus = status === 'paid' ? 'paid' : 
+                     status === 'sent' ? 'pending' : 
+                     status === 'overdue' ? 'pending' : // On filtrera après
+                     status === 'cancelled' ? 'failed' : null;
+      
+      if (dbStatus) {
+        query = query.eq('payment_status', dbStatus);
+      }
     }
 
-    // Tri
-    const [sortField, sortOrder] = sort.split(':');
-    filteredInvoices.sort((a, b) => {
-      const aVal = a[sortField as keyof Invoice];
-      const bVal = b[sortField as keyof Invoice];
-      
-      if (aVal === undefined || bVal === undefined) return 0;
-      
-      let compareA = aVal;
-      let compareB = bVal;
-      
-      if (typeof compareA === 'string') compareA = compareA.toLowerCase();
-      if (typeof compareB === 'string') compareB = compareB.toLowerCase();
-      
-      if (sortOrder === 'desc') {
-        return compareA > compareB ? -1 : 1;
-      }
-      return compareA < compareB ? -1 : 1;
-    });
+    const { data: ordersData, error: ordersError, count } = await query
+      .range((page - 1) * limit, page * limit - 1);
 
-    // Pagination
-    const total = filteredInvoices.length;
-    const startIndex = (page - 1) * limit;
-    const paginatedInvoices = filteredInvoices.slice(startIndex, startIndex + limit);
+    if (ordersError) {
+      console.error('Erreur Supabase orders:', ordersError);
+      throw new Error('Erreur lors de la récupération des commandes');
+    }
+
+    // Transformation des données en format Invoice
+    const invoices: Invoice[] = (ordersData || []).map((order: any) => {
+      const invoiceStatus = getInvoiceStatus(order.payment_status, order.created_at);
+      
+      // Si on filtre par 'overdue', ne garder que ceux qui sont vraiment en retard
+      if (status === 'overdue' && invoiceStatus !== 'overdue') {
+        return null;
+      }
+
+      // Générer un numéro de facture
+      const orderDate = new Date(order.created_at);
+      const orderNumber = `INV-${orderDate.getFullYear()}-${order.id.slice(-6).toUpperCase()}`;
+      
+      // Description basée sur le produit et le plan
+      let description = `Commande ${order.product_type}`;
+      if (order.plan) {
+        description += ` - Plan ${order.plan}`;
+      }
+      if (order.billing_cycle) {
+        description += ` (${order.billing_cycle === 'monthly' ? 'Mensuel' : 'Annuel'})`;
+      }
+
+      // Date d'échéance (30 jours après création)
+      const dueDate = new Date(orderDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+
+      return {
+        id: order.id,
+        order_id: order.id,
+        userId: order.user_id,
+        number: orderNumber,
+        date: order.created_at.split('T')[0],
+        dueDate: dueDate.toISOString().split('T')[0],
+        amount: order.amount,
+        currency: 'sats',
+        status: invoiceStatus,
+        description,
+        product_type: order.product_type,
+        plan: order.plan,
+        billing_cycle: order.billing_cycle,
+        payment_method: order.payment_method,
+        payment_hash: order.payment_hash,
+        paymentDate: order.payment_status === 'paid' ? order.updated_at?.split('T')[0] : undefined,
+        total: order.amount,
+        downloadUrl: `/api/billing/invoices/${order.id}/pdf`
+      };
+    }).filter(Boolean) as Invoice[];
+
+    // Obtenir le nombre total pour la pagination
+    let totalCount = count || 0;
+    
+    // Si on filtre par overdue, recalculer le total
+    if (status === 'overdue') {
+      totalCount = invoices.length;
+    }
 
     return NextResponse.json<ApiResponse<Invoice[]>>({
       success: true,
-      data: paginatedInvoices,
+      data: invoices,
       meta: {
         pagination: {
-          total,
+          total: totalCount,
           page,
           limit
         }

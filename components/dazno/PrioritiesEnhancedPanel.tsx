@@ -15,7 +15,7 @@ interface PrioritiesEnhancedPanelProps {
 
 export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhancedPanelProps) {
   const { data, loading, error, fetchPriorities } = usePrioritiesEnhanced()
-  const [selectedGoals, setSelectedGoals] = useState<string[]>([
+  const [selectedGoals, _setSelectedGoals] = useState<string[]>([
     'increase_revenue',
     'improve_centrality',
     'optimize_channels'

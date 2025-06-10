@@ -35,6 +35,10 @@ export async function GET(request: NextRequest): Promise<ReturnType<typeof NextR
     }
 
     // Récupérer le profil depuis la table profiles
+    if (!supabaseAdmin) {
+      return NextResponse.json({ error: 'Configuration serveur incorrecte' }, { status: 500 })
+    }
+    
     const { data: profile, error: profileError } = await supabaseAdmin
       .from('profiles')
       .select('*')
@@ -48,7 +52,7 @@ export async function GET(request: NextRequest): Promise<ReturnType<typeof NextR
       console.log('[API] Création automatique du profil pour utilisateur:', user.id)
       
       try {
-        const { data: profileData, error: createError } = await supabaseAdmin.rpc(
+        const { data: profileData, error: createError } = await supabaseAdmin!.rpc(
           'ensure_profile_exists', 
           { 
             user_id: user.id, 
@@ -86,6 +90,7 @@ export async function GET(request: NextRequest): Promise<ReturnType<typeof NextR
     }
 
     return NextResponse.json({
+      success: true,
       user: {
         id: user.id,
         email: user.email,

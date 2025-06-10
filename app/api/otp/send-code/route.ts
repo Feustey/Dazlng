@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from '@/lib/supabase'
 
 const SendCodeSchema = z.object({
   email: z.string().email()
@@ -23,14 +23,9 @@ export async function POST(req: NextRequest): Promise<Response> {
     }
 
     // Utiliser Supabase Auth natif pour envoyer le code OTP
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-    if (!supabaseUrl || !supabaseKey) {
-      throw new Error('Variables d\'environnement Supabase manquantes');
+    if (!supabase) {
+      throw new Error('Client Supabase non disponible');
     }
-
-    const supabase = createClient(supabaseUrl, supabaseKey)
     const { error } = await supabase.auth.signInWithOtp({
       email: parsed.data.email
     })

@@ -1,13 +1,8 @@
 import { Resend } from 'resend';
 import { EmailCampaign, Customer, EmailSend } from '@/app/types/crm';
-import { createClient } from '@supabase/supabase-js';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
 
 export class EmailMarketingService {
   
@@ -17,7 +12,7 @@ export class EmailMarketingService {
   async sendCampaign(campaignId: string): Promise<{ success: number; failed: number; errors: any[] }> {
     try {
       // Récupère les détails de la campagne
-      const { data: campaign, error } = await supabase
+      const { data: campaign, error } = await supabaseAdmin
         .from('crm_email_campaigns')
         .select('*')
         .eq('id', campaignId)
@@ -35,7 +30,7 @@ export class EmailMarketingService {
       }
 
       // Met à jour le statut de la campagne
-      await supabase
+      await supabaseAdmin
         .from('crm_email_campaigns')
         .update({ 
           status: 'sending',
@@ -73,7 +68,7 @@ export class EmailMarketingService {
       }
 
       // Met à jour les statistiques de la campagne
-      await supabase
+      await supabaseAdmin
         .from('crm_email_campaigns')
         .update({ 
           status: 'sent',
@@ -89,7 +84,7 @@ export class EmailMarketingService {
 
     } catch (error) {
       // Met à jour le statut en cas d'erreur
-      await supabase
+      await supabaseAdmin
         .from('crm_email_campaigns')
         .update({ status: 'cancelled' })
         .eq('id', campaignId);
@@ -207,7 +202,7 @@ export class EmailMarketingService {
 
     // Pour chaque segment de la campagne
     for (const segmentId of campaign.segment_ids) {
-      const { data: members, error } = await supabase
+      const { data: members, error } = await supabaseAdmin
         .from('crm_customer_segment_members')
         .select(`
           profiles!inner (
@@ -248,7 +243,7 @@ export class EmailMarketingService {
    */
   private async recordEmailSend(emailSend: Partial<EmailSend>): Promise<void> {
     try {
-      const { error } = await supabase
+      const { error } = await supabaseAdmin
         .from('crm_email_sends')
         .insert(emailSend);
 
@@ -264,7 +259,7 @@ export class EmailMarketingService {
    * Planifie une campagne pour envoi différé
    */
   async scheduleCampaign(campaignId: string, scheduledAt: Date): Promise<void> {
-    await supabase
+    await supabaseAdmin
       .from('crm_email_campaigns')
       .update({ 
         status: 'scheduled',
@@ -277,7 +272,7 @@ export class EmailMarketingService {
    * Envoie un email de test à une adresse spécifique
    */
   async sendTestEmail(campaignId: string, testEmail: string): Promise<void> {
-    const { data: campaign, error } = await supabase
+    const { data: campaign, error } = await supabaseAdmin
       .from('crm_email_campaigns')
       .select('*')
       .eq('id', campaignId)
@@ -358,7 +353,7 @@ export class EmailMarketingService {
       }
 
       // Met à jour l'enregistrement
-      await supabase
+      await supabaseAdmin
         .from('crm_email_sends')
         .update(statusUpdates)
         .eq('campaign_id', campaignId)
@@ -373,7 +368,7 @@ export class EmailMarketingService {
    * Obtient les statistiques d'une campagne
    */
   async getCampaignStats(campaignId: string): Promise<any> {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('crm_campaign_stats')
       .select('*')
       .eq('id', campaignId)

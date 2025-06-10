@@ -1,20 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 
 export async function GET(request: NextRequest) {
-  // Créer le client Supabase dans la fonction pour éviter les erreurs de build
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  
-  if (!supabaseUrl || !supabaseKey) {
-    console.warn('Variables Supabase manquantes pour /api/user/crm-data');
+  if (!supabaseAdmin) {
+    console.warn('Supabase admin non configuré pour /api/user/crm-data');
     return NextResponse.json(
       { success: false, error: { code: 'CONFIG_ERROR', message: 'Configuration Supabase manquante' } },
       { status: 500 }
     );
   }
-  
-  const supabase = createClient(supabaseUrl, supabaseKey);
   try {
     // Récupérer l'utilisateur connecté depuis le header Authorization
     const authHeader = request.headers.get('authorization');
@@ -30,7 +24,7 @@ export async function GET(request: NextRequest) {
     const userId = request.headers.get('x-user-id') || 'user-123';
 
     // Récupérer le profil utilisateur
-    const { data: profile, error: profileError } = await supabase
+    const { data: profile, error: profileError } = await supabaseAdmin
       .from('profiles')
       .select('*')
       .eq('id', userId)
@@ -44,13 +38,13 @@ export async function GET(request: NextRequest) {
     }
 
     // Récupérer les commandes
-    const { data: orders } = await supabase
+    const { data: orders } = await supabaseAdmin
       .from('orders')
       .select('*')
       .eq('user_id', userId);
 
     // Récupérer l'abonnement actuel
-    const { data: subscription } = await supabase
+    const { data: subscription } = await supabaseAdmin
       .from('subscriptions')
       .select('*')
       .eq('user_id', userId)

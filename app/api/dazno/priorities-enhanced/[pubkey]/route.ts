@@ -77,8 +77,8 @@ export async function POST(
     const body = await req.json()
     const context = body.context || "Optimisation complète du nœud Lightning"
     const goals = body.goals || ["increase_revenue", "improve_centrality", "optimize_channels"]
-    const includeHistorical = body.includeHistorical || false
-    const depth = body.depth || 'standard' // 'standard' ou 'detailed'
+    const _includeHistorical = body.includeHistorical || false
+    const _depth = body.depth || 'standard' // 'standard' ou 'detailed'
 
     // Vérifier si l'utilisateur a accès à cette fonctionnalité
     const supabase = await createClient()
@@ -104,7 +104,7 @@ export async function POST(
     ])
 
     // Enrichir les actions prioritaires
-    const enhancedActions: EnhancedPriorityAction[] = priorities.priority_actions.map((action, index) => {
+    const enhancedActions: EnhancedPriorityAction[] = priorities.priority_actions.map((action, _index) => {
       // Trouver les recommandations liées
       const relatedRecommendations = recommendations.recommendations.filter(rec => 
         rec.type.toLowerCase().includes(action.category?.toLowerCase() || '') ||
@@ -184,7 +184,7 @@ export async function POST(
 
 // Fonctions utilitaires
 
-function generateImplementationDetails(action: any, nodeInfo: any) {
+function generateImplementationDetails(action: any, _nodeInfo: any) {
   const details: any = {
     steps: [],
     requirements: [],
@@ -379,7 +379,7 @@ function createActionPlan(enhancedActions: any[], priorities: any) {
   }
 }
 
-function generateLongTermVision(goals: string[], actions: any[]): string {
+function generateLongTermVision(goals: string[], _actions: any[]): string {
   const visionParts: string[] = []
   
   if (goals.includes('increase_revenue')) {
@@ -420,5 +420,3 @@ async function logUserActivity(userId: string, pubkey: string, action: string, d
   }
 }
 
-// Export pour les tests
-export type { EnhancedPriorityAction, EnhancedPriorityResponse }

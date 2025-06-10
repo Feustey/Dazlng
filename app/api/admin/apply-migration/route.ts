@@ -13,6 +13,15 @@ export async function POST(_request: NextRequest): Promise<ReturnType<typeof Nex
 
     // Étape 1: Vérifier les colonnes existantes
     console.log('[MIGRATION] Étape 1: Vérification des colonnes existantes...')
+    
+    if (!supabaseAdmin) {
+      return NextResponse.json({
+        success: false,
+        error: 'Configuration admin manquante',
+        message: 'Variables d\'environnement Supabase Service Role requises pour cette opération'
+      }, { status: 500 });
+    }
+    
     const { data: columns, error: columnsError } = await supabaseAdmin
       .from('information_schema.columns')
       .select('column_name')

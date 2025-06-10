@@ -15,6 +15,10 @@
     "test": "jest",
     "test:api": "jest --config jest.api.config.js",
     "test:dazno": "tsx scripts/test-dazno-api.js",
+    "test:lightning": "tsx scripts/test-lightning-migration.ts",
+    "test:daznode-wallet": "tsx scripts/test-daznode-wallet.ts",
+    "test:daznode-api": "tsx scripts/test-daznode-api-direct.ts",
+    "test:lightning-modals": "node scripts/test-all-lightning-modals.js",
     "verify-migration": "tsx scripts/verify-post-migration.ts",
     "test-apis": "tsx scripts/test-apis-post-migration.ts",
     "health-check": "tsx scripts/quick-health-check.ts",
@@ -22,12 +26,20 @@
     "create-admin": "tsx scripts/create-dev-admin.ts",
     "verify-all": "npm run verify-migration && npm run test-apis",
     "cleanup-obsolete": "tsx scripts/cleanup-obsolete-files.ts",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "analyze:bundle": "node scripts/analyze-bundle.js",
+    "test:vitals": "npx lighthouse http://localhost:3000 --view --only-categories=performance",
+    "perf:audit": "npm run analyze:bundle && npm run test:vitals",
+    "cache:clear": "rm -rf .next/cache",
+    "deps:check": "npm outdated",
+    "deps:update": "npm update",
+    "optimize": "npm run cache:clear && npm run build:analyze"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@getalby/sdk": "^5.0.0",
+    "@getalby/sdk": "^5.1.0",
+    "@heroicons/react": "^2.2.0",
     "@mui/material": "^7.1.1",
     "@noble/secp256k1": "^2.2.3",
     "@perawallet/connect": "^1.4.2",
@@ -47,7 +59,7 @@
     "framer-motion": "^10.18.0",
     "jose": "^6.0.11",
     "jsonwebtoken": "^9.0.2",
-    "ln-service": "^57.25.0",
+    "lightning": "^10.25.2",
     "lucide-react": "^0.510.0",
     "next": "^15.3.3",
     "next-intl": "^4.1.0",
@@ -104,7 +116,8 @@
     "ts-jest": "^29.0.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.4",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "ws": "^8.18.2"
   },
   "overrides": {
     "react-test-renderer": "18.2.0"

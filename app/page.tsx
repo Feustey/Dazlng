@@ -1,14 +1,36 @@
 "use client";
 import React, { useEffect, useState, Suspense } from "react";
-import AOS from "aos";
-import "aos/dist/aos.css";
-import NewHero from "../components/shared/ui/NewHero";
-import { TechnicalProof } from "../components/shared/ui/TechnicalProof";
-import { UniqueFeature } from "../components/shared/ui/UniqueFeature";
-import RealMetrics from "../components/shared/ui/RealMetrics";
-import RealTestimonials from "../components/shared/ui/RealTestimonials";
-import { HowItWorks } from "@/components/shared/ui/HowItWorks";
-import { CTASection } from "@/components/shared/ui/CTASection";
+import dynamic from "next/dynamic";
+import { useInView } from "@/hooks/useInView";
+
+// Lazy loading des composants pour optimiser le First Load
+const NewHero = dynamic(() => import("../components/shared/ui/NewHero"), {
+  loading: () => <div className="h-screen bg-gradient-to-br from-indigo-900 to-purple-900 animate-pulse" />
+});
+
+const TechnicalProof = dynamic(() => import("../components/shared/ui/TechnicalProof").then(mod => ({ default: mod.TechnicalProof })), {
+  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
+});
+
+const UniqueFeature = dynamic(() => import("../components/shared/ui/UniqueFeature").then(mod => ({ default: mod.UniqueFeature })), {
+  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
+});
+
+const RealMetrics = dynamic(() => import("../components/shared/ui/RealMetrics"), {
+  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
+});
+
+const RealTestimonials = dynamic(() => import("../components/shared/ui/RealTestimonials"), {
+  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
+});
+
+const HowItWorks = dynamic(() => import("@/components/shared/ui/HowItWorks").then(mod => ({ default: mod.HowItWorks })), {
+  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
+});
+
+const CTASection = dynamic(() => import("@/components/shared/ui/CTASection").then(mod => ({ default: mod.CTASection })), {
+  loading: () => <div className="h-64 bg-gray-100 animate-pulse rounded-xl" />
+});
 
 // Composant client séparé pour gérer les paramètres d'URL
 const SignupConfirmation: React.FC = () => {
@@ -28,6 +50,10 @@ const SignupConfirmation: React.FC = () => {
   
   const closeConfirmation = (): void => {
     setShowSignupConfirmation(false);
+    // Nettoyer l'URL après fermeture
+    if (typeof window !== 'undefined') {
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
   };
   
   if (!mounted) return null;
@@ -36,9 +62,7 @@ const SignupConfirmation: React.FC = () => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 backdrop-blur-sm">
       <div 
-        className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl border border-indigo-200 transform transition-all animate-fade-in-scale"
-        data-aos="zoom-in"
-        data-aos-duration="400"
+        className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl border border-indigo-200 transform transition-all animate-zoom-in"
       >
         <div className="flex flex-col items-center text-center">
           <div className="bg-green-100 p-4 rounded-full mb-6">
@@ -52,7 +76,7 @@ const SignupConfirmation: React.FC = () => {
           </p>
           <button
             onClick={closeConfirmation}
-            className="w-full bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors shadow-lg"
+            className="w-full bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors shadow-lg hover-lift"
           >
             Commencer l'aventure
           </button>
@@ -62,33 +86,65 @@ const SignupConfirmation: React.FC = () => {
   );
 };
 
+// Composant wrapper avec animations optimisées
+const AnimatedSection: React.FC<{ children: React.ReactNode; className?: string; delay?: number }> = ({ 
+  children, 
+  className = "", 
+  delay = 0 
+}) => {
+  const { ref, inView } = useInView({ 
+    threshold: 0.1, 
+    triggerOnce: true,
+    delay 
+  });
+  
+  return (
+    <section 
+      ref={ref}
+      className={`${className} ${inView ? 'animate-fade-in' : 'opacity-0'}`}
+      style={{ animationDelay: `${delay}ms` }}
+    >
+      {children}
+    </section>
+  );
+};
+
 export default function OptimizedHomePage(): React.ReactElement {
   useEffect(() => {
-    AOS.init({ 
-      once: false,
-      duration: 800,
-      easing: 'ease-out-cubic',
-      mirror: true,
-      anchorPlacement: 'top-bottom'
-    });
+    // Préchargement des images critiques
+    const preloadImages = [
+      '/assets/images/logo-daznode.svg',
+      '/assets/images/dazia-illustration.png'
+    ];
     
-    // Script pour le défilement fluide
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      const targetId = (anchor as HTMLAnchorElement).getAttribute('href');
-      if (!targetId) return;
-      const targetElement = document.querySelector(targetId);
-      if (targetElement) {
-        anchor.addEventListener('click', (e) => {
-          e.preventDefault();
+    preloadImages.forEach(src => {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = src;
+      document.head.appendChild(link);
+    });
+
+    // Défilement fluide pour les ancres
+    const handleAnchorClicks = (e: Event) => {
+      const target = e.target as HTMLAnchorElement;
+      if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#')) {
+        e.preventDefault();
+        const targetId = target.getAttribute('href')!;
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
           const elementTop = targetElement.getBoundingClientRect().top + window.scrollY;
           const offset = 80;
           window.scrollTo({
             top: elementTop - offset,
             behavior: 'smooth'
           });
-        });
+        }
       }
-    });
+    };
+
+    document.addEventListener('click', handleAnchorClicks);
+    return () => document.removeEventListener('click', handleAnchorClicks);
   }, []);
 
   return (
@@ -99,27 +155,39 @@ export default function OptimizedHomePage(): React.ReactElement {
       </Suspense>
 
       {/* Page structure optimisée avec nouveaux composants */}
-      <main className="min-h-screen w-full overflow-x-hidden">
-        {/* Hero Section avec la vraie douleur technique */}
+      <main className="min-h-screen w-full overflow-x-hidden scroll-smooth">
+        {/* Hero Section avec la vraie douleur technique - Priority loading */}
         <NewHero />
 
         {/* Section Preuves techniques - Ce que l'IA détecte */}
-        <TechnicalProof />
+        <AnimatedSection delay={100}>
+          <TechnicalProof />
+        </AnimatedSection>
 
         {/* Section Fonctionnalité unique - IA prédictive */}
-        <UniqueFeature />
+        <AnimatedSection delay={200}>
+          <UniqueFeature />
+        </AnimatedSection>
 
         {/* Section Métriques réelles de production */}
-        <RealMetrics />
+        <AnimatedSection delay={300}>
+          <RealMetrics />
+        </AnimatedSection>
 
         {/* Section Comment ça marche */}
-        <HowItWorks />
+        <AnimatedSection delay={400}>
+          <HowItWorks />
+        </AnimatedSection>
 
         {/* Section Témoignages de vrais devs Lightning */}
-        <RealTestimonials />
+        <AnimatedSection delay={500}>
+          <RealTestimonials />
+        </AnimatedSection>
 
         {/* Section CTA finale */}
-        <CTASection />
+        <AnimatedSection delay={600}>
+          <CTASection />
+        </AnimatedSection>
       </main>
     </>
   );

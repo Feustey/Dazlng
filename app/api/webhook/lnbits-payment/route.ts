@@ -1,10 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-);
+import { supabaseAdmin } from '@/lib/supabase-admin';
 
 interface LNbitsWebhookPayload {
   payment_hash: string;
@@ -45,7 +40,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     const amountSats = Math.floor(payload.amount / 1000);
     
     // Rechercher la commande correspondante
-    const { data: orders, error: ordersError } = await supabase
+    const { data: orders, error: ordersError } = await supabaseAdmin
       .from('orders')
       .select('*')
       .or(`payment_hash.eq.${payload.payment_hash},metadata->>payment_hash.eq.${payload.payment_hash}`)
@@ -97,7 +92,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       updated_at: new Date().toISOString()
     };
 
-    const { error: updateError } = await supabase
+    const { error: updateError } = await supabaseAdmin
       .from('orders')
       .update(updateData)
       .eq('id', order.id);
@@ -180,7 +175,7 @@ async function processDazBoxOrder(order: Record<string, unknown>, payment: LNbit
     updated_at: new Date().toISOString()
   };
 
-  const { error } = await supabase
+  const { error } = await supabaseAdmin
     .from('deliveries')
     .insert([deliveryData]);
 
@@ -232,7 +227,7 @@ async function processDazNodeOrder(order: Record<string, unknown>, _payment: LNb
     updated_at: new Date().toISOString()
   };
 
-  const { error } = await supabase
+  const { error } = await supabaseAdmin
     .from('subscriptions')
     .insert([subscriptionData]);
 

@@ -1,9 +1,8 @@
-import { redirect } from 'next/navigation';
+import AdminAuthPage from './components/AdminAuthPage';
 import type { FC } from 'react';
 
 const AdminRoot: FC = () => {
-  redirect('/admin/dashboard');
-  return null;
+  return <AdminAuthPage />;
 };
 
 export default AdminRoot; 
