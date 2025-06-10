@@ -4,6 +4,16 @@ import { createUnifiedLightningService } from '@/lib/services/unified-lightning-
 export const dynamic = "force-dynamic";
 export const runtime = 'nodejs';
 
+// Méthode GET pour diagnostics (à supprimer en production)
+export async function GET(): Promise<Response> {
+  return NextResponse.json({
+    success: true,
+    message: 'create-invoice endpoint v2.0 actif',
+    methods: ['POST'],
+    timestamp: new Date().toISOString()
+  });
+}
+
 interface CreateInvoiceRequest {
   amount: number;
   description: string;
