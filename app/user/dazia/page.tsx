@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, FC } from 'react';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
-import { CheckCircleIcon, ClockIcon, SparklesIcon, LockClosedIcon } from '@heroicons/react/24/outline';
+import { usePubkeyCookie } from '@/app/user/hooks/usePubkeyCookie';
+import { CheckCircleIcon, ClockIcon, SparklesIcon, LockClosedIcon, StarIcon, BoltIcon } from '@heroicons/react/24/outline';
 
 interface EnhancedRecommendation {
   priority: number;
@@ -22,82 +23,103 @@ interface EnhancedRecommendation {
   date: string;
 }
 
+interface DailyRecommendation {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  priority: number;
+  impact: 'low' | 'medium' | 'high';
+  difficulty: 'easy' | 'medium' | 'hard';
+  estimated_time: string;
+  implementation_steps: string[];
+  success_criteria: string[];
+  generated_at: string;
+  expires_at: string;
+}
+
 interface RecommendationModal {
   isOpen: boolean;
-  recommendation: EnhancedRecommendation | null;
+  recommendation: EnhancedRecommendation | DailyRecommendation | null;
+  type: 'enhanced' | 'daily';
 }
 
 const DaziaPage: FC = () => {
   const { session } = useSupabase();
-  const [pubkey, setPubkey] = useState<string | null>(null);
+  const { pubkey, isLoaded: pubkeyLoaded } = usePubkeyCookie();
   const [recommendations, setRecommendations] = useState<EnhancedRecommendation[]>([]);
+  const [dailyRecommendation, setDailyRecommendation] = useState<DailyRecommendation | null>(null);
   const [completedActions, setCompletedActions] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
+  const [generatingDaily, setGeneratingDaily] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasSubscription, setHasSubscription] = useState(false);
-  const [modal, setModal] = useState<RecommendationModal>({ isOpen: false, recommendation: null });
+  const [modal, setModal] = useState<RecommendationModal>({ isOpen: false, recommendation: null, type: 'enhanced' });
 
-  // Charger le profil utilisateur et les recommandations
+  // Charger les recommandations quand le pubkey est disponible
   useEffect(() => {
-    const loadData = async (): Promise<void> => {
-      if (!session?.access_token) {
+    const loadRecommendations = async (): Promise<void> => {
+      if (!session?.access_token || !pubkey || !pubkeyLoaded) {
         setLoading(false);
         return;
       }
 
       try {
-        // Charger le profil pour récupérer la pubkey
-        const profileResponse = await fetch('/api/user/profile', {
+        setError(null);
+        console.log(`🔍 Chargement des recommandations pour ${pubkey.substring(0, 10)}...`);
+        
+        // Charger les recommandations avancées
+        const enhancedResponse = await fetch(`/api/dazno/priorities-enhanced/${pubkey}`, {
+          method: 'POST',
           headers: {
             'Authorization': `Bearer ${session.access_token}`,
             'Content-Type': 'application/json'
-          }
+          },
+          body: JSON.stringify({
+            context: "Optimisation complète avec recommandations Dazia",
+            goals: ["increase_revenue", "improve_centrality", "optimize_channels"],
+            depth: 'detailed'
+          })
         });
 
-        if (profileResponse.ok) {
-          const profileData = await profileResponse.json();
-          const userPubkey = profileData.profile?.pubkey;
-          
-          if (userPubkey) {
-            setPubkey(userPubkey);
-            
-            // Charger les recommandations avancées
-            const enhancedResponse = await fetch(`/api/dazno/priorities-enhanced/${userPubkey}`, {
-              method: 'POST',
-              headers: {
-                'Authorization': `Bearer ${session.access_token}`,
-                'Content-Type': 'application/json'
+        if (enhancedResponse.ok) {
+          const enhancedData = await enhancedResponse.json();
+          if (enhancedData.success && enhancedData.data?.priority_actions) {
+            // Enrichir avec des dates et formater pour l'affichage
+            const enrichedRecommendations: EnhancedRecommendation[] = enhancedData.data.priority_actions.map((action: any, index: number) => ({
+              ...action,
+              reasoning: action.reasoning || `Action recommandée pour améliorer les performances de votre nœud Lightning. Impact estimé: ${action.expected_impact}.`,
+              date: new Date(Date.now() - (index * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], // Dates échelonnées
+              implementation_details: action.implementation_details || {
+                steps: ['Analyser la situation actuelle', 'Planifier l\'implémentation', 'Exécuter l\'action'],
+                requirements: ['Accès au nœud Lightning', 'Outils de gestion'],
+                estimated_hours: Math.ceil(action.priority / 2)
               },
-              body: JSON.stringify({
-                context: "Optimisation complète avec recommandations Dazia",
-                goals: ["increase_revenue", "improve_centrality", "optimize_channels"],
-                depth: 'detailed'
-              })
-            });
-
-            if (enhancedResponse.ok) {
-              const enhancedData = await enhancedResponse.json();
-              if (enhancedData.success && enhancedData.data?.priority_actions) {
-                // Enrichir avec des dates et formater pour l'affichage
-                const enrichedRecommendations: EnhancedRecommendation[] = enhancedData.data.priority_actions.map((action: any, index: number) => ({
-                  ...action,
-                  reasoning: action.reasoning || `Action recommandée pour améliorer les performances de votre nœud Lightning. Impact estimé: ${action.expected_impact}.`,
-                  date: new Date(Date.now() - (index * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], // Dates échelonnées
-                  implementation_details: action.implementation_details || {
-                    steps: ['Analyser la situation actuelle', 'Planifier l\'implémentation', 'Exécuter l\'action'],
-                    requirements: ['Accès au nœud Lightning', 'Outils de gestion'],
-                    estimated_hours: Math.ceil(action.priority / 2)
-                  },
-                  success_criteria: action.success_criteria || [
-                    `Amélioration de ${action.expected_impact} des métriques ciblées`,
-                    'Stabilité maintenue du nœud',
-                    'Aucun impact négatif sur les canaux existants'
-                  ]
-                }));
-                
-                setRecommendations(enrichedRecommendations);
-              }
-            }
+              success_criteria: action.success_criteria || [
+                `Amélioration de ${action.expected_impact} des métriques ciblées`,
+                'Stabilité maintenue du nœud',
+                'Aucun impact négatif sur les canaux existants'
+              ]
+            }));
+            
+            setRecommendations(enrichedRecommendations);
+            console.log(`✅ ${enrichedRecommendations.length} recommandations chargées`);
+          } else {
+            console.warn('⚠️ Aucune recommandation trouvée dans la réponse');
+            setError('Aucune recommandation disponible pour ce nœud');
+          }
+        } else {
+          const errorData = await enhancedResponse.json().catch(() => ({}));
+          console.error('❌ Erreur API:', enhancedResponse.status, errorData);
+          
+          if (enhancedResponse.status === 500) {
+            setError('Service temporairement indisponible. Veuillez réessayer dans quelques minutes.');
+          } else if (enhancedResponse.status === 401) {
+            setError('Session expirée. Veuillez vous reconnecter.');
+          } else if (enhancedResponse.status === 400) {
+            setError('Clé publique invalide. Vérifiez votre configuration dans "Mon Nœud".');
+          } else {
+            setError(errorData.error?.message || 'Erreur lors du chargement des recommandations');
           }
         }
 
@@ -105,15 +127,63 @@ const DaziaPage: FC = () => {
         setHasSubscription(false); // Par défaut pas d'abonnement premium
 
       } catch (err) {
-        console.error('Erreur lors du chargement des données:', err);
-        setError('Impossible de charger les recommandations. Veuillez réessayer.');
+        console.error('❌ Erreur lors du chargement des données:', err);
+        setError('Erreur de connexion. Vérifiez votre connexion internet et réessayez.');
       } finally {
         setLoading(false);
       }
     };
 
-    loadData();
-  }, [session]);
+    loadRecommendations();
+  }, [session, pubkey, pubkeyLoaded]);
+
+  // Générer la recommandation du jour
+  const generateDailyRecommendation = async (): Promise<void> => {
+    if (!session?.access_token) {
+      setError('Vous devez être connecté pour générer une recommandation');
+      return;
+    }
+
+    if (!pubkey) {
+      setError('Veuillez d\'abord renseigner votre clé publique de nœud dans l\'onglet "Mon Nœud"');
+      return;
+    }
+
+    setGeneratingDaily(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/user/dazia/generate-recommendation', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ pubkey })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setDailyRecommendation(data.data);
+        
+        // Scroll vers la nouvelle recommandation
+        setTimeout(() => {
+          document.getElementById('daily-recommendation')?.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+          });
+        }, 100);
+      } else {
+        setError(data.error?.message || 'Erreur lors de la génération de la recommandation');
+      }
+    } catch (err) {
+      console.error('Erreur génération recommandation:', err);
+      setError('Erreur lors de la génération de la recommandation. Veuillez réessayer.');
+    } finally {
+      setGeneratingDaily(false);
+    }
+  };
 
   const toggleCompletion = (index: number): void => {
     const newCompleted = new Set(completedActions);
@@ -144,19 +214,27 @@ const DaziaPage: FC = () => {
   };
 
   const openModal = (recommendation: EnhancedRecommendation): void => {
-    setModal({ isOpen: true, recommendation });
+    setModal({ isOpen: true, recommendation, type: 'enhanced' });
   };
 
   const closeModal = (): void => {
-    setModal({ isOpen: false, recommendation: null });
+    setModal({ isOpen: false, recommendation: null, type: 'enhanced' });
   };
 
-  if (loading) {
+  const retryLoadRecommendations = (): void => {
+    setError(null);
+    setLoading(true);
+    // Le useEffect se déclenchera automatiquement
+  };
+
+  if (!pubkeyLoaded || loading) {
     return (
       <div className="flex items-center justify-center min-h-96">
         <div className="text-center">
           <div className="animate-spin h-12 w-12 border-4 border-yellow-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-gray-600">Chargement des recommandations Dazia...</p>
+          <p className="text-gray-600">
+            {!pubkeyLoaded ? 'Chargement de la configuration...' : 'Chargement des recommandations Dazia...'}
+          </p>
         </div>
       </div>
     );
@@ -193,6 +271,9 @@ const DaziaPage: FC = () => {
         </p>
         <div className="mt-4 flex items-center space-x-4 text-sm">
           <span className="bg-white/20 px-3 py-1 rounded-full">
+            Nœud: {pubkey.substring(0, 10)}...
+          </span>
+          <span className="bg-white/20 px-3 py-1 rounded-full">
             {recommendations.length} recommandations
           </span>
           <span className="bg-white/20 px-3 py-1 rounded-full">
@@ -201,16 +282,112 @@ const DaziaPage: FC = () => {
         </div>
       </div>
 
+      {/* Gestion des erreurs */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-xl p-6">
+          <div className="flex items-start space-x-3">
+            <div className="flex-shrink-0">
+              <svg className="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div className="flex-grow">
+              <h3 className="text-lg font-semibold text-red-800 mb-2">Erreur de chargement</h3>
+              <p className="text-red-700 mb-4">{error}</p>
+              <button
+                onClick={retryLoadRecommendations}
+                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Réessayer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bouton Génération Recommandation du Jour */}
+      <div className="bg-white rounded-xl shadow-lg border border-yellow-200 p-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div className="p-3 bg-yellow-100 rounded-full">
+              <BoltIcon className="h-6 w-6 text-yellow-600" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">Recommandation du Jour</h3>
+              <p className="text-gray-600 text-sm">
+                Obtenez une recommandation personnalisée et actionnable (limitée à 1 par jour)
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={generateDailyRecommendation}
+            disabled={generatingDaily || !pubkey}
+            className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+              generatingDaily 
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                : 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white hover:from-yellow-600 hover:to-orange-600 shadow-lg hover:shadow-xl'
+            }`}
+          >
+            {generatingDaily ? (
+              <div className="flex items-center space-x-2">
+                <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
+                <span>Génération...</span>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <StarIcon className="h-5 w-5" />
+                <span>Générer ma recommandation</span>
+              </div>
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Recommandation du Jour Générée */}
+      {dailyRecommendation && (
+        <div id="daily-recommendation" className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl shadow-lg p-6">
+          <div className="flex items-start space-x-4">
+            <div className="p-2 bg-blue-100 rounded-full flex-shrink-0">
+              <StarIcon className="h-6 w-6 text-blue-600" />
+            </div>
+            <div className="flex-grow">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h3 className="text-xl font-bold text-blue-900 mb-1">{dailyRecommendation.title}</h3>
+                  <p className="text-blue-700 text-sm">Recommandation du jour • Expire dans 24h</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${getDifficultyIcon(dailyRecommendation.impact)}`}>
+                    Impact {dailyRecommendation.impact}
+                  </span>
+                  <span className="text-sm text-blue-600">
+                    {getDifficultyIcon(dailyRecommendation.difficulty)} {dailyRecommendation.difficulty}
+                  </span>
+                </div>
+              </div>
+
+              <p className="text-gray-700 mb-4">{dailyRecommendation.description}</p>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4 text-sm text-gray-600">
+                  <span className="flex items-center space-x-1">
+                    <ClockIcon className="h-4 w-4" />
+                    <span>{dailyRecommendation.estimated_time}</span>
+                  </span>
+                  <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+                    {dailyRecommendation.category}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Actions recommandées */}
       <div>
         <h2 className="text-2xl font-bold text-gray-900 mb-6">🎯 Actions Recommandées</h2>
         
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-6">
-            {error}
-          </div>
-        )}
-
         <div className="space-y-4">
           {recommendations.map((rec, index) => {
             const isCompleted = completedActions.has(`${index}`);
@@ -411,8 +588,10 @@ const DaziaPage: FC = () => {
                 </button>
                 <button
                   onClick={() => {
-                    const index = recommendations.indexOf(modal.recommendation!);
-                    if (index !== -1) toggleCompletion(index);
+                    if (modal.type === 'enhanced' && modal.recommendation) {
+                      const index = recommendations.indexOf(modal.recommendation as EnhancedRecommendation);
+                      if (index !== -1) toggleCompletion(index);
+                    }
                     closeModal();
                   }}
                   className="bg-yellow-600 text-white px-6 py-2 rounded-lg hover:bg-yellow-700 transition-colors"

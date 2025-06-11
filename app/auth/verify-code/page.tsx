@@ -2,6 +2,7 @@
 
 import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import Image from "next/image";
 import { createSupabaseBrowserClient } from '@/lib/supabase';
 
 function VerifyCodeForm(): JSX.Element {
@@ -51,61 +52,95 @@ function VerifyCodeForm(): JSX.Element {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold mb-4 text-indigo-700" tabIndex={0}>
-        Saisissez votre code de connexion
-      </h1>
-      
-      {email && (
-        <p className="text-gray-600 mb-4">
-          Code envoyé à : <strong>{email}</strong>
-        </p>
-      )}
-
-      {error && (
-        <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-4" role="alert" aria-live="assertive">
-          {error}
-        </div>
-      )}
-
-      {success ? (
-        <div className="bg-green-100 text-green-700 px-4 py-2 rounded mb-4" role="status" aria-live="polite">
-          Code vérifié, connexion en cours...
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-80" aria-label="Formulaire de vérification OTP">
-          <input
-            type="text"
-            placeholder="Code reçu par email"
-            required
-            className="border p-2 rounded tracking-widest text-center"
-            value={code}
-            onChange={e => setCode(e.target.value)}
-            disabled={pending}
-            inputMode="numeric"
-            pattern="[0-9]{6}"
-            maxLength={6}
+    <div className="min-h-screen bg-gradient-to-br from-indigo-600 to-purple-700 flex items-center justify-center px-4">
+      <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+        {/* Logo */}
+        <div className="flex justify-center mb-6">
+          <Image
+            src="/assets/images/logo-daznode.svg"
+            alt="Logo DazNode"
+            width={120}
+            height={48}
+            className="h-12 w-auto"
+            priority
           />
-          <button
-            type="submit"
-            className="bg-indigo-600 text-white px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            disabled={pending}
-          >
-            {pending ? "Vérification..." : "Valider le code"}
-          </button>
-        </form>
-      )}
+        </div>
 
-      <a href="/auth/login" className="mt-4 text-indigo-600 hover:underline" tabIndex={0}>
-        Retour à la connexion
-      </a>
+        {/* Titre */}
+        <h1 className="text-2xl font-bold text-center mb-2 text-gray-800">
+          Vérification
+        </h1>
+
+        {/* Sous-titre */}
+        <p className="text-center text-gray-600 mb-6">
+          {email ? `Code envoyé à ${email}` : 'Saisissez votre code de connexion'}
+        </p>
+
+        {/* Messages d'erreur */}
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+            {error}
+          </div>
+        )}
+
+        {/* Message de succès */}
+        {success ? (
+          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4">
+            Code vérifié, connexion en cours...
+          </div>
+        ) : (
+          /* Formulaire */
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="code" className="block text-sm font-medium text-gray-700 mb-1">
+                Code de vérification
+              </label>
+              <input
+                id="code"
+                type="text"
+                value={code}
+                onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-center text-2xl tracking-widest"
+                placeholder="000000"
+                maxLength={6}
+                required
+                disabled={pending}
+                inputMode="numeric"
+                pattern="[0-9]{6}"
+              />
+            </div>
+            <div className="space-y-2">
+              <button
+                type="submit"
+                disabled={pending || code.length !== 6}
+                className="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {pending ? "Vérification..." : "Valider le code"}
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push('/auth/login')}
+                className="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+              >
+                Retour à la connexion
+              </button>
+            </div>
+          </form>
+        )}
+
+        {/* Note confidentialité */}
+        <p className="text-xs text-gray-500 text-center mt-6">
+          Le code expire dans 10 minutes.<br />
+          <span className="italic">Besoin d'aide ? Contactez-nous.</span>
+        </p>
+      </div>
     </div>
   );
 }
 
 export default function VerifyCodePage(): JSX.Element {
   return (
-    <Suspense>
+    <Suspense fallback={<div>Chargement...</div>}>
       <VerifyCodeForm />
     </Suspense>
   );

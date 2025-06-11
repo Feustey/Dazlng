@@ -145,4 +145,59 @@ export function formatStatus(status: string): string {
   };
 
   return statusMap[status] || status;
+}
+
+/**
+ * Formate une valeur pour l'affichage
+ * @param value La valeur à formater (peut être un nombre, une chaîne ou undefined)
+ * @param defaultValue La valeur par défaut si value est undefined ou null
+ * @returns La valeur formatée ou la valeur par défaut
+ */
+export function formatValue(value: string | number | undefined | null, defaultValue: string = 'N/A'): string {
+  if (value === undefined || value === null || value === '') {
+    return defaultValue;
+  }
+  return String(value);
+}
+
+/**
+ * Formate un prix en satoshis pour l'affichage
+ * @param sats Le nombre de satoshis
+ * @param showUnit Si on doit afficher l'unité "sats"
+ * @returns Le prix formaté
+ */
+export function formatSatsPrice(sats: number, showUnit: boolean = true): string {
+  if (sats === 0) {
+    return showUnit ? '0 sats' : '0';
+  }
+  
+  if (sats >= 1000000) {
+    const millions = (sats / 1000000).toFixed(1);
+    return showUnit ? `${millions}M sats` : millions + 'M';
+  }
+  
+  if (sats >= 1000) {
+    const thousands = (sats / 1000).toFixed(0);
+    return showUnit ? `${thousands}k sats` : thousands + 'k';
+  }
+  
+  return showUnit ? `${sats.toLocaleString()} sats` : sats.toLocaleString();
+}
+
+/**
+ * Convertit des euros en satoshis (1€ = 1000 sats)
+ * @param euros Le montant en euros
+ * @returns Le montant en satoshis
+ */
+export function euroToSats(euros: number): number {
+  return euros * 1000;
+}
+
+/**
+ * Convertit des satoshis en euros (1000 sats = 1€)
+ * @param sats Le montant en satoshis
+ * @returns Le montant en euros
+ */
+export function satsToEuro(sats: number): number {
+  return sats / 1000;
 } 

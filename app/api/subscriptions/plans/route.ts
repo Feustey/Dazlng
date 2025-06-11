@@ -34,7 +34,7 @@ export async function GET(_req: NextRequest): Promise<Response> {
         name: 'Gratuit',
         description: 'Parfait pour commencer',
         price: 0,
-        currency: 'EUR',
+        currency: 'SATS',
         interval: 'month',
         features: [
           'Connexion d\'un nœud',

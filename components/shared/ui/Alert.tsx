@@ -1,9 +1,10 @@
 import React from 'react';
 
 interface AlertProps {
-  children: React.ReactNode;
-  variant?: 'default' | 'warning' | 'error' | 'success';
+  type?: 'error' | 'success' | 'warning' | 'info' | 'destructive' | 'default';
+  message?: string;
   className?: string;
+  children?: React.ReactNode;
 }
 
 interface AlertDescriptionProps {
@@ -11,36 +12,36 @@ interface AlertDescriptionProps {
   className?: string;
 }
 
-export function Alert({ 
-  children, 
-  variant = 'default', 
-  className = '' 
-}: AlertProps): React.ReactElement {
-  const baseClasses = 'rounded-lg border p-4';
+const Alert: React.FC<AlertProps> = ({ type = 'default', message, className = '', children }) => {
+  const baseClasses = "px-4 py-3 rounded-lg mb-4 border";
   
-  const variants = {
-    default: 'border-blue-200 bg-blue-50 text-blue-800',
-    warning: 'border-yellow-200 bg-yellow-50 text-yellow-800',
-    error: 'border-red-200 bg-red-50 text-red-800',
-    success: 'border-green-200 bg-green-50 text-green-800'
+  const typeClasses = {
+    error: "bg-red-50 border-red-200 text-red-700",
+    destructive: "bg-red-50 border-red-200 text-red-700",
+    success: "bg-green-50 border-green-200 text-green-700",
+    warning: "bg-yellow-50 border-yellow-200 text-yellow-700",
+    info: "bg-blue-50 border-blue-200 text-blue-700",
+    default: "bg-gray-50 border-gray-200 text-gray-700"
   };
 
   return (
-    <div className={`${baseClasses} ${variants[variant]} ${className}`}>
+    <div className={`${baseClasses} ${typeClasses[type]} ${className}`}>
+      {message && <div>{message}</div>}
       {children}
     </div>
   );
-}
+};
 
-export function AlertDescription({ 
-  children, 
-  className = '' 
-}: AlertDescriptionProps): React.ReactElement {
+const AlertDescription: React.FC<AlertDescriptionProps> = ({ children, className = '' }) => {
   return (
-    <div className={`text-sm ${className}`}>
+    <div className={`text-sm mt-1 ${className}`}>
       {children}
     </div>
   );
-}
+};
 
+// Exports nommés
+export { Alert, AlertDescription };
+
+// Export par défaut
 export default Alert; 

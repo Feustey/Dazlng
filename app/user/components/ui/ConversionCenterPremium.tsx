@@ -52,7 +52,7 @@ export const ConversionCenterPremium: React.FC<ConversionCenterPremiumProps> = (
   const roiCalculation = {
     monthlyFees: hasNode ? Math.max(Math.round(estimatedSavings * 0.1 / 30), 1000) : 5000,
     monthlySavings: estimatedSavings,
-    paybackMonths: Math.ceil(29 / Math.max(estimatedSavings / 29000, 1))
+    paybackMonths: Math.ceil(29000 / Math.max(estimatedSavings, 1000))
   };
 
   return (
@@ -142,7 +142,7 @@ export const ConversionCenterPremium: React.FC<ConversionCenterPremiumProps> = (
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-green-600">29€</div>
+                    <div className="text-3xl font-bold text-green-600">29 000 sats</div>
                     <div className="text-sm text-gray-600">Coût mensuel Premium</div>
                   </div>
                   
@@ -163,7 +163,7 @@ export const ConversionCenterPremium: React.FC<ConversionCenterPremiumProps> = (
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm font-medium">Projection 6 mois</span>
                     <span className="text-sm text-green-600 font-bold">
-                      +{Math.round((roiCalculation.monthlySavings * 6 - 29 * 6) / 1000)}k sats
+                      +{Math.round((roiCalculation.monthlySavings * 6 - 29000 * 6) / 1000)}k sats
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-3">
@@ -237,7 +237,7 @@ export const ConversionCenterPremium: React.FC<ConversionCenterPremiumProps> = (
                 onClick={onUpgrade}
                 className="px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg font-semibold shadow-lg hover:from-purple-700 hover:to-indigo-700 transition transform hover:scale-105"
               >
-                Passer Premium - 29€/mois
+                Passer Premium - 29 000 sats/mois
               </button>
             </div>
           </div>

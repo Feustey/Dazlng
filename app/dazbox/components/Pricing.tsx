@@ -8,8 +8,8 @@ interface PricingPlan {
   id: string;
   name: string;
   description: string;
-  price: number; // Prix en BTC (ex: 0.004)
-  originalPrice?: number; // Prix original en BTC
+  price: number; // Prix en satoshis
+  originalPrice?: number; // Prix original en satoshis
   discount?: string;
   features: string[];
   recommended?: boolean;
@@ -22,9 +22,15 @@ const DazBoxPricing: React.FC = (): React.ReactElement => {
   const router = useRouter();
   const { trackCTAClick, trackProductInterest } = useConversionTracking();
 
-  // Fonction pour formater le prix en BTC
-  const formatBTCPrice = (price: number): string => {
-    return price.toFixed(3); // Affiche 3 décimales
+  // Fonction pour formater le prix en satoshis
+  const formatSatsPrice = (sats: number): string => {
+    if (sats >= 1000000) {
+      return `${(sats / 1000000).toFixed(1)}M sats`;
+    }
+    if (sats >= 1000) {
+      return `${(sats / 1000).toFixed(0)}k sats`;
+    }
+    return `${sats.toLocaleString()} sats`;
   };
 
   const plans: PricingPlan[] = [
@@ -32,9 +38,9 @@ const DazBoxPricing: React.FC = (): React.ReactElement => {
       id: 'starter',
       name: 'DazBox Starter',
       description: 'Parfait pour débuter sur Lightning Network',
-      price: 0.004,
-      originalPrice: 0.0057,
-      discount: '-30%',
+      price: 400000,
+      originalPrice: 450000,
+      discount: '-11%',
       features: [
         'Configuration automatique',
         'Support 24/7 pendant 3 mois',
@@ -50,9 +56,9 @@ const DazBoxPricing: React.FC = (): React.ReactElement => {
       id: 'pro',
       name: 'DazBox Pro',
       description: 'Solution complète pour maximiser vos revenus',
-      price: 0.005,
-      originalPrice: 0.0072,
-      discount: '-31%',
+      price: 500000,
+      originalPrice: 600000,
+      discount: '-17%',
       recommended: true,
       badge: 'Le Plus Populaire',
       features: [
@@ -72,9 +78,9 @@ const DazBoxPricing: React.FC = (): React.ReactElement => {
       id: 'enterprise',
       name: 'DazBox Enterprise',
       description: 'Pour les professionnels et institutions',
-      price: 0.01,
-      originalPrice: 0.013,
-      discount: '-23%',
+      price: 1000000,
+      originalPrice: 1200000,
+      discount: '-17%',
       features: [
         'Tout de la version Pro',
         'Configuration multi-nœuds',
@@ -180,12 +186,12 @@ const DazBoxPricing: React.FC = (): React.ReactElement => {
                 <div className="mb-4">
                   <div className="flex items-center justify-center gap-3">
                     <span className="text-4xl font-bold text-orange-500">
-                      ₿{formatBTCPrice(plan.price)}
+                      {formatSatsPrice(plan.price)}
                     </span>
                     {plan.originalPrice && (
                       <div className="text-right">
                         <div className="text-lg text-gray-400 line-through">
-                          ₿{formatBTCPrice(plan.originalPrice)}
+                          {formatSatsPrice(plan.originalPrice)}
                         </div>
                         <div className="text-sm font-bold text-red-500">
                           {plan.discount}

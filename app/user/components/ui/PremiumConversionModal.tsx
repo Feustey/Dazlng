@@ -218,7 +218,7 @@ export const PremiumConversionModal: React.FC<PremiumConversionModalProps> = ({
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-6 border border-green-200">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-green-600">29€</div>
+                    <div className="text-3xl font-bold text-green-600">29 000 sats</div>
                     <div className="text-sm text-gray-600">Coût mensuel Premium</div>
                   </div>
                   
@@ -240,7 +240,7 @@ export const PremiumConversionModal: React.FC<PremiumConversionModalProps> = ({
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm">Gains cumulés</span>
                     <span className="text-lg font-bold text-green-600">
-                      +{Math.round((personalizedGain * 6 - 29 * 6 * 100000000 / 45000) / 1000)}k sats
+                      +{Math.round((personalizedGain * 6 - 29000 * 6) / 1000)}k sats
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-3">
@@ -336,7 +336,7 @@ export const PremiumConversionModal: React.FC<PremiumConversionModalProps> = ({
                 onClick={onUpgrade}
                 className="px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg font-semibold shadow-lg hover:from-purple-700 hover:to-indigo-700 transition transform hover:scale-105"
               >
-                Passer Premium - 29€/mois
+                Passer Premium - 29 000 sats/mois
               </button>
             </div>
           </div>

@@ -114,7 +114,7 @@ const DazBoxClientHero: React.FC = (): React.ReactElement => {
               </div>
               <div className="text-right">
                 <p className="text-2xl font-bold">400 000 Satoshis</p>
-                <p className="text-sm line-through text-orange-200">400 000 Satoshis</p>
+                <p className="text-sm line-through text-orange-200">450 000 Satoshis</p>
               </div>
             </div>
           </div>
