@@ -18,7 +18,7 @@ export async function GET(): Promise<Response> {
 interface CreateInvoiceRequest {
   amount: number;
   description: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 interface ApiResponse<T> {
@@ -27,7 +27,7 @@ interface ApiResponse<T> {
   error?: {
     code: string;
     message: string;
-    details?: any;
+    details?: string | Record<string, unknown>;
   };
   meta?: {
     timestamp: string;
@@ -88,7 +88,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       paymentRequestLength: invoice.paymentRequest?.length
     });
 
-    return NextResponse.json<ApiResponse<any>>({
+    return NextResponse.json<ApiResponse<{ invoice: object; provider: string }>>({
       success: true,
       data: {
         invoice: {

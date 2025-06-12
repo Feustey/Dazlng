@@ -100,13 +100,12 @@ const NodeManagement: FC = () => {
   const [recommendationType, setRecommendationType] = useState<'standard' | 'amboss' | 'unified'>('unified');
   const [loadingAdvanced, setLoadingAdvanced] = useState(false);
 
-  // API Base URL
-  const API_BASE = process.env.NEXT_PUBLIC_DAZNO_API_URL || 'https://api.dazno.de';
+  // Les appels API utilisent maintenant les endpoints proxy pour éviter CORS
 
   // Fonctions pour les nouveaux endpoints
   const fetchAmbossNodeInfo = async (nodePubkey: string): Promise<AmbossNodeInfo | null> => {
     try {
-      const response = await fetch(`${API_BASE}/api/v1/node/${nodePubkey}/info/amboss`, {
+      const response = await fetch(`/api/proxy/node/${nodePubkey}/info/amboss`, {
         headers: {
           'Authorization': `Bearer ${session?.access_token}`,
           'Content-Type': 'application/json'
@@ -127,7 +126,7 @@ const NodeManagement: FC = () => {
 
   const fetchAmbossRecommendations = async (nodePubkey: string): Promise<AmbossRecommendation[]> => {
     try {
-      const response = await fetch(`${API_BASE}/api/v1/channels/recommendations/amboss`, {
+      const response = await fetch(`/api/proxy/channels/recommendations/amboss`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${session?.access_token}`,
@@ -154,7 +153,7 @@ const NodeManagement: FC = () => {
 
   const fetchUnifiedRecommendations = async (nodePubkey: string): Promise<UnifiedRecommendation[]> => {
     try {
-      const response = await fetch(`${API_BASE}/api/v1/channels/recommendations/unified`, {
+      const response = await fetch(`/api/proxy/channels/recommendations/unified`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${session?.access_token}`,
@@ -245,6 +244,7 @@ const NodeManagement: FC = () => {
     if (pubkey && isValidLightningPubkey(pubkey)) {
       loadNodeData(pubkey);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pubkey]);
 
   const loadNodeData = async (nodePubkey: string): Promise<void> => {
