@@ -147,13 +147,14 @@ class MCPLightAPI {
   }
 
   /**
-   * Effectue une requête authentifiée à l'API
+   * Effectue une requête authentifiée à l'API avec fallback
    */
   private async makeRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     if (!this.initialized) {
       const success = await this.initialize();
       if (!success) {
-        throw new Error('Impossible d\'initialiser l\'API MCP-Light');
+        console.warn('⚠️ API MCP-Light indisponible, utilisation du mode fallback');
+        throw new Error('API_UNAVAILABLE');
       }
     }
 

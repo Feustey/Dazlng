@@ -94,14 +94,28 @@ export async function POST(
       }, { status: 401 })
     }
 
-    // Récupérer toutes les données en parallèle pour optimiser les performances
+    // Récupérer toutes les données en parallèle avec fallback
     console.log(`🔍 Analyse enhanced du nœud ${pubkey.substring(0, 10)}...`)
     
-    const [nodeInfo, recommendations, priorities] = await Promise.all([
-      mcpLightAPI.getNodeInfo(pubkey),
-      mcpLightAPI.getRecommendations(pubkey),
-      mcpLightAPI.getPriorityActions(pubkey, context, goals)
-    ])
+    let nodeInfo, recommendations, priorities;
+    
+    try {
+      [nodeInfo, recommendations, priorities] = await Promise.all([
+        mcpLightAPI.getNodeInfo(pubkey),
+        mcpLightAPI.getRecommendations(pubkey),
+        mcpLightAPI.getPriorityActions(pubkey, context, goals)
+      ]);
+    } catch (error: any) {
+      if (error.message === 'API_UNAVAILABLE') {
+        console.warn('⚠️ API MCP-Light indisponible, génération de données de fallback');
+        const fallbackData = generateFallbackAnalysis(pubkey);
+        nodeInfo = fallbackData.nodeInfo;
+        recommendations = fallbackData.recommendations;
+        priorities = fallbackData.priorities;
+      } else {
+        throw error;
+      }
+    }
 
     // Enrichir les actions prioritaires
     const enhancedActions: EnhancedPriorityAction[] = priorities.priority_actions.map((action, _index) => {
@@ -183,6 +197,68 @@ export async function POST(
 }
 
 // Fonctions utilitaires
+
+function generateFallbackAnalysis(pubkey: string) {
+  return {
+    nodeInfo: {
+      pubkey,
+      current_stats: {
+        alias: 'Nœud Lightning',
+        capacity: 50000000, // 0.5 BTC
+        channel_count: 8,
+        centrality_rank: 5000,
+        htlc_success_rate: 95,
+        uptime_percentage: 99,
+        routing_revenue_7d: 1000
+      }
+    },
+    recommendations: {
+      pubkey,
+      timestamp: new Date().toISOString(),
+      recommendations: [
+        {
+          type: 'channel_optimization',
+          priority: 'high' as const,
+          reasoning: 'Optimiser la gestion des canaux pour améliorer la liquidité',
+          expected_benefit: 'Augmentation des revenus de routage'
+        },
+        {
+          type: 'fee_adjustment',
+          priority: 'medium' as const,
+          reasoning: 'Ajuster les frais pour rester compétitif',
+          expected_benefit: 'Meilleur équilibre revenus/volume'
+        }
+      ]
+    },
+    priorities: {
+      pubkey,
+      timestamp: new Date().toISOString(),
+      priority_actions: [
+        {
+          priority: 1,
+          action: 'Optimiser la gestion des canaux Lightning',
+          timeline: '1-2 semaines',
+          expected_impact: 'Amélioration des revenus de routage de 15-25%',
+          difficulty: 'medium' as const,
+          category: 'channels',
+          urgency: 'high' as const
+        },
+        {
+          priority: 2,
+          action: 'Ajuster les frais de routage',
+          timeline: '3-5 jours',
+          expected_impact: 'Optimisation du ratio volume/revenus',
+          difficulty: 'low' as const,
+          category: 'fees',
+          urgency: 'medium' as const
+        }
+      ],
+      openai_analysis: 'Analyse de fallback générée localement en raison de l\'indisponibilité de l\'API externe.',
+      context: 'Mode fallback',
+      goals: ['increase_revenue', 'improve_centrality']
+    }
+  };
+}
 
 function generateImplementationDetails(action: any, _nodeInfo: any) {
   const details: any = {

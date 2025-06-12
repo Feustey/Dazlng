@@ -141,12 +141,26 @@ export async function POST(request: NextRequest): Promise<Response> {
     console.log(`🎯 Génération nouvelle recommandation pour ${pubkey.substring(0, 10)}...`)
     
     try {
-      // Appel à l'API MCP Light pour obtenir une recommandation enrichie
-      const [nodeInfo, recommendations, priorities] = await Promise.all([
-        mcpLightAPI.getNodeInfo(pubkey),
-        mcpLightAPI.getRecommendations(pubkey),
-        mcpLightAPI.getPriorityActions(pubkey, "Recommandation quotidienne Dazia", ["increase_revenue", "optimize_performance"])
-      ])
+      // Appel à l'API MCP Light pour obtenir une recommandation enrichie avec fallback
+      let nodeInfo, recommendations, priorities;
+      
+      try {
+        [nodeInfo, recommendations, priorities] = await Promise.all([
+          mcpLightAPI.getNodeInfo(pubkey),
+          mcpLightAPI.getRecommendations(pubkey),
+          mcpLightAPI.getPriorityActions(pubkey, "Recommandation quotidienne Dazia", ["increase_revenue", "optimize_performance"])
+        ]);
+      } catch (apiError: any) {
+        if (apiError.message === 'API_UNAVAILABLE') {
+          console.warn('⚠️ API MCP-Light indisponible, utilisation de données de fallback');
+          const fallbackData = generateFallbackDaziaData(pubkey);
+          nodeInfo = fallbackData.nodeInfo;
+          recommendations = fallbackData.recommendations;
+          priorities = fallbackData.priorities;
+        } else {
+          throw apiError;
+        }
+      }
 
       // Sélectionner la meilleure action pour la recommandation du jour
       const bestAction: any = priorities.priority_actions?.[0] || recommendations.recommendations?.[0]
@@ -281,6 +295,42 @@ export async function POST(request: NextRequest): Promise<Response> {
 }
 
 // Fonctions utilitaires
+
+function generateFallbackDaziaData(pubkey: string) {
+  return {
+    nodeInfo: {
+      pubkey,
+      current_stats: {
+        alias: 'Nœud Lightning',
+        capacity: 50000000,
+        channel_count: 8,
+        centrality_rank: 5000
+      }
+    },
+    recommendations: {
+      recommendations: [
+        {
+          type: 'channel_optimization',
+          priority: 'high',
+          reasoning: 'Optimiser la gestion des canaux',
+          expected_benefit: 'Amélioration des revenus'
+        }
+      ]
+    },
+    priorities: {
+      priority_actions: [
+        {
+          priority: 1,
+          action: 'Optimiser la gestion des canaux Lightning',
+          timeline: '1-2 semaines',
+          expected_impact: 'Amélioration des revenus de routage',
+          difficulty: 'medium',
+          category: 'channels'
+        }
+      ]
+    }
+  };
+}
 
 function generateSmartDescription(action: any, nodeInfo: any): string {
   const alias = nodeInfo?.current_stats?.alias || 'votre nœud'
