@@ -16,8 +16,8 @@ export default function Header(): React.ReactElement {
       });
       
       if (response.ok) {
-        // Rediriger vers la page d'auth admin
-        router.push('/admin');
+        // Rediriger vers la page d'accueil
+        router.push('/');
       } else {
         console.error('Erreur lors de la déconnexion');
       }

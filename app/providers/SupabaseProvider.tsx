@@ -56,7 +56,7 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }): J
         }
         
         if (event === 'SIGNED_OUT') {
-          router.push('/auth/login')
+          router.push('/')
         }
       }
     )

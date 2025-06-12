@@ -66,7 +66,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       return errorResponse(
         ErrorCodes.VALIDATION_ERROR, 
         'Données de commande invalides', 
-        validationResult.error.details
+        'error' in validationResult ? validationResult.error.details : undefined
       );
     }
 

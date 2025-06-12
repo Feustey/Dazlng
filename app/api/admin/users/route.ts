@@ -13,7 +13,6 @@ import {
 import { withAdmin } from '@/lib/middleware';
 import { ErrorCodes } from '@/types/database';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
-import type { AdminUser } from '@/types/database';
 
 interface AdminUser {
   id: string;

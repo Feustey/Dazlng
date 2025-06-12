@@ -52,7 +52,7 @@ export function useAuth(): UseAuthReturn {
 
         // Rediriger selon l'état d'authentification
         if (event === 'SIGNED_OUT' || !session) {
-          router.push('/auth/login');
+          router.push('/');
         }
       }
     );
@@ -78,7 +78,7 @@ export function useAuth(): UseAuthReturn {
         sessionStorage.removeItem('token');
       }
 
-      router.push('/auth/login');
+      router.push('/');
     } catch (error) {
       console.error('Erreur inattendue lors de la déconnexion:', error);
     } finally {

@@ -11,19 +11,24 @@ export async function GET(request: NextRequest): Promise<ReturnType<typeof NextR
     const isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV !== 'production';
     
     if (isDevelopment && (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY)) {
-      console.log('[API] Mode développement - Supabase non configuré, utilisateur de test retourné');
+      console.log('[API] Mode développement - Supabase non configuré, utilisateur de test avec nœud retourné');
       return NextResponse.json({
         success: true,
         user: {
           id: 'dev-user-id',
-          email: 'dev@dazno.de',
-          nom: 'Développeur',
-          prenom: 'Test',
+          email: 'stephane@inoval.io', // ✅ Email plus réaliste
+          nom: 'Courant',
+          prenom: 'Stéphane',
+          // ✅ CORRECTIF : Ajouter des données de nœud pour tester la gamification
+          pubkey: '02778f4a4eb3a2344b9fd8ee72e7ec5f03f803e5f5273e2e1a2af508910cf2b12b',
+          node_id: '02778f4a4eb3a2344b9fd8ee72e7ec5f03f803e5f5273e2e1a2af508910cf2b12b',
+          compte_x: '@stephane_web3',
           t4g_tokens: 1,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           settings: {},
-          email_verified: true
+          email_verified: true,
+          phone_verified: false
         }
       });
     }
@@ -124,19 +129,23 @@ export async function GET(request: NextRequest): Promise<ReturnType<typeof NextR
     // Mode développement - fallback en cas d'erreur
     const isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV !== 'production';
     if (isDevelopment) {
-      console.log('[API] Erreur en mode développement, utilisateur de fallback retourné');
+      console.log('[API] Erreur en mode développement, utilisateur de fallback avec nœud retourné');
       return NextResponse.json({
         success: true,
         user: {
           id: 'dev-fallback-id',
-          email: 'dev-fallback@dazno.de',
-          nom: 'Développeur',
-          prenom: 'Fallback',
+          email: 'stephane@inoval.io',
+          nom: 'Courant',
+          prenom: 'Stéphane',
+          pubkey: '02778f4a4eb3a2344b9fd8ee72e7ec5f03f803e5f5273e2e1a2af508910cf2b12b',
+          node_id: '02778f4a4eb3a2344b9fd8ee72e7ec5f03f803e5f5273e2e1a2af508910cf2b12b',
+          compte_x: '@stephane_web3',
           t4g_tokens: 1,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           settings: {},
-          email_verified: true
+          email_verified: true,
+          phone_verified: false
         }
       });
     }

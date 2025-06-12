@@ -187,7 +187,7 @@ export default function OpenAIPage(): JSX.Element | null {
 
   if (error) {
     return (
-      <Alert variant="error">
+      <Alert type="error">
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>{error}</AlertDescription>
       </Alert>
@@ -216,7 +216,7 @@ export default function OpenAIPage(): JSX.Element | null {
       {metrics.alerts.length > 0 && (
         <div className="space-y-2">
           {metrics.alerts.map((alert, index) => (
-            <Alert key={index} variant={alert.level === "warning" ? "warning" : "error"}>
+            <Alert key={index} type={alert.level === "warning" ? "warning" : "error"}>
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
                 <strong>{alert.type}:</strong> {alert.message}

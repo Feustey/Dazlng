@@ -26,8 +26,14 @@ export { OptimizedImage } from './OptimizedImage';
 export { LazyList } from './LazyList';
 export { PageLoader, usePageLoader } from './PageLoader';
 
-// New optimized landing page components
-export { default as NewHero } from './NewHero';
+// New optimized landing page components - Revenue focused
+export { default as NewRevenueHero } from './NewRevenueHero';
+export { default as WhyBecomeNodeRunner } from './WhyBecomeNodeRunner';
+export { default as DetailedTestimonials } from './DetailedTestimonials';
+export { default as CommunitySection } from './CommunitySection';
+export { default as BeginnersFAQ } from './BeginnersFAQ';
+export { default as FirstStepsGuide } from './FirstStepsGuide';
+export { default as FinalConversionCTA } from './FinalConversionCTA';
 
 // Layout components
 export { default as GradientLayout } from '../layout/GradientLayout';

@@ -48,7 +48,7 @@ export default function MCPAnalysisPage(): React.ReactElement {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="max-w-md w-full">
-          <Alert variant="error">
+          <Alert type="error">
             <AlertDescription>
               <h3 className="font-semibold mb-2">❌ Erreur d'Initialisation API</h3>
               <p>{error}</p>

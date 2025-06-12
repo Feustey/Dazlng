@@ -28,8 +28,8 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
       });
 
       if (response.ok) {
-        // Rediriger vers la page de connexion
-        router.push('/auth/login');
+        // Rediriger vers la page d'accueil
+        router.push('/');
         router.refresh();
       } else {
         console.error('Erreur lors de la déconnexion');

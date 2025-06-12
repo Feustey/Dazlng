@@ -23,7 +23,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     const validationResult = validateData(paginationSchema, Object.fromEntries(searchParams.entries()))
     
     if (!validationResult.success) {
-      return errorResponse(ErrorCodes.VALIDATION_ERROR, 'Données invalides', validationResult.error.details)
+      return errorResponse(ErrorCodes.VALIDATION_ERROR, 'Données invalides', 'error' in validationResult ? validationResult.error.details : undefined)
     }
 
     const { page = 1, limit = 20, sort } = validationResult.data
@@ -74,7 +74,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     const validationResult = validateData(createDeliverySchema, body)
     
     if (!validationResult.success) {
-      return errorResponse(ErrorCodes.VALIDATION_ERROR, validationResult.error.message, validationResult.error.details)
+      return errorResponse(ErrorCodes.VALIDATION_ERROR, 'error' in validationResult ? validationResult.error.message : 'Erreur de validation', 'error' in validationResult ? validationResult.error.details : undefined)
     }
 
     const deliveryData = validationResult.data

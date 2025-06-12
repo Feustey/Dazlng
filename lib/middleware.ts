@@ -274,7 +274,7 @@ export function withAuth<T extends any[]>(
     const authResult = await requireAuth(req)
     
     if (!authResult.success) {
-      return authResult.response
+      return (authResult as { success: false; response: Response }).response
     }
     
     return handler(req, authResult.user, ...args)
@@ -291,7 +291,7 @@ export function withAdmin<T extends any[]>(
     const adminResult = await requireAdmin(req)
     
     if (!adminResult.success) {
-      return adminResult.response
+      return (adminResult as { success: false; response: Response }).response
     }
     
     return handler(req, adminResult.user, ...args)
@@ -309,7 +309,7 @@ export function withRateLimit<T extends any[]>(
     const rateLimitResult = await rateLimit(req, config)
     
     if (!rateLimitResult.success) {
-      return rateLimitResult.response
+      return (rateLimitResult as { success: false; response: Response }).response
     }
     
     return handler(req, ...args)

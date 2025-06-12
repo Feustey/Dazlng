@@ -4,23 +4,15 @@ import dynamic from "next/dynamic";
 import { useInView } from "@/hooks/useInView";
 
 // Lazy loading des composants pour optimiser le First Load
-const NewHero = dynamic(() => import("../components/shared/ui/NewHero"), {
-  loading: () => <div className="h-screen bg-gradient-to-br from-indigo-900 to-purple-900 animate-pulse" />
+const NewRevenueHero = dynamic(() => import("../components/shared/ui/NewRevenueHero"), {
+  loading: () => <div className="h-screen bg-gradient-to-br from-green-600 via-blue-700 to-purple-800 animate-pulse" />
 });
 
-const TechnicalProof = dynamic(() => import("../components/shared/ui/TechnicalProof").then(mod => ({ default: mod.TechnicalProof })), {
+const WhyBecomeNodeRunner = dynamic(() => import("../components/shared/ui/WhyBecomeNodeRunner"), {
   loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
 });
 
-const UniqueFeature = dynamic(() => import("../components/shared/ui/UniqueFeature").then(mod => ({ default: mod.UniqueFeature })), {
-  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
-});
-
-const RealMetrics = dynamic(() => import("../components/shared/ui/RealMetrics"), {
-  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
-});
-
-const RealTestimonials = dynamic(() => import("../components/shared/ui/RealTestimonials"), {
+const DetailedTestimonials = dynamic(() => import("../components/shared/ui/DetailedTestimonials"), {
   loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
 });
 
@@ -28,7 +20,19 @@ const HowItWorks = dynamic(() => import("@/components/shared/ui/HowItWorks").the
   loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
 });
 
-const CTASection = dynamic(() => import("@/components/shared/ui/CTASection").then(mod => ({ default: mod.CTASection })), {
+const CommunitySection = dynamic(() => import("../components/shared/ui/CommunitySection"), {
+  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
+});
+
+const FirstStepsGuide = dynamic(() => import("../components/shared/ui/FirstStepsGuide"), {
+  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
+});
+
+const BeginnersFAQ = dynamic(() => import("../components/shared/ui/BeginnersFAQ"), {
+  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
+});
+
+const FinalConversionCTA = dynamic(() => import("../components/shared/ui/FinalConversionCTA"), {
   loading: () => <div className="h-64 bg-gray-100 animate-pulse rounded-xl" />
 });
 
@@ -154,39 +158,44 @@ export default function OptimizedHomePage(): React.ReactElement {
         <SignupConfirmation />
       </Suspense>
 
-      {/* Page structure optimisée avec nouveaux composants */}
+      {/* Page structure optimisée avec nouveaux composants centrés sur les revenus */}
       <main className="min-h-screen w-full overflow-x-hidden scroll-smooth">
-        {/* Hero Section avec la vraie douleur technique - Priority loading */}
-        <NewHero />
+        {/* Hero Section centré sur les revenus passifs - Priority loading */}
+        <NewRevenueHero />
 
-        {/* Section Preuves techniques - Ce que l'IA détecte */}
+        {/* Section Pourquoi devenir opérateur de nœud */}
         <AnimatedSection delay={100}>
-          <TechnicalProof />
-        </AnimatedSection>
-
-        {/* Section Fonctionnalité unique - IA prédictive */}
-        <AnimatedSection delay={200}>
-          <UniqueFeature />
-        </AnimatedSection>
-
-        {/* Section Métriques réelles de production */}
-        <AnimatedSection delay={300}>
-          <RealMetrics />
+          <WhyBecomeNodeRunner />
         </AnimatedSection>
 
         {/* Section Comment ça marche */}
-        <AnimatedSection delay={400}>
+        <AnimatedSection delay={200}>
           <HowItWorks />
         </AnimatedSection>
 
-        {/* Section Témoignages de vrais devs Lightning */}
-        <AnimatedSection delay={500}>
-          <RealTestimonials />
+        {/* Section Témoignages détaillés avec métriques financières */}
+        <AnimatedSection delay={300}>
+          <DetailedTestimonials />
         </AnimatedSection>
 
-        {/* Section CTA finale */}
+        {/* Section Guide des premiers pas */}
+        <AnimatedSection delay={400}>
+          <FirstStepsGuide />
+        </AnimatedSection>
+
+        {/* Section FAQ pour débutants */}
+        <AnimatedSection delay={500}>
+          <BeginnersFAQ />
+        </AnimatedSection>
+
+        {/* Section Communauté Token For Good */}
         <AnimatedSection delay={600}>
-          <CTASection />
+          <CommunitySection />
+        </AnimatedSection>
+
+        {/* Section CTA finale de conversion */}
+        <AnimatedSection delay={700}>
+          <FinalConversionCTA />
         </AnimatedSection>
       </main>
     </>
