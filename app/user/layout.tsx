@@ -20,6 +20,25 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
     }
   }, [user, loading, router, pathname]);
 
+  // Fonction de déconnexion
+  const handleLogout = async (): Promise<void> => {
+    try {
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+      });
+
+      if (response.ok) {
+        // Rediriger vers la page de connexion
+        router.push('/auth/login');
+        router.refresh();
+      } else {
+        console.error('Erreur lors de la déconnexion');
+      }
+    } catch (error) {
+      console.error('Erreur réseau lors de la déconnexion:', error);
+    }
+  };
+
   // Afficher un loader pendant la vérification
   if (loading) {
     return (
@@ -87,7 +106,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
       {/* Header sans padding-top car le header global est masqué */}
       <header className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-left h-16">
+          <div className="flex justify-between items-center h-16">
             <nav className="flex space-x-8">
               {navItems.map((item) => {
                 const isActive = pathname === item.href;
@@ -107,6 +126,35 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
                 );
               })}
             </nav>
+            
+            {/* Section droite avec email utilisateur et déconnexion */}
+            <div className="flex items-center space-x-4">
+              {/* Email utilisateur */}
+              <span className="text-sm text-gray-600 hidden sm:block">
+                {user?.email}
+              </span>
+              
+              {/* Bouton de déconnexion */}
+              <button
+                onClick={handleLogout}
+                className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-150"
+                title="Se déconnecter"
+              >
+                <svg 
+                  className="w-5 h-5" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" 
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </header>

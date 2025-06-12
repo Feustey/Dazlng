@@ -41,12 +41,12 @@ const CheckoutFormSchema = z.object({
 
 type CheckoutForm = z.infer<typeof CheckoutFormSchema>;
 
-// ✅ Type pour l'insertion de commande
+// ✅ Type pour l'insertion de commande (compatible avec la BDD)
 type OrderInsert = {
   user_id: string | null;
   product_type: 'daznode' | 'dazbox' | 'dazpay';
   amount: number;
-  payment_status: 'pending' | 'paid' | 'failed' | 'cancelled';
+  payment_status: boolean; // Base de données utilise BOOLEAN
   payment_method: string;
   payment_hash?: string;
   metadata: Record<string, unknown>;
@@ -187,7 +187,7 @@ function CheckoutContent(): React.ReactElement {
     user_id: userId,
     product_type: PRODUCT_CONFIG.DAZBOX.type, // ✅ Conforme au schéma
     amount: getPrice(),
-    payment_status: 'pending', // ✅ String au lieu de boolean
+    payment_status: false, // ✅ Boolean pour compatibilité BDD
     payment_method: 'lightning',
     payment_hash: invoiceData.paymentHash,
     metadata: {
@@ -272,16 +272,10 @@ function CheckoutContent(): React.ReactElement {
       // ✅ Créer les données de commande typées
       const orderData = createOrderData(userId, invoiceData, form);
       
-      // Adapter le payment_status pour la compatibilité avec l'ancien schéma BOOLEAN
-      const compatibleOrderData = {
-        ...orderData,
-        payment_status: false // Temporaire : utiliser false au lieu de 'pending' pour la compatibilité
-      };
-      
       // Créer la commande dans Supabase
       const { data: order, error: orderError } = await supabase
         .from('orders')
-        .insert([compatibleOrderData])
+        .insert([orderData])
         .select()
         .single();
 

@@ -23,7 +23,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     const validationResult = validateData(paginationSchema, Object.fromEntries(searchParams.entries()))
     
     if (!validationResult.success) {
-      return errorResponse(ErrorCodes.VALIDATION_ERROR, validationResult.error.message, validationResult.error.details)
+      return errorResponse(ErrorCodes.VALIDATION_ERROR, 'Données invalides', validationResult.error.details)
     }
 
     const { page = 1, limit = 20, sort } = validationResult.data

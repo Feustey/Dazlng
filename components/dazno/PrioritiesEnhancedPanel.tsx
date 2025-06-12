@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from 'react'
 import { usePrioritiesEnhanced } from '@/hooks/usePrioritiesEnhanced'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/shared/ui/card'
-import { Badge } from '@/components/shared/ui/badge'
-import { Button } from '@/components/shared/ui/button'
+import Card, { CardHeader, CardTitle, CardContent } from '@/components/shared/ui/Card'
+import Badge from '@/components/shared/ui/Badge'
+import Button from '@/components/shared/ui/Button'
 import { Loader2, TrendingUp, AlertTriangle, Target, Clock, DollarSign, Zap } from 'lucide-react'
-import { cn } from '@/utils/cn'
+import { cn } from '@/lib/utils'
 
 interface PrioritiesEnhancedPanelProps {
   pubkey: string

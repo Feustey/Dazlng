@@ -293,7 +293,19 @@ const SubscriptionsPage: FC = () => {
         throw new Error('Erreur lors de la création de la facture');
       }
 
-      const invoiceData: InvoiceData = await invoiceResponse.json();
+      const invoiceResult: ApiResponse<{ invoice: any; provider: string }> = await invoiceResponse.json();
+      
+      if (!invoiceResult.success || !invoiceResult.data) {
+        throw new Error(invoiceResult.error?.message || 'Erreur lors de la création de la facture');
+      }
+
+      const invoiceData: InvoiceData = {
+        paymentRequest: invoiceResult.data.invoice.payment_request,
+        paymentHash: invoiceResult.data.invoice.payment_hash,
+        amount: invoiceResult.data.invoice.amount,
+        description: invoiceResult.data.invoice.description,
+        expiresAt: invoiceResult.data.invoice.expires_at
+      };
       
       // Ouvrir la facture Lightning dans une nouvelle fenêtre
       const lightningUrl = `lightning:${invoiceData.paymentRequest}`;

@@ -41,7 +41,7 @@ const createTestOrder = async () => {
     const testOrder = {
       id: "7d2d8bcb-2dd1-43da-a341-73c0757aecc4",
       user_id: testProfile.id,
-      product_type: "DazBox",
+      product_type: "dazbox",
       plan: null,
       billing_cycle: null,
       amount: 400000, // 400,000 sats

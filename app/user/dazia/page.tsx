@@ -213,8 +213,9 @@ const DaziaPage: FC = () => {
     }
   };
 
-  const openModal = (recommendation: EnhancedRecommendation): void => {
-    setModal({ isOpen: true, recommendation, type: 'enhanced' });
+  const openModal = (recommendation: EnhancedRecommendation | DailyRecommendation): void => {
+    const type = 'action' in recommendation ? 'enhanced' : 'daily';
+    setModal({ isOpen: true, recommendation, type });
   };
 
   const closeModal = (): void => {
@@ -516,8 +517,13 @@ const DaziaPage: FC = () => {
             <div className="p-6">
               <div className="flex items-start justify-between mb-6">
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900">{modal.recommendation.action}</h3>
-                  <p className="text-gray-600 mt-1">{modal.recommendation.category} • {modal.recommendation.timeline}</p>
+                  <h3 className="text-xl font-bold text-gray-900">
+                    {'action' in modal.recommendation ? modal.recommendation.action : modal.recommendation.title}
+                  </h3>
+                  <p className="text-gray-600 mt-1">
+                    {modal.recommendation.category}
+                    {'timeline' in modal.recommendation && ` • ${modal.recommendation.timeline}`}
+                  </p>
                 </div>
                 <button
                   onClick={closeModal}
@@ -531,15 +537,23 @@ const DaziaPage: FC = () => {
 
               <div className="space-y-6">
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Justification</h4>
-                  <p className="text-gray-700">{modal.recommendation.reasoning}</p>
+                  <h4 className="font-semibold text-gray-900 mb-2">
+                    {'reasoning' in modal.recommendation ? 'Justification' : 'Description'}
+                  </h4>
+                  <p className="text-gray-700">
+                    {'reasoning' in modal.recommendation ? modal.recommendation.reasoning : modal.recommendation.description}
+                  </p>
                 </div>
 
-                {modal.recommendation.implementation_details?.steps && (
+                {(('implementation_details' in modal.recommendation && modal.recommendation.implementation_details?.steps) || 
+                  ('implementation_steps' in modal.recommendation && modal.recommendation.implementation_steps)) && (
                   <div>
                     <h4 className="font-semibold text-gray-900 mb-2">Étapes d'implémentation</h4>
                     <ol className="list-decimal list-inside space-y-1 text-gray-700">
-                      {modal.recommendation.implementation_details.steps.map((step, idx) => (
+                      {('implementation_details' in modal.recommendation 
+                        ? modal.recommendation.implementation_details?.steps 
+                        : modal.recommendation.implementation_steps
+                      )?.map((step, idx) => (
                         <li key={idx}>{step}</li>
                       ))}
                     </ol>
@@ -561,7 +575,11 @@ const DaziaPage: FC = () => {
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                       <span className="text-gray-500">Impact estimé:</span>
-                      <span className="ml-2 font-medium text-green-600">{modal.recommendation.expected_impact}</span>
+                      <span className="ml-2 font-medium text-green-600">
+                        {'expected_impact' in modal.recommendation 
+                          ? modal.recommendation.expected_impact 
+                          : `${modal.recommendation.impact} impact`}
+                      </span>
                     </div>
                     <div>
                       <span className="text-gray-500">Difficulté:</span>
@@ -569,12 +587,18 @@ const DaziaPage: FC = () => {
                     </div>
                     <div>
                       <span className="text-gray-500">Temps estimé:</span>
-                      <span className="ml-2">{modal.recommendation.implementation_details?.estimated_hours || 2}h</span>
+                      <span className="ml-2">
+                        {'implementation_details' in modal.recommendation
+                          ? `${modal.recommendation.implementation_details?.estimated_hours || 2}h`
+                          : modal.recommendation.estimated_time}
+                      </span>
                     </div>
-                    <div>
-                      <span className="text-gray-500">Urgence:</span>
-                      <span className="ml-2">{modal.recommendation.urgency}</span>
-                    </div>
+                    {('urgency' in modal.recommendation) && (
+                      <div>
+                        <span className="text-gray-500">Urgence:</span>
+                        <span className="ml-2">{modal.recommendation.urgency}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

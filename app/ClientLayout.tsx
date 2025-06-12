@@ -5,7 +5,8 @@ import ModernLayout from "@/components/shared/layout/ModernLayout";
 import PerformanceProvider from './PerformanceProvider';
 import { Toaster } from 'react-hot-toast';
 import dynamic from 'next/dynamic';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
+import { initSupabaseCookiesFix } from '@/lib/supabase-cookies-fix';
 
 const Footer = dynamic(() => import('@/components/Footer'), { loading: () => <div className="h-40 bg-gray-100"></div> });
 
@@ -15,6 +16,11 @@ interface ClientLayoutProps {
 
 const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
   const pathname = usePathname();
+
+  // Initialiser le fix des cookies Supabase au montage
+  useEffect(() => {
+    initSupabaseCookiesFix();
+  }, []);
   const hideHeader = pathname?.startsWith("/checkout") || 
                     pathname?.startsWith("/auth/login") || 
                     pathname?.startsWith("/user") ||
