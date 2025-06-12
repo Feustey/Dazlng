@@ -178,31 +178,7 @@ function CheckoutContent(): React.ReactElement {
     }
   };
 
-  // ✅ Fonction pour créer les données de commande typées
-  const createOrderData = (
-    userId: string | null,
-    invoiceData: Invoice,
-    form: CheckoutForm
-  ): OrderInsert => ({
-    user_id: userId,
-    product_type: PRODUCT_CONFIG.DAZBOX.type, // ✅ Conforme au schéma
-    amount: getPrice(),
-    payment_status: false, // ✅ Boolean pour compatibilité BDD
-    payment_method: 'lightning',
-    payment_hash: invoiceData.paymentHash,
-    metadata: {
-      customer: form,
-      product: {
-        name: PRODUCT_CONFIG.DAZBOX.name,
-        quantity: 1,
-        priceSats: getPrice(),
-        promoApplied,
-        promoCode: promoApplied ? promoCode : null,
-        discountPercentage: promoApplied ? PROMO_CONFIG.discount : 0
-      },
-      invoice: invoiceData.paymentRequest
-    }
-  });
+  // Note: Fonction supprimée car on utilise maintenant l'API /api/orders
 
   // ✅ Fonction pour créer une session de checkout
   const createCheckoutSession = async (orderData: OrderInsert): Promise<string | null> => {
@@ -269,25 +245,55 @@ function CheckoutContent(): React.ReactElement {
         userId = user?.id || null;
       }
       
-      // ✅ Créer les données de commande typées
-      const orderData = createOrderData(userId, invoiceData, form);
-      
-      // Créer la commande dans Supabase
-      const { data: order, error: orderError } = await supabase
-        .from('orders')
-        .insert([orderData])
-        .select()
-        .single();
+      // ✅ Créer la commande via l'API pour respecter les validations
+      const orderPayload = {
+        user_id: userId,
+        product_type: PRODUCT_CONFIG.DAZBOX.type,
+        amount: getPrice(),
+        payment_method: 'lightning',
+        customer: form,
+        product: {
+          name: PRODUCT_CONFIG.DAZBOX.name,
+          quantity: 1,
+          priceSats: getPrice()
+        },
+        metadata: {
+          promoApplied,
+          promoCode: promoApplied ? promoCode : null,
+          discountPercentage: promoApplied ? PROMO_CONFIG.discount : 0,
+          invoice: invoiceData.paymentRequest
+        }
+      };
 
-      if (orderError) {
-        throw new Error(`Erreur lors de la création de la commande: ${orderError.message}`);
+      const orderResponse = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(session?.access_token && { 'Authorization': `Bearer ${session.access_token}` })
+        },
+        body: JSON.stringify(orderPayload)
+      });
+
+      if (!orderResponse.ok) {
+        const errorData = await orderResponse.json();
+        throw new Error(`Erreur lors de la création de la commande: ${errorData.message || 'Erreur inconnue'}`);
       }
+
+      const { data: order } = await orderResponse.json();
 
       // Stocker l'ID de la commande pour la mise à jour après paiement
       sessionStorage.setItem('current_order_id', order.id);
       
-      // ✅ Créer une session de checkout
-      const sessionId = await createCheckoutSession(orderData);
+      // ✅ Créer une session de checkout (pour tracking optionnel)
+      const sessionId = await createCheckoutSession({
+        user_id: userId,
+        product_type: PRODUCT_CONFIG.DAZBOX.type,
+        amount: getPrice(),
+        payment_status: false,
+        payment_method: 'lightning',
+        payment_hash: invoiceData.paymentHash,
+        metadata: orderPayload.metadata
+      });
       if (sessionId) {
         sessionStorage.setItem('current_checkout_session_id', sessionId);
       }
