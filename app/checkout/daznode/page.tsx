@@ -101,6 +101,7 @@ function CheckoutContent(): React.ReactElement {
       },
       body: JSON.stringify({
         user_id: userId,
+        product_type: 'daznode',
         customer: form,
         product: {
           ...productDetails,

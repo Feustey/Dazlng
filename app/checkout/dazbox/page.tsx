@@ -3,7 +3,7 @@ import React, { useState, Suspense, useEffect } from 'react';
 import LightningPayment from '../../../components/shared/ui/LightningPayment';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { generateInvoice } from '../../../lib/lightning';
 import Image from 'next/image';
 import ProtonPayment from '../../../components/shared/ui/ProtonPayment';
@@ -24,6 +24,20 @@ const PROMO_CONFIG = {
   code: 'MEETUPBITCOIN',
   discount: 10
 } as const;
+
+// Configuration dynamique des plans DazBox
+const DAZBOX_PLANS = {
+  starter: {
+    name: 'DazBox Starter',
+    type: 'dazbox',
+    priceSats: 400_000
+  },
+  pro: {
+    name: 'DazBox Pro',
+    type: 'dazbox',
+    priceSats: 500_000
+  }
+};
 
 // ✅ Validation Zod
 const CheckoutFormSchema = z.object({
@@ -104,6 +118,9 @@ function CheckoutContent(): React.ReactElement {
   const router = useRouter(); // ✅ Utiliser Next.js router
   const [_btcCopied, _setBtcCopied] = useState(false);
   const _btcAddress = 'bc1p0vyqda9uv7kad4lsfzx5s9ndawhm3e3fd5vw7pnsem22n7dpfgxq48kht7';
+  const searchParams = useSearchParams();
+  const plan = searchParams.get('plan') || 'starter';
+  const selectedPlan = DAZBOX_PLANS[plan] || DAZBOX_PLANS.starter;
 
   // ✅ Validation améliorée avec Zod
   const isFormValid = (showErrors: boolean = false): boolean => {
@@ -131,16 +148,15 @@ function CheckoutContent(): React.ReactElement {
 
   // ✅ Prix calculé avec la configuration centralisée
   const getPrice = (): number => {
-    const basePrice = PRODUCT_CONFIG.DAZBOX.basePriceSats;
     if (promoApplied) {
-      return Math.round(basePrice * (1 - PROMO_CONFIG.discount / 100));
+      return Math.round(selectedPlan.priceSats * (1 - PROMO_CONFIG.discount / 100));
     }
-    return basePrice;
+    return selectedPlan.priceSats;
   };
 
   const _productDetails = {
-    name: PRODUCT_CONFIG.DAZBOX.name,
-    type: PRODUCT_CONFIG.DAZBOX.type,
+    name: selectedPlan.name,
+    type: selectedPlan.type,
     priceSats: getPrice(),
     quantity: 1,
   };
@@ -229,7 +245,7 @@ function CheckoutContent(): React.ReactElement {
       
       const invoiceData = await generateInvoice({ 
         amount: getPrice(), 
-        memo: `Paiement pour ${PRODUCT_CONFIG.DAZBOX.name}` 
+        memo: `Paiement pour ${selectedPlan.name}` 
       });
       
       if (!invoiceData || !invoiceData.paymentRequest) {
@@ -248,20 +264,22 @@ function CheckoutContent(): React.ReactElement {
       // ✅ Créer la commande via l'API pour respecter les validations
       const orderPayload = {
         user_id: userId,
-        product_type: PRODUCT_CONFIG.DAZBOX.type,
+        product_type: 'dazbox',
         amount: getPrice(),
         payment_method: 'lightning',
         customer: form,
         product: {
-          name: PRODUCT_CONFIG.DAZBOX.name,
+          name: selectedPlan.name,
           quantity: 1,
-          priceSats: getPrice()
+          priceSats: getPrice(),
+          plan: plan
         },
         metadata: {
           promoApplied,
           promoCode: promoApplied ? promoCode : null,
           discountPercentage: promoApplied ? PROMO_CONFIG.discount : 0,
-          invoice: invoiceData.paymentRequest
+          invoice: invoiceData.paymentRequest,
+          plan: plan
         }
       };
 
@@ -287,7 +305,7 @@ function CheckoutContent(): React.ReactElement {
       // ✅ Créer une session de checkout (pour tracking optionnel)
       const sessionId = await createCheckoutSession({
         user_id: userId,
-        product_type: PRODUCT_CONFIG.DAZBOX.type,
+        product_type: 'dazbox',
         amount: getPrice(),
         payment_status: false,
         payment_method: 'lightning',
@@ -382,7 +400,7 @@ Le client devrait être recontacté pour un paiement via Wallet of Satoshi.`
           <LightningPayment 
             invoiceData={invoice}
             amount={getPrice()} 
-            productName={PRODUCT_CONFIG.DAZBOX.name}
+            productName={selectedPlan.name}
             onSuccess={handlePaymentSuccess}
             onCancel={() => { setShowLightning(false); setInvoice(null); setError(null); }}
           />
@@ -612,7 +630,7 @@ Le client devrait être recontacté pour un paiement via Wallet of Satoshi.`
                   />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg">{PRODUCT_CONFIG.DAZBOX.name}</h3>
+                  <h3 className="font-semibold text-lg">{selectedPlan.name}</h3>
                   <p className="text-sm text-white/80">Votre nœud Lightning personnel</p>
                   <div className="flex items-center mt-1">
                     <span className="bg-yellow-400/20 text-yellow-300 text-xs px-2 py-1 rounded-full">✓ 3 mois de DazNode Premium inclus</span>
@@ -622,7 +640,7 @@ Le client devrait être recontacté pour un paiement via Wallet of Satoshi.`
               <div className="mb-6 space-y-4">
                 <div className="flex justify-between mb-2">
                   <span>Prix</span>
-                  <span className="font-semibold">{PRODUCT_CONFIG.DAZBOX.basePriceSats.toLocaleString('fr-FR')} sats</span>
+                  <span className="font-semibold">{selectedPlan.basePriceBTC.toLocaleString('fr-FR')} BTC</span>
                 </div>
                 <div className="mb-4">
                   <div className="relative mt-1">
@@ -650,7 +668,7 @@ Le client devrait être recontacté pour un paiement via Wallet of Satoshi.`
                 )}
                 <div className="flex justify-between text-xl font-bold border-t border-white/20 pt-4 mt-4">
                   <span>Total</span>
-                  <span className="text-yellow-300">{getPrice().toLocaleString('fr-FR')} sats</span>
+                  <span className="text-yellow-300">{selectedPlan.basePriceBTC.toLocaleString('fr-FR')} BTC</span>
                 </div>
                 <button 
                   className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center shadow-lg transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"

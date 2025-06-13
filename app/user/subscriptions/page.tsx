@@ -284,7 +284,7 @@ const SubscriptionsPage: FC = () => {
             planId,
             billingCycle: cycle,
             userId: user.id,
-            productType: 'subscription'
+            productType: 'daznode'
           }
         })
       });

@@ -11,6 +11,7 @@ import { CRMHeaderDashboard } from '../components/ui/CRMHeaderDashboard';
 import { ProfileCompletionEnhanced } from '../components/ui/ProfileCompletionEnhanced';
 import { SmartConversionCenter } from '../components/ui/SmartConversionCenter';
 import { PremiumConversionModal } from '../components/ui/PremiumConversionModal';
+import { useRouter } from 'next/navigation';
 
 const UserDashboard: FC = () => {
   const {
@@ -30,7 +31,10 @@ const UserDashboard: FC = () => {
 
   // Variables pour compatibilité
   const applyRecommendation = (id: string) => console.log('Recommandation appliquée:', id);
-  const upgradeToPremium = () => console.log('Upgrade vers Premium');
+  const router = useRouter();
+  const upgradeToPremium = () => {
+    router.push('/user/subscriptions?plan=premium');
+  };
 
   // Afficher un loader pendant la vérification de la session
   if (isLoading) {

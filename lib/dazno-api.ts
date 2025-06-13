@@ -270,8 +270,9 @@ class DaznoApiClient {
   }
 }
 
-// Instance singleton de l'API client
-export const daznoApi = new DaznoApiClient();
+const daznoAPI = new DaznoApiClient();
+export const daznoApi = daznoAPI;
+export { daznoAPI };
 
 // Fonctions utilitaires pour l'intégration
 export function isValidLightningPubkey(pubkey: string): boolean {
@@ -331,7 +332,7 @@ export function mapNodeInfoToStats(nodeInfo: NodeInfo): {
 // Hook pour vérifier la disponibilité de l'API
 export async function checkApiHealth(): Promise<boolean> {
   try {
-    await daznoApi.checkHealth();
+    await daznoAPI.checkHealth();
     return true;
   } catch {
     return false;

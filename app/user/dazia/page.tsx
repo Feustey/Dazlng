@@ -4,6 +4,14 @@ import React, { useState, useEffect, FC } from 'react';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
 import { usePubkeyCookie } from '@/app/user/hooks/usePubkeyCookie';
 import { CheckCircleIcon, ClockIcon, SparklesIcon, LockClosedIcon, StarIcon, BoltIcon } from '@heroicons/react/24/outline';
+import { motion, AnimatePresence } from 'framer-motion';
+import { DaziaHeader } from './components/DaziaHeader';
+import { RecommendationCard } from './components/RecommendationCard';
+import { PerformanceMetrics } from './components/PerformanceMetrics';
+import { useSession } from 'next-auth/react';
+import { daznoAPI } from '@/lib/dazno-api';
+import { RecommendationFilters } from './components/RecommendationFilters';
+import { AdvancedStats } from './components/AdvancedStats';
 
 interface EnhancedRecommendation {
   priority: number;
@@ -44,6 +52,64 @@ interface RecommendationModal {
   type: 'enhanced' | 'daily';
 }
 
+interface DaziaData {
+  overview: {
+    health_score: number;
+    revenue_7d: number;
+    efficiency: number;
+    network_rank: number;
+  };
+  priorities: {
+    immediate: any[];
+    short_term: any[];
+    long_term: any[];
+  };
+  analysis: {
+    liquidity: {
+      score: number;
+      recommendations: any[];
+    };
+    connectivity: {
+      score: number;
+      recommendations: any[];
+    };
+    fees: {
+      score: number;
+      recommendations: any[];
+    };
+  };
+  metrics: {
+    revenue: {
+      current: number;
+      change: number;
+      history: { date: string; value: number }[];
+    };
+    efficiency: {
+      current: number;
+      change: number;
+      history: { date: string; value: number }[];
+    };
+    channels: {
+      current: number;
+      change: number;
+      history: { date: string; value: number }[];
+    };
+    uptime: {
+      current: number;
+      change: number;
+      history: { date: string; value: number }[];
+    };
+  };
+}
+
+interface User {
+  id: string;
+  name?: string;
+  email: string;
+  pubkey?: string;
+  // ... autres propriétés
+}
+
 const DaziaPage: FC = () => {
   const { session } = useSupabase();
   const { pubkey, isLoaded: pubkeyLoaded } = usePubkeyCookie();
@@ -55,6 +121,14 @@ const DaziaPage: FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [hasSubscription, setHasSubscription] = useState(false);
   const [modal, setModal] = useState<RecommendationModal>({ isOpen: false, recommendation: null, type: 'enhanced' });
+  const [activeTab, setActiveTab] = useState<'immediate' | 'short_term' | 'long_term'>('immediate');
+  const [data, setData] = useState<DaziaData | null>(null);
+  const [filters, setFilters] = useState({
+    search: '',
+    categories: [] as string[],
+    impact: [] as string[],
+    difficulty: [] as string[]
+  });
 
   // Charger les recommandations quand le pubkey est disponible
   useEffect(() => {
@@ -228,6 +302,113 @@ const DaziaPage: FC = () => {
     // Le useEffect se déclenchera automatiquement
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (!session?.user?.pubkey) {
+          throw new Error('Clé publique non disponible');
+        }
+
+        const [nodeInfo, recommendations, priorities] = await Promise.all([
+          daznoAPI.getNodeInfo(session.user.pubkey),
+          daznoAPI.getRecommendations(session.user.pubkey),
+          daznoAPI.getPriorities(session.user.pubkey, {
+            context: 'node_optimization',
+            goals: ['increase_revenue', 'improve_connectivity'],
+            preferences: {
+              risk_tolerance: 'medium',
+              investment_horizon: 'medium_term'
+            }
+          })
+        ]);
+
+        // Transformer les données
+        const transformedData: DaziaData = {
+          overview: {
+            health_score: nodeInfo.health_score,
+            revenue_7d: nodeInfo.routing_revenue_7d,
+            efficiency: nodeInfo.forwarding_efficiency,
+            network_rank: nodeInfo.network_rank
+          },
+          priorities: {
+            immediate: priorities.actions.filter(a => a.priority === 1),
+            short_term: priorities.actions.filter(a => a.priority === 2),
+            long_term: priorities.actions.filter(a => a.priority === 3)
+          },
+          analysis: {
+            liquidity: {
+              score: nodeInfo.liquidity_score,
+              recommendations: recommendations.filter(r => r.category === 'liquidity')
+            },
+            connectivity: {
+              score: nodeInfo.connectivity_score,
+              recommendations: recommendations.filter(r => r.category === 'connectivity')
+            },
+            fees: {
+              score: nodeInfo.fee_score || 0,
+              recommendations: recommendations.filter(r => r.category === 'fees')
+            }
+          },
+          metrics: {
+            revenue: {
+              current: nodeInfo.routing_revenue_7d,
+              change: 5.2, // À calculer avec l'historique
+              history: [] // À remplir avec l'historique
+            },
+            efficiency: {
+              current: nodeInfo.forwarding_efficiency,
+              change: 2.1,
+              history: []
+            },
+            channels: {
+              current: nodeInfo.active_channels,
+              change: 3.4,
+              history: []
+            },
+            uptime: {
+              current: nodeInfo.uptime_percentage,
+              change: 0.5,
+              history: []
+            }
+          }
+        };
+
+        setData(transformedData);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Une erreur est survenue');
+      }
+    };
+
+    fetchData();
+  }, [session]);
+
+  const handleCompleteAction = (id: string) => {
+    setCompletedActions(prev => {
+      const newSet = new Set(prev);
+      newSet.add(id);
+      return newSet;
+    });
+  };
+
+  const filterRecommendations = (recommendations: any[]) => {
+    return recommendations.filter(rec => {
+      const matchesSearch = filters.search === '' || 
+        rec.title.toLowerCase().includes(filters.search.toLowerCase()) ||
+        rec.description.toLowerCase().includes(filters.search.toLowerCase());
+      
+      const matchesCategory = filters.categories.length === 0 || 
+        filters.categories.includes(rec.category);
+      
+      const matchesImpact = filters.impact.length === 0 || 
+        filters.impact.includes(rec.impact);
+      
+      const matchesDifficulty = filters.difficulty.length === 0 || 
+        filters.difficulty.includes(rec.difficulty);
+      
+      return matchesSearch && matchesCategory && matchesImpact && matchesDifficulty;
+    });
+  };
+
   if (!pubkeyLoaded || loading) {
     return (
       <div className="flex items-center justify-center min-h-96">
@@ -259,254 +440,154 @@ const DaziaPage: FC = () => {
     );
   }
 
+  if (error) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="rounded-lg bg-red-50 p-6 text-center">
+          <h2 className="text-xl font-semibold text-red-800">Erreur</h2>
+          <p className="mt-2 text-red-600">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!data) return null;
+
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-xl p-8 text-white">
-        <div className="flex items-center space-x-3 mb-4">
-          <SparklesIcon className="h-8 w-8" />
-          <h1 className="text-3xl font-bold">Dazia IA</h1>
-        </div>
-        <p className="text-lg opacity-90">
-          Recommandations intelligentes pour optimiser votre nœud Lightning
-        </p>
-        <div className="mt-4 flex items-center space-x-4 text-sm">
-          <span className="bg-white/20 px-3 py-1 rounded-full">
-            Nœud: {pubkey.substring(0, 10)}...
-          </span>
-          <span className="bg-white/20 px-3 py-1 rounded-full">
-            {recommendations.length} recommandations
-          </span>
-          <span className="bg-white/20 px-3 py-1 rounded-full">
-            {completedActions.size} actions complétées
-          </span>
-        </div>
-      </div>
+    <div className="container mx-auto max-w-7xl space-y-8 p-6">
+      <DaziaHeader />
 
-      {/* Gestion des erreurs */}
-      {error && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-6">
-          <div className="flex items-start space-x-3">
-            <div className="flex-shrink-0">
-              <svg className="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div className="flex-grow">
-              <h3 className="text-lg font-semibold text-red-800 mb-2">Erreur de chargement</h3>
-              <p className="text-red-700 mb-4">{error}</p>
-              <button
-                onClick={retryLoadRecommendations}
-                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
-              >
-                Réessayer
-              </button>
-            </div>
+      <PerformanceMetrics metrics={data.metrics} />
+
+      <AdvancedStats stats={{
+        channelDistribution: {
+          labels: ['Petits', 'Moyens', 'Grands'],
+          data: [30, 50, 20]
+        },
+        revenueByCategory: {
+          labels: ['Routage', 'Frais', 'Autres'],
+          data: [60, 30, 10]
+        },
+        networkMetrics: {
+          centrality: 0.75,
+          betweenness: 0.82,
+          eigenvector: 0.68
+        },
+        feeMetrics: {
+          baseFee: 1000,
+          feeRate: 500,
+          htlcFee: 100
+        }
+      }} />
+
+      <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="mb-6 flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-gray-900">
+            Recommandations IA
+          </h2>
+          <div className="flex space-x-2">
+            <button
+              onClick={() => setActiveTab('immediate')}
+              className={`rounded-full px-4 py-2 text-sm font-medium ${
+                activeTab === 'immediate'
+                  ? 'bg-yellow-500 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              Immédiat
+            </button>
+            <button
+              onClick={() => setActiveTab('short_term')}
+              className={`rounded-full px-4 py-2 text-sm font-medium ${
+                activeTab === 'short_term'
+                  ? 'bg-yellow-500 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              Court terme
+            </button>
+            <button
+              onClick={() => setActiveTab('long_term')}
+              className={`rounded-full px-4 py-2 text-sm font-medium ${
+                activeTab === 'long_term'
+                  ? 'bg-yellow-500 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              Long terme
+            </button>
           </div>
         </div>
-      )}
 
-      {/* Bouton Génération Recommandation du Jour */}
-      <div className="bg-white rounded-xl shadow-lg border border-yellow-200 p-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="p-3 bg-yellow-100 rounded-full">
-              <BoltIcon className="h-6 w-6 text-yellow-600" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900">Recommandation du Jour</h3>
-              <p className="text-gray-600 text-sm">
-                Obtenez une recommandation personnalisée et actionnable (limitée à 1 par jour)
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={generateDailyRecommendation}
-            disabled={generatingDaily || !pubkey}
-            className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
-              generatingDaily 
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white hover:from-yellow-600 hover:to-orange-600 shadow-lg hover:shadow-xl'
-            }`}
+        <RecommendationFilters onFilterChange={setFilters} />
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
           >
-            {generatingDaily ? (
-              <div className="flex items-center space-x-2">
-                <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
-                <span>Génération...</span>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-2">
-                <StarIcon className="h-5 w-5" />
-                <span>Générer ma recommandation</span>
-              </div>
-            )}
-          </button>
-        </div>
+            {filterRecommendations(data.priorities[activeTab])
+              .filter(rec => !completedActions.has(rec.id))
+              .map(recommendation => (
+                <RecommendationCard
+                  key={recommendation.id}
+                  recommendation={recommendation}
+                  onComplete={handleCompleteAction}
+                />
+              ))}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
-      {/* Recommandation du Jour Générée */}
-      {dailyRecommendation && (
-        <div id="daily-recommendation" className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl shadow-lg p-6">
-          <div className="flex items-start space-x-4">
-            <div className="p-2 bg-blue-100 rounded-full flex-shrink-0">
-              <StarIcon className="h-6 w-6 text-blue-600" />
+      {/* Section Analyse détaillée */}
+      <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+        <h2 className="mb-6 text-2xl font-bold text-gray-900">
+          Analyse détaillée
+        </h2>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {Object.entries(data.analysis).map(([category, data]) => (
+            <div
+              key={category}
+              className="rounded-lg border border-gray-200 p-6"
+            >
+              <h3 className="text-lg font-semibold capitalize text-gray-900">
+                {category}
+              </h3>
+              <div className="mt-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Score</span>
+                  <span className="text-lg font-semibold text-gray-900">
+                    {data.score}%
+                  </span>
+                </div>
+                <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-gray-200">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${data.score}%` }}
+                    className="h-full bg-yellow-500"
+                  />
+                </div>
+              </div>
+              <div className="mt-4">
+                <h4 className="text-sm font-medium text-gray-600">
+                  Recommandations
+                </h4>
+                <ul className="mt-2 space-y-2">
+                  {data.recommendations.slice(0, 3).map(rec => (
+                    <li
+                      key={rec.id}
+                      className="text-sm text-gray-600"
+                    >
+                      • {rec.title}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-            <div className="flex-grow">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="text-xl font-bold text-blue-900 mb-1">{dailyRecommendation.title}</h3>
-                  <p className="text-blue-700 text-sm">Recommandation du jour • Expire dans 24h</p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${getDifficultyIcon(dailyRecommendation.impact)}`}>
-                    Impact {dailyRecommendation.impact}
-                  </span>
-                  <span className="text-sm text-blue-600">
-                    {getDifficultyIcon(dailyRecommendation.difficulty)} {dailyRecommendation.difficulty}
-                  </span>
-                </div>
-              </div>
-
-              <p className="text-gray-700 mb-4">{dailyRecommendation.description}</p>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4 text-sm text-gray-600">
-                  <span className="flex items-center space-x-1">
-                    <ClockIcon className="h-4 w-4" />
-                    <span>{dailyRecommendation.estimated_time}</span>
-                  </span>
-                  <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
-                    {dailyRecommendation.category}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Actions recommandées */}
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">🎯 Actions Recommandées</h2>
-        
-        <div className="space-y-4">
-          {recommendations.map((rec, index) => {
-            const isCompleted = completedActions.has(`${index}`);
-            const isBlurred = !hasSubscription && index >= recommendations.length - 4;
-            
-            return (
-              <div
-                key={index}
-                className={`bg-white rounded-xl shadow border p-6 transition-all duration-200 hover:shadow-lg ${
-                  isCompleted ? 'bg-green-50 border-green-200' : 'hover:border-yellow-300'
-                } ${isBlurred ? 'relative' : ''}`}
-              >
-                {isBlurred && (
-                  <div className="absolute inset-0 bg-white/80 backdrop-blur-sm rounded-xl flex items-center justify-center z-10">
-                    <div className="text-center">
-                      <LockClosedIcon className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">Contenu Premium</h3>
-                      <p className="text-gray-600 mb-4">Débloquez toutes les recommandations</p>
-                      <button className="bg-yellow-600 text-white px-6 py-2 rounded-lg hover:bg-yellow-700 transition-colors">
-                        Passer à Premium
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 pt-1">
-                    <input
-                      type="checkbox"
-                      checked={isCompleted}
-                      onChange={() => toggleCompletion(index)}
-                      className="h-5 w-5 text-yellow-600 focus:ring-yellow-500 border-gray-300 rounded"
-                      disabled={isBlurred}
-                    />
-                  </div>
-
-                  <div className="flex-grow">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center space-x-3">
-                        <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getPriorityColor(rec.priority)}`}>
-                          Priorité {rec.priority}/10
-                        </span>
-                        <span className="text-sm text-gray-500">
-                          {getDifficultyIcon(rec.difficulty)} {rec.difficulty}
-                        </span>
-                        <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
-                          {rec.category}
-                        </span>
-                      </div>
-                      <span className="text-sm text-gray-500">{rec.timeline}</span>
-                    </div>
-
-                    <h3 className={`text-lg font-semibold mb-2 ${isCompleted ? 'line-through text-gray-500' : 'text-gray-900'}`}>
-                      {rec.action}
-                    </h3>
-
-                    <p className="text-gray-600 mb-3">
-                      Impact estimé: <span className="font-medium text-green-600">{rec.expected_impact}</span>
-                    </p>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4 text-sm text-gray-500">
-                        <span className="flex items-center space-x-1">
-                          <ClockIcon className="h-4 w-4" />
-                          <span>{rec.implementation_details?.estimated_hours || 2}h estimées</span>
-                        </span>
-                        {isCompleted && (
-                          <span className="flex items-center space-x-1 text-green-600">
-                            <CheckCircleIcon className="h-4 w-4" />
-                            <span>Complété</span>
-                          </span>
-                        )}
-                      </div>
-                      
-                      <button
-                        onClick={() => openModal(rec)}
-                        className="text-yellow-600 hover:text-yellow-700 font-medium text-sm"
-                        disabled={isBlurred}
-                      >
-                        Voir détails →
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Historique des recommandations */}
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">📋 Historique des Recommandations</h2>
-        
-        <div className="bg-white rounded-xl shadow p-6">
-          <div className="space-y-3">
-            {recommendations.slice(0, 8).map((rec, index) => (
-              <div
-                key={`history-${index}`}
-                className="flex items-center justify-between py-3 border-b border-gray-100 last:border-b-0"
-              >
-                <div className="flex-grow">
-                  <h4 className="font-medium text-gray-900">{rec.action}</h4>
-                  <p className="text-sm text-gray-500">Catégorie: {rec.category}</p>
-                </div>
-                
-                <div className="flex items-center space-x-4">
-                  <span className="text-sm text-gray-500">{rec.date}</span>
-                  <button
-                    onClick={() => openModal(rec)}
-                    className="text-yellow-600 hover:text-yellow-700 font-medium text-sm"
-                  >
-                    Lire →
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+          ))}
         </div>
       </div>
 
