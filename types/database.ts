@@ -411,4 +411,150 @@ export type TableName = keyof DatabaseTables
 
 // Type helper pour les opérations CRUD
 export type CreateData<T extends TableName> = Omit<DatabaseTables[T], 'id' | 'created_at' | 'updated_at'>
-export type UpdateData<T extends TableName> = Partial<Omit<DatabaseTables[T], 'id' | 'created_at'>> 
+export type UpdateData<T extends TableName> = Partial<Omit<DatabaseTables[T], 'id' | 'created_at'>>
+
+export interface Database {
+  public: {
+    Tables: {
+      orders: {
+        Row: {
+          id: string;
+          product: string;
+          amount: number;
+          customer_name: string;
+          customer_email: string;
+          customer_address?: string;
+          plan?: string;
+          status: 'pending' | 'paid' | 'failed';
+          payment_hash?: string;
+          payment_request?: string;
+          order_ref?: string;
+          paid_at?: string;
+          metadata?: Record<string, any>;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          product: string;
+          amount: number;
+          customer_name: string;
+          customer_email: string;
+          customer_address?: string;
+          plan?: string;
+          status?: 'pending' | 'paid' | 'failed';
+          payment_hash?: string;
+          payment_request?: string;
+          order_ref?: string;
+          paid_at?: string;
+          metadata?: Record<string, any>;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          product?: string;
+          amount?: number;
+          customer_name?: string;
+          customer_email?: string;
+          customer_address?: string;
+          plan?: string;
+          status?: 'pending' | 'paid' | 'failed';
+          payment_hash?: string;
+          payment_request?: string;
+          order_ref?: string;
+          paid_at?: string;
+          metadata?: Record<string, any>;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
+      payment_logs: {
+        Row: {
+          id: string;
+          order_id: string;
+          order_ref: string;
+          payment_hash: string;
+          payment_request: string;
+          amount: number;
+          status: 'pending' | 'settled' | 'expired' | 'failed';
+          error?: string;
+          metadata?: Record<string, any>;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          order_id: string;
+          order_ref: string;
+          payment_hash: string;
+          payment_request: string;
+          amount: number;
+          status: 'pending' | 'settled' | 'expired' | 'failed';
+          error?: string;
+          metadata?: Record<string, any>;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          order_id?: string;
+          order_ref?: string;
+          payment_hash?: string;
+          payment_request?: string;
+          amount?: number;
+          status?: 'pending' | 'settled' | 'expired' | 'failed';
+          error?: string;
+          metadata?: Record<string, any>;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
+      rate_limits: {
+        Row: {
+          id: string;
+          key: string;
+          timestamp: string;
+        };
+        Insert: {
+          id?: string;
+          key: string;
+          timestamp: string;
+        };
+        Update: {
+          id?: string;
+          key?: string;
+          timestamp?: string;
+        };
+      };
+      rate_limit_blocks: {
+        Row: {
+          id: string;
+          key: string;
+          expires_at: string;
+        };
+        Insert: {
+          id?: string;
+          key: string;
+          expires_at: string;
+        };
+        Update: {
+          id?: string;
+          key?: string;
+          expires_at?: string;
+        };
+      };
+    };
+    Functions: {
+      count_requests: {
+        Args: {
+          p_key: string;
+          p_start: string;
+        };
+        Returns: {
+          count: number;
+        };
+      };
+    };
+  };
+} 

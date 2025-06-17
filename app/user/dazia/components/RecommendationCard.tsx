@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { CheckCircle2, AlertCircle, ChevronRight, Lock } from 'lucide-react';
+import { CheckCircle2, ChevronRight, Lock } from 'lucide-react';
 import { useState } from 'react';
 
 interface RecommendationCardProps {

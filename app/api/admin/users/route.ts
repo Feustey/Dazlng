@@ -10,6 +10,12 @@ import { ErrorCodes } from '@/types/database';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { z } from 'zod';
 
+interface UserSettings {
+  theme?: 'light' | 'dark';
+  admin?: boolean;
+  [key: string]: unknown;
+}
+
 interface AdminUser {
   id: string;
   email: string;
@@ -21,7 +27,7 @@ interface AdminUser {
   verified_at?: string;
   t4g_tokens: number;
   node_id?: string;
-  settings?: any;
+  settings?: UserSettings;
   ordersCount: number;
   totalSpent: number;
   subscriptionStatus: string;

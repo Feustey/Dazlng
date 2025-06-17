@@ -1,11 +1,6 @@
 import { NextRequest } from 'next/server'
 import { supabase } from '@/lib/supabase'
-import { 
-  unauthorizedResponse, 
-  forbiddenResponse, 
-  rateLimitResponse,
-  errorResponse 
-} from '@/lib/api-response'
+import { createApiResponse } from '@/lib/api-response'
 import { ErrorCodes } from '@/types/database'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 
@@ -44,7 +39,7 @@ export async function requireAuth(req: NextRequest): Promise<{
   if (!user) {
     return {
       success: false,
-      response: unauthorizedResponse('Token d\'authentification requis')
+      response: createApiResponse({ success: false, error: { code: ErrorCodes.UNAUTHORIZED, message: 'Token d\'authentification requis' } }, 401)
     }
   }
   
@@ -108,7 +103,7 @@ export async function requireAdmin(req: NextRequest): Promise<{
   if (!adminCheck) {
     return {
       success: false,
-      response: forbiddenResponse('Droits d\'administration requis')
+      response: createApiResponse({ success: false, error: { code: ErrorCodes.FORBIDDEN, message: 'Droits d\'administration requis' } }, 403)
     }
   }
   
@@ -169,10 +164,7 @@ export async function rateLimit(
   if (current.count >= config.maxAttempts) {
     return {
       success: false,
-      response: rateLimitResponse(
-        'Trop de requêtes, veuillez réessayer plus tard',
-        new Date(current.resetTime)
-      )
+      response: createApiResponse({ success: false, error: { code: ErrorCodes.RATE_LIMIT_EXCEEDED, message: 'Trop de requêtes, veuillez réessayer plus tard' }, meta: { resetTime: new Date(current.resetTime) } }, 429)
     }
   }
   
@@ -236,14 +228,14 @@ export async function requireOwnership<T extends { user_id: string }>(
     if (error || !resource) {
       return {
         success: false,
-        response: errorResponse(ErrorCodes.NOT_FOUND, 'Ressource non trouvée')
+        response: createApiResponse({ success: false, error: { code: ErrorCodes.NOT_FOUND, message: 'Ressource non trouvée', details: error } }, 404)
       }
     }
     
     if (resource.user_id !== user.id) {
       return {
         success: false,
-        response: forbiddenResponse('Vous n\'êtes pas autorisé à accéder à cette ressource')
+        response: createApiResponse({ success: false, error: { code: ErrorCodes.FORBIDDEN, message: "Vous n'êtes pas autorisé à accéder à cette ressource" } }, 403)
       }
     }
     
@@ -255,7 +247,7 @@ export async function requireOwnership<T extends { user_id: string }>(
     console.error('Erreur lors de la vérification de propriété:', error)
     return {
       success: false,
-      response: errorResponse(ErrorCodes.DATABASE_ERROR, 'Erreur de base de données')
+      response: createApiResponse({ success: false, error: { code: ErrorCodes.DATABASE_ERROR, message: 'Erreur de base de données', details: error } }, 500)
     }
   }
 }
@@ -272,11 +264,9 @@ export function withAuth<T extends any[]>(
 ) {
   return async (req: NextRequest, ...args: T): Promise<Response> => {
     const authResult = await requireAuth(req)
-    
     if (!authResult.success) {
       return (authResult as { success: false; response: Response }).response
     }
-    
     return handler(req, authResult.user, ...args)
   }
 }
@@ -289,11 +279,9 @@ export function withAdmin<T extends any[]>(
 ) {
   return async (req: NextRequest, ...args: T): Promise<Response> => {
     const adminResult = await requireAdmin(req)
-    
     if (!adminResult.success) {
       return (adminResult as { success: false; response: Response }).response
     }
-    
     return handler(req, adminResult.user, ...args)
   }
 }
@@ -307,11 +295,9 @@ export function withRateLimit<T extends any[]>(
 ) {
   return async (req: NextRequest, ...args: T): Promise<Response> => {
     const rateLimitResult = await rateLimit(req, config)
-    
     if (!rateLimitResult.success) {
       return (rateLimitResult as { success: false; response: Response }).response
     }
-    
     return handler(req, ...args)
   }
 }
@@ -325,17 +311,13 @@ export function withAuthAndRateLimit<T extends any[]>(
 ) {
   return async (req: NextRequest, ...args: T): Promise<Response> => {
     const rateLimitResult = await rateLimit(req, rateLimitConfig)
-    
     if (!rateLimitResult.success) {
-      return rateLimitResult.response
+      return (rateLimitResult as { success: false; response: Response }).response
     }
-    
     const authResult = await requireAuth(req)
-    
     if (!authResult.success) {
-      return authResult.response
+      return (authResult as { success: false; response: Response }).response
     }
-    
     return handler(req, authResult.user, ...args)
   }
 } 

@@ -3,13 +3,7 @@ import { supabase } from "@/lib/supabase";
 import { Resend } from 'resend';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { generateEmailTemplate } from '../../../utils/email';
-import {
-  successResponse,
-  errorResponse,
-  unauthorizedResponse,
-  handleApiError,
-  logApiRequest
-} from '@/lib/api-response';
+import { createApiResponse, handleApiError } from '@/lib/api-response';
 import {
   createOrderSchema,
   validateData
@@ -30,10 +24,10 @@ export async function GET(req: NextRequest): Promise<Response> {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {
-      return unauthorizedResponse();
+      return createApiResponse({ success: false, error: { code: ErrorCodes.UNAUTHORIZED, message: 'Unauthorized' } }, 401);
     }
 
-    logApiRequest('GET', '/api/orders', user.id);
+    console.log('GET', '/api/orders', user.id);
 
     const { data, error } = await supabase
       .from("orders")
@@ -43,10 +37,10 @@ export async function GET(req: NextRequest): Promise<Response> {
 
     if (error) {
       console.error('Erreur lors de la récupération des commandes:', error);
-      return errorResponse(ErrorCodes.DATABASE_ERROR, 'Erreur lors de la récupération des commandes');
+      return createApiResponse(ErrorCodes.DATABASE_ERROR, 'Erreur lors de la récupération des commandes');
     }
 
-    return successResponse(data || []);
+    return createApiResponse({ success: true, data });
 
   } catch (error) {
     return handleApiError(error, 'GET /api/orders');
@@ -63,16 +57,12 @@ export async function POST(req: NextRequest): Promise<Response> {
     // Validation des données avec Zod
     const validationResult = validateData(createOrderSchema, body);
     if (!validationResult.success) {
-      return errorResponse(
-        ErrorCodes.VALIDATION_ERROR, 
-        'Données de commande invalides', 
-        'error' in validationResult ? validationResult.error.details : undefined
-      );
+      return createApiResponse({ success: false, error: { code: ErrorCodes.VALIDATION_ERROR, message: 'Données de commande invalides', details: validationResult.error?.details } }, 400);
     }
 
     const { user_id, product_type, plan, billing_cycle, amount, payment_method, customer, product, metadata } = validationResult.data;
 
-    logApiRequest('POST', '/api/orders', user_id, { product_type, amount });
+    console.log('POST', '/api/orders', user_id, { product_type, amount });
 
     // Préparer les données de la commande pour la base de données
     const orderData = {
@@ -100,7 +90,7 @@ export async function POST(req: NextRequest): Promise<Response> {
 
     if (error) {
       console.error('Erreur lors de la création de la commande:', error);
-      return errorResponse(ErrorCodes.DATABASE_ERROR, 'Erreur lors de la création de la commande');
+      return createApiResponse(ErrorCodes.DATABASE_ERROR, 'Erreur lors de la création de la commande');
     }
 
     // Envoi d'un email de notification (en arrière-plan)
@@ -157,12 +147,15 @@ export async function POST(req: NextRequest): Promise<Response> {
       console.error('Erreur lors de l\'envoi de l\'email:', emailError);
     }
 
-    return successResponse({
-      id: data.id,
-      order_number: data.id,
-      status: data.payment_status,
-      amount: data.amount,
-      created_at: data.created_at
+    return createApiResponse({
+      success: true,
+      data: {
+        id: data.id,
+        order_number: data.id,
+        status: data.payment_status,
+        amount: data.amount,
+        created_at: data.created_at
+      }
     }, 201);
 
   } catch (error) {

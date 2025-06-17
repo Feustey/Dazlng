@@ -8,6 +8,14 @@ const resendApiKey = process.env.RESEND_API_KEY;
 const resend = new Resend(resendApiKey);
 const isDevelopment = process.env.NODE_ENV === 'development';
 
+interface ContactData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
 export async function POST(request: NextRequest): Promise<Response> {
   try {
     // Vérifier la clé API Resend
@@ -166,9 +174,9 @@ export async function POST(request: NextRequest): Promise<Response> {
           }
         ])
 
-    } catch (emailError: any) {
+    } catch (emailError: unknown) {
       console.error('[CONTACT] Erreur envoi email:', emailError)
-      console.error('[CONTACT] Détails erreur:', emailError?.message, emailError?.stack)
+      console.error('[CONTACT] Détails erreur:', emailError instanceof Error ? emailError.message : 'Erreur inconnue', emailError instanceof Error ? emailError.stack : undefined)
       // Ne pas faire échouer la requête si l'email échoue, mais logger l'erreur
       await supabaseAdmin
         .from('email_logs')
@@ -178,7 +186,7 @@ export async function POST(request: NextRequest): Promise<Response> {
             recipient: email,
             contact_id: contact.id,
             status: 'failed',
-            error_message: emailError?.message || 'Erreur inconnue'
+            error_message: emailError instanceof Error ? emailError.message : 'Erreur inconnue'
           }
         ])
     }
@@ -189,21 +197,21 @@ export async function POST(request: NextRequest): Promise<Response> {
       data: { id: contact.id }
     })
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[CONTACT] Erreur inattendue:', error)
-    console.error('[CONTACT] Stack trace:', error?.stack)
+    console.error('[CONTACT] Stack trace:', error instanceof Error ? error.stack : undefined)
     return NextResponse.json({
       success: false,
       error: {
         code: ErrorCodes.INTERNAL_ERROR,
         message: 'Erreur interne du serveur',
-        details: isDevelopment ? error?.message : undefined
+        details: isDevelopment ? error instanceof Error ? error.message : undefined : undefined
       }
     }, { status: 500 })
   }
 }
 
-function generateAdminNotificationEmail(data: any): string {
+function generateAdminNotificationEmail(data: ContactData): string {
   const subjectLabels: Record<string, string> = {
     'dazpay': 'Dazpay - Solution de paiement',
     'support': 'Support technique',
@@ -252,7 +260,7 @@ function generateAdminNotificationEmail(data: any): string {
   `
 }
 
-function generateUserConfirmationEmail(data: any): string {
+function generateUserConfirmationEmail(data: Pick<ContactData, 'firstName' | 'subject' | 'message'>): string {
   const subjectLabels: Record<string, string> = {
     'dazpay': 'Dazpay - Solution de paiement',
     'support': 'Support technique',

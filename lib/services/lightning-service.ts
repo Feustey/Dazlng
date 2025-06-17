@@ -1,15 +1,13 @@
-import { authenticatedLndGrpc, createInvoice, decodePaymentRequest, getInvoice, getWalletInfo, getChannels } from 'lightning';
+// Import dynamique du module lightning
+const lightning = require('lightning');
+const { createInvoice, decodePaymentRequest, getInvoice, getWalletInfo, getChannels } = lightning;
+import { Invoice, InvoiceStatus, CreateInvoiceParams } from '@/types/lightning';
+import { createDazNodeLightningService } from './daznode-lightning-service';
 
 interface LightningConfig {
   cert: string;          // Base64 encoded tls.cert
   macaroon: string;      // Base64 encoded admin.macaroon  
   socket: string;        // IP:Port du nœud (ex: '127.0.0.1:10009')
-}
-
-interface CreateInvoiceParams {
-  amount: number;        // Montant en satoshis
-  description: string;   // Description de la facture
-  expiry?: number;       // Expiration en secondes (défaut: 3600)
 }
 
 interface LightningInvoice {
@@ -20,12 +18,6 @@ interface LightningInvoice {
   expiresAt: string;
   amount: number;
   description: string;
-}
-
-interface InvoiceStatus {
-  status: 'pending' | 'settled' | 'cancelled' | 'expired';
-  settledAt?: string;
-  amount?: number;
 }
 
 interface NodeInfo {
@@ -49,124 +41,62 @@ interface DecodedInvoice {
 }
 
 export class LightningService {
-  private lnd: any;
-  private config: LightningConfig;
-  
-  constructor(config: LightningConfig) {
-    this.config = config;
-    this.initializeLND();
+  private daznodeService;
+
+  constructor() {
+    this.daznodeService = createDazNodeLightningService();
   }
 
-  private initializeLND(): void {
+  async generateInvoice(params: CreateInvoiceParams): Promise<Invoice> {
     try {
-      const { lnd } = authenticatedLndGrpc({
-        cert: this.config.cert,
-        macaroon: this.config.macaroon,
-        socket: this.config.socket,
-      });
-      
-      this.lnd = lnd;
-      console.log('✅ LightningService - Connexion LND établie');
-    } catch (error) {
-      console.error('❌ LightningService - Erreur connexion LND:', error);
-      throw new Error(`Impossible de se connecter au nœud LND: ${error}`);
-    }
-  }
-
-  /**
-   * Crée une nouvelle facture Lightning
-   */
-  async generateInvoice(params: CreateInvoiceParams): Promise<LightningInvoice> {
-    try {
-      console.log('📄 LightningService - Génération facture:', {
+      const invoice = await this.daznodeService.generateInvoice({
         amount: params.amount,
-        description: params.description?.substring(0, 50),
-        expiry: params.expiry
-      });
-      
-      // Validation
-      if (!params.amount || params.amount <= 0) {
-        throw new Error('Montant invalide: doit être supérieur à 0');
-      }
-      
-      if (params.amount > 1000000) {
-        throw new Error('Montant trop élevé: maximum 1,000,000 sats');
-      }
-      
-      if (!params.description?.trim()) {
-        throw new Error('Description requise');
-      }
-
-      if (params.description.length > 500) {
-        throw new Error('Description trop longue: maximum 500 caractères');
-      }
-
-      // Création de la facture via la librairie Lightning
-      const expirySeconds = params.expiry || 3600;
-      const invoice = await createInvoice({
-        lnd: this.lnd,
-        tokens: params.amount,
         description: params.description,
-        expires_at: new Date(Date.now() + expirySeconds * 1000).toISOString()
+        expiry: params.expiry || 3600
       });
-
-      const result: LightningInvoice = {
-        id: invoice.id,
-        paymentRequest: invoice.request,
-        paymentHash: invoice.id, // Dans Lightning lib, l'ID est le payment hash
-        createdAt: new Date().toISOString(),
-        expiresAt: new Date(Date.now() + expirySeconds * 1000).toISOString(),
-        amount: params.amount,
-        description: params.description
-      };
-
-      console.log('✅ LightningService - Facture créée:', { 
-        id: result.id, 
-        amount: result.amount,
-        hash: result.paymentHash?.substring(0, 20) + '...'
-      });
-
-      return result;
-
-    } catch (error) {
-      console.error('❌ LightningService - Erreur génération facture:', error);
-      throw new Error(`Erreur génération facture: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
-    }
-  }
-
-  /**
-   * Vérifie le statut d'une facture
-   */
-  async checkInvoiceStatus(paymentHash: string): Promise<InvoiceStatus> {
-    try {
-      console.log('🔍 LightningService - Vérification statut:', paymentHash?.substring(0, 20) + '...');
-      
-      const invoice = await getInvoice({
-        lnd: this.lnd,
-        id: paymentHash
-      });
-
-      let status: 'pending' | 'settled' | 'cancelled' | 'expired' = 'pending';
-      
-      if (invoice.is_confirmed) {
-        status = 'settled';
-      } else if (invoice.is_canceled) {
-        status = 'cancelled';
-      } else if (new Date(invoice.expires_at) < new Date()) {
-        status = 'expired';
-      }
-
-      console.log('✅ LightningService - Statut vérifié:', status);
 
       return {
-        status,
-        settledAt: invoice.confirmed_at,
-        amount: invoice.tokens
+        id: invoice.id,
+        paymentRequest: invoice.paymentRequest,
+        paymentHash: invoice.paymentHash,
+        amount: params.amount,
+        description: params.description,
+        createdAt: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + (params.expiry || 3600) * 1000).toISOString(),
+        status: 'pending'
       };
-
     } catch (error) {
-      console.error('❌ LightningService - Erreur vérification facture:', error);
-      throw new Error(`Erreur vérification: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
+      console.error('Erreur génération facture:', error);
+      throw error;
+    }
+  }
+
+  async checkInvoiceStatus(paymentHash: string): Promise<InvoiceStatus> {
+    try {
+      const status = await this.daznodeService.checkInvoiceStatus(paymentHash);
+      return status;
+    } catch (error) {
+      console.error('Erreur vérification facture:', error);
+      throw error;
+    }
+  }
+
+  async watchInvoice(params: {
+    paymentHash: string;
+    onPaid: () => void;
+    onExpired: () => void;
+    onError: (error: Error) => void;
+  }): Promise<void> {
+    try {
+      await this.daznodeService.watchInvoice({
+        paymentHash: params.paymentHash,
+        onPaid: params.onPaid,
+        onExpired: params.onExpired,
+        onError: params.onError
+      });
+    } catch (error) {
+      console.error('Erreur surveillance facture:', error);
+      throw error;
     }
   }
 
@@ -182,7 +112,7 @@ export class LightningService {
       }
 
       const decoded = await decodePaymentRequest({
-        lnd: this.lnd,
+        lnd: this.daznodeService.lnd,
         request: paymentRequest
       });
 
@@ -215,8 +145,8 @@ export class LightningService {
       console.log('🔍 LightningService - Health check...');
       
       const [walletInfo, channels] = await Promise.all([
-        getWalletInfo({ lnd: this.lnd }),
-        getChannels({ lnd: this.lnd })
+        getWalletInfo({ lnd: this.daznodeService.lnd }),
+        getChannels({ lnd: this.daznodeService.lnd })
       ]);
 
       const nodeInfo: NodeInfo = {
@@ -248,10 +178,10 @@ export class LightningService {
    */
   async getNodeInfo(): Promise<NodeInfo | null> {
     try {
-      const healthCheck = await this.healthCheck();
-      return healthCheck.nodeInfo || null;
+      const health = await this.healthCheck();
+      return health.isOnline ? health.nodeInfo || null : null;
     } catch (error) {
-      console.error('❌ LightningService - Erreur info nœud:', error);
+      console.error('❌ LightningService - Erreur récupération info nœud:', error);
       return null;
     }
   }
@@ -307,7 +237,7 @@ export function createLightningService(): LightningService {
     macaroonLength: config.macaroon.length
   });
 
-  return new LightningService(config);
+  return new LightningService();
 }
 
 // Export des types pour utilisation externe

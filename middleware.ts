@@ -1,115 +1,44 @@
-import { createServerClient } from '@supabase/ssr'
-import { NextResponse, type NextRequest } from 'next/server'
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 
-export async function middleware(request: NextRequest): Promise<Response> {
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  })
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value
-        },
-        set(name: string, value: string, options: any) {
-          request.cookies.set({
-            name,
-            value,
-            ...options,
-          })
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          })
-          response.cookies.set({
-            name,
-            value,
-            ...options,
-          })
-        },
-        remove(name: string, options: any) {
-          request.cookies.set({
-            name,
-            value: '',
-            ...options,
-          })
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          })
-          response.cookies.set({
-            name,
-            value: '',
-            ...options,
-          })
-        },
-      },
-    }
-  )
-
-  const { data: { user } } = await supabase.auth.getUser()
-  const { pathname } = request.nextUrl
-
-  // Log pour debugging
-  if (pathname.startsWith('/user') && process.env.NODE_ENV === 'development') {
-    console.log('[Middleware] User auth check:', {
-      pathname,
-      hasUser: !!user,
-      userId: user?.id
-    });
+export async function middleware(request: NextRequest) {
+  // Vérifier si c'est une requête API
+  if (request.nextUrl.pathname.startsWith('/api/')) {
+    // Ajouter les headers CORS
+    const response = NextResponse.next();
+    
+    response.headers.set('Access-Control-Allow-Origin', '*');
+    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    
+    return response;
   }
+  
+  // Vérification de l'authentification pour les routes API
+  if (request.nextUrl.pathname.startsWith('/api/')) {
+    const res = NextResponse.next();
+    const supabase = createMiddlewareClient({ req: request, res });
+    
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
 
-  // Routes admin - vérifier les permissions
-  if (pathname.startsWith('/admin')) {
-    // En développement local, pas de protection sur /admin
-    if (process.env.NODE_ENV === 'development') {
-      console.log('[Middleware] Mode développement - accès admin autorisé sans authentification');
-    } else {
-      // En production, vérifier l'email @dazno.de
-      if (!user?.email?.includes('@dazno.de')) {
-        return NextResponse.redirect(new URL('/auth/login?error=access_denied', request.url))
-      }
+    // Si pas de session et route protégée, retourner 401
+    if (!session && !request.nextUrl.pathname.startsWith('/api/auth/')) {
+      return NextResponse.json(
+        { error: 'Non autorisé' },
+        { status: 401 }
+      );
     }
   }
 
-  // Routes utilisateur - authentification requise
-  if (pathname.startsWith('/user')) {
-    if (!user) {
-      return NextResponse.redirect(new URL('/auth/login?callbackUrl=' + encodeURIComponent(request.url), request.url))
-    }
-  }
-
-  // API routes protégées
-  if (pathname.startsWith('/api/user') || pathname.startsWith('/api/admin')) {
-    if (!user) {
-      return new NextResponse(
-        JSON.stringify({
-          success: false,
-          error: {
-            code: 'UNAUTHORIZED',
-            message: 'Authentification requise'
-          }
-        }),
-        { 
-          status: 401,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      )
-    }
-  }
-
-  return response
+  return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)',
+    '/api/:path*',
+    '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
-} 
+}; 

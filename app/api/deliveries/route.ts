@@ -1,12 +1,6 @@
-
 import { NextRequest } from 'next/server'
 import { supabase } from '@/lib/supabase'
-import { 
-  successResponse, 
-  errorResponse, 
-  paginatedResponse,
-  handleApiError
-} from '@/lib/api-response'
+import { createApiResponse, handleApiError } from '@/lib/api-response'
 import { 
   createDeliverySchema, 
   validateData,
@@ -23,7 +17,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     const validationResult = validateData(paginationSchema, Object.fromEntries(searchParams.entries()))
     
     if (!validationResult.success) {
-      return errorResponse(ErrorCodes.VALIDATION_ERROR, 'Données invalides', 'error' in validationResult ? validationResult.error.details : undefined)
+      return createApiResponse({ success: false, error: { code: ErrorCodes.VALIDATION_ERROR, message: 'Données invalides', details: validationResult.error?.details } }, 400)
     }
 
     const { page = 1, limit = 20, sort } = validationResult.data
@@ -55,10 +49,10 @@ export async function GET(req: NextRequest): Promise<Response> {
 
     if (error) {
       console.error('Erreur lors de la récupération des livraisons:', error)
-      return errorResponse(ErrorCodes.DATABASE_ERROR, 'Erreur lors de la récupération des livraisons')
+      return createApiResponse(ErrorCodes.DATABASE_ERROR, 'Erreur lors de la récupération des livraisons')
     }
 
-    return paginatedResponse(data || [], count || 0, page, limit)
+    return createApiResponse({ success: true, data, meta: { total: count, page, limit } })
 
   } catch (error) {
     return handleApiError(error, 'GET /api/deliveries')
@@ -74,7 +68,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     const validationResult = validateData(createDeliverySchema, body)
     
     if (!validationResult.success) {
-      return errorResponse(ErrorCodes.VALIDATION_ERROR, 'error' in validationResult ? validationResult.error.message : 'Erreur de validation', 'error' in validationResult ? validationResult.error.details : undefined)
+      return createApiResponse({ success: false, error: { code: ErrorCodes.VALIDATION_ERROR, message: 'Erreur de validation', details: validationResult.error?.details } }, 400)
     }
 
     const deliveryData = validationResult.data
@@ -87,7 +81,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       .single()
 
     if (!orderExists) {
-      return errorResponse(ErrorCodes.NOT_FOUND, 'Commande non trouvée')
+      return createApiResponse(ErrorCodes.NOT_FOUND, 'Commande non trouvée')
     }
 
     // Vérifier qu'il n'y a pas déjà une livraison pour cette commande
@@ -98,7 +92,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       .single()
 
     if (existingDelivery) {
-      return errorResponse(ErrorCodes.DUPLICATE_ENTRY, 'Une livraison existe déjà pour cette commande')
+      return createApiResponse(ErrorCodes.DUPLICATE_ENTRY, 'Une livraison existe déjà pour cette commande')
     }
 
     // Créer la livraison
@@ -110,10 +104,10 @@ export async function POST(req: NextRequest): Promise<Response> {
 
     if (error) {
       console.error('Erreur lors de la création de la livraison:', error)
-      return errorResponse(ErrorCodes.DATABASE_ERROR, 'Erreur lors de la création de la livraison')
+      return createApiResponse(ErrorCodes.DATABASE_ERROR, 'Erreur lors de la création de la livraison')
     }
 
-    return successResponse(data, 201)
+    return createApiResponse({ success: true, data }, 201)
 
   } catch (error) {
     return handleApiError(error, 'POST /api/deliveries')

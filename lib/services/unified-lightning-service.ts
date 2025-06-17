@@ -1,5 +1,9 @@
 import { createLightningService, LightningInvoice, CreateInvoiceParams, InvoiceStatus } from './lightning-service';
-import { createDazNodeWalletService, DazNodeInvoice, DazNodeInvoiceParams, DazNodeInvoiceStatus } from './daznode-wallet-service';
+import { createLNBitsService } from './lnbits-service';
+import { PaymentLogger } from './payment-logger';
+import {
+  WatchInvoiceConfig
+} from '@/types/lightning';
 
 interface UnifiedInvoice {
   id: string;
@@ -9,6 +13,7 @@ interface UnifiedInvoice {
   expiresAt: string;
   amount: number;
   description: string;
+  metadata?: Record<string, any>;
 }
 
 interface UnifiedInvoiceStatus {
@@ -19,102 +24,230 @@ interface UnifiedInvoiceStatus {
 
 interface UnifiedWalletInfo {
   isOnline: boolean;
-  provider: 'lnd' | 'daznode';
+  provider: 'lnd' | 'lnbits';
   walletInfo?: {
     balance?: number;
-    publicKey: string;
-    alias: string;
+    publicKey?: string;
+    alias?: string;
     channels?: number;
     blockHeight?: number;
   };
 }
 
+interface ExtendedCreateInvoiceParams extends CreateInvoiceParams {
+  metadata?: Record<string, any>;
+}
+
 export class UnifiedLightningService {
-  private lightningService: any = null;
-  private dazNodeService: any = null;
-  private provider: 'lnd' | 'daznode' = 'daznode';
+  private provider: 'lnd' | 'lnbits';
+  private lightningService?: ReturnType<typeof createLightningService>;
+  private lnbitsService?: ReturnType<typeof createLNBitsService>;
+  private paymentLogger: PaymentLogger;
+  private watchers: Map<string, NodeJS.Timeout>;
 
   constructor() {
-    this.initializeProvider();
-  }
+    this.provider = process.env.LIGHTNING_PROVIDER === 'lnd' ? 'lnd' : 'lnbits';
+    this.paymentLogger = new PaymentLogger();
+    this.watchers = new Map();
 
-  /**
-   * Initialise le provider Lightning approprié
-   */
-  private initializeProvider(): void {
+    // Initialisation des services
     try {
-      // Essayer d'abord LND si configuré
-      this.lightningService = createLightningService();
-      this.provider = 'lnd';
-      console.log('✅ UnifiedLightning - Utilisation du nœud LND');
-    } catch (error) {
-      if (error instanceof Error && error.message === 'FALLBACK_TO_DAZNODE_WALLET') {
-        // Fallback vers le wallet DazNode
-        this.dazNodeService = createDazNodeWalletService();
-        this.provider = 'daznode';
-        console.log('✅ UnifiedLightning - Utilisation du wallet DazNode');
+      if (this.provider === 'lnd') {
+        this.lightningService = createLightningService();
       } else {
-        // Erreur de configuration LND, utiliser DazNode
-        console.warn('⚠️ UnifiedLightning - Erreur LND, fallback vers DazNode:', error);
-        this.dazNodeService = createDazNodeWalletService();
-        this.provider = 'daznode';
+        this.lnbitsService = createLNBitsService();
       }
+    } catch (error) {
+      console.error('❌ UnifiedLightning - Erreur initialisation service:', error);
+      throw error;
     }
   }
 
   /**
    * Génère une facture Lightning
    */
-  async generateInvoice(params: CreateInvoiceParams): Promise<UnifiedInvoice> {
+  async generateInvoice(params: ExtendedCreateInvoiceParams): Promise<LightningInvoice> {
     try {
-      console.log(`📄 UnifiedLightning - Génération facture via ${this.provider}:`, {
-        amount: params.amount,
-        description: params.description?.substring(0, 50)
-      });
+      const invoice = await this.provider === 'lnd'
+        ? this.generateLNDInvoice(params)
+        : this.generateLNBitsInvoice(params);
 
-      if (this.provider === 'lnd' && this.lightningService) {
-        const invoice = await this.lightningService.generateInvoice(params);
-        return this.mapLightningInvoice(invoice);
-      } else if (this.provider === 'daznode' && this.dazNodeService) {
-        const dazNodeParams: DazNodeInvoiceParams = {
-          amount: params.amount,
-          description: params.description,
-          expiry: params.expiry
-        };
-        const invoice = await this.dazNodeService.generateInvoice(dazNodeParams);
-        return this.mapDazNodeInvoice(invoice);
+      // Logger la création de la facture
+      if (params.metadata?.order_id) {
+        await this.paymentLogger.logPayment({
+          order_id: params.metadata.order_id,
+          order_ref: params.metadata.order_ref || '',
+          payment_hash: invoice.paymentHash,
+          payment_request: invoice.paymentRequest,
+          amount: invoice.amount,
+          status: 'pending',
+          metadata: params.metadata
+        });
       }
 
-      throw new Error('Aucun provider Lightning disponible');
-
+      return invoice;
     } catch (error) {
-      console.error(`❌ UnifiedLightning - Erreur génération facture ${this.provider}:`, error);
+      console.error('❌ UnifiedLightning - Erreur génération facture:', error);
       throw error;
     }
   }
 
   /**
+   * Surveille une facture avec renouvellement automatique
+   */
+  async watchInvoiceWithRenewal(
+    invoice: LightningInvoice,
+    config: WatchInvoiceConfig = {}
+  ): Promise<void> {
+    const {
+      checkInterval = 3000,
+      maxAttempts = 120,
+      autoRenew = true,
+      onPaid,
+      onExpired,
+      onError,
+      onRenewing,
+      onRenewed
+    } = config;
+
+    let attempts = 0;
+    let currentInvoice = invoice;
+
+    // Nettoyer tout watcher existant
+    this.clearWatcher(invoice.paymentHash);
+
+    const watcher = setInterval(async () => {
+      try {
+        attempts++;
+
+        // Vérifier si on a atteint le nombre max de tentatives
+        if (attempts >= maxAttempts) {
+          this.clearWatcher(currentInvoice.paymentHash);
+          onExpired?.();
+          return;
+        }
+
+        // Vérifier si la facture est expirée
+        const expiresAt = new Date(currentInvoice.expiresAt).getTime();
+        const now = Date.now();
+
+        // Si la facture expire dans moins de 15 secondes et autoRenew est activé
+        if (autoRenew && expiresAt - now < 15000) {
+          onRenewing?.();
+
+          // Générer une nouvelle facture
+          const newInvoice = await this.generateInvoice({
+            amount: currentInvoice.amount,
+            description: currentInvoice.description,
+            metadata: currentInvoice.metadata
+          });
+
+          // Mettre à jour la facture courante
+          currentInvoice = newInvoice;
+          onRenewed?.(newInvoice);
+
+          // Réinitialiser le compteur de tentatives
+          attempts = 0;
+        }
+
+        // Vérifier le statut
+        const status = await this.checkInvoiceStatus(currentInvoice.paymentHash);
+
+        if (status === 'settled') {
+          this.clearWatcher(currentInvoice.paymentHash);
+          await onPaid?.();
+        } else if (status === 'expired') {
+          this.clearWatcher(currentInvoice.paymentHash);
+          onExpired?.();
+        }
+
+      } catch (error) {
+        console.error('❌ UnifiedLightning - Erreur surveillance:', error);
+        this.clearWatcher(currentInvoice.paymentHash);
+        onError?.(error instanceof Error ? error : new Error('Erreur inconnue'));
+      }
+    }, checkInterval);
+
+    this.watchers.set(invoice.paymentHash, watcher);
+  }
+
+  /**
    * Vérifie le statut d'une facture
    */
-  async checkInvoiceStatus(paymentHash: string): Promise<UnifiedInvoiceStatus> {
+  async checkInvoiceStatus(paymentHash: string): Promise<InvoiceStatus> {
     try {
-      console.log(`🔍 UnifiedLightning - Vérification statut via ${this.provider}:`, 
-        paymentHash?.substring(0, 20) + '...');
+      const status = await this.provider === 'lnd'
+        ? this.checkLNDInvoice(paymentHash)
+        : this.checkLNBitsInvoice(paymentHash);
 
-      if (this.provider === 'lnd' && this.lightningService) {
-        const status = await this.lightningService.checkInvoiceStatus(paymentHash);
-        return this.mapLightningStatus(status);
-      } else if (this.provider === 'daznode' && this.dazNodeService) {
-        const status = await this.dazNodeService.checkInvoiceStatus(paymentHash);
-        return this.mapDazNodeStatus(status);
-      }
+      // Mettre à jour le log
+      await this.paymentLogger.updateStatus(paymentHash, status);
 
-      throw new Error('Aucun provider Lightning disponible');
-
+      return status;
     } catch (error) {
-      console.error(`❌ UnifiedLightning - Erreur vérification statut ${this.provider}:`, error);
+      console.error('❌ UnifiedLightning - Erreur vérification:', error);
       throw error;
     }
+  }
+
+  /**
+   * Nettoie un watcher
+   */
+  private clearWatcher(paymentHash: string) {
+    const watcher = this.watchers.get(paymentHash);
+    if (watcher) {
+      clearInterval(watcher);
+      this.watchers.delete(paymentHash);
+    }
+  }
+
+  /**
+   * Génère une facture via LND
+   */
+  private async generateLNDInvoice(params: ExtendedCreateInvoiceParams): Promise<LightningInvoice> {
+    if (!this.lightningService) {
+      throw new Error('Service LND non initialisé');
+    }
+    return this.lightningService.generateInvoice(params);
+  }
+
+  /**
+   * Génère une facture via LNBits
+   */
+  private async generateLNBitsInvoice(params: ExtendedCreateInvoiceParams): Promise<LightningInvoice> {
+    if (!this.lnbitsService) {
+      throw new Error('Service LNBits non initialisé');
+    }
+    const invoice = await this.lnbitsService.createInvoice(params);
+    return {
+      id: invoice.checking_id,
+      paymentRequest: invoice.payment_request,
+      paymentHash: invoice.payment_hash,
+      createdAt: invoice.created_at,
+      expiresAt: invoice.expires_at,
+      amount: invoice.amount,
+      description: invoice.description
+    };
+  }
+
+  /**
+   * Vérifie une facture via LND
+   */
+  private async checkLNDInvoice(paymentHash: string): Promise<InvoiceStatus> {
+    if (!this.lightningService) {
+      throw new Error('Service LND non initialisé');
+    }
+    return this.lightningService.checkInvoiceStatus(paymentHash);
+  }
+
+  /**
+   * Vérifie une facture via LNBits
+   */
+  private async checkLNBitsInvoice(paymentHash: string): Promise<InvoiceStatus> {
+    if (!this.lnbitsService) {
+      throw new Error('Service LNBits non initialisé');
+    }
+    return this.lnbitsService.checkInvoiceStatus(paymentHash);
   }
 
   /**
@@ -138,24 +271,23 @@ export class UnifiedLightningService {
           } : undefined
         };
 
-      } else if (this.provider === 'daznode' && this.dazNodeService) {
-        const walletInfo = await this.dazNodeService.getWalletInfo();
+      } else if (this.provider === 'lnbits' && this.lnbitsService) {
+        const walletInfo = await this.lnbitsService.getWalletInfo();
         
         return {
-          isOnline: walletInfo.isOnline,
-          provider: 'daznode',
-          walletInfo: walletInfo.walletInfo ? {
-            balance: walletInfo.walletInfo.balance,
-            publicKey: walletInfo.walletInfo.publicKey,
-            alias: walletInfo.walletInfo.alias || 'DazNode Wallet'
-          } : undefined
+          isOnline: true,
+          provider: 'lnbits',
+          walletInfo: {
+            balance: walletInfo.balance,
+            alias: walletInfo.name
+          }
         };
       }
 
-      throw new Error('Aucun provider Lightning disponible');
+      return { isOnline: false, provider: this.provider };
 
     } catch (error) {
-      console.error(`❌ UnifiedLightning - Erreur informations wallet ${this.provider}:`, error);
+      console.error('❌ UnifiedLightning - Erreur récupération wallet:', error);
       return { isOnline: false, provider: this.provider };
     }
   }
@@ -176,8 +308,8 @@ export class UnifiedLightningService {
    */
   async close(): Promise<void> {
     try {
-      if (this.provider === 'daznode' && this.dazNodeService) {
-        await this.dazNodeService.close();
+      if (this.provider === 'lnd' && this.lightningService) {
+        await this.lightningService.close();
       }
       console.log('✅ UnifiedLightning - Connexions fermées');
     } catch (error) {
@@ -188,44 +320,24 @@ export class UnifiedLightningService {
   /**
    * Obtient le provider actuel
    */
-  getProvider(): 'lnd' | 'daznode' {
+  getProvider(): 'lnd' | 'lnbits' {
     return this.provider;
   }
 
-  // Méthodes de mapping privées
   private mapLightningInvoice(invoice: LightningInvoice): UnifiedInvoice {
     return {
       id: invoice.id,
       paymentRequest: invoice.paymentRequest,
-      paymentHash: invoice.paymentHash,
+      paymentHash: invoice.paymentHash || invoice.id,
       createdAt: invoice.createdAt,
       expiresAt: invoice.expiresAt,
       amount: invoice.amount,
-      description: invoice.description
-    };
-  }
-
-  private mapDazNodeInvoice(invoice: DazNodeInvoice): UnifiedInvoice {
-    return {
-      id: invoice.id,
-      paymentRequest: invoice.paymentRequest,
-      paymentHash: invoice.paymentHash,
-      createdAt: invoice.createdAt,
-      expiresAt: invoice.expiresAt,
-      amount: invoice.amount,
-      description: invoice.description
+      description: invoice.description,
+      metadata: invoice.metadata
     };
   }
 
   private mapLightningStatus(status: InvoiceStatus): UnifiedInvoiceStatus {
-    return {
-      status: status.status,
-      settledAt: status.settledAt,
-      amount: status.amount
-    };
-  }
-
-  private mapDazNodeStatus(status: DazNodeInvoiceStatus): UnifiedInvoiceStatus {
     return {
       status: status.status,
       settledAt: status.settledAt,

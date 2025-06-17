@@ -1,49 +1,42 @@
 "use client";
 
 import React, { useState, useEffect, FC } from 'react';
-import { useSupabase } from '@/app/providers/SupabaseProvider';
-import { usePubkeyCookie } from '@/app/user/hooks/usePubkeyCookie';
-import { CheckCircleIcon, ClockIcon, SparklesIcon, LockClosedIcon, StarIcon, BoltIcon } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DaziaHeader } from './components/DaziaHeader';
 import { RecommendationCard } from './components/RecommendationCard';
 import { PerformanceMetrics } from './components/PerformanceMetrics';
-import { useSession } from 'next-auth/react';
-import { daznoAPI } from '@/lib/dazno-api';
+import { usePubkeyCookie } from '@/app/user/hooks/usePubkeyCookie';
+import { useGamificationSystem } from '@/app/user/hooks/useGamificationSystem';
+import { useSubscription } from '@/lib/hooks/useSubscription';
 import { RecommendationFilters } from './components/RecommendationFilters';
 import { AdvancedStats } from './components/AdvancedStats';
+import { daznoAPI } from '@/lib/dazno-api';
 
 interface EnhancedRecommendation {
+  id: string;
+  title: string;
+  description: string;
   priority: number;
-  action: string;
-  timeline: string;
-  expected_impact: string;
-  difficulty: 'low' | 'medium' | 'high';
-  category: string;
-  urgency: 'low' | 'medium' | 'high';
+  impact: string;
+  difficulty: string;
+  reasoning: string;
+  date: string;
   implementation_details: {
     steps: string[];
     requirements: string[];
     estimated_hours: number;
   };
   success_criteria: string[];
-  reasoning: string;
-  date: string;
 }
 
 interface DailyRecommendation {
   id: string;
   title: string;
   description: string;
-  category: string;
-  priority: number;
-  impact: 'low' | 'medium' | 'high';
-  difficulty: 'easy' | 'medium' | 'hard';
-  estimated_time: string;
-  implementation_steps: string[];
-  success_criteria: string[];
-  generated_at: string;
-  expires_at: string;
+  impact: string;
+  difficulty: string;
+  reasoning: string;
+  date: string;
 }
 
 interface RecommendationModal {
@@ -53,66 +46,15 @@ interface RecommendationModal {
 }
 
 interface DaziaData {
-  overview: {
-    health_score: number;
-    revenue_7d: number;
-    efficiency: number;
-    network_rank: number;
-  };
-  priorities: {
-    immediate: any[];
-    short_term: any[];
-    long_term: any[];
-  };
-  analysis: {
-    liquidity: {
-      score: number;
-      recommendations: any[];
-    };
-    connectivity: {
-      score: number;
-      recommendations: any[];
-    };
-    fees: {
-      score: number;
-      recommendations: any[];
-    };
-  };
-  metrics: {
-    revenue: {
-      current: number;
-      change: number;
-      history: { date: string; value: number }[];
-    };
-    efficiency: {
-      current: number;
-      change: number;
-      history: { date: string; value: number }[];
-    };
-    channels: {
-      current: number;
-      change: number;
-      history: { date: string; value: number }[];
-    };
-    uptime: {
-      current: number;
-      change: number;
-      history: { date: string; value: number }[];
-    };
-  };
-}
-
-interface User {
-  id: string;
-  name?: string;
-  email: string;
-  pubkey?: string;
-  // ... autres propriétés
+  recommendations: EnhancedRecommendation[];
+  dailyRecommendation: DailyRecommendation | null;
+  completedActions: Set<string>;
 }
 
 const DaziaPage: FC = () => {
-  const { session } = useSupabase();
   const { pubkey, isLoaded: pubkeyLoaded } = usePubkeyCookie();
+  const { profile, isLoading: userLoading } = useGamificationSystem();
+  const { subscription, loading: subscriptionLoading } = useSubscription();
   const [recommendations, setRecommendations] = useState<EnhancedRecommendation[]>([]);
   const [dailyRecommendation, setDailyRecommendation] = useState<DailyRecommendation | null>(null);
   const [completedActions, setCompletedActions] = useState<Set<string>>(new Set());
@@ -133,7 +75,7 @@ const DaziaPage: FC = () => {
   // Charger les recommandations quand le pubkey est disponible
   useEffect(() => {
     const loadRecommendations = async (): Promise<void> => {
-      if (!session?.access_token || !pubkey || !pubkeyLoaded) {
+      if (!pubkey || !pubkeyLoaded) {
         setLoading(false);
         return;
       }
@@ -146,7 +88,7 @@ const DaziaPage: FC = () => {
         const enhancedResponse = await fetch(`/api/dazno/priorities-enhanced/${pubkey}`, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${session.access_token}`,
+            'Authorization': `Bearer ${pubkey}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
@@ -209,15 +151,10 @@ const DaziaPage: FC = () => {
     };
 
     loadRecommendations();
-  }, [session, pubkey, pubkeyLoaded]);
+  }, [pubkey, pubkeyLoaded]);
 
   // Générer la recommandation du jour
   const generateDailyRecommendation = async (): Promise<void> => {
-    if (!session?.access_token) {
-      setError('Vous devez être connecté pour générer une recommandation');
-      return;
-    }
-
     if (!pubkey) {
       setError('Veuillez d\'abord renseigner votre clé publique de nœud dans l\'onglet "Mon Nœud"');
       return;
@@ -230,7 +167,7 @@ const DaziaPage: FC = () => {
       const response = await fetch('/api/user/dazia/generate-recommendation', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${session.access_token}`,
+          'Authorization': `Bearer ${pubkey}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ pubkey })
@@ -305,14 +242,14 @@ const DaziaPage: FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (!session?.user?.pubkey) {
+        if (!pubkey) {
           throw new Error('Clé publique non disponible');
         }
 
         const [nodeInfo, recommendations, priorities] = await Promise.all([
-          daznoAPI.getNodeInfo(session.user.pubkey),
-          daznoAPI.getRecommendations(session.user.pubkey),
-          daznoAPI.getPriorities(session.user.pubkey, {
+          daznoAPI.getNodeInfo(pubkey),
+          daznoAPI.getRecommendations(pubkey),
+          daznoAPI.getPriorities(pubkey, {
             context: 'node_optimization',
             goals: ['increase_revenue', 'improve_connectivity'],
             preferences: {
@@ -324,53 +261,9 @@ const DaziaPage: FC = () => {
 
         // Transformer les données
         const transformedData: DaziaData = {
-          overview: {
-            health_score: nodeInfo.health_score,
-            revenue_7d: nodeInfo.routing_revenue_7d,
-            efficiency: nodeInfo.forwarding_efficiency,
-            network_rank: nodeInfo.network_rank
-          },
-          priorities: {
-            immediate: priorities.actions.filter(a => a.priority === 1),
-            short_term: priorities.actions.filter(a => a.priority === 2),
-            long_term: priorities.actions.filter(a => a.priority === 3)
-          },
-          analysis: {
-            liquidity: {
-              score: nodeInfo.liquidity_score,
-              recommendations: recommendations.filter(r => r.category === 'liquidity')
-            },
-            connectivity: {
-              score: nodeInfo.connectivity_score,
-              recommendations: recommendations.filter(r => r.category === 'connectivity')
-            },
-            fees: {
-              score: nodeInfo.fee_score || 0,
-              recommendations: recommendations.filter(r => r.category === 'fees')
-            }
-          },
-          metrics: {
-            revenue: {
-              current: nodeInfo.routing_revenue_7d,
-              change: 5.2, // À calculer avec l'historique
-              history: [] // À remplir avec l'historique
-            },
-            efficiency: {
-              current: nodeInfo.forwarding_efficiency,
-              change: 2.1,
-              history: []
-            },
-            channels: {
-              current: nodeInfo.active_channels,
-              change: 3.4,
-              history: []
-            },
-            uptime: {
-              current: nodeInfo.uptime_percentage,
-              change: 0.5,
-              history: []
-            }
-          }
+          recommendations: recommendations.filter(r => r.category !== 'liquidity' && r.category !== 'connectivity' && r.category !== 'fees'),
+          dailyRecommendation: null,
+          completedActions: new Set()
         };
 
         setData(transformedData);
@@ -380,7 +273,7 @@ const DaziaPage: FC = () => {
     };
 
     fetchData();
-  }, [session]);
+  }, [pubkey]);
 
   const handleCompleteAction = (id: string) => {
     setCompletedActions(prev => {
@@ -457,7 +350,28 @@ const DaziaPage: FC = () => {
     <div className="container mx-auto max-w-7xl space-y-8 p-6">
       <DaziaHeader />
 
-      <PerformanceMetrics metrics={data.metrics} />
+      <PerformanceMetrics metrics={{
+        revenue: {
+          current: data.recommendations[0].impact,
+          change: 5.2,
+          history: []
+        },
+        efficiency: {
+          current: data.recommendations[0].impact,
+          change: 2.1,
+          history: []
+        },
+        channels: {
+          current: data.recommendations[0].impact,
+          change: 3.4,
+          history: []
+        },
+        uptime: {
+          current: data.recommendations[0].impact,
+          change: 0.5,
+          history: []
+        }
+      }} />
 
       <AdvancedStats stats={{
         channelDistribution: {
@@ -529,7 +443,7 @@ const DaziaPage: FC = () => {
             exit={{ opacity: 0, y: -20 }}
             className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
           >
-            {filterRecommendations(data.priorities[activeTab])
+            {filterRecommendations(data.recommendations)
               .filter(rec => !completedActions.has(rec.id))
               .map(recommendation => (
                 <RecommendationCard
@@ -548,46 +462,33 @@ const DaziaPage: FC = () => {
           Analyse détaillée
         </h2>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {Object.entries(data.analysis).map(([category, data]) => (
-            <div
-              key={category}
-              className="rounded-lg border border-gray-200 p-6"
-            >
-              <h3 className="text-lg font-semibold capitalize text-gray-900">
-                {category}
-              </h3>
-              <div className="mt-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Score</span>
-                  <span className="text-lg font-semibold text-gray-900">
-                    {data.score}%
-                  </span>
-                </div>
-                <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-gray-200">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${data.score}%` }}
-                    className="h-full bg-yellow-500"
-                  />
+          {Object.entries(data.recommendations[0])
+            .filter(([key, value]) => key !== 'id' && key !== 'category' && key !== 'impact' && key !== 'difficulty')
+            .map(([key, value]) => (
+              <div
+                key={key}
+                className="rounded-lg border border-gray-200 p-6"
+              >
+                <h3 className="text-lg font-semibold capitalize text-gray-900">
+                  {key}
+                </h3>
+                <div className="mt-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">Score</span>
+                    <span className="text-lg font-semibold text-gray-900">
+                      {value}%
+                    </span>
+                  </div>
+                  <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-gray-200">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${value}%` }}
+                      className="h-full bg-yellow-500"
+                    />
+                  </div>
                 </div>
               </div>
-              <div className="mt-4">
-                <h4 className="text-sm font-medium text-gray-600">
-                  Recommandations
-                </h4>
-                <ul className="mt-2 space-y-2">
-                  {data.recommendations.slice(0, 3).map(rec => (
-                    <li
-                      key={rec.id}
-                      className="text-sm text-gray-600"
-                    >
-                      • {rec.title}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
 
