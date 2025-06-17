@@ -3,7 +3,6 @@ const lightning = require('lightning');
 const { decodePaymentRequest, getWalletInfo, getChannels } = lightning;
 import { Invoice, InvoiceStatus, CreateInvoiceParams } from '@/types/lightning';
 import { createDazNodeLightningService } from './daznode-lightning-service';
-import { createLightningClient } from './lightning-client'
 
 interface LightningConfig {
   cert: string;          // Base64 encoded tls.cert
@@ -75,7 +74,12 @@ export class LightningService {
   async checkInvoiceStatus(paymentHash: string): Promise<InvoiceStatus> {
     try {
       const status = await this.daznodeService.checkInvoiceStatus(paymentHash);
-      return status;
+      return {
+        status: status.status as 'pending' | 'settled' | 'failed' | 'expired',
+        amount: status.amount,
+        settledAt: status.settledAt,
+        metadata: status.metadata
+      };
     } catch (error) {
       console.error('Erreur vérification facture:', error);
       throw error;
@@ -204,8 +208,8 @@ export function createLightningService(): LightningService {
   }
   
   const config: LightningConfig = {
-    cert: process.env.LND_TLS_CERT!,
-    macaroon: process.env.LND_ADMIN_MACAROON!,
+    cert: process.env.LND_TLS_CERT ?? '',
+    macaroon: process.env.LND_ADMIN_MACAROON ?? '',
     socket: process.env.LND_SOCKET || '127.0.0.1:10009'
   };
 

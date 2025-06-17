@@ -46,7 +46,11 @@ export class DazNodeLightningService {
         description: params.description,
         createdAt: new Date().toISOString(),
         expiresAt: new Date(Date.now() + (params.expiry || 3600) * 1000).toISOString(),
-        status: 'pending'
+        status: {
+          status: 'pending',
+          amount: params.amount,
+          metadata: params.metadata
+        }
       };
     } catch (error) {
       console.error('Erreur génération facture DazNode:', error);
@@ -56,10 +60,16 @@ export class DazNodeLightningService {
 
   async checkInvoiceStatus(paymentHash: string): Promise<InvoiceStatus> {
     try {
-      const response = await this.request<{ status: InvoiceStatus }>(
+      const response = await this.request<{ status: string, amount: number, settledAt?: string, metadata?: Record<string, unknown> }>(
         `/api/v1/lightning/invoice/${paymentHash}/status`
       );
-      return response.status;
+      
+      return {
+        status: response.status as 'pending' | 'settled' | 'failed' | 'expired',
+        amount: response.amount,
+        settledAt: response.settledAt,
+        metadata: response.metadata
+      };
     } catch (error) {
       console.error('Erreur vérification facture DazNode:', error);
       throw error;
@@ -76,7 +86,7 @@ export class DazNodeLightningService {
       const checkStatus = async () => {
         const status = await this.checkInvoiceStatus(params.paymentHash);
         
-        switch (status) {
+        switch (status.status) {
           case 'settled':
             params.onPaid();
             break;
