@@ -8,6 +8,11 @@ import { z } from 'zod';
 export const dynamic = "force-dynamic";
 export const runtime = 'nodejs';
 
+// Constantes
+const PROVIDER = 'daznode@getalby.com';
+const INVOICE_EXPIRY = 3600; // 1 heure en secondes
+const CORS_ORIGINS = ['https://daznode.com', 'https://app.daznode.com'];
+
 // Schéma de validation Zod
 const CreateInvoiceSchema = z.object({
   amount: z.number().positive(),
@@ -15,6 +20,7 @@ const CreateInvoiceSchema = z.object({
   metadata: z.record(z.unknown()).optional()
 });
 
+// Types
 interface InvoiceResponse {
   id: string;
   paymentRequest: string;
@@ -41,15 +47,54 @@ interface ApiResponse<T> {
 
 // Configuration CORS
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': CORS_ORIGINS.join(', '),
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Max-Age': '86400', // 24 heures
 };
 
-export async function OPTIONS() {
-  return new NextResponse(null, {
-    status: 204,
-    headers: corsHeaders,
+// Codes d'erreur
+const ErrorCodes = {
+  UNAUTHORIZED: 'UNAUTHORIZED',
+  VALIDATION_ERROR: 'VALIDATION_ERROR',
+  LIGHTNING_ERROR: 'LIGHTNING_ERROR',
+  INTERNAL_ERROR: 'INTERNAL_ERROR'
+} as const;
+
+// Mode simulation pour tests
+const SIMULATION_MODE = process.env.NODE_ENV === 'development' && !process.env.FORCE_LIGHTNING_CONNECTION;
+
+// Fonctions utilitaires
+function generateSimulatedInvoice(amount: number, description: string): InvoiceResponse {
+  const paymentHash = randomUUID().replace(/-/g, '');
+  const paymentRequest = `lnbc${Math.floor(amount/1000)}m1p${paymentHash}pp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq5xysxxatsyp3k7enxv4jsxqzpuaztrnwngzn3kdzw5hydlzf03qdgm2hdq27cqv3agm2awhz5se903vruatfhq77w3ls4evs3ch9zw97j25emudupq63nyw24cg27h2rspfj9srp`;
+  
+  return {
+    id: paymentHash,
+    paymentRequest,
+    paymentHash,
+    amount,
+    description,
+    expiresAt: new Date(Date.now() + INVOICE_EXPIRY * 1000).toISOString(),
+    createdAt: new Date().toISOString()
+  };
+}
+
+function createErrorResponse(code: keyof typeof ErrorCodes, message: string, details?: unknown, status = 400): Response {
+  return NextResponse.json<ApiResponse<null>>({
+    success: false,
+    error: {
+      code: ErrorCodes[code],
+      message,
+      details
+    },
+    meta: {
+      timestamp: new Date().toISOString(),
+      provider: PROVIDER
+    }
+  }, { 
+    status,
+    headers: corsHeaders
   });
 }
 
@@ -71,55 +116,32 @@ async function authenticateRequest(): Promise<boolean> {
   }
 }
 
-// Mode simulation pour tests
-const SIMULATION_MODE = process.env.NODE_ENV === 'development' && !process.env.FORCE_LIGHTNING_CONNECTION;
-
-function generateSimulatedInvoice(amount: number, description: string): InvoiceResponse {
-  const paymentHash = randomUUID().replace(/-/g, '');
-  const paymentRequest = `lnbc${Math.floor(amount/1000)}m1p${paymentHash}pp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq5xysxxatsyp3k7enxv4jsxqzpuaztrnwngzn3kdzw5hydlzf03qdgm2hdq27cqv3agm2awhz5se903vruatfhq77w3ls4evs3ch9zw97j25emudupq63nyw24cg27h2rspfj9srp`;
-  
-  return {
-    id: paymentHash,
-    paymentRequest,
-    paymentHash,
-    amount,
-    description,
-    expiresAt: new Date(Date.now() + 3600 * 1000).toISOString(),
-    createdAt: new Date().toISOString()
-  };
+// Handlers
+export async function OPTIONS(): Promise<Response> {
+  return new NextResponse(null, {
+    status: 204,
+    headers: corsHeaders,
+  });
 }
 
 export async function GET(): Promise<Response> {
   return NextResponse.json({
     success: true,
-    message: 'create-invoice endpoint - daznode@getalby.com',
-    provider: 'lightning + daznode@getalby.com',
+    message: `create-invoice endpoint - ${PROVIDER}`,
+    provider: `lightning + ${PROVIDER}`,
     methods: ['POST'],
     timestamp: new Date().toISOString()
   }, { headers: corsHeaders });
 }
 
 export async function POST(req: NextRequest): Promise<Response> {
-  console.log('🚀 create-invoice - Nouvelle requête via daznode@getalby.com');
+  console.log(`🚀 create-invoice - Nouvelle requête via ${PROVIDER}`);
   
   try {
     // Vérification de l'authentification
     const isAuthenticated = await authenticateRequest();
     if (!isAuthenticated) {
-      return NextResponse.json<ApiResponse<null>>({
-        success: false,
-        error: {
-          code: 'UNAUTHORIZED',
-          message: 'Authentification requise'
-        },
-        meta: {
-          timestamp: new Date().toISOString(),
-          provider: 'daznode@getalby.com'
-        }
-      }, { 
-        status: 401,
-        headers: corsHeaders
-      });
+      return createErrorResponse('UNAUTHORIZED', 'Authentification requise', null, 401);
     }
 
     // Validation des données d'entrée avec Zod
@@ -127,21 +149,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     const validationResult = CreateInvoiceSchema.safeParse(body);
     
     if (!validationResult.success) {
-      return NextResponse.json<ApiResponse<null>>({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: 'Données invalides',
-          details: validationResult.error.format()
-        },
-        meta: {
-          timestamp: new Date().toISOString(),
-          provider: 'daznode@getalby.com'
-        }
-      }, { 
-        status: 400,
-        headers: corsHeaders
-      });
+      return createErrorResponse('VALIDATION_ERROR', 'Données invalides', validationResult.error.format());
     }
 
     const { amount, description } = validationResult.data;
@@ -157,7 +165,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       const result = await lightningService.generateInvoice({
         amount,
         description,
-        expiry: 3600
+        expiry: INVOICE_EXPIRY
       });
       
       invoice = {
@@ -181,11 +189,11 @@ export async function POST(req: NextRequest): Promise<Response> {
       success: true,
       data: {
         invoice,
-        provider: SIMULATION_MODE ? 'daznode@getalby.com (simulation)' : 'daznode@getalby.com'
+        provider: SIMULATION_MODE ? `${PROVIDER} (simulation)` : PROVIDER
       },
       meta: {
         timestamp: new Date().toISOString(),
-        provider: 'daznode@getalby.com'
+        provider: PROVIDER
       }
     }, { headers: corsHeaders });
     
@@ -206,11 +214,11 @@ export async function POST(req: NextRequest): Promise<Response> {
             success: true,
             data: {
               invoice,
-              provider: 'daznode@getalby.com (fallback simulation)'
+              provider: `${PROVIDER} (fallback simulation)`
             },
             meta: {
               timestamp: new Date().toISOString(),
-              provider: 'daznode@getalby.com'
+              provider: PROVIDER
             }
           }, { headers: corsHeaders });
         }
@@ -219,20 +227,11 @@ export async function POST(req: NextRequest): Promise<Response> {
       }
     }
     
-    return NextResponse.json<ApiResponse<null>>({
-      success: false,
-      error: {
-        code: 'LIGHTNING_ERROR',
-        message: 'Erreur lors de la génération de la facture',
-        details: error instanceof Error ? error.message : 'Erreur inconnue'
-      },
-      meta: {
-        timestamp: new Date().toISOString(),
-        provider: 'daznode@getalby.com'
-      }
-    }, { 
-      status: 500,
-      headers: corsHeaders
-    });
+    return createErrorResponse(
+      'LIGHTNING_ERROR',
+      'Erreur lors de la génération de la facture',
+      error instanceof Error ? error.message : 'Erreur inconnue',
+      500
+    );
   }
 } 
