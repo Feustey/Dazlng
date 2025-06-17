@@ -1,8 +1,10 @@
 // Import dynamique du module lightning
-const lightning = require('lightning');
-const { decodePaymentRequest, getWalletInfo, getChannels } = lightning;
+import * as lightning from 'lightning';
 import { Invoice, InvoiceStatus, CreateInvoiceParams } from '@/types/lightning';
 import { createDazNodeLightningService } from './daznode-lightning-service';
+
+// Extraction des fonctions nécessaires
+const { decodePaymentRequest, getWalletInfo, getChannels } = lightning;
 
 interface LightningConfig {
   cert: string;          // Base64 encoded tls.cert
@@ -63,7 +65,11 @@ export class LightningService {
         description: params.description,
         createdAt: new Date().toISOString(),
         expiresAt: new Date(Date.now() + (params.expiry || 3600) * 1000).toISOString(),
-        status: 'pending'
+        status: {
+          status: 'pending',
+          amount: params.amount,
+          metadata: {}
+        }
       };
     } catch (error) {
       console.error('Erreur génération facture:', error);
