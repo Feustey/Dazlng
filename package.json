@@ -41,7 +41,8 @@
     "deps:check": "npm outdated",
     "deps:update": "npm update",
     "optimize": "npm run cache:clear && npm run build:analyze",
-    "test:dazno-api": "tsx scripts/test-dazno-api.ts"
+    "test:dazno-api": "tsx scripts/test-dazno-api.ts",
+    "generate-jwt": "tsx scripts/generate-jwt.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
