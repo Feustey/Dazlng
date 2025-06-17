@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, FC } from 'react';
+import React, { useState, useEffect, FC, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DaziaHeader } from './components/DaziaHeader';
 import { RecommendationCard } from './components/RecommendationCard';
@@ -10,34 +10,9 @@ import { useGamificationSystem } from '@/app/user/hooks/useGamificationSystem';
 import { useSubscription } from '@/lib/hooks/useSubscription';
 import { RecommendationFilters } from './components/RecommendationFilters';
 import { AdvancedStats } from './components/AdvancedStats';
-import { daznoAPI } from '@/lib/dazno-api';
-
-interface EnhancedRecommendation {
-  id: string;
-  title: string;
-  description: string;
-  priority: number;
-  impact: string;
-  difficulty: string;
-  reasoning: string;
-  date: string;
-  implementation_details: {
-    steps: string[];
-    requirements: string[];
-    estimated_hours: number;
-  };
-  success_criteria: string[];
-}
-
-interface DailyRecommendation {
-  id: string;
-  title: string;
-  description: string;
-  impact: string;
-  difficulty: string;
-  reasoning: string;
-  date: string;
-}
+import { daznoAPI, DaznoRecommendation } from '@/lib/dazno-api';
+import { SparklesIcon } from '@/app/components/icons/SparklesIcon';
+import { EnhancedRecommendation, DailyRecommendation, DaziaData } from '@/types/recommendations';
 
 interface RecommendationModal {
   isOpen: boolean;
@@ -45,23 +20,17 @@ interface RecommendationModal {
   type: 'enhanced' | 'daily';
 }
 
-interface DaziaData {
-  recommendations: EnhancedRecommendation[];
-  dailyRecommendation: DailyRecommendation | null;
-  completedActions: Set<string>;
-}
-
 const DaziaPage: FC = () => {
   const { pubkey, isLoaded: pubkeyLoaded } = usePubkeyCookie();
-  const { profile, isLoading: userLoading } = useGamificationSystem();
-  const { subscription, loading: subscriptionLoading } = useSubscription();
+  const { isLoading: _userLoading } = useGamificationSystem();
+  const { loading: _subscriptionLoading } = useSubscription();
   const [recommendations, setRecommendations] = useState<EnhancedRecommendation[]>([]);
-  const [dailyRecommendation, setDailyRecommendation] = useState<DailyRecommendation | null>(null);
+  const [_dailyRecommendation, setDailyRecommendation] = useState<DailyRecommendation | null>(null);
   const [completedActions, setCompletedActions] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
-  const [generatingDaily, setGeneratingDaily] = useState(false);
+  const [_generatingDaily, setGeneratingDaily] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [hasSubscription, setHasSubscription] = useState(false);
+  const [_hasSubscription, setHasSubscription] = useState(false);
   const [modal, setModal] = useState<RecommendationModal>({ isOpen: false, recommendation: null, type: 'enhanced' });
   const [activeTab, setActiveTab] = useState<'immediate' | 'short_term' | 'long_term'>('immediate');
   const [data, setData] = useState<DaziaData | null>(null);
@@ -154,7 +123,7 @@ const DaziaPage: FC = () => {
   }, [pubkey, pubkeyLoaded]);
 
   // Générer la recommandation du jour
-  const generateDailyRecommendation = async (): Promise<void> => {
+  const _generateDailyRecommendation = async (): Promise<void> => {
     if (!pubkey) {
       setError('Veuillez d\'abord renseigner votre clé publique de nœud dans l\'onglet "Mon Nœud"');
       return;
@@ -209,7 +178,7 @@ const DaziaPage: FC = () => {
     setCompletedActions(newCompleted);
   };
 
-  const getPriorityColor = (priority: number): string => {
+  const _getPriorityColor = (priority: number): string => {
     if (priority <= 3) return 'bg-red-100 text-red-800 border-red-200';
     if (priority <= 6) return 'bg-yellow-100 text-yellow-800 border-yellow-200';
     return 'bg-green-100 text-green-800 border-green-200';
@@ -224,7 +193,7 @@ const DaziaPage: FC = () => {
     }
   };
 
-  const openModal = (recommendation: EnhancedRecommendation | DailyRecommendation): void => {
+  const _openModal = (recommendation: EnhancedRecommendation | DailyRecommendation): void => {
     const type = 'action' in recommendation ? 'enhanced' : 'daily';
     setModal({ isOpen: true, recommendation, type });
   };
@@ -233,7 +202,7 @@ const DaziaPage: FC = () => {
     setModal({ isOpen: false, recommendation: null, type: 'enhanced' });
   };
 
-  const retryLoadRecommendations = (): void => {
+  const _retryLoadRecommendations = (): void => {
     setError(null);
     setLoading(true);
     // Le useEffect se déclenchera automatiquement
@@ -246,29 +215,58 @@ const DaziaPage: FC = () => {
           throw new Error('Clé publique non disponible');
         }
 
-        const [nodeInfo, recommendations, priorities] = await Promise.all([
+        const [_nodeInfo, _recommendations, _priorities] = await Promise.all([
           daznoAPI.getNodeInfo(pubkey),
           daznoAPI.getRecommendations(pubkey),
-          daznoAPI.getPriorities(pubkey, {
-            context: 'node_optimization',
-            goals: ['increase_revenue', 'improve_connectivity'],
-            preferences: {
-              risk_tolerance: 'medium',
-              investment_horizon: 'medium_term'
-            }
-          })
+          daznoAPI.getPriorities(pubkey)
         ]);
 
         // Transformer les données
         const transformedData: DaziaData = {
-          recommendations: recommendations.filter(r => r.category !== 'liquidity' && r.category !== 'connectivity' && r.category !== 'fees'),
+          recommendations: (_recommendations as DaznoRecommendation[]).filter((r: DaznoRecommendation) => 
+            r.category !== 'liquidity' && 
+            r.category !== 'connectivity' && 
+            r.category !== 'fees'
+          ).map((r: DaznoRecommendation): EnhancedRecommendation => ({
+            id: r.id,
+            title: r.title,
+            description: r.description,
+            priority: Number(r.priority) || 0,
+            impact: r.impact,
+            difficulty: r.difficulty,
+            estimated_gain: Number(r.estimated_gain_sats) || 0,
+            category:
+              r.category === 'channel_management' ? 'liquidity' :
+              r.category === 'fee_optimization' ? 'fees' :
+              r.category === 'routing' ? 'connectivity' : 'security',
+            action_type: r.action_type,
+            steps: [
+              {
+                order: Number(1),
+                description: 'Analyser la situation actuelle',
+                command: 'lncli getinfo'
+              },
+              {
+                order: Number(2),
+                description: "Planifier l'implémentation",
+                command: 'lncli listchannels'
+              },
+              {
+                order: Number(3),
+                description: "Exécuter l'action",
+                command: 'lncli updatechanpolicy'
+              }
+            ],
+            free: Boolean(r.free)
+          })),
           dailyRecommendation: null,
           completedActions: new Set()
         };
 
         setData(transformedData);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Une erreur est survenue');
+      } catch (error) {
+        console.error('Erreur lors du chargement des données:', error);
+        setError('Erreur lors du chargement des données');
       }
     };
 
@@ -301,6 +299,27 @@ const DaziaPage: FC = () => {
       return matchesSearch && matchesCategory && matchesImpact && matchesDifficulty;
     });
   };
+
+  const _renderRecommendations = (): ReactNode => {
+    if (!data) return null;
+
+    return (
+      <div className="space-y-4">
+        {data.recommendations.map((recommendation: EnhancedRecommendation) => (
+          <RecommendationCard
+            key={recommendation.id}
+            recommendation={recommendation}
+            onComplete={() => handleCompleteAction(recommendation.id)}
+            isPremium={false}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  const handleTabChange = (newValue: string) => {
+    setActiveTab(newValue)
+  }
 
   if (!pubkeyLoaded || loading) {
     return (
@@ -401,7 +420,7 @@ const DaziaPage: FC = () => {
           </h2>
           <div className="flex space-x-2">
             <button
-              onClick={() => setActiveTab('immediate')}
+              onClick={() => handleTabChange('immediate')}
               className={`rounded-full px-4 py-2 text-sm font-medium ${
                 activeTab === 'immediate'
                   ? 'bg-yellow-500 text-white'
@@ -411,7 +430,7 @@ const DaziaPage: FC = () => {
               Immédiat
             </button>
             <button
-              onClick={() => setActiveTab('short_term')}
+              onClick={() => handleTabChange('short_term')}
               className={`rounded-full px-4 py-2 text-sm font-medium ${
                 activeTab === 'short_term'
                   ? 'bg-yellow-500 text-white'
@@ -421,7 +440,7 @@ const DaziaPage: FC = () => {
               Court terme
             </button>
             <button
-              onClick={() => setActiveTab('long_term')}
+              onClick={() => handleTabChange('long_term')}
               className={`rounded-full px-4 py-2 text-sm font-medium ${
                 activeTab === 'long_term'
                   ? 'bg-yellow-500 text-white'

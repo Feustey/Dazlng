@@ -3,6 +3,7 @@ const lightning = require('lightning');
 const { createInvoice, decodePaymentRequest, getInvoice, getWalletInfo, getChannels } = lightning;
 import { Invoice, InvoiceStatus, CreateInvoiceParams } from '@/types/lightning';
 import { createDazNodeLightningService } from './daznode-lightning-service';
+import { createLightningClient } from './lightning-client'
 
 interface LightningConfig {
   cert: string;          // Base64 encoded tls.cert

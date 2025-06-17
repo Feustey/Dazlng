@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Sparkles } from 'lucide-react';
+import { SparklesIcon } from '@/app/components/icons/SparklesIcon';
 
 export const DaziaHeader = () => {
   return (
@@ -11,7 +11,7 @@ export const DaziaHeader = () => {
       <div className="absolute inset-0 bg-black/10" />
       <div className="relative z-10">
         <div className="flex items-center gap-3">
-          <Sparkles className="h-8 w-8 text-white" />
+          <SparklesIcon className="h-8 w-8 text-white" />
           <h1 className="text-3xl font-bold text-white">Dazia IA</h1>
         </div>
         <p className="mt-2 text-lg text-white/90">

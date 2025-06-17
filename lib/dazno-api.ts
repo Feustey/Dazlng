@@ -49,6 +49,7 @@ export interface DaznoRecommendation {
   impact: 'low' | 'medium' | 'high';
   difficulty: 'easy' | 'medium' | 'hard';
   priority: number;
+  reasoning?: string;
   
   // Détails SparkSeer
   estimated_gain_sats?: number;
@@ -56,7 +57,7 @@ export interface DaznoRecommendation {
   confidence_score?: number;
   
   // Contexte de la recommandation
-  category: 'channel_management' | 'fee_optimization' | 'liquidity' | 'routing' | 'connectivity';
+  category: 'channel_management' | 'fee_optimization' | 'liquidity' | 'routing' | 'connectivity' | 'fees';
   action_type: 'open_channel' | 'close_channel' | 'adjust_fees' | 'rebalance' | 'other';
   
   // Données additionnelles SparkSeer
@@ -263,6 +264,43 @@ class DaznoApiClient {
           timeline: '2-4 heures',
           complexity: 'medium' as const,
           category: 'liquidity',
+          urgency: 'medium' as const
+        }
+      ];
+    }
+  }
+
+  async getPriorities(pubkey: string): Promise<PriorityAction[]> {
+    if (!pubkey || pubkey.length !== 66) {
+      throw new Error('Invalid pubkey format');
+    }
+    
+    try {
+      return await this.makeRequest(`/api/v1/node/${pubkey}/priorities`);
+    } catch (error) {
+      console.warn('[DaznoAPI] Priorities not available, using fallback data:', error);
+      // Données de fallback avec priorités génériques
+      return [
+        {
+          id: 'priority-1',
+          action: 'Vérifier la connectivité de votre nœud',
+          priority: 1,
+          estimated_impact: 85,
+          reasoning: 'Un nœud bien connecté améliore significativement les performances de routing.',
+          timeline: 'Immédiat',
+          complexity: 'low' as const,
+          category: 'connectivity',
+          urgency: 'high' as const
+        },
+        {
+          id: 'priority-2',
+          action: 'Optimiser les frais de vos canaux actifs',
+          priority: 2,
+          estimated_impact: 70,
+          reasoning: 'Des frais optimisés augmentent les revenus de routing.',
+          timeline: 'Court terme',
+          complexity: 'medium' as const,
+          category: 'fee_optimization',
           urgency: 'medium' as const
         }
       ];

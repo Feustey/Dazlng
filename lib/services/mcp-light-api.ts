@@ -102,6 +102,63 @@ export interface ApiResponse<T> {
   };
 }
 
+// Nouvelles interfaces pour les endpoints RAG
+export interface RAGDocument {
+  id: string;
+  content: string;
+  metadata: Record<string, any>;
+  created_at: string;
+}
+
+export interface RAGQuery {
+  query: string;
+  context?: string;
+  limit?: number;
+}
+
+export interface RAGEmbedding {
+  text: string;
+  embedding: number[];
+}
+
+// Nouvelles interfaces pour les endpoints Simulation
+export interface SimulationProfile {
+  id: string;
+  name: string;
+  description: string;
+  parameters: Record<string, any>;
+}
+
+export interface SimulationResult {
+  success: boolean;
+  data: Record<string, any>;
+  metrics: Record<string, number>;
+}
+
+// Nouvelles interfaces pour les endpoints LNBits
+export interface LNBitsPayment {
+  payment_hash: string;
+  bolt11: string;
+  amount: number;
+  status: string;
+  created_at: string;
+}
+
+export interface LNBitsWallet {
+  id: string;
+  name: string;
+  balance: number;
+  currency: string;
+}
+
+export interface LNBitsChannel {
+  id: string;
+  remote_pubkey: string;
+  capacity: number;
+  local_balance: number;
+  remote_balance: number;
+}
+
 class MCPLightAPI {
   private baseURL: string;
   private credentials: MCPLightCredentials | null = null;
@@ -349,6 +406,108 @@ class MCPLightAPI {
     this.initialized = false;
     this.credentials = null;
     return this.initialize();
+  }
+
+  // Nouvelles méthodes pour les endpoints RAG
+  async createDocument(content: string, metadata: Record<string, any>): Promise<RAGDocument> {
+    return this.makeRequest<RAGDocument>('/rag/documents', {
+      method: 'POST',
+      body: JSON.stringify({ content, metadata })
+    });
+  }
+
+  async createDocumentsBatch(documents: Array<{ content: string; metadata: Record<string, any> }>): Promise<RAGDocument[]> {
+    return this.makeRequest<RAGDocument[]>('/rag/documents/batch', {
+      method: 'POST',
+      body: JSON.stringify({ documents })
+    });
+  }
+
+  async getDocument(documentId: string): Promise<RAGDocument> {
+    return this.makeRequest<RAGDocument>(`/rag/documents/${documentId}`);
+  }
+
+  async queryRAG(query: RAGQuery): Promise<any> {
+    return this.makeRequest('/rag/query', {
+      method: 'POST',
+      body: JSON.stringify(query)
+    });
+  }
+
+  async generateEmbedding(text: string): Promise<RAGEmbedding> {
+    return this.makeRequest<RAGEmbedding>('/rag/embed', {
+      method: 'POST',
+      body: JSON.stringify({ text })
+    });
+  }
+
+  async analyzeContent(content: string): Promise<any> {
+    return this.makeRequest('/rag/analyze', {
+      method: 'POST',
+      body: JSON.stringify({ content })
+    });
+  }
+
+  // Nouvelles méthodes pour les endpoints Simulation
+  async getSimulationProfiles(): Promise<SimulationProfile[]> {
+    return this.makeRequest<SimulationProfile[]>('/api/v1/simulate/profiles');
+  }
+
+  async simulateNode(pubkey: string, scenario: string): Promise<SimulationResult> {
+    return this.makeRequest<SimulationResult>('/api/v1/simulate/node', {
+      method: 'POST',
+      body: JSON.stringify({ pubkey, scenario })
+    });
+  }
+
+  async optimizeNode(pubkey: string): Promise<SimulationResult> {
+    return this.makeRequest<SimulationResult>(`/api/v1/optimize/node/${pubkey}`, {
+      method: 'POST'
+    });
+  }
+
+  // Nouvelles méthodes pour les endpoints Administration
+  async getAdminMetrics(): Promise<any> {
+    return this.makeRequest('/api/v1/admin/metrics');
+  }
+
+  async performMaintenance(action: string): Promise<any> {
+    return this.makeRequest('/api/v1/admin/maintenance', {
+      method: 'POST',
+      body: JSON.stringify({ action })
+    });
+  }
+
+  // Nouvelles méthodes pour les endpoints LNBits
+  async getPayments(): Promise<LNBitsPayment[]> {
+    return this.makeRequest<LNBitsPayment[]>('/api/v1/payments');
+  }
+
+  async getWallet(): Promise<LNBitsWallet> {
+    return this.makeRequest<LNBitsWallet>('/api/v1/wallet');
+  }
+
+  async decodePayment(bolt11: string): Promise<any> {
+    return this.makeRequest('/api/v1/payments/decode', {
+      method: 'POST',
+      body: JSON.stringify({ bolt11 })
+    });
+  }
+
+  async payBolt11(bolt11: string): Promise<any> {
+    return this.makeRequest('/api/v1/payments/bolt11', {
+      method: 'POST',
+      body: JSON.stringify({ bolt11 })
+    });
+  }
+
+  async getChannels(): Promise<LNBitsChannel[]> {
+    return this.makeRequest<LNBitsChannel[]>('/api/v1/channels');
+  }
+
+  // Nouvelle méthode pour l'endpoint Automatisation
+  async getConfig(): Promise<any> {
+    return this.makeRequest('/config');
   }
 }
 

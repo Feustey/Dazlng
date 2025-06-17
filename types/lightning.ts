@@ -20,7 +20,12 @@ export interface DazNodeInvoice {
   metadata?: Record<string, any>;
 }
 
-export type InvoiceStatus = 'pending' | 'settled' | 'expired' | 'failed';
+export type InvoiceStatus = {
+  status: 'pending' | 'settled' | 'failed' | 'expired';
+  amount: number;
+  settledAt?: string;
+  metadata?: Record<string, any>;
+}
 
 export interface CreateInvoiceParams {
   amount: number;
@@ -59,4 +64,10 @@ export interface PaymentLogEntry {
   created_at: string;
   updated_at: string;
   error?: string;
+}
+
+export interface LightningService {
+  healthCheck(): Promise<boolean>;
+  watchInvoiceWithRenewal(invoice: string, options: any): Promise<void>;
+  close(): Promise<void>;
 } 

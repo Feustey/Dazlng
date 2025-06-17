@@ -12,7 +12,7 @@ interface RecommendationCardProps {
     priority: number;
     estimated_gain: number;
     category: 'liquidity' | 'connectivity' | 'fees' | 'security';
-    action_type: 'open_channel' | 'close_channel' | 'adjust_fees' | 'rebalance';
+    action_type: 'open_channel' | 'close_channel' | 'adjust_fees' | 'rebalance' | 'other';
     target_node?: {
       pubkey: string;
       alias: string;
