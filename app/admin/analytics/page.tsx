@@ -104,13 +104,13 @@ const AnalyticsPage: React.FC = () => {
 
   useEffect(() => {
     loadAnalytics();
-  }, [timeRange]);
+  }, [timeRange, loadAnalytics]);
 
   // Auto-refresh toutes les 5 minutes
   useEffect(() => {
     const interval = setInterval(loadAnalytics, 5 * 60 * 1000);
     return () => clearInterval(interval);
-  }, [timeRange]);
+  }, [timeRange, loadAnalytics]);
 
   const formatNumber = (num: number): string => {
     if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';

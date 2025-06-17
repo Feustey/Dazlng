@@ -25,6 +25,10 @@ interface Customer {
   customer_score: number;
   segment: string;
   last_activity?: string;
+  // Propriétés de l'API
+  ordersCount?: number;
+  totalSpent?: number;
+  subscriptionStatus?: string;
 }
 
 interface CustomerStats {
@@ -108,24 +112,20 @@ const generateMockStats = (): CustomerStats => {
 
 export default function UsersPage(): JSX.Element {
   const [customers, setCustomers] = useState<Customer[]>([]);
-  const [stats, setStats] = useState<CustomerStats | null>(null);
+  const [stats, setStats] = useState<CustomerStats>({
+    total_customers: 0,
+    active_customers: 0,
+    premium_customers: 0,
+    lightning_users: 0,
+    total_revenue: 0,
+    avg_order_value: 0
+  });
   const [loading, setLoading] = useState(true);
+  const [selectedPage, setSelectedPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSegment, setSelectedSegment] = useState('all');
-  const [selectedPage, setSelectedPage] = useState(1);
-  const [itemsPerPage] = useState(25);
-  const [isDevelopment, setIsDevelopment] = useState<boolean>(false);
-
-  useEffect(() => {
-    // Détecter l'environnement côté client uniquement pour éviter l'hydratation mismatch
-    setIsDevelopment(!process.env.NODE_ENV || process.env.NODE_ENV !== 'production');
-  }, []);
-
-  useEffect(() => {
-    if (isDevelopment !== undefined) {
-      loadCustomersData();
-    }
-  }, [selectedPage, searchTerm, selectedSegment, isDevelopment]);
+  const [isDevelopment, setIsDevelopment] = useState<boolean | undefined>(undefined);
+  const itemsPerPage = 10;
 
   const loadCustomersData = async () => {
     try {
@@ -178,7 +178,7 @@ export default function UsersPage(): JSX.Element {
       
       if (data.success) {
         // Transformer les données de l'API vers le format attendu
-        const enrichedCustomers = data.data.map((user: any) => {
+        const enrichedCustomers = data.data.map((user: Customer) => {
           const orders_count = user.ordersCount || 0;
           const total_spent = user.totalSpent || 0;
           
@@ -240,6 +240,17 @@ export default function UsersPage(): JSX.Element {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // Détecter l'environnement côté client uniquement pour éviter l'hydratation mismatch
+    setIsDevelopment(!process.env.NODE_ENV || process.env.NODE_ENV !== 'production');
+  }, []);
+
+  useEffect(() => {
+    if (isDevelopment !== undefined) {
+      loadCustomersData();
+    }
+  }, [selectedPage, searchTerm, selectedSegment, isDevelopment, loadCustomersData]);
 
   const exportCustomers = async () => {
     try {

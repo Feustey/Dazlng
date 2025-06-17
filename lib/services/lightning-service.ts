@@ -1,6 +1,6 @@
 // Import dynamique du module lightning
 const lightning = require('lightning');
-const { createInvoice, decodePaymentRequest, getInvoice, getWalletInfo, getChannels } = lightning;
+const { decodePaymentRequest, getWalletInfo, getChannels } = lightning;
 import { Invoice, InvoiceStatus, CreateInvoiceParams } from '@/types/lightning';
 import { createDazNodeLightningService } from './daznode-lightning-service';
 import { createLightningClient } from './lightning-client'

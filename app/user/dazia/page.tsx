@@ -482,7 +482,7 @@ const DaziaPage: FC = () => {
         </h2>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {Object.entries(data.recommendations[0])
-            .filter(([key, value]) => key !== 'id' && key !== 'category' && key !== 'impact' && key !== 'difficulty')
+            .filter(([key, _value]) => key !== 'id' && key !== 'category' && key !== 'impact' && key !== 'difficulty')
             .map(([key, value]) => (
               <div
                 key={key}

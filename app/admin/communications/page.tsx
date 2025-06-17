@@ -75,10 +75,6 @@ export default function CommunicationsPage(): JSX.Element {
   const [showNewCampaign, setShowNewCampaign] = useState(false)
   const [showNewTemplate, setShowNewTemplate] = useState(false)
 
-  useEffect(() => {
-    loadData()
-  }, [activeTab])
-
   const loadData = async (): Promise<void> => {
     try {
       setLoading(true)
@@ -99,12 +95,16 @@ export default function CommunicationsPage(): JSX.Element {
         await loadTemplates()
       }
       
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Erreur chargement données:', error)
     } finally {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    loadData()
+  }, [activeTab, loadData])
 
   const loadEmailLogs = async () => {
     try {
