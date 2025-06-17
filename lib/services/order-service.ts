@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '../supabase';
 import { Database } from '@/types/database';
 import { z } from 'zod';
 import { PaymentService } from './payment-service';
@@ -21,14 +21,9 @@ const CreateOrderSchema = z.object({
 export type CreateOrderParams = z.infer<typeof CreateOrderSchema>;
 
 export class OrderService {
-  private supabase;
   private paymentService;
 
   constructor() {
-    this.supabase = createClient<Database>(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
     this.paymentService = new PaymentService();
   }
 
@@ -41,7 +36,7 @@ export class OrderService {
       const validatedParams = CreateOrderSchema.parse(params);
 
       // 2. Création de la commande dans la base de données
-      const { data: order, error } = await this.supabase
+      const { data: order, error } = await supabase
         .from('orders')
         .insert({
           product_type: validatedParams.product_type,
@@ -73,7 +68,7 @@ export class OrderService {
    */
   async updateOrder(orderId: string, updates: Partial<Database['public']['Tables']['orders']['Update']>) {
     try {
-      const { data: order, error } = await this.supabase
+      const { data: order, error } = await supabase
         .from('orders')
         .update(updates)
         .eq('id', orderId)
@@ -95,7 +90,7 @@ export class OrderService {
    */
   async markOrderPaid(orderId: string) {
     try {
-      const { data: order, error } = await this.supabase
+      const { data: order, error } = await supabase
         .from('orders')
         .update({
           payment_status: 'paid',
@@ -120,7 +115,7 @@ export class OrderService {
    */
   async getOrder(orderId: string) {
     try {
-      const { data: order, error } = await this.supabase
+      const { data: order, error } = await supabase
         .from('orders')
         .select()
         .eq('id', orderId)
@@ -139,7 +134,7 @@ export class OrderService {
    */
   async getOrderByPaymentHash(paymentHash: string) {
     try {
-      const { data: order, error } = await this.supabase
+      const { data: order, error } = await supabase
         .from('orders')
         .select()
         .eq('payment_hash', paymentHash)
@@ -158,7 +153,7 @@ export class OrderService {
    */
   async getUserOrders(userId: string) {
     try {
-      const { data: orders, error } = await this.supabase
+      const { data: orders, error } = await supabase
         .from('orders')
         .select()
         .eq('user_id', userId)
