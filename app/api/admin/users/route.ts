@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
-import { 
-  errorResponse,
-  paginatedResponse,
-  handleApiError,
-  logApiRequest
-} from '@/lib/api-response';
+import { createApiResponse, handleApiError } from '@/lib/api-response';
 import { 
   adminQuerySchema,
   validateData
@@ -13,6 +8,7 @@ import {
 import { withAdmin } from '@/lib/middleware';
 import { ErrorCodes } from '@/types/database';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
+import { z } from 'zod';
 
 interface AdminUser {
   id: string;
@@ -134,16 +130,7 @@ export async function GET(req: NextRequest): Promise<Response> {
       const endIndex = startIndex + limit;
       const paginatedUsers = mockUsers.slice(startIndex, endIndex);
       
-      return NextResponse.json({
-        success: true,
-        data: paginatedUsers,
-        meta: {
-          total,
-          page,
-          limit,
-          totalPages: Math.ceil(total / limit)
-        }
-      });
+      return createApiResponse({ success: true, data: paginatedUsers, meta: { total, page, limit, totalPages: Math.ceil(total / limit) } });
     }
 
     // Mode production - cette partie nécessiterait une vraie configuration Supabase
@@ -158,16 +145,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     // Fallback vers les données mock même en cas d'erreur
     const mockUsers = generateMockUsers();
     
-    return NextResponse.json({
-      success: true,
-      data: mockUsers,
-      meta: {
-        total: mockUsers.length,
-        page: 1,
-        limit: 20,
-        totalPages: 1
-      }
-    });
+    return createApiResponse({ success: true, data: mockUsers, meta: { total: mockUsers.length, page: 1, limit: 20, totalPages: 1 } });
   }
 }
 
@@ -182,17 +160,20 @@ async function getUsersHandler(req: NextRequest, user: SupabaseUser): Promise<Re
     // Validation des paramètres de requête
     const validationResult = validateData(adminQuerySchema, Object.fromEntries(searchParams.entries()));
     if (!validationResult.success) {
-      return errorResponse(
-        ErrorCodes.VALIDATION_ERROR,
-        'Paramètres de requête invalides',
-        // @ts-expect-error - TypeScript Zod validation narrowing issue
-        validationResult.error.details
-      );
+      const errorResult = validationResult as { success: false; error: { message: string; details: z.ZodIssue[] } };
+      return createApiResponse({
+        success: false,
+        error: {
+          code: ErrorCodes.VALIDATION_ERROR,
+          message: errorResult.error.message,
+          details: errorResult.error.details
+        }
+      }, 400);
     }
 
     const { page = 1, limit = 20, sort = 'created_at:desc', search } = validationResult.data;
 
-    logApiRequest('GET', '/api/admin/users', user.id, { page, limit, search });
+    console.log('GET', '/api/admin/users', user.id, { page, limit, search });
 
     // Construction de la requête avec jointures pour les statistiques
     let query = supabase
@@ -228,11 +209,27 @@ async function getUsersHandler(req: NextRequest, user: SupabaseUser): Promise<Re
 
     if (profilesError) {
       console.error('Erreur lors de la récupération des profils:', profilesError);
-      return errorResponse(ErrorCodes.DATABASE_ERROR, 'Erreur lors de la récupération des utilisateurs');
+      return createApiResponse({
+        success: false,
+        error: {
+          code: ErrorCodes.DATABASE_ERROR,
+          message: 'Erreur lors de la récupération des utilisateurs'
+        }
+      }, 500);
     }
 
     if (!profiles || profiles.length === 0) {
-      return paginatedResponse([], count || 0, page, limit);
+      return createApiResponse({
+        success: true,
+        data: [],
+        meta: {
+          pagination: {
+            total: 0,
+            page,
+            limit
+          }
+        }
+      });
     }
 
     // Récupérer les statistiques additionnelles pour chaque utilisateur
@@ -273,10 +270,20 @@ async function getUsersHandler(req: NextRequest, user: SupabaseUser): Promise<Re
       };
     });
 
-    return paginatedResponse(enrichedUsers, count || 0, page, limit);
+    return createApiResponse({
+      success: true,
+      data: enrichedUsers,
+      meta: {
+        pagination: {
+          total: count || 0,
+          page,
+          limit
+        }
+      }
+    });
 
   } catch (error) {
-    return handleApiError(error, 'GET /api/admin/users');
+    return handleApiError(error);
   }
 }
 
