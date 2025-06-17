@@ -32,7 +32,8 @@
       }
     ],
     "types": [
-      // "./types/next-auth"
+      // "./types/next-auth",
+      "./types/lightning"
     ]
   },
   "include": [
