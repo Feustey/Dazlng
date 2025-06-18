@@ -27,6 +27,12 @@ const ContactPage: React.FC = () => {
         mirror: true,
         anchorPlacement: 'top-bottom'
       });
+      // Désactive le scroll sur la page contact
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
     }
   }, []);
 
