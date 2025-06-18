@@ -3,9 +3,6 @@ import * as lightning from 'lightning';
 import { Invoice, InvoiceStatus, CreateInvoiceParams } from '@/types/lightning';
 import { createDazNodeLightningService } from './daznode-lightning-service';
 
-// Extraction des fonctions nécessaires
-const { decodePaymentRequest, getWalletInfo, getChannels } = lightning;
-
 interface LightningConfig {
   cert: string;          // Base64 encoded tls.cert
   macaroon: string;      // Base64 encoded admin.macaroon  
@@ -44,9 +41,25 @@ interface DecodedInvoice {
 
 export class LightningService {
   private daznodeService;
+  private lnd: any;
 
   constructor() {
     this.daznodeService = createDazNodeLightningService();
+    this.initializeLnd();
+  }
+
+  private async initializeLnd() {
+    try {
+      const { lnd } = await lightning.createLndGrpc({
+        socket: process.env.LND_SOCKET || '127.0.0.1:10009',
+        cert: process.env.LND_TLS_CERT,
+        macaroon: process.env.LND_ADMIN_MACAROON
+      });
+      this.lnd = lnd;
+    } catch (error) {
+      console.error('❌ Erreur initialisation LND:', error);
+      throw new Error('Impossible de se connecter au nœud LND');
+    }
   }
 
   async generateInvoice(params: CreateInvoiceParams): Promise<Invoice> {
@@ -122,8 +135,8 @@ export class LightningService {
         throw new Error('Format de facture invalide: doit commencer par "ln"');
       }
 
-      const decoded = await decodePaymentRequest({
-        lnd: this.daznodeService.lnd,
+      const decoded = await lightning.decodePaymentRequest({
+        lnd: this.lnd,
         request: paymentRequest
       });
 
@@ -156,8 +169,8 @@ export class LightningService {
       console.log('🔍 LightningService - Health check...');
       
       const [walletInfo, channels] = await Promise.all([
-        getWalletInfo({ lnd: this.daznodeService.lnd }),
-        getChannels({ lnd: this.daznodeService.lnd })
+        lightning.getWalletInfo({ lnd: this.lnd }),
+        lightning.getChannels({ lnd: this.lnd })
       ]);
 
       const nodeInfo: NodeInfo = {

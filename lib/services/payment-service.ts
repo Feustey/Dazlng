@@ -22,6 +22,15 @@ const CreateOrderSchema = z.object({
 
 export type CreateOrderParams = z.infer<typeof CreateOrderSchema>;
 
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  error?: {
+    code: string;
+    message: string;
+  };
+}
+
 export class PaymentService {
   private lightningService: LightningService;
   private logger: PaymentLogger;
@@ -98,8 +107,29 @@ export class PaymentService {
   /**
    * Vérifie le statut d'une facture et met à jour la commande si nécessaire
    */
-  async checkInvoiceStatus(paymentHash: string): Promise<InvoiceStatus> {
-    return this.lightningService.checkInvoiceStatus(paymentHash);
+  async checkInvoiceStatus(paymentHash: string): Promise<{ status: InvoiceStatus }> {
+    try {
+      const response = await fetch('/api/lightning', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'checkInvoice',
+          params: { paymentHash }
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur vérification facture');
+      }
+
+      const { data } = await response.json() as ApiResponse<{ status: InvoiceStatus }>;
+      return data;
+    } catch (error) {
+      console.error('Erreur vérification facture:', error);
+      throw error;
+    }
   }
 
   /**
@@ -162,7 +192,32 @@ export class PaymentService {
   }
 
   async generateInvoice(params: CreateInvoiceParams): Promise<Invoice> {
-    return this.lightningService.generateInvoice(params);
+    try {
+      const response = await fetch('/api/lightning', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'generateInvoice',
+          params: {
+            amount: params.amount,
+            description: params.description,
+            expires_at: params.expires_at
+          }
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur génération facture');
+      }
+
+      const { data } = await response.json() as ApiResponse<Invoice>;
+      return data;
+    } catch (error) {
+      console.error('Erreur génération facture:', error);
+      throw error;
+    }
   }
 
   async watchInvoice(params: {
@@ -171,6 +226,21 @@ export class PaymentService {
     onExpired: () => void;
     onError: (error: Error) => void;
   }): Promise<void> {
-    return this.lightningService.watchInvoice(params);
+    const checkInterval = setInterval(async () => {
+      try {
+        const { status } = await this.checkInvoiceStatus(params.paymentHash);
+        
+        if (status === 'settled') {
+          clearInterval(checkInterval);
+          params.onPaid();
+        } else if (status === 'expired') {
+          clearInterval(checkInterval);
+          params.onExpired();
+        }
+      } catch (error) {
+        clearInterval(checkInterval);
+        params.onError(error instanceof Error ? error : new Error('Erreur inconnue'));
+      }
+    }, 5000); // Vérifier toutes les 5 secondes
   }
 } 

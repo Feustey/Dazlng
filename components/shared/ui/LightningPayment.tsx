@@ -1,14 +1,17 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { usePaymentService } from '@/lib/hooks/usePaymentService';
-import { Invoice } from '@/types/lightning';
+import { Invoice, InvoiceStatus } from '@/types/lightning';
+import Button from '@/components/shared/ui/Button';
+import { toast } from 'sonner';
 import QRCode from 'react-qr-code';
 
 interface LightningPaymentProps {
   amount: number;
   description: string;
   onPaid: () => void;
+  onExpired: () => void;
   onError: (error: Error) => void;
 }
 
@@ -16,10 +19,11 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
   amount,
   description,
   onPaid,
+  onExpired,
   onError
 }) => {
   const [invoice, setInvoice] = useState<Invoice | null>(null);
-  const [status, setStatus] = useState<'pending' | 'paid' | 'expired' | 'error'>('pending');
+  const [status, setStatus] = useState<InvoiceStatus>('pending');
   const [error, setError] = useState<string | null>(null);
   const paymentService = usePaymentService();
 
@@ -31,121 +35,102 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
           description
         });
         setInvoice(newInvoice);
-        setStatus('pending');
-        setError(null);
-
-        // Surveiller le paiement
-        paymentService.watchInvoice({
-          paymentHash: newInvoice.paymentHash,
-          onPaid: () => {
-            setStatus('paid');
-            onPaid();
-          },
-          onExpired: () => {
-            setStatus('expired');
-          },
-          onError: (error) => {
-            setStatus('error');
-            setError(error.message);
-            onError(error);
-          }
-        });
-      } catch (error) {
-        setStatus('error');
-        setError(error instanceof Error ? error.message : 'Erreur inconnue');
-        onError(error instanceof Error ? error : new Error('Erreur inconnue'));
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Erreur génération facture');
+        onError(err instanceof Error ? err : new Error('Erreur génération facture'));
       }
     };
 
     generateInvoice();
-  }, [amount, description, onPaid, onError, paymentService]);
+  }, [amount, description, paymentService, onError]);
 
-  if (status === 'error') {
-    return (
-      <div className="p-4 bg-red-50 rounded-lg">
-        <p className="text-red-600">Erreur: {error}</p>
-        <button
-          onClick={() => window.location.reload()}
-          className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-        >
-          Réessayer
-        </button>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (!invoice) return;
 
-  if (status === 'expired') {
-    return (
-      <div className="p-4 bg-yellow-50 rounded-lg">
-        <p className="text-yellow-600">La facture a expiré</p>
-        <button
-          onClick={() => window.location.reload()}
-          className="mt-2 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700"
-        >
-          Générer une nouvelle facture
-        </button>
-      </div>
-    );
-  }
+    const watchInvoice = async () => {
+      try {
+        await paymentService.watchInvoice({
+          paymentHash: invoice.id,
+          onPaid: () => {
+            setStatus('settled' as InvoiceStatus);
+            onPaid();
+          },
+          onExpired: () => {
+            setStatus('expired' as InvoiceStatus);
+            onExpired();
+          },
+          onError: (err) => {
+            setStatus('error' as InvoiceStatus);
+            setError(err.message);
+            onError(err);
+          }
+        });
+      } catch (err) {
+        setStatus('error' as InvoiceStatus);
+        setError(err instanceof Error ? err.message : 'Erreur surveillance facture');
+        onError(err instanceof Error ? err : new Error('Erreur surveillance facture'));
+      }
+    };
 
-  if (status === 'paid') {
+    watchInvoice();
+  }, [invoice, paymentService, onPaid, onExpired, onError]);
+
+  const copyToClipboard = async () => {
+    if (!invoice) return;
+    try {
+      await navigator.clipboard.writeText(invoice.paymentRequest);
+      toast.success('Facture copiée dans le presse-papiers');
+    } catch (err) {
+      toast.error('Erreur copie facture');
+    }
+  };
+
+  if (error) {
     return (
-      <div className="p-4 bg-green-50 rounded-lg">
-        <p className="text-green-600">Paiement reçu !</p>
+      <div className="p-4 text-red-500 bg-red-50 rounded-lg">
+        <p>{error}</p>
       </div>
     );
   }
 
   if (!invoice) {
     return (
-      <div className="p-4 bg-gray-50 rounded-lg">
+      <div className="p-4 text-gray-500">
         <p>Génération de la facture...</p>
       </div>
     );
   }
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow">
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold mb-2">Paiement Lightning</h3>
-        <p className="text-gray-600">{description}</p>
-        <p className="text-xl font-bold mt-2">{amount} sats</p>
-      </div>
-
-      <div className="flex justify-center mb-4">
+    <div className="p-4 space-y-4">
+      <div className="flex justify-center">
         <QRCode
           value={invoice.paymentRequest}
           size={256}
-          level="M"
-          className="p-2 bg-white"
+          style={{ height: "auto", maxWidth: "100%", width: "100%" }}
         />
       </div>
-
+      
       <div className="text-center">
-        <p className="text-sm text-gray-500 mb-2">Scannez le QR code ou copiez la facture</p>
-        <div className="relative">
-          <input
-            type="text"
-            value={invoice.paymentRequest}
-            readOnly
-            className="w-full p-2 border rounded text-sm font-mono"
-          />
-          <button
-            onClick={() => {
-              navigator.clipboard.writeText(invoice.paymentRequest);
-            }}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 px-2 py-1 text-sm bg-gray-100 rounded hover:bg-gray-200"
-          >
-            Copier
-          </button>
+        <p className="text-sm text-gray-500 mb-2">Montant: {amount} sats</p>
+        <p className="text-sm text-gray-500 mb-4">{description}</p>
+        
+        <div className="flex justify-center space-x-2">
+          <Button onClick={copyToClipboard} variant="outline">
+            Copier la facture
+          </Button>
         </div>
       </div>
 
-      <div className="mt-4 text-center">
-        <p className="text-sm text-gray-500">
-          Expire le {new Date(invoice.expiresAt).toLocaleString()}
-        </p>
-      </div>
+      {status === 'pending' && (
+        <p className="text-center text-yellow-500">En attente du paiement...</p>
+      )}
+      {status === 'settled' && (
+        <p className="text-center text-green-500">Paiement reçu !</p>
+      )}
+      {status === 'expired' && (
+        <p className="text-center text-red-500">Facture expirée</p>
+      )}
     </div>
   );
 }; 

@@ -69,7 +69,7 @@
     "jose": "^6.0.11",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
-    "lightning": "^10.25.2",
+    "lightning": "^10.25.3",
     "lucide-react": "^0.510.0",
     "next": "^15.3.3",
     "next-intl": "^4.1.0",
