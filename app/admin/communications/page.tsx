@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 
@@ -65,7 +65,7 @@ interface EmailStats {
 }
 
 export default function CommunicationsPage(): JSX.Element {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'campaigns' | 'templates' | 'logs'>('dashboard')
+  const [activeTab, setActiveTab] = useState('dashboard')
   const [emailLogs, setEmailLogs] = useState<EmailLog[]>([])
   const [contacts, setContacts] = useState<Contact[]>([])
   const [campaigns, setCampaigns] = useState<EmailCampaign[]>([])
@@ -75,7 +75,7 @@ export default function CommunicationsPage(): JSX.Element {
   const [showNewCampaign, setShowNewCampaign] = useState(false)
   const [showNewTemplate, setShowNewTemplate] = useState(false)
 
-  const loadData = async (): Promise<void> => {
+  const loadData = useCallback(async (): Promise<void> => {
     try {
       setLoading(true)
       
@@ -100,11 +100,11 @@ export default function CommunicationsPage(): JSX.Element {
     } finally {
       setLoading(false)
     }
-  }
+  }, [activeTab])
 
   useEffect(() => {
     loadData()
-  }, [activeTab, loadData])
+  }, [loadData])
 
   const loadEmailLogs = async () => {
     try {

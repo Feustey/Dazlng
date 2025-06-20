@@ -5,8 +5,8 @@ import { cookies } from 'next/headers'
 interface AuthUser {
   id: string
   email: string
-  user_metadata?: any
-  app_metadata?: any
+  user_metadata?: unknown
+  app_metadata?: unknown
 }
 
 interface AuthResult {
@@ -21,18 +21,27 @@ interface AuthResult {
 export async function getAuthenticatedUser(): Promise<AuthResult> {
   try {
     const cookieStore = await cookies()
+    
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.error('[AUTH] Variables d\'environnement Supabase manquantes')
+      return { user: null, error: 'Configuration serveur invalide', isAdmin: false }
+    }
+    
     const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      supabaseUrl,
+      supabaseAnonKey,
       {
         cookies: {
           get(name: string) {
             return cookieStore.get(name)?.value
           },
-          set(name: string, value: string, options: any) {
+          set(name: string, value: string, options: Record<string, unknown>) {
             cookieStore.set({ name, value, ...options })
           },
-          remove(name: string, options: any) {
+          remove(name: string, options: Record<string, unknown>) {
             cookieStore.set({ name, value: '', ...options })
           },
         },
@@ -66,7 +75,7 @@ export async function getAuthenticatedUser(): Promise<AuthResult> {
 
     const authUser: AuthUser = {
       id: user.id,
-      email: user.email!,
+      email: user.email || '',
       user_metadata: user.user_metadata,
       app_metadata: user.app_metadata
     }
@@ -95,9 +104,17 @@ export async function requireAuth(request: Request): Promise<AuthResult> {
 
   const token = authHeader.replace('Bearer ', '')
   
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('[AUTH] Variables d\'environnement Supabase manquantes')
+    return { user: null, error: 'Configuration serveur invalide', isAdmin: false }
+  }
+  
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       cookies: {
         get: () => undefined,
@@ -118,7 +135,7 @@ export async function requireAuth(request: Request): Promise<AuthResult> {
   return {
     user: {
       id: user.id,
-      email: user.email!,
+      email: user.email || '',
       user_metadata: user.user_metadata,
       app_metadata: user.app_metadata
     },

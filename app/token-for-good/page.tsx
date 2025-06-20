@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import Image from "next/image";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import Link from "next/link";
 
 export default function TokenForGoodPage(): React.ReactElement {
   useEffect(() => {
@@ -33,7 +34,13 @@ export default function TokenForGoodPage(): React.ReactElement {
   }, []);
   
   return (
-    <div className="overflow-hidden">
+    <div className="overflow-hidden relative">
+      {/* CTA sticky */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <Link href="https://app.token-for-good.com/login" target="_blank" className="bg-gradient-to-r from-yellow-400 to-orange-400 text-indigo-900 font-bold px-6 py-3 rounded-full shadow-lg hover:scale-105 transition text-lg flex items-center gap-2">
+          🚀 Rejoindre la communauté
+        </Link>
+      </div>
       {/* Hero Section avec fond violet */}
       <section className="bg-gradient-to-b from-indigo-600 to-indigo-700 text-white pb-24 pt-10 relative">
         <div className="container mx-auto px-4 text-center">
@@ -54,10 +61,19 @@ export default function TokenForGoodPage(): React.ReactElement {
           <p className="text-xl md:text-2xl max-w-3xl mx-auto mb-8" data-aos="fade-up" data-aos-delay="100">
             La plus grande communauté francophone de node runners Bitcoin
           </p>
-          <p className="text-lg md:text-xl max-w-2xl mx-auto mb-12 text-indigo-200" data-aos="fade-up" data-aos-delay="200">
+          <p className="text-lg md:text-xl max-w-2xl mx-auto mb-6 text-indigo-200" data-aos="fade-up" data-aos-delay="200">
             Rejoignez +500 passionnés qui s'entraident pour maximiser leurs revenus Lightning Network
           </p>
-          
+          {/* Teasing gamification */}
+          <div className="mb-6" data-aos="fade-up" data-aos-delay="250">
+            <span className="inline-block bg-yellow-400 text-indigo-900 font-bold px-4 py-2 rounded-full shadow">
+              🎁 1 T4G offert à l'inscription &nbsp;|&nbsp; 🏅 Débloquez votre premier badge dès l'inscription !
+            </span>
+          </div>
+          {/* CTA principal Hero */}
+          <Link href="https://app.token-for-good.com/login" target="_blank" className="inline-flex items-center justify-center w-auto h-14 rounded-full bg-white text-indigo-700 shadow-lg hover:bg-opacity-90 transition-all duration-300 text-xl font-bold px-8 mb-4">
+            🚀 Rejoindre la communauté
+          </Link>
           {/* Flèche de défilement vers la section "Pourquoi rejoindre" */}
           <a 
             href="#why-join" 
@@ -95,6 +111,19 @@ export default function TokenForGoodPage(): React.ReactElement {
           <h2 className="text-4xl font-bold mb-16 text-center" data-aos="fade-up">
             Pourquoi rejoindre Token for Good ?
           </h2>
+          
+          {/* Teasing gamification section avantages */}
+          <div className="flex justify-center mb-8">
+            <span className="inline-block bg-yellow-400 text-indigo-900 font-bold px-4 py-2 rounded-full shadow">
+              🏅 Débloquez votre premier badge dès l'inscription !
+            </span>
+          </div>
+          {/* CTA section avantages */}
+          <div className="flex justify-center mb-8">
+            <Link href="https://app.token-for-good.com/login" target="_blank" className="bg-white text-indigo-700 font-bold px-8 py-3 rounded-xl shadow hover:bg-gray-100 transition text-lg">
+              🚀 Rejoindre la communauté
+            </Link>
+          </div>
           
           <div className="grid md:grid-cols-3 gap-8 mt-12">
             <div className="bg-[#3b8953]/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300" data-aos="fade-up" data-aos-delay="100">
@@ -235,6 +264,33 @@ export default function TokenForGoodPage(): React.ReactElement {
               </div>
             </div>
           </div>
+          {/* CTA sous témoignages */}
+          <div className="flex justify-center mt-8">
+            <Link href="https://app.token-for-good.com/login" target="_blank" className="bg-white text-indigo-700 font-bold px-8 py-3 rounded-xl shadow hover:bg-gray-100 transition text-lg">
+              🚀 Rejoindre la communauté
+            </Link>
+          </div>
+          {/* Mini-leaderboard public */}
+          <div className="mt-12 bg-white/20 rounded-2xl p-6 shadow text-center max-w-2xl mx-auto">
+            <h3 className="text-xl font-bold text-yellow-300 mb-4">Top mentors du mois</h3>
+            <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
+              <div className="flex flex-col items-center">
+                <Image src="/assets/images/avatar-male.svg" alt="Avatar Jean" width={40} height={40} className="rounded-full mb-1" />
+                <span className="font-bold text-white">Jean D.</span>
+                <span className="text-yellow-200 text-sm">12 aides</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <Image src="/assets/images/avatar-female.svg" alt="Avatar Marie" width={40} height={40} className="rounded-full mb-1" />
+                <span className="font-bold text-white">Marie L.</span>
+                <span className="text-yellow-200 text-sm">10 aides</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <Image src="/assets/images/avatar-leaticia.png" alt="Avatar Leaticia" width={40} height={40} className="rounded-full mb-1" />
+                <span className="font-bold text-white">Laeticia</span>
+                <span className="text-yellow-200 text-sm">8 aides</span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -316,7 +372,7 @@ export default function TokenForGoodPage(): React.ReactElement {
       <section className="bg-white py-8 rounded-2xl mb-10">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl font-bold text-center mb-4">Newsletter</h2>
-          <p className="text-center mb-6">Chaque semaine, toute l'actualité de la communauté !</p>
+          <p className="text-center mb-6 font-semibold text-indigo-700">Rejoignez +500 node runners et recevez chaque semaine les meilleures astuces Lightning !</p>
           <form className="max-w-md mx-auto flex flex-col md:flex-row gap-4">
             <input type="email" placeholder="Votre email" className="flex-1 px-4 py-2 border rounded" />
             <button type="submit" className="bg-[#1a1a1a] text-white px-6 py-2 rounded font-semibold">S'inscrire</button>

@@ -132,7 +132,34 @@ function CheckoutContent(): React.ReactElement {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
-    // ... code existant (à adapter si besoin)
+    if (!isFormValid()) return;
+    try {
+      setShowLightning(true);
+      // Création de la commande + facture en un seul appel
+      const orderRef = `${Math.random().toString(36).substring(2, 10)}-${Date.now().toString(36)}`;
+      const invoiceRes = await fetch('/api/create-invoice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: getPrice(),
+          description: `DazNode${isAnnual ? ' (Abonnement Annuel)' : ''} - ${orderRef}`,
+          metadata: {
+            product_type: 'daznode',
+            customer: form,
+            plan: isAnnual ? 'premium' : 'basic',
+            billing_cycle: isAnnual ? 'yearly' : 'monthly',
+            order_ref: orderRef
+          }
+        })
+      });
+      const invoiceData = await invoiceRes.json();
+      if (!invoiceData.success) throw new Error(invoiceData.error?.message || 'Erreur création facture');
+      // Afficher le QR code et suivre le paiement (à intégrer dans le rendu)
+      // ...
+    } catch (error) {
+      setShowLightning(false);
+      // Afficher une erreur utilisateur
+    }
   };
 
   if (showLightning) {

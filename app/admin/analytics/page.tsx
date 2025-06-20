@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 interface AnalyticsData {
   stats: {
@@ -44,7 +44,7 @@ const AnalyticsPage: React.FC = () => {
   const [timeRange, setTimeRange] = useState('7d');
   const [lastUpdated, setLastUpdated] = useState<string>('');
 
-  const loadAnalytics = async () => {
+  const loadAnalytics = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -100,17 +100,17 @@ const AnalyticsPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [timeRange]);
 
   useEffect(() => {
     loadAnalytics();
-  }, [timeRange, loadAnalytics]);
+  }, [loadAnalytics]);
 
   // Auto-refresh toutes les 5 minutes
   useEffect(() => {
     const interval = setInterval(loadAnalytics, 5 * 60 * 1000);
     return () => clearInterval(interval);
-  }, [timeRange, loadAnalytics]);
+  }, [loadAnalytics]);
 
   const formatNumber = (num: number): string => {
     if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';

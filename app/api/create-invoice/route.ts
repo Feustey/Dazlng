@@ -1,16 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createDazNodeLightningService } from '@/lib/services/daznode-lightning-service';
-import { randomUUID } from 'crypto';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
+import { daznoAPI } from '@/lib/services/dazno-api';
+import { OrderService } from '@/lib/services/order-service';
 
 export const dynamic = "force-dynamic";
 export const runtime = 'nodejs';
 
 // Constantes
 const PROVIDER = 'daznode@getalby.com';
-const INVOICE_EXPIRY = 3600; // 1 heure en secondes
 const CORS_ORIGINS = ['https://daznode.com', 'https://app.daznode.com'];
 
 // Schéma de validation Zod
@@ -21,16 +20,6 @@ const CreateInvoiceSchema = z.object({
 });
 
 // Types
-interface InvoiceResponse {
-  id: string;
-  paymentRequest: string;
-  paymentHash: string;
-  amount: number;
-  description: string;
-  expiresAt: string;
-  createdAt: string;
-}
-
 interface ApiResponse<T> {
   success: boolean;
   data?: T;
@@ -60,43 +49,6 @@ const ErrorCodes = {
   LIGHTNING_ERROR: 'LIGHTNING_ERROR',
   INTERNAL_ERROR: 'INTERNAL_ERROR'
 } as const;
-
-// Mode simulation pour tests
-const SIMULATION_MODE = process.env.NODE_ENV === 'development' && !process.env.FORCE_LIGHTNING_CONNECTION;
-
-// Fonctions utilitaires
-function generateSimulatedInvoice(amount: number, description: string): InvoiceResponse {
-  const paymentHash = randomUUID().replace(/-/g, '');
-  const paymentRequest = `lnbc${Math.floor(amount/1000)}m1p${paymentHash}pp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq5xysxxatsyp3k7enxv4jsxqzpuaztrnwngzn3kdzw5hydlzf03qdgm2hdq27cqv3agm2awhz5se903vruatfhq77w3ls4evs3ch9zw97j25emudupq63nyw24cg27h2rspfj9srp`;
-  
-  return {
-    id: paymentHash,
-    paymentRequest,
-    paymentHash,
-    amount,
-    description,
-    expiresAt: new Date(Date.now() + INVOICE_EXPIRY * 1000).toISOString(),
-    createdAt: new Date().toISOString()
-  };
-}
-
-function createErrorResponse(code: keyof typeof ErrorCodes, message: string, details?: unknown, status = 400): Response {
-  return NextResponse.json<ApiResponse<null>>({
-    success: false,
-    error: {
-      code: ErrorCodes[code],
-      message,
-      details
-    },
-    meta: {
-      timestamp: new Date().toISOString(),
-      provider: PROVIDER
-    }
-  }, { 
-    status,
-    headers: corsHeaders
-  });
-}
 
 // Middleware d'authentification
 async function authenticateRequest(): Promise<boolean> {
@@ -135,8 +87,7 @@ export async function GET(): Promise<Response> {
 }
 
 export async function POST(req: NextRequest): Promise<Response> {
-  console.log(`🚀 create-invoice - Nouvelle requête via ${PROVIDER}`);
-  
+  console.log(`🚀 create-invoice - Nouvelle requête via DaznoAPI`);
   try {
     // Vérification de l'authentification
     const isAuthenticated = await authenticateRequest();
@@ -147,86 +98,48 @@ export async function POST(req: NextRequest): Promise<Response> {
     // Validation des données d'entrée avec Zod
     const body = await req.json();
     const validationResult = CreateInvoiceSchema.safeParse(body);
-    
     if (!validationResult.success) {
       return createErrorResponse('VALIDATION_ERROR', 'Données invalides', validationResult.error.format());
     }
-
-    const { amount, description } = validationResult.data;
+    const { amount, description, metadata } = validationResult.data;
     console.log('✅ create-invoice - Paramètres validés:', { amount, description });
 
-    let invoice: InvoiceResponse;
-
-    if (SIMULATION_MODE) {
-      console.log('🔄 create-invoice - Mode simulation activé');
-      invoice = generateSimulatedInvoice(amount, description);
-    } else {
-      const lightningService = createDazNodeLightningService();
-      const result = await lightningService.generateInvoice({
-        amount,
-        description,
-        expiry: INVOICE_EXPIRY
-      });
-      
-      invoice = {
-        id: result.id,
-        paymentRequest: result.paymentRequest,
-        paymentHash: result.paymentHash,
-        amount,
-        description,
-        expiresAt: result.expiresAt,
-        createdAt: new Date().toISOString()
-      };
-    }
-    
-    console.log('✅ create-invoice - Facture créée:', {
-      id: invoice.id.substring(0, 20) + '...',
-      amount: invoice.amount,
-      simulation: SIMULATION_MODE
+    // Création de la facture via l'API Dazno
+    const invoice = await daznoAPI.createInvoice({
+      amount,
+      description,
+      metadata,
     });
 
-    return NextResponse.json<ApiResponse<{ invoice: InvoiceResponse; provider: string }>>({
+    // Persistance de la commande dans la base de données
+    const orderService = new OrderService();
+    const order = await orderService.createOrder({
+      product_type: (metadata?.product_type as 'daznode' | 'dazbox' | 'dazpay') || 'daznode',
+      amount,
+      customer: (metadata?.customer as { name: string; email: string; address?: string; plan?: 'basic' | 'premium' | 'enterprise' }) || { name: '', email: '' },
+      plan: (metadata?.plan as 'basic' | 'premium' | 'enterprise') || undefined,
+      billing_cycle: (metadata?.billing_cycle as 'monthly' | 'yearly') || undefined,
+      metadata: {
+        ...metadata,
+        payment_hash: invoice.paymentHash,
+        payment_request: invoice.paymentRequest,
+      },
+    });
+
+    return NextResponse.json<ApiResponse<{ invoice: any; order: any; provider: string }>>({
       success: true,
       data: {
         invoice,
-        provider: SIMULATION_MODE ? `${PROVIDER} (simulation)` : PROVIDER
+        order,
+        provider: PROVIDER
       },
       meta: {
         timestamp: new Date().toISOString(),
         provider: PROVIDER
       }
     }, { headers: corsHeaders });
-    
   } catch (error) {
     console.error('❌ create-invoice - Erreur:', error);
-    
-    // Fallback en mode simulation si nécessaire
-    if (!SIMULATION_MODE) {
-      try {
-        const body = await req.json();
-        const validationResult = CreateInvoiceSchema.safeParse(body);
-        
-        if (validationResult.success) {
-          const { amount, description } = validationResult.data;
-          const invoice = generateSimulatedInvoice(amount, description);
-          
-          return NextResponse.json<ApiResponse<{ invoice: InvoiceResponse; provider: string }>>({
-            success: true,
-            data: {
-              invoice,
-              provider: `${PROVIDER} (fallback simulation)`
-            },
-            meta: {
-              timestamp: new Date().toISOString(),
-              provider: PROVIDER
-            }
-          }, { headers: corsHeaders });
-        }
-      } catch (fallbackError) {
-        console.error('❌ create-invoice - Erreur fallback:', fallbackError);
-      }
-    }
-    
     return createErrorResponse(
       'LIGHTNING_ERROR',
       'Erreur lors de la génération de la facture',
@@ -234,4 +147,22 @@ export async function POST(req: NextRequest): Promise<Response> {
       500
     );
   }
+}
+
+function createErrorResponse(code: keyof typeof ErrorCodes, message: string, details?: unknown, status = 400): Response {
+  return NextResponse.json<ApiResponse<null>>({
+    success: false,
+    error: {
+      code: ErrorCodes[code],
+      message,
+      details
+    },
+    meta: {
+      timestamp: new Date().toISOString(),
+      provider: PROVIDER
+    }
+  }, { 
+    status,
+    headers: corsHeaders
+  });
 } 

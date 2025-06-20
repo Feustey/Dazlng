@@ -4,12 +4,12 @@ import { HttpsProxyAgent } from 'https-proxy-agent';
 
 config(); // Charge les variables d'environnement
 
-const API_BASE_URL = 'https://api.dazno.de/v1';
+const API_BASE_URL = 'http://api.dazno.de/v1';
 const TEST_PUBKEY = '03eec7245d6b7d2ccb30380bfbe2a3648cd7a942653f5aa340edcea1f283686619';
 
-// Configuration du proxy local
-const proxyUrl = process.env.HTTP_PROXY || 'http://localhost:8080';
-const proxyAgent = new HttpsProxyAgent(proxyUrl);
+// Configuration du proxy local (optionnel)
+const proxyUrl = process.env.HTTP_PROXY || 'http://localhost:8000';
+const useProxy = process.env.USE_PROXY === 'true';
 
 interface TestResult {
   endpoint: string;
@@ -21,17 +21,25 @@ interface TestResult {
 async function testEndpoint(endpoint: string, method: 'GET' | 'POST' = 'GET', data?: any): Promise<TestResult> {
   try {
     console.log(`🔄 Test de ${endpoint}...`);
-    const response = await axios({
+    
+    const config: any = {
       method,
       url: `${API_BASE_URL}${endpoint}`,
       data,
-      httpsAgent: proxyAgent,
       headers: {
         'Authorization': `Bearer ${process.env.DAZNO_API_KEY}`,
         'Content-Type': 'application/json'
       },
-      timeout: 10000 // 10 secondes timeout
-    });
+      timeout: 10000, // 10 secondes timeout
+      maxRedirects: 5 // Suivre les redirections automatiquement
+    };
+
+    // Ajouter le proxy seulement si activé
+    if (useProxy) {
+      config.httpsAgent = new HttpsProxyAgent(proxyUrl);
+    }
+    
+    const response = await axios(config);
     
     console.log(`✅ ${endpoint} - Succès`);
     return {
@@ -65,7 +73,7 @@ async function testEndpoint(endpoint: string, method: 'GET' | 'POST' = 'GET', da
 async function runTests() {
   console.log('🚀 Démarrage des tests api.dazno.de...\n');
   console.log(`Mode: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`Proxy: ${proxyUrl}\n`);
+  console.log(`Connexion: ${useProxy ? `Avec proxy (${proxyUrl})` : 'Directe'}\n`);
 
   const tests = [
     // Endpoints Lightning

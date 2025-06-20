@@ -1,9 +1,9 @@
 import { NextRequest } from 'next/server';
-import { createUnifiedLightningService } from '@/lib/services/unified-lightning-service';
 import { OrderService } from '@/lib/services/order-service';
 import { rateLimit } from '@/lib/rate-limit';
 import { handleApiError, createApiResponse } from '@/lib/api-response';
 import { InvoiceStatus } from '@/types/lightning';
+import { daznoAPI } from '@/lib/services/dazno-api';
 
 // Rate limiter : 60 requêtes par minute
 const rateLimiter = rateLimit({
@@ -67,8 +67,7 @@ export async function GET(req: NextRequest) {
       }, 400);
     }
 
-    const lightningService = createUnifiedLightningService();
-    const status = await lightningService.checkInvoiceStatus(order.payment_hash);
+    const status = await daznoAPI.checkInvoiceStatus(order.payment_hash);
 
     // 6. Si payé, mettre à jour la commande
     if (status === 'settled') {

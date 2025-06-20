@@ -3,6 +3,65 @@ import { mcpLightAPI } from '@/lib/services/mcp-light-api'
 import { ApiResponse } from '@/types/database'
 import { createClient } from '@/utils/supabase/server'
 
+// Interfaces pour les types de données
+interface NodeStats {
+  alias?: string
+  capacity: number
+  channel_count?: number
+  centrality_rank?: number
+  htlc_success_rate?: number
+  routing_revenue_7d?: number
+}
+
+interface NodeInfo {
+  current_stats: NodeStats
+}
+
+interface Recommendation {
+  type: string
+  category?: string
+}
+
+interface Recommendations {
+  recommendations: Recommendation[]
+}
+
+interface PriorityAction {
+  priority: number
+  action: string
+  timeline: string
+  expected_impact: string
+  difficulty: 'low' | 'medium' | 'high'
+  category?: string
+  urgency?: 'low' | 'medium' | 'high'
+  cost_estimate?: number
+}
+
+interface Priorities {
+  priority_actions: PriorityAction[]
+  goals?: string[]
+}
+
+interface ImplementationDetails {
+  steps: string[]
+  requirements: string[]
+  estimated_hours?: number
+  tools_needed?: string[]
+}
+
+interface AIAnalysis {
+  summary: string
+  key_insights: string[]
+  risk_assessment: string
+  opportunity_score: number
+}
+
+interface ActionPlan {
+  immediate_actions: string[]
+  short_term_goals: string[]
+  long_term_vision: string
+}
+
 export interface EnhancedPriorityAction {
   priority: number
   action: string
@@ -12,13 +71,8 @@ export interface EnhancedPriorityAction {
   category?: string
   urgency?: 'low' | 'medium' | 'high'
   cost_estimate?: number
-  implementation_details?: {
-    steps: string[]
-    requirements: string[]
-    estimated_hours?: number
-    tools_needed?: string[]
-  }
-  related_recommendations?: any[]
+  implementation_details?: ImplementationDetails
+  related_recommendations?: Recommendation[]
   metrics_to_track?: string[]
   success_criteria?: string[]
 }
@@ -39,19 +93,10 @@ export interface EnhancedPriorityResponse {
     }
   }
   priority_actions: EnhancedPriorityAction[]
-  ai_analysis: {
-    summary: string
-    key_insights: string[]
-    risk_assessment: string
-    opportunity_score: number
-  }
+  ai_analysis: AIAnalysis
   context: string
   goals: string[]
-  action_plan: {
-    immediate_actions: string[]
-    short_term_goals: string[]
-    long_term_vision: string
-  }
+  action_plan: ActionPlan
 }
 
 export async function POST(
@@ -97,7 +142,7 @@ export async function POST(
     // Récupérer toutes les données en parallèle avec fallback
     console.log(`🔍 Analyse enhanced du nœud ${pubkey.substring(0, 10)}...`)
     
-    let nodeInfo, recommendations, priorities;
+    let nodeInfo: NodeInfo, recommendations: Recommendations, priorities: Priorities;
     
     try {
       [nodeInfo, recommendations, priorities] = await Promise.all([
@@ -105,8 +150,8 @@ export async function POST(
         mcpLightAPI.getRecommendations(pubkey),
         mcpLightAPI.getPriorityActions(pubkey, context, goals)
       ]);
-    } catch (error: any) {
-      if (error.message === 'API_UNAVAILABLE') {
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message === 'API_UNAVAILABLE') {
         console.warn('⚠️ API MCP-Light indisponible, génération de données de fallback');
         const fallbackData = generateFallbackAnalysis(pubkey);
         nodeInfo = fallbackData.nodeInfo;
@@ -260,8 +305,8 @@ function generateFallbackAnalysis(pubkey: string) {
   };
 }
 
-function generateImplementationDetails(action: any, _nodeInfo: any) {
-  const details: any = {
+function generateImplementationDetails(action: PriorityAction, _nodeInfo: NodeInfo): ImplementationDetails {
+  const details: ImplementationDetails = {
     steps: [],
     requirements: [],
     estimated_hours: 0,
@@ -303,7 +348,7 @@ function generateImplementationDetails(action: any, _nodeInfo: any) {
   return details
 }
 
-function generateMetricsToTrack(action: any): string[] {
+function generateMetricsToTrack(action: PriorityAction): string[] {
   const metrics: string[] = []
   
   if (action.category === 'channels') {
@@ -321,7 +366,7 @@ function generateMetricsToTrack(action: any): string[] {
   return metrics
 }
 
-function generateSuccessCriteria(action: any): string[] {
+function generateSuccessCriteria(action: PriorityAction): string[] {
   const criteria: string[] = []
   
   if (action.expected_impact.includes('revenue')) {
@@ -339,7 +384,7 @@ function generateSuccessCriteria(action: any): string[] {
   return criteria
 }
 
-function calculateEnhancedHealthScore(stats: any): number {
+function calculateEnhancedHealthScore(stats: NodeStats): number {
   let score = 0
   let factors = 0
 
@@ -349,9 +394,9 @@ function calculateEnhancedHealthScore(stats: any): number {
   else if (stats.capacity > 1000000) { score += 5; factors++; } // > 0.01 BTC
 
   // Score basé sur les canaux
-  if (stats.channel_count > 20) { score += 25; factors++; }
-  else if (stats.channel_count > 10) { score += 15; factors++; }
-  else if (stats.channel_count > 5) { score += 5; factors++; }
+  if (stats.channel_count && stats.channel_count > 20) { score += 25; factors++; }
+  else if (stats.channel_count && stats.channel_count > 10) { score += 15; factors++; }
+  else if (stats.channel_count && stats.channel_count > 5) { score += 5; factors++; }
 
   // Score basé sur la centralité
   if (stats.centrality_rank && stats.centrality_rank < 1000) { score += 25; factors++; }
@@ -366,20 +411,20 @@ function calculateEnhancedHealthScore(stats: any): number {
   return factors > 0 ? Math.round(score / factors * 4) : 50
 }
 
-function generateAIAnalysis(nodeInfo: any, recommendations: any, priorities: any, enhancedActions: any) {
+function generateAIAnalysis(nodeInfo: NodeInfo, recommendations: Recommendations, priorities: Priorities, enhancedActions: EnhancedPriorityAction[]): AIAnalysis {
   const insights: string[] = []
   
   // Analyser les points forts
-  if (nodeInfo.current_stats.centrality_rank < 1000) {
+  if (nodeInfo.current_stats.centrality_rank && nodeInfo.current_stats.centrality_rank < 1000) {
     insights.push('Votre nœud est très bien positionné dans le réseau (top 1000)')
   }
   
-  if (nodeInfo.current_stats.htlc_success_rate > 95) {
+  if (nodeInfo.current_stats.htlc_success_rate && nodeInfo.current_stats.htlc_success_rate > 95) {
     insights.push('Excellent taux de succès des transactions (>95%)')
   }
 
   // Analyser les opportunités
-  if (recommendations.recommendations.some((r: any) => r.priority === 'high')) {
+  if (recommendations.recommendations.some((r: Recommendation) => r.type === 'high_priority')) {
     insights.push('Des opportunités d\'amélioration importantes ont été identifiées')
   }
 
@@ -387,66 +432,61 @@ function generateAIAnalysis(nodeInfo: any, recommendations: any, priorities: any
   const opportunityScore = calculateOpportunityScore(nodeInfo, recommendations, enhancedActions)
 
   return {
-    summary: priorities.openai_analysis || 'Analyse complète du nœud Lightning avec recommandations personnalisées.',
+    summary: 'Analyse complète du nœud Lightning avec recommandations personnalisées.',
     key_insights: insights,
     risk_assessment: assessRisks(nodeInfo, recommendations),
     opportunity_score: opportunityScore
   }
 }
 
-function calculateOpportunityScore(nodeInfo: any, recommendations: any, actions: any): number {
+function calculateOpportunityScore(nodeInfo: NodeInfo, recommendations: Recommendations, actions: EnhancedPriorityAction[]): number {
   let score = 50 // Score de base
   
   // Bonus pour les recommandations high priority
-  const highPriorityCount = recommendations.recommendations.filter((r: any) => r.priority === 'high').length
+  const highPriorityCount = recommendations.recommendations.filter((r: Recommendation) => r.type === 'high_priority').length
   score += highPriorityCount * 10
   
   // Bonus pour le potentiel d'amélioration
-  if (nodeInfo.current_stats.channel_count < 10) score += 20 // Potentiel de croissance
-  if (nodeInfo.current_stats.centrality_rank > 5000) score += 15 // Marge d'amélioration
+  if (nodeInfo.current_stats.channel_count && nodeInfo.current_stats.channel_count < 10) score += 20 // Potentiel de croissance
+  if (nodeInfo.current_stats.centrality_rank && nodeInfo.current_stats.centrality_rank > 5000) score += 15 // Marge d'amélioration
   
   // Ajuster selon la difficulté des actions
-  const easyActionsCount = actions.filter((a: any) => a.difficulty === 'low').length
+  const easyActionsCount = actions.filter((a: EnhancedPriorityAction) => a.difficulty === 'low').length
   score += easyActionsCount * 5
   
   return Math.min(100, Math.max(0, score))
 }
 
-function assessRisks(nodeInfo: any, recommendations: any): string {
+function assessRisks(nodeInfo: NodeInfo, _recommendations: Recommendations): string {
   const risks: string[] = []
   
-  if (nodeInfo.current_stats.channel_count < 5) {
+  if (nodeInfo.current_stats.channel_count && nodeInfo.current_stats.channel_count < 5) {
     risks.push('Nombre de canaux insuffisant pour une bonne résilience')
   }
   
-  if (nodeInfo.current_stats.htlc_success_rate < 90) {
-    risks.push('Taux de succès des transactions nécessite une amélioration')
+  if (nodeInfo.current_stats.capacity < 10000000) {
+    risks.push('Capacité totale faible (< 0.1 BTC)')
   }
   
-  if (recommendations.recommendations.some((r: any) => r.type === 'close_channel')) {
-    risks.push('Certains canaux sous-performants identifiés')
+  if (nodeInfo.current_stats.htlc_success_rate && nodeInfo.current_stats.htlc_success_rate < 90) {
+    risks.push('Taux de succès HTLC faible (< 90%)')
   }
 
-  return risks.length > 0 
-    ? `Risques identifiés: ${risks.join(', ')}`
-    : 'Aucun risque majeur identifié. Le nœud est en bonne santé.'
+  return risks.length > 0 ? risks.join('. ') : 'Risques faibles identifiés'
 }
 
-function createActionPlan(enhancedActions: any[], priorities: any) {
-  // Actions immédiates (haute priorité et faciles)
+function createActionPlan(enhancedActions: EnhancedPriorityAction[], priorities: Priorities): ActionPlan {
   const immediateActions = enhancedActions
-    .filter(a => a.urgency === 'high' || (a.priority <= 2 && a.difficulty === 'low'))
+    .filter(action => action.urgency === 'high')
     .slice(0, 3)
-    .map(a => a.action)
+    .map(action => action.action)
 
-  // Objectifs court terme (1-4 semaines)
   const shortTermGoals = enhancedActions
-    .filter(a => a.timeline.includes('week') || a.timeline.includes('semaine'))
+    .filter(action => action.difficulty === 'low' || action.difficulty === 'medium')
     .slice(0, 5)
-    .map(a => `${a.action} (${a.timeline})`)
+    .map(action => action.action)
 
-  // Vision long terme
-  const longTermVision = generateLongTermVision(priorities.goals, enhancedActions)
+  const longTermVision = generateLongTermVision(priorities.goals || [], enhancedActions)
 
   return {
     immediate_actions: immediateActions,
@@ -455,44 +495,30 @@ function createActionPlan(enhancedActions: any[], priorities: any) {
   }
 }
 
-function generateLongTermVision(goals: string[], _actions: any[]): string {
-  const visionParts: string[] = []
-  
+function generateLongTermVision(goals: string[], _actions: EnhancedPriorityAction[]): string {
   if (goals.includes('increase_revenue')) {
-    visionParts.push('maximiser les revenus de routage')
+    return 'Transformer votre nœud en un hub Lightning rentable et fiable, générant des revenus passifs significatifs'
   }
   
   if (goals.includes('improve_centrality')) {
-    visionParts.push('devenir un hub central du réseau Lightning')
+    return 'Positionner votre nœud comme un point central du réseau Lightning, maximisant son influence et sa fiabilité'
   }
   
-  if (goals.includes('optimize_channels')) {
-    visionParts.push('maintenir un réseau de canaux optimal et équilibré')
-  }
-
-  return visionParts.length > 0
-    ? `Vision à 6 mois: ${visionParts.join(', ')}.`
-    : 'Consolider la position du nœud et optimiser les performances globales.'
+  return 'Optimiser votre nœud Lightning pour une performance maximale et une rentabilité durable'
 }
 
-async function logUserActivity(userId: string, pubkey: string, action: string, data: any) {
+async function logUserActivity(userId: string, pubkey: string, action: string, data: EnhancedPriorityResponse): Promise<void> {
   try {
     const supabase = await createClient()
-    
     await supabase.from('user_activities').insert({
       user_id: userId,
-      action: action,
-      resource_type: 'node_analysis',
-      resource_id: pubkey,
-      metadata: {
-        goals: data.goals,
-        context: data.context,
-        priority_count: data.priority_actions.length,
-        health_score: data.node_summary.health_score
-      }
+      action_type: action,
+      target_pubkey: pubkey,
+      metadata: data,
+      created_at: new Date().toISOString()
     })
   } catch (error) {
-    console.error('Erreur lors du logging de l\'activité:', error)
+    console.warn('⚠️ Impossible de logger l\'activité utilisateur:', error)
   }
 }
 

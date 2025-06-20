@@ -4,13 +4,10 @@ import { useSupabase } from '@/app/providers/SupabaseProvider';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { z } from 'zod';
-import { createUnifiedLightningService } from '@/lib/services/unified-lightning-service';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { toast } from 'react-hot-toast';
 import { LightningPayment } from '@/components/shared/ui/LightningPayment';
-import { OrderService } from '@/lib/services/order-service';
-import QRCode from 'qrcode';
 
 // ✅ Configuration centralisée
 const _PRODUCT_CONFIG = {
@@ -84,14 +81,9 @@ function CheckoutContent(): React.ReactElement {
   const _selectedPlan = DAZBOX_PLANS[plan] || DAZBOX_PLANS.starter;
   const [checkoutState, setCheckoutState] = useState<CheckoutState>({ status: 'idle' });
 
-  // Services
-  const lightningService = createUnifiedLightningService();
-  const orderService = new OrderService();
-
   // Hooks pour l'UX
   const _isOnline = useNetworkStatus();
   const _isMobile = useMediaQuery('(max-width: 768px)');
-  const isLowBandwidth = useMediaQuery('(prefers-reduced-data: reduce)');
 
   // ✅ Initialiser AOS une seule fois
   useEffect(() => {
@@ -118,18 +110,24 @@ function CheckoutContent(): React.ReactElement {
     };
   }, []);
 
-  // Effet pour sauvegarder l'état en localStorage
-  useEffect(() => {
-    if (checkoutState.orderId) {
-      localStorage.setItem('lastCheckoutState', JSON.stringify({
-        orderId: checkoutState.orderId,
-        status: checkoutState.status,
-        orderRef: checkoutState.orderRef
-      }));
+  // Vérification de paiement
+  const verifyPayment = async (orderId: string) => {
+    try {
+      const order = await fetch('/api/get-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId })
+      });
+      const orderData = await order.json();
+      if (orderData.status === 'paid') {
+        setCheckoutState(prev => ({ ...prev, status: 'paid' }));
+        router.push(`/checkout/success?order=${orderId}`);
+      }
+    } catch (error) {
+      console.error('Erreur vérification:', error);
     }
-  }, [checkoutState.orderId, checkoutState.status, checkoutState.orderRef]);
+  };
 
-  // Effet pour restaurer l'état au chargement
   useEffect(() => {
     const savedState = localStorage.getItem('lastCheckoutState');
     if (savedState) {
@@ -139,122 +137,46 @@ function CheckoutContent(): React.ReactElement {
         verifyPayment(orderId);
       }
     }
-  }, []);
-
-  // Vérification de paiement
-  const verifyPayment = async (orderId: string) => {
-    try {
-      const order = await orderService.getOrder(orderId);
-      if (order.status === 'paid') {
-        setCheckoutState(prev => ({ ...prev, status: 'paid' }));
-        router.push(`/checkout/success?order=${orderId}`);
-      }
-    } catch (error) {
-      console.error('Erreur vérification:', error);
-    }
-  };
+  }, [verifyPayment]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     try {
-      // 1. Création de la commande
       setCheckoutState({ status: 'creating_order' });
-      
-      const order = await orderService.createOrder({
-        product_type: 'dazbox',
-        amount: PLAN_AMOUNTS[plan],
-        customer: {
-          name: '',
-          email: '',
-          address: '',
-          plan: plan as 'basic' | 'premium' | 'enterprise'
-        },
-        plan: plan as 'basic' | 'premium' | 'enterprise'
+      // Appel unique à l'API pour créer commande + facture
+      const orderRef = `${Math.random().toString(36).substring(2, 10)}-${Date.now().toString(36)}`;
+      const invoiceRes = await fetch('/api/create-invoice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: PLAN_AMOUNTS[plan],
+          description: `DazBox - ${plan.toUpperCase()} - ${orderRef}`,
+          metadata: {
+            product_type: 'dazbox',
+            customer: {
+              name: '',
+              email: '',
+              address: '',
+              plan: plan as 'basic' | 'premium' | 'enterprise'
+            },
+            plan: plan as 'basic' | 'premium' | 'enterprise',
+            billing_cycle: undefined,
+            order_ref: orderRef
+          }
+        })
       });
-
-      // Générer une référence unique pour le support
-      const orderRef = `${order.id.substring(0, 8)}-${Date.now().toString(36)}`;
-
-      // 2. Génération de la facture
-      setCheckoutState({ 
-        status: 'generating_invoice', 
-        orderId: order.id,
-        orderRef 
-      });
-      
-      const invoice = await lightningService.generateInvoice({
-        amount: order.amount,
-        description: `DazBox - ${plan.toUpperCase()} - ${orderRef}`
-      });
-
-      // 3. Mise à jour de la commande
-      await orderService.updateOrder(order.id, {
-        payment_hash: invoice.paymentHash,
-        payment_request: invoice.paymentRequest,
-        order_ref: orderRef
-      });
-
-      // 4. Génération du QR code (adapté à la bande passante)
-      const qrCode = await QRCode.toDataURL(invoice.paymentRequest, {
-        width: isLowBandwidth ? 200 : 300,
-        margin: 2,
-        color: {
-          dark: '#000000',
-          light: '#FFFFFF'
-        }
-      });
-
-      // 5. Mise à jour de l'état
+      const invoiceData = await invoiceRes.json();
+      if (!invoiceData.success) throw new Error(invoiceData.error?.message || 'Erreur création facture');
+      const invoice = invoiceData.data.invoice;
+      const order = invoiceData.data.order;
       setCheckoutState({
         status: 'waiting_payment',
         invoice,
         orderId: order.id,
-        qrCode,
         orderRef
       });
-
-      // 6. Démarrage du watcher avec renouvellement
-      lightningService.watchInvoiceWithRenewal(invoice, {
-        checkInterval: isLowBandwidth ? 5000 : 3000,
-        maxAttempts: 240, // 20 minutes
-        onPaid: async () => {
-          await orderService.markOrderPaid(order.id);
-          setCheckoutState(prev => ({ ...prev, status: 'paid' }));
-          toast.success('Paiement reçu !');
-          router.push(`/checkout/success?order=${order.id}&ref=${orderRef}`);
-        },
-        onExpired: () => {
-          setCheckoutState(prev => ({ ...prev, status: 'expired' }));
-          toast.error('Facture expirée - Nouvelle facture générée');
-        },
-        onError: (error) => {
-          setCheckoutState(prev => ({ 
-            ...prev, 
-            status: 'error',
-            error: error.message 
-          }));
-          toast.error('Erreur - Veuillez réessayer');
-        },
-        onRenewing: () => {
-          toast.loading('Mise à jour de la facture...');
-        },
-        onRenewed: (newInvoice) => {
-          setCheckoutState(prev => ({
-            ...prev,
-            invoice: newInvoice,
-            status: 'waiting_payment'
-          }));
-          toast.success('Nouvelle facture générée !');
-        }
-      });
-
-    } catch (error) {
-      setCheckoutState({
-        status: 'error',
-        error: error instanceof Error ? error.message : 'Erreur inconnue'
-      });
-      toast.error('Erreur lors de la création de la commande');
+    } catch (error: any) {
+      setCheckoutState({ status: 'error', error: error.message || 'Erreur inconnue' });
     }
   };
 
@@ -280,6 +202,9 @@ function CheckoutContent(): React.ReactElement {
                   status: 'error',
                   error: error instanceof Error ? error.message : 'Erreur inconnue'
                 });
+              }}
+              onExpired={() => {
+                setCheckoutState(prev => ({ ...prev, status: 'expired' }));
               }}
             />
           </form>

@@ -29,7 +29,7 @@ export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhance
         logActivity: true
       })
     }
-  }, [pubkey, fetchPriorities])
+  }, [pubkey, fetchPriorities, selectedGoals])
 
   const handleRefresh = () => {
     fetchPriorities(pubkey, {

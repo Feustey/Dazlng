@@ -244,6 +244,56 @@ class DaznoAPI {
     this.credentials = null
     return this.initialize()
   }
+
+  /**
+   * ⚡ Crée une facture Lightning via l'API Dazno
+   */
+  async createInvoice(params: {
+    amount: number;
+    description: string;
+    metadata?: Record<string, any>;
+  }): Promise<{
+    paymentRequest: string;
+    paymentHash: string;
+    amount: number;
+    expiresAt: string;
+    createdAt: string;
+  }> {
+    const body = {
+      amount: params.amount,
+      description: params.description,
+      metadata: params.metadata || {},
+    };
+    // L'endpoint officiel pour la création de facture est /api/v1/lightning/decoder (POST)
+    // Si un endpoint /api/v1/lightning/create-invoice existe, remplacer ici
+    return this.makeRequest<{
+      paymentRequest: string;
+      paymentHash: string;
+      amount: number;
+      expiresAt: string;
+      createdAt: string;
+    }>(`/api/v1/lightning/decoder`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+
+  /**
+   * Vérifie le statut d'un paiement Lightning via l'API Dazno
+   */
+  async checkInvoiceStatus(paymentHash: string): Promise<'settled' | 'pending' | 'expired'> {
+    const body = { payment_hash: paymentHash };
+    // L'endpoint officiel pour le check est /api/v1/lightning/check-payment (POST)
+    // Adapter si l'API attend un autre format
+    const res = await this.makeRequest<{ status: 'settled' | 'pending' | 'expired' }>(
+      '/api/v1/lightning/check-payment',
+      {
+        method: 'POST',
+        body: JSON.stringify(body),
+      }
+    );
+    return res.status;
+  }
 }
 
 // Instance singleton

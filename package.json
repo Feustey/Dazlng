@@ -43,7 +43,9 @@
     "optimize": "npm run cache:clear && npm run build:analyze",
     "test:dazno-api": "tsx scripts/test-dazno-api.ts",
     "generate-jwt": "tsx scripts/generate-jwt.ts",
-    "test:jwt": "tsx scripts/test-jwt-auth.ts"
+    "test:jwt": "tsx scripts/test-jwt-auth.ts",
+    "setup-env": "node scripts/setup-env.js",
+    "test:user-endpoints": "node scripts/test-user-endpoints.js"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

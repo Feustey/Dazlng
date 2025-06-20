@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { formatDate, formatSats } from '@/utils/formatters';
 
@@ -112,14 +112,7 @@ const generateMockStats = (): CustomerStats => {
 
 export default function UsersPage(): JSX.Element {
   const [customers, setCustomers] = useState<Customer[]>([]);
-  const [stats, setStats] = useState<CustomerStats>({
-    total_customers: 0,
-    active_customers: 0,
-    premium_customers: 0,
-    lightning_users: 0,
-    total_revenue: 0,
-    avg_order_value: 0
-  });
+  const [stats, setStats] = useState<CustomerStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedPage, setSelectedPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
@@ -127,7 +120,7 @@ export default function UsersPage(): JSX.Element {
   const [isDevelopment, setIsDevelopment] = useState<boolean | undefined>(undefined);
   const itemsPerPage = 10;
 
-  const loadCustomersData = async () => {
+  const loadCustomersData = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -239,7 +232,7 @@ export default function UsersPage(): JSX.Element {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedPage, searchTerm, selectedSegment, isDevelopment]);
 
   useEffect(() => {
     // Détecter l'environnement côté client uniquement pour éviter l'hydratation mismatch
@@ -250,7 +243,7 @@ export default function UsersPage(): JSX.Element {
     if (isDevelopment !== undefined) {
       loadCustomersData();
     }
-  }, [selectedPage, searchTerm, selectedSegment, isDevelopment, loadCustomersData]);
+  }, [loadCustomersData, isDevelopment]);
 
   const exportCustomers = async () => {
     try {

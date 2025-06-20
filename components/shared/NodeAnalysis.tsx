@@ -50,7 +50,7 @@ const NodeAnalysis: React.FC<NodeAnalysisProps> = ({
     if (pubkey) {
       handleAnalyzeNode();
     }
-  }, [pubkey]);
+  }, [pubkey, handleAnalyzeNode]);
 
   const getHealthScoreColor = (score: number): string => {
     if (score >= 70) return 'text-green-500';

@@ -8,19 +8,24 @@ export async function POST(_request: NextRequest): Promise<ReturnType<typeof Nex
   try {
     console.log('[MIGRATION] Début de l\'application de la migration des champs contact...')
     
+    // Vérifier si Supabase est configuré
+    if (!supabaseAdmin || !supabaseAdmin.from) {
+      return NextResponse.json({
+        success: false,
+        error: 'CONFIGURATION_MISSING',
+        message: 'Variables d\'environnement Supabase Service Role requises pour cette opération. Veuillez configurer NEXT_PUBLIC_SUPABASE_URL et SUPABASE_SERVICE_ROLE_KEY.',
+        details: {
+          supabase_configured: !!supabaseAdmin,
+          environment: process.env.NODE_ENV
+        }
+      }, { status: 500 });
+    }
+    
     const migrationSteps = []
     const errors = []
 
     // Étape 1: Vérifier les colonnes existantes
     console.log('[MIGRATION] Étape 1: Vérification des colonnes existantes...')
-    
-    if (!supabaseAdmin) {
-      return NextResponse.json({
-        success: false,
-        error: 'Configuration admin manquante',
-        message: 'Variables d\'environnement Supabase Service Role requises pour cette opération'
-      }, { status: 500 });
-    }
     
     const { data: columns, error: columnsError } = await supabaseAdmin
       .from('information_schema.columns')
@@ -67,7 +72,7 @@ export async function POST(_request: NextRequest): Promise<ReturnType<typeof Nex
               sql = 'ALTER TABLE public.profiles ADD COLUMN code_postal TEXT'
               break
             case 'pays':
-              sql = 'ALTER TABLE public.profiles ADD COLUMN pays TEXT DEFAULT \'\'France\'\''
+              sql = 'ALTER TABLE public.profiles ADD COLUMN pays TEXT DEFAULT \'France\''
               break
           }
 
@@ -81,9 +86,10 @@ export async function POST(_request: NextRequest): Promise<ReturnType<typeof Nex
               console.log(`[MIGRATION] Colonne ${column} ajoutée avec succès`)
             }
           }
-        } catch (columnError: any) {
+        } catch (columnError: unknown) {
+          const errorMessage = columnError instanceof Error ? columnError.message : 'Erreur inconnue'
           console.error(`[MIGRATION] Exception colonne ${column}:`, columnError)
-          errors.push(`Colonne ${column}: ${columnError.message}`)
+          errors.push(`Colonne ${column}: ${errorMessage}`)
         }
       }
 
@@ -130,9 +136,10 @@ export async function POST(_request: NextRequest): Promise<ReturnType<typeof Nex
           } else {
             console.log(`[MIGRATION] Contrainte ${constraint.name} ajoutée`)
           }
-        } catch (constraintError: any) {
+        } catch (constraintError: unknown) {
+          const errorMessage = constraintError instanceof Error ? constraintError.message : 'Erreur inconnue'
           console.error(`[MIGRATION] Exception contrainte ${constraint.name}:`, constraintError)
-          errors.push(`Contrainte ${constraint.name}: ${constraintError.message}`)
+          errors.push(`Contrainte ${constraint.name}: ${errorMessage}`)
         }
       }
 
@@ -181,13 +188,16 @@ export async function POST(_request: NextRequest): Promise<ReturnType<typeof Nex
       }
     })
 
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue'
+    const errorStack = error instanceof Error ? error.stack : undefined
+    
     console.error('[MIGRATION] Erreur générale:', error)
     return NextResponse.json({
       success: false,
       error: 'Erreur lors de l\'application de la migration',
-      message: error.message,
-      stack: error.stack
+      message: errorMessage,
+      stack: errorStack
     }, { status: 500 })
   }
 } 

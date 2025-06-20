@@ -1,10 +1,10 @@
 interface ApiError {
   code: string;
   message: string;
-  details?: any;
+  details?: unknown;
 }
 
-interface ApiResponse<T = any> {
+interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   error?: ApiError;
@@ -14,7 +14,7 @@ interface ApiResponse<T = any> {
       page: number;
       limit: number;
     };
-    [key: string]: any;
+    [key: string]: unknown;
   };
 }
 

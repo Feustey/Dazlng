@@ -242,6 +242,135 @@ export const createProspectSchema = z.object({
 })
 
 // ============================================================================
+// PROFILS UTILISATEURS AVANCÉS
+// ============================================================================
+
+export const profileUpdateSchema = z.object({
+  firstname: z.string().min(1, "Le prénom est requis").max(50, "Le prénom est trop long").optional(),
+  lastname: z.string().min(1, "Le nom est requis").max(50, "Le nom est trop long").optional(),
+  email: z.string().email("Format d'email invalide").optional(),
+  phone: z.string().regex(/^(?:\+33|0)[1-9](?:[0-9]{8})$/, "Numéro de téléphone invalide").optional(),
+  preferences: z.object({
+    notifications: z.boolean().optional(),
+    privacy: z.enum(["public", "private", "friends"]).optional(),
+    language: z.enum(["fr", "en"]).optional(),
+    timezone: z.string().optional()
+  }).optional(),
+  socialLinks: z.array(z.object({
+    platform: z.enum(['linkedin', 'github', 'twitter', 'website']),
+    url: z.string().url("URL invalide"),
+    isPublic: z.boolean().optional(),
+    displayName: z.string().optional()
+  })).optional()
+})
+
+export const studiesSchema = z.object({
+  program: z.string().min(1, "Le programme est requis").max(100, "Le programme est trop long"),
+  school: z.string().min(1, "L'école est requise").max(100, "L'école est trop longue"),
+  graduationYear: z.number().int().min(1950).max(new Date().getFullYear() + 10, "Année de diplôme invalide"),
+  specialization: z.string().max(200, "La spécialisation est trop longue").optional(),
+  degree: z.string().max(100, "Le diplôme est trop long").optional(),
+  gpa: z.number().min(0).max(4).optional(),
+  achievements: z.array(z.string()).optional()
+})
+
+export const privacySettingsSchema = z.object({
+  profileVisibility: z.enum(["public", "private", "friends"], {
+    errorMap: () => ({ message: "Visibilité du profil invalide" })
+  }),
+  showEmail: z.boolean(),
+  showPhone: z.boolean(),
+  showWallet: z.boolean(),
+  allowMessages: z.boolean(),
+  showOnlineStatus: z.boolean(),
+  showLastSeen: z.boolean(),
+  allowServiceRequests: z.boolean(),
+  allowNotifications: z.boolean()
+})
+
+export const notificationSettingsSchema = z.object({
+  email: z.object({
+    newMessages: z.boolean(),
+    serviceBookings: z.boolean(),
+    paymentConfirmations: z.boolean(),
+    systemUpdates: z.boolean(),
+    marketing: z.boolean(),
+    weeklyDigest: z.boolean()
+  }),
+  push: z.object({
+    newMessages: z.boolean(),
+    serviceBookings: z.boolean(),
+    paymentConfirmations: z.boolean(),
+    systemUpdates: z.boolean()
+  }),
+  inApp: z.object({
+    newMessages: z.boolean(),
+    serviceBookings: z.boolean(),
+    paymentConfirmations: z.boolean(),
+    systemUpdates: z.boolean(),
+    achievements: z.boolean(),
+    recommendations: z.boolean()
+  })
+})
+
+// ============================================================================
+// EXPÉRIENCES PROFESSIONNELLES
+// ============================================================================
+
+export const experienceSchema = z.object({
+  title: z.string().min(1, "Le titre est requis").max(100, "Le titre est trop long"),
+  company: z.string().min(1, "L'entreprise est requise").max(100, "L'entreprise est trop longue"),
+  role: z.string().min(1, "Le rôle est requis").max(100, "Le rôle est trop long"),
+  city: z.string().min(1, "La ville est requise").max(50, "La ville est trop longue"),
+  country: z.string().min(1, "Le pays est requis").max(50, "Le pays est trop long"),
+  industry: z.string().max(100, "Le secteur est trop long").optional(),
+  from: z.string().datetime("Date de début invalide"),
+  to: z.string().datetime("Date de fin invalide").optional(),
+  isCurrent: z.boolean().default(false),
+  description: z.string().max(1000, "La description est trop longue").optional()
+})
+
+// ============================================================================
+// COMPÉTENCES
+// ============================================================================
+
+export const skillSchema = z.object({
+  name: z.string().min(1, "Le nom de la compétence est requis").max(100, "Le nom est trop long"),
+  level: z.enum(["beginner", "intermediate", "advanced", "expert"], {
+    errorMap: () => ({ message: "Niveau de compétence invalide" })
+  }),
+  category: z.string().min(1, "La catégorie est requise").max(50, "La catégorie est trop longue"),
+  description: z.string().max(500, "La description est trop longue").optional()
+})
+
+// ============================================================================
+// FAVORIS
+// ============================================================================
+
+export const favoriteSchema = z.object({
+  type: z.enum(["service", "provider", "benefit"], {
+    errorMap: () => ({ message: "Type de favori invalide" })
+  }),
+  itemId: z.string().min(1, "ID de l'élément requis"),
+  notes: z.string().max(500, "Les notes sont trop longues").optional()
+})
+
+// ============================================================================
+// CHANGEMENT DE MOT DE PASSE
+// ============================================================================
+
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, "Mot de passe actuel requis"),
+  newPassword: z.string()
+    .min(8, "Le nouveau mot de passe doit contenir au moins 8 caractères")
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre"),
+  confirmPassword: z.string().min(1, "Confirmation du mot de passe requise")
+}).refine((data) => data.newPassword === data.confirmPassword, {
+  message: "Les mots de passe ne correspondent pas",
+  path: ["confirmPassword"]
+})
+
+// ============================================================================
 // UTILITAIRES DE VALIDATION
 // ============================================================================
 
