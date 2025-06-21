@@ -4,6 +4,7 @@ import { Metadata } from 'next';
 import ClientLayout from './ClientLayout';
 import React from 'react';
 import { SupabaseProvider } from './providers/SupabaseProvider'
+import Script from 'next/script';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -17,17 +18,19 @@ export const metadata: Metadata = {
   creator: 'DazNode',
   publisher: 'DazNode',
   robots: 'index, follow',
-  metadataBase: new URL('https://dazno.de'),
+  metadataBase: new URL(process.env.NODE_ENV === 'production' ? 'https://dazno.de' : 'http://localhost:3001'),
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
-    url: 'https://dazno.de',
+    url: process.env.NODE_ENV === 'production' ? 'https://dazno.de' : 'http://localhost:3001',
     title: 'DazNode | Solutions Lightning Network pour tous',
     description: 'Daznode simplifie l\'accès au réseau Lightning avec des solutions clés en main. Nœuds personnels, services de paiement et IA dédiée pour particuliers et professionnels.',
     siteName: 'DazNode',
     images: [
       {
-        url: 'https://dazno.de/assets/images/og-image.png',
+        url: process.env.NODE_ENV === 'production' 
+          ? 'https://dazno.de/assets/images/og-image.png'
+          : 'http://localhost:3001/assets/images/og-image.png',
         width: 1200,
         height: 630,
         alt: 'DazNode - Solutions Lightning Network'
@@ -38,7 +41,9 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'DazNode | Solutions Lightning Network pour tous',
     description: 'Daznode simplifie l\'accès au réseau Lightning avec des solutions clés en main. Nœuds personnels, services de paiement et IA dédiée.',
-    images: ['https://dazno.de/assets/images/og-image.png']
+    images: [process.env.NODE_ENV === 'production' 
+      ? 'https://dazno.de/assets/images/og-image.png'
+      : 'http://localhost:3001/assets/images/og-image.png']
   }
 };
 
@@ -46,10 +51,6 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <html lang="fr">
       <head>
-        {/* Script Umami conditionnel */}
-        {typeof window !== 'undefined' && window.localStorage.getItem('cookie_consent') === 'true' && (
-          <script defer src="https://cloud.umami.is/script.js" data-website-id="21fab8e3-a8fd-474d-9187-9739cce7c9b5"></script>
-        )}
         {/* Préchargement des fonts */}
         {/* Préconnexion aux domaines externes */}
         <link rel="dns-prefetch" href="//api.dazno.de" />
@@ -72,6 +73,13 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             {children}
           </ClientLayout>
         </SupabaseProvider>
+        
+        {/* Script Umami géré avec next/script */}
+        <Script
+          src="https://cloud.umami.is/script.js"
+          data-website-id="21fab8e3-a8fd-474d-9187-9739cce7c9b5"
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   );

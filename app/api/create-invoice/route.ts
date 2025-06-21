@@ -10,7 +10,7 @@ export const runtime = 'nodejs';
 
 // Constantes
 const PROVIDER = 'daznode@getalby.com';
-const CORS_ORIGINS = ['https://daznode.com', 'https://app.daznode.com'];
+const CORS_ORIGINS = ['https://daznode.com', 'https://app.daznode.com', 'http://localhost:3001'];
 
 // Schéma de validation Zod
 const CreateInvoiceSchema = z.object({
@@ -50,24 +50,6 @@ const ErrorCodes = {
   INTERNAL_ERROR: 'INTERNAL_ERROR'
 } as const;
 
-// Middleware d'authentification
-async function authenticateRequest(): Promise<boolean> {
-  try {
-    const supabase = createRouteHandlerClient({ cookies });
-    const { data: { session }, error } = await supabase.auth.getSession();
-    
-    if (error || !session) {
-      console.error('❌ Erreur d\'authentification:', error);
-      return false;
-    }
-    
-    return true;
-  } catch (error) {
-    console.error('❌ Erreur lors de l\'authentification:', error);
-    return false;
-  }
-}
-
 // Handlers
 export async function OPTIONS(): Promise<Response> {
   return new NextResponse(null, {
@@ -83,18 +65,23 @@ export async function GET(): Promise<Response> {
     provider: `lightning + ${PROVIDER}`,
     methods: ['POST'],
     timestamp: new Date().toISOString()
-  }, { headers: corsHeaders });
+  }, { 
+    status: 200,
+    headers: corsHeaders 
+  });
 }
 
 export async function POST(req: NextRequest): Promise<Response> {
   console.log(`🚀 create-invoice - Nouvelle requête via DaznoAPI`);
   try {
-    // Vérification de l'authentification
-    const isAuthenticated = await authenticateRequest();
-    if (!isAuthenticated) {
-      return createErrorResponse('UNAUTHORIZED', 'Authentification requise', null, 401);
+    const supabase = createRouteHandlerClient({ cookies });
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    
+    if (sessionError || !session) {
+      console.error('❌ Erreur d\'authentification:', sessionError);
+      return createErrorResponse('UNAUTHORIZED', 'Authentification requise', sessionError?.message, 401);
     }
-
+    
     // Validation des données d'entrée avec Zod
     const body = await req.json();
     const validationResult = CreateInvoiceSchema.safeParse(body);
