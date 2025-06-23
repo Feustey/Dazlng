@@ -5,13 +5,16 @@
  * Utilisation: npm run test:admin-features
  */
 
-import { supabase } from '../lib/supabase';
+import { getSupabaseAdminClient } from '../lib/supabase';
 import { getEnhancedStats, createAdminNotification, getAdminNotifications } from '../lib/admin-utils';
 
 async function testAdminFeatures(): Promise<void> {
   console.log('🚀 Test des fonctionnalités administrateur DazNode\n');
 
   try {
+    // Créer le client admin
+    const supabase = getSupabaseAdminClient();
+
     // Test 1: Création d'un rôle admin de test
     console.log('📝 Test 1: Création d\'un rôle admin de test...');
     
@@ -43,10 +46,10 @@ async function testAdminFeatures(): Promise<void> {
     try {
       const stats = await getEnhancedStats();
       console.log('✅ Statistiques récupérées:');
-      console.log(`   - Utilisateurs: ${stats.users.total} (${stats.users.activeLastMonth} actifs ce mois)`);
-      console.log(`   - Revenus: ${stats.revenue.total} sats (croissance: ${stats.revenue.growth}%)`);
-      console.log(`   - Produits: DazNode(${stats.products.daznode.active}), DazBox(${stats.products.dazbox.active}), DazPay(${stats.products.dazpay.active})`);
-      console.log(`   - Paiements: ${stats.payments.successRate}% de succès`);
+      console.log(`   - Utilisateurs: ${stats.users.total} (${stats.users.newThisMonth} nouveaux ce mois)`);
+      console.log(`   - Commandes: ${stats.orders.total} (revenus: ${stats.orders.revenue} sats)`);
+      console.log(`   - Paiements: ${stats.payments.successful}/${stats.payments.total} réussis`);
+      console.log(`   - Abonnements: ${stats.subscriptions.active} actifs (MRR: ${stats.subscriptions.mrr} sats)`);
     } catch (error) {
       console.error('❌ Erreur statistiques:', error);
     }
@@ -60,7 +63,7 @@ async function testAdminFeatures(): Promise<void> {
         'info',
         'Test de notification',
         'Ceci est une notification de test pour vérifier le système.',
-        { type: 'test', entityId: 'test-001' },
+        { type: 'button', label: 'Voir détails' },
         'medium'
       );
       console.log('✅ Notification créée avec succès');

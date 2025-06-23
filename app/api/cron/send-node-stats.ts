@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { Resend } from 'resend';
 import { generateEmailTemplate } from '../../../utils/email';
 
@@ -40,6 +40,9 @@ export async function POST(req: NextRequest): Promise<Response> {
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
   }
+  
+  const supabase = getSupabaseAdminClient();
+  
   // Récupérer tous les utilisateurs avec un node_id
   const { data: users, error } = await supabase
     .from('profiles')

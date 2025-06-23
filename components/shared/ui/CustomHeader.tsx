@@ -5,13 +5,12 @@ import { useSupabase } from '@/app/providers/SupabaseProvider';
 import { useRouter } from 'next/navigation';
 
 const CustomHeader: React.FC = () => {
-  const { user, session } = useSupabase();
+  const { user, session, signOut } = useSupabase();
   const router = useRouter();
 
   const handleLogout = async (): Promise<void> => {
     try {
-      const { supabase } = await import('@/lib/supabase');
-      await supabase.auth.signOut();
+      await signOut();
       router.push('/');
     } catch (error) {
       console.error('Erreur lors de la déconnexion:', error);

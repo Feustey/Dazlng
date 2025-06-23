@@ -4,7 +4,7 @@
  * Script de diagnostic pour les problèmes Supabase et API
  */
 
-import { supabase, supabaseAdmin, resetSupabaseClients } from '@/lib/supabase';
+import { getSupabaseBrowserClient, getSupabaseAdminClient } from '@/lib/supabase';
 
 async function runDiagnostics() {
   console.log('🔍 DIAGNOSTIC SUPABASE ET API');
@@ -13,12 +13,15 @@ async function runDiagnostics() {
   // Test 1: Instances Supabase
   console.log('\n1️⃣ Test instances Supabase...');
   try {
+    const supabase = getSupabaseBrowserClient();
+    const supabaseAdmin = getSupabaseAdminClient();
+    
     console.log('✅ Client principal:', !!supabase);
     console.log('✅ Client admin:', !!supabaseAdmin);
     
     // Test de création multiple
-    const { supabase: supabase1 } = await import('@/lib/supabase');
-    const { supabase: supabase2 } = await import('@/lib/supabase');
+    const supabase1 = getSupabaseBrowserClient();
+    const supabase2 = getSupabaseBrowserClient();
     
     console.log('🔍 Même instance client?', supabase1 === supabase2);
     
@@ -73,13 +76,12 @@ try {
 // Test 3: Reset et re-test
 console.log('\n3️⃣ Test reset instances...');
 try {
-  resetSupabaseClients();
+  // Test de création de nouvelles instances
+  const newSupabase = getSupabaseBrowserClient();
+  const newSupabaseAdmin = getSupabaseAdminClient();
   
-  // Re-import pour tester le singleton
-  delete require.cache[require.resolve('@/lib/supabase')];
-  const { supabase: newSupabase } = await import('@/lib/supabase');
-  
-  console.log('✅ Nouvelle instance créée:', !!newSupabase);
+  console.log('✅ Nouvelle instance client créée:', !!newSupabase);
+  console.log('✅ Nouvelle instance admin créée:', !!newSupabaseAdmin);
   
 } catch (error) {
   console.error('❌ Erreur reset:', error);

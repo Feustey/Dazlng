@@ -1,4 +1,4 @@
-import { supabaseAdmin } from '@/lib/supabase-admin'
+import { getSupabaseAdminClient } from '@/lib/supabase'
 
 interface SecurityEvent {
   type: 'AUTH_SUCCESS' | 'AUTH_FAILURE' | 'UNAUTHORIZED_ACCESS' | 'SUSPICIOUS_ACTIVITY'
@@ -11,6 +11,7 @@ interface SecurityEvent {
 
 export async function logSecurityEvent(event: SecurityEvent): Promise<void> {
   try {
+    const supabaseAdmin = getSupabaseAdminClient();
     await supabaseAdmin
       .from('security_logs')
       .insert({
