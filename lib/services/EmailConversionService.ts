@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { sendEmail } from '@/utils/email';
 
 interface ConversionEmailData {
@@ -189,7 +189,7 @@ export class EmailConversionService {
       });
 
       // Marquer dans le tracking que la proposition a été envoyée
-      await supabase
+      await getSupabaseAdminClient()
         .from('user_email_tracking')
         .update({
           conversion_status: 'proposal_sent',

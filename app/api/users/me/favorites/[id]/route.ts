@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { ApiResponse } from "@/types/database";
 
 async function getUserFromRequest(req: NextRequest) {
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
   if (!token) return null;
-  const { data: { user } } = await supabase.auth.getUser(token);
+  const { data: { user } } = await getSupabaseAdminClient().auth.getUser(token);
   return user;
 }
 
@@ -27,7 +27,7 @@ export async function DELETE(
     }
 
     // Vérifie que le favori appartient à l'utilisateur
-    const { data: existingFavorite, error: _checkError } = await supabase
+    const { data: existingFavorite, error: _checkError } = await getSupabaseAdminClient()
       .from("user_favorites")
       .select("id")
       .eq("id", params.id)
@@ -44,7 +44,7 @@ export async function DELETE(
       }, { status: 404 });
     }
 
-    const { error } = await supabase
+    const { error } = await getSupabaseAdminClient()
       .from("user_favorites")
       .delete()
       .eq("id", params.id)

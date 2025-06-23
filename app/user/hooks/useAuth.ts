@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseBrowserClient } from '@/lib/supabase';
 import type { User, Session } from '@supabase/supabase-js';
 
 interface UseAuthReturn {
@@ -23,7 +23,7 @@ export function useAuth(): UseAuthReturn {
     // Récupérer la session initiale
     const getInitialSession = async (): Promise<void> => {
       try {
-        const { data: { session }, error } = await supabase.auth.getSession();
+        const { data: { session }, error } = await getSupabaseBrowserClient().auth.getSession();
         
         if (error) {
           console.error('Erreur lors de la récupération de la session:', error);
@@ -42,7 +42,7 @@ export function useAuth(): UseAuthReturn {
     getInitialSession();
 
     // Écouter les changements d'authentification
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+    const { data: { subscription } } = getSupabaseBrowserClient().auth.onAuthStateChange(
       async (event, session) => {
         console.log('[AUTH] Changement d\'état:', event, session?.user?.id);
         
@@ -65,7 +65,7 @@ export function useAuth(): UseAuthReturn {
   const signOut = async (): Promise<void> => {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signOut();
+      const { error } = await getSupabaseBrowserClient().auth.signOut();
       
       if (error) {
         console.error('Erreur lors de la déconnexion:', error);
@@ -89,7 +89,7 @@ export function useAuth(): UseAuthReturn {
   const getAccessToken = async (): Promise<string | null> => {
     try {
       if (!session) {
-        const { data: { session: currentSession } } = await supabase.auth.getSession();
+        const { data: { session: currentSession } } = await getSupabaseBrowserClient().auth.getSession();
         return currentSession?.access_token || null;
       }
       return session.access_token;

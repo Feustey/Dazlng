@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { validateAdminAccess } from "@/utils/adminHelpers";
 
 export async function GET(req: NextRequest): Promise<Response> {
@@ -12,7 +12,7 @@ export async function GET(req: NextRequest): Promise<Response> {
   const sort = searchParams.get("sort") || "created_at:desc";
   const [sortField, sortOrder] = sort.split(":");
   const status = searchParams.get("status");
-  let query = supabase.from("subscriptions").select("*", { count: "exact" });
+  let query = getSupabaseAdminClient().from("subscriptions").select("*", { count: "exact" });
   if (status) query = query.eq("status", status);
   query = query.order(sortField, { ascending: sortOrder === "asc" }).limit(limit);
   const { data, error } = await query;

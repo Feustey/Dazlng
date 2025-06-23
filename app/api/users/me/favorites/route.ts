@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { favoriteSchema, validateData } from "@/lib/validations";
 import { ApiResponse } from "@/types/database";
 
 async function getUserFromRequest(req: NextRequest) {
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
   if (!token) return null;
-  const { data: { user } } = await supabase.auth.getUser(token);
+  const { data: { user } } = await getSupabaseAdminClient().auth.getUser(token);
   return user;
 }
 
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> 
       }, { status: 401 });
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await getSupabaseAdminClient()
       .from("user_favorites")
       .select("*")
       .eq("user_id", user.id)
@@ -90,12 +90,12 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
     }
 
     // Vérifie si le favori existe déjà
-    const { data: existingFavorite, error: _checkError } = await supabase
+    const { data: existingFavorite, error: _checkError } = await getSupabaseAdminClient()
       .from("user_favorites")
       .select("id")
       .eq("user_id", user.id)
-      .eq("type", validation.data.type)
       .eq("item_id", validation.data.itemId)
+      .eq("type", validation.data.type)
       .single();
 
     if (existingFavorite) {
@@ -114,7 +114,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
       added_at: new Date().toISOString()
     };
 
-    const { data, error } = await supabase
+    const { data, error } = await getSupabaseAdminClient()
       .from("user_favorites")
       .insert(favoriteData)
       .select()

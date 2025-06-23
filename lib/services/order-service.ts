@@ -1,4 +1,4 @@
-import { supabase } from '../supabase';
+import { getSupabaseAdminClient } from '../supabase';
 import { Database } from '@/types/database';
 import { z } from 'zod';
 import { PaymentService } from './payment-service';
@@ -32,6 +32,8 @@ export class OrderService {
    */
   async createOrder(params: CreateOrderParams) {
     try {
+      const supabase = getSupabaseAdminClient();
+      
       // 1. Validation des données
       const validatedParams = CreateOrderSchema.parse(params);
 
@@ -68,6 +70,8 @@ export class OrderService {
    */
   async updateOrder(orderId: string, updates: Partial<Database['public']['Tables']['orders']['Update']>) {
     try {
+      const supabase = getSupabaseAdminClient();
+      
       const { data: order, error } = await supabase
         .from('orders')
         .update(updates)
@@ -90,6 +94,8 @@ export class OrderService {
    */
   async markOrderPaid(orderId: string) {
     try {
+      const supabase = getSupabaseAdminClient();
+      
       const { data: order, error } = await supabase
         .from('orders')
         .update({
@@ -115,6 +121,8 @@ export class OrderService {
    */
   async getOrder(orderId: string) {
     try {
+      const supabase = getSupabaseAdminClient();
+      
       const { data: order, error } = await supabase
         .from('orders')
         .select()
@@ -134,6 +142,8 @@ export class OrderService {
    */
   async getOrderByPaymentHash(paymentHash: string) {
     try {
+      const supabase = getSupabaseAdminClient();
+      
       const { data: order, error } = await supabase
         .from('orders')
         .select()
@@ -153,6 +163,8 @@ export class OrderService {
    */
   async getUserOrders(userId: string) {
     try {
+      const supabase = getSupabaseAdminClient();
+      
       const { data: orders, error } = await supabase
         .from('orders')
         .select()

@@ -1,50 +1,47 @@
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase-admin';
 
 export async function GET(request: NextRequest) {
-  if (!supabaseAdmin) {
+  if (!getSupabaseAdminClient) {
     console.warn('Supabase admin non configuré pour /api/user/crm-data');
     return NextResponse.json(
-      { success: false, error: { code: 'CONFIG_ERROR', message: 'Configuration Supabase manquante' } },
-      { status: 500 }
+      { error: 'Service non disponible' },
+      { status: 503 }
     );
   }
+
   try {
-    // Récupérer l'utilisateur connecté depuis le header Authorization
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader) {
+    const userId = request.nextUrl.searchParams.get('userId');
+    if (!userId) {
       return NextResponse.json(
-        { success: false, error: { code: 'UNAUTHORIZED', message: 'Token manquant' } },
-        { status: 401 }
+        { error: 'userId requis' },
+        { status: 400 }
       );
     }
 
-    // Simuler l'extraction de l'user_id depuis le token JWT
-    // En production, il faudrait vérifier le JWT
-    const userId = request.headers.get('x-user-id') || 'user-123';
-
     // Récupérer le profil utilisateur
-    const { data: profile, error: profileError } = await supabaseAdmin
+    const { data: profile, error: profileError } = await getSupabaseAdminClient()
       .from('profiles')
       .select('*')
       .eq('id', userId)
       .single();
 
-    if (profileError || !profile) {
+    if (profileError) {
+      console.error('Erreur profil:', profileError);
       return NextResponse.json(
-        { success: false, error: { code: 'NOT_FOUND', message: 'Utilisateur non trouvé' } },
-        { status: 404 }
+        { error: 'Erreur lors de la récupération du profil' },
+        { status: 500 }
       );
     }
 
     // Récupérer les commandes
-    const { data: orders } = await supabaseAdmin
+    const { data: orders } = await getSupabaseAdminClient()
       .from('orders')
       .select('*')
       .eq('user_id', userId);
 
     // Récupérer l'abonnement actuel
-    const { data: subscription } = await supabaseAdmin
+    const { data: subscription } = await getSupabaseAdminClient()
       .from('subscriptions')
       .select('*')
       .eq('user_id', userId)

@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { getSupabaseAdminClient } from '@/lib/supabase'
 import { createApiResponse } from '@/lib/api-response'
 import { ErrorCodes } from '@/types/database'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
@@ -16,7 +16,7 @@ export async function getUserFromRequest(req: NextRequest): Promise<SupabaseUser
   if (!token) return null
   
   try {
-    const { data: { user } } = await supabase.auth.getUser(token)
+    const { data: { user } } = await getSupabaseAdminClient().auth.getUser(token)
     return user
   } catch (error) {
     console.error('Erreur lors de la récupération de l\'utilisateur:', error)
@@ -69,7 +69,7 @@ export async function optionalAuth(req: NextRequest): Promise<{
 export async function isAdmin(user: SupabaseUser): Promise<boolean> {
   try {
     // Récupérer les paramètres de l'utilisateur pour vérifier le rôle admin
-    const { data: profile } = await supabase
+    const { data: profile } = await getSupabaseAdminClient()
       .from('profiles')
       .select('settings')
       .eq('id', user.id)
@@ -219,7 +219,7 @@ export async function requireOwnership<T extends { user_id: string }>(
   response: Response
 }> {
   try {
-    const { data: resource, error } = await supabase
+    const { data: resource, error } = await getSupabaseAdminClient()
       .from(table)
       .select('*')
       .eq(field, resourceId)

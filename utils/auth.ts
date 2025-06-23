@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { supabase } from '../lib/supabase';
+import { getSupabaseAdminClient } from '../lib/supabase';
 import { User } from '../types/database';
 import { NextRequest } from 'next/server';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
@@ -33,6 +33,8 @@ export async function registerUser(email: string, password: string, name: string
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
+    const supabase = getSupabaseAdminClient();
+    
     const { data: user, error } = await supabase
       .from('users')
       .insert([
@@ -55,6 +57,8 @@ export async function registerUser(email: string, password: string, name: string
 }
 
 export async function loginUser(email: string, password: string): Promise<{ token: string; user: { id: string; email: string; name: string } }> {
+  const supabase = getSupabaseAdminClient();
+  
   const { data: user, error } = await supabase
     .from('users')
     .select('*')
@@ -102,6 +106,8 @@ interface SubscriptionWithProduct {
 }
 
 export async function getUserData(userId: string): Promise<UserWithOrders> {
+  const supabase = getSupabaseAdminClient();
+  
   const { data: user, error: userError } = await supabase
     .from('users')
     .select('id, email, name, created_at, updated_at')
@@ -204,7 +210,7 @@ export async function getUserFromRequest(req: NextRequest): Promise<AuthUser | n
     const token = authHeader.replace('Bearer ', '');
     
     // Vérifier le token avec Supabase
-    const { data: { user }, error } = await supabase.auth.getUser(token);
+    const { data: { user }, error } = await getSupabaseAdminClient().auth.getUser(token);
     
     if (error || !user) {
       console.log('[AUTH] Token invalide ou utilisateur non trouvé:', error?.message);
@@ -256,7 +262,7 @@ export async function getUserFromSession(): Promise<AuthUser | null> {
  */
 export async function checkClientAuth(): Promise<{ user: SupabaseUser | null; session: any }> {
   try {
-    const { data: { session }, error } = await supabase.auth.getSession();
+    const { data: { session }, error } = await getSupabaseAdminClient().auth.getSession();
     
     if (error) {
       console.error('[AUTH] Erreur session client:', error);
@@ -275,7 +281,7 @@ export async function checkClientAuth(): Promise<{ user: SupabaseUser | null; se
  */
 export async function signOut(): Promise<void> {
   try {
-    await supabase.auth.signOut();
+    await getSupabaseAdminClient().auth.signOut();
     
     // Nettoyer le localStorage et sessionStorage
     if (typeof window !== 'undefined') {
@@ -292,7 +298,7 @@ export async function signOut(): Promise<void> {
  */
 export async function getAccessToken(): Promise<string | null> {
   try {
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await getSupabaseAdminClient().auth.getSession();
     return session?.access_token || null;
   } catch (error) {
     console.error('[AUTH] Erreur lors de la récupération du token:', error);

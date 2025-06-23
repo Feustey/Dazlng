@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { Resend } from 'resend';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { generateEmailTemplate } from '../../../utils/email';
@@ -13,7 +13,7 @@ import { ErrorCodes } from '@/types/database';
 async function getUserFromRequest(req: NextRequest): Promise<SupabaseUser | null> {
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
   if (!token) return null;
-  const { data: { user } } = await supabase.auth.getUser(token);
+  const { data: { user } } = await getSupabaseAdminClient().auth.getUser(token);
   return user;
 }
 
@@ -29,7 +29,7 @@ export async function GET(req: NextRequest): Promise<Response> {
 
     console.log('GET', '/api/orders', user.id);
 
-    const { data, error } = await supabase
+    const { data, error } = await getSupabaseAdminClient()
       .from("orders")
       .select("*")
       .eq("user_id", user.id)
@@ -82,7 +82,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     };
 
     // Insérer la commande dans la base de données
-    const { data, error } = await supabase
+    const { data, error } = await getSupabaseAdminClient()
       .from("orders")
       .insert([orderData])
       .select()

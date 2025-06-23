@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { changePasswordSchema, validateData } from "@/lib/validations";
 import { ApiResponse } from "@/types/database";
 
 async function getUserFromRequest(req: NextRequest) {
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
   if (!token) return null;
-  const { data: { user } } = await supabase.auth.getUser(token);
+  const { data: { user } } = await getSupabaseAdminClient().auth.getUser(token);
   return user;
 }
 
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
     }
 
     // Vérifie le mot de passe actuel
-    const { error: signInError } = await supabase.auth.signInWithPassword({
+    const { error: signInError } = await getSupabaseAdminClient().auth.signInWithPassword({
       email: user.email!,
       password: validation.data.currentPassword
     });
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
     }
 
     // Met à jour le mot de passe
-    const { error: updateError } = await supabase.auth.updateUser({
+    const { error: updateError } = await getSupabaseAdminClient().auth.updateUser({
       password: validation.data.newPassword
     });
 
@@ -70,7 +70,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
     }
 
     // Enregistre le changement dans l'historique (optionnel)
-    const { error: historyError } = await supabase
+    const { error: historyError } = await getSupabaseAdminClient()
       .from("password_history")
       .insert({
         user_id: user.id,

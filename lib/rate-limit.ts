@@ -13,10 +13,18 @@ export class RateLimiter {
   private config: RateLimitConfig;
 
   constructor(config: RateLimitConfig) {
-    this.supabase = createClient<Database>(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    
+    if (!supabaseUrl) {
+      throw new Error('NEXT_PUBLIC_SUPABASE_URL est manquante dans les variables d\'environnement');
+    }
+    
+    if (!supabaseAnonKey) {
+      throw new Error('NEXT_PUBLIC_SUPABASE_ANON_KEY est manquante dans les variables d\'environnement');
+    }
+    
+    this.supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
     this.config = {
       blockDurationMs: 3600000, // 1 heure par défaut
       ...config
@@ -59,7 +67,7 @@ export class RateLimiter {
         });
 
       // 3. Si limite dépassée, bloquer l'IP
-      if (count >= this.config.maxRequests) {
+      if (count && count >= this.config.maxRequests) {
         await this.blockKey(key);
         return false;
       }
@@ -81,7 +89,8 @@ export class RateLimiter {
    * Bloque une clé pour la durée configurée
    */
   private async blockKey(key: string) {
-    const expiresAt = new Date(Date.now() + this.config.blockDurationMs!);
+    const blockDuration = this.config.blockDurationMs || 3600000;
+    const expiresAt = new Date(Date.now() + blockDuration);
     
     await this.supabase
       .from('rate_limit_blocks')

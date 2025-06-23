@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { createApiResponse, handleApiError } from '@/lib/api-response';
 import { 
   adminQuerySchema,
@@ -182,7 +182,7 @@ async function getUsersHandler(req: NextRequest, user: SupabaseUser): Promise<Re
     console.log('GET', '/api/admin/users', user.id, { page, limit, search });
 
     // Construction de la requête avec jointures pour les statistiques
-    let query = supabase
+    let query = getSupabaseAdminClient()
       .from('profiles')
       .select(`
         id,
@@ -242,20 +242,20 @@ async function getUsersHandler(req: NextRequest, user: SupabaseUser): Promise<Re
     const userIds = profiles.map(p => p.id);
     
     // Compter les commandes par utilisateur
-    const { data: orderCounts } = await supabase
+    const { data: orderCounts } = await getSupabaseAdminClient()
       .from('orders')
       .select('user_id')
       .in('user_id', userIds);
 
     // Calculer le total dépensé par utilisateur
-    const { data: orderTotals } = await supabase
+    const { data: orderTotals } = await getSupabaseAdminClient()
       .from('orders')
       .select('user_id, amount')
       .eq('payment_status', 'paid')
       .in('user_id', userIds);
 
     // Récupérer les statuts d'abonnement
-    const { data: subscriptions } = await supabase
+    const { data: subscriptions } = await getSupabaseAdminClient()
       .from('subscriptions')
       .select('user_id, status, plan_id')
       .eq('status', 'active')

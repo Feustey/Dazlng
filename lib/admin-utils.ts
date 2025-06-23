@@ -1,26 +1,105 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
-import { 
-  AdminApiResponse, 
-  EnhancedStats, 
-  AdminAuditLog, 
-  AdminNotification,
-  AdminPermission,
-  AdminFilterInput
-} from '@/types/admin';
-import { ErrorCodes } from '@/types/database';
-import { validateData } from '@/lib/validations';
-import { adminFilterSchema } from '@/types/admin';
+import { getSupabaseAdminClient } from './supabase';
 
-// Cache simple en mémoire (à remplacer par Redis en production)
+// Types pour les réponses API admin
+export interface AdminApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: {
+    code: string;
+    message: string;
+    details?: any;
+  };
+  meta?: {
+    pagination?: {
+      total: number;
+      page: number;
+      limit: number;
+    };
+    timestamp: string;
+    version: string;
+  };
+}
+
+// Types pour les filtres admin
+export interface AdminFilterInput {
+  page?: number;
+  limit?: number;
+  search?: string;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+  filters?: Record<string, any>;
+}
+
+// Types pour les notifications admin
+export interface AdminNotification {
+  id: string;
+  admin_id: string;
+  type: 'info' | 'warning' | 'error' | 'success';
+  title: string;
+  message: string;
+  action?: {
+    type: 'link' | 'button';
+    label: string;
+    url?: string;
+  };
+  read: boolean;
+  priority: 'low' | 'medium' | 'high';
+  created_at: string;
+}
+
+// Types pour les statistiques
+export interface EnhancedStats {
+  users: {
+    total: number;
+    active: number;
+    newThisMonth: number;
+    growth: number;
+  };
+  orders: {
+    total: number;
+    pending: number;
+    completed: number;
+    revenue: number;
+  };
+  payments: {
+    total: number;
+    successful: number;
+    failed: number;
+    totalAmount: number;
+  };
+  subscriptions: {
+    total: number;
+    active: number;
+    cancelled: number;
+    mrr: number;
+  };
+  prospects: {
+    total: number;
+    converted: number;
+    conversionRate: number;
+  };
+  network: {
+    totalNodes: number;
+    activeChannels: number;
+    totalCapacity: number;
+  };
+  system: {
+    uptime: number;
+    memoryUsage: number;
+    cpuUsage: number;
+  };
+}
+
+// Cache simple en mémoire
 class SimpleCache {
   private cache = new Map<string, { data: any; expiry: number }>();
-  
+
   set(key: string, data: any, ttl: number = 300): void {
-    const expiry = Date.now() + (ttl * 1000);
+    const expiry = Date.now() + ttl * 1000;
     this.cache.set(key, { data, expiry });
   }
-  
+
   get(key: string): any | null {
     const item = this.cache.get(key);
     if (!item) return null;
@@ -32,7 +111,7 @@ class SimpleCache {
     
     return item.data;
   }
-  
+
   clear(): void {
     this.cache.clear();
   }
@@ -40,22 +119,23 @@ class SimpleCache {
 
 const cache = new SimpleCache();
 
-// Constantes pour le cache
+// Clés de cache
 const CACHE_KEYS = {
-  STATS: 'admin:stats',
-  USER_COUNT: 'admin:user_count',
-  REVENUE: 'admin:revenue',
-  NOTIFICATIONS: (adminId: string) => `admin:notifications:${adminId}`
-};
+  STATS: (type: string) => `admin_stats_${type}`,
+  NOTIFICATIONS: (adminId: string) => `admin_notifications_${adminId}`,
+  USERS: (filters: string) => `admin_users_${filters}`,
+  ORDERS: (filters: string) => `admin_orders_${filters}`,
+} as const;
 
+// TTL du cache
 const CACHE_TTL = {
   STATS: 300, // 5 minutes
-  USER_COUNT: 600, // 10 minutes
-  REVENUE: 300, // 5 minutes
-  NOTIFICATIONS: 60 // 1 minute
-};
+  NOTIFICATIONS: 60, // 1 minute
+  USERS: 120, // 2 minutes
+  ORDERS: 120, // 2 minutes
+} as const;
 
-// Utilitaire pour les réponses admin standardisées
+// Builder pour les réponses API admin
 export class AdminResponseBuilder {
   static success<T>(
     data: T, 
@@ -65,12 +145,13 @@ export class AdminResponseBuilder {
       success: true,
       data,
       meta: {
-        ...meta,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        version: '1.0.0',
+        ...meta
       }
     });
   }
-  
+
   static error(
     code: string,
     message: string,
@@ -79,10 +160,18 @@ export class AdminResponseBuilder {
   ): NextResponse<AdminApiResponse<null>> {
     return NextResponse.json({
       success: false,
-      error: { code, message, details }
+      error: {
+        code,
+        message,
+        details
+      },
+      meta: {
+        timestamp: new Date().toISOString(),
+        version: '1.0.0'
+      }
     }, { status });
   }
-  
+
   static paginated<T>(
     data: T[],
     total: number,
@@ -95,58 +184,50 @@ export class AdminResponseBuilder {
       data,
       meta: {
         pagination: {
+          total,
           page,
-          limit,
-          total,
-          totalPages: Math.ceil(total / limit)
-        },
-        stats: {
-          total,
-          filtered: data.length
+          limit
         },
         timestamp: new Date().toISOString(),
+        version: '1.0.0',
         ...additionalMeta
       }
     });
   }
 }
 
-// Validation et parsing des filtres admin
+// Parseur de filtres admin
 export async function parseAdminFilters(req: NextRequest): Promise<{
   success: boolean;
   data?: AdminFilterInput;
   error?: string;
 }> {
   try {
-    const { searchParams } = new URL(req.url);
-    const params: Record<string, any> = Object.fromEntries(searchParams.entries());
-    
-    // Conversion des paramètres de type
-    if (params.page) params.page = parseInt(params.page);
-    if (params.limit) params.limit = parseInt(params.limit);
-    
-    // Gestion de la plage de dates
-    if (params.startDate || params.endDate) {
-      params.dateRange = {
-        start: params.startDate,
-        end: params.endDate
-      };
-      delete params.startDate;
-      delete params.endDate;
+    const url = new URL(req.url);
+    const page = parseInt(url.searchParams.get('page') || '1');
+    const limit = Math.min(parseInt(url.searchParams.get('limit') || '50'), 100);
+    const search = url.searchParams.get('search') || undefined;
+    const sortBy = url.searchParams.get('sortBy') || 'created_at';
+    const sortOrder = (url.searchParams.get('sortOrder') || 'desc') as 'asc' | 'desc';
+
+    // Parse des filtres additionnels
+    const filters: Record<string, any> = {};
+    for (const [key, value] of url.searchParams.entries()) {
+      if (!['page', 'limit', 'search', 'sortBy', 'sortOrder'].includes(key)) {
+        filters[key] = value;
+      }
     }
-    
-    const validation = validateData(adminFilterSchema, params);
-    
-    if (!validation.success) {
-      return {
-        success: false,
-        error: 'Paramètres de filtrage invalides'
-      };
-    }
-    
+
     return {
       success: true,
-      data: validation.data
+      data: {
+        page,
+        limit,
+        search,
+        sortBy,
+        sortOrder,
+        filters: Object.keys(filters).length > 0 ? filters : undefined
+      }
     };
   } catch (error) {
     return {
@@ -156,124 +237,137 @@ export async function parseAdminFilters(req: NextRequest): Promise<{
   }
 }
 
-// Calcul des statistiques enrichies
+// Statistiques enrichies
 export async function getEnhancedStats(): Promise<EnhancedStats> {
-  const cached = cache.get(CACHE_KEYS.STATS);
-  if (cached) return cached;
-  
   try {
-    const now = new Date();
-    const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
-    const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-    
+    const cacheKey = CACHE_KEYS.STATS('enhanced');
+    const cached = cache.get(cacheKey);
+    if (cached) return cached;
+
+    const supabase = getSupabaseAdminClient();
+
     // Statistiques utilisateurs
     const { count: totalUsers } = await supabase
       .from('profiles')
-      .select('id', { count: 'exact', head: true });
-    
-    const { count: activeLastMonth } = await supabase
+      .select('*', { count: 'exact', head: true });
+
+    const { count: activeUsers } = await supabase
       .from('profiles')
-      .select('id', { count: 'exact', head: true })
-      .gte('updated_at', lastMonth.toISOString());
-    
-    const { count: withSubscriptions } = await supabase
-      .from('subscriptions')
-      .select('user_id', { count: 'exact', head: true })
-      .eq('status', 'active');
-    
-    // Statistiques de revenus
-    const { data: paidPayments } = await supabase
-      .from('payments')
-      .select('amount, created_at')
-      .eq('status', 'paid');
-    
-    const totalRevenue = paidPayments?.reduce((sum, p) => sum + (p.amount || 0), 0) || 0;
-    
-    const thisMonthPayments = paidPayments?.filter(p => 
-      new Date(p.created_at) >= thisMonthStart
-    ) || [];
-    
-    const lastMonthPayments = paidPayments?.filter(p => {
-      const date = new Date(p.created_at);
-      return date >= lastMonth && date < thisMonthStart;
-    }) || [];
-    
-    const thisMonthRevenue = thisMonthPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
-    const lastMonthRevenue = lastMonthPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
-    
-    // Statistiques par produit
-    const { data: orders } = await supabase
+      .select('*', { count: 'exact', head: true })
+      .not('last_sign_in_at', 'is', null);
+
+    const { count: newUsersThisMonth } = await supabase
+      .from('profiles')
+      .select('*', { count: 'exact', head: true })
+      .gte('created_at', new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString());
+
+    // Statistiques commandes
+    const { count: totalOrders } = await supabase
       .from('orders')
-      .select('product_type, amount, payment_status');
-    
-    const productStats = {
-      daznode: { active: 0, total: 0, revenue: 0 },
-      dazbox: { active: 0, total: 0, revenue: 0 },
-      dazpay: { active: 0, total: 0, revenue: 0 }
-    };
-    
-    orders?.forEach(order => {
-      if (order.product_type in productStats) {
-        const product = productStats[order.product_type as keyof typeof productStats];
-        product.total++;
-        if (order.payment_status === 'paid') {
-          product.active++;
-          product.revenue += order.amount || 0;
-        }
-      }
-    });
-    
-    // Statistiques de paiements
-    const { data: allPayments } = await supabase
+      .select('*', { count: 'exact', head: true });
+
+    const { count: pendingOrders } = await supabase
+      .from('orders')
+      .select('*', { count: 'exact', head: true })
+      .eq('payment_status', 'pending');
+
+    const { count: completedOrders } = await supabase
+      .from('orders')
+      .select('*', { count: 'exact', head: true })
+      .eq('payment_status', 'paid');
+
+    // Statistiques paiements
+    const { count: totalPayments } = await supabase
       .from('payments')
-      .select('status, amount');
-    
-    const paymentStats = allPayments?.reduce((acc, p) => {
-      acc[p.status] = (acc[p.status] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>) || {};
-    
+      .select('*', { count: 'exact', head: true });
+
+    const { count: successfulPayments } = await supabase
+      .from('payments')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'paid');
+
+    const { count: failedPayments } = await supabase
+      .from('payments')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'failed');
+
+    // Statistiques abonnements
+    const { count: totalSubscriptions } = await supabase
+      .from('subscriptions')
+      .select('*', { count: 'exact', head: true });
+
+    const { count: activeSubscriptions } = await supabase
+      .from('subscriptions')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'active');
+
+    const { count: cancelledSubscriptions } = await supabase
+      .from('subscriptions')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'cancelled');
+
+    // Statistiques prospects
+    const { count: totalProspects } = await supabase
+      .from('prospects')
+      .select('*', { count: 'exact', head: true });
+
+    const { count: convertedProspects } = await supabase
+      .from('prospects')
+      .select('*', { count: 'exact', head: true })
+      .eq('prospect', false);
+
     const stats: EnhancedStats = {
       users: {
         total: totalUsers || 0,
-        activeLastMonth: activeLastMonth || 0,
-        withSubscriptions: withSubscriptions || 0,
-        conversionRate: totalUsers ? Math.round((withSubscriptions || 0) / totalUsers * 100) : 0,
-        growthRate: lastMonth ? Math.round(((activeLastMonth || 0) / (totalUsers || 1)) * 100) : 0
+        active: activeUsers || 0,
+        newThisMonth: newUsersThisMonth || 0,
+        growth: totalUsers && newUsersThisMonth ? (newUsersThisMonth / totalUsers) * 100 : 0
       },
-      revenue: {
-        total: totalRevenue,
-        thisMonth: thisMonthRevenue,
-        lastMonth: lastMonthRevenue,
-        growth: lastMonthRevenue ? Math.round(((thisMonthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100) : 0,
-        averageOrderValue: Math.round(totalRevenue / Math.max(paidPayments?.length || 1, 1))
+      orders: {
+        total: totalOrders || 0,
+        pending: pendingOrders || 0,
+        completed: completedOrders || 0,
+        revenue: 0 // À calculer avec les montants
       },
-      products: productStats,
       payments: {
-        success: paymentStats.paid || 0,
-        failed: paymentStats.failed || 0,
-        pending: paymentStats.pending || 0,
-        averageAmount: Math.round(totalRevenue / Math.max(allPayments?.length || 1, 1)),
-        successRate: allPayments?.length ? Math.round((paymentStats.paid || 0) / allPayments.length * 100) : 0
+        total: totalPayments || 0,
+        successful: successfulPayments || 0,
+        failed: failedPayments || 0,
+        totalAmount: 0 // À calculer avec les montants
+      },
+      subscriptions: {
+        total: totalSubscriptions || 0,
+        active: activeSubscriptions || 0,
+        cancelled: cancelledSubscriptions || 0,
+        mrr: 0 // À calculer
+      },
+      prospects: {
+        total: totalProspects || 0,
+        converted: convertedProspects || 0,
+        conversionRate: totalProspects && convertedProspects ? (convertedProspects / totalProspects) * 100 : 0
       },
       network: {
-        totalNodes: 0, // À implémenter avec les données Lightning
-        activeNodes: 0,
-        totalChannels: 0,
+        totalNodes: 0, // À récupérer depuis l'API Lightning
+        activeChannels: 0,
         totalCapacity: 0
+      },
+      system: {
+        uptime: process.uptime(),
+        memoryUsage: process.memoryUsage().heapUsed / 1024 / 1024,
+        cpuUsage: 0
       }
     };
-    
-    cache.set(CACHE_KEYS.STATS, stats, CACHE_TTL.STATS);
+
+    cache.set(cacheKey, stats, CACHE_TTL.STATS);
     return stats;
-    
+
   } catch (error) {
-    console.error('Erreur lors du calcul des statistiques:', error);
-    throw new Error('Impossible de calculer les statistiques');
+    console.error('Erreur lors de la récupération des statistiques:', error);
+    throw error;
   }
 }
 
-// Audit des actions admin
+// Logging des actions admin
 export async function logAdminAction(
   req: NextRequest,
   adminId: string,
@@ -284,117 +378,72 @@ export async function logAdminAction(
   _notes?: string
 ): Promise<void> {
   try {
-    const forwarded = req.headers.get('x-forwarded-for');
-    const ip = forwarded ? forwarded.split(',')[0] : req.headers.get('x-real-ip') || 'unknown';
-    const userAgent = req.headers.get('user-agent') || 'unknown';
-    
-    const { data: adminProfile } = await supabase
-      .from('profiles')
-      .select('email')
-      .eq('id', adminId)
-      .single();
-    
-    const auditLog: Omit<AdminAuditLog, 'id'> = {
-      admin_id: adminId,
-      admin_email: adminProfile?.email || 'unknown',
-      action,
-      entity_type: entityType,
-      entity_id: entityId,
-      changes: changes || {},
-      ip_address: ip,
-      user_agent: userAgent,
-      timestamp: new Date().toISOString()
-    };
+    const supabase = getSupabaseAdminClient();
     
     await supabase
       .from('admin_audit_logs')
-      .insert(auditLog);
-      
-    console.log('[ADMIN-AUDIT]', {
-      admin: adminProfile?.email,
-      action,
-      entity: `${entityType}:${entityId}`
-    });
-    
+      .insert({
+        admin_id: adminId,
+        action,
+        entity_type: entityType,
+        entity_id: entityId,
+        changes: changes ? JSON.stringify(changes) : null,
+        ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown',
+        user_agent: req.headers.get('user-agent') || 'unknown',
+        created_at: new Date().toISOString()
+      });
+
   } catch (error) {
     console.error('Erreur lors du logging de l\'action admin:', error);
-    // Ne pas faire échouer l'action principale en cas d'erreur de logging
   }
 }
 
-// Gestion des permissions admin
+// Vérification des permissions admin
 export async function checkAdminPermissions(
   userId: string,
   resource: string,
   action: 'read' | 'write' | 'delete' | 'export'
 ): Promise<boolean> {
   try {
-    const { data: adminRole } = await supabase
-      .from('admin_roles')
-      .select('role, permissions')
+    const supabase = getSupabaseAdminClient();
+    
+    const { data: admin, error } = await supabase
+      .from('admin_users')
+      .select('permissions')
       .eq('user_id', userId)
       .single();
-    
-    if (!adminRole) return false;
-    
-    // Super admin a tous les droits
-    if (adminRole.role === 'super_admin') return true;
-    
-    // Vérifier les permissions spécifiques
-    const permissions = adminRole.permissions as AdminPermission[];
-    const resourcePermission = permissions.find(p => p.resource === resource);
-    
-    return resourcePermission?.actions.includes(action) || false;
-    
+
+    if (error || !admin) return false;
+
+    const permissions = admin.permissions as Record<string, string[]>;
+    return permissions[resource]?.includes(action) || false;
+
   } catch (error) {
     console.error('Erreur lors de la vérification des permissions:', error);
     return false;
   }
 }
 
-// Middleware de sécurité renforcé
+// Middleware d'authentification admin avec permissions
 export function withEnhancedAdminAuth(
   handler: (req: NextRequest, adminId: string) => Promise<Response>,
   requiredPermissions?: { resource: string; action: string }
 ) {
   return async (req: NextRequest): Promise<Response> => {
     try {
-      // Pour le développement, on va simplifier l'auth admin
-      // En production, il faudrait implémenter une véritable auth admin
-      
-      // Récupération du token de session depuis les cookies ou headers
-      const authHeader = req.headers.get('authorization');
-      const cookies = req.headers.get('cookie');
-      
-      let adminId: string | null = null;
-      
-      // Essayer avec le header Authorization
-      if (authHeader) {
-        adminId = await validateAdminToken(authHeader);
-      }
-      
-      // Essayer avec les cookies de session Supabase
-      if (!adminId && cookies) {
-        adminId = await validateAdminSession(cookies);
-      }
-      
-      // Pour le développement local, autoriser sans auth si pas de config admin
-      if (!adminId && process.env.NODE_ENV === 'development') {
-        console.warn('Mode développement : authentification admin simplifiée');
-        adminId = 'dev-admin-user';
-      }
-      
+      // Vérification de l'authentification
+      const adminId = await validateAdminRequest(req);
       if (!adminId) {
         return AdminResponseBuilder.error(
-          ErrorCodes.UNAUTHORIZED,
+          'UNAUTHORIZED',
           'Authentification admin requise',
           null,
           401
         );
       }
-      
-      // Vérification des permissions si spécifiées (skip en développement)
-      if (requiredPermissions && process.env.NODE_ENV !== 'development') {
+
+      // Vérification des permissions si spécifiées
+      if (requiredPermissions) {
         const hasPermission = await checkAdminPermissions(
           adminId,
           requiredPermissions.resource,
@@ -403,20 +452,21 @@ export function withEnhancedAdminAuth(
         
         if (!hasPermission) {
           return AdminResponseBuilder.error(
-            ErrorCodes.FORBIDDEN,
+            'FORBIDDEN',
             'Permissions insuffisantes',
-            { required: requiredPermissions },
+            null,
             403
           );
         }
       }
-      
+
+      // Exécution du handler
       return await handler(req, adminId);
-      
+
     } catch (error) {
       console.error('Erreur dans le middleware admin:', error);
       return AdminResponseBuilder.error(
-        ErrorCodes.INTERNAL_ERROR,
+        'INTERNAL_ERROR',
         'Erreur interne du serveur',
         null,
         500
@@ -425,47 +475,61 @@ export function withEnhancedAdminAuth(
   };
 }
 
-// Validation du token admin (à personnaliser)
+// Validation de l'authentification admin
+async function validateAdminRequest(req: NextRequest): Promise<string | null> {
+  try {
+    // Vérification du token Bearer
+    const authHeader = req.headers.get('Authorization');
+    if (authHeader?.startsWith('Bearer ')) {
+      return await validateAdminToken(authHeader);
+    }
+
+    // Vérification des cookies de session
+    const cookieHeader = req.headers.get('cookie');
+    if (cookieHeader) {
+      return await validateAdminSession(cookieHeader);
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Erreur lors de la validation de la session admin:', error);
+    return null;
+  }
+}
+
+// Validation du token admin
 async function validateAdminToken(authHeader: string): Promise<string | null> {
   try {
-    // Implémentation à adapter selon votre système d'auth
-    // Exemple avec JWT ou session Supabase
     const token = authHeader.replace('Bearer ', '');
+    const supabase = getSupabaseAdminClient();
     
-    // Validation du token et récupération de l'utilisateur
     const { data: { user }, error } = await supabase.auth.getUser(token);
     
-    if (error || !user) return null;
-    
-    // Vérifier si l'utilisateur est admin
-    const { data: adminRole } = await supabase
-      .from('admin_roles')
-      .select('id')
+    if (error || !user) {
+      return null;
+    }
+
+    // Vérifier que l'utilisateur est admin
+    const { data: admin } = await supabase
+      .from('admin_users')
+      .select('user_id')
       .eq('user_id', user.id)
       .single();
-    
-    return adminRole ? user.id : null;
-    
+
+    return admin ? user.id : null;
+
   } catch (error) {
     console.error('Erreur lors de la validation du token admin:', error);
     return null;
   }
 }
 
-// Validation de la session admin via cookies
+// Validation de la session admin
 async function validateAdminSession(_cookies: string): Promise<string | null> {
   try {
-    // Essayer de récupérer la session depuis les cookies
-    // Pour le moment, on retourne null car on utilise le mode développement
-    // En production, il faudrait parser les cookies de session Supabase
-    
-    // Mode simplifié pour le développement
-    if (process.env.NODE_ENV === 'development') {
-      return 'dev-admin-user';
-    }
-    
+    // Implémentation de la validation par session
+    // À adapter selon votre système d'authentification
     return null;
-    
   } catch (error) {
     console.error('Erreur lors de la validation de la session admin:', error);
     return null;
@@ -493,7 +557,7 @@ export async function createAdminNotification(
       created_at: new Date().toISOString()
     };
     
-    await supabase
+    await getSupabaseAdminClient()
       .from('admin_notifications')
       .insert(notification);
     
@@ -515,7 +579,7 @@ export async function getAdminNotifications(
     const cached = cache.get(cacheKey);
     if (cached && !unreadOnly) return cached;
     
-    let query = supabase
+    let query = getSupabaseAdminClient()
       .from('admin_notifications')
       .select('*')
       .eq('admin_id', adminId)

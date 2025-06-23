@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServerClient } from '@/lib/supabase-auth'
-import { supabaseAdmin } from '@/lib/supabase-admin'
+import { getSupabaseAdminClient } from '@/lib/supabase'
 import { mcpLightAPI } from '@/lib/services/mcp-light-api'
 import { ApiResponse } from '@/types/database'
 
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     // Si pas de pubkey dans le body, essayer de le récupérer du profil
     if (!pubkey) {
-      const { data: profile, error: profileError } = await supabaseAdmin
+      const { data: profile, error: profileError } = await getSupabaseAdminClient()
         .from('profiles')
         .select('pubkey')
         .eq('id', user.id)
@@ -106,7 +106,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     const todayEnd = `${today} 23:59:59+00`
 
     // Vérifier s'il y a déjà une recommandation générée aujourd'hui
-    const { data: existingRecommendation, error: checkError } = await supabaseAdmin
+    const { data: existingRecommendation, error: checkError } = await getSupabaseAdminClient()
       .from('daily_recommendations')
       .select('*')
       .eq('user_id', user.id)
@@ -186,7 +186,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       }
 
       // 5. Sauvegarder la recommandation en base
-      const { error: saveError } = await supabaseAdmin
+      const { error: saveError } = await getSupabaseAdminClient()
         .from('daily_recommendations')
         .insert({
           user_id: user.id,
@@ -251,7 +251,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       }
 
       // Sauvegarder la recommandation de fallback
-      await supabaseAdmin
+      await getSupabaseAdminClient()
         .from('daily_recommendations')
         .insert({
           user_id: user.id,

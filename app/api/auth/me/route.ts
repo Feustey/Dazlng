@@ -1,5 +1,5 @@
 import { createSupabaseServerClient } from '@/lib/supabase-auth'
-import { supabaseAdmin } from '@/lib/supabase-admin'
+import { getSupabaseAdminClient } from '@/lib/supabase'
 import { sendWelcomeEmail } from '@/lib/welcome-email'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -61,11 +61,11 @@ export async function GET(request: NextRequest): Promise<ReturnType<typeof NextR
     }
 
     // Récupérer le profil depuis la table profiles
-    if (!supabaseAdmin) {
+    if (!getSupabaseAdminClient()) {
       return NextResponse.json({ error: 'Configuration serveur incorrecte' }, { status: 500 })
     }
     
-    const { data: profile, error: profileError } = await supabaseAdmin
+    const { data: profile, error: profileError } = await getSupabaseAdminClient()
       .from('profiles')
       .select('*')
       .eq('id', user.id)
@@ -78,7 +78,7 @@ export async function GET(request: NextRequest): Promise<ReturnType<typeof NextR
       console.log('[API] Création automatique du profil pour utilisateur:', user.id)
       
       try {
-        const { data: profileData, error: createError } = await supabaseAdmin!.rpc(
+        const { data: profileData, error: createError } = await getSupabaseAdminClient()!.rpc(
           'ensure_profile_exists', 
           { 
             user_id: user.id, 

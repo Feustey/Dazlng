@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { validateAdminAccess } from "@/utils/adminHelpers";
 
 // Données de test pour DazBox
@@ -24,7 +24,7 @@ const createTestOrder = async () => {
       verified_at: new Date("2024-08-15T10:00:00Z").toISOString()
     };
 
-    const { data: profileData, error: profileError } = await supabase
+    const { data: profileData, error: profileError } = await getSupabaseAdminClient()
       .from("profiles")
       .upsert([testProfile], { onConflict: "id" })
       .select()
@@ -57,7 +57,7 @@ const createTestOrder = async () => {
       updated_at: new Date("2025-05-25T11:01:02Z").toISOString()
     };
 
-    const { data: orderData, error: orderError } = await supabase
+    const { data: orderData, error: orderError } = await getSupabaseAdminClient()
       .from("orders")
       .upsert([testOrder], { onConflict: "id" })
       .select()
@@ -84,7 +84,7 @@ const createTestOrder = async () => {
       updated_at: new Date("2025-05-25T14:30:00Z").toISOString()
     };
 
-    const { data: deliveryData, error: deliveryError } = await supabase
+    const { data: deliveryData, error: deliveryError } = await getSupabaseAdminClient()
       .from("deliveries")
       .upsert([testDelivery], { onConflict: "id" })
       .select()
@@ -108,7 +108,7 @@ const createTestOrder = async () => {
       updated_at: new Date("2025-05-25T11:06:15Z").toISOString()
     };
 
-    const { data: paymentData, error: paymentError } = await supabase
+    const { data: paymentData, error: paymentError } = await getSupabaseAdminClient()
       .from("payments")
       .upsert([testPayment], { onConflict: "id" })
       .select()

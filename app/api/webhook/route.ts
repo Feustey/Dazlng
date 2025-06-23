@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { Resend } from 'resend';
 import { generateEmailTemplate } from '../../../utils/email';
 
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         return NextResponse.json({ error: 'Paiement non confirmé' }, { status: 400 });
       }
       // Mettre à jour la commande
-      const { data: orders, error: orderError } = await supabase
+      const { data: orders, error: orderError } = await getSupabaseAdminClient()
         .from('orders')
         .update({ payment_status: 'paid', updated_at: new Date().toISOString() })
         .eq('payment_hash', paymentHash)
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     case 'invoice.expired': {
       const paymentHash = event.data?.payment_hash;
       if (paymentHash) {
-        await supabase
+        await getSupabaseAdminClient()
           .from('orders')
           .update({ payment_status: 'expired', updated_at: new Date().toISOString() })
           .eq('payment_hash', paymentHash);

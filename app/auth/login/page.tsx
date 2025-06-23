@@ -3,10 +3,10 @@
 import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
-import { createSupabaseBrowserClient } from '@/lib/supabase';
+import { getSupabaseBrowserClient } from '@/lib/supabase';
 
 export default function LoginPage(): JSX.Element {
-  const supabase = createSupabaseBrowserClient();
+  const supabase = getSupabaseBrowserClient();
 
   return (
     <Suspense fallback={<div>Chargement...</div>}>

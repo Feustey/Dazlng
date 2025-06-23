@@ -1,10 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 import { User, Product, Order, Delivery, Payment, Subscription } from '../types/database';
-import { supabase } from '../lib/supabase';
+import { getSupabaseAdminClient } from '../lib/supabase';
 
 // Users
 export async function createUser(userData: Omit<User, 'id' | 'created_at' | 'updated_at'>): Promise<User> {
   const id = uuidv4();
+  const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('users')
     .insert([{ id, ...userData }])
@@ -17,6 +18,7 @@ export async function createUser(userData: Omit<User, 'id' | 'created_at' | 'upd
 }
 
 export async function getUserById(id: string): Promise<User | null> {
+  const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('users')
     .select('*')
@@ -28,6 +30,7 @@ export async function getUserById(id: string): Promise<User | null> {
 }
 
 export async function getUserByEmail(email: string): Promise<User | null> {
+  const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('users')
     .select('*')
@@ -40,6 +43,7 @@ export async function getUserByEmail(email: string): Promise<User | null> {
 
 // Products
 export async function getProducts(): Promise<Product[]> {
+  const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('products')
     .select('*');
@@ -49,6 +53,7 @@ export async function getProducts(): Promise<Product[]> {
 }
 
 export async function getProductById(id: string): Promise<Product | null> {
+  const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('products')
     .select('*')
@@ -62,6 +67,7 @@ export async function getProductById(id: string): Promise<Product | null> {
 // Orders
 export async function createOrder(orderData: Omit<Order, 'id' | 'created_at' | 'updated_at'>): Promise<Order> {
   const id = uuidv4();
+  const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('orders')
     .insert([{ id, ...orderData }])
@@ -74,6 +80,7 @@ export async function createOrder(orderData: Omit<Order, 'id' | 'created_at' | '
 }
 
 export async function getOrderById(id: string): Promise<Order | null> {
+  const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('orders')
     .select('*')
@@ -85,6 +92,7 @@ export async function getOrderById(id: string): Promise<Order | null> {
 }
 
 export async function getUserOrders(userId: string): Promise<Order[]> {
+  const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('orders')
     .select('*')
@@ -98,6 +106,7 @@ export async function getUserOrders(userId: string): Promise<Order[]> {
 // Deliveries
 export async function createDelivery(deliveryData: Omit<Delivery, 'id' | 'created_at' | 'updated_at'>): Promise<Delivery> {
   const id = uuidv4();
+  const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('deliveries')
     .insert([{ id, ...deliveryData }])
@@ -110,6 +119,7 @@ export async function createDelivery(deliveryData: Omit<Delivery, 'id' | 'create
 }
 
 export async function getDeliveryById(id: string): Promise<Delivery | null> {
+  const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('deliveries')
     .select('*')
@@ -121,6 +131,7 @@ export async function getDeliveryById(id: string): Promise<Delivery | null> {
 }
 
 export async function getOrderDelivery(orderId: string): Promise<Delivery | null> {
+  const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('deliveries')
     .select('*')
@@ -134,6 +145,7 @@ export async function getOrderDelivery(orderId: string): Promise<Delivery | null
 // Payments
 export async function createPayment(paymentData: Omit<Payment, 'id' | 'created_at' | 'updated_at'>): Promise<Payment> {
   const id = uuidv4();
+  const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('payments')
     .insert([{ id, ...paymentData }])
@@ -146,6 +158,7 @@ export async function createPayment(paymentData: Omit<Payment, 'id' | 'created_a
 }
 
 export async function getPaymentById(id: string): Promise<Payment | null> {
+  const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('payments')
     .select('*')
@@ -157,6 +170,7 @@ export async function getPaymentById(id: string): Promise<Payment | null> {
 }
 
 export async function getOrderPayments(orderId: string): Promise<Payment[]> {
+  const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('payments')
     .select('*')
@@ -170,6 +184,7 @@ export async function getOrderPayments(orderId: string): Promise<Payment[]> {
 // Subscriptions
 export async function createSubscription(subscriptionData: Omit<Subscription, 'id' | 'created_at' | 'updated_at'>): Promise<Subscription> {
   const id = uuidv4();
+  const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('subscriptions')
     .insert([{ id, ...subscriptionData }])
@@ -182,6 +197,7 @@ export async function createSubscription(subscriptionData: Omit<Subscription, 'i
 }
 
 export async function getSubscriptionById(id: string): Promise<Subscription | null> {
+  const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('subscriptions')
     .select('*')
@@ -193,6 +209,7 @@ export async function getSubscriptionById(id: string): Promise<Subscription | nu
 }
 
 export async function getUserSubscriptions(userId: string): Promise<Subscription[]> {
+  const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('subscriptions')
     .select('*')
@@ -204,6 +221,7 @@ export async function getUserSubscriptions(userId: string): Promise<Subscription
 }
 
 export async function updateSubscriptionStatus(id: string, status: Subscription['status']): Promise<void> {
+  const supabase = getSupabaseAdminClient();
   const { error } = await supabase
     .from('subscriptions')
     .update({ status, updated_at: new Date().toISOString() })

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import jwt from 'jsonwebtoken';
 import { secp256k1 } from 'ethereum-cryptography/secp256k1';
 import { hexToBytes, utf8ToBytes } from 'ethereum-cryptography/utils';
@@ -81,6 +81,9 @@ export async function POST(req: NextRequest): Promise<Response> {
 
   // Vérifier si l'utilisateur existe, sinon le créer
   try {
+    // ✅ Utiliser le client admin pour les opérations de base de données
+    const supabase = getSupabaseAdminClient();
+    
     let { data: user } = await supabase.from('profiles').select('*').eq('pubkey', pubkey).single();
     
     if (!user) {

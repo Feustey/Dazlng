@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase-admin';
+import { getSupabaseAdminClient } from '@/lib/supabase';
 
 interface BusinessMetrics {
   // Acquisition
@@ -110,22 +110,22 @@ async function getBusinessMetrics(_startDate: Date): Promise<BusinessMetrics> {
   weekStart.setDate(weekStart.getDate() - 7);
 
   // Signups
-  const { count: totalSignups } = await supabaseAdmin
+  const { count: totalSignups } = await getSupabaseAdminClient()
     .from('profiles')
     .select('*', { count: 'exact', head: true });
 
-  const { count: monthlySignups } = await supabaseAdmin
+  const { count: monthlySignups } = await getSupabaseAdminClient()
     .from('profiles')
     .select('*', { count: 'exact', head: true })
     .gte('created_at', monthStart.toISOString());
 
-  const { count: weeklySignups } = await supabaseAdmin
+  const { count: weeklySignups } = await getSupabaseAdminClient()
     .from('profiles')
     .select('*', { count: 'exact', head: true })
     .gte('created_at', weekStart.toISOString());
 
   // Revenue data
-  const { data: ordersData } = await supabaseAdmin
+  const { data: ordersData } = await getSupabaseAdminClient()
     .from('orders')
     .select('amount, payment_status, created_at, user_id')
     .eq('payment_status', 'paid');
@@ -139,20 +139,20 @@ async function getBusinessMetrics(_startDate: Date): Promise<BusinessMetrics> {
   const avgOrderValue = ordersData?.length ? totalRevenue / ordersData.length : 0;
 
   // Subscriptions
-  const { count: premiumCount } = await supabaseAdmin
+  const { count: premiumCount } = await getSupabaseAdminClient()
     .from('subscriptions')
     .select('*', { count: 'exact', head: true })
     .eq('plan_id', 'premium')
     .eq('status', 'active');
 
   // Lightning adoption
-  const { count: lightningUsers } = await supabaseAdmin
+  const { count: lightningUsers } = await getSupabaseAdminClient()
     .from('profiles')
     .select('*', { count: 'exact', head: true })
     .not('pubkey', 'is', null);
 
   // Verified users
-  const { count: _verifiedUsers } = await supabaseAdmin
+  const { count: _verifiedUsers } = await getSupabaseAdminClient()
     .from('profiles')
     .select('*', { count: 'exact', head: true })
     .eq('email_verified', true);
@@ -191,20 +191,20 @@ async function getBusinessMetrics(_startDate: Date): Promise<BusinessMetrics> {
 
 async function getFunnelMetrics(startDate: Date): Promise<FunnelMetrics> {
   // Étape 1: Visiteurs (approximation basée sur les signups)
-  const { count: totalSignups } = await supabaseAdmin
+  const { count: totalSignups } = await getSupabaseAdminClient()
     .from('profiles')
     .select('*', { count: 'exact', head: true })
     .gte('created_at', startDate.toISOString());
 
   // Étape 2: Utilisateurs vérifiés
-  const { count: verifiedUsers } = await supabaseAdmin
+  const { count: verifiedUsers } = await getSupabaseAdminClient()
     .from('profiles')
     .select('*', { count: 'exact', head: true })
     .eq('email_verified', true)
     .gte('created_at', startDate.toISOString());
 
   // Étape 3: Premier achat
-  const { data: firstPurchases } = await supabaseAdmin
+  const { data: firstPurchases } = await getSupabaseAdminClient()
     .from('orders')
     .select('user_id, created_at')
     .eq('payment_status', 'paid')
@@ -213,7 +213,7 @@ async function getFunnelMetrics(startDate: Date): Promise<FunnelMetrics> {
   const uniqueBuyers = new Set(firstPurchases?.map(order => order.user_id) || []).size;
 
   // Étape 4: Premium
-  const { count: premiumUsers } = await supabaseAdmin
+  const { count: premiumUsers } = await getSupabaseAdminClient()
     .from('subscriptions')
     .select('*', { count: 'exact', head: true })
     .eq('plan_id', 'premium')
@@ -244,7 +244,7 @@ async function getFunnelMetrics(startDate: Date): Promise<FunnelMetrics> {
 
 async function getCohortAnalysis(): Promise<CohortData[]> {
   // Analyse de cohorte simplifiée - utilisateurs par mois d'inscription
-  const { data: cohorts } = await supabaseAdmin
+  const { data: cohorts } = await getSupabaseAdminClient()
     .from('profiles')
     .select('created_at, id')
     .order('created_at', { ascending: true });
@@ -273,7 +273,7 @@ async function getCohortAnalysis(): Promise<CohortData[]> {
     const cohortSize = userIds.length;
     
     // Pour cette démo, nous utilisons des métriques proxy (commandes, abonnements)
-    const { count: activeMonth1 } = await supabaseAdmin
+    const { count: activeMonth1 } = await getSupabaseAdminClient()
       .from('orders')
       .select('*', { count: 'exact', head: true })
       .in('user_id', userIds)

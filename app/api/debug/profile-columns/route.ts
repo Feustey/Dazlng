@@ -1,4 +1,4 @@
-import { supabaseAdmin } from '@/lib/supabase-admin'
+import { getSupabaseAdminClient } from '@/lib/supabase'
 import { NextRequest, NextResponse } from 'next/server'
 
 export const dynamic = "force-dynamic";
@@ -9,7 +9,7 @@ export async function GET(_request: NextRequest): Promise<ReturnType<typeof Next
     console.log('[DEBUG] Vérification des colonnes de la table profiles...')
     
     // Requête pour obtenir la structure de la table profiles
-    const { data: columns, error: columnsError } = await supabaseAdmin
+    const { data: columns, error: columnsError } = await getSupabaseAdminClient()
       .from('information_schema.columns')
       .select('column_name, data_type, is_nullable, column_default')
       .eq('table_name', 'profiles')
@@ -51,7 +51,7 @@ export async function GET(_request: NextRequest): Promise<ReturnType<typeof Next
         }
         
         // Essayer de faire un upsert test (sera rollback)
-        const { error: testError } = await supabaseAdmin
+        const { error: testError } = await getSupabaseAdminClient()
           .from('profiles')
           .upsert(testData, { onConflict: 'id' })
           .select('id')
@@ -62,7 +62,7 @@ export async function GET(_request: NextRequest): Promise<ReturnType<typeof Next
         } else {
           constraintStatus = 'OK'
           // Nettoyer le test
-          await supabaseAdmin
+          await getSupabaseAdminClient()
             .from('profiles')
             .delete()
             .eq('id', 'test-constraint-check')

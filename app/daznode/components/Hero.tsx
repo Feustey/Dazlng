@@ -27,7 +27,7 @@ const DazNodeHero: React.FC = (): React.ReactElement => {
       action: 'start_professional',
       product: 'daznode' 
     });
-    router.push('/register?plan=daznode-pro');
+    router.push('/register');
   };
 
   const handleViewDemo = (): void => {
@@ -55,7 +55,7 @@ const DazNodeHero: React.FC = (): React.ReactElement => {
       {/* Background Effects */}
       <div className="absolute inset-0">
         {/* Grid Pattern */}
-        <div className="absolute inset-0 bg-[url('/assets/images/grid-pattern-dark.svg')] bg-center bg-repeat opacity-20"></div>
+        <div className="absolute inset-0 bg-[url('/assets/images/grid-pattern.svg')] bg-center bg-repeat opacity-20"></div>
         
         {/* Floating Elements */}
         <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
@@ -140,7 +140,7 @@ const DazNodeHero: React.FC = (): React.ReactElement => {
               onClick={handleStartProfessional}
               className="group bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 hover:from-blue-600 hover:via-purple-600 hover:to-cyan-600 text-white font-bold px-8 py-4 text-lg rounded-xl shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2"
             >
-              <span>Démarrer Version Pro</span>
+              <span>Commencer</span>
               <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
@@ -194,7 +194,7 @@ const DazNodeHero: React.FC = (): React.ReactElement => {
             {/* Dashboard mock */}
             <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
               <Image
-                src="/assets/images/daznode-dashboard.png"
+                src="/assets/images/dashboard-daznode.png"
                 alt="DazNode Dashboard - Interface de Gestion Professionnelle"
                 width={500}
                 height={400}

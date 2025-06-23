@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { ApiResponse } from "@/types/database";
 
 async function getUserFromRequest(req: NextRequest) {
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
   if (!token) return null;
-  const { data: { user } } = await supabase.auth.getUser(token);
+  const { data: { user } } = await getSupabaseAdminClient.auth.getUser(token);
   return user;
 }
 
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> 
     }
 
     // Récupère les métriques de base du profil
-    const { data: profile, error: profileError } = await supabase
+    const { data: profile, error: profileError } = await getSupabaseAdminClient
       .from("profiles")
       .select(`
         total_transactions, average_rating, total_reviews, completion_rate,
@@ -45,7 +45,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> 
     }
 
     // Récupère les statistiques des commandes
-    const { data: orders, error: ordersError } = await supabase
+    const { data: orders, error: ordersError } = await getSupabaseAdminClient
       .from("orders")
       .select("amount, payment_status, created_at")
       .eq("user_id", user.id);
@@ -55,7 +55,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> 
     }
 
     // Récupère les statistiques des paiements
-    const { data: payments, error: paymentsError } = await supabase
+    const { data: payments, error: paymentsError } = await getSupabaseAdminClient
       .from("payments")
       .select("amount, status, created_at")
       .eq("user_id", user.id);

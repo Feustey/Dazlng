@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseAdminClient } from '@/lib/supabase';
 
 export async function POST(req: NextRequest): Promise<Response> {
   try {
@@ -7,7 +7,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     if (!email || !pubkey || !choix) {
       return NextResponse.json({ error: "Champs obligatoires manquants" }, { status: 400 });
     }
-    const { error } = await supabase.from("prospects").insert([
+    const { error } = await getSupabaseAdminClient().from("prospects").insert([
       {
         email,
         pubkey,

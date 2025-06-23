@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { studiesSchema, validateData } from "@/lib/validations";
 import { ApiResponse } from "@/types/database";
 
 async function getUserFromRequest(req: NextRequest) {
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
   if (!token) return null;
-  const { data: { user } } = await supabase.auth.getUser(token);
+  const { data: { user } } = await getSupabaseAdminClient().auth.getUser(token);
   return user;
 }
 
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> 
       }, { status: 401 });
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await getSupabaseAdminClient()
       .from("profiles")
       .select("studies")
       .eq("id", user.id)
@@ -89,7 +89,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
       }, { status: 400 });
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await getSupabaseAdminClient()
       .from("profiles")
       .update({
         studies: validation.data,

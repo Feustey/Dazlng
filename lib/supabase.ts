@@ -1,78 +1,61 @@
-// lib/supabase.ts - Configuration Supabase unifiée
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+// lib/supabase.ts - Nouvelle version avec @supabase/ssr
 import { createBrowserClient } from '@supabase/ssr';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
+// Utilisation des variables d'environnement publiques pour le client navigateur
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Configuration Supabase manquante :', {
-    url: !!supabaseUrl,
-    anonKey: !!supabaseAnonKey,
-    serviceKey: !!supabaseServiceKey
+// Vérification des variables d'environnement requises
+if (!supabaseUrl) {
+  throw new Error('NEXT_PUBLIC_SUPABASE_URL est manquante dans les variables d\'environnement');
+}
+
+if (!supabaseAnonKey) {
+  throw new Error('NEXT_PUBLIC_SUPABASE_ANON_KEY est manquante dans les variables d\'environnement');
+}
+
+/**
+ * Crée un client Supabase pour le CONTEXTE NAVIGATEUR (Client-Side Components).
+ * La librairie gère le singleton en interne.
+ */
+export function getSupabaseBrowserClient() {
+  return createBrowserClient(supabaseUrl, supabaseAnonKey);
+}
+
+/**
+ * Crée un client Supabase pour le CONTEXTE SERVEUR avec des droits PUBLICS.
+ * Utilise la clé anonyme pour les opérations publiques côté serveur.
+ */
+export function getSupabaseServerPublicClient(): SupabaseClient {
+  return createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
   });
-  throw new Error('Variables d\'environnement Supabase manquantes. Veuillez configurer NEXT_PUBLIC_SUPABASE_URL et NEXT_PUBLIC_SUPABASE_ANON_KEY');
 }
 
-// ✅ SINGLETON : Une seule instance browser client
-let browserClientInstance: SupabaseClient | null = null;
-
-export function createSupabaseBrowserClient(): SupabaseClient {
-  if (typeof window === 'undefined') {
-    // Côté serveur, retourner le client admin si disponible
-    if (supabaseServiceKey) {
-      return createClient(supabaseUrl, supabaseServiceKey, {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false
-        }
-      });
-    }
-    
-    // Fallback côté serveur avec clé anon
-    return createClient(supabaseUrl, supabaseAnonKey);
-  }
-
-  // Côté client, singleton strict
-  if (!browserClientInstance) {
-    browserClientInstance = createBrowserClient(supabaseUrl, supabaseAnonKey);
-    console.log('✅ Supabase Browser Client créé (singleton)');
-  }
-  
-  return browserClientInstance;
-}
-
-// ✅ CLIENT PRINCIPAL : Utilisation du singleton
-export const supabase = createSupabaseBrowserClient();
-
-// ✅ CLIENT ADMIN : Pour les opérations serveur uniquement
-let adminClientInstance: SupabaseClient | null = null;
-
-export function getSupabaseAdmin(): SupabaseClient {
+/**
+ * Crée un client Supabase pour le CONTEXTE SERVEUR avec des droits d'ADMINISTRATION.
+ * ATTENTION : Ce client peut contourner RLS. À n'utiliser que pour des tâches spécifiques
+ * dans les Server Actions ou les API Routes où les droits admin sont indispensables.
+ */
+export function getSupabaseAdminClient(): SupabaseClient {
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!supabaseServiceKey) {
-    throw new Error('SUPABASE_SERVICE_ROLE_KEY manquante pour le client admin');
+    throw new Error('La clé de service Supabase (SUPABASE_SERVICE_ROLE_KEY) est manquante côté serveur.');
   }
-  
-  if (!adminClientInstance) {
-    adminClientInstance = createClient(supabaseUrl, supabaseServiceKey, {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false
-      }
-    });
-    console.log('✅ Supabase Admin Client créé (singleton)');
-  }
-  
-  return adminClientInstance;
+
+  // Pour le client admin, nous utilisons createClient classique.
+  return createClient(supabaseUrl, supabaseServiceKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
 }
 
-// ✅ EXPORT COMPATIBILITÉ
-export const supabaseAdmin = supabaseServiceKey ? getSupabaseAdmin() : null;
-
-// ✅ RESET FUNCTION pour les tests
-export function resetSupabaseClients(): void {
-  browserClientInstance = null;
-  adminClientInstance = null;
-  console.log('🔄 Supabase clients reset');
-}
+// NOTE: Les anciens exports `supabase` et `supabaseAdmin` sont supprimés
+// pour forcer l'utilisation des nouvelles fonctions et éviter les erreurs.
+// Nous allons corriger les fichiers qui les utilisaient dans les prochaines étapes.

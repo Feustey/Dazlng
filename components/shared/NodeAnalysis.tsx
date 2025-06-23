@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useMCPLight } from '@/hooks/useMCPLight';
 import { NodeAnalysisResult, PriorityAction, SparkSeerRecommendation } from '@/lib/services/mcp-light-api';
 import Card, { CardContent, CardHeader, CardTitle } from '@/components/shared/ui/Card';
@@ -27,7 +27,7 @@ const NodeAnalysis: React.FC<NodeAnalysisProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleAnalyzeNode = async () => {
+  const handleAnalyzeNode = useCallback(async () => {
     if (!pubkey) return;
 
     setLoading(true);
@@ -44,7 +44,7 @@ const NodeAnalysis: React.FC<NodeAnalysisProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [pubkey, analyzeNode, userContext, userGoals, onAnalysisComplete]);
 
   useEffect(() => {
     if (pubkey) {

@@ -1,5 +1,5 @@
 import { createSupabaseServerClient } from '@/lib/supabase-auth'
-import { supabaseAdmin } from '@/lib/supabase-admin'
+import { getSupabaseAdminClient } from '@/lib/supabase'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest): Promise<ReturnType<typeof NextR
     }
 
     // Récupérer le profil depuis la table profiles
-    const { data: profile, error: profileError } = await supabaseAdmin
+    const { data: profile, error: profileError } = await getSupabaseAdminClient()
       .from('profiles')
       .select('*')
       .eq('id', user.id)
@@ -75,7 +75,7 @@ export async function GET(request: NextRequest): Promise<ReturnType<typeof NextR
       console.log('[API] Création automatique du profil pour utilisateur:', user.id)
       
       try {
-        const { data: profileData, error: createError } = await supabaseAdmin.rpc(
+        const { data: profileData, error: createError } = await getSupabaseAdminClient().rpc(
           'ensure_profile_exists', 
           { 
             user_id: user.id, 
@@ -207,7 +207,7 @@ export async function PUT(request: NextRequest): Promise<ReturnType<typeof NextR
     // Vérifier quels champs sont disponibles en base
     let availableColumns: string[] = []
     try {
-      const { data: columns } = await supabaseAdmin
+      const { data: columns } = await getSupabaseAdminClient()
         .from('information_schema.columns')
         .select('column_name')
         .eq('table_name', 'profiles')
@@ -257,7 +257,7 @@ export async function PUT(request: NextRequest): Promise<ReturnType<typeof NextR
     console.log('[API] Données à sauvegarder:', JSON.stringify(profileData, null, 2))
 
     // Mise à jour du profil (ou création s'il n'existe pas)
-    const { data: updatedProfile, error: updateError } = await supabaseAdmin
+    const { data: updatedProfile, error: updateError } = await getSupabaseAdminClient()
       .from('profiles')
       .upsert(profileData, { 
         onConflict: 'id',

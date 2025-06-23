@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { profileUpdateSchema, validateData } from "@/lib/validations";
 import { ApiResponse } from "@/types/database";
 
@@ -7,7 +7,7 @@ import { ApiResponse } from "@/types/database";
 async function getUserFromRequest(req: NextRequest) {
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
   if (!token) return null;
-  const { data: { user } } = await supabase.auth.getUser(token);
+  const { data: { user } } = await getSupabaseAdminClient().auth.getUser(token);
   return user;
 }
 
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> 
     }
 
     // Récupère le profil complet avec les nouvelles propriétés
-    const { data, error } = await supabase
+    const { data, error } = await getSupabaseAdminClient()
       .from("profiles")
       .select(`
         id, email, nom, prenom, pubkey, compte_x, compte_nostr, t4g_tokens, node_id,
@@ -123,7 +123,7 @@ export async function PATCH(req: NextRequest): Promise<NextResponse<ApiResponse>
 
     updateData.updated_at = new Date().toISOString();
 
-    const { data, error } = await supabase
+    const { data, error } = await getSupabaseAdminClient()
       .from("profiles")
       .update(updateData)
       .eq("id", user.id)

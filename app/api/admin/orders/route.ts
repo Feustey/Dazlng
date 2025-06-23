@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { validateAdminAccess } from "@/utils/adminHelpers";
 
 export async function GET(req: NextRequest): Promise<Response> {
@@ -15,7 +15,7 @@ export async function GET(req: NextRequest): Promise<Response> {
   if (orderId) {
     try {
       // Récupérer la commande avec les informations utilisateur et livraison
-      const { data: orderData, error: orderError } = await supabase
+      const { data: orderData, error: orderError } = await getSupabaseAdminClient()
         .from("orders")
         .select(`
           *,
@@ -40,14 +40,14 @@ export async function GET(req: NextRequest): Promise<Response> {
       }
 
       // Récupérer les informations de livraison si elles existent
-      const { data: deliveryData, error: _deliveryError } = await supabase
+      const { data: deliveryData, error: _deliveryError } = await getSupabaseAdminClient()
         .from("deliveries")
         .select("*")
         .eq("order_id", orderId)
         .single();
 
       // Récupérer les informations de paiement si elles existent
-      const { data: paymentData, error: _paymentError } = await supabase
+      const { data: paymentData, error: _paymentError } = await getSupabaseAdminClient()
         .from("payments")
         .select("*")
         .eq("order_id", orderId)
@@ -74,7 +74,7 @@ export async function GET(req: NextRequest): Promise<Response> {
   const [sortField, sortOrder] = sort.split(":");
   const status = searchParams.get("status");
   
-  let query = supabase
+  let query = getSupabaseAdminClient()
     .from("orders")
     .select(`
       *,

@@ -2,7 +2,7 @@
 
 import { Admin, Resource } from 'react-admin';
 import { supabaseDataProvider } from 'ra-supabase-core';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseBrowserClient } from '@/lib/supabase';
 import { customerResource } from '../resources/customers';
 import { segmentResource } from '../resources/segments';
 import { campaignResource } from '../resources/campaigns';
@@ -20,7 +20,7 @@ if (!supabaseUrl || !supabaseKey) {
 }
 
 // Utiliser l'instance Supabase partagée
-const crmSupabaseClient = supabase;
+const crmSupabaseClient = getSupabaseBrowserClient();
 
 // Configuration du data provider
 const dataProvider = supabaseDataProvider({

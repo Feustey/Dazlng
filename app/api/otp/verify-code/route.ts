@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { supabase } from '@/lib/supabase'
+import { getSupabaseServerPublicClient } from '@/lib/supabase'
 
 const VerifyCodeSchema = z.object({
   email: z.string().email(),
@@ -24,10 +24,8 @@ export async function POST(req: NextRequest): Promise<Response> {
       }, { status: 400 })
     }
 
-    // Utiliser Supabase Auth pour vérifier le code OTP
-    if (!supabase) {
-      throw new Error('Client Supabase non disponible');
-    }
+    // ✅ Utiliser le client Supabase "public" côté serveur, qui utilise la clé anon.
+    const supabase = getSupabaseServerPublicClient();
     
     const { data, error: verifyError } = await supabase.auth.verifyOtp({
       email: parsed.data.email,

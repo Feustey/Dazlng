@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
-import { supabaseAdmin } from '@/lib/supabase-admin'
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { RateLimitService } from '@/lib/services/RateLimitService'
 import { ErrorCodes } from '@/types/database'
 
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     // Sauvegarder en base
     console.log('[CONTACT] Enregistrement en base de données...');
-    const { data: contact, error: dbError } = await supabaseAdmin
+    const { data: contact, error: dbError } = await getSupabaseAdminClient()
       .from('contacts')
       .insert({
         first_name: firstName,
@@ -153,7 +153,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       });
 
       // Logger l'envoi
-      await supabaseAdmin
+      await getSupabaseAdminClient()
         .from('email_logs')
         .insert([
           {
@@ -178,7 +178,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       console.error('[CONTACT] Erreur envoi email:', emailError)
       console.error('[CONTACT] Détails erreur:', emailError instanceof Error ? emailError.message : 'Erreur inconnue', emailError instanceof Error ? emailError.stack : undefined)
       // Ne pas faire échouer la requête si l'email échoue, mais logger l'erreur
-      await supabaseAdmin
+      await getSupabaseAdminClient()
         .from('email_logs')
         .insert([
           {

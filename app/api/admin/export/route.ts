@@ -4,7 +4,7 @@ import {
   withEnhancedAdminAuth,
   logAdminAction
 } from '@/lib/admin-utils';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { ErrorCodes } from '@/types/database';
 import { exportRequestSchema, type ExportRequestInput } from '@/types/admin';
 import { validateData } from '@/lib/validations';
@@ -29,7 +29,7 @@ async function createExportHandler(req: NextRequest, adminId: string): Promise<R
     const exportRequest: ExportRequestInput = validation.data;
     
     // Créer un job d'export
-    const { data: exportJob, error } = await supabase
+    const { data: exportJob, error } = await getSupabaseAdminClient()
       .from('export_jobs')
       .insert({
         admin_id: adminId,
@@ -94,7 +94,7 @@ async function getExportJobsHandler(req: NextRequest, adminId: string): Promise<
     const status = searchParams.get('status');
     const limit = parseInt(searchParams.get('limit') || '20');
     
-    let query = supabase
+    let query = getSupabaseAdminClient()
       .from('export_jobs')
       .select('*')
       .eq('admin_id', adminId)
@@ -134,7 +134,7 @@ async function getExportJobsHandler(req: NextRequest, adminId: string): Promise<
 async function processExportJob(jobId: string, exportRequest: ExportRequestInput): Promise<void> {
   try {
     // Mettre à jour le statut à "processing"
-    await supabase
+    await getSupabaseAdminClient()
       .from('export_jobs')
       .update({ 
         status: 'processing',
@@ -173,7 +173,7 @@ async function processExportJob(jobId: string, exportRequest: ExportRequestInput
     }
     
     // Mise à jour du progrès
-    await supabase
+    await getSupabaseAdminClient()
       .from('export_jobs')
       .update({ 
         progress: 50,
@@ -185,7 +185,7 @@ async function processExportJob(jobId: string, exportRequest: ExportRequestInput
     const fileContent = await generateExportFile(data, exportRequest.format, exportRequest.includeFields);
     
     // Mise à jour du progrès
-    await supabase
+    await getSupabaseAdminClient()
       .from('export_jobs')
       .update({ 
         progress: 80,
@@ -197,7 +197,7 @@ async function processExportJob(jobId: string, exportRequest: ExportRequestInput
     const fileUrl = await saveExportFile(fileName, fileContent);
     
     // Marquer comme terminé
-    await supabase
+    await getSupabaseAdminClient()
       .from('export_jobs')
       .update({ 
         status: 'completed',
@@ -212,7 +212,7 @@ async function processExportJob(jobId: string, exportRequest: ExportRequestInput
     console.error('Erreur lors du traitement de l\'export:', error);
     
     // Marquer comme échoué
-    await supabase
+    await getSupabaseAdminClient()
       .from('export_jobs')
       .update({ 
         status: 'failed',
@@ -225,7 +225,7 @@ async function processExportJob(jobId: string, exportRequest: ExportRequestInput
 
 // Fonctions d'export de données
 async function exportUsers(_filters?: any): Promise<any[]> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabaseAdminClient()
     .from('profiles')
     .select('id, email, nom, prenom, created_at, updated_at, email_verified, t4g_tokens');
   
@@ -234,7 +234,7 @@ async function exportUsers(_filters?: any): Promise<any[]> {
 }
 
 async function exportOrders(_filters?: any): Promise<any[]> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabaseAdminClient()
     .from('orders')
     .select('id, user_id, product_type, amount, payment_status, created_at, updated_at');
   
@@ -243,7 +243,7 @@ async function exportOrders(_filters?: any): Promise<any[]> {
 }
 
 async function exportPayments(_filters?: any): Promise<any[]> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabaseAdminClient()
     .from('payments')
     .select('id, order_id, amount, status, created_at, updated_at');
   
@@ -252,7 +252,7 @@ async function exportPayments(_filters?: any): Promise<any[]> {
 }
 
 async function exportSubscriptions(_filters?: any): Promise<any[]> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabaseAdminClient()
     .from('subscriptions')
     .select('id, user_id, plan_id, status, start_date, end_date, created_at');
   
@@ -309,7 +309,8 @@ async function saveExportFile(fileName: string, content: string): Promise<string
   // Implémentation simplifiée - à adapter selon votre système de stockage
   // Par exemple, upload vers Supabase Storage, S3, etc.
   
-  const { data: _data, error } = await supabase.storage
+  const { data: _data, error } = await getSupabaseAdminClient()
+    .storage
     .from('exports')
     .upload(fileName, content, {
       contentType: 'application/octet-stream'
@@ -318,7 +319,8 @@ async function saveExportFile(fileName: string, content: string): Promise<string
   if (error) throw error;
   
   // Retourner l'URL du fichier
-  const { data: publicUrl } = supabase.storage
+  const { data: publicUrl } = getSupabaseAdminClient()
+    .storage
     .from('exports')
     .getPublicUrl(fileName);
   

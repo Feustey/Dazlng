@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 
@@ -79,6 +79,9 @@ export async function GET(req: NextRequest): Promise<Response> {
       authChallenges.set(challenge, challengeData);
 
       console.log('[LNURL-AUTH] Authentification réussie pour pubkey:', key.substring(0, 10) + '...');
+
+      // ✅ Utiliser le client admin pour les opérations de base de données
+      const supabase = getSupabaseAdminClient();
 
       // Créer ou mettre à jour l'utilisateur
       const { error: userError } = await supabase

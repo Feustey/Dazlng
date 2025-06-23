@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdminClient } from '@/lib/supabase';
 
 export const dynamic = "force-dynamic";
 export const runtime = 'nodejs';
@@ -45,7 +45,7 @@ async function getUserFromRequest(req: NextRequest): Promise<{ id: string } | nu
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
   if (!token) return null;
   
-  const { data: { user } } = await supabase.auth.getUser(token);
+  const { data: { user } } = await getSupabaseAdminClient.auth.getUser(token);
   return user ? { id: user.id } : null;
 }
 
@@ -86,7 +86,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     const status = searchParams.get('status');
 
     // Construction de la requête Supabase
-    let query = supabase
+    let query = getSupabaseAdminClient
       .from('orders')
       .select(`
         id,

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdminClient } from '@/lib/supabase';
 
 export async function GET(req: NextRequest): Promise<Response> {
   try {
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     const offset = (page - 1) * limit;
 
     // Construction de la requête avec filtres
-    let query = supabase
+    let query = getSupabaseAdminClient()
       .from('user_email_tracking')
       .select('*', { count: 'exact' })
       .order('last_seen_at', { ascending: false })
@@ -41,7 +41,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     }
 
     // Statistiques globales
-    const { data: globalStats } = await supabase
+    const { data: globalStats } = await getSupabaseAdminClient()
       .from('user_email_tracking')
       .select('conversion_status, source')
       .not('conversion_status', 'is', null);
@@ -74,7 +74,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     
-    const { data: recentActivity } = await supabase
+    const { data: recentActivity } = await getSupabaseAdminClient()
       .from('user_email_tracking')
       .select('first_seen_at, conversion_status')
       .gte('first_seen_at', thirtyDaysAgo.toISOString());
@@ -88,7 +88,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     
-    const { data: activeUsers } = await supabase
+    const { data: activeUsers } = await getSupabaseAdminClient()
       .from('user_email_tracking')
       .select('email')
       .gte('last_seen_at', sevenDaysAgo.toISOString());
@@ -138,7 +138,7 @@ export async function POST(req: NextRequest): Promise<Response> {
 
     switch (action) {
       case 'mark_as_converted':
-        await supabase
+        await getSupabaseAdminClient()
           .from('user_email_tracking')
           .update({
             conversion_status: 'converted',
@@ -149,7 +149,7 @@ export async function POST(req: NextRequest): Promise<Response> {
         break;
 
       case 'mark_as_candidate':
-        await supabase
+        await getSupabaseAdminClient()
           .from('user_email_tracking')
           .update({
             conversion_status: 'conversion_candidate',
@@ -160,7 +160,7 @@ export async function POST(req: NextRequest): Promise<Response> {
         break;
 
       case 'reset_status':
-        await supabase
+        await getSupabaseAdminClient()
           .from('user_email_tracking')
           .update({
             conversion_status: 'otp_only',

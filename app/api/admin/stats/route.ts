@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { AdminResponseBuilder, withEnhancedAdminAuth } from '@/lib/admin-utils';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdminClient } from '@/lib/supabase';
 
 export const dynamic = "force-dynamic";
 export const runtime = 'nodejs';
@@ -11,18 +11,18 @@ export const runtime = 'nodejs';
 async function getBasicStatsHandler(_req: NextRequest, _adminId: string): Promise<Response> {
   try {
     // Nombre total d'utilisateurs
-    const { count: totalUsers } = await supabase
+    const { count: totalUsers } = await getSupabaseAdminClient()
       .from("profiles")
       .select("id", { count: "exact", head: true });
     
     // Nombre d'abonnements actifs
-    const { count: activeSubscriptions } = await supabase
+    const { count: activeSubscriptions } = await getSupabaseAdminClient()
       .from("subscriptions")
       .select("id", { count: "exact", head: true })
       .eq("status", "active");
     
     // Revenu total (somme des paiements status 'paid')
-    const { data: payments, error: paymentsError } = await supabase
+    const { data: payments, error: paymentsError } = await getSupabaseAdminClient()
       .from("payments")
       .select("amount, status");
     
@@ -31,7 +31,7 @@ async function getBasicStatsHandler(_req: NextRequest, _adminId: string): Promis
       : 0;
     
     // Commandes en attente
-    const { count: pendingOrders } = await supabase
+    const { count: pendingOrders } = await getSupabaseAdminClient()
       .from("orders")
       .select("id", { count: "exact", head: true })
       .eq("payment_status", "pending");

@@ -5,7 +5,7 @@ import {
   withEnhancedAdminAuth,
   logAdminAction
 } from '@/lib/admin-utils';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { ErrorCodes } from '@/types/database';
 
 export const dynamic = "force-dynamic";
@@ -32,7 +32,7 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
     const sortOrder = filters.sortOrder || 'desc';
     
     // Construction de la requête de base avec jointures
-    let query = supabase
+    let query = getSupabaseAdminClient()
       .from('profiles')
       .select(`
         id,
@@ -101,13 +101,13 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
     // Récupération des statistiques d'utilisation
     const [ordersData, subscriptionsData] = await Promise.all([
       // Commandes par utilisateur
-      supabase
+      getSupabaseAdminClient()
         .from('orders')
         .select('user_id, amount, payment_status')
         .in('user_id', userIds),
       
       // Abonnements actifs
-      supabase
+      getSupabaseAdminClient()
         .from('subscriptions')
         .select('user_id, status, plan_id, start_date, end_date')
         .in('user_id', userIds)

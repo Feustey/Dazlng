@@ -3,7 +3,7 @@
 import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
-import { createSupabaseBrowserClient } from '@/lib/supabase';
+import { getSupabaseBrowserClient } from '@/lib/supabase';
 
 function VerifyCodeForm(): JSX.Element {
   const searchParams = useSearchParams();
@@ -14,7 +14,7 @@ function VerifyCodeForm(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const supabase = createSupabaseBrowserClient();
+  const supabase = getSupabaseBrowserClient();
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();

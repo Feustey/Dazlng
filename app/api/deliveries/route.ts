@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { getSupabaseAdminClient } from '@/lib/supabase'
 import { createApiResponse, handleApiError } from '@/lib/api-response'
 import { 
   createDeliverySchema, 
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     const status = searchParams.get('status')
 
     // Construction de la requête
-    let query = supabase
+    let query = getSupabaseAdminClient()
       .from('deliveries')
       .select('*, orders(id, user_id, product_type)', { count: 'exact' })
 
@@ -74,7 +74,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     const deliveryData = validationResult.data
 
     // Vérifier que la commande existe
-    const { data: orderExists } = await supabase
+    const { data: orderExists } = await getSupabaseAdminClient()
       .from('orders')
       .select('id')
       .eq('id', deliveryData.order_id)
@@ -85,7 +85,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     }
 
     // Vérifier qu'il n'y a pas déjà une livraison pour cette commande
-    const { data: existingDelivery } = await supabase
+    const { data: existingDelivery } = await getSupabaseAdminClient()
       .from('deliveries')
       .select('id')
       .eq('order_id', deliveryData.order_id)
@@ -96,7 +96,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     }
 
     // Créer la livraison
-    const { data, error } = await supabase
+    const { data, error } = await getSupabaseAdminClient()
       .from('deliveries')
       .insert([deliveryData])
       .select()

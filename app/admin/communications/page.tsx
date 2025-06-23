@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useCallback } from 'react'
-import { supabase } from '@/lib/supabase'
+import { getSupabaseBrowserClient } from '@/lib/supabase'
 import Link from 'next/link'
 
 interface EmailLog {
@@ -75,23 +75,18 @@ export default function CommunicationsPage(): JSX.Element {
   const [showNewCampaign, setShowNewCampaign] = useState(false)
   const [showNewTemplate, setShowNewTemplate] = useState(false)
 
-  const loadData = useCallback(async (): Promise<void> => {
+  const loadData = useCallback(async () => {
+    setLoading(true)
+    
     try {
-      setLoading(true)
-      
-      if (activeTab === 'dashboard' || activeTab === 'logs') {
-        await Promise.all([
-          loadEmailLogs(),
-          loadContacts(),
-          loadEmailStats()
-        ])
-      }
-      
-      if (activeTab === 'campaigns') {
+      if (activeTab === 'logs') {
+        await loadEmailLogs()
+      } else if (activeTab === 'contacts') {
+        await loadContacts()
+      } else if (activeTab === 'campaigns') {
         await loadCampaigns()
-      }
-      
-      if (activeTab === 'templates') {
+        await loadEmailStats()
+      } else if (activeTab === 'templates') {
         await loadTemplates()
       }
       
@@ -109,7 +104,7 @@ export default function CommunicationsPage(): JSX.Element {
   const loadEmailLogs = async () => {
     try {
       // Pour le moment, utiliser la table existante ou créer une simulation
-      const { data, error } = await supabase
+      const { data, error } = await getSupabaseBrowserClient()
         .from('email_logs')
         .select('*')
         .order('created_at', { ascending: false })
@@ -145,7 +140,7 @@ export default function CommunicationsPage(): JSX.Element {
 
   const loadContacts = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabaseBrowserClient()
         .from('contacts')
         .select('*')
         .order('created_at', { ascending: false })
@@ -165,7 +160,7 @@ export default function CommunicationsPage(): JSX.Element {
 
   const loadCampaigns = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabaseBrowserClient()
         .from('crm_email_campaigns')
         .select('*')
         .order('created_at', { ascending: false })
@@ -201,7 +196,7 @@ export default function CommunicationsPage(): JSX.Element {
 
   const loadTemplates = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabaseBrowserClient()
         .from('crm_email_templates')
         .select('*')
         .order('created_at', { ascending: false })

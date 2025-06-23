@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { experienceSchema, validateData } from "@/lib/validations";
 import { ApiResponse } from "@/types/database";
 
 async function getUserFromRequest(req: NextRequest) {
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
   if (!token) return null;
-  const { data: { user } } = await supabase.auth.getUser(token);
+  const { data: { user } } = await getSupabaseAdminClient.auth.getUser(token);
   return user;
 }
 
@@ -42,7 +42,7 @@ export async function PUT(
     }
 
     // Vérifie que l'expérience appartient à l'utilisateur
-    const { data: existingExperience, error: checkError } = await supabase
+    const { data: existingExperience, error: checkError } = await getSupabaseAdminClient
       .from("user_experiences")
       .select("id")
       .eq("id", params.id)
@@ -64,7 +64,7 @@ export async function PUT(
       updated_at: new Date().toISOString()
     };
 
-    const { data, error } = await supabase
+    const { data, error } = await getSupabaseAdminClient
       .from("user_experiences")
       .update(updateData)
       .eq("id", params.id)
@@ -121,7 +121,7 @@ export async function DELETE(
     }
 
     // Vérifie que l'expérience appartient à l'utilisateur
-    const { data: existingExperience, error: checkError } = await supabase
+    const { data: existingExperience, error: checkError } = await getSupabaseAdminClient
       .from("user_experiences")
       .select("id")
       .eq("id", params.id)
@@ -138,7 +138,7 @@ export async function DELETE(
       }, { status: 404 });
     }
 
-    const { error } = await supabase
+    const { error } = await getSupabaseAdminClient
       .from("user_experiences")
       .delete()
       .eq("id", params.id)

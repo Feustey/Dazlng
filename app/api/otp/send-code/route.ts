@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { supabase } from '@/lib/supabase'
+import { getSupabaseServerPublicClient } from '@/lib/supabase'
 
 const SendCodeSchema = z.object({
   email: z.string().email()
@@ -22,14 +22,14 @@ export async function POST(req: NextRequest): Promise<Response> {
       }, { status: 400 })
     }
 
-    // Utiliser Supabase Auth natif pour envoyer le code OTP
-    if (!supabase) {
-      throw new Error('Client Supabase non disponible');
-    }
+    // ✅ Utiliser le client Supabase "public" côté serveur, qui utilise la clé anon.
+    const supabase = getSupabaseServerPublicClient();
+
     const { error } = await supabase.auth.signInWithOtp({
       email: parsed.data.email
     })
     if (error) {
+      console.error('Erreur Supabase signInWithOtp:', error)
       return NextResponse.json({
         success: false,
         error: {
@@ -46,12 +46,14 @@ export async function POST(req: NextRequest): Promise<Response> {
       meta: { timestamp: new Date().toISOString(), version: '1.0.0' }
     })
   } catch (e) {
+    const error = e as Error;
+    console.error('Erreur interne API:', error)
     return NextResponse.json({
       success: false,
       error: {
         code: 'INTERNAL_ERROR',
         message: 'Erreur serveur',
-        details: e instanceof Error ? e.message : e
+        details: error.message
       },
       meta: { timestamp: new Date().toISOString(), version: '1.0.0' }
     }, { status: 500 })
