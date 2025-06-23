@@ -25,7 +25,7 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
       );
     }
     
-    const filters = filterResult.data!;
+    const filters = filterResult.data;
     const page = filters.page || 1;
     const limit = filters.limit || 20;
     const sortBy = filters.sortBy || 'created_at';

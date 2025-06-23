@@ -37,7 +37,7 @@ export async function GET(req: NextRequest): Promise<Response> {
 
     if (error) {
       console.error('Erreur lors de la récupération des commandes:', error);
-      return createApiResponse(ErrorCodes.DATABASE_ERROR, 'Erreur lors de la récupération des commandes');
+      return createApiResponse({ success: false, error: { code: ErrorCodes.DATABASE_ERROR, message: "Erreur lors de la récupération des commandes" } }, 500);
     }
 
     return createApiResponse({ success: true, data });
@@ -90,7 +90,7 @@ export async function POST(req: NextRequest): Promise<Response> {
 
     if (error) {
       console.error('Erreur lors de la création de la commande:', error);
-      return createApiResponse(ErrorCodes.DATABASE_ERROR, 'Erreur lors de la création de la commande');
+      return createApiResponse({ success: false, error: { code: ErrorCodes.DATABASE_ERROR, message: "Erreur lors de la création de la commande" } }, 500);
     }
 
     // Envoi d'un email de notification (en arrière-plan)

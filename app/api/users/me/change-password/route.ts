@@ -40,7 +40,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
 
     // Vérifie le mot de passe actuel
     const { error: signInError } = await getSupabaseAdminClient().auth.signInWithPassword({
-      email: user.email!,
+      email: user.email,
       password: validation.data.currentPassword
     });
 

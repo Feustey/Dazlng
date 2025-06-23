@@ -55,7 +55,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     const lightningService = createDazNodeLightningService();
     
     // Vérifier le statut du paiement
-    const paymentStatus = await lightningService.checkInvoiceStatus(invoiceId || paymentHash!);
+    const paymentStatus = await lightningService.checkInvoiceStatus(invoiceId || paymentHash);
     
     console.log('✅ check-invoice - Statut vérifié via daznode@getalby.com:', {
       identifier: invoiceId || paymentHash,
