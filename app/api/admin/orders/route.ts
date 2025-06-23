@@ -1,21 +1,92 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdminClient } from '@/lib/supabase';
-import { validateAdminAccess } from "@/utils/adminHelpers";
+import { withAdminAuth, handleApiError } from '@/lib/api-utils';
+import { z } from 'zod';
+import { ErrorCodes } from '@/types/database';
 
+// Schéma de validation pour les paramètres de requête
+const querySchema = z.object({
+  id: z.string().uuid().optional(),
+  limit: z.coerce.number().min(1).max(100).default(20),
+  sort: z.string().regex(/^[a-zA-Z_]+:(asc|desc)$/).default('created_at:desc'),
+  status: z.enum(['pending', 'paid', 'failed', 'refunded']).optional()
+});
+
+// GET /api/admin/orders - Liste ou détails des commandes
 export async function GET(req: NextRequest): Promise<Response> {
-  const isAdmin = await validateAdminAccess(req);
-  if (!isAdmin) {
-    return NextResponse.json({ error: "Accès non autorisé" }, { status: 403 });
-  }
-  
-  const { searchParams } = new URL(req.url);
-  const orderId = searchParams.get("id");
-  
-  // Si un ID est fourni, récupérer les détails complets de la commande
-  if (orderId) {
+  return withAdminAuth(req, async (_adminUser) => {
     try {
-      // Récupérer la commande avec les informations utilisateur et livraison
-      const { data: orderData, error: orderError } = await getSupabaseAdminClient()
+      const { searchParams } = new URL(req.url);
+      const result = querySchema.safeParse(Object.fromEntries(searchParams.entries()));
+
+      if (!result.success) {
+        return NextResponse.json({
+          success: false,
+          error: {
+            code: ErrorCodes.VALIDATION_ERROR,
+            message: "Paramètres de requête invalides",
+            details: result.error.issues
+          }
+        }, { status: 400 });
+      }
+
+      const { id, limit, sort, status } = result.data;
+      const [sortField, sortOrder] = sort.split(':');
+
+      // Si un ID est fourni, récupérer les détails complets de la commande
+      if (id) {
+        // Récupérer la commande avec les informations utilisateur et livraison
+        const { data: orderData, error: orderError } = await getSupabaseAdminClient()
+          .from("orders")
+          .select(`
+            *,
+            profiles:user_id (
+              id,
+              email,
+              nom,
+              prenom,
+              pubkey,
+              compte_x,
+              compte_nostr,
+              created_at,
+              email_verified
+            )
+          `)
+          .eq("id", id)
+          .single();
+
+        if (orderError) throw orderError;
+
+        // Récupérer les informations de livraison
+        const { data: deliveryData } = await getSupabaseAdminClient()
+          .from("deliveries")
+          .select("*")
+          .eq("order_id", id)
+          .single();
+
+        // Récupérer les informations de paiement
+        const { data: paymentData } = await getSupabaseAdminClient()
+          .from("payments")
+          .select("*")
+          .eq("order_id", id)
+          .single();
+
+        return NextResponse.json({
+          success: true,
+          data: {
+            ...orderData,
+            delivery: deliveryData || null,
+            payment: paymentData || null
+          },
+          meta: {
+            timestamp: new Date().toISOString(),
+            version: "1.0"
+          }
+        });
+      }
+
+      // Liste des commandes avec pagination
+      let query = getSupabaseAdminClient()
         .from("orders")
         .select(`
           *,
@@ -23,75 +94,33 @@ export async function GET(req: NextRequest): Promise<Response> {
             id,
             email,
             nom,
-            prenom,
-            pubkey,
-            compte_x,
-            compte_nostr,
-            created_at,
-            email_verified
+            prenom
           )
-        `)
-        .eq("id", orderId)
-        .single();
+        `, { count: "exact" })
+        .order(sortField, { ascending: sortOrder === "asc" })
+        .limit(limit);
 
-      if (orderError) {
-        console.error("Erreur récupération commande:", orderError);
-        return NextResponse.json({ error: "Commande introuvable" }, { status: 404 });
+      if (status) {
+        query = query.eq("payment_status", status);
       }
 
-      // Récupérer les informations de livraison si elles existent
-      const { data: deliveryData, error: _deliveryError } = await getSupabaseAdminClient()
-        .from("deliveries")
-        .select("*")
-        .eq("order_id", orderId)
-        .single();
+      const { data, error, count } = await query;
 
-      // Récupérer les informations de paiement si elles existent
-      const { data: paymentData, error: _paymentError } = await getSupabaseAdminClient()
-        .from("payments")
-        .select("*")
-        .eq("order_id", orderId)
-        .single();
+      if (error) throw error;
 
-      // Assembler la réponse complète
-      const completeOrder = {
-        ...orderData,
-        delivery: deliveryData || null,
-        payment: paymentData || null
-      };
-
-      return NextResponse.json(completeOrder);
+      return NextResponse.json({
+        success: true,
+        data: data || [],
+        meta: {
+          total: count || 0,
+          limit,
+          timestamp: new Date().toISOString(),
+          version: "1.0"
+        }
+      });
 
     } catch (error) {
-      console.error("Erreur récupération détails commande:", error);
-      return NextResponse.json({ error: "Erreur interne du serveur" }, { status: 500 });
+      return NextResponse.json(handleApiError(error), { status: 500 });
     }
-  }
-
-  // Logique originale pour la liste des commandes
-  const limit = parseInt(searchParams.get("limit") || "20", 10);
-  const sort = searchParams.get("sort") || "created_at:desc";
-  const [sortField, sortOrder] = sort.split(":");
-  const status = searchParams.get("status");
-  
-  let query = getSupabaseAdminClient()
-    .from("orders")
-    .select(`
-      *,
-      profiles:user_id (
-        id,
-        email,
-        nom,
-        prenom
-      )
-    `, { count: "exact" });
-    
-  if (status) query = query.eq("payment_status", status);
-  query = query.order(sortField, { ascending: sortOrder === "asc" }).limit(limit);
-  
-  const { data, error } = await query;
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
-  }
-  return NextResponse.json(data);
+  });
 } 

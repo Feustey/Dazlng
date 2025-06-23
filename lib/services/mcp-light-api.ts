@@ -24,9 +24,9 @@ export interface NodeStats {
 export interface MCPNodeInfo {
   pubkey: string;
   current_stats: NodeStats;
-  historical_data?: any;
-  network_position?: any;
-  performance_metrics?: any;
+  historical_data?: Record<string, unknown>;
+  network_position?: Record<string, unknown>;
+  performance_metrics?: Record<string, unknown>;
 }
 
 export interface SparkSeerRecommendation {
@@ -94,7 +94,7 @@ export interface ApiResponse<T> {
   error?: {
     code: string;
     message: string;
-    details?: any;
+    details?: Record<string, unknown>;
   };
   meta?: {
     timestamp: string;
@@ -106,7 +106,7 @@ export interface ApiResponse<T> {
 export interface RAGDocument {
   id: string;
   content: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
   created_at: string;
 }
 
@@ -126,12 +126,12 @@ export interface SimulationProfile {
   id: string;
   name: string;
   description: string;
-  parameters: Record<string, any>;
+  parameters: Record<string, unknown>;
 }
 
 export interface SimulationResult {
   success: boolean;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   metrics: Record<string, number>;
 }
 
@@ -243,8 +243,8 @@ class MCPLightAPI {
   /**
    * Vérifie l'état de santé de l'API
    */
-  async checkHealth(): Promise<{ status: string; timestamp: string; services?: any }> {
-    return this.makeRequest<{ status: string; timestamp: string; services?: any }>('/health');
+  async checkHealth(): Promise<{ status: string; timestamp: string; services?: Record<string, unknown> }> {
+    return this.makeRequest('/health');
   }
 
   /**
@@ -409,15 +409,15 @@ class MCPLightAPI {
   }
 
   // Nouvelles méthodes pour les endpoints RAG
-  async createDocument(content: string, metadata: Record<string, any>): Promise<RAGDocument> {
-    return this.makeRequest<RAGDocument>('/rag/documents', {
+  async createDocument(content: string, metadata: Record<string, unknown>): Promise<RAGDocument> {
+    return this.makeRequest('/rag/documents', {
       method: 'POST',
       body: JSON.stringify({ content, metadata })
     });
   }
 
-  async createDocumentsBatch(documents: Array<{ content: string; metadata: Record<string, any> }>): Promise<RAGDocument[]> {
-    return this.makeRequest<RAGDocument[]>('/rag/documents/batch', {
+  async createDocumentsBatch(documents: Array<{ content: string; metadata: Record<string, unknown> }>): Promise<RAGDocument[]> {
+    return this.makeRequest('/rag/documents/batch', {
       method: 'POST',
       body: JSON.stringify({ documents })
     });
@@ -427,7 +427,7 @@ class MCPLightAPI {
     return this.makeRequest<RAGDocument>(`/rag/documents/${documentId}`);
   }
 
-  async queryRAG(query: RAGQuery): Promise<any> {
+  async queryRAG(query: RAGQuery): Promise<Record<string, unknown>> {
     return this.makeRequest('/rag/query', {
       method: 'POST',
       body: JSON.stringify(query)
@@ -441,7 +441,7 @@ class MCPLightAPI {
     });
   }
 
-  async analyzeContent(content: string): Promise<any> {
+  async analyzeContent(content: string): Promise<Record<string, unknown>> {
     return this.makeRequest('/rag/analyze', {
       method: 'POST',
       body: JSON.stringify({ content })
@@ -467,12 +467,12 @@ class MCPLightAPI {
   }
 
   // Nouvelles méthodes pour les endpoints Administration
-  async getAdminMetrics(): Promise<any> {
-    return this.makeRequest('/api/v1/admin/metrics');
+  async getAdminMetrics(): Promise<Record<string, unknown>> {
+    return this.makeRequest('/admin/metrics');
   }
 
-  async performMaintenance(action: string): Promise<any> {
-    return this.makeRequest('/api/v1/admin/maintenance', {
+  async performMaintenance(action: string): Promise<Record<string, unknown>> {
+    return this.makeRequest('/admin/maintenance', {
       method: 'POST',
       body: JSON.stringify({ action })
     });
@@ -487,15 +487,15 @@ class MCPLightAPI {
     return this.makeRequest<LNBitsWallet>('/api/v1/wallet');
   }
 
-  async decodePayment(bolt11: string): Promise<any> {
-    return this.makeRequest('/api/v1/payments/decode', {
+  async decodePayment(bolt11: string): Promise<Record<string, unknown>> {
+    return this.makeRequest('/lnbits/decode', {
       method: 'POST',
       body: JSON.stringify({ bolt11 })
     });
   }
 
-  async payBolt11(bolt11: string): Promise<any> {
-    return this.makeRequest('/api/v1/payments/bolt11', {
+  async payBolt11(bolt11: string): Promise<Record<string, unknown>> {
+    return this.makeRequest('/lnbits/pay', {
       method: 'POST',
       body: JSON.stringify({ bolt11 })
     });
@@ -506,8 +506,8 @@ class MCPLightAPI {
   }
 
   // Nouvelle méthode pour l'endpoint Automatisation
-  async getConfig(): Promise<any> {
-    return this.makeRequest('/config');
+  async getConfig(): Promise<Record<string, unknown>> {
+    return this.makeRequest('/lnbits/config');
   }
 }
 

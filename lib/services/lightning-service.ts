@@ -1,6 +1,5 @@
 // Import dynamique du module lightning
-import * as lightning from 'lightning';
-import { Invoice, InvoiceStatus, CreateInvoiceParams } from '@/types/lightning';
+import lightning from 'lightning';
 import { createDazNodeLightningService } from './daznode-lightning-service';
 
 interface LightningConfig {
@@ -9,7 +8,13 @@ interface LightningConfig {
   socket: string;        // IP:Port du nœud (ex: '127.0.0.1:10009')
 }
 
-interface LightningInvoice {
+interface CreateInvoiceParams {
+  amount: number;
+  description: string;
+  expiry?: number;
+}
+
+interface Invoice {
   id: string;
   paymentRequest: string;
   paymentHash: string;
@@ -17,6 +22,14 @@ interface LightningInvoice {
   expiresAt: string;
   amount: number;
   description: string;
+  status: InvoiceStatus;
+}
+
+interface InvoiceStatus {
+  status: 'pending' | 'settled' | 'failed' | 'expired';
+  amount: number;
+  settledAt?: string;
+  metadata: Record<string, unknown>;
 }
 
 interface NodeInfo {
@@ -39,9 +52,12 @@ interface DecodedInvoice {
   destination: string;
 }
 
+// Type pour le client LND
+type LndClient = ReturnType<typeof lightning.createLndGrpc> extends Promise<{ lnd: infer T }> ? T : never;
+
 export class LightningService {
   private daznodeService;
-  private lnd: any;
+  private lnd: LndClient | null = null;
 
   constructor() {
     this.daznodeService = createDazNodeLightningService();
@@ -97,7 +113,7 @@ export class LightningService {
         status: status.status as 'pending' | 'settled' | 'failed' | 'expired',
         amount: status.amount,
         settledAt: status.settledAt,
-        metadata: status.metadata
+        metadata: status.metadata || {}
       };
     } catch (error) {
       console.error('Erreur vérification facture:', error);
@@ -266,7 +282,6 @@ export function createLightningService(): LightningService {
 
 // Export des types pour utilisation externe
 export type { 
-  LightningInvoice, 
   CreateInvoiceParams, 
   InvoiceStatus, 
   NodeInfo, 

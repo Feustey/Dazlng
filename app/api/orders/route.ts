@@ -37,13 +37,13 @@ export async function GET(req: NextRequest): Promise<Response> {
 
     if (error) {
       console.error('Erreur lors de la récupération des commandes:', error);
-      return createApiResponse({ success: false, error: { code: ErrorCodes.DATABASE_ERROR, message: "Erreur lors de la récupération des commandes" } }, 500);
+      return createApiResponse({ success: false, error: { code: ErrorCodes.DATABASE_ERROR, message: "Erreur lors de la récupération des commandes" } });
     }
 
     return createApiResponse({ success: true, data });
 
   } catch (error) {
-    return handleApiError(error, 'GET /api/orders');
+    return handleApiError(error);
   }
 }
 
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     // Validation des données avec Zod
     const validationResult = validateData(createOrderSchema, body);
     if (!validationResult.success) {
-      return createApiResponse({ success: false, error: { code: ErrorCodes.VALIDATION_ERROR, message: 'Données de commande invalides', details: validationResult.error?.details } }, 400);
+      return createApiResponse({ success: false, error: { code: ErrorCodes.VALIDATION_ERROR, message: 'Données de commande invalides', details: validationResult.error } });
     }
 
     const { user_id, product_type, plan, billing_cycle, amount, payment_method, customer, product, metadata } = validationResult.data;
@@ -90,13 +90,13 @@ export async function POST(req: NextRequest): Promise<Response> {
 
     if (error) {
       console.error('Erreur lors de la création de la commande:', error);
-      return createApiResponse({ success: false, error: { code: ErrorCodes.DATABASE_ERROR, message: "Erreur lors de la création de la commande" } }, 500);
+      return createApiResponse({ success: false, error: { code: ErrorCodes.DATABASE_ERROR, message: "Erreur lors de la création de la commande" } });
     }
 
     // Envoi d'un email de notification (en arrière-plan)
     try {
       const resend = new Resend(process.env.RESEND_API_KEY);
-      if (process.env.RESEND_API_KEY) {
+      if (process.env.RESEND_API_KEY && data && typeof data === 'object') {
         const html = generateEmailTemplate({
           title: `Nouvelle commande - ${product.name}`,
           username: `${customer.firstName} ${customer.lastName}`,
@@ -149,16 +149,16 @@ export async function POST(req: NextRequest): Promise<Response> {
 
     return createApiResponse({
       success: true,
-      data: {
+      data: data && typeof data === 'object' ? {
         id: data.id,
         order_number: data.id,
         status: data.payment_status,
         amount: data.amount,
         created_at: data.created_at
-      }
-    }, 201);
+      } : undefined
+    });
 
   } catch (error) {
-    return handleApiError(error, 'POST /api/orders');
+    return handleApiError(error);
   }
 }

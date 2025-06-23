@@ -304,4 +304,4 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({
   );
 };
 
-export default PerformanceMetrics; 
+export { PerformanceMetrics }; 

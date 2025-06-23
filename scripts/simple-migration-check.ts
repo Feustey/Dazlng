@@ -5,21 +5,17 @@
  */
 
 import { config } from 'dotenv';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseAdminClient } from '@/lib/supabase';
+import { TestResult } from '@/lib/test-utils/supabase-test-client';
 
 // Charger les variables d'environnement
 config({ path: '.env.local' });
 config({ path: '.env' });
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Créer le client admin Supabase
+const supabase = getSupabaseAdminClient();
 
-interface CheckResult {
-  name: string;
-  status: 'PASS' | 'FAIL' | 'WARN';
-  message: string;
+interface CheckResult extends TestResult {
   responseTime?: number;
 }
 

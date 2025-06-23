@@ -5,25 +5,18 @@
  */
 
 import { config } from 'dotenv';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseAdminClient } from '@/lib/supabase';
+import { TestResult } from '@/lib/test-utils/supabase-test-client';
 
 // Charger les variables d'environnement
 config({ path: '.env.local' });
 config({ path: '.env' });
 
 // Configuration
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
-
-interface TestResult {
-  name: string;
-  status: 'PASS' | 'FAIL' | 'WARN';
-  message: string;
-  details?: any;
-}
+// Créer le client admin Supabase
+const supabase = getSupabaseAdminClient();
 
 class PostMigrationVerifier {
   private results: TestResult[] = [];

@@ -1,157 +1,84 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdminClient } from '@/lib/supabase';
-import { notificationSettingsSchema, validateData } from "@/lib/validations";
-import { ApiResponse } from "@/types/database";
+import { notificationSettingsSchema } from "@/lib/validations";
+import { withAuth, handleApiError } from '@/lib/api-utils';
+import { ErrorCodes } from "@/types/database";
 
-async function getUserFromRequest(req: NextRequest) {
-  const token = req.headers.get("Authorization")?.replace("Bearer ", "");
-  if (!token) return null;
-  const { data: { user } } = await getSupabaseAdminClient().auth.getUser(token);
-  return user;
+// GET /api/users/me/notification-settings - Récupérer les paramètres de notification
+export async function GET(req: NextRequest): Promise<Response> {
+  return withAuth(req, async (user) => {
+    try {
+      const { data, error } = await getSupabaseAdminClient()
+        .from("user_notification_settings")
+        .select("*")
+        .eq("user_id", user.id)
+        .single();
+
+      if (error) throw error;
+
+      return NextResponse.json({
+        success: true,
+        data: data || {
+          user_id: user.id,
+          email_notifications: true,
+          push_notifications: true,
+          newsletter: true,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        },
+        meta: {
+          timestamp: new Date().toISOString(),
+          version: "1.0"
+        }
+      });
+    } catch (error) {
+      return NextResponse.json(handleApiError(error), { status: 500 });
+    }
+  });
 }
 
-// GET /api/users/me/notification-settings - Récupération des paramètres de notifications
-export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> {
-  try {
-    const user = await getUserFromRequest(req);
-    if (!user) {
-      return NextResponse.json({
-        success: false,
-        error: {
-          code: "UNAUTHORIZED",
-          message: "Non autorisé"
-        }
-      }, { status: 401 });
-    }
+// POST /api/users/me/notification-settings - Mettre à jour les paramètres
+export async function POST(req: NextRequest): Promise<Response> {
+  return withAuth(req, async (user) => {
+    try {
+      const body = await req.json();
+      const result = notificationSettingsSchema.safeParse(body);
 
-    const { data, error } = await getSupabaseAdminClient()
-      .from("profiles")
-      .select("notification_settings")
-      .eq("id", user.id)
-      .single();
-
-    if (error) {
-      return NextResponse.json({
-        success: false,
-        error: {
-          code: "DATABASE_ERROR",
-          message: "Erreur lors de la récupération des paramètres de notifications"
-        }
-      }, { status: 500 });
-    }
-
-    // Paramètres par défaut si aucun n'est défini
-    const defaultNotificationSettings = {
-      email: {
-        newMessages: true,
-        serviceBookings: true,
-        paymentConfirmations: true,
-        systemUpdates: true,
-        marketing: false,
-        weeklyDigest: true
-      },
-      push: {
-        newMessages: true,
-        serviceBookings: true,
-        paymentConfirmations: true,
-        systemUpdates: true
-      },
-      inApp: {
-        newMessages: true,
-        serviceBookings: true,
-        paymentConfirmations: true,
-        systemUpdates: true,
-        achievements: true,
-        recommendations: true
+      if (!result.success) {
+        return NextResponse.json({
+          success: false,
+          error: {
+            code: ErrorCodes.VALIDATION_ERROR,
+            message: "Données invalides",
+            details: result.error.issues
+          }
+        }, { status: 400 });
       }
-    };
 
-    return NextResponse.json({
-      success: true,
-      data: data?.notification_settings || defaultNotificationSettings,
-      meta: {
-        timestamp: new Date().toISOString(),
-        version: "1.0"
-      }
-    });
-
-  } catch (error) {
-    console.error("Erreur GET /api/users/me/notification-settings:", error);
-    return NextResponse.json({
-      success: false,
-      error: {
-        code: "INTERNAL_ERROR",
-        message: "Erreur interne du serveur"
-      }
-    }, { status: 500 });
-  }
-}
-
-// PUT /api/users/me/notification-settings - Mise à jour des paramètres de notifications
-export async function PUT(req: NextRequest): Promise<NextResponse<ApiResponse>> {
-  try {
-    const user = await getUserFromRequest(req);
-    if (!user) {
-      return NextResponse.json({
-        success: false,
-        error: {
-          code: "UNAUTHORIZED",
-          message: "Non autorisé"
-        }
-      }, { status: 401 });
-    }
-
-    const body = await req.json();
-    const validation = validateData(notificationSettingsSchema, body);
-
-    if (!validation.success) {
-      return NextResponse.json({
-        success: false,
-        error: {
-          code: "VALIDATION_ERROR",
-          message: "Données invalides",
-          details: (validation as any).error.details
-        }
-      }, { status: 400 });
-    }
-
-    const { data, error } = await getSupabaseAdminClient()
-      .from("profiles")
-      .update({
-        notification_settings: validation.data,
+      const settingsData = {
+        ...result.data,
+        user_id: user.id,
         updated_at: new Date().toISOString()
-      })
-      .eq("id", user.id)
-      .select("notification_settings")
-      .single();
+      };
 
-    if (error) {
+      const { data, error } = await getSupabaseAdminClient()
+        .from("user_notification_settings")
+        .upsert(settingsData)
+        .select()
+        .single();
+
+      if (error) throw error;
+
       return NextResponse.json({
-        success: false,
-        error: {
-          code: "DATABASE_ERROR",
-          message: "Erreur lors de la mise à jour des paramètres de notifications"
+        success: true,
+        data,
+        meta: {
+          timestamp: new Date().toISOString(),
+          version: "1.0"
         }
-      }, { status: 500 });
+      });
+    } catch (error) {
+      return NextResponse.json(handleApiError(error), { status: 500 });
     }
-
-    return NextResponse.json({
-      success: true,
-      data: data.notification_settings,
-      meta: {
-        timestamp: new Date().toISOString(),
-        version: "1.0"
-      }
-    });
-
-  } catch (error) {
-    console.error("Erreur PUT /api/users/me/notification-settings:", error);
-    return NextResponse.json({
-      success: false,
-      error: {
-        code: "INTERNAL_ERROR",
-        message: "Erreur interne du serveur"
-      }
-    }, { status: 500 });
-  }
+  });
 } 

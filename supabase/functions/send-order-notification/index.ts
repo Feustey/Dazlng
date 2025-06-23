@@ -1,74 +1,152 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts'
 
-interface OrderNotification {
-  order_id: string
-  amount: number
-  status: string
-  customer_email: string
-  customer_name: string
-  product_name: string
-  created_at: string
+// Schéma de validation pour les notifications de commande
+const OrderNotificationSchema = z.object({
+  order_id: z.string().min(1),
+  amount: z.number().positive(),
+  status: z.string().min(1),
+  customer_email: z.string().email(),
+  customer_name: z.string().min(1),
+  product_name: z.string().min(1),
+  created_at: z.string().datetime()
+});
+
+type OrderNotification = z.infer<typeof OrderNotificationSchema>;
+
+interface EmailLog {
+  type: string;
+  recipient: string;
+  order_id: string;
+  status: string;
+  sent_at: string;
+  error?: string;
 }
 
-serve(async (req) => {
+async function sendOrderEmail(order: OrderNotification): Promise<Response> {
+  const emailResponse = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${Deno.env.get('RESEND_API_KEY')}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: 'noreply@dazno.de',
+      to: [order.customer_email],
+      bcc: ['admin@dazno.de'],
+      subject: `Confirmation de commande #${order.order_id}`,
+      html: generateOrderConfirmationEmail(order),
+    }),
+  });
+
+  if (!emailResponse.ok) {
+    throw new Error(`Failed to send email: ${emailResponse.statusText}`);
+  }
+
+  return emailResponse;
+}
+
+async function logEmailSent(log: EmailLog): Promise<void> {
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL') ?? '',
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+  );
+
+  const { error } = await supabase
+    .from('email_logs')
+    .insert(log);
+
+  if (error) {
+    console.error('Error logging email:', error);
+    throw new Error(`Failed to log email: ${error.message}`);
+  }
+}
+
+async function handler(req: Request): Promise<Response> {
   try {
     // Vérifier l'authentification
-    const authHeader = req.headers.get('Authorization')
+    const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
-      return new Response('Unauthorized', { status: 401 })
+      return new Response('Unauthorized', { status: 401 });
     }
 
-    const orderData: OrderNotification = await req.json()
-
-    // Envoyer l'email de confirmation de commande
-    const emailResponse = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${Deno.env.get('RESEND_API_KEY')}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: 'noreply@dazno.de',
-        to: [orderData.customer_email],
-        bcc: ['admin@dazno.de'], // Notification à l'équipe
-        subject: `Confirmation de commande #${orderData.order_id}`,
-        html: generateOrderConfirmationEmail(orderData),
-      }),
-    })
-
-    if (!emailResponse.ok) {
-      throw new Error(`Failed to send email: ${emailResponse.statusText}`)
+    // Valider les données d'entrée
+    const body = await req.json();
+    const validationResult = OrderNotificationSchema.safeParse(body);
+    
+    if (!validationResult.success) {
+      return new Response(
+        JSON.stringify({ 
+          error: 'Invalid order data',
+          details: validationResult.error.errors 
+        }), 
+        { 
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
     }
 
-    // Logger dans Supabase pour audit
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    )
+    const orderData = validationResult.data;
 
-    await supabase
-      .from('email_logs')
-      .insert({
-        type: 'order_confirmation',
-        recipient: orderData.customer_email,
-        order_id: orderData.order_id,
-        status: 'sent',
-        sent_at: new Date().toISOString()
-      })
+    // Envoyer l'email
+    await sendOrderEmail(orderData);
 
-    return new Response(JSON.stringify({ success: true }), {
-      headers: { 'Content-Type': 'application/json' },
-    })
+    // Logger dans Supabase
+    await logEmailSent({
+      type: 'order_confirmation',
+      recipient: orderData.customer_email,
+      order_id: orderData.order_id,
+      status: 'sent',
+      sent_at: new Date().toISOString()
+    });
+
+    return new Response(
+      JSON.stringify({ 
+        success: true,
+        data: {
+          order_id: orderData.order_id,
+          email: orderData.customer_email,
+          sent_at: new Date().toISOString()
+        }
+      }), 
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
 
   } catch (error) {
-    console.error('Error:', error)
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    })
+    console.error('Error:', error);
+    
+    // Logger l'erreur si possible
+    try {
+      await logEmailSent({
+        type: 'order_confirmation',
+        recipient: error.orderData?.customer_email || 'unknown',
+        order_id: error.orderData?.order_id || 'unknown',
+        status: 'error',
+        sent_at: new Date().toISOString(),
+        error: error.message
+      });
+    } catch (logError) {
+      console.error('Failed to log error:', logError);
+    }
+
+    return new Response(
+      JSON.stringify({ 
+        error: error.message || 'Internal server error',
+        timestamp: new Date().toISOString()
+      }), 
+      {
+        status: error.status || 500,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
   }
-})
+}
+
+serve(handler);
 
 function generateOrderConfirmationEmail(order: OrderNotification): string {
   return `

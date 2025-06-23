@@ -56,7 +56,23 @@ export async function GET(req: NextRequest): Promise<Response> {
     
     // Vérifier le statut du paiement
     const paymentStatus = await lightningService.checkInvoiceStatus(invoiceId || paymentHash);
-    
+
+    // Vérification de la structure de paymentStatus
+    if (!paymentStatus || typeof paymentStatus !== 'object' || !('status' in paymentStatus)) {
+      return NextResponse.json<ApiResponse<null>>({
+        success: false,
+        error: {
+          code: 'LIGHTNING_ERROR',
+          message: 'Statut de facture invalide ou inconnu',
+          details: paymentStatus
+        },
+        meta: {
+          timestamp: new Date().toISOString(),
+          provider: 'daznode@getalby.com'
+        }
+      }, { status: 500 });
+    }
+
     console.log('✅ check-invoice - Statut vérifié via daznode@getalby.com:', {
       identifier: invoiceId || paymentHash,
       status: paymentStatus.status,

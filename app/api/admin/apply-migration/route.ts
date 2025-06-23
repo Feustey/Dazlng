@@ -9,7 +9,7 @@ export async function POST(_request: NextRequest): Promise<ReturnType<typeof Nex
     console.log('[MIGRATION] Début de l\'application de la migration des champs contact...')
     
     // Vérifier si Supabase est configuré
-    if (!getSupabaseAdminClient || !getSupabaseAdminClient.from) {
+    if (!getSupabaseAdminClient || !getSupabaseAdminClient().from) {
       return NextResponse.json({
         success: false,
         error: 'CONFIGURATION_MISSING',
@@ -27,7 +27,7 @@ export async function POST(_request: NextRequest): Promise<ReturnType<typeof Nex
     // Étape 1: Vérifier les colonnes existantes
     console.log('[MIGRATION] Étape 1: Vérification des colonnes existantes...')
     
-    const { data: columns, error: columnsError } = await getSupabaseAdminClient
+    const { data: columns, error: columnsError } = await getSupabaseAdminClient()
       .from('information_schema.columns')
       .select('column_name')
       .eq('table_name', 'profiles')
@@ -77,7 +77,7 @@ export async function POST(_request: NextRequest): Promise<ReturnType<typeof Nex
           }
 
           if (sql) {
-            const { error: addColumnError } = await getSupabaseAdminClient.rpc('exec_sql', { sql_query: sql })
+            const { error: addColumnError } = await getSupabaseAdminClient().rpc('exec_sql', { sql_query: sql })
             
             if (addColumnError) {
               console.error(`[MIGRATION] Erreur ajout colonne ${column}:`, addColumnError)
@@ -128,7 +128,7 @@ export async function POST(_request: NextRequest): Promise<ReturnType<typeof Nex
 
       for (const constraint of constraints) {
         try {
-          const { error: constraintError } = await getSupabaseAdminClient.rpc('exec_sql', { sql_query: constraint.sql })
+          const { error: constraintError } = await getSupabaseAdminClient().rpc('exec_sql', { sql_query: constraint.sql })
           
           if (constraintError && !constraintError.message.includes('already exists')) {
             console.error(`[MIGRATION] Erreur contrainte ${constraint.name}:`, constraintError)
@@ -153,7 +153,7 @@ export async function POST(_request: NextRequest): Promise<ReturnType<typeof Nex
 
     // Étape 4: Vérification finale
     console.log('[MIGRATION] Étape 4: Vérification finale...')
-    const { data: finalColumns } = await getSupabaseAdminClient
+    const { data: finalColumns } = await getSupabaseAdminClient()
       .from('information_schema.columns')
       .select('column_name')
       .eq('table_name', 'profiles')

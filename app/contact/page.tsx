@@ -7,16 +7,24 @@ import Image from 'next/image';
 
 const ContactPage: React.FC = () => {
   const [form, setForm] = useState({
-    firstName: '',
-    lastName: '',
+    prenom: '',
+    nom: '',
     email: '',
-    interest: 'dazpay',
+    sujet: 'dazpay',
     message: '',
   });
-  const [_error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState({});
+  const [sending, setSending] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [apiError, setApiError] = useState("");
+
+  const sujets = [
+    { label: "Support technique", value: "support" },
+    { label: "Demande commerciale", value: "conseil" },
+    { label: "Partenariat", value: "partenariat" },
+    { label: "Dazpay - Solution de paiement", value: "dazpay" },
+    { label: "Autre", value: "autre" },
+  ];
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -30,26 +38,19 @@ const ContactPage: React.FC = () => {
     }
   }, []);
 
-  const handleBlur = (fieldName: string): void => {
-    setTouched(prev => ({ ...prev, [fieldName]: true }));
-  };
-
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  const getFieldError = (fieldName: string): string => {
-    if (!touched[fieldName]) return '';
-    
-    switch (fieldName) {
-      case 'email':
-        return form.email && !validateEmail(form.email) ? 'Veuillez entrer une adresse email valide' : '';
-      case 'message':
-        return form.message.length < 10 ? 'Votre message doit contenir au moins 10 caractères' : '';
-      default:
-        return '';
-    }
+  const validate = (field, value) => {
+    let error = "";
+    if (!value.trim()) error = "Ce champ est requis";
+    if (field === "email" && value && !validateEmail(value))
+      error = "Email invalide";
+    if (field === "message" && value.length < 10)
+      error = "Le message doit faire au moins 10 caractères";
+    setErrors((prev) => ({ ...prev, [field]: error }));
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
@@ -58,30 +59,44 @@ const ContactPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
-    setLoading(true);
-    setError('');
-    setSuccess(false);
+    setApiError("");
+    let hasError = false;
+    ["prenom", "nom", "email", "sujet", "message"].forEach((key) => {
+      validate(key, form[key]);
+      if (!form[key].trim() || errors[key]) hasError = true;
+    });
+    if (hasError) return;
+    setSending(true);
     try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          firstName: form.firstName,
-          lastName: form.lastName,
+          firstName: form.prenom,
+          lastName: form.nom,
           email: form.email,
-          interest: form.interest,
+          interest: form.sujet,
           message: form.message,
         }),
       });
-      if (!res.ok) throw new Error((await res.json()).error || 'Erreur inconnue');
-      setSuccess(true);
-      setForm({
-        firstName: '', lastName: '', email: '', interest: 'support', message: '',
-      });
-    } catch (err: unknown) {
-      setError('Une erreur est survenue.');
+      const data = await res.json();
+      if (data.success) {
+        setSuccess(true);
+        setForm({
+          prenom: "",
+          nom: "",
+          email: "",
+          sujet: sujets[0].value,
+          message: "",
+        });
+        setErrors({});
+      } else {
+        setApiError(data.error?.message || "Erreur lors de l'envoi, réessayez.");
+      }
+    } catch {
+      setApiError("Erreur réseau, réessayez.");
     } finally {
-      setLoading(false);
+      setSending(false);
     }
   };
 
@@ -128,6 +143,10 @@ const ContactPage: React.FC = () => {
                   <p className="text-sm">Merci ! Nous vous répondrons dans un délai de 24-48h.</p>
                 </div>
               </div>
+            )}
+            
+            {apiError && !sending && (
+              <div className="text-red-500 text-center mt-2">{apiError}</div>
             )}
             
             <div className="grid md:grid-cols-5 gap-6">
@@ -188,25 +207,23 @@ const ContactPage: React.FC = () => {
                   
                   <div className="flex flex-col md:flex-row gap-3">
                     <div className="flex-1">
-                      <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">Prénom</label>
+                      <label htmlFor="prenom" className="block text-sm font-medium text-gray-700 mb-1">Prénom</label>
                       <input
-                        id="firstName"
-                        name="firstName"
-                        value={form.firstName}
+                        id="prenom"
+                        name="prenom"
+                        value={form.prenom}
                         onChange={handleChange}
-                        onBlur={() => handleBlur('firstName')}
                         className="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm"
                         required
                       />
                     </div>
                     <div className="flex-1">
-                      <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+                      <label htmlFor="nom" className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
                       <input
-                        id="lastName"
-                        name="lastName"
-                        value={form.lastName}
+                        id="nom"
+                        name="nom"
+                        value={form.nom}
                         onChange={handleChange}
-                        onBlur={() => handleBlur('lastName')}
                         className="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm"
                         required
                       />
@@ -221,32 +238,28 @@ const ContactPage: React.FC = () => {
                       type="email"
                       value={form.email}
                       onChange={handleChange}
-                      onBlur={() => handleBlur('email')}
                       className={`w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm ${
-                        getFieldError('email') ? 'border-red-500' : ''
+                        errors['email'] ? 'border-red-500' : ''
                       }`}
                       required
                     />
-                    {getFieldError('email') && (
-                      <p className="mt-1 text-xs text-red-600">{getFieldError('email')}</p>
+                    {errors['email'] && (
+                      <p className="mt-1 text-xs text-red-600">{errors['email']}</p>
                     )}
                   </div>
 
                   <div>
-                    <label htmlFor="interest" className="block text-sm font-medium text-gray-700 mb-1">Sujet</label>
+                    <label htmlFor="sujet" className="block text-sm font-medium text-gray-700 mb-1">Sujet</label>
                     <select
-                      id="interest"
-                      name="interest"
-                      value={form.interest}
+                      id="sujet"
+                      name="sujet"
+                      value={form.sujet}
                       onChange={handleChange}
-                      className="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all bg-white text-sm"
-                      required
+                      className="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400 transition border-gray-200"
                     >
-                      <option value="dazpay">Dazpay - Solution de paiement</option>
-                      <option value="support">Support technique</option>
-                      <option value="conseil">Demande de conseil</option>
-                      <option value="partenariat">Proposition de partenariat</option>
-                      <option value="autre">Autre sujet</option>
+                      {sujets.map((s) => (
+                        <option key={s.value} value={s.value}>{s.label}</option>
+                      ))}
                     </select>
                   </div>
 
@@ -257,14 +270,13 @@ const ContactPage: React.FC = () => {
                       name="message"
                       value={form.message}
                       onChange={handleChange}
-                      onBlur={() => handleBlur('message')}
                       className={`w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all min-h-[100px] text-sm ${
-                        getFieldError('message') ? 'border-red-500' : ''
+                        errors['message'] ? 'border-red-500' : ''
                       }`}
                       required
                     />
-                    {getFieldError('message') && (
-                      <p className="mt-1 text-xs text-red-600">{getFieldError('message')}</p>
+                    {errors['message'] && (
+                      <p className="mt-1 text-xs text-red-600">{errors['message']}</p>
                     )}
                     <p className="mt-1 text-xs text-gray-500">{form.message.length}/500 caractères</p>
                   </div>
@@ -272,9 +284,9 @@ const ContactPage: React.FC = () => {
                   <button 
                     type="submit" 
                     className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium px-4 py-3 rounded-lg transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg text-sm" 
-                    disabled={loading}
+                    disabled={sending}
                   >
-                    {loading ? (
+                    {sending ? (
                       <>
                         <svg className="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />

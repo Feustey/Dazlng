@@ -23,18 +23,6 @@ interface OptimizedImageProps {
   onError?: () => void;
 }
 
-// Placeholder SVG pour les images qui ne chargent pas
-const generatePlaceholderSVG = (width: number = 400, height: number = 300) => {
-  return `data:image/svg+xml;base64,${btoa(`
-    <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
-      <rect width="100%" height="100%" fill="#f3f4f6"/>
-      <text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="#9ca3af" font-family="system-ui, sans-serif" font-size="14">
-        Image non disponible
-      </text>
-    </svg>
-  `)}`;
-};
-
 export function OptimizedImage({
   src,
   alt,
@@ -89,11 +77,25 @@ export function OptimizedImage({
           ...style 
         }}
       >
-        <img
-          src={generatePlaceholderSVG(width, height)}
-          alt={`Erreur de chargement: ${alt}`}
+        <svg 
+          width={width || 400} 
+          height={height || 300} 
+          xmlns="http://www.w3.org/2000/svg"
           className="w-full h-full object-cover"
-        />
+        >
+          <rect width="100%" height="100%" fill="#f3f4f6"/>
+          <text 
+            x="50%" 
+            y="50%" 
+            textAnchor="middle" 
+            dy=".3em" 
+            fill="#9ca3af" 
+            fontFamily="system-ui, sans-serif" 
+            fontSize="14"
+          >
+            Image non disponible
+          </text>
+        </svg>
       </div>
     );
   }

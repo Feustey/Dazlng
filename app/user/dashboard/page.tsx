@@ -1,89 +1,44 @@
 "use client";
 
-import React, { FC, Suspense, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { useGamificationSystem } from '../hooks/useGamificationSystem';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
-import DazBoxComparison from '../components/ui/DazBoxComparison';
-import PerformanceMetrics from '../components/ui/PerformanceMetrics';
-import AccessDeniedAlert from '../components/ui/AccessDeniedAlert';
-// Nouveaux composants CRM
+import { PerformanceMetrics } from '../components/ui/PerformanceMetrics';
+import { DazBoxComparison } from '../components/ui/DazBoxComparison';
 import { CRMHeaderDashboard } from '../components/ui/CRMHeaderDashboard';
 import { ProfileCompletionEnhanced } from '../components/ui/ProfileCompletionEnhanced';
 import { SmartConversionCenter } from '../components/ui/SmartConversionCenter';
 import { PremiumConversionModal } from '../components/ui/PremiumConversionModal';
-import { useRouter } from 'next/navigation';
 
 const UserDashboard: FC = () => {
-  const {
-    profile,
-    gamificationData,
-    isLoading,
-    error,
-    hasNode,
-    achievements
-  } = useGamificationSystem(); // ✅ Nouveau hook unifié
-
-  // Récupérer l'utilisateur directement depuis le provider pour fallback
-  const { user: _user } = useSupabase();
-
-  // États pour les modals
+  const { user } = useSupabase();
+  const { gamificationData, achievements } = useGamificationSystem();
   const [showPremiumModal, setShowPremiumModal] = useState(false);
 
-  // Variables pour compatibilité
+  const profile = user?.profile;
+  const hasNode = Boolean(profile?.node_id);
+
   const applyRecommendation = (id: string) => console.log('Recommandation appliquée:', id);
-  const router = useRouter();
+
   const upgradeToPremium = () => {
-    router.push('/user/subscriptions?plan=premium');
+    console.log('Upgrade to premium');
+    // Logique d'upgrade
   };
 
-  // Afficher un loader pendant la vérification de la session
-  if (isLoading) {
+  if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin h-12 w-12 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-gray-600">Chargement de votre tableau de bord...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Gestion des erreurs
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-600">Erreur: {error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg"
-          >
-            Réessayer
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // ✅ CORRECTIF : Protéger contre le rendu si pas de profil utilisateur
-  if (!profile || !gamificationData) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin h-12 w-12 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-gray-600">Chargement de votre profil...</p>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-purple-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Chargement...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 pb-8">
-      <Suspense fallback={null}>
-        <AccessDeniedAlert />
-      </Suspense>
-
-      {/* ✅ Header CRM avec données unifiées */}
+    <div className="space-y-6 p-6">
+      {/* Header CRM avec données cohérentes */}
       <CRMHeaderDashboard
         userProfile={profile}
         crmData={{
@@ -95,7 +50,7 @@ const UserDashboard: FC = () => {
           hasNode: gamificationData.hasNode,
           isPremium: gamificationData.isPremium,
           engagementLevel: gamificationData.userScore
-        } as any}
+        }}
         onUpgradeToPremium={() => setShowPremiumModal(true)}
         hasNode={gamificationData.hasNode}
         isPremium={gamificationData.isPremium}
@@ -103,7 +58,7 @@ const UserDashboard: FC = () => {
 
       {/* ✅ Section complétion de profil avec données cohérentes */}
       <ProfileCompletionEnhanced
-        profileFields={gamificationData.profileFields as any}
+        profileFields={gamificationData.profileFields}
         completionPercentage={gamificationData.profileCompletion}
         userScore={gamificationData.userScore}
       />
@@ -160,11 +115,11 @@ const UserDashboard: FC = () => {
                 <p className="text-sm text-gray-600 mb-2">{achievement.description}</p>
                 
                 {/* Barre de progression pour achievements en cours */}
-                {!achievement.unlocked && achievement.progress > 0 && (
+                {!achievement.unlocked && achievement.progress && achievement.progress > 0 && (
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div 
                       className="bg-blue-500 h-2 rounded-full transition-all duration-500"
-                      style={{ width: `${(achievement.progress / achievement.maxProgress) * 100}%` }}
+                      style={{ width: `${(achievement.progress / (achievement.maxProgress || 1)) * 100}%` }}
                     />
                   </div>
                 )}
@@ -197,7 +152,7 @@ const UserDashboard: FC = () => {
             timeToImplement: '1 minute',
             category: 'revenue'
           }
-        ] as any}
+        ]}
         userScore={gamificationData.userScore}
         isPremium={gamificationData.isPremium}
         hasNode={gamificationData.hasNode}
@@ -233,7 +188,7 @@ const UserDashboard: FC = () => {
               rankInNetwork: gamificationData.rank,
               totalNodes: gamificationData.totalUsers
             }}
-            achievements={achievements as any}
+            achievements={achievements}
             trendData={[10, 15, 12, 18, 25, 22, 30]}
           />
         </>

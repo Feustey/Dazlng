@@ -1,9 +1,10 @@
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { SUPABASE_SESSION_CONFIG } from './supabase-config';
+import { getSupabaseBrowserClient } from './supabase';
 
 export class SessionManager {
   private static instance: SessionManager;
-  private supabase = createClientComponentClient();
+  private getSupabase() {
+    return getSupabaseBrowserClient();
+  }
   private refreshTimer: NodeJS.Timeout | null = null;
 
   private constructor() {
@@ -23,97 +24,50 @@ export class SessionManager {
    * Initialise la surveillance de session avec auto-refresh
    */
   private async initSessionMonitoring(): Promise<void> {
-    try {
-      const { data: { session } } = await this.supabase.auth.getSession();
-      
-      if (session) {
-        this.scheduleRefresh(session.expires_at || 0);
-      }
-
-      // Écouter les changements de session
-      this.supabase.auth.onAuthStateChange((event, session) => {
-        console.log('[SessionManager] Auth state changed:', event);
-        
-        if (event === 'SIGNED_IN' && session) {
-          this.scheduleRefresh(session.expires_at || 0);
-        } else if (event === 'SIGNED_OUT') {
-          this.clearRefreshTimer();
-        }
-      });
-    } catch (error) {
-      console.error('[SessionManager] Erreur initialisation:', error);
-    }
-  }
-
-  /**
-   * Programme le rafraîchissement automatique de la session
-   */
-  private scheduleRefresh(expiresAt: number): void {
-    this.clearRefreshTimer();
-
-    const now = Math.floor(Date.now() / 1000);
-    const refreshTime = expiresAt - SUPABASE_SESSION_CONFIG.AUTO_REFRESH_BEFORE_EXPIRY;
-    const timeUntilRefresh = (refreshTime - now) * 1000;
-
-    if (timeUntilRefresh > 0) {
-      console.log(`[SessionManager] Refresh programmé dans ${Math.floor(timeUntilRefresh / 1000)}s`);
-      
-      this.refreshTimer = setTimeout(async () => {
-        await this.refreshSession();
-      }, timeUntilRefresh);
-    } else {
-      // La session expire bientôt, rafraîchir immédiatement
-      this.refreshSession();
-    }
-  }
-
-  /**
-   * Rafraîchit la session utilisateur
-   */
-  private async refreshSession(): Promise<void> {
-    try {
-      console.log('[SessionManager] Rafraîchissement de la session...');
-      
-      const { data, error } = await this.supabase.auth.refreshSession();
-      
-      if (error) {
-        console.error('[SessionManager] Erreur refresh:', error);
-        this.handleSessionExpired();
-        return;
-      }
-
-      if (data.session) {
-        console.log('[SessionManager] Session rafraîchie avec succès');
-        this.scheduleRefresh(data.session.expires_at || 0);
-      }
-    } catch (error) {
-      console.error('[SessionManager] Erreur lors du refresh:', error);
-      this.handleSessionExpired();
-    }
-  }
-
-  /**
-   * Gère l'expiration de session
-   */
-  private handleSessionExpired(): void {
-    console.log('[SessionManager] Session expirée, redirection vers login');
-    this.clearRefreshTimer();
+    const supabase = this.getSupabase();
     
-    // Rediriger vers la page de connexion
-    if (typeof window !== 'undefined') {
-      const currentPath = window.location.pathname;
-      window.location.href = `/auth/login?callbackUrl=${encodeURIComponent(currentPath)}`;
+    // Écouter les changements de session
+    supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_OUT') {
+        this.stopSessionRefresh();
+      } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        this.startSessionRefresh();
+      }
+    });
+
+    // Vérifier la session au démarrage
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      this.startSessionRefresh();
     }
   }
 
-  /**
-   * Nettoie le timer de rafraîchissement
-   */
-  private clearRefreshTimer(): void {
+  private startSessionRefresh() {
     if (this.refreshTimer) {
-      clearTimeout(this.refreshTimer);
+      clearInterval(this.refreshTimer);
+    }
+
+    // Rafraîchir la session toutes les 45 minutes (avant l'expiration d'1h)
+    this.refreshTimer = setInterval(async () => {
+      const supabase = this.getSupabase();
+      const { error } = await supabase.auth.refreshSession();
+      if (error) {
+        console.error('Erreur lors du rafraîchissement de la session:', error);
+      }
+    }, 45 * 60 * 1000); // 45 minutes
+  }
+
+  private stopSessionRefresh() {
+    if (this.refreshTimer) {
+      clearInterval(this.refreshTimer);
       this.refreshTimer = null;
     }
+  }
+
+  public async signOut() {
+    const supabase = this.getSupabase();
+    this.stopSessionRefresh();
+    await supabase.auth.signOut();
   }
 
   /**
@@ -121,7 +75,8 @@ export class SessionManager {
    */
   public async isSessionValid(): Promise<boolean> {
     try {
-      const { data: { session } } = await this.supabase.auth.getSession();
+      const supabase = this.getSupabase();
+      const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
         return false;
@@ -142,7 +97,8 @@ export class SessionManager {
    */
   public async forceRefresh(): Promise<boolean> {
     try {
-      await this.refreshSession();
+      const supabase = this.getSupabase();
+      await supabase.auth.refreshSession();
       return await this.isSessionValid();
     } catch (error) {
       console.error('[SessionManager] Erreur force refresh:', error);
@@ -155,7 +111,8 @@ export class SessionManager {
    */
   public async getTimeUntilExpiry(): Promise<number> {
     try {
-      const { data: { session } } = await this.supabase.auth.getSession();
+      const supabase = this.getSupabase();
+      const { data: { session } } = await supabase.auth.getSession();
       
       if (!session?.expires_at) {
         return 0;

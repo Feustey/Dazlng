@@ -1,79 +1,128 @@
-import { getSupabaseAdminClient } from '@/lib/supabase';
 import { NextRequest, NextResponse } from 'next/server';
+import { getSupabaseAdminClient } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-auth';
 
-export async function GET(request: NextRequest) {
-  if (!getSupabaseAdminClient) {
-    console.warn('Supabase admin non configuré pour /api/user/crm-data');
-    return NextResponse.json(
-      { error: 'Service non disponible' },
-      { status: 503 }
-    );
-  }
+interface UserProfile {
+  id: string;
+  email: string;
+  nom?: string;
+  prenom?: string;
+  pubkey?: string;
+  node_id?: string;
+  compte_x?: string;
+  compte_nostr?: string;
+  email_verified: boolean;
+  created_at: string;
+  updated_at: string;
+  settings: Record<string, unknown>;
+}
 
+interface UserOrder {
+  id: string;
+  user_id: string;
+  product_type: string;
+  amount: number;
+  payment_status: string;
+  created_at: string;
+}
+
+interface UserSubscription {
+  id: string;
+  user_id: string;
+  plan_id: string;
+  status: string;
+  start_date: string;
+  end_date?: string;
+}
+
+interface CRMRecommendation {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  impact: string;
+  estimatedGain: number;
+  timeToImplement: string;
+  isPremium: boolean;
+  priority: string;
+  href: string;
+  appliedBy: number;
+}
+
+export async function GET(_request: NextRequest) {
   try {
-    const userId = request.nextUrl.searchParams.get('userId');
-    if (!userId) {
+    const supabase = await createSupabaseServerClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
       return NextResponse.json(
-        { error: 'userId requis' },
-        { status: 400 }
+        { 
+          success: false, 
+          error: { 
+            code: 'UNAUTHORIZED', 
+            message: 'Non authentifié' 
+          } 
+        },
+        { status: 401 }
       );
     }
 
     // Récupérer le profil utilisateur
     const { data: profile, error: profileError } = await getSupabaseAdminClient()
-      .from('profiles')
+      ?.from('profiles')
       .select('*')
-      .eq('id', userId)
-      .single();
+      .eq('id', user.id)
+      .single() || { data: null, error: new Error('Client non disponible') };
 
-    if (profileError) {
-      console.error('Erreur profil:', profileError);
+    if (profileError || !profile) {
       return NextResponse.json(
-        { error: 'Erreur lors de la récupération du profil' },
-        { status: 500 }
+        { 
+          success: false, 
+          error: { 
+            code: 'PROFILE_NOT_FOUND', 
+            message: 'Profil utilisateur non trouvé' 
+          } 
+        },
+        { status: 404 }
       );
     }
 
-    // Récupérer les commandes
-    const { data: orders } = await getSupabaseAdminClient()
-      .from('orders')
+    // Récupérer les commandes de l'utilisateur
+    const { data: orders, error: _ordersError } = await getSupabaseAdminClient()
+      ?.from('orders')
       .select('*')
-      .eq('user_id', userId);
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false }) || { data: [], error: null };
 
     // Récupérer l'abonnement actuel
-    const { data: subscription } = await getSupabaseAdminClient()
-      .from('subscriptions')
+    const { data: subscription, error: _subscriptionError } = await getSupabaseAdminClient()
+      ?.from('subscriptions')
       .select('*')
-      .eq('user_id', userId)
+      .eq('user_id', user.id)
       .eq('status', 'active')
-      .single();
+      .single() || { data: null, error: null };
 
-    // Calculer le score utilisateur
-    const userScore = calculateUserScore(profile, orders || [], subscription);
-    
-    // Déterminer le segment
-    const segment = determineSegment(userScore, profile, orders || [], subscription);
+    // Calculer les métriques CRM
+    const userScore = calculateUserScore(profile as UserProfile, orders as UserOrder[] || [], subscription as UserSubscription);
+    const segment = determineSegment(userScore, profile as UserProfile, orders as UserOrder[] || [], subscription as UserSubscription);
+    const profileCompletion = calculateProfileCompletion(profile as UserProfile);
+    const conversionProbability = calculateConversionProbability(userScore, profile as UserProfile);
+    const recommendations = generateRecommendations(profile as UserProfile, orders as UserOrder[] || [], subscription as UserSubscription, userScore);
 
-    // Générer les recommandations
-    const recommendations = generateRecommendations(profile, orders || [], subscription, userScore);
-
-    // Calculer la completion du profil
-    const profileCompletion = calculateProfileCompletion(profile);
-
-    // Construire les données CRM
     const crmData = {
       userScore,
       segment,
-      engagementLevel: Math.min(100, userScore + 10),
-      conversionProbability: calculateConversionProbability(userScore, profile),
-      lastActivity: profile.updated_at,
-      totalOrders: orders?.length || 0,
-      totalSpent: orders?.reduce((sum, order) => sum + (order.amount || 0), 0) || 0,
-      isPremium: subscription?.status === 'active',
-      hasNode: !!profile.node_id,
       profileCompletion,
-      lightningAdoption: !!profile.pubkey,
-      recommendations
+      conversionProbability,
+      recommendations,
+      metrics: {
+        totalOrders: orders?.length || 0,
+        totalSpent: orders?.reduce((sum: number, order: UserOrder) => sum + order.amount, 0) || 0,
+        averageOrderValue: orders?.length ? (orders.reduce((sum: number, order: UserOrder) => sum + order.amount, 0) / orders.length) : 0,
+        lastOrderDate: orders?.[0]?.created_at || null,
+        subscriptionStatus: subscription?.status || 'none',
+        daysSinceRegistration: Math.floor((Date.now() - new Date(profile.created_at).getTime()) / (1000 * 60 * 60 * 24))
+      }
     };
 
     return NextResponse.json({
@@ -103,7 +152,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-function calculateUserScore(profile: any, orders: any[], subscription: any): number {
+function calculateUserScore(profile: UserProfile, orders: UserOrder[], subscription: UserSubscription): number {
   let score = 0;
 
   // Email vérifié (20 points)
@@ -129,7 +178,7 @@ function calculateUserScore(profile: any, orders: any[], subscription: any): num
   return Math.min(100, Math.round(score));
 }
 
-function determineSegment(score: number, profile: any, orders: any[], subscription: any): string {
+function determineSegment(score: number, profile: UserProfile, orders: UserOrder[], subscription: UserSubscription): string {
   if (score >= 80) return 'champion';
   if (score >= 60 || subscription?.status === 'active') return 'premium';
   if (score >= 40 || orders.length > 0) return 'client';
@@ -137,15 +186,15 @@ function determineSegment(score: number, profile: any, orders: any[], subscripti
   return 'prospect';
 }
 
-function calculateProfileCompletion(profile: any): number {
+function calculateProfileCompletion(profile: UserProfile): number {
   const fields = ['nom', 'prenom', 'pubkey', 'node_id', 'compte_x', 'compte_nostr'];
-  const completed = fields.filter(field => profile[field] && profile[field].length > 0).length;
+  const completed = fields.filter(field => profile[field as keyof UserProfile] && String(profile[field as keyof UserProfile]).length > 0).length;
   const emailVerified = profile.email_verified ? 1 : 0;
   
   return Math.round(((completed + emailVerified) / (fields.length + 1)) * 100);
 }
 
-function calculateConversionProbability(score: number, profile: any): number {
+function calculateConversionProbability(score: number, profile: UserProfile): number {
   let probability = score * 0.6; // Base sur le score
   
   // Bonus si email vérifié
@@ -161,8 +210,8 @@ function calculateConversionProbability(score: number, profile: any): number {
   return Math.max(0, Math.min(100, Math.round(probability)));
 }
 
-function generateRecommendations(profile: any, orders: any[], subscription: any, userScore: number) {
-  const recommendations = [];
+function generateRecommendations(profile: UserProfile, orders: UserOrder[], subscription: UserSubscription, userScore: number): CRMRecommendation[] {
+  const recommendations: CRMRecommendation[] = [];
 
   // Recommandations basées sur le profil
   if (!profile.email_verified) {

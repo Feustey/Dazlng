@@ -78,13 +78,13 @@ export async function GET(request: NextRequest): Promise<ReturnType<typeof NextR
       console.log('[API] Création automatique du profil pour utilisateur:', user.id)
       
       try {
-        const { data: profileData, error: createError } = await getSupabaseAdminClient()!.rpc(
+        const { data: profileData, error: createError } = await getSupabaseAdminClient()?.rpc(
           'ensure_profile_exists', 
           { 
             user_id: user.id, 
             user_email: user.email 
           }
-        )
+        ) || { data: null, error: new Error('Client Supabase non disponible') }
 
         if (createError) {
           console.error('[API] Erreur création profil via fonction:', createError)

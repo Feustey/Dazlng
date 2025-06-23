@@ -1,12 +1,10 @@
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-);
+import { getSupabaseAdminClient } from '@/lib/supabase';
 
 export async function checkTokenExpiry(): Promise<void> {
   try {
+    // Créer le client admin Supabase
+    const supabase = getSupabaseAdminClient();
+    
     // Récupérer tous les utilisateurs avec des tokens
     const { data: users, error } = await supabase
       .from('profiles')
@@ -24,7 +22,7 @@ export async function checkTokenExpiry(): Promise<void> {
       console.log(`Vérification des tokens pour l'utilisateur ${user.email}`);
     }
   } catch (error) {
-    console.error('Erreur lors de la vérification des tokens:', error);
+    console.error('❌ Erreur lors de la vérification des tokens:', error);
     throw error;
   }
 } 

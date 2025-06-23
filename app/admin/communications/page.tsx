@@ -64,8 +64,10 @@ interface EmailStats {
   bounce_rate: number
 }
 
+type TabType = 'dashboard' | 'logs' | 'contacts' | 'campaigns' | 'templates'
+
 export default function CommunicationsPage(): JSX.Element {
-  const [activeTab, setActiveTab] = useState('dashboard')
+  const [activeTab, setActiveTab] = useState<TabType>('dashboard')
   const [emailLogs, setEmailLogs] = useState<EmailLog[]>([])
   const [contacts, setContacts] = useState<Contact[]>([])
   const [campaigns, setCampaigns] = useState<EmailCampaign[]>([])
@@ -75,9 +77,44 @@ export default function CommunicationsPage(): JSX.Element {
   const [showNewCampaign, setShowNewCampaign] = useState(false)
   const [showNewTemplate, setShowNewTemplate] = useState(false)
 
+  const loadEmailStats = async () => {
+    try {
+      // Calculer les stats à partir des campagnes
+      const totalSent = campaigns.reduce((sum, c) => sum + (c.stats.sent_count || 0), 0)
+      const totalDelivered = campaigns.reduce((sum, c) => sum + (c.stats.delivered_count || 0), 0)
+      const totalOpened = campaigns.reduce((sum, c) => sum + (c.stats.opened_count || 0), 0)
+      const totalClicked = campaigns.reduce((sum, c) => sum + (c.stats.clicked_count || 0), 0)
+      
+      const openRate = totalSent > 0 ? (totalOpened / totalSent) * 100 : 0
+      const clickRate = totalOpened > 0 ? (totalClicked / totalOpened) * 100 : 0
+      const bounceRate = totalSent > 0 ? ((totalSent - totalDelivered) / totalSent) * 100 : 0
+      
+      setEmailStats({
+        total_sent: totalSent,
+        total_delivered: totalDelivered,
+        total_opened: totalOpened,
+        total_clicked: totalClicked,
+        open_rate: openRate,
+        click_rate: clickRate,
+        bounce_rate: bounceRate
+      })
+    } catch (error) {
+      console.error('Erreur chargement stats:', error)
+      // Stats par défaut pour la démo
+      setEmailStats({
+        total_sent: 150,
+        total_delivered: 148,
+        total_opened: 89,
+        total_clicked: 23,
+        open_rate: 59.3,
+        click_rate: 25.8,
+        bounce_rate: 1.3
+      })
+    }
+  }
+
   const loadData = useCallback(async () => {
     setLoading(true)
-    
     try {
       if (activeTab === 'logs') {
         await loadEmailLogs()
@@ -95,7 +132,7 @@ export default function CommunicationsPage(): JSX.Element {
     } finally {
       setLoading(false)
     }
-  }, [activeTab])
+  }, [activeTab, loadEmailStats])
 
   useEffect(() => {
     loadData()
@@ -234,42 +271,6 @@ export default function CommunicationsPage(): JSX.Element {
     }
   }
 
-  const loadEmailStats = async () => {
-    try {
-      // Calculer les stats à partir des campagnes
-      const totalSent = campaigns.reduce((sum, c) => sum + (c.stats.sent_count || 0), 0)
-      const totalDelivered = campaigns.reduce((sum, c) => sum + (c.stats.delivered_count || 0), 0)
-      const totalOpened = campaigns.reduce((sum, c) => sum + (c.stats.opened_count || 0), 0)
-      const totalClicked = campaigns.reduce((sum, c) => sum + (c.stats.clicked_count || 0), 0)
-      
-      const openRate = totalSent > 0 ? (totalOpened / totalSent) * 100 : 0
-      const clickRate = totalOpened > 0 ? (totalClicked / totalOpened) * 100 : 0
-      const bounceRate = totalSent > 0 ? ((totalSent - totalDelivered) / totalSent) * 100 : 0
-      
-      setEmailStats({
-        total_sent: totalSent,
-        total_delivered: totalDelivered,
-        total_opened: totalOpened,
-        total_clicked: totalClicked,
-        open_rate: openRate,
-        click_rate: clickRate,
-        bounce_rate: bounceRate
-      })
-    } catch (error) {
-      console.error('Erreur chargement stats:', error)
-      // Stats par défaut pour la démo
-      setEmailStats({
-        total_sent: 150,
-        total_delivered: 148,
-        total_opened: 89,
-        total_clicked: 23,
-        open_rate: 59.3,
-        click_rate: 25.8,
-        bounce_rate: 1.3
-      })
-    }
-  }
-
   const getStatusColor = (status: string) => {
     const colors = {
       sent: 'bg-green-100 text-green-800',
@@ -332,7 +333,7 @@ export default function CommunicationsPage(): JSX.Element {
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() => setActiveTab(tab.id as TabType)}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === tab.id
                   ? 'border-blue-500 text-blue-600'

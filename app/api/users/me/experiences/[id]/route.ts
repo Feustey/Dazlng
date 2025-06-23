@@ -6,7 +6,7 @@ import { ApiResponse } from "@/types/database";
 async function getUserFromRequest(req: NextRequest) {
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
   if (!token) return null;
-  const { data: { user } } = await getSupabaseAdminClient.auth.getUser(token);
+  const { data: { user } } = await getSupabaseAdminClient().auth.getUser(token);
   return user;
 }
 

@@ -45,7 +45,7 @@ async function getUserFromRequest(req: NextRequest): Promise<{ id: string } | nu
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
   if (!token) return null;
   
-  const { data: { user } } = await getSupabaseAdminClient.auth.getUser(token);
+  const { data: { user } } = await getSupabaseAdminClient().auth.getUser(token);
   return user ? { id: user.id } : null;
 }
 
@@ -127,18 +127,16 @@ export async function GET(req: NextRequest): Promise<Response> {
     }
 
     // Transformation des données en format Invoice
-    const invoices: Invoice[] = (ordersData || []).map((order: any) => {
+    const invoices: Invoice[] = Array.isArray(ordersData) ? ordersData.map((order: any) => {
+      if (!order || typeof order !== 'object') return null;
       const invoiceStatus = getInvoiceStatus(order.payment_status, order.created_at);
-      
       // Si on filtre par 'overdue', ne garder que ceux qui sont vraiment en retard
       if (status === 'overdue' && invoiceStatus !== 'overdue') {
         return null;
       }
-
       // Générer un numéro de facture
       const orderDate = new Date(order.created_at);
       const orderNumber = `INV-${orderDate.getFullYear()}-${order.id.slice(-6).toUpperCase()}`;
-      
       // Description basée sur le produit et le plan
       let description = `Commande ${order.product_type}`;
       if (order.plan) {
@@ -147,10 +145,8 @@ export async function GET(req: NextRequest): Promise<Response> {
       if (order.billing_cycle) {
         description += ` (${order.billing_cycle === 'monthly' ? 'Mensuel' : 'Annuel'})`;
       }
-
       // Date d'échéance (30 jours après création)
       const dueDate = new Date(orderDate.getTime() + 30 * 24 * 60 * 60 * 1000);
-
       return {
         id: order.id,
         order_id: order.id,
@@ -171,7 +167,7 @@ export async function GET(req: NextRequest): Promise<Response> {
         total: order.amount,
         downloadUrl: `/api/billing/invoices/${order.id}/pdf`
       };
-    }).filter(Boolean) as Invoice[];
+    }).filter(Boolean) as Invoice[] : [];
 
     // Obtenir le nombre total pour la pagination
     let totalCount = count || 0;

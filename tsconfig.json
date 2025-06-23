@@ -32,7 +32,6 @@
       }
     ],
     "types": [
-      // "./types/next-auth",
       "./types/lightning"
     ]
   },
@@ -41,7 +40,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-, "App.tsx.back"  ],
+  ],
   "exclude": [
     "node_modules",
     "tests",

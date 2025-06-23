@@ -1,10 +1,8 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { getSupabaseAdminClient } from '../lib/supabase';
+import { getSupabaseAdminClient, getSupabaseServerPublicClient } from '../lib/supabase';
 import { User } from '../types/database';
 import { NextRequest } from 'next/server';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
@@ -318,4 +316,129 @@ export function requireAuth(req: import('next/server').NextRequest): { id: strin
   }
   const token = authHeader.replace('Bearer ', '');
   return verifyToken(token);
+}
+
+export async function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(password, 10);
+}
+
+export async function verifyPassword(password: string, hashedPassword: string): Promise<boolean> {
+  return bcrypt.compare(password, hashedPassword);
+}
+
+export function generateToken(user: User): string {
+  return jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1d' });
+}
+
+export async function getCurrentUser(req: NextRequest): Promise<User | null> {
+  try {
+    const token = req.headers.get('authorization')?.replace('Bearer ', '');
+    if (!token) return null;
+
+    const { userId } = verifyToken(token);
+    const supabase = getSupabaseAdminClient();
+    
+    const { data: user, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', userId)
+      .single();
+
+    if (error || !user) return null;
+    return user;
+  } catch {
+    return null;
+  }
+}
+
+export async function getUserProfile(userId: string): Promise<UserWithOrders | null> {
+  const supabase = getSupabaseAdminClient();
+  
+  try {
+    // Récupérer l'utilisateur
+    const { data: user, error: userError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', userId)
+      .single();
+
+    if (userError || !user) return null;
+
+    // Récupérer les commandes
+    const { data: orders, error: ordersError } = await supabase
+      .from('orders')
+      .select('order_number, amount, created_at')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(5);
+
+    if (ordersError) throw ordersError;
+
+    // Récupérer les abonnements
+    const { data: subscriptions, error: subsError } = await supabase
+      .from('subscriptions')
+      .select('name, is_active, start_date, end_date')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (subsError) throw subsError;
+
+    // Construire le profil complet
+    const userProfile: UserWithOrders = {
+      ...user,
+      orders: orders?.map(order => ({
+        order_number: order.order_number,
+        amount: order.amount,
+        date: order.created_at
+      })) || [],
+      subscriptions: subscriptions?.map(sub => ({
+        name: sub.name,
+        is_active: sub.is_active,
+        start_date: sub.start_date,
+        end_date: sub.end_date
+      })) || []
+    };
+
+    return userProfile;
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    return null;
+  }
+}
+
+export async function updateUserProfile(userId: string, data: Partial<User>): Promise<User | null> {
+  const supabase = getSupabaseAdminClient();
+  
+  try {
+    const { data: updatedUser, error } = await supabase
+      .from('users')
+      .update(data)
+      .eq('id', userId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return updatedUser;
+  } catch (error) {
+    console.error('Error updating user profile:', error);
+    return null;
+  }
+}
+
+export async function getPublicUserData(userId: string): Promise<Partial<User> | null> {
+  const supabase = getSupabaseServerPublicClient();
+  
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .select('id, name, email, company')
+      .eq('id', userId)
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Error fetching public user data:', error);
+    return null;
+  }
 } 

@@ -1,27 +1,10 @@
 // Test complet des appels Supabase pour OTP, checkout et contact
 // Usage: npx tsx scripts/test-supabase-integration.ts
 
-import { createClient } from '@supabase/supabase-js';
+import { createTestClient, TestResult, TEST_EMAIL, TEST_NAME, TEST_PUBKEY } from '@/lib/test-utils/supabase-test-client';
 
-// Configuration Supabase
-const SUPABASE_URL = "https://ftpnieqpzstcdttmcsen.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ0cG5pZXFwenN0Y2R0dG1jc2VuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI4MDY1ODEsImV4cCI6MjA1ODM4MjU4MX0.8mBJX2SaZMrGqBn9EUpkPBSqC-O_K2OZFaunQcCSmnQ";
-
-// Créer le client Supabase
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// Données de test
-const TEST_EMAIL = 'stephane.courant@pm.me';
-const TEST_NAME = 'Stéphane Courant';
-const TEST_PUBKEY = '03eec7245d6b7d2ccb30380bfbe2a3648cd7a942653f5aa340edcea1f283686619';
-
-interface TestResult {
-  name: string;
-  status: 'PASS' | 'FAIL' | 'WARN';
-  message: string;
-  details?: any;
-  duration?: number;
-}
+// Créer le client Supabase avec la nouvelle méthode
+const supabase = createTestClient();
 
 async function testSupabaseConnection(): Promise<TestResult> {
   const start = Date.now();

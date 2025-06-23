@@ -134,15 +134,17 @@ export default function OptimizedHomePage(): React.ReactElement {
       const target = e.target as HTMLAnchorElement;
       if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#')) {
         e.preventDefault();
-        const targetId = target.getAttribute('href')!;
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-          const elementTop = targetElement.getBoundingClientRect().top + window.scrollY;
-          const offset = 80;
-          window.scrollTo({
-            top: elementTop - offset,
-            behavior: 'smooth'
-          });
+        const targetId = target.getAttribute('href');
+        if (targetId) {
+          const targetElement = document.querySelector(targetId);
+          if (targetElement) {
+            const elementTop = targetElement.getBoundingClientRect().top + window.scrollY;
+            const offset = 80;
+            window.scrollTo({
+              top: elementTop - offset,
+              behavior: 'smooth'
+            });
+          }
         }
       }
     };

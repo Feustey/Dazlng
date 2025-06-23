@@ -4,16 +4,14 @@
  */
 
 import { config } from 'dotenv';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseAdminClient } from '@/lib/supabase';
 
 // Charger les variables d'environnement
 config({ path: '.env.local' });
 config({ path: '.env' });
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Créer le client admin Supabase
+const supabase = getSupabaseAdminClient();
 
 async function createDevAdmin() {
   console.log('🔧 Création d\'un utilisateur admin temporaire pour développement...\n');
