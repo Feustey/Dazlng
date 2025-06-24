@@ -30,6 +30,7 @@ const Alert: React.FC<AlertProps> = ({ type = 'default', message, className = ''
       {children}
     </div>
   );
+};
 
 const AlertDescription: React.FC<AlertDescriptionProps> = ({ children, className = '' }) => {
   return (
@@ -37,6 +38,7 @@ const AlertDescription: React.FC<AlertDescriptionProps> = ({ children, className
       {children}
     </div>
   );
+};
 
 // Exports nommés
 export { Alert, AlertDescription };

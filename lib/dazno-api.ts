@@ -92,7 +92,7 @@ export interface PriorityAction {
   cost_estimate?: number;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_DAZNO_API_URL ?? "" || 'https://api.dazno.de';
+const API_BASE_URL = process.env.NEXT_PUBLIC_DAZNO_API_URL || 'https://api.dazno.de';
 
 class DaznoApiClient {
   private async makeRequest<T>(endpoint: string, options?: RequestInit): Promise<T> {

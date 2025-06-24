@@ -165,7 +165,7 @@ class MCPLightAPI {
   private initialized = false;
 
   constructor() {
-    this.baseURL = process.env.NEXT_PUBLIC_DAZNO_API_URL ?? "" || 'https://api.dazno.de';
+    this.baseURL = process.env.NEXT_PUBLIC_DAZNO_API_URL || 'https://api.dazno.de';
   }
 
   /**

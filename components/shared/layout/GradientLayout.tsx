@@ -11,5 +11,6 @@ const GradientLayout: React.FC<GradientLayoutProps> = ({ children, className = "
       {children}
     </div>
   );
+};
 
 export default GradientLayout; 

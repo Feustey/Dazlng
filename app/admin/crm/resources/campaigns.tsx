@@ -41,9 +41,9 @@ const RowActions = () => {
 // Composant pour afficher le statut avec couleur
 export interface StatusFieldProps {
   record?: {
-  status?: string;
-  [key: string]: unknown;
-  );
+    status?: string;
+    [key: string]: unknown;
+  };
 }
 
 const StatusField = ({ record }: StatusFieldProps) => {
@@ -63,6 +63,7 @@ const StatusField = ({ record }: StatusFieldProps) => {
       record={record}
     />
   );
+};
 
 // Liste des campagnes
 export const CampaignList = () => (

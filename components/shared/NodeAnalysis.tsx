@@ -286,5 +286,6 @@ const NodeAnalysis: React.FC<NodeAnalysisProps> = ({
       </div>
     </div>
   );
+};
 
 export default NodeAnalysis; 

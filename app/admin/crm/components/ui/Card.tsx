@@ -26,6 +26,7 @@ export const Card: React.FC<CardProps> = ({ children, className = '' }) => {
       {children}
     </div>
   );
+};
 
 export const CardHeader: React.FC<CardHeaderProps> = ({ children, className = '' }) => {
   return (
@@ -33,6 +34,7 @@ export const CardHeader: React.FC<CardHeaderProps> = ({ children, className = ''
       {children}
     </div>
   );
+};
 
 export const CardContent: React.FC<CardContentProps> = ({ children, className = '' }) => {
   return (
@@ -40,6 +42,7 @@ export const CardContent: React.FC<CardContentProps> = ({ children, className = 
       {children}
     </div>
   );
+};
 
 export const CardTitle: React.FC<CardTitleProps> = ({ children, className = '' }) => {
   return (
@@ -47,4 +50,4 @@ export const CardTitle: React.FC<CardTitleProps> = ({ children, className = '' }
       {children}
     </h3>
   );
-}
+};
