@@ -7,7 +7,7 @@ import {
   type PubkeyData 
 } from '@/lib/utils/cookies';
 
-export interface UsePubkeyCookieReturn {
+export export interface UsePubkeyCookieReturn {
   pubkey: string | null;
   pubkeyData: PubkeyData | null;
   setPubkey: (pubkey: string, alias?: string) => void;
@@ -68,4 +68,4 @@ export function usePubkeyCookie(): UsePubkeyCookieReturn {
     updateAlias,
     isLoaded
   };
-} 
+}

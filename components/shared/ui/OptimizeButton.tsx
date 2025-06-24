@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-interface OptimizeButtonProps {
+export interface OptimizeButtonProps {
   nodeId: string;
 }
 
@@ -37,5 +37,5 @@ export default function OptimizeButton({ nodeId }: OptimizeButtonProps): JSX.Ele
     >
       {isOptimizing ? 'Optimisation...' : 'Optimiser le Node'}
     </button>
-  );
-} 
+};
+}

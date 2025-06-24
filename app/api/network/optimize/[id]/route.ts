@@ -22,6 +22,6 @@ export async function POST(request: NextRequest, context: { params: Promise<{ id
     return NextResponse.json(
       { error: 'Erreur lors du démarrage de l\'optimisation' },
       { status: 500 }
-    );
+};
   }
-} 
+}

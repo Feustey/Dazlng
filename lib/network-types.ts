@@ -1,4 +1,4 @@
-export interface NetworkNode {
+export export interface NetworkNode {
   id: string;
   status: 'online' | 'offline' | 'maintenance';
   lastSeen: string;
@@ -9,21 +9,21 @@ export interface NetworkNode {
   };
 }
 
-export interface NetworkSummary {
+export export interface NetworkSummary {
   totalNodes: number;
   activeNodes: number;
   averageLoad: number;
   alerts: NetworkAlert[];
 }
 
-export interface NetworkAlert {
+export export interface NetworkAlert {
   severity: 'info' | 'warning' | 'error';
   message: string;
   timestamp: string;
 }
 
-export interface OptimizationResult {
+export export interface OptimizationResult {
   success: boolean;
   optimizationId: string;
   estimatedDuration: number;
-} 
+}

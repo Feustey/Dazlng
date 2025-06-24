@@ -1,7 +1,7 @@
+import React from 'react';
 'use client';
 
 import { Admin, Resource } from 'react-admin';
-import { supabaseDataProvider } from 'ra-supabase-core';
 import { getSupabaseBrowserClient } from '@/lib/supabase';
 import { customerResource } from '../resources/customers';
 import { segmentResource } from '../resources/segments';
@@ -11,8 +11,8 @@ import { CRMDashboard } from '../components/dashboard/CRMDashboard';
 import { CRMLayout } from '../components/layout/CRMLayout';
 
 // Configuration Supabase - Utiliser une instance unique
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "" || '';
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "" || '';
 
 // Validation des variables d'environnement
 if (!supabaseUrl || !supabaseKey) {
@@ -23,11 +23,156 @@ if (!supabaseUrl || !supabaseKey) {
 const crmSupabaseClient = getSupabaseBrowserClient();
 
 // Configuration du data provider
-const dataProvider = supabaseDataProvider({
-  instanceUrl: supabaseUrl,
-  apiKey: supabaseKey,
-  supabaseClient: crmSupabaseClient,
-});
+const dataProvider = {
+  getList: async (resource: string, params: any) => {
+    const { page, perPage } = params.pagination;
+    const { field, order } = params.sort;
+    
+    const start = (page - 1) * perPage;
+    const end = start + perPage - 1;
+
+    let query = crmSupabaseClient
+      .from(resource)
+      .select('*', { count: 'exact' })
+      .range(start, end);
+
+    if (field) {
+      query = query.order(field, { ascending: order === 'ASC' });
+    }
+
+    if (params.filter) {
+      Object.entries(params.filter).forEach(([key, value]) => {
+        if (typeof value === 'string') {
+          query = query.ilike(key, `%${value}%`);
+        } else {
+          query = query.eq(key, value);
+        }
+      });
+    }
+
+    const { data, error, count } = await query;
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      data: data || [],
+      total: count || 0,
+    };
+  },
+
+  getOne: async (resource: string, params: any) => {
+    const { data, error } = await crmSupabaseClient
+      .from(resource)
+      .select('*')
+      .eq('id', params.id)
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return { data: data || {} };
+  },
+
+  create: async (resource: string, params: any) => {
+    const { data, error } = await crmSupabaseClient
+      .from(resource)
+      .insert(params.data)
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return { data: data || {} };
+  },
+
+  update: async (resource: string, params: any) => {
+    const { data, error } = await crmSupabaseClient
+      .from(resource)
+      .update(params.data)
+      .eq('id', params.id)
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return { data: data || {} };
+  },
+
+  delete: async (resource: string, params: any) => {
+    const { error } = await crmSupabaseClient
+      .from(resource)
+      .delete()
+      .eq('id', params.id);
+
+    if (error) {
+      throw error;
+    }
+
+    return { data: params.previousData };
+  },
+
+  deleteMany: async (resource: string, params: any) => {
+    const { error } = await crmSupabaseClient
+      .from(resource)
+      .delete()
+      .in('id', params.ids);
+
+    if (error) {
+      throw error;
+    }
+
+    return { data: [] };
+  },
+
+  getMany: async (resource: string, params: any) => {
+    const { data, error } = await crmSupabaseClient
+      .from(resource)
+      .select('*')
+      .in('id', params.ids);
+
+    if (error) {
+      throw error;
+    }
+
+    return { data: data || [] };
+  },
+
+  getManyReference: async (resource: string, params: any) => {
+    const { page, perPage } = params.pagination;
+    const { field, order } = params.sort;
+    
+    const start = (page - 1) * perPage;
+    const end = start + perPage - 1;
+
+    let query = crmSupabaseClient
+      .from(resource)
+      .select('*', { count: 'exact' })
+      .eq(params.target, params.id)
+      .range(start, end);
+
+    if (field) {
+      query = query.order(field, { ascending: order === 'ASC' });
+    }
+
+    const { data, error, count } = await query;
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      data: data || [],
+      total: count || 0,
+    };
+  },
+};
 
 // Auth provider pour développement local - accès libre
 const authProvider = {
@@ -36,7 +181,7 @@ const authProvider = {
   checkError: () => Promise.resolve(),
   checkAuth: () => {
     // En développement local, toujours autorisé
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV ?? "" === 'development') {
       return Promise.resolve();
     }
     // En production, vous pouvez ajouter une vraie logique d'auth ici
@@ -110,7 +255,11 @@ const i18nProvider = {
   getLocale: () => 'fr',
 };
 
-export const CRMAdminProvider: React.FC<{ children?: React.ReactNode }> = ({ children: _children }) => {
+export export interface CRMAdminProviderProps {
+  children?: React.ReactNode;
+}
+
+const CRMAdminProvider: React.FC<CRMAdminProviderProps> = ({ children: _children }) => {
   return (
     <Admin
       dataProvider={dataProvider}
@@ -125,5 +274,5 @@ export const CRMAdminProvider: React.FC<{ children?: React.ReactNode }> = ({ chi
       <Resource name="crm_email_campaigns" {...campaignResource} />
       <Resource name="crm_email_templates" {...templateResource} />
     </Admin>
-  );
-}; 
+};
+}

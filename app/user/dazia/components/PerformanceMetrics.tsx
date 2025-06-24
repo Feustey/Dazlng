@@ -1,3 +1,4 @@
+import React from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp, Activity, Zap, Users } from 'lucide-react';
 import { Line } from 'react-chartjs-2';
@@ -22,9 +23,8 @@ ChartJS.register(
   Tooltip,
   Legend,
   Filler
-);
-
-interface MetricCardProps {
+};
+export interface MetricCardProps {
   title: string;
   value: number;
   change: number;
@@ -63,14 +63,14 @@ const MetricCard = ({ title, value, change, icon, color }: MetricCardProps) => (
       </span>
     </div>
   </motion.div>
-);
-
-interface PerformanceMetricsProps {
+};
+export interface PerformanceMetricsProps {
   metrics: {
-    revenue: {
-      current: number;
-      change: number;
-      history: { date: string; value: number }[];
+  revenue: {
+  current: number;
+  change: number;
+  history: { date: string; value: number
+}[];
     };
     efficiency: {
       current: number;
@@ -92,11 +92,11 @@ interface PerformanceMetricsProps {
 
 export const PerformanceMetrics = ({ metrics }: PerformanceMetricsProps) => {
   const chartData = {
-    labels: metrics.revenue.history.map((h) => h.date),
+    labels: metrics.revenue.history.map((h: any) => h.date),
     datasets: [
       {
         label: 'Revenus (sats)',
-        data: metrics.revenue.history.map((h) => h.value),
+        data: metrics.revenue.history.map((h: any) => h.value),
         borderColor: 'rgb(59, 130, 246)',
         backgroundColor: 'rgba(59, 130, 246, 0.1)',
         fill: true,
@@ -104,7 +104,7 @@ export const PerformanceMetrics = ({ metrics }: PerformanceMetricsProps) => {
       },
       {
         label: 'Efficacité (%)',
-        data: metrics.efficiency.history.map((h) => h.value),
+        data: metrics.efficiency.history.map((h: any) => h.value),
         borderColor: 'rgb(16, 185, 129)',
         backgroundColor: 'rgba(16, 185, 129, 0.1)',
         fill: true,
@@ -173,5 +173,5 @@ export const PerformanceMetrics = ({ metrics }: PerformanceMetricsProps) => {
         </div>
       </motion.div>
     </div>
-  );
-}; 
+};
+}

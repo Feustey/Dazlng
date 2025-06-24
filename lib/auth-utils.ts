@@ -2,14 +2,14 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
 
-interface AuthUser {
+export interface AuthUser {
   id: string
   email: string
   user_metadata?: unknown
   app_metadata?: unknown
 }
 
-interface AuthResult {
+export interface AuthResult {
   user: AuthUser | null
   error: string | null
   isAdmin: boolean
@@ -22,8 +22,8 @@ export async function getAuthenticatedUser(): Promise<AuthResult> {
   try {
     const cookieStore = await cookies()
     
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ""
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ""
     
     if (!supabaseUrl || !supabaseAnonKey) {
       console.error('[AUTH] Variables d\'environnement Supabase manquantes')
@@ -104,8 +104,8 @@ export async function requireAuth(request: Request): Promise<AuthResult> {
 
   const token = authHeader.replace('Bearer ', '')
   
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ""
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ""
   
   if (!supabaseUrl || !supabaseAnonKey) {
     console.error('[AUTH] Variables d\'environnement Supabase manquantes')
@@ -142,4 +142,4 @@ export async function requireAuth(request: Request): Promise<AuthResult> {
     error: null,
     isAdmin
   }
-} 
+}

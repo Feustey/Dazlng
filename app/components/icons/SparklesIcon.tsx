@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface SparklesIconProps {
+export interface SparklesIconProps {
   className?: string;
   'aria-hidden'?: boolean;
 }
@@ -20,5 +20,5 @@ export const SparklesIcon: React.FC<SparklesIconProps> = ({ className = '', 'ari
         clipRule="evenodd" 
       />
     </svg>
-  );
-}; 
+};
+}

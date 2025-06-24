@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { useGamificationSystem } from '../hooks/useGamificationSystem';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
 import { PerformanceMetrics } from '../components/ui/PerformanceMetrics';
@@ -9,13 +9,55 @@ import { CRMHeaderDashboard } from '../components/ui/CRMHeaderDashboard';
 import { ProfileCompletionEnhanced } from '../components/ui/ProfileCompletionEnhanced';
 import { SmartConversionCenter } from '../components/ui/SmartConversionCenter';
 import { PremiumConversionModal } from '../components/ui/PremiumConversionModal';
+import { getSupabaseBrowserClient } from '@/lib/supabase';
+
+export interface UserProfile {
+  id: string;
+  email: string;
+  prenom?: string;
+  nom?: string;
+  node_id?: string;
+  pubkey?: string;
+}
 
 const UserDashboard: FC = () => {
   const { user } = useSupabase();
   const { gamificationData, achievements } = useGamificationSystem();
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const profile = user?.profile;
+  // Charger le profil utilisateur
+  useEffect(() => {
+    const loadProfile = async (): Promise<void> => {
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const supabase = getSupabaseBrowserClient();
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('id, email, prenom, nom, node_id, pubkey')
+          .eq('id', user.id)
+          .single();
+
+        if (error) {
+          console.error('Erreur lors du chargement du profil:', error);
+        } else {
+          setProfile(data);
+        }
+      } catch (error) {
+        console.error('Erreur lors du chargement du profil:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProfile();
+  }, [user]);
+
   const hasNode = Boolean(profile?.node_id);
 
   const applyRecommendation = (id: string) => console.log('Recommandation appliquée:', id);
@@ -25,7 +67,7 @@ const UserDashboard: FC = () => {
     // Logique d'upgrade
   };
 
-  if (!user) {
+  if (!user || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -33,7 +75,7 @@ const UserDashboard: FC = () => {
           <p className="mt-4 text-gray-600">Chargement...</p>
         </div>
       </div>
-    );
+};
   }
 
   return (
@@ -85,7 +127,7 @@ const UserDashboard: FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            {gamificationData.achievements.map((achievement) => (
+            {gamificationData.achievements.map((achievement: any) => (
               <div 
                 key={achievement.id}
                 className={`p-4 rounded-lg border transition-all ${
@@ -234,7 +276,7 @@ const UserDashboard: FC = () => {
         />
       )}
     </div>
-  );
+};
 };
 
 export default UserDashboard;

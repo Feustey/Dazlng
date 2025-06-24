@@ -1,0 +1,136 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Architecture des Paiements Lightning
+
+## Structure des fichiers clés
+
+### Types et Validation
+- [types/lightning.ts](mdc:types/lightning.ts) - Types unifiés pour les paiements
+- [lib/validations/lightning.ts](mdc:lib/validations/lightning.ts) - Schémas de validation Zod
+
+### Services
+- [lib/services/lightning-service.ts](mdc:lib/services/lightning-service.ts) - Service Lightning principal
+- [lib/services/payment-logger.ts](mdc:lib/services/payment-logger.ts) - Service de logging
+
+### API Routes
+- [app/api/create-invoice/route.ts](mdc:app/api/create-invoice/route.ts) - Création de factures
+- [app/api/check-invoice/route.ts](mdc:app/api/check-invoice/route.ts) - Vérification des paiements
+
+### Interface utilisateur
+- [components/web/LightningPayment.tsx](mdc:components/web/LightningPayment.tsx) - Composant de paiement
+- [hooks/useToast.ts](mdc:hooks/useToast.ts) - Hook pour les notifications
+
+### Base de données
+- [supabase/migrations/20240526000000_payment_logs.sql](mdc:supabase/migrations/20240526000000_payment_logs.sql) - Migration payment_logs
+
+## Structure de la base de données
+
+### Table `payment_logs`
+
+```sql
+CREATE TABLE IF NOT EXISTS payment_logs (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  payment_hash TEXT NOT NULL UNIQUE,
+  amount INTEGER NOT NULL CHECK (amount > 0),
+  description TEXT NOT NULL,
+  status TEXT NOT NULL CHECK (status IN ('pending', 'paid', 'failed', 'cancelled')),
+  error TEXT,
+  metadata JSONB DEFAULT '{}'::jsonb,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### Index de performance
+```sql
+CREATE INDEX IF NOT EXISTS payment_logs_payment_hash_idx ON payment_logs (payment_hash);
+CREATE INDEX IF NOT EXISTS payment_logs_status_idx ON payment_logs (status);
+CREATE INDEX IF NOT EXISTS payment_logs_created_at_idx ON payment_logs (created_at DESC);
+```
+
+### Nettoyage automatique
+```sql
+-- Fonction pour nettoyer les vieux logs (30 jours)
+CREATE OR REPLACE FUNCTION cleanup_old_payment_logs()
+RETURNS TRIGGER AS $$
+BEGIN
+  DELETE FROM payment_logs
+  WHERE status IN ('paid', 'failed', 'cancelled')
+  AND created_at < NOW() - INTERVAL '30 days';
+  RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger pour le nettoyage automatique
+CREATE TRIGGER cleanup_old_payment_logs_trigger
+  AFTER INSERT ON payment_logs
+  FOR EACH STATEMENT
+  EXECUTE FUNCTION cleanup_old_payment_logs();
+```
+
+### Sécurité RLS
+```sql
+-- Politique pour les admins (accès complet)
+CREATE POLICY admin_payment_logs_policy ON payment_logs
+  FOR ALL
+  TO authenticated
+  USING (
+    EXISTS (
+      SELECT 1 FROM profiles
+      WHERE profiles.id = auth.uid()
+      AND profiles.role = 'admin'
+    )
+  );
+
+-- Politique pour les utilisateurs (lecture seule de leurs paiements)
+CREATE POLICY user_payment_logs_policy ON payment_logs
+  FOR SELECT
+  TO authenticated
+  USING (
+    payment_hash IN (
+      SELECT payment_hash FROM orders
+      WHERE orders.user_id = auth.uid()
+    )
+  );
+```
+
+## Règles de développement
+
+### 1. Service Lightning
+- Utiliser UNIQUEMENT `createLightningService()` pour les opérations Lightning
+- Ne jamais créer d'instance directe du service
+- Toujours gérer les erreurs avec try/catch
+- Logger les erreurs avec le préfixe "❌ LightningService"
+
+### 2. Validation des données
+- Valider TOUTES les entrées avec les schémas Zod
+- Utiliser la fonction `validateData` pour la validation
+- Ne jamais bypasser la validation
+- Retourner des erreurs de validation standardisées
+
+### 3. Logging des paiements
+- Logger TOUS les paiements dans la table `payment_logs`
+- Inclure les métadonnées pertinentes
+- Ne pas logger d'informations sensibles
+- Utiliser les statuts standardisés ('pending', 'paid', 'failed', 'cancelled')
+
+### 4. Sécurité
+- Ne jamais exposer les clés API côté client
+- Valider les montants (min: 1 sat)
+- Utiliser les politiques RLS Supabase
+- Nettoyer les logs après 30 jours
+
+### 5. Interface utilisateur
+- Utiliser le composant `LightningPayment` pour tous les paiements
+- Gérer tous les états de paiement
+- Afficher des notifications toast pour le feedback
+- Supporter mobile et desktop
+
+### 6. Tests
+- Tester tous les cas d'erreur
+- Valider les montants limites
+- Tester les timeouts
+- Vérifier les politiques RLS

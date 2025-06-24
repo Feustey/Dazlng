@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import { z } from 'zod';
-import { daznoAPI } from '@/lib/services/dazno-api';
+import { getSupabaseServerPublicClient } from '@/lib/supabase';
+import { createLightningService } from '@/lib/services/lightning-service';
+import { validateData, createInvoiceSchema } from '@/lib/validations/lightning';
+import type { Invoice, CreateInvoiceParams } from '@/types/lightning';
 import { OrderService } from '@/lib/services/order-service';
+import { PaymentLogger } from '@/lib/services/payment-logger';
+import { ApiResponse } from '@/lib/api-response';
+import { createDazNodeLightningService } from '@/lib/services/daznode-lightning-service';
+import { validateRequestBody } from '@/lib/validations';
+import { z } from 'zod';
 
 export const dynamic = "force-dynamic";
 export const runtime = 'nodejs';
@@ -12,15 +17,16 @@ export const runtime = 'nodejs';
 const PROVIDER = 'daznode@getalby.com';
 const CORS_ORIGINS = ['https://daznode.com', 'https://app.daznode.com', 'http://localhost:3001'];
 
-// Schéma de validation Zod
-const CreateInvoiceSchema = z.object({
-  amount: z.number().positive(),
-  description: z.string().min(1),
-  metadata: z.record(z.unknown()).optional()
-});
+// Configuration CORS
+const corsHeaders = {
+  'Access-Control-Allow-Origin': CORS_ORIGINS.join(', '),
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Max-Age': '86400', // 24 heures
+};
 
-// Types
-interface ApiResponse<T> {
+// Types de réponse API
+interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   error?: {
@@ -33,14 +39,6 @@ interface ApiResponse<T> {
     provider: string;
   };
 }
-
-// Configuration CORS
-const corsHeaders = {
-  'Access-Control-Allow-Origin': CORS_ORIGINS.join(', '),
-  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Access-Control-Max-Age': '86400', // 24 heures
-};
 
 // Codes d'erreur
 const ErrorCodes = {
@@ -71,68 +69,25 @@ export async function GET(): Promise<Response> {
   });
 }
 
-export async function POST(req: NextRequest): Promise<Response> {
-  console.log(`🚀 create-invoice - Nouvelle requête via DaznoAPI`);
+export async function POST(request: Request): Promise<Response> {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    const data = await validateRequestBody(request, createInvoiceSchema);
+    const lightning = createDazNodeLightningService();
+    const invoice = await lightning.generateInvoice(data);
     
-    if (sessionError || !session) {
-      console.error('❌ Erreur d\'authentification:', sessionError);
-      return createErrorResponse('UNAUTHORIZED', 'Authentification requise', sessionError?.message, 401);
-    }
-    
-    // Validation des données d'entrée avec Zod
-    const body = await req.json();
-    const validationResult = CreateInvoiceSchema.safeParse(body);
-    if (!validationResult.success) {
-      return createErrorResponse('VALIDATION_ERROR', 'Données invalides', validationResult.error.format());
-    }
-    const { amount, description, metadata } = validationResult.data;
-    console.log('✅ create-invoice - Paramètres validés:', { amount, description });
-
-    // Création de la facture via l'API Dazno
-    const invoice = await daznoAPI.createInvoice({
-      amount,
-      description,
-      metadata,
-    });
-
-    // Persistance de la commande dans la base de données
-    const orderService = new OrderService();
-    const order = await orderService.createOrder({
-      product_type: (metadata?.product_type as 'daznode' | 'dazbox' | 'dazpay') || 'daznode',
-      amount,
-      customer: (metadata?.customer as { name: string; email: string; address?: string; plan?: 'basic' | 'premium' | 'enterprise' }) || { name: '', email: '' },
-      plan: (metadata?.plan as 'basic' | 'premium' | 'enterprise') || undefined,
-      billing_cycle: (metadata?.billing_cycle as 'monthly' | 'yearly') || undefined,
-      metadata: {
-        ...metadata,
-        payment_hash: invoice.paymentHash,
-        payment_request: invoice.paymentRequest,
-      },
-    });
-
-    return NextResponse.json<ApiResponse<{ invoice: any; order: any; provider: string }>>({
+    return NextResponse.json({
       success: true,
-      data: {
-        invoice,
-        order,
-        provider: PROVIDER
-      },
-      meta: {
-        timestamp: new Date().toISOString(),
-        provider: PROVIDER
-      }
-    }, { headers: corsHeaders });
+      data: invoice
+    });
   } catch (error) {
-    console.error('❌ create-invoice - Erreur:', error);
-    return createErrorResponse(
-      'LIGHTNING_ERROR',
-      'Erreur lors de la génération de la facture',
-      error instanceof Error ? error.message : 'Erreur inconnue',
-      500
-    );
+    console.error('❌ Erreur création facture:', error);
+    return NextResponse.json({
+      success: false,
+      error: {
+        code: 'INVOICE_CREATION_ERROR',
+        message: error instanceof Error ? error.message : 'Erreur inconnue'
+      }
+    }, { status: 500 });
   }
 }
 
@@ -152,4 +107,4 @@ function createErrorResponse(code: keyof typeof ErrorCodes, message: string, det
     status,
     headers: corsHeaders
   });
-} 
+}

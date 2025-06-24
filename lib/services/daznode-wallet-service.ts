@@ -1,4 +1,130 @@
-import { webln } from '@getalby/sdk';
+// Types pour NWC
+export interface NWCConfig {
+  nostrWalletConnectUrl: string;
+}
+
+export interface NWCInvoiceParams {
+  amount: number;
+  defaultMemo: string;
+}
+
+export interface NWCInvoiceResult {
+  paymentRequest: string;
+  paymentHash?: string;
+}
+
+export interface NWCLookupResult {
+  paid: boolean;
+  settledAt?: string;
+  canceled?: boolean;
+  expired?: boolean;
+  amount?: number;
+}
+
+export interface NWCBalanceResult {
+  balance: number;
+}
+
+class NWC {
+  private url: string | null = null;
+  private ws: WebSocket | null = null;
+  private messageHandlers: Map<string, (response: any) => void> = new Map();
+  private connected = false;
+
+  constructor(config: NWCConfig) {
+    this.url = config.nostrWalletConnectUrl;
+  }
+
+  async enable(): Promise<void> {
+    if (this.connected) return;
+    
+    return new Promise((resolve: any, reject: any) => {
+      try {
+        this.ws = new WebSocket(this.url);
+        
+        this.ws?.onopen = () => {
+          this.connected = true;
+          resolve();
+        };
+        
+        this.ws?.onerror = (error: any) => {
+          reject(new Error(`Erreur WebSocket: ${error}`));
+        };
+        
+        this.ws?.onmessage = (event: any) => {
+          const response = JSON.parse(event.data);
+          const handler = this.messageHandlers?.get(response.id);
+          if (handler) {
+            handler(response);
+            this.messageHandlers?.delete(response.id);
+          }
+        };
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  private async sendRequest<T>(method: string, params: any): Promise<T> {
+    if (!this.ws || !this.connected) {
+      throw new Error('WebSocket non connecté');
+    }
+
+    return new Promise((resolve: any, reject: any) => {
+      const id = Math.random().toString(36).substring(7);
+      
+      this.messageHandlers?.set(id, (response: any) => {
+        if (response.error) {
+          reject(new Error(response.error));
+        } else {
+          resolve(response.result);
+        }
+      });
+
+      // Vérification de null safety
+      if (!this.ws) {
+        reject(new Error('WebSocket déconnecté'));
+        return;
+      }
+
+      this.ws?.send(JSON.stringify({
+        id,
+        method,
+        params
+      }));
+    });
+  }
+
+  async makeInvoice(params: NWCInvoiceParams): Promise<NWCInvoiceResult> {
+    if (!this.ws || !this.connected) {
+      throw new Error('WebSocket non connecté');
+    }
+    return this.sendRequest('makeInvoice', params);
+  }
+
+  async lookupInvoice(params: { paymentHash: string }): Promise<NWCLookupResult> {
+    if (!this.ws || !this.connected) {
+      throw new Error('WebSocket non connecté');
+    }
+    return this.sendRequest('lookupInvoice', params);
+  }
+
+  async getBalance(): Promise<NWCBalanceResult> {
+    if (!this.ws || !this.connected) {
+      throw new Error('WebSocket non connecté');
+    }
+    return this.sendRequest('getBalance', {});
+  }
+
+  close(): void {
+    if (this.ws) {
+      this.ws?.close();
+      this.ws = null;
+      this.connected = false;
+      this.messageHandlers?.clear();
+    }
+  }
+}
 
 // Polyfill WebSocket pour Node.js
 if (typeof global !== 'undefined' && !global.WebSocket) {
@@ -10,20 +136,20 @@ if (typeof global !== 'undefined' && !global.WebSocket) {
   }
 }
 
-interface DazNodeWalletConfig {
+export interface DazNodeWalletConfig {
   appPublicKey: string;
   walletPublicKey: string;
   relayUrl: string;
   secret: string;
 }
 
-interface DazNodeInvoiceParams {
+export interface DazNodeInvoiceParams {
   amount: number;
   description: string;
   expiry?: number;
 }
 
-interface DazNodeInvoice {
+export interface DazNodeInvoice {
   id: string;
   paymentRequest: string;
   paymentHash: string;
@@ -33,21 +159,21 @@ interface DazNodeInvoice {
   description: string;
 }
 
-interface DazNodeInvoiceStatus {
-  status: 'pending' | 'settled' | 'cancelled' | 'expired';
+export interface DazNodeInvoiceStatus {
+  status: InvoiceStatus.pending | InvoiceStatus.settled | 'cancelled' | InvoiceStatus.expired;
   settledAt?: string;
   amount?: number;
 }
 
 export class DazNodeWalletService {
-  private config: DazNodeWalletConfig;
-  private nwc: any;
-  private simulationMode: boolean = false;
+  private config: DazNodeWalletConfig | null = null;
+  private nwc: NWC | null = null;
+  private simulationMode = false;
 
   constructor(config: DazNodeWalletConfig) {
     this.config = config;
     // Activer le mode simulation si le secret n'est pas configuré
-    this.simulationMode = !config.secret || config.secret === 'votre_secret_nwc_ici' || config.secret === 'b5264968ca3e66af8afc23934c2480c7b0e180c7c62bab55d14f012d9d541324';
+    this.simulationMode = !config.secret || config.secret === 'votre_secret_nwc_ici' || config.secret === 'b5264968ca3e66af8afc23934c2480c7c62bab55d14f012d9d541324';
   }
 
   /**
@@ -60,20 +186,20 @@ export class DazNodeWalletService {
       console.log('🔗 DazNodeWallet - Initialisation connexion NWC...');
       
       // Vérification du secret NWC
-      if (!this.config.secret || this.config.secret === 'votre_secret_nwc_ici') {
+      if (!this.config?.secret || this.config?.secret === 'votre_secret_nwc_ici') {
         console.log('⚠️ DazNodeWallet - Secret NWC non configuré, mode simulation activé');
         throw new Error('SECRET_NWC_NON_CONFIGURE');
       }
       
       // Construction de l'URL NWC avec les paramètres DazNode
-      const nwcUrl = `nostr+walletconnect://${this.config.walletPublicKey}?relay=${encodeURIComponent(this.config.relayUrl)}&secret=${this.config.secret}`;
+      const nwcUrl = `nostr+walletconnect://${this.config?.walletPublicKey}?relay=${encodeURIComponent(this.config?.relayUrl)}&secret=${this.config?.secret}`;
       
-      this.nwc = new webln.NWC({ nostrWalletConnectUrl: nwcUrl });
-      await this.nwc.enable();
+      this.nwc = new NWC({ nostrWalletConnectUrl: nwcUrl });
+      await (this ?? Promise.reject(new Error("this is null"))).nwc?.enable();
       
       console.log('✅ DazNodeWallet - Connexion NWC établie');
-      console.log(`   - App Public Key: ${this.config.appPublicKey.substring(0, 20)}...`);
-      console.log(`   - Wallet Public Key: ${this.config.walletPublicKey.substring(0, 20)}...`);
+      console.log(`   - App Public Key: ${this.config?.appPublicKey.substring(0, 20)}...`);
+      console.log(`   - Wallet Public Key: ${this.config?.walletPublicKey.substring(0, 20)}...`);
       
     } catch (error) {
       if (error instanceof Error && error.message === 'SECRET_NWC_NON_CONFIGURE') {
@@ -81,7 +207,7 @@ export class DazNodeWalletService {
       }
       
       console.error('❌ DazNodeWallet - Erreur initialisation NWC:', error);
-      throw new Error(`Impossible de se connecter au wallet DazNode: ${error}`);
+      throw new Error(`Impossible de se connecter au wallet DazNode: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 
@@ -90,7 +216,7 @@ export class DazNodeWalletService {
    */
   async generateInvoice(params: DazNodeInvoiceParams): Promise<DazNodeInvoice> {
     try {
-      console.log('📄 DazNodeWallet - Génération facture:', {
+      console.log('�� DazNodeWallet - Génération facture:', {
         amount: params.amount,
         description: params.description?.substring(0, 50),
         expiry: params.expiry,
@@ -116,14 +242,14 @@ export class DazNodeWalletService {
       }
 
       // Initialiser la connexion NWC
-      await this.initializeNWC();
+      await (this ?? Promise.reject(new Error("this is null"))).initializeNWC();
 
       // Sanitiser la description pour NWC
       let safeMemo = params.description.normalize('NFKD').replace(/[^\x00-\x7F]/g, '');
       if (!safeMemo) safeMemo = 'DazNode Payment';
 
       // Créer la facture via NWC
-      const result = await this.nwc.makeInvoice({
+      const result = await (this ?? Promise.reject(new Error("this is null"))).nwc?.makeInvoice({
         amount: params.amount,
         defaultMemo: safeMemo,
       });
@@ -180,21 +306,21 @@ export class DazNodeWalletService {
       }
 
       // Initialiser la connexion NWC
-      await this.initializeNWC();
+      await (this ?? Promise.reject(new Error("this is null"))).initializeNWC();
 
       // Vérifier le statut via NWC
-      const invoice = await this.nwc.lookupInvoice({ paymentHash });
+      const invoice = await (this ?? Promise.reject(new Error("this is null"))).nwc?.lookupInvoice({ paymentHash });
 
-      let status: 'pending' | 'settled' | 'cancelled' | 'expired' = 'pending';
+      let status: InvoiceStatus.pending | InvoiceStatus.settled | 'cancelled' | InvoiceStatus.expired = InvoiceStatus.pending;
       let settledAt: string | undefined;
 
       if (invoice.paid) {
-        status = 'settled';
+        status = InvoiceStatus.settled;
         settledAt = invoice.settledAt || new Date().toISOString();
       } else if (invoice.canceled) {
         status = 'cancelled';
       } else if (invoice.expired) {
-        status = 'expired';
+        status = InvoiceStatus.expired;
       }
 
       console.log('✅ DazNodeWallet - Statut vérifié:', status);
@@ -210,7 +336,7 @@ export class DazNodeWalletService {
       
       // Si la facture n'est pas trouvée, elle est peut-être expirée
       if (error instanceof Error && error.message.includes('not found')) {
-        return { status: 'expired' };
+        return { status: InvoiceStatus.expired };
       }
       
       throw new Error(`Erreur vérification DazNode: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
@@ -239,16 +365,16 @@ export class DazNodeWalletService {
       }
 
       // Initialiser la connexion NWC
-      await this.initializeNWC();
+      await (this ?? Promise.reject(new Error("this is null"))).initializeNWC();
 
       // Obtenir les informations du wallet
-      const balance = await this.nwc.getBalance();
+      const balance = await (this ?? Promise.reject(new Error("this is null"))).nwc?.getBalance();
       
       return {
         isOnline: true,
         walletInfo: {
           balance: balance.balance || 0,
-          publicKey: this.config.walletPublicKey,
+          publicKey: this.config?.walletPublicKey,
           alias: 'DazNode Wallet'
         }
       };
@@ -265,7 +391,7 @@ export class DazNodeWalletService {
   async close(): Promise<void> {
     if (this.nwc) {
       try {
-        this.nwc.close();
+        this.nwc?.close();
         this.nwc = null;
         console.log('✅ DazNodeWallet - Connexion fermée');
       } catch (error) {
@@ -319,7 +445,7 @@ export class DazNodeWalletService {
     console.log('✅ DazNodeWallet - Statut simulé vérifié: pending');
     
     return {
-      status: 'pending',
+      status: InvoiceStatus.pending,
       amount: 1000 // Montant par défaut pour simulation
     };
   }
@@ -341,7 +467,7 @@ export class DazNodeWalletService {
       isOnline: true,
       walletInfo: {
         balance: 50000, // 50k sats de simulation
-        publicKey: this.config.walletPublicKey,
+        publicKey: this.config?.walletPublicKey,
         alias: 'DazNode Wallet (SIMULATION)'
       }
     };
@@ -375,10 +501,10 @@ export function createDazNodeWalletService(): DazNodeWalletService {
   console.log('🏗️ DazNodeWallet - Initialisation...');
 
   const config: DazNodeWalletConfig = {
-    appPublicKey: process.env.APP_PUKEY || process.env.DAZNODE_APP_PUBLIC_KEY || '69620ced6b014d8b6013aa86c6b37cd86f28a5843ce8b430b5d96d7bc991c697',
-    walletPublicKey: process.env.WALLET_PUKEY || process.env.DAZNODE_WALLET_PUBLIC_KEY || 'de79365f2b0b81561d7eb12963173a80a3e78ff0c88262dcdde0118a9deb8e30',
-    relayUrl: process.env.DAZNODE_RELAY_URL || 'wss://relay.getalby.com/v1',
-    secret: process.env.DAZNODE_WALLET_SECRET || 'b5264968ca3e66af8afc23934c2480c7b0e180c7c62bab55d14f012d9d541324'
+    appPublicKey: process.env.APP_PUKEY ?? "" || process.env.DAZNODE_APP_PUBLIC_KEY ?? "" || '69620ced6b014d8b6013aa86c6b37cd86f28a5843ce8b430b5d96d7bc991c697',
+    walletPublicKey: process.env.WALLET_PUKEY ?? "" || process.env.DAZNODE_WALLET_PUBLIC_KEY ?? "" || 'de79365f2b0b81561d7eb12963173a80a3e78ff0c88262dcdde0118a9deb8e30',
+    relayUrl: process.env.DAZNODE_RELAY_URL ?? "" || 'wss://relay.getalby.com/v1',
+    secret: process.env.DAZNODE_WALLET_SECRET ?? "" || 'b5264968ca3e66af8afc23934c2480c7b0e180c7c62bab55d14f012d9d541324'
   };
 
   // Validation de la configuration
@@ -404,4 +530,4 @@ export type {
   DazNodeInvoice, 
   DazNodeInvoiceParams, 
   DazNodeInvoiceStatus 
-}; 
+}

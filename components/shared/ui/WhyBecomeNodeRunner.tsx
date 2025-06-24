@@ -1,54 +1,6 @@
 import React from 'react';
 
-const WhyBecomeNodeRunner: React.FC = (): React.ReactElement => {
-  const benefits = [
-    {
-      icon: "💰",
-      title: "Générer des revenus passifs",
-      description: "Gagnez des frais sur chaque transaction qui transite par votre nœud",
-      details: [
-        "Revenus potentiels : 50-200€/mois selon votre configuration",
-        "ROI typique : 15-25% annuel après optimisation",
-        "Paiements automatiques en Bitcoin"
-      ],
-      gradient: "from-green-500 to-emerald-600"
-    },
-    {
-      icon: "🌍",
-      title: "Contribuer à la révolution financière",
-      description: "Participez à la construction d'un système financier libre et décentralisé",
-      details: [
-        "Chaque nœud renforce la résistance à la censure du réseau Bitcoin",
-        "Devenez votre propre banque, sans intermédiaire",
-        "Soutenez l'adoption mondiale de Bitcoin"
-      ],
-      gradient: "from-blue-500 to-cyan-600"
-    },
-    {
-      icon: "🤝",
-      title: "Rejoindre une communauté passionnée",
-      description: "Accédez à notre Discord privé avec +500 node runners",
-      details: [
-        "Partagez stratégies et conseils avec des experts",
-        "Entraide technique 24/7 de la communauté",
-        "Webinaires et formations exclusives"
-      ],
-      gradient: "from-purple-500 to-violet-600"
-    },
-    {
-      icon: "🔒",
-      title: "Sécurité et contrôle total",
-      description: "Validez vos propres transactions Bitcoin",
-      details: [
-        "Ne dépendez plus des services tiers",
-        "Gardez le contrôle de vos fonds à 100%",
-        "Confidentialité maximale de vos transactions"
-      ],
-      gradient: "from-orange-500 to-red-600"
-    }
-  ];
-
-  return (
+const WhyBecomeNodeRunner: React.FC = () => {
     <section id="why-become-runner" className="py-20 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-16">
@@ -62,7 +14,7 @@ const WhyBecomeNodeRunner: React.FC = (): React.ReactElement => {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
-          {benefits.map((benefit, index) => (
+          {benefits.map((benefit: any, index: any) => (
             <div 
               key={index}
               className="group bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
@@ -77,7 +29,7 @@ const WhyBecomeNodeRunner: React.FC = (): React.ReactElement => {
               
               <div className="p-8">
                 <ul className="space-y-3">
-                  {benefit.details.map((detail, detailIndex) => (
+                  {benefit.details.map((detail: any, detailIndex: any) => (
                     <li key={detailIndex} className="flex items-start">
                       <span className="text-green-500 mr-3 mt-1">✓</span>
                       <span className="text-gray-700">{detail}</span>
@@ -112,7 +64,7 @@ const WhyBecomeNodeRunner: React.FC = (): React.ReactElement => {
         </div>
       </div>
     </section>
-  );
+};
 };
 
 export default WhyBecomeNodeRunner; 

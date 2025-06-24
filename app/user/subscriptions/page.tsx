@@ -4,7 +4,7 @@ import React, { FC, useEffect, useState, useCallback } from 'react';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
 import QRCode from 'qrcode';
 
-interface Subscription {
+export interface Subscription {
   id: string;
   userId: string;
   planId: string;
@@ -22,7 +22,7 @@ interface Subscription {
   cancelReason?: string;
 }
 
-interface Plan {
+export interface Plan {
   id: string;
   name: string;
   description: string;
@@ -39,7 +39,7 @@ interface Plan {
   trialDays?: number;
 }
 
-interface Invoice {
+export interface Invoice {
   id: string;
   order_id: string;
   userId: string;
@@ -69,7 +69,7 @@ interface ApiResponse<T> {
   };
 }
 
-interface InvoiceData {
+export interface InvoiceData {
   paymentRequest: string;
   paymentHash: string;
   amount: number;
@@ -218,7 +218,7 @@ const SubscriptionsPage: FC = () => {
       <span className={`px-2 py-1 text-xs font-medium rounded-full ${colors[status]}`}>
         {labels[status]}
       </span>
-    );
+};
   };
 
   const getInvoiceStatusBadge = (status: Invoice['status']): JSX.Element => {
@@ -242,7 +242,7 @@ const SubscriptionsPage: FC = () => {
       <span className={`px-2 py-1 text-xs font-medium rounded-full ${colors[status]}`}>
         {labels[status]}
       </span>
-    );
+};
   };
 
   const formatDate = (dateString: string): string => {
@@ -445,7 +445,7 @@ const SubscriptionsPage: FC = () => {
           </div>
         </div>
       </div>
-    );
+};
   }
 
   // Vérification de l'authentification
@@ -459,7 +459,7 @@ const SubscriptionsPage: FC = () => {
           </a>
         </div>
       </div>
-    );
+};
   }
 
   if (error) {
@@ -482,7 +482,7 @@ const SubscriptionsPage: FC = () => {
           </button>
         </div>
       </div>
-    );
+};
   }
 
   return (
@@ -558,7 +558,7 @@ const SubscriptionsPage: FC = () => {
                     <div>
                       <h3 className="font-medium text-gray-700 mb-2">Fonctionnalités incluses</h3>
                       <ul className="space-y-1 text-sm">
-                        {currentSubscription.features.map((feature, index) => (
+                        {currentSubscription.features.map((feature: any, index: any) => (
                           <li key={index} className="flex items-center gap-2">
                             <span className="text-green-500">✓</span>
                             {feature}
@@ -811,7 +811,7 @@ const SubscriptionsPage: FC = () => {
                 <div className="bg-blue-50 rounded-lg p-4">
                   <div className="text-sm text-gray-500">Montant total</div>
                   <div className="text-2xl font-bold">
-                    {formatSats(invoices.reduce((sum, i) => sum + i.total, 0))} sats
+                    {formatSats(invoices.reduce((sum: any, i: any) => sum + i.total, 0))} sats
                   </div>
                 </div>
                 <div className="bg-red-50 rounded-lg p-4">
@@ -824,7 +824,7 @@ const SubscriptionsPage: FC = () => {
 
               {/* Filtres des factures */}
               <div className="flex gap-2">
-                {['all', 'paid', 'sent', 'overdue'].map((status) => (
+                {['all', 'paid', 'sent', 'overdue'].map((status: any) => (
                   <button
                     key={status}
                     onClick={() => setInvoiceFilter(status)}
@@ -872,7 +872,7 @@ const SubscriptionsPage: FC = () => {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {invoices.map((invoice) => (
+                  {invoices.map((invoice: any) => (
                     <div key={invoice.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition">
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
@@ -938,7 +938,7 @@ const SubscriptionsPage: FC = () => {
         </div>
       </div>
     </div>
-  );
+};
 };
 
 export default SubscriptionsPage;

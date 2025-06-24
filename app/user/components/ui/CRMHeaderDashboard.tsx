@@ -1,7 +1,7 @@
 import React from 'react';
 import { UserProfile, CRMData } from '../../types';
 
-interface CRMHeaderDashboardProps {
+export interface CRMHeaderDashboardProps {
   userProfile: UserProfile;
   crmData: CRMData;
   onUpgradeToPremium: () => void;
@@ -165,5 +165,5 @@ export const CRMHeaderDashboard: React.FC<CRMHeaderDashboardProps> = ({
         </div>
       </div>
     </div>
-  );
-}; 
+};
+}

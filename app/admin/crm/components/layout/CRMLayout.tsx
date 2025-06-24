@@ -3,7 +3,7 @@
 import React from 'react';
 import { Layout } from 'react-admin';
 
-export const CRMLayout: React.FC<any> = (props) => (
+export const CRMLayout: React.FC<any> = (props: any) => (
   <Layout
     {...props}
     sx={{
@@ -38,4 +38,4 @@ export const CRMLayout: React.FC<any> = (props) => (
       },
     }}
   />
-); 
+}

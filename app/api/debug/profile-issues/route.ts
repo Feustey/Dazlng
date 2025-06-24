@@ -9,7 +9,7 @@ export async function GET(_request: NextRequest): Promise<ReturnType<typeof Next
     const supabase = await createSupabaseServerClient()
     
     // En développement, permettre l'accès sans auth pour diagnostic
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV ?? "" === 'development') {
       // Pas d'auth requise en dev
     } else {
       // En production, vérifier l'authentification admin
@@ -52,4 +52,4 @@ export async function GET(_request: NextRequest): Promise<ReturnType<typeof Next
     console.error("Erreur lors du diagnostic des profils:", error);
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
-} 
+}

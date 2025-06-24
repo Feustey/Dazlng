@@ -46,8 +46,7 @@ const jsonLd = {
   ]
 };
 
-const DazPayPage: React.FC = (): React.ReactElement => {
-  return (
+const DazPayPage: React.FC = () => {
     <main className="min-h-screen">
       {/* Schema.org JSON-LD */}
       <script
@@ -267,7 +266,7 @@ const DazPayPage: React.FC = (): React.ReactElement => {
         </div>
       </section>
     </main>
-  );
+};
 };
 
 export default DazPayPage; 

@@ -21,7 +21,7 @@ export const DaziaHeader = () => {
       
       {/* Particules animées */}
       <div className="absolute inset-0">
-        {[...Array(20)].map((_, i) => (
+        {[...Array(20)].map((_: any, i: any) => (
           <motion.div
             key={i}
             className="absolute h-1 w-1 rounded-full bg-white/30"
@@ -43,5 +43,5 @@ export const DaziaHeader = () => {
         ))}
       </div>
     </motion.div>
-  );
-}; 
+};
+}

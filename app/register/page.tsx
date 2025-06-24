@@ -4,15 +4,15 @@ import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 
-export default function RegisterPage(): React.ReactElement {
+export default function RegisterPage(): React.FC {
   return (
     <Suspense fallback={<div>Chargement...</div>}>
       <RegisterPageContent />
     </Suspense>
-  );
+};
 }
 
-function RegisterPageContent(): React.ReactElement {
+function RegisterPageContent(): React.FC {
   const searchParams = useSearchParams();
   const router = useRouter();
   const urlEmail = searchParams?.get("email") || "";
@@ -191,7 +191,7 @@ function RegisterPageContent(): React.ReactElement {
                 id="email"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e: any) => setEmail(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="votre@email.com"
                 required
@@ -219,7 +219,7 @@ function RegisterPageContent(): React.ReactElement {
                 id="code"
                 type="text"
                 value={code}
-                onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                onChange={(e: any) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-center text-2xl tracking-widest"
                 placeholder="000000"
                 maxLength={6}
@@ -258,7 +258,7 @@ function RegisterPageContent(): React.ReactElement {
                   id="prenom"
                   type="text"
                   value={profile.prenom}
-                  onChange={(e) => setProfile({ ...profile, prenom: e.target.value })}
+                  onChange={(e: any) => setProfile({ ...profile, prenom: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="Votre prénom"
                   required
@@ -273,7 +273,7 @@ function RegisterPageContent(): React.ReactElement {
                   id="nom"
                   type="text"
                   value={profile.nom}
-                  onChange={(e) => setProfile({ ...profile, nom: e.target.value })}
+                  onChange={(e: any) => setProfile({ ...profile, nom: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="Votre nom"
                   required
@@ -329,5 +329,5 @@ function RegisterPageContent(): React.ReactElement {
         </p>
       </div>
     </div>
-  );
-} 
+};
+}

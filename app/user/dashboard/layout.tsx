@@ -4,10 +4,10 @@ import { ReactNode } from 'react';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-interface UserDashboardLayoutProps {
+export interface UserDashboardLayoutProps {
   children: ReactNode;
 }
 
 export default function UserDashboardLayout({ children }: UserDashboardLayoutProps): JSX.Element {
   return <>{children}</>;
-} 
+}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, Star, Zap, TrendingUp, Shield, Headphones } from 'lucide-react';
 
-interface ConversionCenterPremiumProps {
+export interface ConversionCenterPremiumProps {
   isOpen: boolean;
   onClose: () => void;
   onUpgrade: () => void;
@@ -117,7 +117,7 @@ export const ConversionCenterPremium: React.FC<ConversionCenterPremiumProps> = (
           {activeTab === 'features' && (
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {features.map((feature, index) => (
+                {features.map((feature: any, index: any) => (
                   <div key={index} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
                     <div className="flex items-start gap-3">
                       {feature.icon}
@@ -199,7 +199,7 @@ export const ConversionCenterPremium: React.FC<ConversionCenterPremiumProps> = (
                     content: "Interface intuitive et recommandations précises. Je comprends enfin comment optimiser mon nœud efficacement.",
                     metrics: "+85% performance"
                   }
-                ].map((testimonial, index) => (
+                ].map((testimonial: any, index: any) => (
                   <div key={index} className="bg-gray-50 rounded-lg p-6 border border-gray-200">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="text-2xl">{testimonial.avatar}</div>
@@ -244,5 +244,5 @@ export const ConversionCenterPremium: React.FC<ConversionCenterPremiumProps> = (
         </div>
       </div>
     </div>
-  );
-}; 
+};
+}

@@ -22,10 +22,10 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
       return AdminResponseBuilder.error(
         ErrorCodes.VALIDATION_ERROR,
         filterResult.error || 'Paramètres invalides'
-      );
+};
     }
     
-    const filters = filterResult.data;
+    const filters = filterResult.data!;
     const page = filters.page || 1;
     const limit = filters.limit || 20;
     const sortBy = filters.sortBy || 'created_at';
@@ -49,12 +49,12 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
       `, { count: 'exact' });
     
     // Application des filtres
-    if (filters.searchTerm) {
-      query = query.or(`email.ilike.%${filters.searchTerm}%,nom.ilike.%${filters.searchTerm}%,prenom.ilike.%${filters.searchTerm}%`);
+    if (filters.search) {
+      query = query.or(`email.ilike.%${filters.search}%,nom.ilike.%${filters.search}%,prenom.ilike.%${filters.search}%`);
     }
     
-    if (filters.status && filters.status !== 'all') {
-      switch (filters.status) {
+    if (filters.filters?.status && filters.filters.status !== 'all') {
+      switch (filters.filters.status) {
         case 'active':
           query = query.eq('email_verified', true);
           break;
@@ -65,12 +65,12 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
     }
     
     // Filtre par plage de dates
-    if (filters.dateRange) {
-      if (filters.dateRange.start) {
-        query = query.gte('created_at', filters.dateRange.start);
+    if (filters.filters?.dateRange) {
+      if (filters.filters.dateRange.start) {
+        query = query.gte('created_at', filters.filters.dateRange.start);
       }
-      if (filters.dateRange.end) {
-        query = query.lte('created_at', filters.dateRange.end);
+      if (filters.filters.dateRange.end) {
+        query = query.lte('created_at', filters.filters.dateRange.end);
       }
     }
     
@@ -88,7 +88,7 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
       return AdminResponseBuilder.error(
         ErrorCodes.DATABASE_ERROR,
         'Erreur lors de la récupération des utilisateurs'
-      );
+};
     }
     
     if (!profiles || profiles.length === 0) {
@@ -120,19 +120,17 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
       const ordersCount = userOrders.length;
       const totalSpent = userOrders
         .filter(o => o.payment_status === 'paid')
-        .reduce((sum, order) => sum + (order.amount || 0), 0);
+        .reduce((sum: any, order: any) => sum + (order.amount || 0), 0);
       
       // Abonnement actuel
       const activeSubscription = subscriptionsData.data?.find(
         s => s.user_id === profile.id && s.status === 'active'
-      );
-      
+};
       // Dernière activité
       const lastActivity = new Date(profile.updated_at);
       const daysSinceLastActivity = Math.floor(
         (Date.now() - lastActivity.getTime()) / (1000 * 60 * 60 * 24)
-      );
-      
+};
       return {
         ...profile,
         statistics: {
@@ -158,8 +156,7 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
         count: enrichedProfiles.length,
         filters: filterResult.data
       }
-    );
-    
+};
     return AdminResponseBuilder.paginated(
       enrichedProfiles,
       count || 0,
@@ -173,8 +170,7 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
           includesActivity: true
         }
       }
-    );
-    
+};
   } catch (error) {
     console.error('Erreur lors de la récupération des utilisateurs enrichis:', error);
     return AdminResponseBuilder.error(
@@ -182,7 +178,7 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
       'Erreur lors de la récupération des utilisateurs',
       null,
       500
-    );
+};
   }
 }
 
@@ -192,4 +188,4 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
 export const GET = withEnhancedAdminAuth(
   getEnhancedUsersHandler,
   { resource: 'users', action: 'read' }
-); 
+}

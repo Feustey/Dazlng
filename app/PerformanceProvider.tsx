@@ -1,9 +1,10 @@
+import React from 'react';
 'use client';
 
 import { useWebVitals } from '../hooks/useWebVitals';
 import { PageLoader } from '../components/shared/ui/PageLoader';
 
-interface PerformanceProviderProps {
+export interface PerformanceProviderProps {
   children: React.ReactNode;
 }
 
@@ -18,5 +19,5 @@ export default function PerformanceProvider({ children }: PerformanceProviderPro
       
       {children}
     </>
-  );
-} 
+};
+}

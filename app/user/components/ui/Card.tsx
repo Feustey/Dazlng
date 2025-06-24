@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-interface UpgradePromptProps {
+export interface UpgradePromptProps {
   message?: string;
   ctaText?: string;
   onUpgrade?: () => void;
@@ -21,7 +21,7 @@ const UpgradePrompt: FC<UpgradePromptProps> = ({
         {ctaText}
       </button>
     </div>
-  );
+};
 };
 
 export default UpgradePrompt;

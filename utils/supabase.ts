@@ -6,7 +6,7 @@ import { getSupabaseAdminClient } from '../lib/supabase';
 const DEFAULT_PAGE_SIZE = 20;
 const MAX_PAGE_SIZE = 100;
 
-interface PaginationParams {
+export interface PaginationParams {
   page?: number;
   pageSize?: number;
 }
@@ -364,4 +364,4 @@ export async function updateSubscriptionStatus(id: string, status: Subscription[
     .eq('id', id);
 
   if (error) throw error;
-} 
+}

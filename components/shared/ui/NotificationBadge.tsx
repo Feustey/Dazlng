@@ -2,12 +2,12 @@
 
 import React from 'react';
 
-interface NotificationBadgeProps {
+export interface NotificationBadgeProps {
   count?: number;
   show: boolean;
 }
 
-export default function NotificationBadge({ count = 0, show }: NotificationBadgeProps): React.ReactElement | null {
+export default function NotificationBadge({ count = 0, show }: NotificationBadgeProps): React.FC | null {
   if (!show || count === 0) return null;
 
   return (
@@ -16,7 +16,7 @@ export default function NotificationBadge({ count = 0, show }: NotificationBadge
     >
       <span className="text-white text-xs font-semibold">{count}</span>
     </span>
-  );
+};
 }
 
 // Ajoute dans ton CSS global ou tailwind.config.js :

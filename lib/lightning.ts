@@ -1,9 +1,9 @@
-interface InvoiceParams {
+export interface InvoiceParams {
   amount: number;
   memo: string;
 }
 
-interface Invoice {
+export interface Invoice {
   id: string;
   paymentRequest: string;
   paymentHash: string;
@@ -13,7 +13,7 @@ export async function generateInvoice({ amount, memo }: InvoiceParams): Promise<
   console.log('generateInvoice v2.0 - Génération via API Lightning:', { amount, memo });
   
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || '';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "" || '';
     const response = await fetch(`${baseUrl}/api/create-invoice`, {
       method: 'POST',
       headers: { 
@@ -47,7 +47,7 @@ export async function generateInvoice({ amount, memo }: InvoiceParams): Promise<
 }
 
 export async function checkPayment(invoiceId: string): Promise<boolean> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || '';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "" || '';
   const response = await fetch(`${baseUrl}/api/check-invoice?id=${invoiceId}`);
 
   if (!response.ok) {

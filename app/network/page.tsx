@@ -12,5 +12,5 @@ export default async function Page(): Promise<JSX.Element> {
         {JSON.stringify(summary, null, 2)}
       </pre>
     </div>
-  );
-} 
+};
+}

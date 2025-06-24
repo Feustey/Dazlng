@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 
 interface CacheOptions {
-  ttl?: number; // Time to live en millisecondes
-  staleWhileRevalidate?: boolean;
+  ttl?: number; // Time to live in milliseconds
+  storage?: 'memory' | 'local' | 'session';
+  revalidate?: boolean;
 }
 
 interface CacheEntry<T> {
@@ -11,109 +12,131 @@ interface CacheEntry<T> {
   ttl: number;
 }
 
-class ClientCache {
-  private cache = new Map<string, CacheEntry<unknown>>();
-
-  set<T>(key: string, data: T, ttl: number = 5 * 60 * 1000): void {
-    this.cache.set(key, {
-      data,
-      timestamp: Date.now(),
-      ttl
-    });
-  }
-
-  get<T>(key: string): T | null {
-    const entry = this.cache.get(key);
-    if (!entry) return null;
-
-    const isExpired = Date.now() - entry.timestamp > entry.ttl;
-    if (isExpired) {
-      this.cache.delete(key);
-      return null;
-    }
-
-    return entry.data as T;
-  }
-
-  has(key: string): boolean {
-    const entry = this.cache.get(key);
-    if (!entry) return false;
-
-    const isExpired = Date.now() - entry.timestamp > entry.ttl;
-    if (isExpired) {
-      this.cache.delete(key);
-      return false;
-    }
-
-    return true;
-  }
-
-  invalidate(key: string): void {
-    this.cache.delete(key);
-  }
-
-  clear(): void {
-    this.cache.clear();
-  }
-}
-
-const clientCache = new ClientCache();
-
 export function useCache<T>(
   key: string,
   fetcher: () => Promise<T>,
   options: CacheOptions = {}
-): {
-  data: T | null;
-  loading: boolean;
-  error: Error | null;
-  refetch: () => Promise<void>;
-  invalidate: () => void;
-} {
-  const { ttl = 5 * 60 * 1000, staleWhileRevalidate = true } = options;
-  
-  const [data, setData] = useState<T | null>(() => clientCache.get<T>(key));
-  const [loading, setLoading] = useState(!data);
+) {
+  const {
+    ttl = 5 * 60 * 1000, // 5 minutes par défaut
+    storage = 'memory',
+    revalidate = false
+  } = options;
+
+  const [data, setData] = useState<T | null>(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  const fetchData = useCallback(async (): Promise<void> => {
+  // Mémoire cache en RAM
+  const memoryCache = new Map<string, CacheEntry<T>>();
+
+  // Vérifier si une entrée est expirée
+  const isExpired = (entry: CacheEntry<T>) => {
+    return Date.now() - entry.timestamp > entry.ttl;
+  };
+
+  // Sauvegarder dans le storage
+  const saveToStorage = useCallback((key: string, entry: CacheEntry<T>) => {
+    if (storage === 'local') {
+      localStorage.setItem(key, JSON.stringify(entry));
+    } else if (storage === 'session') {
+      sessionStorage.setItem(key, JSON.stringify(entry));
+    } else {
+      memoryCache.set(key, entry);
+    }
+  }, [storage]);
+
+  // Récupérer du storage
+  const getFromStorage = useCallback((key: string): CacheEntry<T> | null => {
+    if (storage === 'local') {
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : null;
+    } else if (storage === 'session') {
+      const item = sessionStorage.getItem(key);
+      return item ? JSON.parse(item) : null;
+    } else {
+      return memoryCache.get(key) || null;
+    }
+  }, [storage]);
+
+  // Supprimer du storage
+  const removeFromStorage = useCallback((key: string) => {
+    if (storage === 'local') {
+      localStorage.removeItem(key);
+    } else if (storage === 'session') {
+      sessionStorage.removeItem(key);
+    } else {
+      memoryCache.delete(key);
+    }
+  }, [storage]);
+
+  // Fonction de fetch avec mise en cache
+  const fetchData = useCallback(async (force = false) => {
     try {
-      setError(null);
-      if (!staleWhileRevalidate || !data) {
-        setLoading(true);
+      setLoading(true);
+
+      // Vérifier le cache sauf si force refresh
+      if (!force) {
+        const cached = getFromStorage(key);
+        if (cached && !isExpired(cached)) {
+          setData(cached.data);
+          setLoading(false);
+          return;
+        }
       }
 
-      const result = await fetcher();
-      clientCache.set(key, result, ttl);
-      setData(result);
+      // Fetch des données
+      const freshData = await fetcher();
+
+      // Sauvegarder dans le cache
+      const entry: CacheEntry<T> = {
+        data: freshData,
+        timestamp: Date.now(),
+        ttl
+      };
+      saveToStorage(key, entry);
+
+      setData(freshData);
+      setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err : new Error('Une erreur est survenue'));
+      setError(err as Error);
+      // En cas d'erreur, on garde les données en cache si disponibles
+      const cached = getFromStorage(key);
+      if (cached) {
+        setData(cached.data);
+      }
     } finally {
       setLoading(false);
     }
-  }, [key, fetcher, ttl, staleWhileRevalidate, data]);
+  }, [key, fetcher, ttl, getFromStorage, saveToStorage]);
 
-  const refetch = useCallback(async (): Promise<void> => {
-    clientCache.invalidate(key);
-    await fetchData();
-  }, [key, fetchData]);
+  // Revalider les données
+  const refetch = useCallback(() => fetchData(true), [fetchData]);
 
-  const invalidate = useCallback((): void => {
-    clientCache.invalidate(key);
+  // Invalider le cache
+  const invalidate = useCallback(() => {
+    removeFromStorage(key);
     setData(null);
-  }, [key]);
+  }, [key, removeFromStorage]);
 
+  // Effet initial
   useEffect(() => {
-    if (!clientCache.has(key)) {
-      fetchData();
-    }
-  }, [key, fetchData]);
+    fetchData();
 
-  return {
-    data,
-    loading,
-    error,
-    refetch,
-    invalidate
-  };
+    // Revalidation périodique si activée
+    let interval: NodeJS.Timeout;
+    if (revalidate) {
+      interval = setInterval(() => {
+        fetchData(true);
+      }, ttl);
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [fetchData, revalidate, ttl]);
+
+  return { data, loading, error, refetch, invalidate };
 } 

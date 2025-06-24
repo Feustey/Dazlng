@@ -4,7 +4,7 @@ import React, { FC, useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
 
-interface Channel {
+export interface Channel {
   id: string;
   remotePubkey: string;
   remoteAlias?: string;
@@ -150,7 +150,7 @@ const NodeChannelsPage: FC = () => {
       <span className={`px-2 py-1 text-xs font-medium rounded-full ${colors[status]}`}>
         {labels[status]}
       </span>
-    );
+};
   };
 
   // États de chargement
@@ -164,7 +164,7 @@ const NodeChannelsPage: FC = () => {
           </div>
         </div>
       </div>
-    );
+};
   }
 
   // Vérification de l'authentification
@@ -178,7 +178,7 @@ const NodeChannelsPage: FC = () => {
           </a>
         </div>
       </div>
-    );
+};
   }
 
   if (error) {
@@ -211,7 +211,7 @@ const NodeChannelsPage: FC = () => {
           )}
         </div>
       </div>
-    );
+};
   }
 
   return (
@@ -246,13 +246,13 @@ const NodeChannelsPage: FC = () => {
         <div className="bg-white rounded-lg shadow p-4">
           <div className="text-sm text-gray-500">Capacité totale</div>
           <div className="text-2xl font-bold">
-            {(channels.reduce((sum, c) => sum + c.capacity, 0) / 100000000).toFixed(2)} BTC
+            {(channels.reduce((sum: any, c: any) => sum + c.capacity, 0) / 100000000).toFixed(2)} BTC
           </div>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
           <div className="text-sm text-gray-500">Balance locale</div>
           <div className="text-2xl font-bold text-blue-600">
-            {(channels.reduce((sum, c) => sum + c.localBalance, 0) / 100000000).toFixed(2)} BTC
+            {(channels.reduce((sum: any, c: any) => sum + c.localBalance, 0) / 100000000).toFixed(2)} BTC
           </div>
         </div>
       </div>
@@ -260,7 +260,7 @@ const NodeChannelsPage: FC = () => {
       {/* Filtres */}
       <div className="bg-white rounded-xl shadow p-6">
         <div className="flex gap-2 mb-6">
-          {['all', 'active', 'inactive', 'pending'].map((status) => (
+          {['all', 'active', 'inactive', 'pending'].map((status: any) => (
             <button
               key={status}
               onClick={() => setFilter(status)}
@@ -296,7 +296,7 @@ const NodeChannelsPage: FC = () => {
           </div>
         ) : (
           <div className="space-y-4">
-            {channels.map((channel) => (
+            {channels.map((channel: any) => (
               <div key={channel.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition">
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex-1">
@@ -388,7 +388,7 @@ const NodeChannelsPage: FC = () => {
         </div>
       )}
     </div>
-  );
+};
 };
 
 export default NodeChannelsPage;

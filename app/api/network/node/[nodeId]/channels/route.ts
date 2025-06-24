@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-interface Channel {
+export interface Channel {
   id: string;
   remotePubkey: string;
   remoteAlias?: string;
@@ -62,7 +62,7 @@ export async function GET(
     }
 
     // Simulation des données - à remplacer par l'API Lightning réelle
-    const mockChannels: Channel[] = Array.from({ length: 15 }, (_, i) => ({
+    const mockChannels: Channel[] = Array.from({ length: 15 }, (_: any, i: any) => ({
       id: `channel_${i + 1}`,
       remotePubkey: `03${Math.random().toString(16).substring(2, 66).padEnd(64, '0')}`,
       remoteAlias: `Node-${i + 1}`,
@@ -90,7 +90,7 @@ export async function GET(
 
     // Tri
     const [sortField, sortOrder] = sort.split(':');
-    filteredChannels.sort((a, b) => {
+    filteredChannels.sort((a: any, b: any) => {
       const aVal = a[sortField as keyof Channel];
       const bVal = b[sortField as keyof Channel];
       
@@ -203,4 +203,4 @@ export async function POST(
       }
     }, { status: 500 });
   }
-} 
+}

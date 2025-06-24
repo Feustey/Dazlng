@@ -1,37 +1,62 @@
--- Table de logs des paiements
+-- Table pour stocker les logs de paiement Lightning
 CREATE TABLE IF NOT EXISTS payment_logs (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    order_id UUID NOT NULL REFERENCES orders(id),
-    order_ref TEXT NOT NULL,
-    payment_hash TEXT NOT NULL UNIQUE,
-    payment_request TEXT NOT NULL,
-    amount BIGINT NOT NULL,
-    status TEXT NOT NULL CHECK (status IN ('pending', 'settled', 'expired', 'failed')),
-    error TEXT,
-    metadata JSONB,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  payment_hash TEXT NOT NULL UNIQUE,
+  amount INTEGER NOT NULL CHECK (amount > 0),
+  description TEXT NOT NULL,
+  status TEXT NOT NULL CHECK (status IN ('pending', 'paid', 'failed', 'cancelled')),
+  error TEXT,
+  metadata JSONB DEFAULT '{}'::jsonb,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Index pour les recherches fréquentes
-CREATE INDEX IF NOT EXISTS payment_logs_order_id_idx ON payment_logs(order_id);
-CREATE INDEX IF NOT EXISTS payment_logs_payment_hash_idx ON payment_logs(payment_hash);
-CREATE INDEX IF NOT EXISTS payment_logs_status_idx ON payment_logs(status);
-CREATE INDEX IF NOT EXISTS payment_logs_created_at_idx ON payment_logs(created_at DESC);
+CREATE INDEX IF NOT EXISTS payment_logs_payment_hash_idx ON payment_logs (payment_hash);
+CREATE INDEX IF NOT EXISTS payment_logs_status_idx ON payment_logs (status);
+CREATE INDEX IF NOT EXISTS payment_logs_created_at_idx ON payment_logs (created_at DESC);
 
--- Trigger pour mettre à jour updated_at
+-- Fonction pour mettre à jour updated_at automatiquement
 CREATE OR REPLACE FUNCTION update_payment_logs_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
-    new.updated_at = timezone('utc'::text, now());
-    RETURN new;
+  NEW.updated_at = CURRENT_TIMESTAMP;
+  RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER payment_logs_updated_at
-    BEFORE UPDATE ON payment_logs
-    FOR EACH ROW
-    EXECUTE FUNCTION update_payment_logs_updated_at();
+-- Trigger pour mettre à jour updated_at
+DROP TRIGGER IF EXISTS update_payment_logs_updated_at ON payment_logs;
+CREATE TRIGGER update_payment_logs_updated_at
+  BEFORE UPDATE ON payment_logs
+  FOR EACH ROW
+  EXECUTE FUNCTION update_payment_logs_updated_at();
+
+-- Politique RLS pour restreindre l'accès
+ALTER TABLE payment_logs ENABLE ROW LEVEL SECURITY;
+
+-- Politique pour les admins (accès complet)
+CREATE POLICY admin_payment_logs_policy ON payment_logs
+  FOR ALL
+  TO authenticated
+  USING (
+    EXISTS (
+      SELECT 1 FROM profiles
+      WHERE profiles.id = auth.uid()
+      AND profiles.role = 'admin'
+    )
+  );
+
+-- Politique pour les utilisateurs (lecture seule de leurs propres paiements)
+CREATE POLICY user_payment_logs_policy ON payment_logs
+  FOR SELECT
+  TO authenticated
+  USING (
+    payment_hash IN (
+      SELECT payment_hash FROM orders
+      WHERE orders.user_id = auth.uid()
+    )
+  );
 
 -- Fonction pour nettoyer les vieux logs (> 30 jours)
 CREATE OR REPLACE FUNCTION cleanup_old_payment_logs()

@@ -49,7 +49,7 @@ function VerifyRequestInner(): JSX.Element {
         Retour à la connexion
       </a>
     </div>
-  );
+};
 }
 
 function VerifyRequestPage(): JSX.Element {
@@ -57,7 +57,7 @@ function VerifyRequestPage(): JSX.Element {
     <Suspense>
       <VerifyRequestInner />
     </Suspense>
-  );
+};
 }
 
 export default VerifyRequestPage; 

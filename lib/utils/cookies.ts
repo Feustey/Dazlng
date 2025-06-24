@@ -1,5 +1,5 @@
 // Utilitaires pour la gestion des cookies de pubkey
-export interface PubkeyData {
+export export interface PubkeyData {
   pubkey: string;
   alias?: string;
   savedAt: string;
@@ -40,8 +40,7 @@ export function getPubkeyFromCookie(): PubkeyData | null {
   const cookies = document.cookie.split(';');
   const pubkeyCookie = cookies.find(cookie => 
     cookie.trim().startsWith(`${PUBKEY_COOKIE_NAME}=`)
-  );
-
+};
   if (!pubkeyCookie) return null;
 
   try {
@@ -105,4 +104,4 @@ export function updatePubkeyAlias(alias: string): void {
   if (existingData) {
     savePubkeyToCookie(existingData.pubkey, alias);
   }
-} 
+}

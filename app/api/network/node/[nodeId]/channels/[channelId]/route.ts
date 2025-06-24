@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-interface Channel {
+export interface Channel {
   id: string;
   remotePubkey: string;
   remoteAlias?: string;
@@ -201,4 +201,4 @@ export async function DELETE(
       }
     }, { status: 500 });
   }
-} 
+}

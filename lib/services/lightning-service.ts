@@ -1,290 +1,178 @@
-// Import dynamique du module lightning
-import lightning from 'lightning';
-import { createDazNodeLightningService } from './daznode-lightning-service';
+import { 
+  Invoice, 
+  InvoiceStatus, 
+  CreateInvoiceParams, 
+  LightningService as ILightningService 
+} from '@/types/lightning';
 
-interface LightningConfig {
-  cert: string;          // Base64 encoded tls.cert
-  macaroon: string;      // Base64 encoded admin.macaroon  
-  socket: string;        // IP:Port du nœud (ex: '127.0.0.1:10009')
+export enum InvoiceStatus {
+  pending = "pending",
+  settled = "settled",
+  expired = "expired",
+  failed = "failed"
 }
+import { validateData } from '@/lib/validations/lightning';
+import { createInvoiceSchema } from '@/lib/validations/lightning';
 
-interface CreateInvoiceParams {
-  amount: number;
-  description: string;
-  expiry?: number;
-}
-
-interface Invoice {
-  id: string;
-  paymentRequest: string;
-  paymentHash: string;
-  createdAt: string;
-  expiresAt: string;
-  amount: number;
-  description: string;
-  status: InvoiceStatus;
-}
-
-interface InvoiceStatus {
-  status: 'pending' | 'settled' | 'failed' | 'expired';
-  amount: number;
-  settledAt?: string;
-  metadata: Record<string, unknown>;
-}
-
-interface NodeInfo {
-  publicKey: string;
-  alias: string;
-  blockHeight: number;
-  channels: number;
-}
-
-interface HealthCheck {
-  isOnline: boolean;
-  nodeInfo?: NodeInfo;
-}
-
-interface DecodedInvoice {
-  amount: number;
-  description: string;
-  paymentHash: string;
-  expiresAt: string;
-  destination: string;
-}
-
-// Type pour le client LND
-type LndClient = ReturnType<typeof lightning.createLndGrpc> extends Promise<{ lnd: infer T }> ? T : never;
-
-export class LightningService {
-  private daznodeService;
-  private lnd: LndClient | null = null;
+export class LightningService implements ILightningService {
+  private apiUrl: string | null = null;
+  private apiKey: string | null = null;
+  private provider: string | null = null;
 
   constructor() {
-    this.daznodeService = createDazNodeLightningService();
-    this.initializeLnd();
-  }
+    this.apiUrl = process.env.DAZNODE_API_URL ?? "" || 'https://api.dazno.de';
+    this.apiKey = process.env.DAZNODE_API_KEY ?? "" || '';
+    this.provider = 'daznode@getalby.com';
 
-  private async initializeLnd() {
-    try {
-      const { lnd } = await lightning.createLndGrpc({
-        socket: process.env.LND_SOCKET || '127.0.0.1:10009',
-        cert: process.env.LND_TLS_CERT,
-        macaroon: process.env.LND_ADMIN_MACAROON
-      });
-      this.lnd = lnd;
-    } catch (error) {
-      console.error('❌ Erreur initialisation LND:', error);
-      throw new Error('Impossible de se connecter au nœud LND');
+    if (!this.apiKey) {
+      console.warn('⚠️ DAZNODE_API_KEY non configurée');
     }
   }
 
+  /**
+   * Effectue une requête vers l'API DazNode
+   */
+  private async request<T>(path: string, options: RequestInit = {}): Promise<T> {
+    const response = await fetch(`${this.apiUrl}${path}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.apiKey}`,
+        ...options.headers,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erreur API: ${response.status} ${response.statusText}`);
+    }
+
+    return response.json();
+  }
+
+  /**
+   * Génère une nouvelle facture Lightning
+   */
   async generateInvoice(params: CreateInvoiceParams): Promise<Invoice> {
     try {
-      const invoice = await this.daznodeService.generateInvoice({
-        amount: params.amount,
-        description: params.description,
-        expiry: params.expiry || 3600
+      // Validation des paramètres
+      const validation = validateData(createInvoiceSchema, params);
+      if (!validation.success) {
+        throw new Error(`Paramètres invalides: ${validation.error.message}`);
+      }
+
+      // Appel API
+      const response = await (this ?? Promise.reject(new Error("this is null"))).request<{
+        id: string;
+        paymentRequest: string;
+        paymentHash: string;
+        amount: number;
+        description: string;
+      }>('/api/v1/lightning/invoice/create', {
+        method: 'POST',
+        body: JSON.stringify({
+          amount: params.amount,
+          description: params.description,
+          expiry: params.expiry || 3600,
+          metadata: params.metadata
+        })
       });
 
+      // Construction de la réponse standardisée
       return {
-        id: invoice.id,
-        paymentRequest: invoice.paymentRequest,
-        paymentHash: invoice.paymentHash,
+        id: response.id,
+        paymentRequest: response.paymentRequest,
+        paymentHash: response.paymentHash,
         amount: params.amount,
         description: params.description,
         createdAt: new Date().toISOString(),
         expiresAt: new Date(Date.now() + (params.expiry || 3600) * 1000).toISOString(),
-        status: {
-          status: 'pending',
-          amount: params.amount,
-          metadata: {}
-        }
+        status: InvoiceStatus.pending,
+        metadata: params.metadata
       };
     } catch (error) {
-      console.error('Erreur génération facture:', error);
+      console.error('❌ LightningService - Erreur génération facture:', error);
       throw error;
     }
   }
 
+  /**
+   * Vérifie le statut d'une facture
+   */
   async checkInvoiceStatus(paymentHash: string): Promise<InvoiceStatus> {
     try {
-      const status = await this.daznodeService.checkInvoiceStatus(paymentHash);
+      const response = await (this ?? Promise.reject(new Error("this is null"))).request<{
+        status: InvoiceStatus.pending | InvoiceStatus.settled | InvoiceStatus.failed | InvoiceStatus.expired;
+        amount: number;
+        settledAt?: string;
+        metadata?: Record<string, any>;
+      }>(`/api/v1/lightning/invoice/${paymentHash}/status`);
+
       return {
-        status: status.status as 'pending' | 'settled' | 'failed' | 'expired',
-        amount: status.amount,
-        settledAt: status.settledAt,
-        metadata: status.metadata || {}
+        status: response.status,
+        amount: response.amount,
+        settledAt: response.settledAt,
+        metadata: response.metadata
       };
     } catch (error) {
-      console.error('Erreur vérification facture:', error);
+      console.error('❌ LightningService - Erreur vérification facture:', error);
       throw error;
     }
   }
 
+  /**
+   * Surveille une facture pour les changements de statut
+   */
   async watchInvoice(params: {
     paymentHash: string;
-    onPaid: () => void;
+    onPaid: () => Promise<void>;
     onExpired: () => void;
     onError: (error: Error) => void;
   }): Promise<void> {
     try {
-      await this.daznodeService.watchInvoice({
-        paymentHash: params.paymentHash,
-        onPaid: params.onPaid,
-        onExpired: params.onExpired,
-        onError: params.onError
-      });
+      const checkInterval = setInterval(async () => {
+        try {
+          const status = await (this ?? Promise.reject(new Error("this is null"))).checkInvoiceStatus(params.paymentHash);
+          
+          if (status.status === InvoiceStatus.settled) {
+            clearInterval(checkInterval);
+            await (params ?? Promise.reject(new Error("params is null"))).onPaid();
+          } else if (status.status === InvoiceStatus.expired || status.status === InvoiceStatus.failed) {
+            clearInterval(checkInterval);
+            params.onExpired();
+          }
+        } catch (error) {
+          clearInterval(checkInterval);
+          params.onError(error instanceof Error ? error : new Error('Erreur inconnue'));
+        }
+      }, 2000);
+
+      // Nettoyage après 1 heure
+      setTimeout(() => {
+        clearInterval(checkInterval);
+        params.onExpired();
+      }, 3600 * 1000);
     } catch (error) {
-      console.error('Erreur surveillance facture:', error);
-      throw error;
+      params.onError(error instanceof Error ? error : new Error('Erreur inconnue'));
     }
   }
 
   /**
-   * Décode une facture Lightning (BOLT11)
+   * Vérifie la santé du service
    */
-  async decodeInvoice(paymentRequest: string): Promise<DecodedInvoice> {
+  async healthCheck(): Promise<{ isOnline: boolean; provider: string }> {
     try {
-      console.log('🔍 LightningService - Décodage facture BOLT11...');
-      
-      if (!paymentRequest?.toLowerCase().startsWith('ln')) {
-        throw new Error('Format de facture invalide: doit commencer par "ln"');
-      }
-
-      const decoded = await lightning.decodePaymentRequest({
-        lnd: this.lnd,
-        request: paymentRequest
-      });
-
-      const result = {
-        amount: decoded.tokens || 0,
-        description: decoded.description || '',
-        paymentHash: decoded.id,
-        expiresAt: decoded.expires_at,
-        destination: decoded.destination
-      };
-
-      console.log('✅ LightningService - Facture décodée:', {
-        amount: result.amount,
-        destination: result.destination?.substring(0, 20) + '...'
-      });
-
-      return result;
-
+      await (this ?? Promise.reject(new Error("this is null"))).request('/api/v1/lightning/health');
+      return { isOnline: true, provider: this.provider };
     } catch (error) {
-      console.error('❌ LightningService - Erreur décodage facture:', error);
-      throw new Error(`Erreur décodage: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
-    }
-  }
-
-  /**
-   * Vérifie la connectivité du nœud
-   */
-  async healthCheck(): Promise<HealthCheck> {
-    try {
-      console.log('🔍 LightningService - Health check...');
-      
-      const [walletInfo, channels] = await Promise.all([
-        lightning.getWalletInfo({ lnd: this.lnd }),
-        lightning.getChannels({ lnd: this.lnd })
-      ]);
-
-      const nodeInfo: NodeInfo = {
-        publicKey: walletInfo.public_key,
-        alias: walletInfo.alias,
-        blockHeight: walletInfo.current_block_height,
-        channels: channels.channels.length
-      };
-
-      console.log('✅ LightningService - Nœud en ligne:', {
-        alias: nodeInfo.alias,
-        channels: nodeInfo.channels,
-        blockHeight: nodeInfo.blockHeight
-      });
-
-      return {
-        isOnline: true,
-        nodeInfo
-      };
-
-    } catch (error) {
-      console.error('❌ LightningService - Health check failed:', error);
-      return { isOnline: false };
-    }
-  }
-
-  /**
-   * Obtient les informations du nœud
-   */
-  async getNodeInfo(): Promise<NodeInfo | null> {
-    try {
-      const health = await this.healthCheck();
-      return health.isOnline ? health.nodeInfo || null : null;
-    } catch (error) {
-      console.error('❌ LightningService - Erreur récupération info nœud:', error);
-      return null;
+      console.error('❌ LightningService - Erreur health check:', error);
+      return { isOnline: false, provider: this.provider };
     }
   }
 }
 
 /**
- * Factory pour créer le service Lightning avec validation de config
- * Utilise le wallet DazNode par défaut si LND n'est pas configuré
+ * Factory pour créer le service Lightning
  */
 export function createLightningService(): LightningService {
-  console.log('🏗️ LightningService - Initialisation...');
-  
-  // Vérifier si LND est configuré
-  const hasLndConfig = process.env.LND_TLS_CERT && process.env.LND_ADMIN_MACAROON;
-  
-  if (!hasLndConfig) {
-    console.log('⚠️ LightningService - Configuration LND non trouvée, utilisation du wallet DazNode');
-    throw new Error('FALLBACK_TO_DAZNODE_WALLET');
-  }
-  
-  const config: LightningConfig = {
-    cert: process.env.LND_TLS_CERT ?? '',
-    macaroon: process.env.LND_ADMIN_MACAROON ?? '',
-    socket: process.env.LND_SOCKET || '127.0.0.1:10009'
-  };
-
-  // Validation de la config
-  if (!config.cert) {
-    throw new Error('Configuration LND manquante: LND_TLS_CERT requis');
-  }
-  
-  if (!config.macaroon) {
-    throw new Error('Configuration LND manquante: LND_ADMIN_MACAROON requis');
-  }
-
-  // Validation du format base64
-  try {
-    Buffer.from(config.cert, 'base64');
-    Buffer.from(config.macaroon, 'base64');
-  } catch (error) {
-    throw new Error('Format base64 invalide pour cert ou macaroon');
-  }
-
-  // Validation du format socket
-  const socketRegex = /^[\w.-]+:\d+$/;
-  if (!socketRegex.test(config.socket)) {
-    throw new Error('Format socket invalide: attendu host:port');
-  }
-
-  console.log('✅ LightningService - Configuration LND validée:', {
-    socket: config.socket,
-    certLength: config.cert.length,
-    macaroonLength: config.macaroon.length
-  });
-
   return new LightningService();
 }
-
-// Export des types pour utilisation externe
-export type { 
-  CreateInvoiceParams, 
-  InvoiceStatus, 
-  NodeInfo, 
-  HealthCheck,
-  DecodedInvoice 
-}; 

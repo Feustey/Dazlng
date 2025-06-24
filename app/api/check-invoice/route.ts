@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createDazNodeLightningService } from '@/lib/services/daznode-lightning-service';
+import { createLightningService } from '@/lib/services/lightning-service';
+import { validateData, checkInvoiceSchema } from '@/lib/validations/lightning';
+import { ApiResponse } from '@/lib/api-response';
+import { PaymentLogger } from '@/lib/services/payment-logger';
+import type { InvoiceStatus } from '@/types/lightning';
 
 // Headers CORS pour permettre les requêtes depuis le navigateur
 const corsHeaders = {
@@ -10,20 +15,6 @@ const corsHeaders = {
 
 export async function OPTIONS(): Promise<Response> {
   return new NextResponse(null, { status: 200, headers: corsHeaders });
-}
-
-interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: {
-    code: string;
-    message: string;
-    details?: string | Record<string, unknown>;
-  };
-  meta?: {
-    timestamp: string;
-    provider: string;
-  };
 }
 
 export async function GET(req: NextRequest): Promise<Response> {
@@ -115,9 +106,65 @@ export async function GET(req: NextRequest): Promise<Response> {
   }
 }
 
-export async function POST(): Promise<Response> {
-  return NextResponse.json({ error: 'LND non disponible sur ce déploiement.' }, { 
-    status: 501, 
-    headers: corsHeaders 
-  });
-} 
+export const dynamic = "force-dynamic";
+export const runtime = 'nodejs';
+
+/**
+ * POST /api/check-invoice
+ * Vérifie le statut d'une facture Lightning
+ */
+export async function POST(request: Request) {
+  try {
+    // Récupération et validation des données
+    const body = await request.json();
+    const validation = validateData(checkInvoiceSchema, body);
+
+    if (!validation.success) {
+      return NextResponse.json<ApiResponse<null>>({
+        success: false,
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'Données invalides',
+          details: validation.error.format()
+        },
+        meta: {
+          timestamp: new Date().toISOString(),
+          provider: 'daznode@getalby.com'
+        }
+      }, { status: 400 });
+    }
+
+    // Vérification du statut
+    const lightningService = createLightningService();
+    const status = await lightningService.checkInvoiceStatus(validation.data.paymentHash);
+
+    // Mise à jour du log de paiement
+    const paymentLogger = new PaymentLogger();
+    await paymentLogger.updatePaymentStatus(validation.data.paymentHash, status);
+
+    // Réponse formatée
+    return NextResponse.json<ApiResponse<InvoiceStatus>>({
+      success: true,
+      data: status,
+      meta: {
+        timestamp: new Date().toISOString(),
+        provider: 'daznode@getalby.com'
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ check-invoice - Erreur:', error);
+
+    return NextResponse.json<ApiResponse<null>>({
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: error instanceof Error ? error.message : 'Erreur interne du serveur',
+      },
+      meta: {
+        timestamp: new Date().toISOString(),
+        provider: 'daznode@getalby.com'
+      }
+    }, { status: 500 });
+  }
+}

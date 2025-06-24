@@ -8,7 +8,7 @@ import Link from 'next/link';
 import SuccessModal from './SuccessModal';
 import { toast } from 'react-hot-toast';
 
-export interface ContactFormProps {
+export export interface ContactFormProps {
   onSubmitSuccess?: () => void;
   onSubmitError?: (error: string) => void;
   buttonText?: string;
@@ -106,7 +106,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
             <FormInput
               label="Prénom"
               value={form.firstName}
-              onChange={(e) => {
+              onChange={(e: any) => {
                 setForm(prev => ({ ...prev, firstName: e.target.value }));
                 if (errors.firstName) setErrors(prev => ({ ...prev, firstName: '' }));
               }}
@@ -117,7 +117,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
             <FormInput
               label="Nom"
               value={form.lastName}
-              onChange={(e) => {
+              onChange={(e: any) => {
                 setForm(prev => ({ ...prev, lastName: e.target.value }));
                 if (errors.lastName) setErrors(prev => ({ ...prev, lastName: '' }));
               }}
@@ -130,7 +130,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
             label="Email"
             type="email"
             value={form.email}
-            onChange={(e) => {
+            onChange={(e: any) => {
               setForm(prev => ({ ...prev, email: e.target.value }));
               if (errors.email) setErrors(prev => ({ ...prev, email: '' }));
             }}
@@ -145,7 +145,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
             <select
               className={`w-full bg-gray-100 border-2 border-gray-300 rounded-lg px-4 py-2 text-base focus:outline-none focus:border-blue-500 ${errors.interest ? 'border-red-500' : ''}`}
               value={form.interest}
-              onChange={(e) => {
+              onChange={(e: any) => {
                 setForm(prev => ({ ...prev, interest: e.target.value }));
                 if (errors.interest) setErrors(prev => ({ ...prev, interest: '' }));
               }}
@@ -168,7 +168,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
             <textarea
               className={`w-full bg-gray-100 border-2 border-gray-300 rounded-lg px-4 py-2 text-base focus:outline-none focus:border-blue-500 min-h-[120px] ${errors.message ? 'border-red-500' : ''}`}
               value={form.message}
-              onChange={(e) => {
+              onChange={(e: any) => {
                 setForm(prev => ({ ...prev, message: e.target.value }));
                 if (errors.message) setErrors(prev => ({ ...prev, message: '' }));
               }}
@@ -196,7 +196,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
         onClose={() => setShowSuccessModal(false)}
       />
     </>
-  );
+};
 };
 
 export default ContactForm; 

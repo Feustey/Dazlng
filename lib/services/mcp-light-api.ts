@@ -3,13 +3,13 @@
  * Gère l'authentification JWT et tous les appels Lightning Network
  * Intégration avec SparkSeer + OpenAI pour l'analyse de nœuds Lightning
  */
-export interface MCPLightCredentials {
+export export interface MCPLightCredentials {
   jwt_token: string;
   expires_at: string;
   token_type: string;
 }
 
-export interface NodeStats {
+export export interface NodeStats {
   alias: string;
   capacity: number;
   channel_count: number;
@@ -21,7 +21,7 @@ export interface NodeStats {
   forwarding_efficiency?: number;
 }
 
-export interface MCPNodeInfo {
+export export interface MCPNodeInfo {
   pubkey: string;
   current_stats: NodeStats;
   historical_data?: Record<string, unknown>;
@@ -29,7 +29,7 @@ export interface MCPNodeInfo {
   performance_metrics?: Record<string, unknown>;
 }
 
-export interface SparkSeerRecommendation {
+export export interface SparkSeerRecommendation {
   type: string;
   priority: 'low' | 'medium' | 'high';
   reasoning?: string;
@@ -40,7 +40,7 @@ export interface SparkSeerRecommendation {
   confidence_score?: number;
 }
 
-export interface PriorityAction {
+export export interface PriorityAction {
   priority: number;
   action: string;
   timeline: string;
@@ -51,14 +51,14 @@ export interface PriorityAction {
   cost_estimate?: number;
 }
 
-export interface MCPRecommendationsResponse {
+export export interface MCPRecommendationsResponse {
   pubkey: string;
   timestamp: string;
   recommendations: SparkSeerRecommendation[];
   sparkseer_version?: string;
 }
 
-export interface MCPPrioritiesResponse {
+export export interface MCPPrioritiesResponse {
   pubkey: string;
   timestamp: string;
   priority_actions: PriorityAction[];
@@ -67,7 +67,7 @@ export interface MCPPrioritiesResponse {
   goals: string[];
 }
 
-export interface NodeAnalysisResult {
+export export interface NodeAnalysisResult {
   pubkey: string;
   timestamp: string;
   nodeInfo: MCPNodeInfo;
@@ -76,7 +76,7 @@ export interface NodeAnalysisResult {
   summary: NodeSummary;
 }
 
-export interface NodeSummary {
+export export interface NodeSummary {
   node_alias: string;
   capacity_btc: string;
   capacity_sats: string;
@@ -103,40 +103,40 @@ export interface ApiResponse<T> {
 }
 
 // Nouvelles interfaces pour les endpoints RAG
-export interface RAGDocument {
+export export interface RAGDocument {
   id: string;
   content: string;
   metadata: Record<string, unknown>;
   created_at: string;
 }
 
-export interface RAGQuery {
+export export interface RAGQuery {
   query: string;
   context?: string;
   limit?: number;
 }
 
-export interface RAGEmbedding {
+export export interface RAGEmbedding {
   text: string;
   embedding: number[];
 }
 
 // Nouvelles interfaces pour les endpoints Simulation
-export interface SimulationProfile {
+export export interface SimulationProfile {
   id: string;
   name: string;
   description: string;
   parameters: Record<string, unknown>;
 }
 
-export interface SimulationResult {
+export export interface SimulationResult {
   success: boolean;
   data: Record<string, unknown>;
   metrics: Record<string, number>;
 }
 
 // Nouvelles interfaces pour les endpoints LNBits
-export interface LNBitsPayment {
+export export interface LNBitsPayment {
   payment_hash: string;
   bolt11: string;
   amount: number;
@@ -144,14 +144,14 @@ export interface LNBitsPayment {
   created_at: string;
 }
 
-export interface LNBitsWallet {
+export export interface LNBitsWallet {
   id: string;
   name: string;
   balance: number;
   currency: string;
 }
 
-export interface LNBitsChannel {
+export export interface LNBitsChannel {
   id: string;
   remote_pubkey: string;
   capacity: number;
@@ -160,12 +160,12 @@ export interface LNBitsChannel {
 }
 
 class MCPLightAPI {
-  private baseURL: string;
+  private baseURL: string | null = null;
   private credentials: MCPLightCredentials | null = null;
   private initialized = false;
 
   constructor() {
-    this.baseURL = process.env.NEXT_PUBLIC_DAZNO_API_URL || 'https://api.dazno.de';
+    this.baseURL = process.env.NEXT_PUBLIC_DAZNO_API_URL ?? "" || 'https://api.dazno.de';
   }
 
   /**
@@ -189,7 +189,7 @@ class MCPLightAPI {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
-      this.credentials = await response.json();
+      this.credentials = await (response ?? Promise.reject(new Error("response is null"))).json();
       this.initialized = true;
       
       console.log('✅ MCP-Light API initialisée avec succès');
@@ -208,7 +208,7 @@ class MCPLightAPI {
    */
   private async makeRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     if (!this.initialized) {
-      const success = await this.initialize();
+      const success = await (this ?? Promise.reject(new Error("this is null"))).initialize();
       if (!success) {
         console.warn('⚠️ API MCP-Light indisponible, utilisation du mode fallback');
         throw new Error('API_UNAVAILABLE');
@@ -221,7 +221,7 @@ class MCPLightAPI {
 
     const defaultOptions: RequestInit = {
       headers: {
-        'Authorization': `Bearer ${this.credentials.jwt_token}`,
+        'Authorization': `Bearer ${this.credentials?.jwt_token}`,
         'Content-Type': 'application/json',
         ...options.headers
       }
@@ -233,7 +233,7 @@ class MCPLightAPI {
     });
 
     if (!response.ok) {
-      const errorData = await response.text();
+      const errorData = await (response ?? Promise.reject(new Error("response is null"))).text();
       throw new Error(`API Error ${response.status}: ${errorData}`);
     }
 
@@ -312,7 +312,7 @@ class MCPLightAPI {
       console.log(`🔍 Analyse du nœud ${pubkey.substring(0, 10)}...`);
 
       // Exécuter toutes les requêtes en parallèle pour optimiser les performances
-      const [nodeInfo, recommendations, priorities] = await Promise.all([
+      const [nodeInfo, recommendations, priorities] = await (Promise ?? Promise.reject(new Error("Promise is null"))).all([
         this.getNodeInfo(pubkey),
         this.getRecommendations(pubkey),
         this.getPriorityActions(pubkey, userContext, userGoals)

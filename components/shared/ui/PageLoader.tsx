@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { cn } from '../../../lib/utils';
 
-interface PageLoaderProps {
+export interface PageLoaderProps {
   className?: string;
   showProgress?: boolean;
 }
@@ -105,7 +105,7 @@ export function PageLoader({ className, showProgress = true }: PageLoaderProps):
         </div>
       </div>
     </>
-  );
+};
 }
 
 // Hook pour contrôler manuellement le loader
@@ -124,4 +124,4 @@ export function usePageLoader(): {
     startLoading,
     stopLoading
   };
-} 
+}

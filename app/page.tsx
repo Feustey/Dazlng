@@ -38,32 +38,6 @@ const FinalConversionCTA = dynamic(() => import("../components/shared/ui/FinalCo
 
 // Composant client séparé pour gérer les paramètres d'URL
 const SignupConfirmation: React.FC = () => {
-  const [showSignupConfirmation, setShowSignupConfirmation] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  
-  useEffect(() => {
-    setMounted(true);
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get('code');
-      if (code) {
-        setShowSignupConfirmation(true);
-      }
-    }
-  }, []);
-  
-  const closeConfirmation = (): void => {
-    setShowSignupConfirmation(false);
-    // Nettoyer l'URL après fermeture
-    if (typeof window !== 'undefined') {
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
-  };
-  
-  if (!mounted) return null;
-  if (!showSignupConfirmation) return null;
-  
-  return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 backdrop-blur-sm">
       <div 
         className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl border border-indigo-200 transform transition-all animate-zoom-in"
@@ -87,11 +61,15 @@ const SignupConfirmation: React.FC = () => {
         </div>
       </div>
     </div>
-  );
+};
 };
 
 // Composant wrapper avec animations optimisées
-const AnimatedSection: React.FC<{ children: React.ReactNode; className?: string; delay?: number }> = ({ 
+export interface AnimatedSectionProps {
+  children: React.ReactNode; className?;
+}
+
+const AnimatedSection: React.FC<AnimatedSectionProps> = ({ 
   children, 
   className = "", 
   delay = 0 
@@ -110,10 +88,10 @@ const AnimatedSection: React.FC<{ children: React.ReactNode; className?: string;
     >
       {children}
     </section>
-  );
+};
 };
 
-export default function OptimizedHomePage(): React.ReactElement {
+export default function OptimizedHomePage(): React.FC {
   useEffect(() => {
     // Préchargement des images critiques
     const preloadImages = [
@@ -201,5 +179,5 @@ export default function OptimizedHomePage(): React.ReactElement {
         </AnimatedSection>
       </main>
     </>
-  );
-} 
+};
+}

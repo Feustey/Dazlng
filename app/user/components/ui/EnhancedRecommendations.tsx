@@ -1,7 +1,7 @@
 import React from 'react';
 import { DaznoRecommendation } from '@/lib/dazno-api';
 
-interface Recommendation {
+export interface Recommendation {
   id: string;
   title: string;
   description: string;
@@ -13,7 +13,7 @@ interface Recommendation {
   category: 'liquidity' | 'routing' | 'efficiency' | 'security';
 }
 
-interface UnifiedRecommendation {
+export interface UnifiedRecommendation {
   id: string;
   title: string;
   description: string;
@@ -22,7 +22,7 @@ interface UnifiedRecommendation {
   type?: string;
 }
 
-interface EnhancedRecommendationsProps {
+export interface EnhancedRecommendationsProps {
   recommendations: (Recommendation | DaznoRecommendation)[];
   isPremium: boolean;
   onApplyRecommendation: (id: string) => void;
@@ -88,7 +88,7 @@ const EnhancedRecommendations: React.FC<EnhancedRecommendationsProps> = ({
         </div>
 
         <div className="space-y-4">
-          {recommendations.map((rec, index) => {
+          {recommendations.map((rec: any, index: any) => {
             const normalizedRec = normalizeRecommendation(rec);
             return (
               <div key={index} className="border border-gray-200 rounded-lg p-4">
@@ -113,7 +113,7 @@ const EnhancedRecommendations: React.FC<EnhancedRecommendationsProps> = ({
                   </button>
                 </div>
               </div>
-            );
+};
           })}
           
           {recommendations.length === 0 && (
@@ -125,7 +125,7 @@ const EnhancedRecommendations: React.FC<EnhancedRecommendationsProps> = ({
         </div>
       </div>
     </div>
-  );
+};
 };
 
 export default EnhancedRecommendations; 

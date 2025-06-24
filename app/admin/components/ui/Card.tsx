@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-interface CardProps {
+export interface CardProps {
   title?: string;
   children: ReactNode;
   className?: string;
@@ -16,5 +16,5 @@ export function Card({ title, children, className = "" }: CardProps): JSX.Elemen
       )}
       <div className="p-6">{children}</div>
     </div>
-  );
-} 
+};
+}

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 
-interface Payment {
+export interface Payment {
   id: string;
   order_id: string;
   payment_hash?: string;
@@ -66,5 +66,5 @@ export default function PaymentDetailPage(): JSX.Element {
       <div className="mb-4">Créé le : {formatDate(payment.created_at)}</div>
       <div className="mb-4">Modifié le : {formatDate(payment.updated_at)}</div>
     </div>
-  );
-} 
+};
+}

@@ -1,47 +1,93 @@
-import { getSupabaseAdminClient } from '../supabase';
-import { InvoiceStatus } from '@/types/lightning';
+import { createClient } from '@/utils/supabase/server';
 
-interface PaymentLogEntry {
-  order_id: string;
-  order_ref: string;
+export enum InvoiceStatus {
+  pending = "pending",
+  settled = "settled",
+  expired = "expired",
+  failed = "failed"
+}
+import type { InvoiceStatus } from '@/types/lightning';
+import { SupabaseClient } from '@supabase/supabase-js';
+
+export interface PaymentLogEntry {
   payment_hash: string;
-  payment_request: string;
+  payment_request?: string;
   amount: number;
-  status: InvoiceStatus;
+  description: string;
+  status: InvoiceStatus['status'];
+  created_at: string;
+  updated_at: string;
   error?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
+/**
+ * Service de logging des paiements Lightning
+ */
 export class PaymentLogger {
-  private supabase;
+  private supabase: SupabaseClient | null = null;
 
   constructor() {
-    this.supabase = getSupabaseAdminClient();
+    this.initSupabase();
+  }
+
+  private async initSupabase() {
+    this.supabase = await createClient();
   }
 
   /**
-   * Enregistre un nouveau paiement
+   * Log un paiement ou met à jour un log existant
    */
-  async logPayment(entry: PaymentLogEntry): Promise<void> {
+  async logPayment(params: Partial<PaymentLogEntry> & { payment_hash: string }): Promise<void> {
     try {
-      const { error } = await this.supabase
-        .from('payment_logs')
-        .insert({
-          order_id: entry.order_id,
-          order_ref: entry.order_ref,
-          payment_hash: entry.payment_hash,
-          payment_request: entry.payment_request,
-          amount: entry.amount,
-          status: entry.status,
-          error: entry.error,
-          metadata: entry.metadata,
-          created_at: new Date().toISOString()
-        });
+      if (!this.supabase) {
+        await (this ?? Promise.reject(new Error("this is null"))).initSupabase();
+      }
 
-      if (error) throw error;
+      // Récupération du log existant
+      const { data: existingLog } = await (this ?? Promise.reject(new Error("this is null"))).supabase
+        .from('payment_logs')
+        .select('*')
+        .eq('payment_hash', params.payment_hash)
+        .single();
+
+      const now = new Date().toISOString();
+
+      if (existingLog) {
+        // Mise à jour du log existant
+        await (this ?? Promise.reject(new Error("this is null"))).supabase
+          .from('payment_logs')
+          .update({
+            status: params.status || existingLog.status,
+            updated_at: now,
+            error: params.error,
+            metadata: {
+              ...existingLog.metadata,
+              ...params.metadata
+            }
+          })
+          .eq('payment_hash', params.payment_hash);
+
+      } else {
+        // Création d'un nouveau log
+        await (this ?? Promise.reject(new Error("this is null"))).supabase
+          .from('payment_logs')
+          .insert({
+            payment_hash: params.payment_hash,
+            payment_request: params.payment_request,
+            amount: params.amount || 0,
+            description: params.description || '',
+            status: params.status || InvoiceStatus.pending,
+            created_at: params.created_at || now,
+            updated_at: now,
+            error: params.error,
+            metadata: params.metadata
+          });
+      }
+
     } catch (error) {
-      console.error('❌ PaymentLogger - Erreur enregistrement paiement:', error);
-      throw error;
+      console.error('❌ PaymentLogger - Erreur:', error);
+      // On ne propage pas l'erreur pour ne pas bloquer le flux principal
     }
   }
 
@@ -49,89 +95,73 @@ export class PaymentLogger {
    * Met à jour le statut d'un paiement
    */
   async updatePaymentStatus(paymentHash: string, status: InvoiceStatus): Promise<void> {
-    try {
-      const { error } = await this.supabase
-        .from('payment_logs')
-        .update({
-          status,
-          updated_at: new Date().toISOString()
-        })
-        .eq('payment_hash', paymentHash);
-
-      if (error) throw error;
-    } catch (error) {
-      console.error('❌ PaymentLogger - Erreur mise à jour statut:', error);
-      throw error;
-    }
+    await (this ?? Promise.reject(new Error("this is null"))).logPayment({
+      payment_hash: paymentHash,
+      status: status.status,
+      metadata: status.metadata
+    });
   }
 
   /**
-   * Enregistre une erreur de paiement
+   * Log une erreur de paiement
    */
   async logPaymentError(paymentHash: string, error: Error): Promise<void> {
-    try {
-      const { error: dbError } = await this.supabase
-        .from('payment_logs')
-        .update({
-          status: 'error',
-          error: error.message,
-          updated_at: new Date().toISOString()
-        })
-        .eq('payment_hash', paymentHash);
-
-      if (dbError) throw dbError;
-    } catch (err) {
-      console.error('❌ PaymentLogger - Erreur enregistrement erreur:', err);
-      throw err;
-    }
+    await (this ?? Promise.reject(new Error("this is null"))).logPayment({
+      payment_hash: paymentHash,
+      status: InvoiceStatus.failed,
+      error: error.message
+    });
   }
 
   /**
-   * Récupère l'historique des paiements d'une commande
+   * Récupère les logs de paiement
    */
-  async getOrderPaymentHistory(orderId: string): Promise<PaymentLogEntry[]> {
-    try {
-      const { data: logs, error } = await this.supabase
-        .from('payment_logs')
-        .select()
-        .eq('order_id', orderId)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      return logs || [];
-    } catch (error) {
-      console.error('❌ PaymentLogger - Erreur récupération historique:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Récupère les statistiques de paiement
-   */
-  async getPaymentStats(): Promise<{
+  async getLogs(params: {
+    status?: InvoiceStatus['status'];
+    limit?: number;
+    offset?: number;
+  }): Promise<{
+    logs: PaymentLogEntry[];
     total: number;
-    success: number;
-    failed: number;
-    pending: number;
   }> {
     try {
-      const { data: logs, error } = await this.supabase
+      if (!this.supabase) {
+        await (this ?? Promise.reject(new Error("this is null"))).initSupabase();
+      }
+
+      let query = this.supabase
         .from('payment_logs')
-        .select('status');
+        .select('*', { count: 'exact' });
 
-      if (error) throw error;
+      // Filtrage par statut
+      if (params.status) {
+        query = query.eq('status', params.status);
+      }
 
-      const stats = {
-        total: logs?.length || 0,
-        success: logs?.filter(log => log.status === 'settled').length || 0,
-        failed: logs?.filter(log => log.status === 'error').length || 0,
-        pending: logs?.filter(log => log.status === 'pending').length || 0
+      // Pagination
+      if (params.limit) {
+        query = query.limit(params.limit);
+      }
+      if (params.offset) {
+        query = query.range(params.offset, params.offset + (params.limit || 10) - 1);
+      }
+
+      // Tri par date de création décroissante
+      query = query.order('created_at', { ascending: false });
+
+      const { data: logs, count } = await query;
+
+      return {
+        logs: logs || [],
+        total: count || 0
       };
 
-      return stats;
     } catch (error) {
-      console.error('❌ PaymentLogger - Erreur récupération statistiques:', error);
-      throw error;
+      console.error('❌ PaymentLogger - Erreur récupération logs:', error);
+      return {
+        logs: [],
+        total: 0
+      };
     }
   }
-} 
+}

@@ -39,7 +39,7 @@ const UpdateProfileSchema = z.object({
 })
 
 export async function GET(request: NextRequest): Promise<Response> {
-  return withAuth(request, async (user) => {
+  return withAuth(request, async (user: any) => {
     try {
       // Récupérer le profil depuis la table profiles
       const { data: profile, error: profileError } = await getSupabaseAdminClient()
@@ -94,7 +94,7 @@ export async function GET(request: NextRequest): Promise<Response> {
 }
 
 export async function PUT(request: NextRequest): Promise<Response> {
-  return withAuth(request, async (user) => {
+  return withAuth(request, async (user: any) => {
     try {
       // Parse et validation des données
       const body = await request.json()
@@ -194,4 +194,4 @@ export async function PUT(request: NextRequest): Promise<Response> {
       return NextResponse.json(handleApiError(error), { status: 500 });
     }
   });
-} 
+}

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ApiResponse } from '@/types/database'
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_DAZNO_API_URL || 'https://api.dazno.de'
+const API_BASE_URL = process.env.NEXT_PUBLIC_DAZNO_API_URL ?? "" || 'https://api.dazno.de'
 
 export async function POST(req: NextRequest): Promise<Response> {
   try {
@@ -93,4 +93,4 @@ export async function GET(req: NextRequest): Promise<Response> {
       }
     }, { status: 500 })
   }
-} 
+}

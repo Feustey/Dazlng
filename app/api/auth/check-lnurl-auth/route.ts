@@ -39,4 +39,4 @@ export async function GET(req: NextRequest): Promise<Response> {
     authenticated: true,
     pubkey: challengeData.pubkey 
   });
-} 
+}

@@ -24,4 +24,4 @@ export async function GET(req: NextRequest): Promise<Response> {
 
 export async function POST(_request: NextRequest): Promise<NextResponse> {
   return NextResponse.json({ message: 'Admin payments endpoint placeholder' });
-} 
+}

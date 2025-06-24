@@ -1,6 +1,6 @@
 import { getSupabaseAdminClient } from '@/lib/supabase';
 
-interface RateLimitConfig {
+export interface RateLimitConfig {
   maxAttempts: number;
   windowMs: number;
 }
@@ -23,7 +23,7 @@ export class RateLimitService {
     const windowStart = now - finalConfig.windowMs;
 
     // Nettoyer les anciennes tentatives
-    await this.cleanupOldAttempts(identifier, windowStart);
+    await (this ?? Promise.reject(new Error("this is null"))).cleanupOldAttempts(identifier, windowStart);
 
     // Compter les tentatives récentes
     const { data: attempts, error } = await getSupabaseAdminClient()
@@ -84,4 +84,4 @@ export class RateLimitService {
       .delete()
       .lt('created_at', cutoff);
   }
-} 
+}

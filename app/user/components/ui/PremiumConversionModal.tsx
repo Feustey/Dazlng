@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-interface PremiumConversionModalProps {
+export interface PremiumConversionModalProps {
   isOpen: boolean;
   onClose: () => void;
   onUpgrade: () => void;
@@ -181,7 +181,7 @@ export const PremiumConversionModal: React.FC<PremiumConversionModalProps> = ({
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {features.map((feature, index) => (
+                {features.map((feature: any, index: any) => (
                   <div key={index} className="relative border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
                     {feature.popular && (
                       <div className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full">
@@ -289,7 +289,7 @@ export const PremiumConversionModal: React.FC<PremiumConversionModalProps> = ({
               </div>
               
               <div className="grid grid-cols-1 gap-6">
-                {testimonials.map((testimonial, index) => (
+                {testimonials.map((testimonial: any, index: any) => (
                   <div key={index} className="bg-gray-50 rounded-lg p-6 border border-gray-200">
                     <div className="flex items-start gap-4 mb-4">
                       <div className="text-3xl">{testimonial.avatar}</div>
@@ -343,5 +343,5 @@ export const PremiumConversionModal: React.FC<PremiumConversionModalProps> = ({
         </div>
       </div>
     </div>
-  );
-}; 
+};
+}

@@ -46,4 +46,4 @@ export async function GET(request: NextRequest) {
       message: 'Dazno API test failed'
     }, { status: 500 });
   }
-} 
+}

@@ -112,4 +112,4 @@ export async function GET(_req: NextRequest): Promise<Response> {
       details: error instanceof Error ? error.message : 'Erreur inconnue'
     }, { status: 500 });
   }
-} 
+}

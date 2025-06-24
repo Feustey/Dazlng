@@ -4,7 +4,7 @@ import { ApiResponse } from '@/types/database'
 import { createClient } from '@/utils/supabase/server'
 
 // Interfaces pour les types de données
-interface NodeStats {
+export interface NodeStats {
   alias?: string
   capacity: number
   channel_count?: number
@@ -13,20 +13,20 @@ interface NodeStats {
   routing_revenue_7d?: number
 }
 
-interface NodeInfo {
+export interface NodeInfo {
   current_stats: NodeStats
 }
 
-interface Recommendation {
+export interface Recommendation {
   type: string
   category?: string
 }
 
-interface Recommendations {
+export interface Recommendations {
   recommendations: Recommendation[]
 }
 
-interface PriorityAction {
+export interface PriorityAction {
   priority: number
   action: string
   timeline: string
@@ -37,32 +37,32 @@ interface PriorityAction {
   cost_estimate?: number
 }
 
-interface Priorities {
+export interface Priorities {
   priority_actions: PriorityAction[]
   goals?: string[]
 }
 
-interface ImplementationDetails {
+export interface ImplementationDetails {
   steps: string[]
   requirements: string[]
   estimated_hours?: number
   tools_needed?: string[]
 }
 
-interface AIAnalysis {
+export interface AIAnalysis {
   summary: string
   key_insights: string[]
   risk_assessment: string
   opportunity_score: number
 }
 
-interface ActionPlan {
+export interface ActionPlan {
   immediate_actions: string[]
   short_term_goals: string[]
   long_term_vision: string
 }
 
-export interface EnhancedPriorityAction {
+export export interface EnhancedPriorityAction {
   priority: number
   action: string
   timeline: string
@@ -77,7 +77,7 @@ export interface EnhancedPriorityAction {
   success_criteria?: string[]
 }
 
-export interface EnhancedPriorityResponse {
+export export interface EnhancedPriorityResponse {
   pubkey: string
   timestamp: string
   node_summary: {
@@ -163,7 +163,7 @@ export async function POST(
     }
 
     // Enrichir les actions prioritaires
-    const enhancedActions: EnhancedPriorityAction[] = priorities.priority_actions.map((action, _index) => {
+    const enhancedActions: EnhancedPriorityAction[] = priorities.priority_actions.map((action: any, _index: any) => {
       // Trouver les recommandations liées
       const relatedRecommendations = recommendations.recommendations.filter(rec => 
         rec.type.toLowerCase().includes(action.category?.toLowerCase() || '') ||
@@ -521,4 +521,3 @@ async function logUserActivity(userId: string, pubkey: string, action: string, d
     console.warn('⚠️ Impossible de logger l\'activité utilisateur:', error)
   }
 }
-

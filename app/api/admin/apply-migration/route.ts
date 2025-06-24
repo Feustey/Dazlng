@@ -16,7 +16,7 @@ export async function POST(_request: NextRequest): Promise<ReturnType<typeof Nex
         message: 'Variables d\'environnement Supabase Service Role requises pour cette opération. Veuillez configurer NEXT_PUBLIC_SUPABASE_URL et SUPABASE_SERVICE_ROLE_KEY.',
         details: {
           supabase_configured: !!getSupabaseAdminClient,
-          environment: process.env.NODE_ENV
+          environment: process.env.NODE_ENV ?? ""
         }
       }, { status: 500 });
     }
@@ -200,4 +200,4 @@ export async function POST(_request: NextRequest): Promise<ReturnType<typeof Nex
       stack: errorStack
     }, { status: 500 })
   }
-} 
+}

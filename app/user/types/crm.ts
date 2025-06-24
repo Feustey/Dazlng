@@ -1,6 +1,6 @@
 // Types pour le système CRM côté utilisateur
 
-export interface UserProfile {
+export export interface UserProfile {
   id: string;
   email: string;
   nom?: string;
@@ -17,7 +17,7 @@ export interface UserProfile {
   settings?: any;
 }
 
-export interface CRMData {
+export export interface CRMData {
   userScore: number;
   segment: 'prospect' | 'lead' | 'client' | 'premium' | 'champion';
   engagementLevel: number;
@@ -32,7 +32,7 @@ export interface CRMData {
   recommendations: SmartRecommendation[];
 }
 
-export interface SmartRecommendation {
+export export interface SmartRecommendation {
   id: string;
   title: string;
   description: string;
@@ -46,7 +46,7 @@ export interface SmartRecommendation {
   href: string;
 }
 
-export interface ProfileField {
+export export interface ProfileField {
   name: string;
   label: string;
   completed: boolean;
@@ -56,7 +56,7 @@ export interface ProfileField {
   description?: string;
 }
 
-export interface ConversionMetrics {
+export export interface ConversionMetrics {
   profileCompletionRate: number;
   emailVerificationRate: number;
   lightningAdoptionRate: number;
@@ -69,4 +69,4 @@ export interface ConversionMetrics {
     premium: number;
     champion: number;
   };
-} 
+}

@@ -3,11 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import { checkApiHealth } from '@/lib/dazno-api';
 
-interface ApiStatusWidgetProps {
+export interface ApiStatusWidgetProps {
   className?: string;
 }
 
-export default function ApiStatusWidget({ className = '' }: ApiStatusWidgetProps): React.ReactElement {
+export default function ApiStatusWidget({ className = '' }: ApiStatusWidgetProps): React.FC {
   const [apiStatus, setApiStatus] = useState<'checking' | 'up' | 'down'>('checking');
   const [lastCheck, setLastCheck] = useState<Date | null>(null);
 
@@ -104,5 +104,5 @@ export default function ApiStatusWidget({ className = '' }: ApiStatusWidgetProps
         </div>
       )}
     </div>
-  );
-} 
+};
+}

@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { FaChartLine, FaUsers, FaMousePointer, FaEye, FaArrowRight, FaDownload } from 'react-icons/fa';
 import { useConversionTracking, TrackingEvent } from '../../../hooks/useConversionTracking';
 
-interface FunnelStep {
+export interface FunnelStep {
   name: string;
   count: number;
   conversionRate: number;
   averageTime?: number;
 }
 
-interface MetricCardProps {
+export interface MetricCardProps {
   title: string;
   value: string | number;
   icon: React.ReactNode;
@@ -37,10 +37,14 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, icon, change, tre
       <h3 className="text-lg font-semibold text-gray-800 mb-2">{title}</h3>
       <p className="text-3xl font-bold text-gray-900">{value}</p>
     </div>
-  );
+};
 };
 
-const FunnelChart: React.FC<{ steps: FunnelStep[] }> = ({ steps }) => {
+export interface FunnelChartProps {
+  steps: FunnelStep[];
+}
+
+const FunnelChart: React.FC<FunnelChartProps> = ({ steps }) => {
   if (!steps.length) return null;
 
   const maxCount = Math.max(...steps.map(s => s.count));
@@ -53,7 +57,7 @@ const FunnelChart: React.FC<{ steps: FunnelStep[] }> = ({ steps }) => {
       </h3>
       
       <div className="space-y-4">
-        {steps.map((step, index) => (
+        {steps.map((step: any, index: any) => (
           <div key={step.name} className="flex items-center gap-4">
             {/* Étape */}
             <div className="flex-shrink-0 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
@@ -92,10 +96,14 @@ const FunnelChart: React.FC<{ steps: FunnelStep[] }> = ({ steps }) => {
         ))}
       </div>
     </div>
-  );
+};
 };
 
-const EventsList: React.FC<{ events: TrackingEvent[] }> = ({ events }) => {
+export interface EventsListProps {
+  events: TrackingEvent[];
+}
+
+const EventsList: React.FC<EventsListProps> = ({ events }) => {
   const recentEvents = events.slice(-10).reverse();
 
   return (
@@ -106,7 +114,7 @@ const EventsList: React.FC<{ events: TrackingEvent[] }> = ({ events }) => {
       </h3>
       
       <div className="space-y-3 max-h-64 overflow-y-auto">
-        {recentEvents.map((event, index) => (
+        {recentEvents.map((event: any, index: any) => (
           <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
             <div>
               <p className="font-medium text-gray-800">{event.stepName}</p>
@@ -119,55 +127,10 @@ const EventsList: React.FC<{ events: TrackingEvent[] }> = ({ events }) => {
         ))}
       </div>
     </div>
-  );
+};
 };
 
-export const FunnelAnalytics: React.FC = () => {
-  const { getLocalAnalytics, getFunnelMetrics } = useConversionTracking();
-  const [analytics, setAnalytics] = useState<TrackingEvent[]>([]);
-  const [funnelData, setFunnelData] = useState<FunnelStep[]>([]);
-  const [metrics, setMetrics] = useState<{
-    sessionId: string;
-    totalEvents: number;
-    sessionDuration: number;
-  } | null>(null);
-
-  useEffect(() => {
-    const updateAnalytics = (): void => {
-      const events = getLocalAnalytics();
-      const funnelMetrics = getFunnelMetrics();
-      
-      setAnalytics(events);
-      setMetrics(funnelMetrics);
-      
-      // Calculer les données du funnel
-      const stepNames = ['page_view', 'cta_click', 'form_interaction', 'demo_interaction', 'product_interest'];
-      const steps: FunnelStep[] = [];
-      
-      let previousCount = events.length;
-      
-      stepNames.forEach((stepName, index) => {
-        const stepEvents = events.filter(e => e.stepName === stepName);
-        const count = stepEvents.length;
-        const conversionRate = previousCount > 0 ? Math.round((count / previousCount) * 100) : 0;
-        
-        steps.push({
-          name: stepName.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()),
-          count,
-          conversionRate: index === 0 ? 100 : conversionRate
-        });
-        
-        previousCount = count;
-      });
-      
-      setFunnelData(steps);
-    };
-
-    updateAnalytics();
-    
-    // Mise à jour toutes les 5 secondes
-    const interval = setInterval(updateAnalytics, 5000);
-    return () => clearInterval(interval);
+export const FunnelAnalytics: React.FC = () => {) => clearInterval(interval);
   }, [getLocalAnalytics, getFunnelMetrics]);
 
   const exportData = (): void => {
@@ -262,7 +225,7 @@ export const FunnelAnalytics: React.FC = () => {
         )}
       </div>
     </div>
-  );
+};
 };
 
 export default FunnelAnalytics; 

@@ -1,57 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 
-const CommunitySection: React.FC = (): React.ReactElement => {
-  const router = useRouter();
-
-  const communityFeatures = [
-    {
-      icon: "🎯",
-      title: "Discord privé de +500 membres actifs",
-      description: "Channels spécialisés par niveau d'expertise",
-      features: [
-        "Partage de stratégies de routing en temps réel",
-        "Alertes communautaires sur les opportunités de marché",
-        "Canaux débutants, intermédiaires et experts"
-      ]
-    },
-    {
-      icon: "📚",
-      title: "Formation continue",
-      description: "Webinaires mensuels avec les top performers",
-      features: [
-        "Guides exclusifs mis à jour par la communauté",
-        "Mentorat one-to-one pour les débutants",
-        "Replays de toutes les formations"
-      ]
-    },
-    {
-      icon: "🏆",
-      title: "Programme de parrainage",
-      description: "10% de commission sur chaque nouveau membre",
-      features: [
-        "Bonus mensuels pour les contributeurs actifs",
-        "Reconnaissance des meilleurs performers",
-        "Challenges et concours réguliers"
-      ]
-    },
-    {
-      icon: "🔧",
-      title: "Support technique communautaire",
-      description: "Résolution de problèmes en < 30 minutes",
-      features: [
-        "Base de connaissances alimentée par tous",
-        "Experts bénévoles disponibles 24/7",
-        "Hotline urgence pour les problèmes critiques"
-      ]
-    }
-  ];
-
-  const handleJoinCommunity = (): void => {
-    router.push('/token-for-good');
-  };
-
-  return (
+const CommunitySection: React.FC = () => {
     <section className="py-20 bg-gradient-to-b from-indigo-900 to-purple-900 text-white">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-16">
@@ -65,7 +15,7 @@ const CommunitySection: React.FC = (): React.ReactElement => {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 mb-12">
-          {communityFeatures.map((feature, index) => (
+          {communityFeatures.map((feature: any, index: any) => (
             <div 
               key={index}
               className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-300"
@@ -79,7 +29,7 @@ const CommunitySection: React.FC = (): React.ReactElement => {
               </div>
               
               <ul className="space-y-3">
-                {feature.features.map((feat, featIndex) => (
+                {feature.features.map((feat: any, featIndex: any) => (
                   <li key={featIndex} className="flex items-start">
                     <span className="text-yellow-400 mr-3 mt-1">✨</span>
                     <span className="text-gray-200">{feat}</span>
@@ -129,7 +79,7 @@ const CommunitySection: React.FC = (): React.ReactElement => {
         </div>
       </div>
     </section>
-  );
+};
 };
 
 export default CommunitySection; 

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { OptimizedImage, LazyList, useCache } from '../shared/ui';
 
 // Exemple de données pour la liste
-const mockData = Array.from({ length: 100 }, (_, i) => ({
+const mockData = Array.from({ length: 100 }, (_: any, i: any) => ({
   id: i,
   title: `Élément ${i + 1}`,
   description: `Description de l'élément ${i + 1}`,
@@ -23,8 +23,7 @@ export default function PerformanceExample(): JSX.Element {
       return mockData;
     },
     { ttl: 5 * 60 * 1000 } // 5 minutes
-  );
-
+};
   const filteredData = cachedData?.filter(item =>
     item.title.toLowerCase().includes(searchTerm.toLowerCase())
   ) || [];
@@ -34,7 +33,7 @@ export default function PerformanceExample(): JSX.Element {
       <div className="flex items-center justify-center p-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
       </div>
-    );
+};
   }
 
   if (error) {
@@ -42,7 +41,7 @@ export default function PerformanceExample(): JSX.Element {
       <div className="text-red-500 p-4">
         Erreur lors du chargement des données: {error.message}
       </div>
-    );
+};
   }
 
   return (
@@ -55,7 +54,7 @@ export default function PerformanceExample(): JSX.Element {
           type="text"
           placeholder="Rechercher..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e: any) => setSearchTerm(e.target.value)}
           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </div>
@@ -83,7 +82,7 @@ export default function PerformanceExample(): JSX.Element {
         <LazyList
           items={filteredData}
           pageSize={10}
-          renderItem={(item, index) => (
+          renderItem={(item: any, index: any) => (
             <div key={item.id} className="bg-white rounded-lg shadow-md p-4 border border-gray-200">
               <div className="flex items-start space-x-4">
                 <OptimizedImage
@@ -131,5 +130,5 @@ export default function PerformanceExample(): JSX.Element {
         </ul>
       </div>
     </div>
-  );
-} 
+};
+}

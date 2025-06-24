@@ -4,7 +4,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import Image from 'next/image';
 
-export default function TermsPage(): React.ReactElement {
+export default function TermsPage(): React.FC {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       AOS.init({ 
@@ -135,7 +135,7 @@ export default function TermsPage(): React.ReactElement {
             </h2>
             
             <div className="grid md:grid-cols-3 gap-8">
-              {termsSections.map((section, idx) => (
+              {termsSections.map((section: any, idx: any) => (
                 <div 
                   key={idx} 
                   className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-xl"
@@ -158,7 +158,7 @@ export default function TermsPage(): React.ReactElement {
                 <div className="p-8">
                   <h3 className="text-2xl font-bold text-white mb-6 text-center">Activités Autorisées</h3>
                   <ul className="space-y-4">
-                    {allowedActivities.map((item, idx) => (
+                    {allowedActivities.map((item: any, idx: any) => (
                       <li key={idx} className="flex items-start bg-white/10 p-4 rounded-xl">
                         <span className="bg-green-100 p-1 rounded-full mr-3 flex-shrink-0">
                           <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -176,7 +176,7 @@ export default function TermsPage(): React.ReactElement {
                 <div className="p-8">
                   <h3 className="text-2xl font-bold text-white mb-6 text-center">Activités Interdites</h3>
                   <ul className="space-y-4">
-                    {prohibitedActivities.map((item, idx) => (
+                    {prohibitedActivities.map((item: any, idx: any) => (
                       <li key={idx} className="flex items-start bg-white/10 p-4 rounded-xl">
                         <span className="bg-red-100 p-1 rounded-full mr-3 flex-shrink-0">
                           <svg className="w-5 h-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -216,5 +216,5 @@ export default function TermsPage(): React.ReactElement {
         </section>
       </main>
     </>
-  );
+};
 }

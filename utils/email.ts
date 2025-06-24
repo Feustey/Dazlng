@@ -11,7 +11,7 @@ function getResendInstance(): any {
   }
 
   if (!resend && ResendModule) {
-    const apiKey = process.env.RESEND_API_KEY;
+    const apiKey = process.env.RESEND_API_KEY ?? "";
     if (!apiKey) {
       console.warn('RESEND_API_KEY non définie - utilisation du mode simulation');
       // Retourner un mock de Resend pour éviter les erreurs
@@ -30,14 +30,14 @@ function getResendInstance(): any {
   };
 }
 
-export interface SendEmailParams {
+export export interface SendEmailParams {
   to: string;
   subject: string;
   html: string;
   from?: string;
 }
 
-export interface EmailTemplateParams {
+export export interface EmailTemplateParams {
   title: string;
   subtitle?: string;
   username?: string;
@@ -347,4 +347,4 @@ export async function sendEmail({ to, subject, html, from }: SendEmailParams): P
     console.error('Erreur lors de l\'envoi d\'email:', error);
     throw new Error('Échec de l\'envoi de l\'email: ' + (error instanceof Error ? error.message : String(error)));
   }
-} 
+}

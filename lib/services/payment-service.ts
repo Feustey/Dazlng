@@ -1,7 +1,13 @@
-import { LightningService } from './lightning-service';
+import { createDazNodeLightningService } from './daznode-lightning-service';
+
+export enum InvoiceStatus {
+  pending = "pending",
+  settled = "settled",
+  expired = "expired",
+  failed = "failed"
+}
 import { PaymentLogger } from './payment-logger';
 import { OrderService } from './order-service';
-import { InvoiceStatus, CreateInvoiceParams, Invoice } from '@/types/lightning';
 import { Order } from '@/types/database';
 import { z } from 'zod';
 
@@ -31,15 +37,62 @@ interface ApiResponse<T> {
   };
 }
 
-export class PaymentService {
-  private lightningService: LightningService;
-  private logger: PaymentLogger;
-  private orderService: OrderService;
+export interface CreateInvoiceParams {
+  amount: number;
+  description: string;
+  metadata?: Record<string, string | number | boolean>;
+  expiry?: number;
+}
 
-  constructor() {
-    this.lightningService = new LightningService();
+export interface Invoice {
+  paymentRequest: string;
+  paymentHash: string;
+  amount: number;
+  expiresAt: string;
+  createdAt: string;
+}
+
+type InvoiceStatus = InvoiceStatus.settled | InvoiceStatus.pending | InvoiceStatus.expired | 'error';
+
+export interface WatchInvoiceParams {
+  invoice: Invoice;
+  checkInterval?: number;
+  maxAttempts?: number;
+  onPaid: () => Promise<void>;
+  onExpired: () => void;
+  onError: (error: Error) => void;
+  onRenewing: () => void;
+  onRenewed: (newInvoice: Invoice) => void;
+}
+
+export interface PaymentServiceConfig {
+  provider?: 'daznode' | 'lnd';
+}
+
+export interface PaymentStatus {
+  status: InvoiceStatus.pending | 'paid' | InvoiceStatus.failed | InvoiceStatus.expired;
+  settledAt?: string;
+  amount?: number;
+}
+
+export interface PaymentServiceResult {
+  success: boolean;
+  data?: PaymentStatus;
+  error?: {
+    code: string;
+    message: string;
+  };
+}
+
+export class PaymentService {
+  private provider: 'daznode' | 'lnd';
+  private logger: PaymentLogger | null = null;
+  private lightningService = createDazNodeLightningService();
+  private orderService = new OrderService();
+
+  constructor(config?: PaymentServiceConfig) {
+    this.provider = config?.provider || 'daznode';
     this.logger = new PaymentLogger();
-    this.orderService = new OrderService();
   }
 
   /**
@@ -47,59 +100,28 @@ export class PaymentService {
    */
   async createOrderWithInvoice(params: CreateOrderParams): Promise<{
     order: Order;
-    invoice: {
-      paymentRequest: string;
-      paymentHash: string;
-      amount: number;
-    };
+    invoice: Invoice;
     orderRef: string;
   }> {
     try {
-      // 1. Validation des données
-      const validatedParams = CreateOrderSchema.parse(params);
+      // Création de la commande
+      const order = await (this ?? Promise.reject(new Error("this is null"))).orderService?.createOrder(params);
+      const orderRef = order.id;
 
-      // 2. Création de la commande
-      const order = await this.orderService.createOrder(validatedParams);
-
-      // 3. Génération d'une référence unique pour le support
-      const orderRef = `${order.id.substring(0, 8)}-${Date.now().toString(36)}`;
-
-      // 4. Génération de la facture
-      const invoice = await this.lightningService.generateInvoice({
+      // Génération de la facture
+      const invoice = await (this ?? Promise.reject(new Error("this is null"))).createInvoice({
         amount: order.amount,
-        description: `${validatedParams.product_type.toUpperCase()} - ${validatedParams.plan?.toUpperCase() || 'BASIC'} - ${orderRef}`,
-        metadata: { 
-          order_id: order.id, 
-          order_ref: orderRef,
-          ...validatedParams.metadata 
+        description: `${params.product_type.toUpperCase()} - ${params.plan?.toUpperCase() || 'BASIC'} - ${orderRef}`,
+        metadata: {
+          orderId: orderRef,
+          productType: params.product_type,
+          plan: params.plan
         }
       });
 
-      // 5. Mise à jour de la commande avec les informations de paiement
-      await this.orderService.updateOrder(order.id, {
-        payment_hash: invoice.paymentHash,
-        payment_request: invoice.paymentRequest,
-        order_ref: orderRef
-      });
-
-      // 6. Log du paiement
-      await this.logger.logPayment({
-        order_id: order.id,
-        order_ref: orderRef,
-        payment_hash: invoice.paymentHash,
-        payment_request: invoice.paymentRequest,
-        amount: invoice.amount,
-        status: 'pending',
-        metadata: validatedParams.metadata
-      });
-
-      return {
-        order,
-        invoice,
-        orderRef
-      };
+      return { order, invoice, orderRef };
     } catch (error) {
-      console.error('❌ PaymentService - Erreur création commande:', error);
+      console.error('Erreur création commande et facture:', error);
       throw error;
     }
   }
@@ -107,25 +129,10 @@ export class PaymentService {
   /**
    * Vérifie le statut d'une facture et met à jour la commande si nécessaire
    */
-  async checkInvoiceStatus(paymentHash: string): Promise<{ status: InvoiceStatus }> {
+  async checkInvoiceStatus(paymentHash: string): Promise<InvoiceStatus> {
     try {
-      const response = await fetch('/api/lightning', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: 'checkInvoice',
-          params: { paymentHash }
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Erreur vérification facture');
-      }
-
-      const { data } = await response.json() as ApiResponse<{ status: InvoiceStatus }>;
-      return data;
+      const status = await (this ?? Promise.reject(new Error("this is null"))).lightningService?.checkInvoiceStatus(paymentHash);
+      return status as InvoiceStatus;
     } catch (error) {
       console.error('Erreur vérification facture:', error);
       throw error;
@@ -136,86 +143,65 @@ export class PaymentService {
    * Surveille une facture avec renouvellement automatique
    */
   async watchInvoiceWithRenewal(params: {
-    invoice: {
-      paymentRequest: string;
-      paymentHash: string;
-      amount: number;
-    };
+    invoice: Invoice;
     orderId: string;
     orderRef: string;
     onPaid: () => Promise<void>;
     onExpired: () => void;
     onError: (error: Error) => void;
     onRenewing: () => void;
-    onRenewed: (newInvoice: { paymentRequest: string; paymentHash: string; amount: number; }) => void;
+    onRenewed: (newInvoice: Invoice) => void;
     checkInterval?: number;
     maxAttempts?: number;
   }): Promise<void> {
     try {
-      await this.lightningService.watchInvoiceWithRenewal(params.invoice, {
-        checkInterval: params.checkInterval || 3000,
-        maxAttempts: params.maxAttempts || 240,
-        onPaid: async () => {
-          await this.orderService.markOrderPaid(params.orderId);
-          await this.logger.updatePaymentStatus(params.invoice.paymentHash, 'settled');
-          await params.onPaid();
-        },
-        onExpired: () => {
-          this.logger.updatePaymentStatus(params.invoice.paymentHash, 'expired');
-          params.onExpired();
-        },
-        onError: (error) => {
-          this.logger.logPaymentError(params.invoice.paymentHash, error);
-          params.onError(error);
-        },
-        onRenewing: params.onRenewing,
-        onRenewed: async (newInvoice) => {
-          await this.orderService.updateOrder(params.orderId, {
-            payment_hash: newInvoice.paymentHash,
-            payment_request: newInvoice.paymentRequest
-          });
-          await this.logger.logPayment({
-            order_id: params.orderId,
-            order_ref: params.orderRef,
-            payment_hash: newInvoice.paymentHash,
-            payment_request: newInvoice.paymentRequest,
-            amount: newInvoice.amount,
-            status: 'pending'
-          });
-          params.onRenewed(newInvoice);
+      let attempts = 0;
+      const maxAttempts = params.maxAttempts || 120; // 6 minutes
+      const checkInterval = params.checkInterval || 3000;
+
+      const watcher = setInterval(async () => {
+        try {
+          attempts++;
+
+          if (attempts >= maxAttempts) {
+            clearInterval(watcher);
+            await (this ?? Promise.reject(new Error("this is null"))).logger?.updatePaymentStatus(params.invoice.paymentHash, InvoiceStatus.expired);
+            params.onExpired();
+            return;
+          }
+
+          const { status } = await (this ?? Promise.reject(new Error("this is null"))).checkInvoiceStatus(params.invoice.paymentHash);
+
+          if (status === InvoiceStatus.settled) {
+            clearInterval(watcher);
+            await (this ?? Promise.reject(new Error("this is null"))).orderService?.markOrderPaid(params.orderId);
+            await (this ?? Promise.reject(new Error("this is null"))).logger?.updatePaymentStatus(params.invoice.paymentHash, InvoiceStatus.settled);
+            await (params ?? Promise.reject(new Error("params is null"))).onPaid();
+          } else if (status === InvoiceStatus.expired) {
+            clearInterval(watcher);
+            await (this ?? Promise.reject(new Error("this is null"))).logger?.updatePaymentStatus(params.invoice.paymentHash, InvoiceStatus.expired);
+            params.onExpired();
+          }
+        } catch (error) {
+          clearInterval(watcher);
+          await (this ?? Promise.reject(new Error("this is null"))).logger?.logPaymentError(params.invoice.paymentHash, error instanceof Error ? error : new Error('Erreur inconnue'));
+          params.onError(error instanceof Error ? error : new Error('Erreur inconnue'));
         }
-      });
+      }, checkInterval);
+
     } catch (error) {
       console.error('❌ PaymentService - Erreur surveillance facture:', error);
       throw error;
     }
   }
 
-  async generateInvoice(params: CreateInvoiceParams): Promise<Invoice> {
+  async createInvoice(params: CreateInvoiceParams): Promise<Invoice> {
     try {
-      const response = await fetch('/api/lightning', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: 'generateInvoice',
-          params: {
-            amount: params.amount,
-            description: params.description,
-            expires_at: params.expires_at
-          }
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Erreur génération facture');
-      }
-
-      const { data } = await response.json() as ApiResponse<Invoice>;
-      return data;
+      const invoice = await (this ?? Promise.reject(new Error("this is null"))).lightningService?.generateInvoice(params);
+      await (this ?? Promise.reject(new Error("this is null"))).logger?.log('invoice_created', invoice);
+      return invoice;
     } catch (error) {
-      console.error('Erreur génération facture:', error);
+      console.error('Erreur création facture:', error);
       throw error;
     }
   }
@@ -228,12 +214,12 @@ export class PaymentService {
   }): Promise<void> {
     const checkInterval = setInterval(async () => {
       try {
-        const { status } = await this.checkInvoiceStatus(params.paymentHash);
+        const { status } = await (this ?? Promise.reject(new Error("this is null"))).checkInvoiceStatus(params.paymentHash);
         
-        if (status === 'settled') {
+        if (status === InvoiceStatus.settled) {
           clearInterval(checkInterval);
           params.onPaid();
-        } else if (status === 'expired') {
+        } else if (status === InvoiceStatus.expired) {
           clearInterval(checkInterval);
           params.onExpired();
         }
@@ -243,4 +229,27 @@ export class PaymentService {
       }
     }, 5000); // Vérifier toutes les 5 secondes
   }
-} 
+
+  async checkPayment(paymentHash: string): Promise<PaymentServiceResult> {
+    try {
+      const status = await (this ?? Promise.reject(new Error("this is null"))).lightningService?.checkPaymentStatus(paymentHash);
+
+      await (this ?? Promise.reject(new Error("this is null"))).logger?.updatePaymentStatus(paymentHash, status.status);
+
+      return {
+        success: true,
+        data: status
+      };
+
+    } catch (error) {
+      console.error('❌ PaymentService - Erreur vérification:', error);
+      return {
+        success: false,
+        error: {
+          code: 'PAYMENT_CHECK_ERROR',
+          message: error instanceof Error ? error.message : 'Erreur inconnue'
+        }
+      };
+    }
+  }
+}

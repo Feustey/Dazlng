@@ -6,7 +6,7 @@ import { ErrorCodes } from "@/types/database";
 
 // GET /api/users/me/notification-settings - Récupérer les paramètres de notification
 export async function GET(req: NextRequest): Promise<Response> {
-  return withAuth(req, async (user) => {
+  return withAuth(req, async (user: any) => {
     try {
       const { data, error } = await getSupabaseAdminClient()
         .from("user_notification_settings")
@@ -39,7 +39,7 @@ export async function GET(req: NextRequest): Promise<Response> {
 
 // POST /api/users/me/notification-settings - Mettre à jour les paramètres
 export async function POST(req: NextRequest): Promise<Response> {
-  return withAuth(req, async (user) => {
+  return withAuth(req, async (user: any) => {
     try {
       const body = await req.json();
       const result = notificationSettingsSchema.safeParse(body);
@@ -81,4 +81,4 @@ export async function POST(req: NextRequest): Promise<Response> {
       return NextResponse.json(handleApiError(error), { status: 500 });
     }
   });
-} 
+}

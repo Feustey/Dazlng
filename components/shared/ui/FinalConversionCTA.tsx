@@ -1,25 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 
-const FinalConversionCTA: React.FC = (): React.ReactElement => {
-  const router = useRouter();
-
-  const guarantees = [
-    "Configuration complète de votre nœud par nos experts",
-    "Intégration dans la communauté Discord",
-    "Premiers revenus Lightning (objectif : 50€ minimum)",
-    "Formation personnalisée selon votre profil"
-  ];
-
-  const handleOrderDazBox = (): void => {
-    router.push('/dazbox');
-  };
-
-  const handleJoinCommunity = (): void => {
-    router.push('/token-for-good');
-  };
-
-  return (
+const FinalConversionCTA: React.FC = () => {
     <section className="py-20 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 text-white">
       <div className="max-w-6xl mx-auto px-4 text-center">
         <div className="mb-12">
@@ -41,7 +23,7 @@ const FinalConversionCTA: React.FC = (): React.ReactElement => {
           </h3>
           
           <div className="grid md:grid-cols-2 gap-6">
-            {guarantees.map((guarantee, index) => (
+            {guarantees.map((guarantee: any, index: any) => (
               <div key={index} className="flex items-center text-left">
                 <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
                   <span className="text-white font-bold">✓</span>
@@ -106,7 +88,7 @@ const FinalConversionCTA: React.FC = (): React.ReactElement => {
         </div>
       </div>
     </section>
-  );
+};
 };
 
 export default FinalConversionCTA; 

@@ -1,13 +1,13 @@
 import React, { FC } from 'react';
 
-interface NodeCardProps {
+export interface NodeCardProps {
   nodeData: {
-    pubkey?: string;
-    alias?: string;
-    totalCapacity?: number;
-    activeChannels?: number;
-    status?: 'online' | 'offline' | 'syncing';
-  } | null;
+  pubkey?: string;
+  alias?: string;
+  totalCapacity?: number;
+  activeChannels?: number;
+  status?: 'online' | 'offline' | 'syncing';
+} | null;
   showUpgradePrompt?: boolean;
 }
 
@@ -22,7 +22,7 @@ const NodeCard: FC<NodeCardProps> = ({ nodeData, showUpgradePrompt = false }) =>
           Connecter mon nœud
         </button>
       </div>
-    );
+};
   }
 
   return (
@@ -67,7 +67,7 @@ const NodeCard: FC<NodeCardProps> = ({ nodeData, showUpgradePrompt = false }) =>
         </div>
       </div>
     </div>
-  );
+};
 };
 
 export default NodeCard;

@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, useState, useCallback } from 'react'
 
-interface WalletAuthState {
+export interface WalletAuthState {
   isConnected: boolean
   address: string | null
   isReady: boolean
@@ -39,13 +39,13 @@ export function useWalletAuth(): WalletAuthState & {
     } catch (error) {
       console.error('Erreur lors de la vérification du wallet:', error)
     }
-  }, [router])
+  }, [router]);
 
   useEffect(() => {
     if (walletState.isReady && walletState.isConnected && walletState.address) {
       verifyWalletSession(walletState.address)
     }
-  }, [walletState.isConnected, walletState.isReady, walletState.address, verifyWalletSession])
+  }, [walletState.isConnected, walletState.isReady, walletState.address, verifyWalletSession]);
 
   const connect = async (_walletType: string): Promise<void> => {
     try {
@@ -73,4 +73,4 @@ export function useWalletAuth(): WalletAuthState & {
     connect,
     disconnect,
   }
-} 
+}

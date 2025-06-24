@@ -18,7 +18,7 @@ export function handleApiError(error: any): ApiResponse<null> {
     error: {
       code: isSupabaseError ? error.code : ErrorCodes.INTERNAL_ERROR,
       message,
-      details: process.env.NODE_ENV === 'development' ? error : undefined
+      details: process.env.NODE_ENV ?? "" === 'development' ? error : undefined
     }
   };
 }
@@ -94,7 +94,7 @@ export async function withAuth(
         }
       },
       { status: 401 }
-    );
+};
   }
   
   try {
@@ -123,7 +123,7 @@ export async function withAdminAuth(
         }
       },
       { status: 403 }
-    );
+};
   }
   
   try {
@@ -131,4 +131,4 @@ export async function withAdminAuth(
   } catch (error) {
     return NextResponse.json(handleApiError(error), { status: 500 });
   }
-} 
+}

@@ -1,11 +1,19 @@
-import { createLightningService, LightningInvoice, CreateInvoiceParams, InvoiceStatus } from './lightning-service';
+import { createLightningService } from './lightning-service';
+import type { Invoice, CreateInvoiceParams, InvoiceStatus } from '@/types/lightning';
+
+export enum InvoiceStatus {
+  pending = "pending",
+  settled = "settled",
+  expired = "expired",
+  failed = "failed"
+}
+import type { Invoice, CreateInvoiceParams, InvoiceStatus } from '@/types/lightning';
+import type { Invoice, CreateInvoiceParams, InvoiceStatus } from '@/types/lightning';
 import { createLNBitsService } from './lnbits-service';
 import { PaymentLogger } from './payment-logger';
-import {
-  WatchInvoiceConfig
-} from '@/types/lightning';
+import { WatchInvoiceConfig } from '@/types/lightning';
 
-interface UnifiedInvoice {
+export interface UnifiedInvoice {
   id: string;
   paymentRequest: string;
   paymentHash: string;
@@ -16,13 +24,13 @@ interface UnifiedInvoice {
   metadata?: Record<string, any>;
 }
 
-interface UnifiedInvoiceStatus {
-  status: 'pending' | 'settled' | 'cancelled' | 'expired';
+export interface UnifiedInvoiceStatus {
+  status: InvoiceStatus.pending | InvoiceStatus.settled | 'cancelled' | InvoiceStatus.expired;
   settledAt?: string;
   amount?: number;
 }
 
-interface UnifiedWalletInfo {
+export interface UnifiedWalletInfo {
   isOnline: boolean;
   provider: 'lnd' | 'lnbits';
   walletInfo?: {
@@ -40,17 +48,19 @@ interface ExtendedCreateInvoiceParams extends CreateInvoiceParams {
 
 export class UnifiedLightningService {
   private provider: 'lnd' | 'lnbits';
-  private lightningService?: ReturnType<typeof createLightningService>;
-  private lnbitsService?: ReturnType<typeof createLNBitsService>;
-  private paymentLogger: PaymentLogger;
+  private lightningService?: ReturnType<typeof createLightningService> | null;
+  private lnbitsService?: ReturnType<typeof createLNBitsService> | null;
+  private paymentLogger: PaymentLogger | null = null;
   private watchers: Map<string, NodeJS.Timeout>;
 
   constructor() {
-    this.provider = process.env.LIGHTNING_PROVIDER === 'lnd' ? 'lnd' : 'lnbits';
+    this.provider = process.env.LIGHTNING_PROVIDER ?? "" === 'lnd' ? 'lnd' : 'lnbits';
     this.paymentLogger = new PaymentLogger();
     this.watchers = new Map();
+    this.lightningService = null;
+    this.lnbitsService = null;
 
-    // Initialisation des services
+    // Initialisation des services avec gestion d'erreur
     try {
       if (this.provider === 'lnd') {
         this.lightningService = createLightningService();
@@ -59,28 +69,30 @@ export class UnifiedLightningService {
       }
     } catch (error) {
       console.error('❌ UnifiedLightning - Erreur initialisation service:', error);
-      throw error;
+      // Ne pas throw l'erreur, utiliser le fallback
+      this.lightningService = null;
+      this.lnbitsService = null;
     }
   }
 
   /**
    * Génère une facture Lightning
    */
-  async generateInvoice(params: ExtendedCreateInvoiceParams): Promise<LightningInvoice> {
+  async generateInvoice(params: ExtendedCreateInvoiceParams): Promise<Invoice> {
     try {
-      const invoice = await this.provider === 'lnd'
+      const invoice = await (this ?? Promise.reject(new Error("this is null"))).provider === 'lnd'
         ? this.generateLNDInvoice(params)
         : this.generateLNBitsInvoice(params);
 
       // Logger la création de la facture
       if (params.metadata?.order_id) {
-        await this.paymentLogger.logPayment({
-          order_id: params.metadata.order_id,
-          order_ref: params.metadata.order_ref || '',
+        await (this ?? Promise.reject(new Error("this is null"))).paymentLogger?.logPayment({
+          order_id: params.metadata.order_id as string,
+          order_ref: (params.metadata.order_ref as string) || '',
           payment_hash: invoice.paymentHash,
           payment_request: invoice.paymentRequest,
           amount: invoice.amount,
-          status: 'pending',
+          status: InvoiceStatus.pending,
           metadata: params.metadata
         });
       }
@@ -96,7 +108,7 @@ export class UnifiedLightningService {
    * Surveille une facture avec renouvellement automatique
    */
   async watchInvoiceWithRenewal(
-    invoice: LightningInvoice,
+    invoice: Invoice,
     config: WatchInvoiceConfig = {}
   ): Promise<void> {
     const {
@@ -136,7 +148,7 @@ export class UnifiedLightningService {
           onRenewing?.();
 
           // Générer une nouvelle facture
-          const newInvoice = await this.generateInvoice({
+          const newInvoice = await (this ?? Promise.reject(new Error("this is null"))).generateInvoice({
             amount: currentInvoice.amount,
             description: currentInvoice.description,
             metadata: currentInvoice.metadata
@@ -151,12 +163,12 @@ export class UnifiedLightningService {
         }
 
         // Vérifier le statut
-        const status = await this.checkInvoiceStatus(currentInvoice.paymentHash);
+        const status = await (this ?? Promise.reject(new Error("this is null"))).checkInvoiceStatus(currentInvoice.paymentHash);
 
-        if (status === 'settled') {
+        if (status === InvoiceStatus.settled) {
           this.clearWatcher(currentInvoice.paymentHash);
           await onPaid?.();
-        } else if (status === 'expired') {
+        } else if (status === InvoiceStatus.expired) {
           this.clearWatcher(currentInvoice.paymentHash);
           onExpired?.();
         }
@@ -168,20 +180,20 @@ export class UnifiedLightningService {
       }
     }, checkInterval);
 
-    this.watchers.set(invoice.paymentHash, watcher);
+    this.watchers?.set(invoice.paymentHash, watcher);
   }
 
   /**
    * Vérifie le statut d'une facture
    */
-  async checkInvoiceStatus(paymentHash: string): Promise<InvoiceStatus> {
+  async checkInvoiceStatus(paymentHash: string): Promise<InvoiceStatus['status']> {
     try {
-      const status = await this.provider === 'lnd'
+      const status = await (this ?? Promise.reject(new Error("this is null"))).provider === 'lnd'
         ? this.checkLNDInvoice(paymentHash)
         : this.checkLNBitsInvoice(paymentHash);
 
       // Mettre à jour le log
-      await this.paymentLogger.updateStatus(paymentHash, status);
+      await (this ?? Promise.reject(new Error("this is null"))).paymentLogger?.updateStatus(paymentHash, status);
 
       return status;
     } catch (error) {
@@ -193,32 +205,32 @@ export class UnifiedLightningService {
   /**
    * Nettoie un watcher
    */
-  private clearWatcher(paymentHash: string) {
-    const watcher = this.watchers.get(paymentHash);
+  private clearWatcher(paymentHash: string): void {
+    const watcher = this.watchers?.get(paymentHash);
     if (watcher) {
       clearInterval(watcher);
-      this.watchers.delete(paymentHash);
+      this.watchers?.delete(paymentHash);
     }
   }
 
   /**
    * Génère une facture via LND
    */
-  private async generateLNDInvoice(params: ExtendedCreateInvoiceParams): Promise<LightningInvoice> {
+  private async generateLNDInvoice(params: ExtendedCreateInvoiceParams): Promise<Invoice> {
     if (!this.lightningService) {
       throw new Error('Service LND non initialisé');
     }
-    return this.lightningService.generateInvoice(params);
+    return this.lightningService?.generateInvoice(params);
   }
 
   /**
    * Génère une facture via LNBits
    */
-  private async generateLNBitsInvoice(params: ExtendedCreateInvoiceParams): Promise<LightningInvoice> {
+  private async generateLNBitsInvoice(params: ExtendedCreateInvoiceParams): Promise<Invoice> {
     if (!this.lnbitsService) {
       throw new Error('Service LNBits non initialisé');
     }
-    const invoice = await this.lnbitsService.createInvoice(params);
+    const invoice = await (this ?? Promise.reject(new Error("this is null"))).lnbitsService?.createInvoice(params);
     return {
       id: invoice.checking_id,
       paymentRequest: invoice.payment_request,
@@ -226,28 +238,35 @@ export class UnifiedLightningService {
       createdAt: invoice.created_at,
       expiresAt: invoice.expires_at,
       amount: invoice.amount,
-      description: invoice.description
+      description: invoice.description,
+      status: {
+        status: InvoiceStatus.pending,
+        amount: invoice.amount,
+        metadata: invoice.metadata || {}
+      }
     };
   }
 
   /**
    * Vérifie une facture via LND
    */
-  private async checkLNDInvoice(paymentHash: string): Promise<InvoiceStatus> {
+  private async checkLNDInvoice(paymentHash: string): Promise<InvoiceStatus['status']> {
     if (!this.lightningService) {
       throw new Error('Service LND non initialisé');
     }
-    return this.lightningService.checkInvoiceStatus(paymentHash);
+    const status = await (this ?? Promise.reject(new Error("this is null"))).lightningService?.checkInvoiceStatus(paymentHash);
+    return status.status;
   }
 
   /**
    * Vérifie une facture via LNBits
    */
-  private async checkLNBitsInvoice(paymentHash: string): Promise<InvoiceStatus> {
+  private async checkLNBitsInvoice(paymentHash: string): Promise<InvoiceStatus['status']> {
     if (!this.lnbitsService) {
       throw new Error('Service LNBits non initialisé');
     }
-    return this.lnbitsService.checkInvoiceStatus(paymentHash);
+    const status = await (this ?? Promise.reject(new Error("this is null"))).lnbitsService?.checkInvoiceStatus(paymentHash);
+    return status.status;
   }
 
   /**
@@ -258,7 +277,7 @@ export class UnifiedLightningService {
       console.log(`🔍 UnifiedLightning - Informations wallet via ${this.provider}`);
 
       if (this.provider === 'lnd' && this.lightningService) {
-        const health = await this.lightningService.healthCheck();
+        const health = await (this ?? Promise.reject(new Error("this is null"))).lightningService?.healthCheck();
         
         return {
           isOnline: health.isOnline,
@@ -272,7 +291,7 @@ export class UnifiedLightningService {
         };
 
       } else if (this.provider === 'lnbits' && this.lnbitsService) {
-        const walletInfo = await this.lnbitsService.getWalletInfo();
+        const walletInfo = await (this ?? Promise.reject(new Error("this is null"))).lnbitsService?.getWalletInfo();
         
         return {
           isOnline: true,
@@ -296,7 +315,7 @@ export class UnifiedLightningService {
    * Health check unifié
    */
   async healthCheck(): Promise<{ isOnline: boolean; provider: string }> {
-    const walletInfo = await this.getWalletInfo();
+    const walletInfo = await (this ?? Promise.reject(new Error("this is null"))).getWalletInfo();
     return {
       isOnline: walletInfo.isOnline,
       provider: this.provider
@@ -309,7 +328,7 @@ export class UnifiedLightningService {
   async close(): Promise<void> {
     try {
       if (this.provider === 'lnd' && this.lightningService) {
-        await this.lightningService.close();
+        await (this ?? Promise.reject(new Error("this is null"))).lightningService?.close();
       }
       console.log('✅ UnifiedLightning - Connexions fermées');
     } catch (error) {
@@ -324,7 +343,7 @@ export class UnifiedLightningService {
     return this.provider;
   }
 
-  private mapLightningInvoice(invoice: LightningInvoice): UnifiedInvoice {
+  private mapLightningInvoice(invoice: Invoice): UnifiedInvoice {
     return {
       id: invoice.id,
       paymentRequest: invoice.paymentRequest,
@@ -359,4 +378,4 @@ export type {
   UnifiedInvoice, 
   UnifiedInvoiceStatus, 
   UnifiedWalletInfo 
-}; 
+}

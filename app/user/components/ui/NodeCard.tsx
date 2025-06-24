@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-interface StatsWidgetProps {
+export interface StatsWidgetProps {
   title: string;
   value: string | number;
   unit?: string;
@@ -30,7 +30,7 @@ const StatsWidget: FC<StatsWidgetProps> = ({ title, value, unit, icon, trend, st
         <div className="text-xs mt-1 text-gray-400">{status}</div>
       )}
     </div>
-  );
+};
 };
 
 export default StatsWidget;

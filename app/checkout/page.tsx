@@ -1,3 +1,4 @@
+import React from 'react';
 "use client";
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -6,7 +7,7 @@ import { OrderSummary } from '../components/checkout/Summary';
 import { PaymentForm } from '../components/checkout/Payment';
 import { UserInfoForm } from '../components/checkout/UserInfo';
 
-export default function DazBoxCheckout(): React.ReactElement {
+export default function DazBoxCheckout(): React.FC {
   const [step, setStep] = useState(1);
   const [orderData, setOrderData] = useState({});
 
@@ -16,7 +17,7 @@ export default function DazBoxCheckout(): React.ReactElement {
     { id: 3, name: 'Confirmation' }
   ];
 
-  const renderStep = (): React.ReactElement => {
+  const renderStep = (): React.FC => {
     switch(step) {
       case 1:
         return (
@@ -28,13 +29,13 @@ export default function DazBoxCheckout(): React.ReactElement {
             transition={{ duration: 0.3 }}
           >
             <UserInfoForm 
-              onSubmit={(data) => {
+              onSubmit={(data: any) => {
                 setOrderData({ ...orderData, ...data });
                 setStep(2);
               }}
             />
           </motion.div>
-        );
+};
       case 2:
         return (
           <motion.div
@@ -49,7 +50,7 @@ export default function DazBoxCheckout(): React.ReactElement {
               onSuccess={() => setStep(3)}
             />
           </motion.div>
-        );
+};
       case 3:
         return (
           <motion.div
@@ -78,7 +79,7 @@ export default function DazBoxCheckout(): React.ReactElement {
               </div>
             </div>
           </motion.div>
-        );
+};
       default:
         return <div />;
     }
@@ -102,5 +103,5 @@ export default function DazBoxCheckout(): React.ReactElement {
         </div>
       </div>
     </div>
-  );
-} 
+};
+}

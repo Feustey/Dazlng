@@ -6,51 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useConversionTracking } from '../../../hooks/useConversionTracking';
 import { useScrollTracking } from '../../../hooks/useScrollTracking';
 
-const DazNodeHero: React.FC = (): React.ReactElement => {
-  const router = useRouter();
-  const { trackCTAClick, trackPageView, trackProductInterest } = useConversionTracking();
-  
-  // Track scroll depth pour cette section
-  useScrollTracking({ pageName: 'daznode_landing' });
-
-  // Track page view au montage du composant
-  useEffect(() => {
-    trackPageView('daznode_landing', { 
-      section: 'hero',
-      product: 'daznode' 
-    });
-    trackProductInterest('daznode', 'page_view', { source: 'hero' });
-  }, [trackPageView, trackProductInterest]);
-
-  const handleStartProfessional = (): void => {
-    trackCTAClick('primary', 'daznode_hero', { 
-      action: 'start_professional',
-      product: 'daznode' 
-    });
-    router.push('/register');
-  };
-
-  const handleViewDemo = (): void => {
-    trackCTAClick('secondary', 'daznode_hero', { 
-      action: 'view_demo',
-      product: 'daznode' 
-    });
-    router.push('/daznode/demo');
-  };
-
-  const handleLearnMore = (): void => {
-    trackCTAClick('secondary', 'daznode_hero', { 
-      action: 'learn_more',
-      product: 'daznode' 
-    });
-    // Scroll vers la section features
-    const element = document.getElementById('features');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  return (
+const DazNodeHero: React.FC = () => {
     <section className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 flex items-center justify-center px-4 py-20">
       {/* Background Effects */}
       <div className="absolute inset-0">
@@ -273,7 +229,7 @@ const DazNodeHero: React.FC = (): React.ReactElement => {
         }
       `}</style>
     </section>
-  );
+};
 };
 
 export default DazNodeHero; 

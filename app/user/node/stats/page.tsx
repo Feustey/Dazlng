@@ -2,7 +2,7 @@
 
 import React, { FC, useEffect, useState } from 'react';
 
-interface NodeStats {
+export interface NodeStats {
   totalCapacity: number;
   routingRevenue: number;
   channelCount: number;
@@ -39,7 +39,7 @@ const NodeStatsPage: FC = () => {
         {/* Plus de widgets stats... */}
       </div>
     </div>
-  );
+};
 };
 
 export default NodeStatsPage;

@@ -6,7 +6,7 @@ import { StatsCard } from "../components/ui/StatsCard";
 import { formatDate, formatSats } from "../../../utils/formatters";
 import Link from "next/link";
 
-interface User {
+export interface User {
   id: string;
   name: string;
   email: string;
@@ -14,14 +14,14 @@ interface User {
   created_at: string;
 }
 
-interface Stats {
+export interface Stats {
   totalUsers: number;
   activeSubscriptions: number;
   totalRevenue: number;
   pendingOrders: number;
 }
 
-interface BusinessMetrics {
+export interface BusinessMetrics {
   monthly_signups: number;
   weekly_signups: number;
   conversion_rate: number;
@@ -38,7 +38,7 @@ interface BusinessMetrics {
   revenue_per_user: number;
 }
 
-interface FunnelMetrics {
+export interface FunnelMetrics {
   visitors: number;
   signups: number;
   verified_users: number;
@@ -157,14 +157,14 @@ export default function DashboardPage(): JSX.Element {
         <div className="animate-pulse space-y-6">
           <div className="h-8 bg-gray-200 rounded w-1/3"></div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {[...Array(8)].map((_, i) => (
+            {[...Array(8)].map((_: any, i: any) => (
               <div key={i} className="h-24 bg-gray-200 rounded"></div>
             ))}
           </div>
           <div className="h-96 bg-gray-200 rounded"></div>
         </div>
       </div>
-    );
+};
   }
 
   return (
@@ -178,7 +178,7 @@ export default function DashboardPage(): JSX.Element {
         <div className="flex space-x-2">
           <select
             value={selectedPeriod}
-            onChange={(e) => setSelectedPeriod(e.target.value)}
+            onChange={(e: any) => setSelectedPeriod(e.target.value)}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="7">7 derniers jours</option>
@@ -462,5 +462,5 @@ export default function DashboardPage(): JSX.Element {
         </Link>
       </div>
     </div>
-  );
-} 
+};
+}

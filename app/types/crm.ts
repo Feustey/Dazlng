@@ -1,4 +1,4 @@
-export interface SegmentCriteria {
+export export interface SegmentCriteria {
   subscription?: {
     plan?: string[];
     status?: string[];
@@ -20,7 +20,7 @@ export interface SegmentCriteria {
   };
 }
 
-export interface CustomerSegment {
+export export interface CustomerSegment {
   id: string;
   name: string;
   description?: string;
@@ -31,7 +31,7 @@ export interface CustomerSegment {
   updated_at: string;
 }
 
-export interface EmailCampaign {
+export export interface EmailCampaign {
   id: string;
   name: string;
   subject: string;
@@ -54,7 +54,7 @@ export interface EmailCampaign {
   updated_at: string;
 }
 
-export interface EmailTemplate {
+export export interface EmailTemplate {
   id: string;
   name: string;
   subject?: string;
@@ -66,7 +66,7 @@ export interface EmailTemplate {
   updated_at: string;
 }
 
-export interface EmailSend {
+export export interface EmailSend {
   id: string;
   campaign_id: string;
   customer_id: string;
@@ -80,7 +80,7 @@ export interface EmailSend {
   metadata: Record<string, unknown>;
 }
 
-export interface Customer {
+export export interface Customer {
   id: string;
   email: string;
   nom?: string;
@@ -104,7 +104,7 @@ export interface Customer {
   segments?: CustomerSegment[];
 }
 
-export interface CRMMetrics {
+export export interface CRMMetrics {
   activeCustomers: number;
   customerGrowth: number;
   emailOpenRate: number;
@@ -115,11 +115,11 @@ export interface CRMMetrics {
   revenueGrowth: number;
 }
 
-export interface EmailMarketingStats {
+export export interface EmailMarketingStats {
   totalCampaigns: number;
   totalSent: number;
   averageOpenRate: number;
   averageClickRate: number;
   bounceRate: number;
   unsubscribeRate: number;
-} 
+}

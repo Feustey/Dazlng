@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Zap, TrendingUp, DollarSign, Clock, Star, Lock, ChevronRight } from 'lucide-react';
 
-interface SmartRecommendation {
+export interface SmartRecommendation {
   id: string;
   title: string;
   description: string;
@@ -13,7 +13,7 @@ interface SmartRecommendation {
   appliedBy?: number; // Nombre d'utilisateurs qui l'ont appliquée
 }
 
-interface SmartConversionCenterProps {
+export interface SmartConversionCenterProps {
   recommendations: SmartRecommendation[];
   userScore: number;
   isPremium: boolean;
@@ -75,7 +75,7 @@ export const SmartConversionCenter: React.FC<SmartConversionCenterProps> = ({
   };
 
   const personalizedMessage = getPersonalizedMessage();
-  const totalPotentialGain = premiumRecommendations.reduce((sum, r) => sum + r.estimatedGain, 0);
+  const totalPotentialGain = premiumRecommendations.reduce((sum: any, r: any) => sum + r.estimatedGain, 0);
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -172,7 +172,7 @@ export const SmartConversionCenter: React.FC<SmartConversionCenterProps> = ({
 
       {/* Liste des recommandations */}
       <div className="space-y-4">
-                 {filteredRecommendations.map((recommendation) => (
+                 {filteredRecommendations.map((recommendation: any) => (
           <div
             key={recommendation.id}
             className={`border rounded-lg p-4 transition ${
@@ -279,5 +279,5 @@ export const SmartConversionCenter: React.FC<SmartConversionCenterProps> = ({
         </div>
       )}
     </div>
-  );
-}; 
+};
+}

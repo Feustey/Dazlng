@@ -67,7 +67,7 @@ export async function GET(req: NextRequest): Promise<Response> {
       if (error) throw error;
 
       // Enrichir les données avec les statistiques
-      const enrichedUsers = await Promise.all((data || []).map(async (user) => {
+      const enrichedUsers = await Promise.all((data || []).map(async (user: any) => {
         // Récupérer le total dépensé
         const { data: ordersData } = await getSupabaseAdminClient()
           .from('orders')
@@ -75,7 +75,7 @@ export async function GET(req: NextRequest): Promise<Response> {
           .eq('user_id', user.id)
           .eq('payment_status', 'paid');
 
-        const totalSpent = ordersData?.reduce((sum, order) => sum + (order.amount || 0), 0) || 0;
+        const totalSpent = ordersData?.reduce((sum: any, order: any) => sum + (order.amount || 0), 0) || 0;
 
         return {
           ...user,
@@ -102,4 +102,4 @@ export async function GET(req: NextRequest): Promise<Response> {
       return NextResponse.json(handleApiError(error), { status: 500 });
     }
   });
-} 
+}

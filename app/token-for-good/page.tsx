@@ -6,7 +6,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import Link from "next/link";
 
-export default function TokenForGoodPage(): React.ReactElement {
+export default function TokenForGoodPage(): React.FC {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       AOS.init({ 
@@ -32,7 +32,7 @@ export default function TokenForGoodPage(): React.ReactElement {
       });
     }
   }, []);
-  
+
   return (
     <div className="overflow-hidden relative">
       {/* CTA sticky */}
@@ -383,5 +383,5 @@ export default function TokenForGoodPage(): React.ReactElement {
       {/* Partenaires */}
  
     </div>
-  );
-} 
+};
+}

@@ -1,5 +1,12 @@
+import React from 'react';
 import GradientTitle from "./GradientTitle";
 
-export default function PageTitle({ children }: { children: React.ReactNode }): React.ReactElement {
+export interface PageTitleProps {
+  children: React.ReactNode;
+}
+
+const PageTitle: React.FC<PageTitleProps> = ({ children }) => {
   return <GradientTitle>{children}</GradientTitle>;
-} 
+};
+
+export default PageTitle; 

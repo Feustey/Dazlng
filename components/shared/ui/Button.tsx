@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface ButtonProps {
+export interface ButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
   disabled?: boolean;
@@ -11,7 +11,7 @@ interface ButtonProps {
   className?: string;
 }
 
-export default function Button(props: ButtonProps): React.ReactElement {
+export default function Button(props: ButtonProps): React.FC {
   const {
     children,
     onClick,
@@ -59,5 +59,5 @@ export default function Button(props: ButtonProps): React.ReactElement {
         <span>{children}</span>
       </span>
     </button>
-  );
-} 
+};
+}

@@ -1,46 +1,6 @@
 import React, { useState } from 'react';
 
-const BeginnersFAQ: React.FC = (): React.ReactElement => {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
-
-  const faqs = [
-    {
-      question: "Combien puis-je gagner réellement ?",
-      answer: "Nos membres débutants génèrent en moyenne 50-120€/mois après 3 mois d'optimisation. Les revenus dépendent de votre capital initial, de la configuration de vos canaux et des conditions de marché. Nos top performers génèrent plus de 300€/mois.",
-      category: "Revenus"
-    },
-    {
-      question: "Que se passe-t-il si j'ai un problème technique ?",
-      answer: "La communauté Discord répond en moyenne en 15 minutes. Nos experts bénévoles adorent aider ! En plus, vous avez accès à une base de connaissances complète et à des guides vidéo détaillés.",
-      category: "Support"
-    },
-    {
-      question: "Est-ce légal en France ?",
-      answer: "Absolument. Opérer un nœud Bitcoin est parfaitement légal et considéré comme une activité technique. Vous devez simplement déclarer vos revenus comme des bénéfices non commerciaux (BNC) lors de votre déclaration d'impôts.",
-      category: "Légal"
-    },
-    {
-      question: "Quel capital initial faut-il pour commencer ?",
-      answer: "Le minimum recommandé est 0.1 BTC (~3000€) pour commencer à générer des revenus significatifs. Avec la DazBox à 799€, votre investissement total est d'environ 3800€ pour un ROI de 15-25% annuel.",
-      category: "Investment"
-    },
-    {
-      question: "Dois-je être développeur pour utiliser DazNode ?",
-      answer: "Pas du tout ! DazNode automatise toute la partie technique. Notre interface intuitive et la communauté vous accompagnent. De nombreux membres n'avaient aucune connaissance technique avant de commencer.",
-      category: "Technique"
-    },
-    {
-      question: "Qu'est-ce qui rend DazNode différent des autres solutions ?",
-      answer: "Notre IA prédictive, notre communauté active et notre approche 'community-first'. Nous ne vendons pas juste un produit, nous créons une communauté d'entraide où chacun partage ses stratégies gagnantes.",
-      category: "Différenciation"
-    }
-  ];
-
-  const toggleFAQ = (index: number): void => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
-
-  return (
+const BeginnersFAQ: React.FC = () => {
     <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-16">
@@ -53,7 +13,7 @@ const BeginnersFAQ: React.FC = (): React.ReactElement => {
         </div>
 
         <div className="space-y-4">
-          {faqs.map((faq, index) => (
+          {faqs.map((faq: any, index: any) => (
             <div 
               key={index}
               className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300"
@@ -105,7 +65,7 @@ const BeginnersFAQ: React.FC = (): React.ReactElement => {
         </div>
       </div>
     </section>
-  );
+};
 };
 
 export default BeginnersFAQ; 

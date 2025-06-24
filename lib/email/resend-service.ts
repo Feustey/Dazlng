@@ -2,7 +2,7 @@ import { Resend } from 'resend';
 import { EmailCampaign, Customer, EmailSend } from '@/app/types/crm';
 import { getSupabaseAdminClient } from '@/lib/supabase';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY ?? "");
 
 export class EmailMarketingService {
   
@@ -48,8 +48,7 @@ export class EmailMarketingService {
         const batch = recipients.slice(i, i + batchSize);
         const batchPromises = batch.map(recipient => 
           this.sendToCustomer(campaign, recipient)
-        );
-
+};
         const batchResults = await Promise.allSettled(batchPromises);
         
         for (const result of batchResults) {
@@ -105,7 +104,7 @@ export class EmailMarketingService {
 
       // Envoie l'email via Resend
       const result = await resend.emails.send({
-        from: process.env.CRM_DEFAULT_FROM_EMAIL || 'DazNode <noreply@daznode.com>',
+        from: process.env.CRM_DEFAULT_FROM_EMAIL ?? "" || 'DazNode <noreply@daznode.com>',
         to: customer.email,
         subject: personalizedSubject,
         html: personalizedContent,
@@ -161,8 +160,8 @@ export class EmailMarketingService {
       '{{t4g_tokens}}': customer.t4g_tokens?.toString() || '0',
       '{{date_inscription}}': customer.created_at ? new Date(customer.created_at).toLocaleDateString('fr-FR') : '',
       '{{statut_email}}': customer.email_verified ? 'Vérifié' : 'Non vérifié',
-      '{{dashboard_url}}': `${process.env.NEXT_PUBLIC_APP_URL}/user/dashboard`,
-      '{{unsubscribe_url}}': `${process.env.NEXT_PUBLIC_APP_URL}/unsubscribe?email=${encodeURIComponent(customer.email)}`
+      '{{dashboard_url}}': `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/user/dashboard`,
+      '{{unsubscribe_url}}': `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/unsubscribe?email=${encodeURIComponent(customer.email)}`
     };
 
     // Variables Lightning Network
@@ -300,7 +299,7 @@ export class EmailMarketingService {
     const personalizedSubject = `[TEST] ${this.personalizeContent(campaign.subject, testCustomer)}`;
 
     await resend.emails.send({
-      from: process.env.CRM_DEFAULT_FROM_EMAIL || 'DazNode <noreply@daznode.com>',
+      from: process.env.CRM_DEFAULT_FROM_EMAIL ?? "" || 'DazNode <noreply@daznode.com>',
       to: testEmail,
       subject: personalizedSubject,
       html: personalizedContent,
@@ -381,4 +380,4 @@ export class EmailMarketingService {
 
     return data;
   }
-} 
+}

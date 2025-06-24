@@ -19,7 +19,7 @@ const FormInput: React.FC<FormInputProps> = ({ label, error, optional, ...props 
       />
       {error && <div className="text-red-500 text-sm mt-1 font-medium">{error}</div>}
     </div>
-  );
+};
 };
 
 export default FormInput; 

@@ -38,19 +38,40 @@ declare module 'lightning' {
   export interface CreateInvoiceParams {
     amount: number;
     description: string;
-    expires_at?: string;
+    expiry?: number;
+    metadata?: Record<string, any>;
   }
 
   export interface Invoice {
-    paymentRequest: string;
     id: string;
-    secret: string;
+    paymentRequest: string;
+    paymentHash: string;
     amount: number;
     description: string;
-    expires_at: string;
+    createdAt: string;
+    expiresAt: string;
+    status: 'pending' | 'settled' | 'failed' | 'expired';
+    metadata?: Record<string, any>;
   }
 
-  export type InvoiceStatus = 'pending' | 'settled' | 'expired' | 'error';
+  export interface InvoiceStatus {
+    status: 'pending' | 'settled' | 'failed' | 'expired';
+    amount: number;
+    settledAt?: string;
+    metadata?: Record<string, any>;
+  }
+
+  export interface LightningService {
+    generateInvoice(params: CreateInvoiceParams): Promise<Invoice>;
+    checkInvoiceStatus(paymentHash: string): Promise<InvoiceStatus>;
+    watchInvoice(params: {
+      paymentHash: string;
+      onPaid: () => Promise<void>;
+      onExpired: () => void;
+      onError: (error: Error) => void;
+    }): Promise<void>;
+    healthCheck(): Promise<{ isOnline: boolean; provider: string }>;
+  }
 
   export function createLndGrpc(params: CreateLndGrpcParams): Promise<{ lnd: any }>;
   export function decodePaymentRequest(params: DecodePaymentRequestParams): Promise<DecodedPaymentRequest>;
@@ -61,5 +82,5 @@ declare module 'lightning' {
 }
 
 declare module '@/types/lightning' {
-  export type { Invoice, InvoiceStatus, CreateInvoiceParams } from 'lightning';
+  export type { Invoice, InvoiceStatus, CreateInvoiceParams, LightningService } from 'lightning';
 } 

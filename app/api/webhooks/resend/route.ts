@@ -35,7 +35,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Erreur lors du traitement du webhook' 
       },
       { status: 500 }
-    );
+};
   }
 }
 
@@ -52,4 +52,4 @@ export async function GET(): Promise<NextResponse> {
       'email.complained'
     ]
   });
-} 
+}

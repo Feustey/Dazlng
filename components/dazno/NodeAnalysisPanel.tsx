@@ -1,10 +1,11 @@
+import React from 'react';
 'use client'
 
 import { useState } from 'react'
 import { useDaznoAPI } from '@/hooks/useDaznoAPI'
 import { DaznoPriorityRequest } from '@/types/dazno-api'
 
-interface NodeAnalysisPanelProps {
+export interface NodeAnalysisPanelProps {
   pubkey: string
   className?: string
 }
@@ -78,7 +79,7 @@ export const NodeAnalysisPanel: React.FC<NodeAnalysisPanelProps> = ({
             </label>
             <select
               value={context}
-              onChange={(e) => setContext(e.target.value as DaznoPriorityRequest['context'])}
+              onChange={(e: any) => setContext(e.target.value as DaznoPriorityRequest['context'])}
               className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
             >
               <option value="beginner">Débutant</option>
@@ -101,7 +102,7 @@ export const NodeAnalysisPanel: React.FC<NodeAnalysisPanelProps> = ({
                   <input
                     type="checkbox"
                     checked={selectedGoals.includes(goal.value as any)}
-                    onChange={(e) => {
+                    onChange={(e: any) => {
                       if (e.target.checked) {
                         setSelectedGoals([...selectedGoals, goal.value as any])
                       } else {
@@ -170,7 +171,7 @@ export const NodeAnalysisPanel: React.FC<NodeAnalysisPanelProps> = ({
           <div className="bg-gray-50 rounded-lg p-4">
             <h4 className="font-medium text-gray-900 mb-2">Prochaines étapes</h4>
             <ul className="space-y-1">
-              {dazno.complete.next_steps.map((step, index) => (
+              {dazno.complete.next_steps.map((step: any, index: any) => (
                 <li key={index} className="text-sm text-gray-700 flex items-start">
                   <span className="text-blue-600 mr-2">{index + 1}.</span>
                   {step}
@@ -209,7 +210,7 @@ export const NodeAnalysisPanel: React.FC<NodeAnalysisPanelProps> = ({
           </div>
 
           <div className="space-y-4">
-            {dazno.priorities.priority_actions.map((action, index) => (
+            {dazno.priorities.priority_actions.map((action: any, index: any) => (
               <div key={index} className="border border-gray-200 rounded-lg p-4">
                 <div className="flex items-start justify-between mb-2">
                   <h4 className="font-medium text-gray-900">

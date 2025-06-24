@@ -14,7 +14,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         return NextResponse.json({ error: 'payment_hash manquant' }, { status: 400 });
       }
       // Vérification du paiement via l'API externe
-      const apiKey = process.env.DAZNODE_API_KEY;
+      const apiKey = process.env.DAZNODE_API_KEY ?? "";
       const paymentRes = await fetch(`https://api.dazno.de/api/v1/payments/${paymentHash}`, {
         headers: { 'X-Api-Key': apiKey || '' }
       });
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       // Envoi de l'email de confirmation
       if (order.customer?.email) {
         try {
-          const resend = new Resend(process.env.RESEND_API_KEY);
+          const resend = new Resend(process.env.RESEND_API_KEY ?? "");
           const html = generateEmailTemplate({
             title: 'Merci pour votre commande !',
             username: `${order.customer.firstName} ${order.customer.lastName}`,
@@ -74,4 +74,4 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   return NextResponse.json({ status: 'ok' });
-} 
+}

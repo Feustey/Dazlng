@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Trophy, Target, Star, Award, TrendingUp, Users, Zap, Shield } from 'lucide-react';
 
-interface Achievement {
+export interface Achievement {
   id: string;
   title: string;
   description: string;
@@ -14,7 +14,7 @@ interface Achievement {
   unlockedDate?: Date;
 }
 
-interface GamificationCenterProps {
+export interface GamificationCenterProps {
   userScore: number;
   achievements: Achievement[];
   currentLevel: number;
@@ -225,5 +225,5 @@ export const GamificationCenter: React.FC<GamificationCenterProps> = ({
         </div>
       )}
     </div>
-  );
-}; 
+};
+}

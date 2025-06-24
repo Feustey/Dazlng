@@ -14,7 +14,7 @@ import {
 } from '@/lib/utils/cookies';
 
 // Nouvelles interfaces pour les endpoints avancés
-interface AmbossNodeInfo {
+export interface AmbossNodeInfo {
   pubkey: string;
   alias: string;
   capacity: number;
@@ -38,7 +38,7 @@ interface AmbossNodeInfo {
   };
 }
 
-interface AmbossRecommendation {
+export interface AmbossRecommendation {
   id: string;
   type: 'channel_management' | 'fee_optimization' | 'liquidity_management';
   title: string;
@@ -58,7 +58,7 @@ interface AmbossRecommendation {
   }[];
 }
 
-interface UnifiedRecommendation {
+export interface UnifiedRecommendation {
   id: string;
   source: 'amboss' | 'sparkseer' | 'openai' | 'hybrid';
   title: string;
@@ -448,7 +448,11 @@ const NodeManagement: FC = () => {
   };
 
   // Graphique simple pour les tendances
-  const SimpleChart: React.FC<{ data: number[]; title: string }> = ({ data, title }) => {
+  export interface SimpleChartProps {
+  data: number[]; title;
+}
+
+const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
     if (data.length === 0) return null;
     
     const max = Math.max(...data);
@@ -459,7 +463,7 @@ const NodeManagement: FC = () => {
       <div className="bg-white rounded-xl shadow p-6">
         <h3 className="text-lg font-semibold mb-4">{title}</h3>
         <div className="flex items-end gap-1 h-32 mb-4">
-          {data.map((value, index) => {
+          {data.map((value: any, index: any) => {
             const height = ((value - min) / range) * 100;
             return (
               <div
@@ -468,7 +472,7 @@ const NodeManagement: FC = () => {
                 style={{ height: `${Math.max(height, 10)}%` }}
                 title={`Jour ${index + 1}: ${formatSats(value)}`}
               />
-            );
+};
           })}
         </div>
         <div className="flex justify-between text-sm text-gray-600">
@@ -476,7 +480,7 @@ const NodeManagement: FC = () => {
           <span>Aujourd'hui</span>
         </div>
       </div>
-    );
+};
   };
 
   // Si l'utilisateur n'est pas connecté
@@ -492,7 +496,7 @@ const NodeManagement: FC = () => {
           Se connecter
         </button>
       </div>
-    );
+};
   }
 
   // Si pas de pubkey configurée, afficher le formulaire de saisie
@@ -521,7 +525,7 @@ const NodeManagement: FC = () => {
                 type="text"
                 id="pubkey"
                 value={pubkeyInput}
-                onChange={(e) => setPubkeyInput(e.target.value)}
+                onChange={(e: any) => setPubkeyInput(e.target.value)}
                 placeholder="03864ef025fde8fb587d989186ce6a4a186895ee44a926bfc370e2c366597a3f8f"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-mono text-sm"
                 maxLength={66}
@@ -575,7 +579,7 @@ const NodeManagement: FC = () => {
           )}
         </div>
       </div>
-    );
+};
   }
 
   // Affichage principal avec les données du nœud
@@ -918,7 +922,7 @@ const NodeManagement: FC = () => {
 
         <div className="space-y-4">
           {/* Recommandations Amboss */}
-          {recommendationType === 'amboss' && ambossRecommendations.map((rec) => (
+          {recommendationType === 'amboss' && ambossRecommendations.map((rec: any) => (
             <div key={rec.id} className="border border-purple-200 rounded-lg p-4 hover:shadow-md transition">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
@@ -951,7 +955,7 @@ const NodeManagement: FC = () => {
                   <div className="text-xs text-gray-500">
                     <div className="font-medium mb-1">Actions suggérées:</div>
                     <ul className="list-disc list-inside space-y-1">
-                      {rec.suggested_actions.map((action, index) => (
+                      {rec.suggested_actions.map((action: any, index: any) => (
                         <li key={index}>{action}</li>
                       ))}
                     </ul>
@@ -961,7 +965,7 @@ const NodeManagement: FC = () => {
                     <div className="mt-3 text-xs">
                       <div className="font-medium text-gray-700 mb-1">Nœuds cibles recommandés:</div>
                       <div className="space-y-1">
-                        {rec.target_nodes.slice(0, 3).map((node, index) => (
+                        {rec.target_nodes.slice(0, 3).map((node: any, index: any) => (
                           <div key={index} className="flex justify-between items-center">
                             <span className="text-gray-600">{node.alias}</span>
                             <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs">
@@ -978,7 +982,7 @@ const NodeManagement: FC = () => {
           ))}
 
           {/* Recommandations Unifiées */}
-          {recommendationType === 'unified' && unifiedRecommendations.map((rec) => (
+          {recommendationType === 'unified' && unifiedRecommendations.map((rec: any) => (
             <div key={rec.id} className="border border-green-200 rounded-lg p-4 hover:shadow-md transition">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
@@ -1031,7 +1035,7 @@ const NodeManagement: FC = () => {
           ))}
 
           {/* Recommandations Standard */}
-          {recommendationType === 'standard' && recommendations.slice(0, 5).map((rec) => (
+          {recommendationType === 'standard' && recommendations.slice(0, 5).map((rec: any) => (
             <div key={rec.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
@@ -1118,7 +1122,7 @@ const NodeManagement: FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {priorityActions.map((action, index) => (
+                {priorityActions.map((action: any, index: any) => (
                   <tr key={action.id || index} className="border-b border-gray-100 hover:bg-gray-50">
                     <td className="py-3 px-4">
                       <div className="font-medium">{action.action}</div>
@@ -1271,7 +1275,7 @@ const NodeManagement: FC = () => {
         </div>
       )}
     </div>
-  );
+};
 };
 
 export default NodeManagement;

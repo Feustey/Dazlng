@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Brain, TrendingUp, DollarSign, Clock, ChevronRight, Lock } from 'lucide-react';
 import { CRMData } from '../../types';
 
-interface SmartRecommendation {
+export interface SmartRecommendation {
   id: string;
   title: string;
   description: string;
@@ -15,7 +15,7 @@ interface SmartRecommendation {
   confidenceScore: number; // 0-100
 }
 
-interface SmartRecommendationsProps {
+export interface SmartRecommendationsProps {
   recommendations: SmartRecommendation[];
   crmData: CRMData;
   isPremium: boolean;
@@ -45,7 +45,7 @@ export const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
     : recommendations.filter(r => r.category === selectedCategory);
 
   // Trier par impact et disponibilité
-  const sortedRecommendations = [...filteredRecommendations].sort((a, b) => {
+  const sortedRecommendations = [...filteredRecommendations].sort((a: any, b: any) => {
     if (a.isPremium && !b.isPremium && !isPremium) return 1;
     if (!a.isPremium && b.isPremium && !isPremium) return -1;
     
@@ -147,7 +147,7 @@ export const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
           </div>
           <div className="bg-green-50 rounded-lg p-3 border border-green-100">
             <div className="text-lg font-bold text-green-600">
-              {Math.round(recommendations.reduce((sum, r) => sum + r.estimatedGain, 0) / 1000)}k
+              {Math.round(recommendations.reduce((sum: any, r: any) => sum + r.estimatedGain, 0) / 1000)}k
             </div>
             <div className="text-xs text-green-800">Sats potentiels</div>
           </div>
@@ -282,7 +282,7 @@ export const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
             <div>
               <h3 className="text-lg font-bold mb-2">Débloquez {premiumRecommendations.length} recommandations Premium</h3>
               <p className="text-purple-100 text-sm">
-                Gain potentiel estimé: +{Math.round(premiumRecommendations.reduce((sum, r) => sum + r.estimatedGain, 0) / 1000)}k sats/mois
+                Gain potentiel estimé: +{Math.round(premiumRecommendations.reduce((sum: any, r: any) => sum + r.estimatedGain, 0) / 1000)}k sats/mois
               </p>
             </div>
             <button
@@ -295,5 +295,5 @@ export const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
         </div>
       )}
     </div>
-  );
-}; 
+};
+}

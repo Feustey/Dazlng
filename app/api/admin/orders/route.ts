@@ -14,7 +14,7 @@ const querySchema = z.object({
 
 // GET /api/admin/orders - Liste ou détails des commandes
 export async function GET(req: NextRequest): Promise<Response> {
-  return withAdminAuth(req, async (_adminUser) => {
+  return withAdminAuth(req, async (_adminUser: any) => {
     try {
       const { searchParams } = new URL(req.url);
       const result = querySchema.safeParse(Object.fromEntries(searchParams.entries()));
@@ -123,4 +123,4 @@ export async function GET(req: NextRequest): Promise<Response> {
       return NextResponse.json(handleApiError(error), { status: 500 });
     }
   });
-} 
+}

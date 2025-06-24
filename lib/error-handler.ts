@@ -15,4 +15,4 @@ export const handleError = (error: unknown): ErrorResponse => {
     message: 'Une erreur inattendue est survenue',
     code: 'UNKNOWN_ERROR'
   }
-} 
+}

@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import type { FC, ReactNode } from 'react';
 
-interface AdminAuthGuardProps {
+export interface AdminAuthGuardProps {
   children: ReactNode;
 }
 
-interface AuthUser {
+export interface AuthUser {
   id: string;
   email: string;
   user_metadata: Record<string, unknown>;
@@ -25,7 +25,7 @@ const AdminAuthGuard: FC<AdminAuthGuardProps> = ({ children }) => {
 
   useEffect(() => {
     // Détecter l'environnement côté client uniquement pour éviter l'hydratation mismatch
-    setIsDevelopment(!process.env.NODE_ENV || process.env.NODE_ENV !== 'production');
+    setIsDevelopment(!process.env.NODE_ENV ?? "" || process.env.NODE_ENV ?? "" !== 'production');
   }, []);
 
   useEffect(() => {
@@ -120,7 +120,7 @@ const AdminAuthGuard: FC<AdminAuthGuardProps> = ({ children }) => {
           )}
         </div>
       </div>
-    );
+};
   }
 
   // Si pas authentifié ou pas admin, ne rien afficher (la redirection est en cours)

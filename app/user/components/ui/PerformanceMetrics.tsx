@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 
-interface NodeMetrics {
+export interface NodeMetrics {
   monthlyRevenue: number;
   totalCapacity: number;
   activeChannels: number;
@@ -13,7 +13,7 @@ interface NodeMetrics {
   totalNodes: number;
 }
 
-interface Achievement {
+export interface Achievement {
   id: string;
   title: string;
   description: string;
@@ -23,7 +23,7 @@ interface Achievement {
   target: number;
 }
 
-interface PerformanceMetricsProps {
+export interface PerformanceMetricsProps {
   metrics: NodeMetrics;
   achievements: Achievement[];
   trendData: number[]; // Pour les graphiques simples
@@ -51,21 +51,21 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({
           <span>📈</span>
           <span className="text-sm font-medium">+{growth.toFixed(1)}%</span>
         </div>
-      );
+};
     } else if (growth < 0) {
       return (
         <div className="flex items-center gap-1 text-red-600">
           <span>📉</span>
           <span className="text-sm font-medium">{growth.toFixed(1)}%</span>
         </div>
-      );
+};
     }
     return (
       <div className="flex items-center gap-1 text-gray-600">
         <span>➡️</span>
         <span className="text-sm font-medium">Stable</span>
       </div>
-    );
+};
   };
 
   const getRankBadge = (rank: number, total: number): JSX.Element => {
@@ -88,17 +88,21 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({
       <span className={`px-3 py-1 rounded-full text-xs font-medium ${badgeColor}`}>
         {badgeIcon} Top {percentage.toFixed(0)}%
       </span>
-    );
+};
   };
 
-  const SimpleChart: React.FC<{ data: number[] }> = ({ data }) => {
+  export interface SimpleChartProps {
+  data: number[];
+}
+
+const SimpleChart: React.FC<SimpleChartProps> = ({ data }) => {
     const max = Math.max(...data);
     const min = Math.min(...data);
     const range = max - min || 1;
 
     return (
       <div className="flex items-end gap-1 h-16">
-        {data.map((value, index) => {
+        {data.map((value: any, index: any) => {
           const height = ((value - min) / range) * 100;
           return (
             <div
@@ -106,10 +110,10 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({
               className="bg-indigo-200 rounded-t flex-1 min-h-1"
               style={{ height: `${Math.max(height, 10)}%` }}
             />
-          );
+};
         })}
       </div>
-    );
+};
   };
 
   const unlockedAchievements = achievements.filter(a => a.unlocked);
@@ -212,7 +216,7 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({
             <div className="text-xs text-gray-500">Pic journalier</div>
           </div>
           <div>
-            <div className="text-lg font-bold text-gray-700">{Math.round(trendData.reduce((a, b) => a + b, 0) / trendData.length).toLocaleString()}</div>
+            <div className="text-lg font-bold text-gray-700">{Math.round(trendData.reduce((a: any, b: any) => a + b, 0) / trendData.length).toLocaleString()}</div>
             <div className="text-xs text-gray-500">Moyenne</div>
           </div>
           <div>
@@ -233,7 +237,7 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({
 
         {/* Achievements débloqués */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          {unlockedAchievements.slice(-4).map((achievement) => (
+          {unlockedAchievements.slice(-4).map((achievement: any) => (
             <div key={achievement.id} className="flex items-center gap-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
               <div className="text-2xl">{achievement.icon}</div>
               <div>
@@ -301,7 +305,7 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({
         </Link>
       </div>
     </div>
-  );
+};
 };
 
 export { PerformanceMetrics }; 

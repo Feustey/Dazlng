@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { FaStar, FaQuoteLeft } from 'react-icons/fa';
 
-interface TestimonialProps {
+export interface TestimonialProps {
   name: string;
   title: string;
   content: string;
@@ -34,7 +34,7 @@ const Testimonial: React.FC<TestimonialProps> = ({ name, title, content, avatar,
     </div>
     
     <div className="flex mb-3">
-      {[...Array(rating)].map((_, i) => (
+      {[...Array(rating)].map((_: any, i: any) => (
         <FaStar key={i} className="text-yellow-400 w-4 h-4" />
       ))}
     </div>
@@ -44,9 +44,8 @@ const Testimonial: React.FC<TestimonialProps> = ({ name, title, content, avatar,
       <p className="text-gray-700 leading-relaxed pl-6 italic">{content}</p>
     </div>
   </div>
-);
-
-interface MetricProps {
+};
+export interface MetricProps {
   number: string;
   label: string;
   delay: number;
@@ -65,41 +64,8 @@ const Metric: React.FC<MetricProps> = ({ number, label, delay }) => (
       {label}
     </div>
   </div>
-);
-
+};
 export const SocialProof: React.FC = () => {
-  const testimonials = [
-    {
-      name: "Marie Dubois",
-      title: "Entrepreneur",
-      content: "La DazBox a transformé ma façon de gérer mes paiements Bitcoin. Installation en 5 minutes, tout fonctionne parfaitement !",
-      avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      rating: 5
-    },
-    {
-      name: "Thomas Martin",
-      title: "Développeur",
-      content: "DazNode m'aide à optimiser mon nœud Lightning. L'IA anticipe les besoins de routing, c'est impressionnant !",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      rating: 5
-    },
-    {
-      name: "Sophie Leroy",
-      title: "Commerçante",
-      content: "DazPay a révolutionné mon commerce. Paiements instantanés et frais dérisoires, mes clients adorent !",
-      avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      rating: 5
-    }
-  ];
-
-  const metrics = [
-    { number: "500+", label: "Nœuds déployés" },
-    { number: "99.9%", label: "Disponibilité" },
-    { number: "24/7", label: "Support" },
-    { number: "5 min", label: "Installation" }
-  ];
-
-  return (
     <section className="py-20 bg-white">
       <div className="max-w-6xl mx-auto px-4">
         {/* En-tête */}
@@ -114,7 +80,7 @@ export const SocialProof: React.FC = () => {
 
         {/* Métriques */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-20">
-          {metrics.map((metric, index) => (
+          {metrics.map((metric: any, index: any) => (
             <Metric
               key={metric.label}
               number={metric.number}
@@ -126,7 +92,7 @@ export const SocialProof: React.FC = () => {
 
         {/* Témoignages */}
         <div className="grid md:grid-cols-3 gap-8 mb-16">
-          {testimonials.map((testimonial, index) => (
+          {testimonials.map((testimonial: any, index: any) => (
             <Testimonial
               key={testimonial.name}
               name={testimonial.name}
@@ -160,5 +126,5 @@ export const SocialProof: React.FC = () => {
         </div>
       </div>
     </section>
-  );
-}; 
+};
+}

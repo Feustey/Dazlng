@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-interface UserFeedbackToastProps {
+export interface UserFeedbackToastProps {
   show: boolean;
   type: 'success' | 'error' | 'info' | 'warning' | 'xp-gain';
   title: string;
@@ -125,11 +125,11 @@ export const UserFeedbackToast: React.FC<UserFeedbackToastProps> = ({
         </div>
       </div>
     </div>
-  );
+};
 };
 
 // Hook pour gérer les toasts
-interface ToastMessage {
+export interface ToastMessage {
   id: string;
   type: 'success' | 'error' | 'info' | 'warning' | 'xp-gain';
   title: string;
@@ -193,8 +193,7 @@ export const useUserFeedback = () => {
         />
       ))}
     </div>
-  );
-
+};
   return {
     showSuccess,
     showError,
@@ -203,4 +202,4 @@ export const useUserFeedback = () => {
     showWarning,
     ToastContainer
   };
-}; 
+}

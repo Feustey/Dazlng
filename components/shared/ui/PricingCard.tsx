@@ -2,7 +2,7 @@ import { FaBolt, FaCheckCircle } from "react-icons/fa";
 import Link from "next/link";
 import type { FC, ReactNode } from "react";
 
-interface PricingCardProps {
+export interface PricingCardProps {
   title: string;
   price: string;
   unit?: string;
@@ -44,7 +44,7 @@ const PricingCard: FC<PricingCardProps> = ({
       </div>
       <div className="text-3xl font-extrabold mb-2">{price}{unit && <span className="text-base font-normal"> {unit}</span>}</div>
       <ul className="mb-6 space-y-1 text-sm text-left w-full max-w-xs">
-        {features.map((f, i) => (
+        {features.map((f: any, i: any) => (
           <li key={i} className="flex items-center gap-2">
             <FaCheckCircle className="text-green-300" /> {f}
           </li>
@@ -66,7 +66,7 @@ const PricingCard: FC<PricingCardProps> = ({
       )}
       {microcopy && <p className="text-xs text-gray-100 mt-2 text-center">{microcopy}</p>}
     </div>
-  );
+};
 };
 
 export default PricingCard; 

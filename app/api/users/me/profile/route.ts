@@ -176,4 +176,4 @@ function calculateProfileCompletion(profile: any): number {
   });
 
   return Math.round((completedFields.length / fields.length) * 100);
-} 
+}

@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
 import { isValidLightningPubkey } from '@/lib/dazno-api';
 
-export interface UserProfile {
+export export interface UserProfile {
   id: string;
   email: string;
   nom?: string;
@@ -21,7 +21,7 @@ export interface UserProfile {
   settings?: any;
 }
 
-export interface ProfileField {
+export export interface ProfileField {
   name: string;
   label: string;
   completed: boolean;
@@ -31,7 +31,7 @@ export interface ProfileField {
   description?: string;
 }
 
-export interface Achievement {
+export export interface Achievement {
   id: string;
   title: string;
   description: string;
@@ -44,7 +44,7 @@ export interface Achievement {
   rarity: 'common' | 'rare' | 'epic' | 'legendary';
 }
 
-export interface GamificationData {
+export export interface GamificationData {
   // Score & niveau
   userScore: number;
   level: number;
@@ -215,8 +215,8 @@ export function useGamificationSystem() {
 
     // 📈 Calcul du score et progression
     const completedFields = profileFields.filter(f => f.completed);
-    const totalPossiblePoints = profileFields.reduce((sum, field) => sum + field.points, 0);
-    const earnedPoints = completedFields.reduce((sum, field) => sum + field.points, 0);
+    const totalPossiblePoints = profileFields.reduce((sum: any, field: any) => sum + field.points, 0);
+    const earnedPoints = completedFields.reduce((sum: any, field: any) => sum + field.points, 0);
     
     // Bonus pour utilisateur premium
     const premiumBonus = isPremium ? 15 : 0;
@@ -301,10 +301,10 @@ export function useGamificationSystem() {
     const incompleteFields = profileFields.filter(f => !f.completed);
     const priorityActions = incompleteFields
       .filter(f => f.priority === 'high')
-      .sort((a, b) => b.points - a.points);
+      .sort((a: any, b: any) => b.points - a.points);
     
     const nextActions = incompleteFields
-      .sort((a, b) => {
+      .sort((a: any, b: any) => {
         const priorityOrder = { high: 3, medium: 2, low: 1 };
         return priorityOrder[b.priority] - priorityOrder[a.priority] || b.points - a.points;
       })
@@ -372,4 +372,4 @@ export function useGamificationSystem() {
     profileFields: gamificationData?.profileFields || [],
     achievements: gamificationData?.achievements || []
   };
-} 
+}

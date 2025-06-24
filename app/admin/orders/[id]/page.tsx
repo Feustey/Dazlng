@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 
-interface Profile {
+export interface Profile {
   id: string;
   email: string;
   nom: string;
@@ -16,7 +16,7 @@ interface Profile {
   email_verified: boolean;
 }
 
-interface Delivery {
+export interface Delivery {
   id: string;
   order_id: string;
   address: string;
@@ -29,7 +29,7 @@ interface Delivery {
   updated_at: string;
 }
 
-interface Payment {
+export interface Payment {
   id: string;
   order_id: string;
   amount: number;
@@ -39,7 +39,7 @@ interface Payment {
   updated_at: string;
 }
 
-interface Order {
+export interface Order {
   id: string;
   user_id: string;
   product_type: string;
@@ -108,7 +108,7 @@ export default function OrderDetailPage(): JSX.Element {
       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${color}`}>
         {status || "-"}
       </span>
-    );
+};
   }
 
   if (isLoading) {
@@ -121,7 +121,7 @@ export default function OrderDetailPage(): JSX.Element {
           <div className="h-4 bg-gray-200 rounded w-1/2"></div>
         </div>
       </div>
-    );
+};
   }
 
   if (error) {
@@ -135,7 +135,7 @@ export default function OrderDetailPage(): JSX.Element {
           </Link>
         </div>
       </div>
-    );
+};
   }
 
   if (!order) {
@@ -149,7 +149,7 @@ export default function OrderDetailPage(): JSX.Element {
           </Link>
         </div>
       </div>
-    );
+};
   }
 
   return (
@@ -363,5 +363,5 @@ export default function OrderDetailPage(): JSX.Element {
         </div>
       )}
     </div>
-  );
-} 
+};
+}

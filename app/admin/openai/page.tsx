@@ -7,7 +7,7 @@ import { Select, SelectItem } from "../components/ui/Select";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { AlertCircle, DollarSign, Activity, Users, Zap } from "lucide-react";
 
-interface OpenAIMetrics {
+export interface OpenAIMetrics {
   timestamp: string;
   period_start: string;
   period_end: string;
@@ -90,7 +90,7 @@ interface OpenAIMetrics {
   };
 }
 
-interface RealtimeMetrics {
+export interface RealtimeMetrics {
   last_hour: {
     api_calls: number;
     openai_requests: number;
@@ -107,7 +107,7 @@ interface RealtimeMetrics {
   }>;
 }
 
-interface SystemHealth {
+export interface SystemHealth {
   timestamp: string;
   status: string;
   components: {
@@ -182,7 +182,7 @@ export default function OpenAIPage(): JSX.Element | null {
       <div className="flex items-center justify-center h-96">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
       </div>
-    );
+};
   }
 
   if (error) {
@@ -191,7 +191,7 @@ export default function OpenAIPage(): JSX.Element | null {
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>{error}</AlertDescription>
       </Alert>
-    );
+};
   }
 
   if (!metrics) return null;
@@ -215,7 +215,7 @@ export default function OpenAIPage(): JSX.Element | null {
       {/* Alertes */}
       {metrics.alerts.length > 0 && (
         <div className="space-y-2">
-          {metrics.alerts.map((alert, index) => (
+          {metrics.alerts.map((alert: any, index: any) => (
             <Alert key={index} type={alert.level === "warning" ? "warning" : "error"}>
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
@@ -354,7 +354,7 @@ export default function OpenAIPage(): JSX.Element | null {
                   fill="#8884d8"
                   dataKey="value"
                 >
-                  {Object.entries(metrics.openai_usage.models_used).map((_, index) => (
+                  {Object.entries(metrics.openai_usage.models_used).map((_: any, index: any) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
@@ -517,5 +517,5 @@ export default function OpenAIPage(): JSX.Element | null {
         </CardContent>
       </Card>
     </div>
-  );
+};
 }

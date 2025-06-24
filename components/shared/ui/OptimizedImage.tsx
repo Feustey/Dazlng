@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useState, useCallback } from 'react';
 import { cn } from '../../../lib/utils';
 
-interface OptimizedImageProps {
+export interface OptimizedImageProps {
   src: string;
   alt: string;
   width?: number;
@@ -40,7 +40,7 @@ export function OptimizedImage({
   onLoad,
   onError,
   ...props
-}: OptimizedImageProps): React.ReactElement {
+}: OptimizedImageProps): React.FC {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
@@ -97,7 +97,7 @@ export function OptimizedImage({
           </text>
         </svg>
       </div>
-    );
+};
   }
 
   return (
@@ -136,5 +136,5 @@ export function OptimizedImage({
         <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-pulse" />
       )}
     </div>
-  );
-} 
+};
+}

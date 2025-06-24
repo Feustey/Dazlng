@@ -3,18 +3,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 
-export const CTASection: React.FC = (): React.ReactElement => {
-  const router = useRouter();
-
-  const handleGetStarted = (): void => {
-    router.push('/auth/login');
-  };
-
-  const handleContact = (): void => {
-    router.push('/contact');
-  };
-
-  return (
+export const CTASection: React.FC = () => {
     <section className="py-20 bg-gradient-to-br from-indigo-600 via-purple-700 to-pink-800">
       <div className="max-w-4xl mx-auto px-4 text-center">
         <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
@@ -65,5 +54,5 @@ export const CTASection: React.FC = (): React.ReactElement => {
         </div>
       </div>
     </section>
-  );
-}; 
+};
+}

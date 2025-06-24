@@ -24,4 +24,4 @@ export async function POST(req: NextRequest): Promise<Response> {
   } catch (e) {
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
-} 
+}

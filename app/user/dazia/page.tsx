@@ -14,7 +14,7 @@ import { daznoAPI, DaznoRecommendation } from '@/lib/dazno-api';
 import { SparklesIcon } from '@/app/components/icons/SparklesIcon';
 import { EnhancedRecommendation, DailyRecommendation, DaziaData } from '@/types/recommendations';
 
-interface RecommendationModal {
+export interface RecommendationModal {
   isOpen: boolean;
   recommendation: EnhancedRecommendation | DailyRecommendation | null;
   type: 'enhanced' | 'daily';
@@ -242,17 +242,17 @@ const DaziaPage: FC = () => {
             action_type: r.action_type,
             steps: [
               {
-                order: Number(1),
+                order: 1,
                 description: 'Analyser la situation actuelle',
                 command: 'lncli getinfo'
               },
               {
-                order: Number(2),
+                order: 2,
                 description: "Planifier l'implémentation",
                 command: 'lncli listchannels'
               },
               {
-                order: Number(3),
+                order: 3,
                 description: "Exécuter l'action",
                 command: 'lncli updatechanpolicy'
               }
@@ -281,7 +281,7 @@ const DaziaPage: FC = () => {
     });
   };
 
-  const filterRecommendations = (recommendations: any[]) => {
+  const filterRecommendations = (recommendations: EnhancedRecommendation[]) => {
     return recommendations.filter(rec => {
       const matchesSearch = filters.search === '' || 
         rec.title.toLowerCase().includes(filters.search.toLowerCase()) ||
@@ -314,12 +314,12 @@ const DaziaPage: FC = () => {
           />
         ))}
       </div>
-    );
+};
   };
 
-  const handleTabChange = (newValue: string) => {
-    setActiveTab(newValue)
-  }
+  const handleTabChange = (newValue: 'immediate' | 'short_term' | 'long_term') => {
+    setActiveTab(newValue);
+  };
 
   if (!pubkeyLoaded || loading) {
     return (
@@ -331,7 +331,7 @@ const DaziaPage: FC = () => {
           </p>
         </div>
       </div>
-    );
+};
   }
 
   if (!pubkey) {
@@ -349,7 +349,7 @@ const DaziaPage: FC = () => {
           Connecter mon nœud
         </a>
       </div>
-    );
+};
   }
 
   if (error) {
@@ -360,10 +360,20 @@ const DaziaPage: FC = () => {
           <p className="mt-2 text-red-600">{error}</p>
         </div>
       </div>
-    );
+};
   }
 
-  if (!data) return null;
+  if (!data || data.recommendations.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <SparklesIcon className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
+        <h1 className="text-2xl font-bold text-gray-900 mb-4">Aucune recommandation disponible</h1>
+        <p className="text-gray-600 mb-6">
+          Nous n'avons pas pu charger de recommandations pour votre nœud.
+        </p>
+      </div>
+};
+  }
 
   return (
     <div className="container mx-auto max-w-7xl space-y-8 p-6">
@@ -371,22 +381,22 @@ const DaziaPage: FC = () => {
 
       <PerformanceMetrics metrics={{
         revenue: {
-          current: data.recommendations[0].impact,
+          current: data.recommendations[0]?.estimated_gain || 0,
           change: 5.2,
           history: []
         },
         efficiency: {
-          current: data.recommendations[0].impact,
+          current: data.recommendations[0]?.priority || 0,
           change: 2.1,
           history: []
         },
         channels: {
-          current: data.recommendations[0].impact,
+          current: data.recommendations.length,
           change: 3.4,
           history: []
         },
         uptime: {
-          current: data.recommendations[0].impact,
+          current: 99.5,
           change: 0.5,
           history: []
         }
@@ -481,27 +491,28 @@ const DaziaPage: FC = () => {
           Analyse détaillée
         </h2>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {Object.entries(data.recommendations[0])
+          {Object.entries(data.recommendations[0] || {})
             .filter(([key, _value]) => key !== 'id' && key !== 'category' && key !== 'impact' && key !== 'difficulty')
+            .slice(0, 6) // Limiter à 6 éléments pour éviter les erreurs
             .map(([key, value]) => (
               <div
                 key={key}
                 className="rounded-lg border border-gray-200 p-6"
               >
                 <h3 className="text-lg font-semibold capitalize text-gray-900">
-                  {key}
+                  {key.replace(/_/g, ' ')}
                 </h3>
                 <div className="mt-4">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600">Score</span>
                     <span className="text-lg font-semibold text-gray-900">
-                      {value}%
+                      {typeof value === 'number' ? value : String(value).slice(0, 10)}
                     </span>
                   </div>
                   <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-gray-200">
                     <motion.div
                       initial={{ width: 0 }}
-                      animate={{ width: `${value}%` }}
+                      animate={{ width: `${Math.min(typeof value === 'number' ? value : 0, 100)}%` }}
                       className="h-full bg-yellow-500"
                     />
                   </div>
@@ -554,7 +565,7 @@ const DaziaPage: FC = () => {
                       {('implementation_details' in modal.recommendation 
                         ? modal.recommendation.implementation_details?.steps 
                         : modal.recommendation.implementation_steps
-                      )?.map((step, idx) => (
+                      )?.map((step: any, idx: any) => (
                         <li key={idx}>{step}</li>
                       ))}
                     </ol>
@@ -565,7 +576,7 @@ const DaziaPage: FC = () => {
                   <div>
                     <h4 className="font-semibold text-gray-900 mb-2">Critères de succès</h4>
                     <ul className="list-disc list-inside space-y-1 text-gray-700">
-                      {modal.recommendation.success_criteria.map((criteria, idx) => (
+                      {modal.recommendation.success_criteria.map((criteria: any, idx: any) => (
                         <li key={idx}>{criteria}</li>
                       ))}
                     </ul>
@@ -591,7 +602,7 @@ const DaziaPage: FC = () => {
                       <span className="ml-2">
                         {'implementation_details' in modal.recommendation
                           ? `${modal.recommendation.implementation_details?.estimated_hours || 2}h`
-                          : modal.recommendation.estimated_time}
+                          : 'estimated_time' in modal.recommendation ? modal.recommendation.estimated_time : '2h'}
                       </span>
                     </div>
                     {('urgency' in modal.recommendation) && (
@@ -629,7 +640,7 @@ const DaziaPage: FC = () => {
         </div>
       )}
     </div>
-  );
+};
 };
 
 export default DaziaPage; 

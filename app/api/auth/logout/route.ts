@@ -44,4 +44,4 @@ export async function POST(_request: NextRequest): Promise<ReturnType<typeof Nex
       { status: 500 }
     )
   }
-} 
+}

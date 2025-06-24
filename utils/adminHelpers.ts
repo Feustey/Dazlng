@@ -3,11 +3,11 @@ import { NextRequest } from "next/server";
 // import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 // À adapter selon ta logique réelle de vérification admin
-const ADMIN_PUBKEY = process.env.ADMIN_PUBKEY;
+const ADMIN_PUBKEY = process.env.ADMIN_PUBKEY ?? "";
 
 export async function validateAdminAccess(req: NextRequest): Promise<boolean> {
   // Bypass en local
-  if (process.env.NODE_ENV === "development" || req.headers.get("host")?.startsWith("localhost")) {
+  if (process.env.NODE_ENV ?? "" === "development" || req.headers.get("host")?.startsWith("localhost")) {
     return true;
   }
   // Exemple : vérification d'un header personnalisé contenant la signature
@@ -21,4 +21,4 @@ export async function validateAdminAccess(req: NextRequest): Promise<boolean> {
 
   // TODO: Vérifier la signature du message (implémentation à faire selon ta stack)
   return true;
-} 
+}

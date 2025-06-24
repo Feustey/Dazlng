@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface MetricProps {
+export interface MetricProps {
   number: string;
   label: string;
   description: string;
@@ -24,37 +24,8 @@ const RealMetric: React.FC<MetricProps> = ({ number, label, description, color, 
       {description}
     </div>
   </div>
-);
-
+};
 const RealMetrics: React.FC = () => {
-  const metrics = [
-    { 
-      number: "127k", 
-      label: "Sats économisés/mois", 
-      description: "En moyenne par node",
-      color: "text-green-600"
-    },
-    { 
-      number: "6h", 
-      label: "Prédiction force-close", 
-      description: "Avant que ça arrive",
-      color: "text-blue-600"
-    },
-    { 
-      number: "99.97%", 
-      label: "Uptime moyen", 
-      description: "Nos nodes clients",
-      color: "text-purple-600"
-    },
-    { 
-      number: "47", 
-      label: "Métriques analysées", 
-      description: "Par notre IA en temps réel",
-      color: "text-orange-600"
-    }
-  ];
-
-  return (
     <section className="py-20 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4">
         {/* En-tête */}
@@ -69,7 +40,7 @@ const RealMetrics: React.FC = () => {
 
         {/* Métriques */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-          {metrics.map((metric, index) => (
+          {metrics.map((metric: any, index: any) => (
             <RealMetric
               key={metric.label}
               number={metric.number}
@@ -126,7 +97,7 @@ const RealMetrics: React.FC = () => {
         </div>
       </div>
     </section>
-  );
+};
 };
 
 export default RealMetrics; 

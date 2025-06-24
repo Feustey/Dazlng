@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 
-interface AuthLayoutProps {
+export interface AuthLayoutProps {
   children: React.ReactNode;
   title: string;
   subtitle: string;
@@ -51,7 +51,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
         </p>
       </div>
     </div>
-  );
+};
 };
 
 export default AuthLayout; 

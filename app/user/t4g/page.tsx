@@ -1,16 +1,77 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useGamificationSystem } from "../hooks/useGamificationSystem";
 import { CRMUserHeader } from "../components/ui/CRMUserHeader";
 import { GamificationCenter } from "../components/ui/GamificationCenter";
 import { SmartRecommendations } from "../components/ui/SmartRecommendations";
 import Link from "next/link";
-import type { CRMData } from "../types/crm";
+import { useSupabase } from '@/app/providers/SupabaseProvider';
+import { getSupabaseBrowserClient } from '@/lib/supabase';
+
+export interface UserProfile {
+  id: string;
+  email: string;
+  prenom?: string;
+  nom?: string;
+  node_id?: string;
+  pubkey?: string;
+  t4g_tokens: number;
+}
+
+export interface CRMData {
+  userScore: number;
+  segment: 'lead' | 'client' | 'premium' | 'champion';
+  engagementLevel: number;
+  conversionProbability: number;
+  lastActivity: string;
+  totalOrders: number;
+  totalSpent: number;
+  isPremium: boolean;
+  hasNode: boolean;
+  profileCompletion: number;
+  lightningAdoption: boolean;
+  recommendations: any[];
+}
 
 export default function T4GPage() {
   // Récupération des données de gamification et CRM
-  const { profile, isLoading, error, gamificationData } = useGamificationSystem();
+  const { user } = useSupabase();
+  const { isLoading, error, gamificationData } = useGamificationSystem();
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [profileLoading, setProfileLoading] = useState(true);
+
+  // Charger le profil utilisateur
+  useEffect(() => {
+    const loadProfile = async (): Promise<void> => {
+      if (!user) {
+        setProfileLoading(false);
+        return;
+      }
+
+      try {
+        const supabase = getSupabaseBrowserClient();
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('id, email, prenom, nom, node_id, pubkey, t4g_tokens')
+          .eq('id', user.id)
+          .single();
+
+        if (error) {
+          console.error('Erreur lors du chargement du profil:', error);
+        } else {
+          setProfile(data);
+        }
+      } catch (error) {
+        console.error('Erreur lors du chargement du profil:', error);
+      } finally {
+        setProfileLoading(false);
+      }
+    };
+
+    loadProfile();
+  }, [user]);
+
   // TODO: Remplacer par un vrai fetch CRMData (mock ici)
   const crmData: CRMData | null = profile ? {
     userScore: 72,
@@ -33,7 +94,7 @@ export default function T4GPage() {
     points: a.reward // GamificationCenter attend 'points', le hook fournit 'reward'
   })) ?? [];
 
-  if (isLoading) return <div className="p-8 text-center">Chargement...</div>;
+  if (isLoading || profileLoading) return <div className="p-8 text-center">Chargement...</div>;
   if (error || !profile || !gamificationData || !crmData) return <div className="p-8 text-center text-red-600">Erreur de chargement du profil</div>;
 
   return (
@@ -124,5 +185,5 @@ export default function T4GPage() {
         </div>
       </section>
     </div>
-  );
-} 
+};
+}

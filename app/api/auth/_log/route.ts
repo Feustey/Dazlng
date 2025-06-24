@@ -10,4 +10,4 @@ export async function POST(req: NextRequest): Promise<Response> {
     console.error('[AUTH-LOG] Erreur:', e)
     return NextResponse.json({ success: true }) // Toujours retourner success pour les logs
   }
-} 
+}

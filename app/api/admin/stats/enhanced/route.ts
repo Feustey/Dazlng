@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdminClient } from '@/lib/supabase';
 
-interface BusinessMetrics {
+export interface BusinessMetrics {
   // Acquisition
   monthly_signups: number;
   weekly_signups: number;
@@ -25,7 +25,7 @@ interface BusinessMetrics {
   revenue_per_user: number;
 }
 
-interface FunnelMetrics {
+export interface FunnelMetrics {
   visitors: number;
   signups: number;
   verified_users: number;
@@ -39,7 +39,7 @@ interface FunnelMetrics {
   premium_rate: number;
 }
 
-interface CohortData {
+export interface CohortData {
   month: string;
   cohort_size: number;
   month_1: number;
@@ -130,11 +130,11 @@ async function getBusinessMetrics(_startDate: Date): Promise<BusinessMetrics> {
     .select('amount, payment_status, created_at, user_id')
     .eq('payment_status', 'paid');
 
-  const totalRevenue = ordersData?.reduce((sum, order) => sum + (order.amount || 0), 0) || 0;
+  const totalRevenue = ordersData?.reduce((sum: any, order: any) => sum + (order.amount || 0), 0) || 0;
   
   const monthlyRevenue = ordersData?.filter(order => 
     new Date(order.created_at) >= monthStart
-  ).reduce((sum, order) => sum + (order.amount || 0), 0) || 0;
+  ).reduce((sum: any, order: any) => sum + (order.amount || 0), 0) || 0;
 
   const avgOrderValue = ordersData?.length ? totalRevenue / ordersData.length : 0;
 
@@ -291,4 +291,4 @@ async function getCohortAnalysis(): Promise<CohortData[]> {
   }
 
   return cohortAnalysis.slice(-12); // 12 derniers mois
-} 
+}

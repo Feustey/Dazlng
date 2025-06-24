@@ -1,6 +1,6 @@
 import { getSupabaseAdminClient } from '@/lib/supabase'
 
-interface SecurityEvent {
+export interface SecurityEvent {
   type: 'AUTH_SUCCESS' | 'AUTH_FAILURE' | 'UNAUTHORIZED_ACCESS' | 'SUSPICIOUS_ACTIVITY'
   userId?: string
   email?: string
@@ -36,4 +36,4 @@ export function getClientInfo(request: Request): { ipAddress: string; userAgent:
                'unknown',
     userAgent: request.headers.get('user-agent') || 'unknown'
   }
-} 
+}

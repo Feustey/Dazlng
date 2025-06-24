@@ -1,8 +1,9 @@
+import React from 'react';
 "use client";
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-export default function CheckoutSuccess(): React.ReactElement {
+export default function CheckoutSuccess(): React.FC {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -80,7 +81,7 @@ export default function CheckoutSuccess(): React.ReactElement {
           </div>
         </div>
       </div>
-    );
+};
   }
   
   if (error) {
@@ -105,7 +106,7 @@ export default function CheckoutSuccess(): React.ReactElement {
           </div>
         </div>
       </div>
-    );
+};
   }
 
   return (
@@ -128,5 +129,5 @@ export default function CheckoutSuccess(): React.ReactElement {
         </div>
       </div>
     </div>
-  );
-} 
+};
+}

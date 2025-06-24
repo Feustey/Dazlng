@@ -2,19 +2,19 @@ import { motion } from 'framer-motion';
 import { Search, Filter, X } from 'lucide-react';
 import { useState } from 'react';
 
-interface FilterOption {
+export interface FilterOption {
   id: string;
   label: string;
   value: string;
 }
 
-interface RecommendationFiltersProps {
+export interface RecommendationFiltersProps {
   onFilterChange: (filters: {
-    search: string;
-    categories: string[];
-    impact: string[];
-    difficulty: string[];
-  }) => void;
+  search: string;
+  categories: string[];
+  impact: string[];
+  difficulty: string[];
+}) => void;
 }
 
 export const RecommendationFilters = ({ onFilterChange }: RecommendationFiltersProps) => {
@@ -57,7 +57,7 @@ export const RecommendationFilters = ({ onFilterChange }: RecommendationFiltersP
       prev.includes(category)
         ? prev.filter(c => c !== category)
         : [...prev, category]
-    );
+};
   };
 
   const toggleImpact = (impact: string) => {
@@ -65,7 +65,7 @@ export const RecommendationFilters = ({ onFilterChange }: RecommendationFiltersP
       prev.includes(impact)
         ? prev.filter(i => i !== impact)
         : [...prev, impact]
-    );
+};
   };
 
   const toggleDifficulty = (difficulty: string) => {
@@ -73,7 +73,7 @@ export const RecommendationFilters = ({ onFilterChange }: RecommendationFiltersP
       prev.includes(difficulty)
         ? prev.filter(d => d !== difficulty)
         : [...prev, difficulty]
-    );
+};
   };
 
   const clearFilters = () => {
@@ -110,7 +110,7 @@ export const RecommendationFilters = ({ onFilterChange }: RecommendationFiltersP
           <input
             type="text"
             value={search}
-            onChange={(e) => {
+            onChange={(e: any) => {
               setSearch(e.target.value);
               handleFilterChange();
             }}
@@ -130,7 +130,7 @@ export const RecommendationFilters = ({ onFilterChange }: RecommendationFiltersP
           <div>
             <h4 className="mb-2 text-sm font-medium text-gray-700">Catégories</h4>
             <div className="flex flex-wrap gap-2">
-              {categories.map((category) => (
+              {categories.map((category: any) => (
                 <button
                   key={category.id}
                   onClick={() => {
@@ -153,7 +153,7 @@ export const RecommendationFilters = ({ onFilterChange }: RecommendationFiltersP
           <div>
             <h4 className="mb-2 text-sm font-medium text-gray-700">Impact</h4>
             <div className="flex flex-wrap gap-2">
-              {impactLevels.map((impact) => (
+              {impactLevels.map((impact: any) => (
                 <button
                   key={impact.id}
                   onClick={() => {
@@ -176,7 +176,7 @@ export const RecommendationFilters = ({ onFilterChange }: RecommendationFiltersP
           <div>
             <h4 className="mb-2 text-sm font-medium text-gray-700">Difficulté</h4>
             <div className="flex flex-wrap gap-2">
-              {difficultyLevels.map((difficulty) => (
+              {difficultyLevels.map((difficulty: any) => (
                 <button
                   key={difficulty.id}
                   onClick={() => {
@@ -214,5 +214,5 @@ export const RecommendationFilters = ({ onFilterChange }: RecommendationFiltersP
         </div>
       )}
     </div>
-  );
-}; 
+};
+}

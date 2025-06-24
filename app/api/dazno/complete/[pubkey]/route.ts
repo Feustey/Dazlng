@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { daznoAPI } from '@/lib/services/dazno-api'
+import { createDaznoApiClient } from '@/lib/services/dazno-api'
 import { ApiResponse } from '@/types/database'
 import { DaznoCompleteResponse, DaznoPriorityRequest } from '@/types/dazno-api'
 
@@ -15,7 +15,10 @@ export async function GET(
     const resolvedParams = await params
     const pubkey = resolvedParams.pubkey
 
-    if (!daznoAPI.isValidPubkey(pubkey)) {
+    const daznoApi = createDaznoApiClient()
+    await daznoApi.initialize()
+
+    if (!daznoApi.isValidPubkey(pubkey)) {
       return NextResponse.json<ApiResponse<null>>({
         success: false,
         error: {
@@ -25,7 +28,7 @@ export async function GET(
       }, { status: 400 })
     }
 
-    const data = await daznoAPI.getCompleteNodeAnalysis(pubkey, context, goals)
+    const data = await daznoApi.getCompleteNodeAnalysis(pubkey, context, goals)
 
     return NextResponse.json<ApiResponse<DaznoCompleteResponse>>({
       success: true,
@@ -47,4 +50,4 @@ export async function GET(
       }
     }, { status: 500 })
   }
-} 
+}

@@ -6,43 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useConversionTracking } from '../../../hooks/useConversionTracking';
 import { useScrollTracking } from '../../../hooks/useScrollTracking';
 
-const DazPayHero: React.FC = (): React.ReactElement => {
-  const router = useRouter();
-  const { trackCTAClick, trackPageView, trackProductInterest } = useConversionTracking();
-  
-  // Track scroll depth pour cette section
-  useScrollTracking({ pageName: 'dazpay_landing' });
-
-  // Track page view au montage du composant
-  useEffect(() => {
-    trackPageView('dazpay_landing', { 
-      section: 'hero',
-      product: 'dazpay' 
-    });
-    trackProductInterest('dazpay', 'page_view', { source: 'hero' });
-  }, [trackPageView, trackProductInterest]);
-
-  const handleStartFree = (): void => {
-    trackCTAClick('primary', 'dazpay_hero', { 
-      action: 'start_free',
-      product: 'dazpay' 
-    });
-    router.push('/checkout/dazpay');
-  };
-
-  const handleViewDemo = (): void => {
-    trackCTAClick('secondary', 'dazpay_hero', { 
-      action: 'view_demo',
-      product: 'dazpay' 
-    });
-    // Scroll vers la section features
-    const element = document.getElementById('features');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  return (
+const DazPayHero: React.FC = () => {
     <section className="relative min-h-screen bg-gradient-to-br from-orange-500 via-red-600 to-pink-700 flex items-center justify-center px-4 py-20">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
@@ -190,7 +154,7 @@ const DazPayHero: React.FC = (): React.ReactElement => {
         </div>
       </div>
     </section>
-  );
+};
 };
 
 export default DazPayHero; 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { UserProfile, CRMData, SmartRecommendation, ProfileField } from '../types/crm';
 
-interface UseCRMDataProps {
+export interface UseCRMDataProps {
   userProfile?: UserProfile;
 }
 
@@ -259,4 +259,4 @@ export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
     userScore: userProfile ? calculateUserScore(userProfile) : 0,
     recommendations: crmData?.recommendations || []
   };
-}; 
+}

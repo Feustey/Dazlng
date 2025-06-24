@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-interface StatsWidgetProps {
+export interface StatsWidgetProps {
   title: string;
   value: string | number;
   icon?: string;
@@ -23,7 +23,7 @@ const StatsWidget: FC<StatsWidgetProps> = ({ title, value, icon, trend }) => {
         </div>
       )}
     </div>
-  );
+};
 };
 
 export default StatsWidget;

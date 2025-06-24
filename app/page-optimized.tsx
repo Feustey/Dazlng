@@ -9,25 +9,6 @@ import { CTASection } from "@/components/shared/ui/CTASection";
 
 // Composant client séparé pour gérer les paramètres d'URL
 const SignupConfirmation: React.FC = () => {
-  const [showSignupConfirmation, setShowSignupConfirmation] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  
-  useEffect(() => {
-    setMounted(true);
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-    if (code) {
-      setShowSignupConfirmation(true);
-    }
-  }, []);
-  
-  const closeConfirmation = (): void => {
-    setShowSignupConfirmation(false);
-  };
-  
-  if (!mounted || !showSignupConfirmation) return null;
-  
-  return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 backdrop-blur-sm">
       <div 
         className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl border border-indigo-200 transform transition-all animate-fade-in-scale"
@@ -53,10 +34,10 @@ const SignupConfirmation: React.FC = () => {
         </div>
       </div>
     </div>
-  );
+};
 };
 
-export default function OptimizedHomePage(): React.ReactElement {
+export default function OptimizedHomePage(): React.FC {
   useEffect(() => {
     AOS.init({ 
       once: false,
@@ -72,7 +53,7 @@ export default function OptimizedHomePage(): React.ReactElement {
       if (!targetId) return;
       const targetElement = document.querySelector(targetId);
       if (targetElement) {
-        anchor.addEventListener('click', (e) => {
+        anchor.addEventListener('click', (e: any) => {
           e.preventDefault();
           const elementTop = targetElement.getBoundingClientRect().top + window.scrollY;
           const offset = 80;
@@ -107,5 +88,5 @@ export default function OptimizedHomePage(): React.ReactElement {
         <CTASection />
       </main>
     </>
-  );
-} 
+};
+}

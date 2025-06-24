@@ -4,39 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useConversionTracking } from '../../../hooks/useConversionTracking';
 import { useScrollTracking } from '../../../hooks/useScrollTracking';
 
-const NewHero: React.FC = (): React.ReactElement => {
-  const router = useRouter();
-  const { trackCTAClick, trackPageView } = useConversionTracking();
-  
-  // Track scroll depth pour cette section
-  useScrollTracking({ pageName: 'landing_hero' });
-
-  // Track page view au montage du composant
-  useEffect(() => {
-    trackPageView('landing_page', { section: 'hero' });
-  }, [trackPageView]);
-
-  const handleStartFree = (): void => {
-    trackCTAClick('primary', 'hero_section', { action: 'start_free' });
-    router.push('/auth/login');
-  };
-
-  const handleViewDemo = (): void => {
-    trackCTAClick('secondary', 'hero_section', { action: 'view_demo' });
-    router.push('/daznode/demo');
-  };
-
-  const handleScrollToDemo = (): void => {
-    // Utilisation de setTimeout pour s'assurer que le DOM est prêt
-    setTimeout(() => {
-      const element = document.getElementById('how-it-works');
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 0);
-  };
-
-  return (
+const NewHero: React.FC = () => {
     <section className="min-h-screen bg-gradient-to-br from-indigo-600 to-purple-700 flex items-center justify-center px-4 py-20">
       <div className="max-w-6xl mx-auto text-center space-y-8">
         {/* Logo */}
@@ -128,7 +96,7 @@ const NewHero: React.FC = (): React.ReactElement => {
         </div>
       </div>
     </section>
-  );
+};
 };
 
 export default NewHero; 

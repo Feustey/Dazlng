@@ -1,3 +1,4 @@
+import React from 'react';
 'use client'
 
 import { createContext, useContext, useEffect, useState, useMemo } from 'react'
@@ -5,7 +6,7 @@ import { getSupabaseBrowserClient } from '@/lib/supabase'
 import type { User, Session } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
 
-interface SupabaseContext {
+export interface SupabaseContext {
   user: User | null
   session: Session | null
   loading: boolean
@@ -44,7 +45,7 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }): J
     getSession()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      async (event: any, session: any) => {
         console.log('Auth state change:', event, session?.user?.id)
         
         setSession(session)
@@ -62,7 +63,7 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }): J
     )
 
     return () => subscription.unsubscribe()
-  }, [supabase, router])
+  }, [supabase, router]);
 
   const signOut = async (): Promise<void> => {
     await supabase.auth.signOut()
@@ -81,4 +82,4 @@ export const useSupabase = (): SupabaseContext => {
     throw new Error('useSupabase must be used within a SupabaseProvider')
   }
   return context
-} 
+}

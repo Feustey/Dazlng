@@ -1,47 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 
-const DetailedTestimonials: React.FC = (): React.ReactElement => {
-  const testimonials = [
-    {
-      name: "Jean D.",
-      role: "Node Runner depuis 8 mois",
-      avatar: "/assets/images/avatar-male.svg",
-      quote: "Revenus moyens : 127€/mois. La communauté DazNode m'a aidé à optimiser mes canaux dès le premier mois. L'entraide est exceptionnelle !",
-      metrics: {
-        monthlyEarnings: "127€",
-        roi: "19.2%",
-        period: "8 mois"
-      },
-      gradient: "from-green-500 to-emerald-600"
-    },
-    {
-      name: "Marie L.",
-      role: "Ex-développeuse devenue node runner",
-      avatar: "/assets/images/avatar-female.svg",
-      quote: "J'ai quitté mon job grâce aux revenus de mes 3 nœuds DazNode. La communauté partage toutes les stratégies gagnantes.",
-      metrics: {
-        monthlyEarnings: "340€",
-        nodes: "3 nœuds",
-        period: "1 an"
-      },
-      gradient: "from-blue-500 to-cyan-600"
-    },
-    {
-      name: "Pierre M.",
-      role: "De 0 à expert en 6 mois",
-      avatar: "/assets/images/avatar-leaticia.png",
-      quote: "Parti de zéro, la communauté m'a tout appris. Aujourd'hui je forme les nouveaux. DazNode c'est bien plus qu'un produit, c'est une famille.",
-      metrics: {
-        monthlyEarnings: "89€",
-        role: "Mentor actif",
-        period: "6 mois"
-      },
-      gradient: "from-purple-500 to-violet-600"
-    }
-  ];
-
-  return (
+const DetailedTestimonials: React.FC = () => {
     <section className="py-20 bg-gradient-to-b from-white to-gray-50">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-16">
@@ -55,7 +15,7 @@ const DetailedTestimonials: React.FC = (): React.ReactElement => {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
+          {testimonials.map((testimonial: any, index: any) => (
             <div 
               key={index}
               className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
@@ -129,7 +89,7 @@ const DetailedTestimonials: React.FC = (): React.ReactElement => {
         </div>
       </div>
     </section>
-  );
+};
 };
 
 export default DetailedTestimonials; 

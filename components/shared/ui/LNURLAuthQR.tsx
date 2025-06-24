@@ -3,13 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 
-interface LNURLAuthQRProps {
+export interface LNURLAuthQRProps {
   challenge: string;
   onSuccess: (token: string) => void;
   onError: (error: string) => void;
 }
 
-export default function LNURLAuthQR({ challenge, onSuccess, onError }: LNURLAuthQRProps): React.ReactElement {
+export default function LNURLAuthQR({ challenge, onSuccess, onError }: LNURLAuthQRProps): React.FC {
   const [lnurlAuth, setLnurlAuth] = useState<string>('');
   const [isChecking, setIsChecking] = useState(false);
 
@@ -108,5 +108,5 @@ export default function LNURLAuthQR({ challenge, onSuccess, onError }: LNURLAuth
         </div>
       )}
     </div>
-  );
-} 
+};
+}

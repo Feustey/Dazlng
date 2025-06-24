@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface BadgeProps {
+export interface BadgeProps {
   children: React.ReactNode;
   variant?: 'default' | 'secondary' | 'destructive' | 'outline';
   size?: 'sm' | 'md' | 'lg';
@@ -12,7 +12,7 @@ export default function Badge({
   variant = 'default', 
   size = 'md', 
   className = '' 
-}: BadgeProps): React.ReactElement {
+}: BadgeProps): React.FC {
   const baseClasses = 'inline-flex items-center rounded-full font-medium';
   
   const variants = {
@@ -32,7 +32,7 @@ export default function Badge({
     <span className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`}>
       {children}
     </span>
-  );
+};
 }
 
 export { Badge }; 

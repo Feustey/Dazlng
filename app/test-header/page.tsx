@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-export default function TestHeaderPage(): React.ReactElement {
+export default function TestHeaderPage(): React.FC {
   return (
     <div className="min-h-screen">
       {/* Hero section pour tester le header sur fond moderne */}
@@ -82,5 +82,5 @@ export default function TestHeaderPage(): React.ReactElement {
         </div>
       </footer>
     </div>
-  );
-} 
+};
+}

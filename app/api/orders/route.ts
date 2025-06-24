@@ -24,7 +24,13 @@ export async function GET(req: NextRequest): Promise<Response> {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {
-      return createApiResponse({ success: false, error: { code: ErrorCodes.UNAUTHORIZED, message: 'Unauthorized' } }, 401);
+      return createApiResponse({ 
+        success: false, 
+        error: { 
+          code: ErrorCodes.UNAUTHORIZED, 
+          message: 'Unauthorized' 
+        } 
+      }, 401);
     }
 
     console.log('GET', '/api/orders', user.id);
@@ -37,7 +43,13 @@ export async function GET(req: NextRequest): Promise<Response> {
 
     if (error) {
       console.error('Erreur lors de la récupération des commandes:', error);
-      return createApiResponse({ success: false, error: { code: ErrorCodes.DATABASE_ERROR, message: "Erreur lors de la récupération des commandes" } });
+      return createApiResponse({ 
+        success: false, 
+        error: { 
+          code: ErrorCodes.DATABASE_ERROR, 
+          message: "Erreur lors de la récupération des commandes" 
+        } 
+      }, 500);
     }
 
     return createApiResponse({ success: true, data });
@@ -57,7 +69,14 @@ export async function POST(req: NextRequest): Promise<Response> {
     // Validation des données avec Zod
     const validationResult = validateData(createOrderSchema, body);
     if (!validationResult.success) {
-      return createApiResponse({ success: false, error: { code: ErrorCodes.VALIDATION_ERROR, message: 'Données de commande invalides', details: validationResult.error } });
+      return createApiResponse({ 
+        success: false, 
+        error: { 
+          code: ErrorCodes.VALIDATION_ERROR, 
+          message: 'Données de commande invalides', 
+          details: validationResult.error 
+        } 
+      }, 400);
     }
 
     const { user_id, product_type, plan, billing_cycle, amount, payment_method, customer, product, metadata } = validationResult.data;
@@ -90,13 +109,19 @@ export async function POST(req: NextRequest): Promise<Response> {
 
     if (error) {
       console.error('Erreur lors de la création de la commande:', error);
-      return createApiResponse({ success: false, error: { code: ErrorCodes.DATABASE_ERROR, message: "Erreur lors de la création de la commande" } });
+      return createApiResponse({ 
+        success: false, 
+        error: { 
+          code: ErrorCodes.DATABASE_ERROR, 
+          message: "Erreur lors de la création de la commande" 
+        } 
+      }, 500);
     }
 
     // Envoi d'un email de notification (en arrière-plan)
     try {
-      const resend = new Resend(process.env.RESEND_API_KEY);
-      if (process.env.RESEND_API_KEY && data && typeof data === 'object') {
+      const resend = new Resend(process.env.RESEND_API_KEY ?? "");
+      if (process.env.RESEND_API_KEY ?? "" && data && typeof data === 'object' && 'id' in data) {
         const html = generateEmailTemplate({
           title: `Nouvelle commande - ${product.name}`,
           username: `${customer.firstName} ${customer.lastName}`,
@@ -117,15 +142,20 @@ export async function POST(req: NextRequest): Promise<Response> {
 
         // Email à l'équipe
         await resend.emails.send({
-          from: 'contact@dazno.de',
           to: 'contact@dazno.de',
           subject: `Nouvelle commande #${data.id} - ${product_type}`,
-          html,
+          html: generateEmailTemplate({
+            title: 'Nouvelle commande',
+            username: `${customer.firstName} ${customer.lastName}`,
+            mainContent: `Nouvelle commande #${data.id} - ${product_type}`,
+            detailedContent: html,
+            ctaText: 'Suivre ma commande',
+            ctaLink: 'https://dazno.de/user/dashboard'
+          })
         });
 
         // Email de confirmation au client
         await resend.emails.send({
-          from: 'contact@dazno.de',
           to: customer.email,
           subject: `Confirmation de commande #${data.id}`,
           html: generateEmailTemplate({

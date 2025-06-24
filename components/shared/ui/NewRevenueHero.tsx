@@ -3,25 +3,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useConversionTracking } from '../../../hooks/useConversionTracking';
 
-const NewRevenueHero: React.FC = (): React.ReactElement => {
-  const router = useRouter();
-  const { trackCTAClick, trackPageView } = useConversionTracking();
-
-  useEffect(() => {
-    trackPageView('landing_page', { section: 'revenue_hero' });
-  }, [trackPageView]);
-
-  const handleStartFree = (): void => {
-    trackCTAClick('primary', 'revenue_hero_section', { action: 'start_free' });
-    router.push('/auth/login');
-  };
-
-  const handleJoinCommunity = (): void => {
-    trackCTAClick('secondary', 'revenue_hero_section', { action: 'join_community' });
-    router.push('/token-for-good');
-  };
-
-  return (
+const NewRevenueHero: React.FC = () => {
     <section className="min-h-screen bg-gradient-to-br from-green-600 via-blue-700 to-purple-800 flex items-center justify-center px-4 py-20">
       <div className="max-w-7xl mx-auto text-center space-y-8">
         {/* Logo */}
@@ -130,7 +112,7 @@ const NewRevenueHero: React.FC = (): React.ReactElement => {
         </div>
       </div>
     </section>
-  );
+};
 };
 
 export default NewRevenueHero; 

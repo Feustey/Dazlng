@@ -8,7 +8,7 @@ import Button from '@/components/shared/ui/Button';
 import { Alert, AlertDescription } from '@/components/shared/ui/Alert';
 import { Zap, Search, Globe, Database } from 'lucide-react';
 
-export default function MCPAnalysisPage(): React.ReactElement {
+export default function MCPAnalysisPage(): React.FC {
   const [pubkey, setPubkey] = useState('');
   const [validatedPubkey, setValidatedPubkey] = useState<string | null>(null);
   const { initialized, loading, error, checkHealth, isValidPubkey } = useMCPLight();
@@ -41,7 +41,7 @@ export default function MCPAnalysisPage(): React.ReactElement {
           <p className="text-gray-600">Récupération des credentials JWT...</p>
         </div>
       </div>
-    );
+};
   }
 
   if (error) {
@@ -56,7 +56,7 @@ export default function MCPAnalysisPage(): React.ReactElement {
           </Alert>
         </div>
       </div>
-    );
+};
   }
 
   return (
@@ -108,7 +108,7 @@ export default function MCPAnalysisPage(): React.ReactElement {
                       id="pubkey"
                       type="text"
                       value={pubkey}
-                      onChange={(e) => setPubkey(e.target.value)}
+                      onChange={(e: any) => setPubkey(e.target.value)}
                       placeholder="Entrez la clé publique (66 caractères hex)"
                       maxLength={66}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-mono text-sm"
@@ -219,7 +219,7 @@ export default function MCPAnalysisPage(): React.ReactElement {
           <div className="lg:col-span-2">
             <NodeAnalysis 
               pubkey={validatedPubkey}
-              onAnalysisComplete={(result) => {
+              onAnalysisComplete={(result: any) => {
                 console.log('Analyse terminée:', result);
               }}
               userContext="Je veux optimiser les performances de mon nœud Lightning Network"
@@ -243,5 +243,5 @@ export default function MCPAnalysisPage(): React.ReactElement {
         </div>
       </footer>
     </div>
-  );
-} 
+};
+}

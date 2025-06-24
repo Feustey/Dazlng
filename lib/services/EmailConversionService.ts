@@ -1,7 +1,7 @@
 import { getSupabaseAdminClient } from '@/lib/supabase';
 import { sendEmail } from '@/utils/email';
 
-interface ConversionEmailData {
+export interface ConversionEmailData {
   email: string;
   name?: string;
   loginCount: number;
@@ -165,7 +165,7 @@ export class EmailConversionService {
               </div>
 
               <div style="text-align: center;">
-                <a href="${process.env.NEXT_PUBLIC_BASE_URL}/register?from=conversion&email=${encodeURIComponent(email)}" class="cta-button">
+                <a href="${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/register?from=conversion&email=${encodeURIComponent(email)}" class="cta-button">
                   Créer mon compte permanent
                 </a>
               </div>
@@ -293,7 +293,7 @@ export class EmailConversionService {
           <p>Il est temps de passer au niveau supérieur avec un compte permanent !</p>
           
           <div style="text-align: center;">
-            <a href="${process.env.NEXT_PUBLIC_BASE_URL}/register?conversion=true&email=${encodeURIComponent(email)}" class="cta-button">
+            <a href="${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/register?conversion=true&email=${encodeURIComponent(email)}" class="cta-button">
               Créer mon compte DAZ Node
             </a>
           </div>
@@ -409,4 +409,4 @@ export class EmailConversionService {
       return false;
     }
   }
-} 
+}

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 
-interface PaymentFormProps {
+export interface PaymentFormProps {
   onBack: () => void;
   onSuccess: () => void;
 }
 
-export function PaymentForm({ onBack, onSuccess }: PaymentFormProps): React.ReactElement {
+export function PaymentForm({ onBack, onSuccess }: PaymentFormProps): React.FC {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -31,5 +31,5 @@ export function PaymentForm({ onBack, onSuccess }: PaymentFormProps): React.Reac
       </button>
       {error && <div className="text-red-500">{error}</div>}
     </form>
-  );
-} 
+};
+}

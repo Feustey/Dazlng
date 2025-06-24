@@ -4,7 +4,7 @@ import { withAuth, handleApiError } from '@/lib/api-utils';
 
 // GET /api/users/me/metrics - Métriques utilisateur
 export async function GET(req: NextRequest): Promise<Response> {
-  return withAuth(req, async (user) => {
+  return withAuth(req, async (user: any) => {
     try {
       // Récupérer les métriques de l'utilisateur
       const { data, error } = await getSupabaseAdminClient()
@@ -38,7 +38,7 @@ export async function GET(req: NextRequest): Promise<Response> {
 
 // POST /api/users/me/metrics - Mettre à jour les métriques
 export async function POST(req: NextRequest): Promise<Response> {
-  return withAuth(req, async (user) => {
+  return withAuth(req, async (user: any) => {
     try {
       const body = await req.json();
       
@@ -79,4 +79,4 @@ export async function POST(req: NextRequest): Promise<Response> {
       return NextResponse.json(handleApiError(error), { status: 500 });
     }
   });
-} 
+}

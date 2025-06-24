@@ -10,4 +10,4 @@ export async function verifyLnurlAuth(pubkey: string, k1: string, sig: string): 
   } catch (e) {
     return false;
   }
-} 
+}

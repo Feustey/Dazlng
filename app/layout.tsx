@@ -18,17 +18,17 @@ export const metadata: Metadata = {
   creator: 'DazNode',
   publisher: 'DazNode',
   robots: 'index, follow',
-  metadataBase: new URL(process.env.NODE_ENV === 'production' ? 'https://dazno.de' : 'http://localhost:3001'),
+  metadataBase: new URL(process.env.NODE_ENV ?? "" === 'production' ? 'https://dazno.de' : 'http://localhost:3001'),
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
-    url: process.env.NODE_ENV === 'production' ? 'https://dazno.de' : 'http://localhost:3001',
+    url: process.env.NODE_ENV ?? "" === 'production' ? 'https://dazno.de' : 'http://localhost:3001',
     title: 'DazNode | Solutions Lightning Network pour tous',
     description: 'Daznode simplifie l\'accès au réseau Lightning avec des solutions clés en main. Nœuds personnels, services de paiement et IA dédiée pour particuliers et professionnels.',
     siteName: 'DazNode',
     images: [
       {
-        url: process.env.NODE_ENV === 'production' 
+        url: process.env.NODE_ENV ?? "" === 'production' 
           ? 'https://dazno.de/assets/images/og-image.png'
           : 'http://localhost:3001/assets/images/og-image.png',
         width: 1200,
@@ -41,13 +41,17 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'DazNode | Solutions Lightning Network pour tous',
     description: 'Daznode simplifie l\'accès au réseau Lightning avec des solutions clés en main. Nœuds personnels, services de paiement et IA dédiée.',
-    images: [process.env.NODE_ENV === 'production' 
+    images: [process.env.NODE_ENV ?? "" === 'production' 
       ? 'https://dazno.de/assets/images/og-image.png'
       : 'http://localhost:3001/assets/images/og-image.png']
   }
 };
 
-const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export interface RootLayoutProps {
+  children: React.ReactNode;
+}
+
+const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   return (
     <html lang="fr">
       <head>
@@ -82,7 +86,7 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         />
       </body>
     </html>
-  );
+};
 };
 
 export default RootLayout; 

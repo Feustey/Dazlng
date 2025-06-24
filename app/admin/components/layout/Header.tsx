@@ -1,9 +1,10 @@
+import React from 'react';
 'use client';
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-export default function Header(): React.ReactElement {
+export default function Header(): React.FC {
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -51,5 +52,5 @@ export default function Header(): React.ReactElement {
         </div>
       </div>
     </header>
-  );
-} 
+};
+}

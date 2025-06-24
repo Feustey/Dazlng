@@ -22,7 +22,7 @@ export interface AdminApiResponse<T> {
 }
 
 // Types pour les filtres admin
-export interface AdminFilterInput {
+export export interface AdminFilterInput {
   page?: number;
   limit?: number;
   search?: string;
@@ -32,7 +32,7 @@ export interface AdminFilterInput {
 }
 
 // Types pour les notifications admin
-export interface AdminNotification {
+export export interface AdminNotification {
   id: string;
   admin_id: string;
   type: 'info' | 'warning' | 'error' | 'success';
@@ -49,7 +49,7 @@ export interface AdminNotification {
 }
 
 // Types pour les statistiques
-export interface EnhancedStats {
+export export interface EnhancedStats {
   users: {
     total: number;
     active: number;
@@ -439,7 +439,7 @@ export function withEnhancedAdminAuth(
           'Authentification admin requise',
           null,
           401
-        );
+};
       }
 
       // Vérification des permissions si spécifiées
@@ -448,15 +448,14 @@ export function withEnhancedAdminAuth(
           adminId,
           requiredPermissions.resource,
           requiredPermissions.action as any
-        );
-        
+};
         if (!hasPermission) {
           return AdminResponseBuilder.error(
             'FORBIDDEN',
             'Permissions insuffisantes',
             null,
             403
-          );
+};
         }
       }
 
@@ -470,7 +469,7 @@ export function withEnhancedAdminAuth(
         'Erreur interne du serveur',
         null,
         500
-      );
+};
     }
   };
 }
@@ -614,4 +613,4 @@ export function invalidateAdminCache(pattern?: string): void {
   } else {
     cache.clear();
   }
-} 
+}

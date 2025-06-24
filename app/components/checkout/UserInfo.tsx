@@ -10,11 +10,11 @@ export type UserInfo = {
   phone: string;
 };
 
-interface UserInfoFormProps {
+export interface UserInfoFormProps {
   onSubmit: (data: UserInfo) => void;
 }
 
-export function UserInfoForm({ onSubmit }: UserInfoFormProps): React.ReactElement {
+export function UserInfoForm({ onSubmit }: UserInfoFormProps): React.FC {
   const [form, setForm] = useState<UserInfo>({
     fullName: "",
     email: "",
@@ -50,5 +50,5 @@ export function UserInfoForm({ onSubmit }: UserInfoFormProps): React.ReactElemen
       {error && <div className="text-red-500">{error}</div>}
       <button type="submit" className="btn-primary w-full">Procéder au paiement</button>
     </form>
-  );
-} 
+};
+}

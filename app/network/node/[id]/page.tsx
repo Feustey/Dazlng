@@ -23,8 +23,8 @@ export default async function Page(): Promise<JSX.Element> {
           </div>
         </div>
       </div>
-    );
+};
   } catch (error) {
     notFound();
   }
-} 
+}

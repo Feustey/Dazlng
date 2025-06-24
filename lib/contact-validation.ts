@@ -51,4 +51,4 @@ export async function checkRateLimit(_ip: string): Promise<boolean> {
   // Implémentation du rate limiting
   // Retourne false si trop de requêtes de cette IP
   return true
-} 
+}

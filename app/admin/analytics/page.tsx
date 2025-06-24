@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 
-interface AnalyticsData {
+export interface AnalyticsData {
   stats: {
     pageviews: { value: number };
     visitors: { value: number };
@@ -28,7 +28,7 @@ interface AnalyticsData {
   };
 }
 
-interface ApiResponse {
+export interface ApiResponse {
   success: boolean;
   data: AnalyticsData;
   source: 'mock' | 'umami' | 'mock_fallback';
@@ -36,80 +36,7 @@ interface ApiResponse {
   error?: string;
 }
 
-const AnalyticsPage: React.FC = () => {
-  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [source, setSource] = useState<string>('');
-  const [timeRange, setTimeRange] = useState('7d');
-  const [lastUpdated, setLastUpdated] = useState<string>('');
-
-  const loadAnalytics = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const params = new URLSearchParams();
-      
-      // Calculer les dates selon la période sélectionnée
-      const endAt = new Date();
-      const startAt = new Date();
-      
-      switch (timeRange) {
-        case '24h':
-          startAt.setDate(startAt.getDate() - 1);
-          break;
-        case '7d':
-          startAt.setDate(startAt.getDate() - 7);
-          break;
-        case '30d':
-          startAt.setDate(startAt.getDate() - 30);
-          break;
-        case '90d':
-          startAt.setDate(startAt.getDate() - 90);
-          break;
-      }
-
-      params.append('startAt', startAt.getTime().toString());
-      params.append('endAt', endAt.getTime().toString());
-      params.append('unit', timeRange === '24h' ? 'hour' : 'day');
-
-      const response = await fetch(`/api/admin/umami-analytics?${params}`);
-      
-      if (!response.ok) {
-        throw new Error(`Erreur API: ${response.status}`);
-      }
-
-      const result: ApiResponse = await response.json();
-      
-      if (result.success) {
-        setAnalyticsData(result.data);
-        setSource(result.source);
-        setLastUpdated(result.timestamp);
-        
-        if (result.error) {
-          console.warn('Analytics chargées avec fallback:', result.error);
-        }
-      } else {
-        throw new Error('Erreur lors du chargement des analytics');
-      }
-
-    } catch (err) {
-      console.error('Erreur chargement analytics:', err);
-      setError(err instanceof Error ? err.message : 'Erreur inconnue');
-    } finally {
-      setLoading(false);
-    }
-  }, [timeRange]);
-
-  useEffect(() => {
-    loadAnalytics();
-  }, [loadAnalytics]);
-
-  // Auto-refresh toutes les 5 minutes
-  useEffect(() => {
-    const interval = setInterval(loadAnalytics, 5 * 60 * 1000);
-    return () => clearInterval(interval);
+const AnalyticsPage: React.FC = () => {) => clearInterval(interval);
   }, [loadAnalytics]);
 
   const formatNumber = (num: number): string => {
@@ -154,7 +81,7 @@ const AnalyticsPage: React.FC = () => {
       <span className={`px-2 py-1 rounded-full text-xs font-medium ${badge.color}`}>
         {badge.text}
       </span>
-    );
+};
   };
 
   if (loading && !analyticsData) {
@@ -163,14 +90,14 @@ const AnalyticsPage: React.FC = () => {
         <div className="animate-pulse space-y-4">
           <div className="h-8 bg-gray-200 rounded w-1/3"></div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {[...Array(4)].map((_, i) => (
+            {[...Array(4)].map((_: any, i: any) => (
               <div key={i} className="h-24 bg-gray-200 rounded"></div>
             ))}
           </div>
           <div className="h-96 bg-gray-200 rounded"></div>
         </div>
       </div>
-    );
+};
   }
 
   if (error && !analyticsData) {
@@ -187,7 +114,7 @@ const AnalyticsPage: React.FC = () => {
           </button>
         </div>
       </div>
-    );
+};
   }
 
   return (
@@ -206,7 +133,7 @@ const AnalyticsPage: React.FC = () => {
           {/* Sélecteur de période */}
           <select 
             value={timeRange} 
-            onChange={(e) => setTimeRange(e.target.value)}
+            onChange={(e: any) => setTimeRange(e.target.value)}
             className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="24h">Dernières 24h</option>
@@ -301,7 +228,7 @@ const AnalyticsPage: React.FC = () => {
           <div className="bg-white p-6 rounded-lg shadow border">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">📄 Pages populaires</h3>
             <div className="space-y-3">
-              {analyticsData.pageviews.pageviews.slice(0, 8).map((page, index) => (
+              {analyticsData.pageviews.pageviews.slice(0, 8).map((page: any, index: any) => (
                 <div key={index} className="flex items-center justify-between">
                   <div className="text-sm text-gray-600 truncate flex-1">{page.x}</div>
                   <div className="text-sm font-medium text-gray-900 ml-2">
@@ -315,7 +242,7 @@ const AnalyticsPage: React.FC = () => {
           <div className="bg-white p-6 rounded-lg shadow border">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">🌍 Pays</h3>
             <div className="space-y-3">
-              {analyticsData.metrics.countries.slice(0, 8).map((country, index) => (
+              {analyticsData.metrics.countries.slice(0, 8).map((country: any, index: any) => (
                 <div key={index} className="flex items-center justify-between">
                   <div className="text-sm text-gray-600">{country.x}</div>
                   <div className="text-sm font-medium text-gray-900">
@@ -334,7 +261,7 @@ const AnalyticsPage: React.FC = () => {
           <div className="bg-white p-6 rounded-lg shadow border">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">🌐 Navigateurs</h3>
             <div className="space-y-3">
-              {analyticsData.metrics.browsers.slice(0, 5).map((browser, index) => (
+              {analyticsData.metrics.browsers.slice(0, 5).map((browser: any, index: any) => (
                 <div key={index} className="flex items-center justify-between">
                   <div className="text-sm text-gray-600">{browser.x}</div>
                   <div className="text-sm font-medium text-gray-900">
@@ -348,7 +275,7 @@ const AnalyticsPage: React.FC = () => {
           <div className="bg-white p-6 rounded-lg shadow border">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">💻 Systèmes</h3>
             <div className="space-y-3">
-              {analyticsData.metrics.os.slice(0, 5).map((os, index) => (
+              {analyticsData.metrics.os.slice(0, 5).map((os: any, index: any) => (
                 <div key={index} className="flex items-center justify-between">
                   <div className="text-sm text-gray-600">{os.x}</div>
                   <div className="text-sm font-medium text-gray-900">
@@ -362,7 +289,7 @@ const AnalyticsPage: React.FC = () => {
           <div className="bg-white p-6 rounded-lg shadow border">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">📱 Appareils</h3>
             <div className="space-y-3">
-              {analyticsData.metrics.devices.map((device, index) => (
+              {analyticsData.metrics.devices.map((device: any, index: any) => (
                 <div key={index} className="flex items-center justify-between">
                   <div className="text-sm text-gray-600">{device.x}</div>
                   <div className="text-sm font-medium text-gray-900">
@@ -380,7 +307,7 @@ const AnalyticsPage: React.FC = () => {
         <div className="bg-white p-6 rounded-lg shadow border">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">🎯 Événements personnalisés</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {analyticsData.events.map((event, index) => (
+            {analyticsData.events.map((event: any, index: any) => (
               <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div className="text-sm text-gray-600">{event.x}</div>
                 <div className="text-sm font-medium text-gray-900">
@@ -399,7 +326,7 @@ const AnalyticsPage: React.FC = () => {
         </div>
       )}
     </div>
-  );
+};
 };
 
 export default AnalyticsPage;

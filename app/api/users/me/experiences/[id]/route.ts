@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdminClient } from '@/lib/supabase';
 import { experienceSchema, validateData } from "@/lib/validations";
-import { ApiResponse } from "@/types/database";
+import { ApiResponse, ErrorCodes } from "@/types/database";
+import { handleApiError } from "@/lib/api-utils";
+import { z } from "zod";
+
+type Experience = z.infer<typeof experienceSchema>;
 
 async function getUserFromRequest(req: NextRequest) {
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
@@ -14,14 +18,14 @@ async function getUserFromRequest(req: NextRequest) {
 export async function PUT(
   req: NextRequest,
   { params }: { params: { id: string } }
-): Promise<NextResponse<ApiResponse>> {
+): Promise<Response> {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {
-      return NextResponse.json({
+      return NextResponse.json<ApiResponse<null>>({
         success: false,
         error: {
-          code: "UNAUTHORIZED",
+          code: ErrorCodes.UNAUTHORIZED,
           message: "Non autorisé"
         }
       }, { status: 401 });
@@ -31,18 +35,18 @@ export async function PUT(
     const validation = validateData(experienceSchema, body);
 
     if (!validation.success) {
-      return NextResponse.json({
+      return NextResponse.json<ApiResponse<null>>({
         success: false,
         error: {
-          code: "VALIDATION_ERROR",
+          code: ErrorCodes.VALIDATION_ERROR,
           message: "Données invalides",
-          details: (validation as any).error.details
+          details: validation.error.details
         }
       }, { status: 400 });
     }
 
     // Vérifie que l'expérience appartient à l'utilisateur
-    const { data: existingExperience, error: checkError } = await getSupabaseAdminClient
+    const { data: existingExperience, error: checkError } = await getSupabaseAdminClient()
       .from("user_experiences")
       .select("id")
       .eq("id", params.id)
@@ -50,10 +54,10 @@ export async function PUT(
       .single();
 
     if (checkError || !existingExperience) {
-      return NextResponse.json({
+      return NextResponse.json<ApiResponse<null>>({
         success: false,
         error: {
-          code: "NOT_FOUND",
+          code: ErrorCodes.NOT_FOUND,
           message: "Expérience non trouvée"
         }
       }, { status: 404 });
@@ -64,7 +68,7 @@ export async function PUT(
       updated_at: new Date().toISOString()
     };
 
-    const { data, error } = await getSupabaseAdminClient
+    const { data, error } = await getSupabaseAdminClient()
       .from("user_experiences")
       .update(updateData)
       .eq("id", params.id)
@@ -73,16 +77,10 @@ export async function PUT(
       .single();
 
     if (error) {
-      return NextResponse.json({
-        success: false,
-        error: {
-          code: "DATABASE_ERROR",
-          message: "Erreur lors de la mise à jour de l'expérience"
-        }
-      }, { status: 500 });
+      return NextResponse.json(handleApiError(error), { status: 500 });
     }
 
-    return NextResponse.json({
+    return NextResponse.json<ApiResponse<Experience>>({
       success: true,
       data,
       meta: {
@@ -93,13 +91,7 @@ export async function PUT(
 
   } catch (error) {
     console.error("Erreur PUT /api/users/me/experiences/[id]:", error);
-    return NextResponse.json({
-      success: false,
-      error: {
-        code: "INTERNAL_ERROR",
-        message: "Erreur interne du serveur"
-      }
-    }, { status: 500 });
+    return NextResponse.json(handleApiError(error), { status: 500 });
   }
 }
 
@@ -107,21 +99,21 @@ export async function PUT(
 export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }
-): Promise<NextResponse<ApiResponse>> {
+): Promise<Response> {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {
-      return NextResponse.json({
+      return NextResponse.json<ApiResponse<null>>({
         success: false,
         error: {
-          code: "UNAUTHORIZED",
+          code: ErrorCodes.UNAUTHORIZED,
           message: "Non autorisé"
         }
       }, { status: 401 });
     }
 
     // Vérifie que l'expérience appartient à l'utilisateur
-    const { data: existingExperience, error: checkError } = await getSupabaseAdminClient
+    const { data: existingExperience, error: checkError } = await getSupabaseAdminClient()
       .from("user_experiences")
       .select("id")
       .eq("id", params.id)
@@ -129,32 +121,26 @@ export async function DELETE(
       .single();
 
     if (checkError || !existingExperience) {
-      return NextResponse.json({
+      return NextResponse.json<ApiResponse<null>>({
         success: false,
         error: {
-          code: "NOT_FOUND",
+          code: ErrorCodes.NOT_FOUND,
           message: "Expérience non trouvée"
         }
       }, { status: 404 });
     }
 
-    const { error } = await getSupabaseAdminClient
+    const { error } = await getSupabaseAdminClient()
       .from("user_experiences")
       .delete()
       .eq("id", params.id)
       .eq("user_id", user.id);
 
     if (error) {
-      return NextResponse.json({
-        success: false,
-        error: {
-          code: "DATABASE_ERROR",
-          message: "Erreur lors de la suppression de l'expérience"
-        }
-      }, { status: 500 });
+      return NextResponse.json(handleApiError(error), { status: 500 });
     }
 
-    return NextResponse.json({
+    return NextResponse.json<ApiResponse<{ message: string }>>({
       success: true,
       data: { message: "Expérience supprimée avec succès" },
       meta: {
@@ -165,12 +151,6 @@ export async function DELETE(
 
   } catch (error) {
     console.error("Erreur DELETE /api/users/me/experiences/[id]:", error);
-    return NextResponse.json({
-      success: false,
-      error: {
-        code: "INTERNAL_ERROR",
-        message: "Erreur interne du serveur"
-      }
-    }, { status: 500 });
+    return NextResponse.json(handleApiError(error), { status: 500 });
   }
-} 
+}

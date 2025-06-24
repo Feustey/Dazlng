@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdminClient } from '@/lib/supabase';
 import { createSupabaseServerClient } from '@/lib/supabase-auth';
 
-interface UserProfile {
+export interface UserProfile {
   id: string;
   email: string;
   nom?: string;
@@ -17,7 +17,7 @@ interface UserProfile {
   settings: Record<string, unknown>;
 }
 
-interface UserOrder {
+export interface UserOrder {
   id: string;
   user_id: string;
   product_type: string;
@@ -26,7 +26,7 @@ interface UserOrder {
   created_at: string;
 }
 
-interface UserSubscription {
+export interface UserSubscription {
   id: string;
   user_id: string;
   plan_id: string;
@@ -35,7 +35,7 @@ interface UserSubscription {
   end_date?: string;
 }
 
-interface CRMRecommendation {
+export interface CRMRecommendation {
   id: string;
   title: string;
   description: string;
@@ -64,7 +64,7 @@ export async function GET(_request: NextRequest) {
           } 
         },
         { status: 401 }
-      );
+};
     }
 
     // Récupérer le profil utilisateur
@@ -84,7 +84,7 @@ export async function GET(_request: NextRequest) {
           } 
         },
         { status: 404 }
-      );
+};
     }
 
     // Récupérer les commandes de l'utilisateur
@@ -148,7 +148,7 @@ export async function GET(_request: NextRequest) {
         } 
       },
       { status: 500 }
-    );
+};
   }
 }
 
@@ -326,4 +326,4 @@ function generateRecommendations(profile: UserProfile, orders: UserOrder[], subs
   }
 
   return recommendations.slice(0, 6); // Limiter à 6 recommandations
-} 
+}

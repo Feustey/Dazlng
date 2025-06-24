@@ -4,8 +4,8 @@ export interface BaseRecommendation {
   description: string;
   impact: 'high' | 'medium' | 'low';
   difficulty: 'easy' | 'medium' | 'hard';
-  reasoning: string;
-  date: string;
+  reasoning?: string;
+  date?: string;
   category?: string;
 }
 
@@ -30,11 +30,34 @@ export interface EnhancedRecommendation {
     command?: string;
   }[];
   free: boolean;
+  action?: string;
+  reasoning?: string;
+  expected_impact?: string;
+  timeline?: string;
+  urgency?: string;
+  estimated_time?: string;
+  implementation_details?: {
+    steps?: string[];
+    requirements?: string[];
+    estimated_hours?: number;
+  };
+  success_criteria?: string[];
+  metadata?: Record<string, any>;
 }
 
 export interface DailyRecommendation extends BaseRecommendation {
   implementation_steps?: string[];
   success_criteria?: string[];
+  action?: string;
+  expected_impact?: string;
+  timeline?: string;
+  urgency?: string;
+  estimated_time?: string;
+  implementation_details?: {
+    steps?: string[];
+    requirements?: string[];
+    estimated_hours?: number;
+  };
 }
 
 export interface DaziaData {

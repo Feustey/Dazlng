@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-interface Order {
+export interface Order {
   id: string;
   user_id: string;
   product_type: string;
@@ -66,7 +66,7 @@ export default function OrdersPage(): JSX.Element {
               </tr>
             </thead>
             <tbody>
-              {orders.map((order) => (
+              {orders.map((order: any) => (
                 <tr key={order.id} className="border-b hover:bg-gray-50">
                   <td className="py-2 px-4">{order.id}</td>
                   <td className="py-2 px-4">{order.user_id}</td>
@@ -89,5 +89,5 @@ export default function OrdersPage(): JSX.Element {
         </div>
       )}
     </div>
-  );
-} 
+};
+}

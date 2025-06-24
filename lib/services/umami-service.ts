@@ -1,7 +1,7 @@
 // Service côté client pour Umami Analytics
 class UmamiService {
-  private websiteId: string;
-  private isEnabled: boolean;
+  private websiteId: string | null = null;
+  private isEnabled: boolean | null = null;
 
   constructor() {
     this.websiteId = '21fab8e3-a8fd-474d-9187-9739cce7c9b5'; // ID du site Umami configuré dans layout.tsx
@@ -140,7 +140,7 @@ class UmamiService {
 
 // Déclaration des types pour window.umami
 declare global {
-  interface Window {
+  export interface Window {
     umami?: {
       track: (event: string, data?: Record<string, any>) => void;
     };
@@ -151,7 +151,7 @@ declare global {
 export const umamiService = new UmamiService();
 
 // Types pour l'API Analytics
-export interface UmamiAnalyticsResponse {
+export export interface UmamiAnalyticsResponse {
   success: boolean;
   data: {
     stats: {

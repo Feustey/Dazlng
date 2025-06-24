@@ -1,25 +1,25 @@
 import { ReactNode } from "react";
 
-interface SelectProps {
+export interface SelectProps {
   value: string;
   onValueChange: (value: string) => void;
   children: ReactNode;
   className?: string;
 }
 
-interface SelectTriggerProps {
+export interface SelectTriggerProps {
   children: ReactNode;
 }
 
-interface SelectValueProps {
+export interface SelectValueProps {
   placeholder?: string;
 }
 
-interface SelectContentProps {
+export interface SelectContentProps {
   children: ReactNode;
 }
 
-interface SelectItemProps {
+export interface SelectItemProps {
   value: string;
   children: ReactNode;
 }
@@ -29,13 +29,13 @@ export function Select({ value, onValueChange, children, className = "" }: Selec
     <div className={`relative ${className}`}>
       <select
         value={value}
-        onChange={(e) => onValueChange(e.target.value)}
+        onChange={(e: any) => onValueChange(e.target.value)}
         className="block w-full px-4 py-2 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
       >
         {children}
       </select>
     </div>
-  );
+};
 }
 
 export function SelectTrigger({ children }: SelectTriggerProps): JSX.Element {

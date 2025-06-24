@@ -5,11 +5,11 @@ export type OrderData = {
   email?: string;
 };
 
-interface OrderSummaryProps {
+export interface OrderSummaryProps {
   data: OrderData;
 }
 
-export function OrderSummary({ data }: OrderSummaryProps): React.ReactElement {
+export function OrderSummary({ data }: OrderSummaryProps): React.FC {
   const product = {
     name: "Dazbox",
     priceBTC: 0.004,
@@ -30,5 +30,5 @@ export function OrderSummary({ data }: OrderSummaryProps): React.ReactElement {
         </div>
       )}
     </div>
-  );
-} 
+};
+}

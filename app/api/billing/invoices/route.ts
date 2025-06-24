@@ -4,7 +4,7 @@ import { getSupabaseAdminClient } from '@/lib/supabase';
 export const dynamic = "force-dynamic";
 export const runtime = 'nodejs';
 
-interface Invoice {
+export interface Invoice {
   id: string;
   order_id: string;
   userId: string;
@@ -86,7 +86,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     const status = searchParams.get('status');
 
     // Construction de la requête Supabase
-    let query = getSupabaseAdminClient
+    let query = getSupabaseAdminClient()
       .from('orders')
       .select(`
         id,
@@ -101,7 +101,7 @@ export async function GET(req: NextRequest): Promise<Response> {
         metadata,
         created_at,
         updated_at
-      `)
+      `, { count: 'exact' })
       .eq('user_id', user.id)
       .order('created_at', { ascending: false });
 
@@ -199,4 +199,4 @@ export async function GET(req: NextRequest): Promise<Response> {
       }
     }, { status: 500 });
   }
-} 
+}

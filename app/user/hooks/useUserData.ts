@@ -10,7 +10,7 @@ import type {
   CRMData 
 } from '../types';
 
-interface UseUserDataReturn {
+export interface UseUserDataReturn {
   // User data
   userProfile: UserProfile | null;
   nodeStats: NodeStats | null;
@@ -81,7 +81,7 @@ export function useUserData(): UseUserDataReturn {
     };
 
     fetchUserData();
-  }, [user, session, loading])
+  }, [user, session, loading]);
 
   useEffect(() => {
     const fetchNodeData = async (): Promise<void> => {
@@ -338,7 +338,7 @@ export function useUserData(): UseUserDataReturn {
     const baseValue = currentRevenue;
     const variance = baseValue * 0.15; // 15% de variance
     
-    return Array.from({ length: 7 }, (_, i) => {
+    return Array.from({ length: 7 }, (_: any, i: any) => {
       const trend = growth * (i - 3); // Tendance centrée
       const random = (Math.random() - 0.5) * variance;
       return Math.max(0, Math.round(baseValue + trend + random));
@@ -388,4 +388,4 @@ export function useUserData(): UseUserDataReturn {
     applyRecommendation: applyRecommendation,
     upgradeToPremium
   };
-} 
+}

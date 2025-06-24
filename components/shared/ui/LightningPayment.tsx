@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import QRCode from 'react-qr-code';
 import { Loader2 } from 'lucide-react';
 
-interface LightningPaymentProps {
+export interface LightningPaymentProps {
   amount: number;
   description: string;
   metadata?: Record<string, unknown>;
@@ -107,7 +107,7 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
           Réessayer
         </Button>
       </div>
-    );
+};
   }
 
   if (!invoice) {
@@ -124,7 +124,7 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
           )}
         </Button>
       </div>
-    );
+};
   }
 
   return (
@@ -162,5 +162,5 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
         <p className="text-center text-red-500">Facture expirée</p>
       )}
     </div>
-  );
-}; 
+};
+}

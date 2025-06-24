@@ -2,22 +2,22 @@ import { motion } from 'framer-motion';
 import { CheckCircle2, ChevronRight, Lock } from 'lucide-react';
 import { useState } from 'react';
 
-interface RecommendationCardProps {
+export interface RecommendationCardProps {
   recommendation: {
-    id: string;
-    title: string;
-    description: string;
-    impact: 'high' | 'medium' | 'low';
-    difficulty: 'easy' | 'medium' | 'hard';
-    priority: number;
-    estimated_gain: number;
-    category: 'liquidity' | 'connectivity' | 'fees' | 'security';
-    action_type: 'open_channel' | 'close_channel' | 'adjust_fees' | 'rebalance' | 'other';
-    target_node?: {
-      pubkey: string;
-      alias: string;
-      capacity: number;
-    };
+  id: string;
+  title: string;
+  description: string;
+  impact: 'high' | 'medium' | 'low';
+  difficulty: 'easy' | 'medium' | 'hard';
+  priority: number;
+  estimated_gain: number;
+  category: 'liquidity' | 'connectivity' | 'fees' | 'security';
+  action_type: 'open_channel' | 'close_channel' | 'adjust_fees' | 'rebalance' | 'other';
+  target_node?: {
+  pubkey: string;
+  alias: string;
+  capacity: number;
+};
     steps: {
       order: number;
       description: string;
@@ -96,7 +96,7 @@ export const RecommendationCard = ({
           className="mt-4 overflow-hidden"
         >
           <div className="space-y-4">
-            {recommendation.steps.map((step) => (
+            {recommendation.steps.map((step: any) => (
               <div key={step.order} className="flex items-start gap-3">
                 <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-100">
                   {step.order}
@@ -147,5 +147,5 @@ export const RecommendationCard = ({
         transition={{ duration: 0.2 }}
       />
     </motion.div>
-  );
-}; 
+};
+}

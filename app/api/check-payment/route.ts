@@ -3,7 +3,7 @@ import { OrderService } from '@/lib/services/order-service';
 import { rateLimit } from '@/lib/rate-limit';
 import { handleApiError, createApiResponse } from '@/lib/api-response';
 import { InvoiceStatus } from '@/types/lightning';
-import { daznoAPI } from '@/lib/services/dazno-api';
+import { createDaznoApiClient } from '@/lib/services/dazno-api';
 
 // Rate limiter : 60 requêtes par minute
 const rateLimiter = rateLimit({
@@ -67,8 +67,11 @@ export async function GET(req: NextRequest) {
       }, 400);
     }
 
-    const status = await daznoAPI.checkInvoiceStatus(order.payment_hash);
-
+    const daznoApi = createDaznoApiClient();
+    await daznoApi.initialize();
+    
+    const status = await daznoApi.checkInvoiceStatus(order.payment_hash);
+    
     // 6. Si payé, mettre à jour la commande
     if (status === 'settled') {
       await orderService.markOrderPaid(orderId);
@@ -85,4 +88,4 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     return handleApiError(error);
   }
-} 
+}

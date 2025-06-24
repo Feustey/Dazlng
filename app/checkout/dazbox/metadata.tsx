@@ -17,4 +17,4 @@ export const metadata: Metadata = {
       }
     ]
   }
-}; 
+}

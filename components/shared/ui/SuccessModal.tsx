@@ -6,7 +6,7 @@ import { Fragment } from 'react';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 
-interface SuccessModalProps {
+export interface SuccessModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
@@ -99,7 +99,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
         </div>
       </Dialog>
     </Transition>
-  );
+};
 };
 
 export default SuccessModal; 

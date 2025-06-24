@@ -49,4 +49,4 @@ export async function POST(req: NextRequest): Promise<Response> {
       meta: { timestamp: new Date().toISOString(), version: '1.0.0' }
     }, { status: 500 })
   }
-} 
+}

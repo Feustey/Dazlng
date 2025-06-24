@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { getSupabaseBrowserClient } from '@/lib/supabase';
 import type { User, Session } from '@supabase/supabase-js';
 
-interface UseAuthReturn {
+export interface UseAuthReturn {
   user: User | null;
   session: Session | null;
   loading: boolean;
@@ -43,7 +43,7 @@ export function useAuth(): UseAuthReturn {
 
     // Écouter les changements d'authentification
     const { data: { subscription } } = getSupabaseBrowserClient().auth.onAuthStateChange(
-      async (event, session) => {
+      async (event: any, session: any) => {
         console.log('[AUTH] Changement d\'état:', event, session?.user?.id);
         
         setSession(session);
@@ -55,8 +55,7 @@ export function useAuth(): UseAuthReturn {
           router.push('/');
         }
       }
-    );
-
+};
     return () => {
       subscription.unsubscribe();
     };
@@ -106,4 +105,4 @@ export function useAuth(): UseAuthReturn {
     signOut,
     getAccessToken
   };
-} 
+}

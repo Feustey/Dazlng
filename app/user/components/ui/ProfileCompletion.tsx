@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 
-interface ProfileField {
+export interface ProfileField {
   name: string;
   label: string;
   completed: boolean;
@@ -9,7 +9,7 @@ interface ProfileField {
   href: string;
 }
 
-interface ProfileCompletionProps {
+export interface ProfileCompletionProps {
   profileFields: ProfileField[];
   completionPercentage: number;
   userScore: number;
@@ -63,7 +63,7 @@ const ProfileCompletion: React.FC<ProfileCompletionProps> = ({
           </Link>
         </div>
       </div>
-    );
+};
   }
 
   return (
@@ -90,7 +90,7 @@ const ProfileCompletion: React.FC<ProfileCompletionProps> = ({
         <div className="mb-6">
           <h3 className="text-lg font-medium text-amber-800 mb-3">Actions prioritaires</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {highPriorityFields.slice(0, 2).map((field) => (
+            {highPriorityFields.slice(0, 2).map((field: any) => (
               <Link 
                 key={field.name}
                 href={field.href}
@@ -110,7 +110,7 @@ const ProfileCompletion: React.FC<ProfileCompletionProps> = ({
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {profileFields.map((field) => (
+        {profileFields.map((field: any) => (
           <div key={field.name} className="flex items-center gap-2">
             <span className={field.completed ? 'text-green-500' : 'text-amber-500'}>
               {field.completed ? '✓' : '●'}
@@ -131,7 +131,7 @@ const ProfileCompletion: React.FC<ProfileCompletionProps> = ({
         </Link>
       </div>
     </div>
-  );
+};
 };
 
 export default ProfileCompletion; 

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import GradientLayout from '../../../components/shared/layout/GradientLayout';
 
-export default function DemoPage(): React.ReactElement {
+export default function DemoPage(): React.FC {
   const router = useRouter();
 
   const handleBackToHome = (): void => {
@@ -206,5 +206,5 @@ export default function DemoPage(): React.ReactElement {
         </div>
       </div>
     </GradientLayout>
-  );
-} 
+};
+}

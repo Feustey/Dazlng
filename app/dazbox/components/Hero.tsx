@@ -4,52 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useConversionTracking } from '../../../hooks/useConversionTracking';
 import { useScrollTracking } from '../../../hooks/useScrollTracking';
 
-const DazBoxHero: React.FC = (): React.ReactElement => {
-  const router = useRouter();
-  const { trackCTAClick, trackPageView, trackProductInterest } = useConversionTracking();
-  
-  // Track scroll depth pour cette section
-  useScrollTracking({ pageName: 'dazbox_landing' });
-
-  // Track page view au montage du composant
-  useEffect(() => {
-    trackPageView('dazbox_landing', { 
-      section: 'hero',
-      product: 'dazbox' 
-    });
-    trackProductInterest('dazbox', 'page_view', { source: 'hero' });
-  }, [trackPageView, trackProductInterest]);
-
-  const handleOrderNow = (): void => {
-    trackCTAClick('primary', 'dazbox_hero', { 
-      action: 'order_now',
-      product: 'dazbox' 
-    });
-    router.push('/checkout/dazbox');
-  };
-
-  const handleLearnMore = (): void => {
-    trackCTAClick('secondary', 'dazbox_hero', { 
-      action: 'learn_more',
-      product: 'dazbox' 
-    });
-    // Scroll vers la section features
-    const element = document.getElementById('features');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleWatchDemo = (): void => {
-    trackCTAClick('secondary', 'dazbox_hero', { 
-      action: 'watch_demo',
-      product: 'dazbox' 
-    });
-    // Ici on pourrait ouvrir une modal video ou rediriger vers une page demo
-    router.push('/dazbox/demo');
-  };
-
-  return (
+const DazBoxHero: React.FC = () => {
     <section className="relative min-h-screen bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 flex items-center justify-center px-4 py-20">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
@@ -200,7 +155,7 @@ const DazBoxHero: React.FC = (): React.ReactElement => {
         </div>
       </div>
     </section>
-  );
+};
 };
 
 export default DazBoxHero; 

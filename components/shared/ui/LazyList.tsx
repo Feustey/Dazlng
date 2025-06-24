@@ -1,91 +1,133 @@
+import React from 'react';
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useInView } from 'react-intersection-observer';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { cn } from '../../../lib/utils';
 
 interface LazyListProps<T> {
   items: T[];
-  renderItem: (item: T, index: number) => React.ReactNode;
   pageSize?: number;
-  className?: string;
+  renderItem: (item: T, index: number) => React.ReactNode;
   loadingComponent?: React.ReactNode;
   emptyComponent?: React.ReactNode;
-  threshold?: number;
+  className?: string;
+  overscan?: number;
+  estimateSize?: number;
+  onEndReached?: () => void;
+  endReachedThreshold?: number;
 }
 
 export function LazyList<T>({
   items,
+  pageSize = 10,
   renderItem,
-  pageSize = 20,
-  className,
   loadingComponent,
   emptyComponent,
-  threshold = 200
-}: LazyListProps<T>): JSX.Element {
-  const [currentPage, setCurrentPage] = useState(1);
+  className = '',
+  overscan = 5,
+  estimateSize = 50,
+  onEndReached,
+  endReachedThreshold = 0.8
+}: LazyListProps<T>) {
+  const [displayCount, setDisplayCount] = useState(pageSize);
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Référence au conteneur de la liste
+  const parentRef = useRef<HTMLDivElement>(null);
+  
+  // Observer pour détecter la fin de la liste
+  const { ref: endRef, inView } = useInView({
+    threshold: endReachedThreshold
+  });
 
-  // Éléments visibles actuellement
-  const visibleItems = useMemo(() => {
-    return items.slice(0, currentPage * pageSize);
-  }, [items, currentPage, pageSize]);
+  // Virtualisation pour optimiser le rendu
+  const virtualizer = useVirtualizer({
+    count: Math.min(displayCount, items.length),
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => estimateSize,
+    overscan
+  });
 
-  // Détection du scroll pour charger plus d'éléments
-  const handleScroll = useCallback(() => {
-    if (isLoading || visibleItems.length >= items.length) return;
-
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.offsetHeight;
-
-    if (scrollTop + windowHeight >= documentHeight - threshold) {
-      setIsLoading(true);
-      // Simulation d'un délai de chargement
-      setTimeout(() => {
-        setCurrentPage(prev => prev + 1);
-        setIsLoading(false);
-      }, 100);
+  // Gérer le chargement de plus d'éléments
+  const loadMore = useCallback(async () => {
+    if (isLoading || displayCount >= items.length) return;
+    
+    setIsLoading(true);
+    try {
+      // Simuler un délai de chargement
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      setDisplayCount(prev => Math.min(prev + pageSize, items.length));
+      
+      if (onEndReached && displayCount + pageSize >= items.length) {
+        onEndReached();
+      }
+    } finally {
+      setIsLoading(false);
     }
-  }, [isLoading, visibleItems.length, items.length, threshold]);
+  }, [displayCount, isLoading, items.length, onEndReached, pageSize]);
 
+  // Charger plus d'éléments quand on atteint la fin
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
+    if (inView) {
+      loadMore();
+    }
+  }, [inView, loadMore]);
 
-  if (items.length === 0) {
-    return (
-      <div className={cn('flex items-center justify-center p-8', className)}>
-        {emptyComponent || <p className="text-gray-500">Aucun élément à afficher</p>}
-      </div>
-    );
+  // Optimisation du rendu
+  const getItemKey = useCallback((index: number) => {
+    const item = items[index];
+    return (item as any).id || index;
+  }, [items]);
+
+  if (!items.length && emptyComponent) {
+    return <>{emptyComponent}</>;
   }
 
   return (
-    <div className={cn('space-y-2', className)}>
-      {visibleItems.map((item, index) => (
-        <div key={index} className="animate-in fade-in duration-300">
-          {renderItem(item, index)}
-        </div>
-      ))}
-      
-      {isLoading && (
-        <div className="flex items-center justify-center p-4">
-          {loadingComponent || (
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 bg-blue-500 rounded-full animate-pulse"></div>
-              <div className="w-4 h-4 bg-blue-500 rounded-full animate-pulse delay-75"></div>
-              <div className="w-4 h-4 bg-blue-500 rounded-full animate-pulse delay-150"></div>
+    <div 
+      ref={parentRef}
+      className={`relative overflow-auto ${className}`}
+      style={{ height: '100%', maxHeight: '80vh' }}
+    >
+      <div
+        style={{
+          height: virtualizer.getTotalSize() + 'px',
+          width: '100%',
+          position: 'relative'
+        }}
+      >
+        {virtualizer.getVirtualItems().map((virtualItem: any) => {
+          const item = items[virtualItem.index];
+          return (
+            <div
+              key={getItemKey(virtualItem.index)}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: virtualItem.size + 'px',
+                transform: `translateY(${virtualItem.start}px)`
+              }}
+            >
+              {renderItem(item, virtualItem.index)}
             </div>
-          )}
+};
+        })}
+      </div>
+
+      {/* Indicateur de chargement */}
+      {isLoading && loadingComponent && (
+        <div className="py-4">
+          {loadingComponent}
         </div>
       )}
-      
-      {visibleItems.length >= items.length && items.length > pageSize && (
-        <div className="text-center p-4 text-gray-500">
-          Tous les éléments ont été chargés
-        </div>
-      )}
+
+      {/* Élément observé pour détecter la fin */}
+      <div ref={endRef} className="h-px" />
     </div>
-  );
-} 
+};
+}

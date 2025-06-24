@@ -6,7 +6,7 @@ import { ErrorCodes } from "@/types/database";
 
 // GET /api/users/me/experiences - Liste des expériences
 export async function GET(req: NextRequest): Promise<Response> {
-  return withAuth(req, async (user) => {
+  return withAuth(req, async (user: any) => {
     try {
       const { data, error } = await getSupabaseAdminClient()
         .from("user_experiences")
@@ -32,7 +32,7 @@ export async function GET(req: NextRequest): Promise<Response> {
 
 // POST /api/users/me/experiences - Créer une expérience
 export async function POST(req: NextRequest): Promise<Response> {
-  return withAuth(req, async (user) => {
+  return withAuth(req, async (user: any) => {
     try {
       const body = await req.json();
       const result = experienceSchema.safeParse(body);
@@ -75,4 +75,4 @@ export async function POST(req: NextRequest): Promise<Response> {
       return NextResponse.json(handleApiError(error), { status: 500 });
     }
   });
-} 
+}

@@ -1,58 +1,6 @@
 import React from 'react';
 
-const FirstStepsGuide: React.FC = (): React.ReactElement => {
-  const steps = [
-    {
-      day: "Jour 1-2",
-      title: "Réception et installation guidée",
-      description: "Votre DazBox arrive chez vous avec un guide d'installation détaillé",
-      tasks: [
-        "Déballage et connexion de votre DazBox",
-        "Configuration initiale avec notre assistant",
-        "Premier contact avec votre mentor communauté"
-      ],
-      icon: "📦",
-      color: "from-blue-500 to-cyan-500"
-    },
-    {
-      day: "Jour 3-4",
-      title: "Formation communauté + premiers canaux",
-      description: "Intégration dans Discord et formation personnalisée",
-      tasks: [
-        "Accès au Discord privé et présentation",
-        "Formation 1-on-1 avec un mentor",
-        "Ouverture de vos premiers canaux Lightning"
-      ],
-      icon: "🎓",
-      color: "from-green-500 to-emerald-500"
-    },
-    {
-      day: "Jour 5-6",
-      title: "Optimisation avec mentors",
-      description: "Fine-tuning de votre configuration pour maximiser les revenus",
-      tasks: [
-        "Analyse de vos premiers metrics",
-        "Optimisation des frais et liquidité",
-        "Stratégies de routing personnalisées"
-      ],
-      icon: "⚡",
-      color: "from-yellow-500 to-orange-500"
-    },
-    {
-      day: "Jour 7",
-      title: "Premiers revenus + stratégie personnalisée",
-      description: "Validation de vos gains et plan de développement",
-      tasks: [
-        "Analyse de vos premiers revenus",
-        "Plan de croissance sur 3 mois",
-        "Accès aux stratégies avancées"
-      ],
-      icon: "💰",
-      color: "from-purple-500 to-pink-500"
-    }
-  ];
-
-  return (
+const FirstStepsGuide: React.FC = () => {
     <section className="py-20 bg-gradient-to-b from-white to-gray-50">
       <div className="max-w-6xl mx-auto px-4">
         <div className="text-center mb-16">
@@ -70,7 +18,7 @@ const FirstStepsGuide: React.FC = (): React.ReactElement => {
           <div className="absolute left-8 md:left-1/2 transform md:-translate-x-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-400 to-purple-600 rounded-full"></div>
 
           <div className="space-y-12">
-            {steps.map((step, index) => (
+            {steps.map((step: any, index: any) => (
               <div 
                 key={index}
                 className={`relative flex items-center ${
@@ -96,7 +44,7 @@ const FirstStepsGuide: React.FC = (): React.ReactElement => {
                     <p className="text-gray-600 mb-6 text-lg">{step.description}</p>
                     
                     <ul className="space-y-3">
-                      {step.tasks.map((task, taskIndex) => (
+                      {step.tasks.map((task: any, taskIndex: any) => (
                         <li key={taskIndex} className="flex items-start">
                           <span className="text-green-500 mr-3 mt-1">✓</span>
                           <span className="text-gray-700">{task}</span>
@@ -129,7 +77,7 @@ const FirstStepsGuide: React.FC = (): React.ReactElement => {
         </div>
       </div>
     </section>
-  );
+};
 };
 
 export default FirstStepsGuide; 

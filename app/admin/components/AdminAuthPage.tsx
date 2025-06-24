@@ -1,3 +1,4 @@
+import React from 'react';
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -139,7 +140,7 @@ const AdminAuthPage: FC<AdminAuthPageProps> = () => {
                 type="email"
                 id="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e: any) => setEmail(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 required
                 disabled={loading}
@@ -167,7 +168,7 @@ const AdminAuthPage: FC<AdminAuthPageProps> = () => {
                 type="text"
                 id="code"
                 value={code}
-                onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                onChange={(e: any) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-center text-2xl tracking-widest"
                 placeholder="000000"
                 maxLength={6}
@@ -204,7 +205,7 @@ const AdminAuthPage: FC<AdminAuthPageProps> = () => {
         </div>
       </div>
     </div>
-  );
+};
 };
 
 export default AdminAuthPage; 

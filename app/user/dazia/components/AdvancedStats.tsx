@@ -17,14 +17,13 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend
-);
-
-interface AdvancedStatsProps {
+};
+export interface AdvancedStatsProps {
   stats: {
-    channelDistribution: {
-      labels: string[];
-      data: number[];
-    };
+  channelDistribution: {
+  labels: string[];
+  data: number[];
+};
     revenueByCategory: {
       labels: string[];
       data: number[];
@@ -231,5 +230,5 @@ export const AdvancedStats = ({ stats }: AdvancedStatsProps) => {
         </motion.div>
       </div>
     </div>
-  );
-}; 
+};
+}

@@ -8,7 +8,7 @@ const OptimizePage: FC = () => {
         <p>Outils d'optimisation automatique</p>
       </div>
     </div>
-  );
+};
 };
 
 export default OptimizePage;

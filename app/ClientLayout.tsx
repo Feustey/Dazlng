@@ -10,7 +10,7 @@ import { initSupabaseCookiesFix } from '@/lib/supabase-cookies-fix';
 
 const Footer = dynamic(() => import('@/components/Footer'), { loading: () => <div className="h-40 bg-gray-100"></div> });
 
-interface ClientLayoutProps {
+export interface ClientLayoutProps {
   children: ReactNode;
 }
 
@@ -21,6 +21,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
   useEffect(() => {
     initSupabaseCookiesFix();
   }, []);
+
   const hideHeader = pathname?.startsWith("/checkout") || 
                     pathname?.startsWith("/auth/login") || 
                     pathname?.startsWith("/user") ||
@@ -52,8 +53,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
       </main>
       <Footer />
     </div>
-  );
-
+};
   if (useModernLayout) {
     return (
       <PerformanceProvider>
@@ -88,7 +88,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
           }}
         />
       </PerformanceProvider>
-    );
+};
   }
 
   return (
@@ -119,7 +119,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
         }}
       />
     </PerformanceProvider>
-  );
+};
 };
 
 export default ClientLayout; 

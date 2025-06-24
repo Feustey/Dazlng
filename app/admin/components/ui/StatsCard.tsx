@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-interface StatsCardProps {
+export interface StatsCardProps {
   title: string;
   value: string | number;
   icon: string;
@@ -23,11 +23,10 @@ export function StatsCard({ title, value, icon, link, className = "", trend }: S
         <div className="text-3xl">{icon}</div>
       </div>
     </div>
-  );
-
+};
   if (link) {
     return <Link href={link}>{content}</Link>;
   }
 
   return content;
-} 
+}

@@ -1,5 +1,5 @@
 // Client API pour les services DazNode externes
-export interface NodeInfo {
+export export interface NodeInfo {
   pubkey: string;
   alias?: string;
   
@@ -41,7 +41,7 @@ export interface NodeInfo {
   connectivity_score?: number;
 }
 
-export interface DaznoRecommendation {
+export export interface DaznoRecommendation {
   id: string;
   type: string; // SparkSeer recommendation type
   title: string;
@@ -72,7 +72,7 @@ export interface DaznoRecommendation {
   requires_premium?: boolean;
 }
 
-export interface PriorityAction {
+export export interface PriorityAction {
   id: string;
   action: string;
   priority: number;
@@ -92,7 +92,7 @@ export interface PriorityAction {
   cost_estimate?: number;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_DAZNO_API_URL || 'https://api.dazno.de';
+const API_BASE_URL = process.env.NEXT_PUBLIC_DAZNO_API_URL ?? "" || 'https://api.dazno.de';
 
 class DaznoApiClient {
   private async makeRequest<T>(endpoint: string, options?: RequestInit): Promise<T> {
@@ -375,4 +375,4 @@ export async function checkApiHealth(): Promise<boolean> {
   } catch {
     return false;
   }
-} 
+}

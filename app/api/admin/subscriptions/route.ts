@@ -20,4 +20,4 @@ export async function GET(req: NextRequest): Promise<Response> {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
   return NextResponse.json(data);
-} 
+}

@@ -4,7 +4,7 @@ import { getUserFromRequest } from '@/utils/auth';
 export const dynamic = "force-dynamic";
 export const runtime = 'nodejs';
 
-interface Subscription {
+export interface Subscription {
   id: string;
   userId: string;
   planId: string;
@@ -82,4 +82,4 @@ export async function GET(req: NextRequest): Promise<Response> {
       }
     }, { status: 500 });
   }
-} 
+}

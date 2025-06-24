@@ -4,7 +4,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
 import { Users, Mail, Target, Send, TrendingUp, TrendingDown } from 'lucide-react';
 
-interface MetricCardProps {
+export interface MetricCardProps {
   title: string;
   value: string | number;
   trend?: number;
@@ -35,23 +35,10 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, trend, icon: Icon
         )}
       </CardContent>
     </Card>
-  );
+};
 };
 
 export const CRMDashboard: React.FC = () => {
-  // Dans un vrai projet, ces données viendraient d'une API
-  const metrics = {
-    activeCustomers: 1247,
-    customerGrowth: 12.5,
-    emailOpenRate: 24.8,
-    openRateChange: -2.1,
-    segmentCount: 8,
-    activeCampaigns: 3,
-    totalRevenue: 125430,
-    revenueGrowth: 18.2
-  };
-
-  return (
     <div className="p-6 space-y-6">
       {/* En-tête */}
       <div className="flex items-center justify-between">
@@ -153,7 +140,7 @@ export const CRMDashboard: React.FC = () => {
               { name: 'Nouveaux Clients', count: 123, percentage: 10 },
               { name: 'Clients Inactifs', count: 89, percentage: 7 },
               { name: 'Clients Lightning', count: 234, percentage: 19 }
-            ].map((segment, index) => (
+            ].map((segment: any, index: any) => (
               <div key={index} className="flex items-center justify-between">
                 <div>
                   <div className="font-medium">{segment.name}</div>
@@ -203,7 +190,7 @@ export const CRMDashboard: React.FC = () => {
                 time: 'Il y a 6 heures',
                 status: 'success'
               }
-            ].map((activity, index) => (
+            ].map((activity: any, index: any) => (
               <div key={index} className="flex items-start space-x-3">
                 <div className={`w-2 h-2 rounded-full mt-2 ${
                   activity.status === 'success' ? 'bg-green-500' : 
@@ -220,5 +207,5 @@ export const CRMDashboard: React.FC = () => {
         </CardContent>
       </Card>
     </div>
-  );
-}; 
+};
+}

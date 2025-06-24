@@ -27,7 +27,7 @@ export class SessionManager {
     const supabase = this.getSupabase();
     
     // Écouter les changements de session
-    supabase.auth.onAuthStateChange((event) => {
+    supabase.auth.onAuthStateChange((event: any) => {
       if (event === 'SIGNED_OUT') {
         this.stopSessionRefresh();
       } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
@@ -130,4 +130,4 @@ export class SessionManager {
 // Initialiser le gestionnaire de session côté client
 if (typeof window !== 'undefined') {
   SessionManager.getInstance();
-} 
+}

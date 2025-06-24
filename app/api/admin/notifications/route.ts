@@ -9,13 +9,13 @@ import { ErrorCodes } from '@/types/database';
 import { z } from 'zod';
 
 const createNotificationSchema = z.object({
-  type: z.enum(['alert', 'info', 'success', 'warning']),
+  type: z.enum(['info', 'warning', 'error', 'success']),
   title: z.string().min(1).max(100),
   message: z.string().min(1).max(500),
   priority: z.enum(['low', 'medium', 'high']).optional(),
   action: z.object({
-    type: z.string(),
-    entityId: z.string(),
+    type: z.enum(['link', 'button']),
+    label: z.string(),
     url: z.string().optional()
   }).optional()
 });
@@ -33,7 +33,7 @@ async function getNotificationsHandler(req: NextRequest, adminId: string): Promi
     return AdminResponseBuilder.success(notifications, {
       stats: {
         total: notifications.length,
-        filtered: notifications.filter(n => !n.read).length
+        unread: notifications.filter(n => !n.read).length
       }
     });
     
@@ -44,7 +44,7 @@ async function getNotificationsHandler(req: NextRequest, adminId: string): Promi
       'Erreur lors de la récupération des notifications',
       null,
       500
-    );
+};
   }
 }
 
@@ -61,12 +61,11 @@ async function createNotificationHandler(req: NextRequest, adminId: string): Pro
         ErrorCodes.VALIDATION_ERROR,
         'Données de notification invalides',
         validation.error.errors
-      );
+};
     }
     
     const { type, title, message, priority = 'medium', action } = validation.data;
     
-    // @ts-expect-error - TypeScript optional properties issue
     await createAdminNotification(adminId, type, title, message, action, priority);
     
     return AdminResponseBuilder.success({ message: 'Notification créée avec succès' });
@@ -78,7 +77,7 @@ async function createNotificationHandler(req: NextRequest, adminId: string): Pro
       'Erreur lors de la création de la notification',
       null,
       500
-    );
+};
   }
 }
 
@@ -88,9 +87,8 @@ async function createNotificationHandler(req: NextRequest, adminId: string): Pro
 export const GET = withEnhancedAdminAuth(
   getNotificationsHandler,
   { resource: 'notifications', action: 'read' }
-);
-
+};
 export const POST = withEnhancedAdminAuth(
   createNotificationHandler,
   { resource: 'notifications', action: 'write' }
-); 
+}

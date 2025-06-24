@@ -26,6 +26,5 @@ const AppIcon: React.FC<AppIconProps> = ({ name, size = 24, className = '', alt 
     className={className}
     alt={alt || name}
   />
-);
-
+};
 export default AppIcon; 

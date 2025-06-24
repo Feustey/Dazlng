@@ -41,7 +41,6 @@ const socialLinks = [
 ];
 
 const Footer: React.FC = () => {
-  return (
     <footer className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white overflow-hidden">
       {/* Éléments décoratifs en arrière-plan */}
       <div className="absolute inset-0 opacity-10 pointer-events-none select-none">
@@ -72,7 +71,7 @@ const Footer: React.FC = () => {
               <p className="text-blue-100 text-sm mb-4">Où l'imagination rencontre l'innovation - libérez votre créativité avec nous!</p>
               {/* Icônes de réseaux sociaux */}
               <div className="flex space-x-3 mt-6">
-                {socialLinks.map((link, index) => (
+                {socialLinks.map((link: any, index: any) => (
                   <a
                     key={index}
                     href={link.url}
@@ -171,7 +170,7 @@ const Footer: React.FC = () => {
         </div>
       </div>
     </footer>
-  );
+};
 };
 
 export default Footer; 

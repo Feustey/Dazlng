@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-interface Plan {
+export interface Plan {
   id: string;
   name: string;
   description: string;
@@ -136,4 +136,4 @@ export async function GET(_req: NextRequest): Promise<Response> {
       }
     }, { status: 500 });
   }
-} 
+}

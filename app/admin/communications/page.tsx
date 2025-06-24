@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { getSupabaseBrowserClient } from '@/lib/supabase'
 import Link from 'next/link'
 
-interface EmailLog {
+export interface EmailLog {
   id: string
   type: string
   recipient: string
@@ -14,7 +14,7 @@ interface EmailLog {
   contact_id?: string
 }
 
-interface Contact {
+export interface Contact {
   id: string
   first_name: string
   last_name: string
@@ -24,7 +24,7 @@ interface Contact {
   created_at: string
 }
 
-interface EmailTemplate {
+export interface EmailTemplate {
   id: string
   name: string
   subject: string
@@ -35,7 +35,7 @@ interface EmailTemplate {
   created_at: string
 }
 
-interface EmailCampaign {
+export interface EmailCampaign {
   id: string
   name: string
   subject: string
@@ -54,7 +54,7 @@ interface EmailCampaign {
   created_at: string
 }
 
-interface EmailStats {
+export interface EmailStats {
   total_sent: number
   total_delivered: number
   total_opened: number
@@ -80,10 +80,10 @@ export default function CommunicationsPage(): JSX.Element {
   const loadEmailStats = async () => {
     try {
       // Calculer les stats à partir des campagnes
-      const totalSent = campaigns.reduce((sum, c) => sum + (c.stats.sent_count || 0), 0)
-      const totalDelivered = campaigns.reduce((sum, c) => sum + (c.stats.delivered_count || 0), 0)
-      const totalOpened = campaigns.reduce((sum, c) => sum + (c.stats.opened_count || 0), 0)
-      const totalClicked = campaigns.reduce((sum, c) => sum + (c.stats.clicked_count || 0), 0)
+      const totalSent = campaigns.reduce((sum: any, c: any) => sum + (c.stats.sent_count || 0), 0)
+      const totalDelivered = campaigns.reduce((sum: any, c: any) => sum + (c.stats.delivered_count || 0), 0)
+      const totalOpened = campaigns.reduce((sum: any, c: any) => sum + (c.stats.opened_count || 0), 0)
+      const totalClicked = campaigns.reduce((sum: any, c: any) => sum + (c.stats.clicked_count || 0), 0)
       
       const openRate = totalSent > 0 ? (totalOpened / totalSent) * 100 : 0
       const clickRate = totalOpened > 0 ? (totalClicked / totalOpened) * 100 : 0
@@ -132,11 +132,11 @@ export default function CommunicationsPage(): JSX.Element {
     } finally {
       setLoading(false)
     }
-  }, [activeTab, loadEmailStats])
+  }, [activeTab, loadEmailStats]);
 
   useEffect(() => {
     loadData()
-  }, [loadData])
+  }, [loadData]);
 
   const loadEmailLogs = async () => {
     try {
@@ -295,7 +295,7 @@ export default function CommunicationsPage(): JSX.Element {
         <div className="animate-pulse space-y-4">
           <div className="h-8 bg-gray-200 rounded w-1/4"></div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {[...Array(4)].map((_, i) => (
+            {[...Array(4)].map((_: any, i: any) => (
               <div key={i} className="h-24 bg-gray-200 rounded"></div>
             ))}
           </div>
@@ -330,7 +330,7 @@ export default function CommunicationsPage(): JSX.Element {
             { id: 'campaigns', label: 'Campagnes', icon: '📧' },
             { id: 'templates', label: 'Templates', icon: '📝' },
             { id: 'logs', label: 'Logs', icon: '📋' }
-          ].map((tab) => (
+          ].map((tab: any) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as TabType)}
@@ -434,7 +434,7 @@ export default function CommunicationsPage(): JSX.Element {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {campaigns.map((campaign) => (
+                {campaigns.map((campaign: any) => (
                   <tr key={campaign.id}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div>
@@ -501,7 +501,7 @@ export default function CommunicationsPage(): JSX.Element {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {templates.map((template) => (
+            {templates.map((template: any) => (
               <div key={template.id} className="bg-white rounded-lg shadow border p-6">
                 <div className="flex justify-between items-start mb-4">
                   <div>
@@ -523,7 +523,7 @@ export default function CommunicationsPage(): JSX.Element {
                 <div className="mb-4">
                   <p className="text-sm font-medium text-gray-900 mb-1">Variables:</p>
                   <div className="flex flex-wrap gap-1">
-                    {Object.keys(template.variables).map((variable) => (
+                    {Object.keys(template.variables).map((variable: any) => (
                       <span key={variable} className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800">
                         {variable}
                       </span>
@@ -564,7 +564,7 @@ export default function CommunicationsPage(): JSX.Element {
                   </tr>
                 </thead>
                 <tbody>
-                  {emailLogs.map((log) => (
+                  {emailLogs.map((log: any) => (
                     <tr key={log.id} className="border-t">
                       <td className="px-4 py-2">{log.type}</td>
                       <td className="px-4 py-2">{log.recipient}</td>
@@ -600,7 +600,7 @@ export default function CommunicationsPage(): JSX.Element {
                   </tr>
                 </thead>
                 <tbody>
-                  {contacts.map((contact) => (
+                  {contacts.map((contact: any) => (
                     <tr key={contact.id} className="border-t">
                       <td className="px-4 py-2">
                         {contact.first_name} {contact.last_name}
@@ -676,4 +676,4 @@ export default function CommunicationsPage(): JSX.Element {
       )}
     </div>
   )
-} 
+}

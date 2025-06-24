@@ -74,14 +74,7 @@ export const updateProfileSchema = z.object({
 // ============================================================================
 
 export const createOrderSchema = z.object({
-  user_id: uuidSchema.optional(),
-  product_type: z.enum(['daznode', 'dazbox', 'dazpay'], {
-    errorMap: () => ({ message: 'Type de produit invalide' })
-  }),
-  plan: z.string().optional(),
-  billing_cycle: z.enum(['monthly', 'yearly']).optional(),
-  amount: z.number().positive('Le montant doit être positif'),
-  payment_method: z.string().min(1, 'Méthode de paiement requise'),
+  product_type: z.enum(['daznode', 'dazbox', 'dazpay']),
   customer: z.object({
     email: emailSchema,
     firstName: z.string().min(1, 'Prénom requis'),
@@ -89,15 +82,13 @@ export const createOrderSchema = z.object({
     address: z.string().min(1, 'Adresse requise'),
     city: z.string().min(1, 'Ville requise'),
     postalCode: z.string().min(1, 'Code postal requis'),
-    country: z.string().min(1, 'Pays requis'),
-    pubkey: lightningPubkeySchema
+    country: z.string().min(1, 'Pays requis')
   }),
   product: z.object({
-    name: z.string().min(1, 'Nom du produit requis'),
-    quantity: z.number().int().positive('La quantité doit être positive'),
-    priceSats: z.number().positive('Le prix en sats doit être positif')
-  }),
-  metadata: z.record(z.any()).optional()
+    name: z.string().min(1),
+    quantity: z.number().int().positive(),
+    priceSats: z.number().positive()
+  })
 })
 
 export const updateOrderSchema = z.object({
@@ -365,7 +356,7 @@ export const changePasswordSchema = z.object({
     .min(8, "Le nouveau mot de passe doit contenir au moins 8 caractères")
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre"),
   confirmPassword: z.string().min(1, "Confirmation du mot de passe requise")
-}).refine((data) => data.newPassword === data.confirmPassword, {
+}).refine((data: any) => data.newPassword === data.confirmPassword, {
   message: "Les mots de passe ne correspondent pas",
   path: ["confirmPassword"]
 })
@@ -422,4 +413,4 @@ export function validateQueryParams<T>(schema: z.ZodSchema<T>, searchParams: URL
   }
   
   return schema.parse(params)
-} 
+}

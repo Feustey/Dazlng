@@ -6,4 +6,4 @@ export const prisma = {
   session: {
     create: async () => ({}),
   },
-}; 
+}

@@ -27,4 +27,4 @@ export class NetworkService {
     };
     throw errorResponse;
   }
-} 
+}

@@ -3,7 +3,7 @@ import { FaDownload, FaPlug, FaCog, FaChartLine } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import { useConversionTracking } from '../../../hooks/useConversionTracking';
 
-interface StepProps {
+export interface StepProps {
   number: number;
   icon: React.ReactNode;
   title: string;
@@ -29,58 +29,8 @@ const Step: React.FC<StepProps> = ({ number, icon, title, description, delay }) 
     <h3 className="text-xl font-bold text-gray-800">{title}</h3>
     <p className="text-gray-600 max-w-xs leading-relaxed">{description}</p>
   </div>
-);
-
+};
 export const HowItWorks: React.FC = () => {
-  const router = useRouter();
-  const { trackCTAClick } = useConversionTracking();
-  
-  const handleOrderClick = (): void => {
-    try {
-      trackCTAClick('primary', 'how_it_works_section', { action: 'order_dazbox' });
-    } catch (error) {
-      console.warn('Tracking error:', error);
-    }
-    router.push('/checkout/dazbox');
-  };
-
-  const handleQuestionClick = (): void => {
-    try {
-      trackCTAClick('secondary', 'how_it_works_section', { action: 'ask_question' });
-    } catch (error) {
-      console.warn('Tracking error:', error);
-    }
-    router.push('/contact');
-  };
-
-  const steps = [
-    {
-      number: 1,
-      icon: <FaDownload />,
-      title: "Commandez votre DazBox",
-      description: "Recevez votre nœud Lightning préconfigué directement chez vous en 48h"
-    },
-    {
-      number: 2,
-      icon: <FaPlug />,
-      title: "Branchez et connectez",
-      description: "Une prise, un câble ethernet : votre nœud se synchronise automatiquement"
-    },
-    {
-      number: 3,
-      icon: <FaCog />,
-      title: "L'IA optimise tout",
-      description: "Notre intelligence artificielle gère le routing et maximise vos revenus 24/7"
-    },
-    {
-      number: 4,
-      icon: <FaChartLine />,
-      title: "Suivez vos gains",
-      description: "Dashboard en temps réel pour tracker vos performances et revenus Lightning"
-    }
-  ];
-
-  return (
     <section id="how-it-works" className="py-20 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4">
         {/* En-tête de section */}
@@ -96,7 +46,7 @@ export const HowItWorks: React.FC = () => {
 
         {/* Étapes */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-          {steps.map((step, index) => (
+          {steps.map((step: any, index: any) => (
             <Step
               key={step.number}
               number={step.number}
@@ -112,7 +62,7 @@ export const HowItWorks: React.FC = () => {
         <div className="hidden lg:block relative mb-16">
           <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-indigo-300 to-purple-300 transform -translate-y-1/2"></div>
           <div className="flex justify-between items-center">
-            {[1, 2, 3].map((_, index) => (
+            {[1, 2, 3].map((_: any, index: any) => (
               <div 
                 key={index} 
                 className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center"
@@ -153,5 +103,5 @@ export const HowItWorks: React.FC = () => {
         </div>
       </div>
     </section>
-  );
-}; 
+};
+}

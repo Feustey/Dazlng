@@ -2,7 +2,7 @@
 import React, { ReactNode } from "react";
 // import { usePathname } from "next/navigation";
 
-interface ModernLayoutProps {
+export interface ModernLayoutProps {
   children: ReactNode;
   withGradientBg?: boolean;
   withAnimatedCircles?: boolean;
@@ -27,7 +27,7 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({
         {children}
       </div>
     </div>
-  );
+};
 };
 
 export default ModernLayout; 

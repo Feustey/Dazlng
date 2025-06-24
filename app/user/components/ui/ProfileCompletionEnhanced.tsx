@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { CheckCircle, Circle, Star, Target, Gift, TrendingUp } from 'lucide-react';
 
-interface ProfileField {
+export interface ProfileField {
   name: string;
   label: string;
   completed: boolean;
@@ -12,7 +12,7 @@ interface ProfileField {
   description?: string;
 }
 
-interface ProfileCompletionEnhancedProps {
+export interface ProfileCompletionEnhancedProps {
   profileFields: ProfileField[];
   completionPercentage: number;
   userScore: number;
@@ -28,12 +28,12 @@ export const ProfileCompletionEnhanced: React.FC<ProfileCompletionEnhancedProps>
   const incompleteFields = profileFields.filter(field => !field.completed);
   const highPriorityFields = incompleteFields
     .filter(field => field.priority === 'high')
-    .sort((a, b) => (b.points || 0) - (a.points || 0));
+    .sort((a: any, b: any) => (b.points || 0) - (a.points || 0));
 
   const completedFields = profileFields.filter(field => field.completed);
   
-  const totalPossiblePoints = profileFields.reduce((sum, field) => sum + (field.points || 10), 0);
-  const earnedPoints = completedFields.reduce((sum, field) => sum + (field.points || 10), 0);
+  const totalPossiblePoints = profileFields.reduce((sum: any, field: any) => sum + (field.points || 10), 0);
+  const earnedPoints = completedFields.reduce((sum: any, field: any) => sum + (field.points || 10), 0);
 
   const getRewardForCompletion = () => {
     if (completionPercentage === 100) return "🎉 Profil Master débloqué !";
@@ -132,7 +132,7 @@ export const ProfileCompletionEnhanced: React.FC<ProfileCompletionEnhancedProps>
           </div>
         </div>
       </div>
-    );
+};
   }
 
   return (
@@ -197,11 +197,11 @@ export const ProfileCompletionEnhanced: React.FC<ProfileCompletionEnhancedProps>
             <TrendingUp className="w-5 h-5 text-red-600" />
             <h3 className="text-lg font-medium text-amber-800">Actions prioritaires</h3>
             <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-bold">
-              +{highPriorityFields.reduce((sum, field) => sum + (field.points || 10), 0)} XP
+              +{highPriorityFields.reduce((sum: any, field: any) => sum + (field.points || 10), 0)} XP
             </span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {highPriorityFields.slice(0, 2).map((field) => (
+            {highPriorityFields.slice(0, 2).map((field: any) => (
               <Link 
                 key={field.name}
                 href={field.href}
@@ -262,7 +262,7 @@ export const ProfileCompletionEnhanced: React.FC<ProfileCompletionEnhancedProps>
                     {priorityLabels[priority as keyof typeof priorityLabels]} ({fieldsInPriority.filter(f => !f.completed).length} restants)
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {fieldsInPriority.map((field) => (
+                    {fieldsInPriority.map((field: any) => (
                       <div 
                         key={field.name} 
                         className={`flex items-center gap-3 p-3 rounded-lg border ${
@@ -290,7 +290,7 @@ export const ProfileCompletionEnhanced: React.FC<ProfileCompletionEnhancedProps>
                     ))}
                   </div>
                 </div>
-              );
+};
             })}
           </div>
         )}
@@ -310,5 +310,5 @@ export const ProfileCompletionEnhanced: React.FC<ProfileCompletionEnhancedProps>
         </div>
       </div>
     </div>
-  );
-}; 
+};
+}

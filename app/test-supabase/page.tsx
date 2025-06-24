@@ -62,7 +62,7 @@ export default async function TestSupabase(): Promise<JSX.Element> {
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Test des tables</h2>
         <div className="grid gap-3">
-          {tableResults.map((result) => (
+          {tableResults.map((result: any) => (
             <div 
               key={result.table}
               className={`p-3 rounded flex justify-between items-center ${
@@ -85,12 +85,12 @@ export default async function TestSupabase(): Promise<JSX.Element> {
           <div className="grid gap-2">
             <div>
               <strong>NEXT_PUBLIC_SUPABASE_URL:</strong> {
-                process.env.NEXT_PUBLIC_SUPABASE_URL ? '✅ Définie' : '❌ Manquante'
+                process.env.NEXT_PUBLIC_SUPABASE_URL ?? "" ? '✅ Définie' : '❌ Manquante'
               }
             </div>
             <div>
               <strong>NEXT_PUBLIC_SUPABASE_ANON_KEY:</strong> {
-                process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? '✅ Définie' : '❌ Manquante'
+                process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "" ? '✅ Définie' : '❌ Manquante'
               }
             </div>
           </div>
@@ -108,5 +108,5 @@ export default async function TestSupabase(): Promise<JSX.Element> {
         </ol>
       </div>
     </div>
-  );
-} 
+};
+}

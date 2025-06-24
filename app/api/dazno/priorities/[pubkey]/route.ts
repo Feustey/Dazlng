@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { daznoAPI } from '@/lib/services/dazno-api'
+import { createDaznoApiClient } from '@/lib/services/dazno-api'
 import { ApiResponse } from '@/types/database'
 import { DaznoPriorityRequest, DaznoPriorityResponse } from '@/types/dazno-api'
 
@@ -11,7 +11,7 @@ export async function POST(
     const resolvedParams = await params
     const pubkey = resolvedParams.pubkey
     
-    if (!daznoAPI.isValidPubkey(pubkey)) {
+    if (!createDaznoApiClient().isValidPubkey(pubkey)) {
       return NextResponse.json<ApiResponse<null>>({
         success: false,
         error: {
@@ -34,7 +34,10 @@ export async function POST(
       }, { status: 400 })
     }
 
-    const data = await daznoAPI.getPriorityActions(pubkey, body)
+    const daznoApi = createDaznoApiClient()
+    await daznoApi.initialize()
+
+    const data = await daznoApi.getPriorityActions(pubkey, body)
 
     return NextResponse.json<ApiResponse<DaznoPriorityResponse>>({
       success: true,
@@ -56,4 +59,4 @@ export async function POST(
       }
     }, { status: 500 })
   }
-} 
+}

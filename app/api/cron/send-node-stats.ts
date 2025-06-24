@@ -3,10 +3,10 @@ import { getSupabaseAdminClient } from '@/lib/supabase';
 import { Resend } from 'resend';
 import { generateEmailTemplate } from '../../../utils/email';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY ?? "");
 
 // Définition du type pour les données du nœud
-interface DazNodeData {
+export interface DazNodeData {
   summary: unknown;
   centralities: unknown;
   stats: unknown;
@@ -14,7 +14,7 @@ interface DazNodeData {
 }
 
 async function fetchDazNodeData(nodeId: string): Promise<DazNodeData> {
-  const baseUrl = process.env.DAZNODE_API_URL;
+  const baseUrl = process.env.DAZNODE_API_URL ?? "";
   const [summary, centralities, stats, history] = await Promise.all([
     fetch(`${baseUrl}/network/summary`).then(res => res.json()),
     fetch(`${baseUrl}/network/centralities`).then(res => res.json()),
@@ -37,7 +37,7 @@ function generateEmailContent(data: DazNodeData, username: string): string {
 
 export async function POST(req: NextRequest): Promise<Response> {
   const authHeader = req.headers.get('authorization');
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET ?? ""}`) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
   }
   
@@ -61,4 +61,4 @@ export async function POST(req: NextRequest): Promise<Response> {
     });
   }
   return NextResponse.json({ success: true });
-} 
+}

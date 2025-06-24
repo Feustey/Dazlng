@@ -15,7 +15,7 @@ interface ExtendedRecommendation extends DaznoSparkSeerRecommendation {
   suggested_value?: number;
 }
 
-interface DaznoInsightsProps {
+export interface DaznoInsightsProps {
   recommendations: ExtendedRecommendation[];
   onApplyRecommendation: (id: string) => void;
 }
@@ -25,7 +25,7 @@ export const DaznoInsights: React.FC<DaznoInsightsProps> = ({
   onApplyRecommendation,
 }) => {
   // Grouper les recommandations par type
-  const groupedRecommendations = recommendations.reduce((acc, rec) => {
+  const groupedRecommendations = recommendations.reduce((acc: any, rec: any) => {
     const category = rec.type || 'other';
     if (!acc[category]) {
       acc[category] = [];
@@ -36,12 +36,12 @@ export const DaznoInsights: React.FC<DaznoInsightsProps> = ({
 
   // Calculer le score moyen de confiance par catégorie
   const categoryScores = Object.entries(groupedRecommendations).map(([category, recs]) => {
-    const avgConfidence = recs.reduce((sum, rec) => sum + (rec.confidence_score || 0), 0) / recs.length;
+    const avgConfidence = recs.reduce((sum: any, rec: any) => sum + (rec.confidence_score || 0), 0) / recs.length;
     return { category, avgConfidence };
   });
 
   // Trier les catégories par score de confiance
-  categoryScores.sort((a, b) => b.avgConfidence - a.avgConfidence);
+  categoryScores.sort((a: any, b: any) => b.avgConfidence - a.avgConfidence);
 
   return (
     <div className="space-y-6">
@@ -60,13 +60,13 @@ export const DaznoInsights: React.FC<DaznoInsightsProps> = ({
           <div className="bg-green-50 p-4 rounded-lg">
             <div className="text-sm text-green-600 font-medium">Gain total estimé</div>
             <div className="text-2xl font-bold text-green-700">
-              {formatSats(recommendations.reduce((sum, rec) => sum + (rec.estimated_gain_sats || 0), 0))} sats
+              {formatSats(recommendations.reduce((sum: any, rec: any) => sum + (rec.estimated_gain_sats || 0), 0))} sats
             </div>
           </div>
           <div className="bg-orange-50 p-4 rounded-lg">
             <div className="text-sm text-orange-600 font-medium">Confiance moyenne</div>
             <div className="text-2xl font-bold text-orange-700">
-              {Math.round(recommendations.reduce((sum, rec) => sum + (rec.confidence_score || 0), 0) / recommendations.length * 100)}%
+              {Math.round(recommendations.reduce((sum: any, rec: any) => sum + (rec.confidence_score || 0), 0) / recommendations.length * 100)}%
             </div>
           </div>
         </div>
@@ -88,7 +88,7 @@ export const DaznoInsights: React.FC<DaznoInsightsProps> = ({
           </div>
 
           <div className="space-y-4">
-            {groupedRecommendations[category].map((rec) => (
+            {groupedRecommendations[category].map((rec: any) => (
               <div key={rec.id} className="border border-gray-200 rounded-lg p-4 hover:border-purple-300 hover:shadow-md transition">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -154,10 +154,10 @@ export const DaznoInsights: React.FC<DaznoInsightsProps> = ({
         </div>
       ))}
     </div>
-  );
+};
 };
 
 // Fonction utilitaire pour formater les sats
 const formatSats = (sats: number): string => {
   return new Intl.NumberFormat('fr-FR').format(sats);
-}; 
+}

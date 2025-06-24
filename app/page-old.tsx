@@ -10,26 +10,6 @@ import { FaServer, FaBox, FaCreditCard } from "react-icons/fa";
 
 // Composant client séparé pour gérer les paramètres d'URL
 const SignupConfirmation: React.FC = () => {
-  const [showSignupConfirmation, setShowSignupConfirmation] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  
-  useEffect(() => {
-    setMounted(true);
-    // Utiliser URLSearchParams directement côté client pour éviter les erreurs d'hydratation
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-    if (code) {
-      setShowSignupConfirmation(true);
-    }
-  }, []);
-  
-  const closeConfirmation = (): void => {
-    setShowSignupConfirmation(false);
-  };
-  
-  // Ne pas rendre pendant l'hydratation côté serveur
-  if (!mounted || !showSignupConfirmation) return null;
-  return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 backdrop-blur-sm">
       <div 
         className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl border border-indigo-200 transform transition-all animate-fade-in-scale"
@@ -55,10 +35,10 @@ const SignupConfirmation: React.FC = () => {
         </div>
       </div>
     </div>
-  );
+};
 };
 
-export default function HomePage(): React.ReactElement {
+export default function HomePage(): React.FC {
   
   // Cache des données de testimonials et autres contenus dynamiques
   const { data: testimonials, loading: testimonialsLoading } = useCache(
@@ -91,8 +71,7 @@ export default function HomePage(): React.ReactElement {
       ];
     },
     { ttl: 10 * 60 * 1000 } // 10 minutes de cache
-  );
-
+};
   useEffect(() => {
     AOS.init({ 
       once: false,
@@ -108,7 +87,7 @@ export default function HomePage(): React.ReactElement {
       if (!targetId) return;
       const targetElement = document.querySelector(targetId);
       if (targetElement) {
-        anchor.addEventListener('click', (e) => {
+        anchor.addEventListener('click', (e: any) => {
           e.preventDefault();
           const elementTop = targetElement.getBoundingClientRect().top + window.scrollY;
           const offset = 80; // Décalage de 80px vers le haut
@@ -120,6 +99,7 @@ export default function HomePage(): React.ReactElement {
       }
     });
   }, []);
+
   return (
     <>
       {/* Lightbox de confirmation d'inscription dans Suspense */}
@@ -493,7 +473,7 @@ export default function HomePage(): React.ReactElement {
               <LazyList
                 items={testimonials}
                 pageSize={3}
-                renderItem={(testimonial, index) => (
+                renderItem={(testimonial: any, index: any) => (
                   <div 
                     key={testimonial.id} 
                     className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300"
@@ -513,7 +493,7 @@ export default function HomePage(): React.ReactElement {
                         <div className="flex items-center justify-between mb-2">
                           <h4 className="font-semibold text-lg text-gray-900">{testimonial.name}</h4>
                           <div className="flex text-yellow-400">
-                            {[...Array(5)].map((_, i) => (
+                            {[...Array(5)].map((_: any, i: any) => (
                               <svg key={i} className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                               </svg>
@@ -557,5 +537,5 @@ export default function HomePage(): React.ReactElement {
 
       </main>
     </>
-  );
-} 
+};
+}

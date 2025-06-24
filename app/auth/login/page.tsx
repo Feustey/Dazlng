@@ -12,7 +12,7 @@ export default function LoginPage(): JSX.Element {
     <Suspense fallback={<div>Chargement...</div>}>
       <LoginPageContent supabase={supabase} />
     </Suspense>
-  );
+};
 }
 
 function LoginPageContent({ supabase }: { supabase: any }): JSX.Element {
@@ -103,7 +103,7 @@ function LoginPageContent({ supabase }: { supabase: any }): JSX.Element {
                 type="email"
                 name="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e: any) => setEmail(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="votre@email.com"
                 required
@@ -141,5 +141,5 @@ function LoginPageContent({ supabase }: { supabase: any }): JSX.Element {
         </p>
       </div>
     </div>
-  );
+};
 }

@@ -3,8 +3,8 @@ import { createBrowserClient } from '@supabase/ssr';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 // Utilisation des variables d'environnement publiques pour le client navigateur
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
 
 // Vérification des variables d'environnement requises
 if (!supabaseUrl) {
@@ -42,7 +42,7 @@ export function getSupabaseServerPublicClient(): SupabaseClient {
  * dans les Server Actions ou les API Routes où les droits admin sont indispensables.
  */
 export function getSupabaseAdminClient(): SupabaseClient {
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
   if (!supabaseServiceKey) {
     throw new Error('La clé de service Supabase (SUPABASE_SERVICE_ROLE_KEY) est manquante côté serveur.');
   }

@@ -8,7 +8,7 @@ import Button from '@/components/shared/ui/Button'
 import { Loader2, TrendingUp, AlertTriangle, Target, Clock, DollarSign, Zap } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-interface PrioritiesEnhancedPanelProps {
+export interface PrioritiesEnhancedPanelProps {
   pubkey: string
   className?: string
 }
@@ -29,7 +29,7 @@ export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhance
         logActivity: true
       })
     }
-  }, [pubkey, fetchPriorities, selectedGoals])
+  }, [pubkey, fetchPriorities, selectedGoals]);
 
   const handleRefresh = () => {
     fetchPriorities(pubkey, {
@@ -145,7 +145,7 @@ export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhance
             <div>
               <h4 className="font-semibold mb-2">Points Clés</h4>
               <ul className="list-disc list-inside space-y-1">
-                {data.ai_analysis.key_insights.map((insight, index) => (
+                {data.ai_analysis.key_insights.map((insight: any, index: any) => (
                   <li key={index} className="text-gray-700">{insight}</li>
                 ))}
               </ul>
@@ -172,7 +172,7 @@ export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhance
                 Actions Immédiates
               </h4>
               <ul className="space-y-2">
-                {data.action_plan.immediate_actions.map((action, index) => (
+                {data.action_plan.immediate_actions.map((action: any, index: any) => (
                   <li key={index} className="flex items-start gap-2">
                     <span className="text-red-500 font-bold">•</span>
                     <span className="text-gray-700">{action}</span>
@@ -189,7 +189,7 @@ export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhance
                 Objectifs Court Terme
               </h4>
               <ul className="space-y-2">
-                {data.action_plan.short_term_goals.map((goal, index) => (
+                {data.action_plan.short_term_goals.map((goal: any, index: any) => (
                   <li key={index} className="flex items-start gap-2">
                     <span className="text-yellow-500 font-bold">•</span>
                     <span className="text-gray-700">{goal}</span>
@@ -216,7 +216,7 @@ export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhance
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {data.priority_actions.map((action, index) => (
+            {data.priority_actions.map((action: any, index: any) => (
               <div key={index} className="border rounded-lg p-4 space-y-3">
                 <div className="flex items-start justify-between">
                   <div className="flex items-start gap-3">
@@ -253,7 +253,7 @@ export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhance
                   <div>
                     <p className="text-xs font-medium text-gray-600 mb-1">Étapes:</p>
                     <ol className="list-decimal list-inside text-xs text-gray-600 space-y-1">
-                      {action.implementation_details.steps.map((step, i) => (
+                      {action.implementation_details.steps.map((step: any, i: any) => (
                         <li key={i}>{step}</li>
                       ))}
                     </ol>
@@ -264,7 +264,7 @@ export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhance
                   <div>
                     <p className="text-xs font-medium text-gray-600 mb-1">Prérequis:</p>
                     <ul className="list-disc list-inside text-xs text-gray-600 space-y-1">
-                      {action.implementation_details.requirements.map((req, i) => (
+                      {action.implementation_details.requirements.map((req: any, i: any) => (
                         <li key={i}>{req}</li>
                       ))}
                     </ul>
@@ -275,7 +275,7 @@ export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhance
                   <div>
                     <p className="text-xs font-medium text-gray-600 mb-1">Outils nécessaires:</p>
                     <div className="flex flex-wrap gap-1">
-                      {action.implementation_details.tools_needed.map((tool, i) => (
+                      {action.implementation_details.tools_needed.map((tool: any, i: any) => (
                         <Badge key={i} variant="secondary" className="text-xs">
                           {tool}
                         </Badge>

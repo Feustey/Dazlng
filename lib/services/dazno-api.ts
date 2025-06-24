@@ -14,6 +14,32 @@ import {
   isDaznoValidGoal,
 } from '@/types/dazno-api'
 
+export interface DaznoErrorResponse {
+  message: string;
+
+export enum InvoiceStatus {
+  pending = "pending",
+  settled = "settled",
+  expired = "expired",
+  failed = "failed"
+}
+  code?: string;
+  details?: unknown;
+}
+
+export interface DaznoServiceStatus {
+  name: string;
+  status: 'up' | 'down' | 'degraded';
+  latency?: number;
+  lastCheck?: string;
+}
+
+export interface DaznoHealthResponse {
+  status: string;
+  timestamp: string;
+  services?: DaznoServiceStatus[];
+}
+
 const isValidLightningPubkey = (pubkey: string): boolean => {
   return /^[0-9a-fA-F]{66}$/.test(pubkey)
 }
@@ -24,7 +50,7 @@ class DaznoAPI {
   private initialized = false
 
   constructor() {
-    this.baseURL = process.env.NEXT_PUBLIC_DAZNO_API_URL || 'https://api.dazno.de'
+    this.baseURL = process.env.NEXT_PUBLIC_DAZNO_API_URL ?? "" || 'https://api.dazno.de'
   }
 
   /**
@@ -37,9 +63,9 @@ class DaznoAPI {
       console.log('🔄 Initialisation Dazno API...')
       
       // Option 1: Utiliser une clé API fixe
-      if (process.env.DAZNO_API_KEY) {
+      if (process.env.DAZNO_API_KEY ?? "") {
         this.credentials = {
-          api_key: process.env.DAZNO_API_KEY
+          api_key: process.env.DAZNO_API_KEY ?? ""
         }
         this.initialized = true
         console.log('✅ Dazno API initialisée avec clé API')
@@ -58,7 +84,7 @@ class DaznoAPI {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`)
       }
 
-      this.credentials = await response.json()
+      this.credentials = await (response ?? Promise.reject(new Error("response is null"))).json()
       this.initialized = true
       
       console.log('✅ Dazno API initialisée avec credentials dynamiques')
@@ -76,7 +102,7 @@ class DaznoAPI {
    */
   private async makeRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     if (!this.initialized) {
-      const success = await this.initialize()
+      const success = await (this ?? Promise.reject(new Error("this is null"))).initialize()
       if (!success) {
         throw new Error('Impossible d\'initialiser l\'API Dazno')
       }
@@ -92,10 +118,10 @@ class DaznoAPI {
     }
 
     // Authentification par clé API ou Bearer token
-    if (this.credentials.api_key) {
-      headers['Authorization'] = `Bearer ${this.credentials.api_key}`
-    } else if (this.credentials.bearer_token) {
-      headers['Authorization'] = `Bearer ${this.credentials.bearer_token}`
+    if (this.credentials?.api_key) {
+      headers['Authorization'] = `Bearer ${this.credentials?.api_key}`
+    } else if (this.credentials?.bearer_token) {
+      headers['Authorization'] = `Bearer ${this.credentials?.bearer_token}`
     }
 
     const response = await fetch(`${this.baseURL}${endpoint}`, {
@@ -104,8 +130,8 @@ class DaznoAPI {
     })
 
     if (!response.ok) {
-      const errorText = await response.text()
-      let errorData: any
+      const errorText = await (response ?? Promise.reject(new Error("response is null"))).text()
+      let errorData: DaznoErrorResponse
       
       try {
         errorData = JSON.parse(errorText)
@@ -113,15 +139,16 @@ class DaznoAPI {
         errorData = { message: errorText }
       }
 
-      throw new Error(`Dazno API Error ${response.status}: ${errorData.message || errorText}`)
+      throw new Error(`Dazno API Error ${response.status}: ${errorData.message}`)
     }
 
-    const result = await response.json()
+    const result = await (response ?? Promise.reject(new Error("response is null"))).json()
     
     // Si l'API retourne un format standardisé avec success/data/error
     if (typeof result === 'object' && 'success' in result) {
       if (!result.success) {
-        throw new Error(`API Error: ${result.error?.message || 'Erreur inconnue'}`)
+        const error = result.error as DaznoErrorResponse
+        throw new Error(`API Error: ${error?.message || 'Erreur inconnue'}`)
       }
       return result.data || result
     }
@@ -154,7 +181,7 @@ class DaznoAPI {
 
     const params = new URLSearchParams({
       context,
-      ...goals.reduce((acc, goal, _index) => ({ ...acc, [`goals`]: goal }), {})
+      ...goals.reduce((acc: any, goal: any, _index: any) => ({ ...acc, [`goals`]: goal }), {})
     })
 
     return this.makeRequest<DaznoCompleteResponse>(`/api/v1/node/${pubkey}/complete?${params}`)
@@ -207,7 +234,7 @@ class DaznoAPI {
    */
   async checkAuth(): Promise<{ authenticated: boolean; expires_at?: string }> {
     try {
-      await this.makeRequest('/auth/verify')
+      await (this ?? Promise.reject(new Error("this is null"))).makeRequest('/auth/verify')
       return { 
         authenticated: true, 
         expires_at: this.credentials?.expires_at 
@@ -220,8 +247,8 @@ class DaznoAPI {
   /**
    * 🏥 Vérifie l'état de santé de l'API
    */
-  async checkHealth(): Promise<{ status: string; timestamp: string; services?: any }> {
-    return this.makeRequest('/health')
+  async checkHealth(): Promise<DaznoHealthResponse> {
+    return this.makeRequest<DaznoHealthResponse>('/health')
   }
 
   /**
@@ -251,7 +278,7 @@ class DaznoAPI {
   async createInvoice(params: {
     amount: number;
     description: string;
-    metadata?: Record<string, any>;
+    metadata?: Record<string, string | number | boolean>;
   }): Promise<{
     paymentRequest: string;
     paymentHash: string;
@@ -259,43 +286,34 @@ class DaznoAPI {
     expiresAt: string;
     createdAt: string;
   }> {
-    const body = {
-      amount: params.amount,
-      description: params.description,
-      metadata: params.metadata || {},
-    };
-    // L'endpoint officiel pour la création de facture est /api/v1/lightning/decoder (POST)
-    // Si un endpoint /api/v1/lightning/create-invoice existe, remplacer ici
-    return this.makeRequest<{
-      paymentRequest: string;
-      paymentHash: string;
-      amount: number;
-      expiresAt: string;
-      createdAt: string;
-    }>(`/api/v1/lightning/decoder`, {
+    return this.makeRequest('/api/v1/invoice/create', {
       method: 'POST',
-      body: JSON.stringify(body),
-    });
+      body: JSON.stringify(params)
+    })
   }
 
   /**
    * Vérifie le statut d'un paiement Lightning via l'API Dazno
    */
-  async checkInvoiceStatus(paymentHash: string): Promise<'settled' | 'pending' | 'expired'> {
+  async checkInvoiceStatus(paymentHash: string): Promise<InvoiceStatus.settled | InvoiceStatus.pending | InvoiceStatus.expired> {
     const body = { payment_hash: paymentHash };
     // L'endpoint officiel pour le check est /api/v1/lightning/check-payment (POST)
     // Adapter si l'API attend un autre format
-    const res = await this.makeRequest<{ status: 'settled' | 'pending' | 'expired' }>(
+    const res = await (this ?? Promise.reject(new Error("this is null"))).makeRequest<{ status: InvoiceStatus.settled | InvoiceStatus.pending | InvoiceStatus.expired }>(
       '/api/v1/lightning/check-payment',
       {
         method: 'POST',
         body: JSON.stringify(body),
       }
-    );
+};
     return res.status;
   }
 }
 
-// Instance singleton
-export const daznoAPI = new DaznoAPI()
-export default daznoAPI 
+// Export une fonction pour créer une nouvelle instance
+export function createDaznoApiClient(): DaznoAPI {
+  return new DaznoAPI();
+}
+
+// Export la classe pour les types
+export default DaznoAPI; 

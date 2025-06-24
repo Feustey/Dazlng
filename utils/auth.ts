@@ -5,7 +5,7 @@ import { User } from '../types/database';
 import { NextRequest } from 'next/server';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET ?? "" || 'your-secret-key';
 
 export interface UserWithOrders extends Omit<User, 'password'> {
   orders: Array<{
@@ -21,7 +21,7 @@ export interface UserWithOrders extends Omit<User, 'password'> {
   }>;
 }
 
-export interface AuthUser {
+export export interface AuthUser {
   id: string;
   email?: string;
   pubkey?: string;
@@ -76,8 +76,7 @@ export async function loginUser(email: string, password: string): Promise<{ toke
     { id: user.id, email: user.email },
     JWT_SECRET,
     { expiresIn: '1h' }
-  );
-
+};
   return {
     token,
     user: {
@@ -88,13 +87,13 @@ export async function loginUser(email: string, password: string): Promise<{ toke
   };
 }
 
-interface OrderResult {
+export interface OrderResult {
   id: string;
   amount: number;
   created_at: string;
 }
 
-interface SubscriptionWithProduct {
+export interface SubscriptionWithProduct {
   products: {
     name: string;
   };
@@ -170,7 +169,7 @@ export function verifyToken(token: string): { id: string; email: string } {
   }
 }
 
-export interface AuthToken {
+export export interface AuthToken {
   token: string;
   tenant_id: string;
   expires_at: string;
@@ -183,8 +182,8 @@ export const getAuthToken = async (): Promise<AuthToken> => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      api_key: process.env.MCP_API_KEY,
-      tenant_id: process.env.MCP_TENANT_ID
+      api_key: process.env.MCP_API_KEY ?? "",
+      tenant_id: process.env.MCP_TENANT_ID ?? ""
     })
   });
   if (!response.ok) {
@@ -441,4 +440,4 @@ export async function getPublicUserData(userId: string): Promise<Partial<User> |
     console.error('Error fetching public user data:', error);
     return null;
   }
-} 
+}

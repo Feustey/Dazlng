@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 
-interface NodeStats {
+export interface NodeStats {
   monthlyRevenue: number;
   totalCapacity: number;
   activeChannels: number;
@@ -13,7 +13,7 @@ interface NodeStats {
   totalNodes: number;
 }
 
-interface DazBoxComparisonProps {
+export interface DazBoxComparisonProps {
   userNodeStats: NodeStats | null;
   hasNode: boolean;
 }
@@ -132,7 +132,7 @@ const DazBoxComparison: React.FC<DazBoxComparisonProps> = ({ userNodeStats, hasN
           </Link>
         </div>
       </div>
-    );
+};
   }
 
   return (
@@ -227,7 +227,7 @@ const DazBoxComparison: React.FC<DazBoxComparisonProps> = ({ userNodeStats, hasN
         </Link>
       </div>
     </div>
-  );
+};
 };
 
 export { DazBoxComparison }; 

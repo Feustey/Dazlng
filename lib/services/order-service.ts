@@ -1,7 +1,15 @@
 import { getSupabaseAdminClient } from '../supabase';
+
+export enum InvoiceStatus {
+  pending = "pending",
+  settled = "settled",
+  expired = "expired",
+  failed = "failed"
+}
 import { Database } from '@/types/database';
 import { z } from 'zod';
 import { PaymentService } from './payment-service';
+import { EmailService } from './email-service';
 
 // Schéma de validation pour la création d'une commande
 const CreateOrderSchema = z.object({
@@ -22,9 +30,11 @@ export type CreateOrderParams = z.infer<typeof CreateOrderSchema>;
 
 export class OrderService {
   private paymentService;
+  private emailService;
 
   constructor() {
     this.paymentService = new PaymentService();
+    this.emailService = new EmailService();
   }
 
   /**
@@ -44,7 +54,7 @@ export class OrderService {
           product_type: validatedParams.product_type,
           amount: validatedParams.amount,
           payment_method: 'lightning',
-          payment_status: 'pending',
+          payment_status: InvoiceStatus.pending,
           metadata: {
             customer: validatedParams.customer,
             plan: validatedParams.plan,
@@ -90,12 +100,13 @@ export class OrderService {
   }
 
   /**
-   * Marque une commande comme payée
+   * Marque une commande comme payée et envoie les notifications
    */
   async markOrderPaid(orderId: string) {
     try {
       const supabase = getSupabaseAdminClient();
       
+      // 1. Mise à jour du statut
       const { data: order, error } = await supabase
         .from('orders')
         .update({
@@ -108,6 +119,38 @@ export class OrderService {
 
       if (error) throw error;
       if (!order) throw new Error('Commande non trouvée');
+
+      // 2. Si c'est une commande DazBox, envoyer un email détaillé
+      if (order.product_type === 'dazbox') {
+        const metadata = order.metadata as any;
+        await (this ?? Promise.reject(new Error("this is null"))).emailService?.sendDazBoxOrderConfirmation({
+          to: metadata.customer.email,
+          orderRef: order.order_ref || order.id.substring(0, 8),
+          customerName: `${metadata.customer.firstName} ${metadata.customer.lastName}`,
+          deliveryAddress: metadata.delivery_address,
+          product: {
+            name: metadata.product.name,
+            price: order.amount,
+            plan: metadata.plan
+          },
+          estimatedDelivery: '5-7 jours ouvrés'
+        });
+
+        // Email interne pour le suivi
+        await (this ?? Promise.reject(new Error("this is null"))).emailService?.sendInternalDazBoxNotification({
+          orderRef: order.order_ref || order.id.substring(0, 8),
+          customerDetails: {
+            name: `${metadata.customer.firstName} ${metadata.customer.lastName}`,
+            email: metadata.customer.email,
+            phone: metadata.customer.phone
+          },
+          deliveryAddress: metadata.delivery_address,
+          product: {
+            name: metadata.product.name,
+            plan: metadata.plan
+          }
+        });
+      }
 
       return order;
     } catch (error) {
@@ -178,4 +221,4 @@ export class OrderService {
       throw error;
     }
   }
-} 
+}

@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 
-export default function RealTestimonials(): React.ReactElement {
+export default function RealTestimonials(): React.FC {
   return (
     <section className="py-20 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4">
@@ -69,5 +69,5 @@ export default function RealTestimonials(): React.ReactElement {
         </div>
       </div>
     </section>
-  );
-} 
+};
+}

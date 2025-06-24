@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function DazpayCheckoutPage(): React.ReactElement {
+export default function DazpayCheckoutPage(): React.FC {
   const router = useRouter();
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -10,6 +10,7 @@ export default function DazpayCheckoutPage(): React.ReactElement {
     }, 5000);
     return () => clearTimeout(timer);
   }, [router]);
+
   return (
     <div className="max-w-[600px] mx-auto my-12 p-8 bg-[rgba(20,20,40,0.85)] rounded-[24px] shadow-2xl text-center">
       <div className="mb-6">
@@ -38,5 +39,5 @@ export default function DazpayCheckoutPage(): React.ReactElement {
         Vous serez redirigé vers la page de contact dans quelques secondes...
       </p>
     </div>
-  );
-} 
+};
+}

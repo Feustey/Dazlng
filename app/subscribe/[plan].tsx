@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
 
@@ -41,14 +42,14 @@ const plans = {
   },
 };
 
-interface FormData {
+export interface FormData {
   name: string;
   email: string;
   company: string;
   phone: string;
 }
 
-export default function SubscribeScreen(): React.ReactElement {
+export default function SubscribeScreen(): React.FC {
   const params = useParams();
   const plan = params.plan;
   const planDetails = plans[plan as keyof typeof plans];
@@ -71,7 +72,7 @@ export default function SubscribeScreen(): React.ReactElement {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <p className="text-lg text-error text-center">Plan non trouvé</p>
       </div>
-    );
+};
   }
 
   return (
@@ -84,7 +85,7 @@ export default function SubscribeScreen(): React.ReactElement {
         <div className="bg-white p-5 rounded-lg mb-8">
           <h2 className="text-lg font-bold text-secondary mb-4">Services inclus :</h2>
           <ul className="space-y-2">
-            {planDetails.features.map((feature, index) => (
+            {planDetails.features.map((feature: any, index: any) => (
               <li key={index} className="text-base text-gray-700">• {feature}</li>
             ))}
           </ul>
@@ -142,5 +143,5 @@ export default function SubscribeScreen(): React.ReactElement {
         </form>
       </div>
     </div>
-  );
-} 
+};
+}

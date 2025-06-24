@@ -1,13 +1,13 @@
 import React from 'react';
 
-interface AlertProps {
+export interface AlertProps {
   type?: 'error' | 'success' | 'warning' | 'info' | 'destructive' | 'default';
   message?: string;
   className?: string;
   children?: React.ReactNode;
 }
 
-interface AlertDescriptionProps {
+export interface AlertDescriptionProps {
   children: React.ReactNode;
   className?: string;
 }
@@ -29,7 +29,7 @@ const Alert: React.FC<AlertProps> = ({ type = 'default', message, className = ''
       {message && <div>{message}</div>}
       {children}
     </div>
-  );
+};
 };
 
 const AlertDescription: React.FC<AlertDescriptionProps> = ({ children, className = '' }) => {
@@ -37,7 +37,7 @@ const AlertDescription: React.FC<AlertDescriptionProps> = ({ children, className
     <div className={`text-sm mt-1 ${className}`}>
       {children}
     </div>
-  );
+};
 };
 
 // Exports nommés

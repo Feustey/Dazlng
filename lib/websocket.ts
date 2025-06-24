@@ -4,7 +4,7 @@ class WebSocketService {
   private socket: Socket | null = null;
 
   connect(): void {
-    const wsUrl = process.env.NEXT_PUBLIC_WS_URL ?? '';
+    const wsUrl = process.env.NEXT_PUBLIC_WS_URL ?? "" ?? '';
     if (!this.socket) {
       this.socket = io(wsUrl, {
         auth: {

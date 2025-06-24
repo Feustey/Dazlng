@@ -4,7 +4,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useConversionTracking } from '../../../hooks/useConversionTracking';
 
-interface PricingPlan {
+export interface PricingPlan {
   id: string;
   name: string;
   description: string;
@@ -18,111 +18,7 @@ interface PricingPlan {
   ctaVariant: 'primary' | 'secondary';
 }
 
-const DazBoxPricing: React.FC = (): React.ReactElement => {
-  const router = useRouter();
-  const { trackCTAClick, trackProductInterest } = useConversionTracking();
-
-  // Fonction pour formater le prix en satoshis
-  const formatSatsPrice = (sats: number): string => {
-    if (sats >= 1000000) {
-      return `${(sats / 1000000).toFixed(1)}M sats`;
-    }
-    if (sats >= 1000) {
-      return `${(sats / 1000).toFixed(0)}k sats`;
-    }
-    return `${sats.toLocaleString()} sats`;
-  };
-
-  const plans: PricingPlan[] = [
-    {
-      id: 'starter',
-      name: 'DazBox Starter',
-      description: 'Parfait pour débuter sur Lightning Network',
-      price: 400000,
-      originalPrice: 450000,
-      discount: '-11%',
-      features: [
-        'Configuration automatique',
-        'Support 24/7 pendant 3 mois',
-        'Mises à jour automatiques',
-        'Interface web intuitive',
-        'Monitoring de base',
-        'Revenus passifs jusqu\'à 8% APY'
-      ],
-      ctaText: 'Commander Starter',
-      ctaVariant: 'secondary'
-    },
-    {
-      id: 'pro',
-      name: 'DazBox Pro',
-      description: 'Solution complète pour maximiser vos revenus',
-      price: 500000,
-      originalPrice: 600000,
-      discount: '-17%',
-      recommended: true,
-      badge: 'Le Plus Populaire',
-      features: [
-        'Tout de la version Starter',
-        'Support VIP 24/7 à vie',
-        'Optimisation IA des canaux',
-        'Analytics avancés',
-        'API personnalisée',
-        'Backup automatique cloud',
-        'Revenus passifs jusqu\'à 15% APY',
-        'Formation personnalisée incluse'
-      ],
-      ctaText: 'Commander Pro',
-      ctaVariant: 'primary'
-    },
-    {
-      id: 'enterprise',
-      name: 'DazBox Enterprise',
-      description: 'Pour les professionnels et institutions',
-      price: 1000000,
-      originalPrice: 1200000,
-      discount: '-17%',
-      features: [
-        'Tout de la version Pro',
-        'Configuration multi-nœuds',
-        'SLA 99.99% garanti',
-        'Intégration entreprise',
-        'Conformité réglementaire',
-        'Support dédié & formation',
-        'Revenus optimisés jusqu\'à 20% APY',
-        'Facturation personnalisée'
-      ],
-      ctaText: 'Nous Contacter',
-      ctaVariant: 'secondary'
-    }
-  ];
-
-  const handlePlanSelect = (plan: PricingPlan): void => {
-    trackCTAClick('primary', 'dazbox_pricing', {
-      plan: plan.id,
-      price: plan.price,
-      action: 'select_plan'
-    });
-    trackProductInterest('dazbox', 'plan_selected', {
-      plan: plan.id,
-      price: plan.price
-    });
-
-    if (plan.id === 'enterprise') {
-      router.push('/contact?product=dazbox&plan=enterprise');
-    } else {
-      router.push(`/checkout/dazbox?plan=${plan.id}`);
-    }
-  };
-
-  const handleCalculateROI = (): void => {
-    trackCTAClick('secondary', 'dazbox_pricing', {
-      action: 'calculate_roi'
-    });
-    // Ici on pourrait ouvrir une calculatrice de ROI
-    window.open('/tools/roi-calculator?product=dazbox', '_blank');
-  };
-
-  return (
+const DazBoxPricing: React.FC = () => {
     <section id="pricing" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
@@ -152,7 +48,7 @@ const DazBoxPricing: React.FC = (): React.ReactElement => {
 
         {/* Pricing Cards */}
         <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {plans.map((plan) => (
+          {plans.map((plan: any) => (
             <div
               key={plan.id}
               className={`
@@ -214,7 +110,7 @@ const DazBoxPricing: React.FC = (): React.ReactElement => {
 
               {/* Features */}
               <div className="space-y-4 mb-8">
-                {plan.features.map((feature, featureIndex) => (
+                {plan.features.map((feature: any, featureIndex: any) => (
                   <div key={featureIndex} className="flex items-start gap-3">
                     <div className="flex-shrink-0 w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
                       <svg className="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
@@ -294,7 +190,7 @@ const DazBoxPricing: React.FC = (): React.ReactElement => {
         </div>
       </div>
     </section>
-  );
+};
 };
 
 export default DazBoxPricing; 

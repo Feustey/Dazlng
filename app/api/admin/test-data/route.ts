@@ -178,4 +178,4 @@ export async function GET(req: NextRequest): Promise<Response> {
     test_user: "alice.dubois@example.fr",
     note: "Les données existantes seront mises à jour si elles existent déjà"
   });
-} 
+}

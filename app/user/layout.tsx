@@ -4,7 +4,7 @@ import React, { ReactNode } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
 
-interface UserLayoutProps {
+export interface UserLayoutProps {
   children: ReactNode;
 }
 
@@ -48,7 +48,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
           <p className="text-gray-600">Vérification de l'authentification...</p>
         </div>
       </div>
-    );
+};
   }
 
   // Rediriger si pas authentifié
@@ -108,7 +108,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <nav className="flex space-x-8">
-              {navItems.map((item) => {
+              {navItems.map((item: any) => {
                 const isActive = pathname === item.href;
                 return (
                   <a
@@ -123,7 +123,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
                       />
                     )}
                   </a>
-                );
+};
               })}
             </nav>
             
@@ -166,7 +166,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
         </div>
       </main>
     </div>
-  );
+};
 };
 
 export default UserLayout;

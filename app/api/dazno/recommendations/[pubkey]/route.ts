@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { daznoAPI } from '@/lib/services/dazno-api'
+import { createDaznoApiClient } from '@/lib/services/dazno-api'
 import { ApiResponse } from '@/types/database'
 import { DaznoRecommendationsResponse } from '@/types/dazno-api'
 
@@ -11,17 +11,10 @@ export async function GET(
     const resolvedParams = await params
     const pubkey = resolvedParams.pubkey
 
-    if (!daznoAPI.isValidPubkey(pubkey)) {
-      return NextResponse.json<ApiResponse<null>>({
-        success: false,
-        error: {
-          code: 'INVALID_PUBKEY',
-          message: 'Clé publique invalide'
-        }
-      }, { status: 400 })
-    }
+    const daznoApi = createDaznoApiClient()
+    await daznoApi.initialize()
 
-    const data = await daznoAPI.getRecommendations(pubkey)
+    const data = await daznoApi.getRecommendations(pubkey)
 
     return NextResponse.json<ApiResponse<DaznoRecommendationsResponse>>({
       success: true,
@@ -43,4 +36,4 @@ export async function GET(
       }
     }, { status: 500 })
   }
-} 
+}

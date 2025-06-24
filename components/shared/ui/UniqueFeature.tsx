@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function UniqueFeature(): React.ReactElement {
+export function UniqueFeature(): React.FC {
   return (
     <section className="py-20 bg-gradient-to-br from-gray-900 to-black text-white">
       <div className="max-w-4xl mx-auto px-4 text-center">
@@ -31,5 +31,5 @@ export function UniqueFeature(): React.ReactElement {
         </p>
       </div>
     </section>
-  );
-} 
+};
+}

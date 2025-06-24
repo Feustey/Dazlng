@@ -1,10 +1,10 @@
-interface ApiError {
+export export interface ApiError {
   code: string;
   message: string;
   details?: unknown;
 }
 
-interface ApiResponse<T = unknown> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   error?: ApiError;
@@ -80,4 +80,4 @@ export function handleApiError(error: unknown): Response {
       message: 'Une erreur inconnue est survenue'
     }
   }, 500);
-} 
+}

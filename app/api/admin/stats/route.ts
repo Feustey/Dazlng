@@ -9,7 +9,7 @@ export const runtime = 'nodejs';
  * GET /api/admin/stats - Statistiques basiques pour l'interface admin
  */
 export async function GET(req: NextRequest): Promise<Response> {
-  return withAdminAuth(req, async (_adminUser) => {
+  return withAdminAuth(req, async (_adminUser: any) => {
     try {
       // Nombre total d'utilisateurs
       const { count: totalUsers } = await getSupabaseAdminClient()
@@ -30,7 +30,7 @@ export async function GET(req: NextRequest): Promise<Response> {
       if (paymentsError) throw paymentsError;
       
       const totalRevenue = payments
-        ? payments.filter(p => p.status === "paid").reduce((sum, p) => sum + (p.amount || 0), 0) 
+        ? payments.filter(p => p.status === "paid").reduce((sum: any, p: any) => sum + (p.amount || 0), 0) 
         : 0;
       
       // Commandes en attente
@@ -61,4 +61,4 @@ export async function GET(req: NextRequest): Promise<Response> {
       return NextResponse.json(handleApiError(error), { status: 500 });
     }
   });
-} 
+}

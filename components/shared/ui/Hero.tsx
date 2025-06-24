@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 
-interface HeroProps {
+export interface HeroProps {
   title: string;
   subtitle: string;
   imageUrl: string;
@@ -16,7 +16,7 @@ export default function Hero({
   imageUrl,
   buttonText = 'Commencer',
   onButtonPress,
-}: HeroProps): React.ReactElement {
+}: HeroProps): React.FC {
   return (
     <div className="relative w-full h-[420px]">
       <Image
@@ -42,5 +42,5 @@ export default function Hero({
         )}
       </div>
     </div>
-  );
-} 
+};
+}

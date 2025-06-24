@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
 
-interface Subscription {
+export interface Subscription {
   id: string;
   userId: string;
   planId: string;
@@ -59,4 +59,4 @@ export function useSubscription() {
   }, [session?.access_token]);
 
   return { subscription, loading, error };
-} 
+}

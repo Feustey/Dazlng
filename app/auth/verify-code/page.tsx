@@ -99,7 +99,7 @@ function VerifyCodeForm(): JSX.Element {
                 id="code"
                 type="text"
                 value={code}
-                onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                onChange={(e: any) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-center text-2xl tracking-widest"
                 placeholder="000000"
                 maxLength={6}
@@ -135,7 +135,7 @@ function VerifyCodeForm(): JSX.Element {
         </p>
       </div>
     </div>
-  );
+};
 }
 
 export default function VerifyCodePage(): JSX.Element {
@@ -143,5 +143,5 @@ export default function VerifyCodePage(): JSX.Element {
     <Suspense fallback={<div>Chargement...</div>}>
       <VerifyCodeForm />
     </Suspense>
-  );
-} 
+};
+}

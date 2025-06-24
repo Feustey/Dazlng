@@ -4,4 +4,4 @@ export function useToast(): { addToast: (..._args: unknown[]) => void } {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     addToast: (..._args: unknown[]) => { /* fonction vide */ },
   };
-} 
+}

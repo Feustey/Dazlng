@@ -4,11 +4,11 @@ import { getSupabaseAdminClient } from '@/lib/supabase';
 import { RateLimitService } from '@/lib/services/RateLimitService'
 import { ErrorCodes } from '@/types/database'
 
-const resendApiKey = process.env.RESEND_API_KEY;
+const resendApiKey = process.env.RESEND_API_KEY ?? "";
 const resend = new Resend(resendApiKey);
-const isDevelopment = process.env.NODE_ENV === 'development';
+const isDevelopment = process.env.NODE_ENV ?? "" === 'development';
 
-interface ContactData {
+export interface ContactData {
   firstName: string;
   lastName: string;
   email: string;
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       return NextResponse.json(
         { error: "Champs obligatoires manquants" },
         { status: 400 }
-      );
+};
     }
 
     // Validation email
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       return NextResponse.json(
         { error: "Email invalide" },
         { status: 400 }
-      );
+};
     }
 
     // Sauvegarder en base

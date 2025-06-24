@@ -73,4 +73,4 @@ export function initSupabaseCookiesFix(): void {
       throw error;
     }
   };
-} 
+}

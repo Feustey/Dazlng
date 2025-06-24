@@ -2,17 +2,6 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 
 const TechnicalCTA: React.FC = () => {
-  const router = useRouter();
-
-  const handleStartTrial = (): void => {
-    router.push('/auth/login');
-  };
-
-  const handleViewDemo = (): void => {
-    router.push('/daznode/demo');
-  };
-
-  return (
     <section className="py-20 bg-gradient-to-br from-red-900 via-orange-900 to-yellow-900 text-white">
       <div className="max-w-4xl mx-auto px-4 text-center">
         {/* Urgence technique */}
@@ -92,7 +81,7 @@ const TechnicalCTA: React.FC = () => {
         </div>
       </div>
     </section>
-  );
+};
 };
 
 export default TechnicalCTA; 

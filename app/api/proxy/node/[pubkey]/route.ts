@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { SignJWT } from 'jose';
 
 const API_BASE_URL = 'https://api.dazno.de/api/v1';
-const JWT_SECRET = process.env.JWT_SECRET || 'gww2ZhqbmABxnX3k0qVWx0nib7-eNiqIP33ED2-rCuc';
+const JWT_SECRET = process.env.JWT_SECRET ?? "" || 'gww2ZhqbmABxnX3k0qVWx0nib7-eNiqIP33ED2-rCuc';
 
 async function generateJWT() {
   const secret = new TextEncoder().encode(JWT_SECRET);
@@ -51,4 +51,4 @@ export async function GET(
       }
     }, { status: 500 });
   }
-} 
+}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { formatSatsPrice } from '../../../utils/formatters';
 
-interface PriceDisplayProps {
+export interface PriceDisplayProps {
   /** Prix en satoshis */
   sats: number;
   /** Classe CSS personnalisée */
@@ -50,7 +50,7 @@ const PriceDisplay: React.FC<PriceDisplayProps> = ({
       <span className={`${sizeClasses[size]} ${colorClasses[color]} ${className}`}>
         Gratuit{period ? period : ''}
       </span>
-    );
+};
   }
 
   // Formatage du prix
@@ -60,13 +60,13 @@ const PriceDisplay: React.FC<PriceDisplayProps> = ({
     <span className={`${sizeClasses[size]} ${colorClasses[color]} ${className}`}>
       {formattedPrice}{period ? period : ''}
     </span>
-  );
+};
 };
 
 export default PriceDisplay;
 
 // Composant spécialisé pour les plans d'abonnement
-interface SubscriptionPriceProps {
+export interface SubscriptionPriceProps {
   /** Prix mensuel en satoshis */
   monthlyPrice: number;
   /** Prix annuel en satoshis (optionnel) */
@@ -107,11 +107,11 @@ export const SubscriptionPrice: React.FC<SubscriptionPriceProps> = ({
         </div>
       )}
     </div>
-  );
+};
 };
 
 // Composant pour comparer les prix
-interface PriceComparisonProps {
+export interface PriceComparisonProps {
   /** Prix original en satoshis */
   originalPrice: number;
   /** Prix avec remise en satoshis */
@@ -139,5 +139,5 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
         </div>
       </div>
     </div>
-  );
-}; 
+};
+}

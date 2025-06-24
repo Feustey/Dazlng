@@ -165,7 +165,7 @@ const SettingsPage: FC = () => {
           </div>
         </div>
       </div>
-    );
+};
   }
 
   // Vérification de l'authentification
@@ -176,7 +176,7 @@ const SettingsPage: FC = () => {
           <p className="text-red-600">Vous devez être connecté pour accéder à cette page.</p>
         </div>
       </div>
-    );
+};
   }
 
   return (
@@ -330,7 +330,7 @@ const SettingsPage: FC = () => {
                   name="pays" 
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
                   value={form.pays} 
-                  onChange={(e) => setForm({ ...form, pays: e.target.value })}
+                  onChange={(e: any) => setForm({ ...form, pays: e.target.value })}
                 >
                   <option value="France">France</option>
                   <option value="Belgique">Belgique</option>
@@ -403,7 +403,7 @@ const SettingsPage: FC = () => {
         </div>
       )}
     </div>
-  );
+};
 };
 
 export default SettingsPage;

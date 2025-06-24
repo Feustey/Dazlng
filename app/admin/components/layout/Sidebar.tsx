@@ -38,13 +38,13 @@ export default function Sidebar(): JSX.Element {
       </div>
       
       <nav className="flex-1 space-y-6">
-        {groupedLinks.map((section) => (
+        {groupedLinks.map((section: any) => (
           <div key={section.name}>
             <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
               {section.name}
             </h3>
             <ul className="space-y-1">
-              {section.links.map((link) => (
+              {section.links.map((link: any) => (
                 <li key={link.href}>
                   <Link 
                     href={link.href} 
@@ -74,5 +74,5 @@ export default function Sidebar(): JSX.Element {
         </Link>
       </div>
     </aside>
-  );
-} 
+};
+}

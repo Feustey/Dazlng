@@ -1,6 +1,6 @@
 // Types partagés pour l'interface utilisateur
 
-export interface UserProfile {
+export export interface UserProfile {
   email: string;
   nom?: string;
   prenom?: string;
@@ -18,7 +18,7 @@ export interface UserProfile {
   email_verified?: boolean;
 }
 
-export interface NodeStats {
+export export interface NodeStats {
   monthlyRevenue: number;
   totalCapacity: number;
   activeChannels: number;
@@ -30,7 +30,7 @@ export interface NodeStats {
   totalNodes: number;
 }
 
-export interface Recommendation {
+export export interface Recommendation {
   id: string;
   title: string;
   description: string;
@@ -42,7 +42,7 @@ export interface Recommendation {
   category: 'liquidity' | 'routing' | 'efficiency' | 'security';
 }
 
-export interface Achievement {
+export export interface Achievement {
   id: string;
   title: string;
   description: string;
@@ -52,7 +52,7 @@ export interface Achievement {
   target: number;
 }
 
-export interface ProfileField {
+export export interface ProfileField {
   name: string;
   label: string;
   completed: boolean;
@@ -60,7 +60,7 @@ export interface ProfileField {
   href: string;
 }
 
-export interface CRMData {
+export export interface CRMData {
   profileCompletion: number;
   userScore: number;
   engagementLevel: 'low' | 'medium' | 'high';
@@ -68,7 +68,7 @@ export interface CRMData {
   lastActivity: Date;
 }
 
-export interface DazBoxStats {
+export export interface DazBoxStats {
   monthlyRevenue: number;
   totalCapacity: number;
   activeChannels: number;
@@ -77,4 +77,4 @@ export interface DazBoxStats {
   routingEfficiency: number;
   price: number;
   roi: number;
-} 
+}

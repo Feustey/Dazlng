@@ -98,4 +98,4 @@ export async function GET(_request: NextRequest): Promise<ReturnType<typeof Next
       stack: error.stack
     }, { status: 500 })
   }
-} 
+}

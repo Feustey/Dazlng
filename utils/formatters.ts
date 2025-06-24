@@ -200,4 +200,4 @@ export function euroToSats(euros: number): number {
  */
 export function satsToEuro(sats: number): number {
   return sats / 1000;
-} 
+}

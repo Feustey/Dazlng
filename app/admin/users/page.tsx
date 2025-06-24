@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { formatDate, formatSats } from '@/utils/formatters';
 
-interface Customer {
+export interface Customer {
   id: string;
   email: string;
   nom: string;
@@ -31,7 +31,7 @@ interface Customer {
   subscriptionStatus?: string;
 }
 
-interface CustomerStats {
+export interface CustomerStats {
   total_customers: number;
   active_customers: number;
   premium_customers: number;
@@ -141,7 +141,7 @@ export default function UsersPage(): JSX.Element {
             customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
             customer.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
             customer.prenom.toLowerCase().includes(searchTerm.toLowerCase())
-          );
+};
         }
         
         if (selectedSegment !== 'all') {
@@ -236,7 +236,7 @@ export default function UsersPage(): JSX.Element {
 
   useEffect(() => {
     // Détecter l'environnement côté client uniquement pour éviter l'hydratation mismatch
-    setIsDevelopment(!process.env.NODE_ENV || process.env.NODE_ENV !== 'production');
+    setIsDevelopment(!process.env.NODE_ENV ?? "" || process.env.NODE_ENV ?? "" !== 'production');
   }, []);
 
   useEffect(() => {
@@ -291,14 +291,14 @@ export default function UsersPage(): JSX.Element {
         <div className="animate-pulse space-y-4">
           <div className="h-8 bg-gray-200 rounded w-1/4"></div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {[...Array(4)].map((_, i) => (
+            {[...Array(4)].map((_: any, i: any) => (
               <div key={i} className="h-24 bg-gray-200 rounded"></div>
             ))}
           </div>
           <div className="h-96 bg-gray-200 rounded"></div>
         </div>
       </div>
-    );
+};
   }
 
   return (
@@ -363,14 +363,14 @@ export default function UsersPage(): JSX.Element {
               type="text"
               placeholder="Rechercher par email, nom ou prénom..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e: any) => setSearchTerm(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
           <div>
             <select
               value={selectedSegment}
-              onChange={(e) => setSelectedSegment(e.target.value)}
+              onChange={(e: any) => setSelectedSegment(e.target.value)}
               className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="all">Tous les segments</option>
@@ -401,7 +401,7 @@ export default function UsersPage(): JSX.Element {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {customers.map((customer) => (
+              {customers.map((customer: any) => (
                 <tr key={customer.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
@@ -503,5 +503,5 @@ export default function UsersPage(): JSX.Element {
         </div>
       </div>
     </div>
-  );
-} 
+};
+}

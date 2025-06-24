@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import { secp256k1 } from 'ethereum-cryptography/secp256k1';
 import { hexToBytes, utf8ToBytes } from 'ethereum-cryptography/utils';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET ?? "" || 'your-secret-key';
 
 export async function POST(req: NextRequest): Promise<Response> {
   const { pubkey, message, signature } = await req.json();
@@ -108,4 +108,4 @@ export async function POST(req: NextRequest): Promise<Response> {
     console.error('[LOGIN-NODE] Erreur base de données:', e);
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
   }
-} 
+}

@@ -10,4 +10,4 @@ export const getPubkeyError = (pubkey: string): string | null => {
     return "La clé publique doit commencer par 02 ou 03 et contenir 66 caractères hexadécimaux";
   }
   return null;
-}; 
+}

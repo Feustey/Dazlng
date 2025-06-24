@@ -117,7 +117,7 @@ export async function requireAdmin(req: NextRequest): Promise<{
 // RATE LIMITING
 // ============================================================================
 
-interface RateLimitConfig {
+export interface RateLimitConfig {
   maxAttempts: number
   windowMs: number
   keyGenerator?: (req: NextRequest) => string
@@ -195,7 +195,7 @@ export function createIPRateLimit(maxAttempts = 100, windowMs = 60 * 60 * 1000) 
     rateLimit(req, {
       maxAttempts,
       windowMs,
-      keyGenerator: (req) => `ip:${req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown'}`
+      keyGenerator: (req: any) => `ip:${req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown'}`
     })
 }
 
@@ -320,4 +320,4 @@ export function withAuthAndRateLimit<T extends any[]>(
     }
     return handler(req, authResult.user, ...args)
   }
-} 
+}
