@@ -24,7 +24,7 @@ const ListActions = () => (
   <TopToolbar>
     {/* Actions pour les campagnes */}
   </TopToolbar>
-};
+  );
 const RowActions = () => {
   const record = useRecordContext();
   if (!record) return null;
@@ -35,7 +35,7 @@ const RowActions = () => {
       <EditButton />
       <DeleteButton />
     </div>
-};
+  );
 };
 
 // Composant pour afficher le statut avec couleur
@@ -43,7 +43,7 @@ export interface StatusFieldProps {
   record?: {
   status?: string;
   [key: string]: unknown;
-};
+  );
 }
 
 const StatusField = ({ record }: StatusFieldProps) => {
@@ -62,8 +62,7 @@ const StatusField = ({ record }: StatusFieldProps) => {
       source="status" 
       record={record}
     />
-};
-};
+  );
 
 // Liste des campagnes
 export const CampaignList = () => (
@@ -83,7 +82,7 @@ export const CampaignList = () => (
       <RowActions />
     </Datagrid>
   </List>
-};
+  );
 // Affichage détaillé d'une campagne
 export const CampaignShow = () => (
   <Show title="Détails de la campagne">
@@ -103,7 +102,7 @@ export const CampaignShow = () => (
       <DateField source="updated_at" label="Dernière mise à jour" />
     </SimpleShowLayout>
   </Show>
-};
+  );
 // Édition d'une campagne
 export const CampaignEdit = () => (
   <Edit title="Modifier la campagne">
@@ -115,7 +114,7 @@ export const CampaignEdit = () => (
       <TextInput source="segment_ids" label="Segments (IDs séparés par des virgules)" fullWidth />
     </SimpleForm>
   </Edit>
-};
+  );
 // Création d'une nouvelle campagne
 export const CampaignCreate = () => (
   <Create title="Créer une campagne">
@@ -134,7 +133,7 @@ export const CampaignCreate = () => (
       <TextInput source="segment_ids" label="Segments (IDs séparés par des virgules)" fullWidth />
     </SimpleForm>
   </Create>
-};
+  );
 // Configuration de la ressource
 export const campaignResource = {
   list: CampaignList,

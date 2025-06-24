@@ -69,5 +69,5 @@ export default function RealTestimonials(): React.FC {
         </div>
       </div>
     </section>
-};
+  );
 }

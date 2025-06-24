@@ -225,5 +225,5 @@ export const GamificationCenter: React.FC<GamificationCenterProps> = ({
         </div>
       )}
     </div>
-};
+  );
 }

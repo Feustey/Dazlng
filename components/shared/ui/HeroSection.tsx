@@ -6,5 +6,5 @@ export default function HeroSection({ title, subtitle }: { title: string; subtit
       <h1 className="text-4xl font-extrabold text-[#C026D3] mb-3 text-center tracking-wide">{title}</h1>
       <p className="text-lg text-gray-700 leading-7 text-center font-medium">{subtitle}</p>
     </section>
-};
+  );
 }

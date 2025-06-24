@@ -218,7 +218,7 @@ const SubscriptionsPage: FC = () => {
       <span className={`px-2 py-1 text-xs font-medium rounded-full ${colors[status]}`}>
         {labels[status]}
       </span>
-};
+  );
   };
 
   const getInvoiceStatusBadge = (status: Invoice['status']): JSX.Element => {
@@ -242,7 +242,7 @@ const SubscriptionsPage: FC = () => {
       <span className={`px-2 py-1 text-xs font-medium rounded-full ${colors[status]}`}>
         {labels[status]}
       </span>
-};
+  );
   };
 
   const formatDate = (dateString: string): string => {
@@ -445,7 +445,7 @@ const SubscriptionsPage: FC = () => {
           </div>
         </div>
       </div>
-};
+  );
   }
 
   // Vérification de l'authentification
@@ -459,7 +459,7 @@ const SubscriptionsPage: FC = () => {
           </a>
         </div>
       </div>
-};
+  );
   }
 
   if (error) {
@@ -482,7 +482,7 @@ const SubscriptionsPage: FC = () => {
           </button>
         </div>
       </div>
-};
+  );
   }
 
   return (
@@ -938,7 +938,6 @@ const SubscriptionsPage: FC = () => {
         </div>
       </div>
     </div>
-};
-};
+  );
 
 export default SubscriptionsPage;

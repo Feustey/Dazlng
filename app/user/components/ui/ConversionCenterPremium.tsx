@@ -244,5 +244,5 @@ export const ConversionCenterPremium: React.FC<ConversionCenterPremiumProps> = (
         </div>
       </div>
     </div>
-};
+  );
 }

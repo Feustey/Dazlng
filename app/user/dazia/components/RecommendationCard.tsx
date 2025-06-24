@@ -17,7 +17,7 @@ export interface RecommendationCardProps {
   pubkey: string;
   alias: string;
   capacity: number;
-};
+  );
     steps: {
       order: number;
       description: string;
@@ -147,5 +147,5 @@ export const RecommendationCard = ({
         transition={{ duration: 0.2 }}
       />
     </motion.div>
-};
+  );
 }

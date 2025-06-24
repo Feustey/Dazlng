@@ -108,5 +108,5 @@ export default async function TestSupabase(): Promise<JSX.Element> {
         </ol>
       </div>
     </div>
-};
+  );
 }

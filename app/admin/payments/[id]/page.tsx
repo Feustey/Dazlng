@@ -66,5 +66,5 @@ export default function PaymentDetailPage(): JSX.Element {
       <div className="mb-4">Créé le : {formatDate(payment.created_at)}</div>
       <div className="mb-4">Modifié le : {formatDate(payment.updated_at)}</div>
     </div>
-};
+  );
 }

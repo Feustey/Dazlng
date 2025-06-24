@@ -45,7 +45,6 @@ const DazBoxOffer: FC = () => {
         Livraison rapide et paiement sécurisé
       </p>
     </section>
-};
-};
+  );
 
 export default DazBoxOffer; 

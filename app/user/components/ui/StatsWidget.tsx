@@ -23,7 +23,6 @@ const StatsWidget: FC<StatsWidgetProps> = ({ title, value, icon, trend }) => {
         </div>
       )}
     </div>
-};
-};
+  );
 
 export default StatsWidget;

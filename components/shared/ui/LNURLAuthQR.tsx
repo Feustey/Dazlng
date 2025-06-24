@@ -108,5 +108,5 @@ export default function LNURLAuthQR({ challenge, onSuccess, onError }: LNURLAuth
         </div>
       )}
     </div>
-};
+  );
 }

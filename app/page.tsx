@@ -61,8 +61,7 @@ const SignupConfirmation: React.FC = () => {
         </div>
       </div>
     </div>
-};
-};
+  );
 
 // Composant wrapper avec animations optimisées
 export interface AnimatedSectionProps {
@@ -88,8 +87,7 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
     >
       {children}
     </section>
-};
-};
+  );
 
 export default function OptimizedHomePage(): React.FC {
   useEffect(() => {
@@ -179,5 +177,5 @@ export default function OptimizedHomePage(): React.FC {
         </AnimatedSection>
       </main>
     </>
-};
+  );
 }

@@ -75,7 +75,7 @@ const UserDashboard: FC = () => {
           <p className="mt-4 text-gray-600">Chargement...</p>
         </div>
       </div>
-};
+  );
   }
 
   return (
@@ -276,7 +276,6 @@ const UserDashboard: FC = () => {
         />
       )}
     </div>
-};
-};
+  );
 
 export default UserDashboard;

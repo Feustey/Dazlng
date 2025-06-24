@@ -3,7 +3,7 @@ import React from "react";
 export type OrderData = {
   fullName?: string;
   email?: string;
-};
+  );
 
 export interface OrderSummaryProps {
   data: OrderData;
@@ -30,5 +30,5 @@ export function OrderSummary({ data }: OrderSummaryProps): React.FC {
         </div>
       )}
     </div>
-};
+  );
 }

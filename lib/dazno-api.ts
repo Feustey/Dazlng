@@ -1,5 +1,5 @@
 // Client API pour les services DazNode externes
-export export interface NodeInfo {
+export interface NodeInfo {
   pubkey: string;
   alias?: string;
   
@@ -41,7 +41,7 @@ export export interface NodeInfo {
   connectivity_score?: number;
 }
 
-export export interface DaznoRecommendation {
+export interface DaznoRecommendation {
   id: string;
   type: string; // SparkSeer recommendation type
   title: string;
@@ -72,7 +72,7 @@ export export interface DaznoRecommendation {
   requires_premium?: boolean;
 }
 
-export export interface PriorityAction {
+export interface PriorityAction {
   id: string;
   action: string;
   priority: number;

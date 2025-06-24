@@ -51,7 +51,6 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
         </p>
       </div>
     </div>
-};
-};
+  );
 
 export default AuthLayout; 

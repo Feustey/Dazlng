@@ -105,7 +105,7 @@ export function PageLoader({ className, showProgress = true }: PageLoaderProps):
         </div>
       </div>
     </>
-};
+  );
 }
 
 // Hook pour contrôler manuellement le loader

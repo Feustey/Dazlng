@@ -9,7 +9,7 @@ const iconMap: Record<IconName, string> = {
   alert: '/assets/images/icon-alert.svg',
   check: '/assets/images/icon-check.svg',
   x: '/assets/images/icon-x.svg',
-};
+  );
 
 interface AppIconProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'size'> {
   name: IconName;
@@ -26,5 +26,5 @@ const AppIcon: React.FC<AppIconProps> = ({ name, size = 24, className = '', alt 
     className={className}
     alt={alt || name}
   />
-};
+  );
 export default AppIcon; 

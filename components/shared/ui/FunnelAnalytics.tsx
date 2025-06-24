@@ -37,8 +37,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, icon, change, tre
       <h3 className="text-lg font-semibold text-gray-800 mb-2">{title}</h3>
       <p className="text-3xl font-bold text-gray-900">{value}</p>
     </div>
-};
-};
+  );
 
 export interface FunnelChartProps {
   steps: FunnelStep[];
@@ -96,8 +95,7 @@ const FunnelChart: React.FC<FunnelChartProps> = ({ steps }) => {
         ))}
       </div>
     </div>
-};
-};
+  );
 
 export interface EventsListProps {
   events: TrackingEvent[];
@@ -127,8 +125,7 @@ const EventsList: React.FC<EventsListProps> = ({ events }) => {
         ))}
       </div>
     </div>
-};
-};
+  );
 
 export const FunnelAnalytics: React.FC = () => {) => clearInterval(interval);
   }, [getLocalAnalytics, getFunnelMetrics]);
@@ -225,7 +222,6 @@ export const FunnelAnalytics: React.FC = () => {) => clearInterval(interval);
         )}
       </div>
     </div>
-};
-};
+  );
 
 export default FunnelAnalytics; 

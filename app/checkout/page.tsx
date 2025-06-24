@@ -35,7 +35,7 @@ export default function DazBoxCheckout(): React.FC {
               }}
             />
           </motion.div>
-};
+  );
       case 2:
         return (
           <motion.div
@@ -50,7 +50,7 @@ export default function DazBoxCheckout(): React.FC {
               onSuccess={() => setStep(3)}
             />
           </motion.div>
-};
+  );
       case 3:
         return (
           <motion.div
@@ -79,7 +79,7 @@ export default function DazBoxCheckout(): React.FC {
               </div>
             </div>
           </motion.div>
-};
+  );
       default:
         return <div />;
     }
@@ -103,5 +103,5 @@ export default function DazBoxCheckout(): React.FC {
         </div>
       </div>
     </div>
-};
+  );
 }

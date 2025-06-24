@@ -295,5 +295,5 @@ export const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
         </div>
       )}
     </div>
-};
+  );
 }

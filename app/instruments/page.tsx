@@ -25,7 +25,7 @@ export default async function Instruments(): Promise<JSX.Element> {
             <strong>Erreur:</strong> {error.message}
           </div>
         </div>
-};
+  );
     }
 
     return (
@@ -67,7 +67,7 @@ export default async function Instruments(): Promise<JSX.Element> {
           </pre>
         </div>
       </div>
-};
+  );
   } catch (error) {
     console.error('Erreur lors de la récupération des instruments:', error);
     return (
@@ -77,6 +77,6 @@ export default async function Instruments(): Promise<JSX.Element> {
           <strong>Erreur inattendue:</strong> {error instanceof Error ? error.message : 'Erreur inconnue'}
         </div>
       </div>
-};
+  );
   }
 }

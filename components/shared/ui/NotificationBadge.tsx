@@ -16,7 +16,7 @@ export default function NotificationBadge({ count = 0, show }: NotificationBadge
     >
       <span className="text-white text-xs font-semibold">{count}</span>
     </span>
-};
+  );
 }
 
 // Ajoute dans ton CSS global ou tailwind.config.js :

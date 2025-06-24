@@ -154,7 +154,6 @@ const DazPayHero: React.FC = () => {
         </div>
       </div>
     </section>
-};
-};
+  );
 
 export default DazPayHero; 

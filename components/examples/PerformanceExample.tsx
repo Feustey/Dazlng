@@ -23,7 +23,7 @@ export default function PerformanceExample(): JSX.Element {
       return mockData;
     },
     { ttl: 5 * 60 * 1000 } // 5 minutes
-};
+  );
   const filteredData = cachedData?.filter(item =>
     item.title.toLowerCase().includes(searchTerm.toLowerCase())
   ) || [];
@@ -33,7 +33,7 @@ export default function PerformanceExample(): JSX.Element {
       <div className="flex items-center justify-center p-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
       </div>
-};
+  );
   }
 
   if (error) {
@@ -41,7 +41,7 @@ export default function PerformanceExample(): JSX.Element {
       <div className="text-red-500 p-4">
         Erreur lors du chargement des données: {error.message}
       </div>
-};
+  );
   }
 
   return (
@@ -130,5 +130,5 @@ export default function PerformanceExample(): JSX.Element {
         </ul>
       </div>
     </div>
-};
+  );
 }

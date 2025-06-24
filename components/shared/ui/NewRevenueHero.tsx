@@ -112,7 +112,6 @@ const NewRevenueHero: React.FC = () => {
         </div>
       </div>
     </section>
-};
-};
+  );
 
 export default NewRevenueHero; 

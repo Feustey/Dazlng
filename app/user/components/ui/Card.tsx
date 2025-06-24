@@ -21,7 +21,6 @@ const UpgradePrompt: FC<UpgradePromptProps> = ({
         {ctaText}
       </button>
     </div>
-};
-};
+  );
 
 export default UpgradePrompt;

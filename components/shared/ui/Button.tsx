@@ -59,5 +59,5 @@ export default function Button(props: ButtonProps): React.FC {
         <span>{children}</span>
       </span>
     </button>
-};
+  );
 }

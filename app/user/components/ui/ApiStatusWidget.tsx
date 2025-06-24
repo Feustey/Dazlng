@@ -104,5 +104,5 @@ export default function ApiStatusWidget({ className = '' }: ApiStatusWidgetProps
         </div>
       )}
     </div>
-};
+  );
 }

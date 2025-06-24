@@ -165,7 +165,7 @@ const SettingsPage: FC = () => {
           </div>
         </div>
       </div>
-};
+  );
   }
 
   // Vérification de l'authentification
@@ -176,7 +176,7 @@ const SettingsPage: FC = () => {
           <p className="text-red-600">Vous devez être connecté pour accéder à cette page.</p>
         </div>
       </div>
-};
+  );
   }
 
   return (
@@ -403,7 +403,6 @@ const SettingsPage: FC = () => {
         </div>
       )}
     </div>
-};
-};
+  );
 
 export default SettingsPage;

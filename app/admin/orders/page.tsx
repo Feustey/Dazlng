@@ -89,5 +89,5 @@ export default function OrdersPage(): JSX.Element {
         </div>
       )}
     </div>
-};
+  );
 }

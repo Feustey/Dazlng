@@ -81,7 +81,7 @@ export default function CheckoutSuccess(): React.FC {
           </div>
         </div>
       </div>
-};
+  );
   }
   
   if (error) {
@@ -106,7 +106,7 @@ export default function CheckoutSuccess(): React.FC {
           </div>
         </div>
       </div>
-};
+  );
   }
 
   return (
@@ -129,5 +129,5 @@ export default function CheckoutSuccess(): React.FC {
         </div>
       </div>
     </div>
-};
+  );
 }

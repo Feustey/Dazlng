@@ -3,7 +3,7 @@ import React from "react";
 export type Step = {
   id: number;
   name: string;
-};
+  );
 
 export interface CheckoutProgressProps {
   steps: Step[];
@@ -23,5 +23,5 @@ export function CheckoutProgress({ steps, currentStep }: CheckoutProgressProps):
         </div>
       ))}
     </div>
-};
+  );
 }

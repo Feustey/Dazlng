@@ -11,7 +11,6 @@ const UserHeader: FC = () => {
         </button>
       </div>
     </header>
-};
-};
+  );
 
 export default UserHeader;

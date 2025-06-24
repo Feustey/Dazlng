@@ -65,7 +65,6 @@ const BeginnersFAQ: React.FC = () => {
         </div>
       </div>
     </section>
-};
-};
+  );
 
 export default BeginnersFAQ; 

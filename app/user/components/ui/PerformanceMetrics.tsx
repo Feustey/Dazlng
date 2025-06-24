@@ -51,21 +51,21 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({
           <span>📈</span>
           <span className="text-sm font-medium">+{growth.toFixed(1)}%</span>
         </div>
-};
+  );
     } else if (growth < 0) {
       return (
         <div className="flex items-center gap-1 text-red-600">
           <span>📉</span>
           <span className="text-sm font-medium">{growth.toFixed(1)}%</span>
         </div>
-};
+  );
     }
     return (
       <div className="flex items-center gap-1 text-gray-600">
         <span>➡️</span>
         <span className="text-sm font-medium">Stable</span>
       </div>
-};
+  );
   };
 
   const getRankBadge = (rank: number, total: number): JSX.Element => {
@@ -88,7 +88,7 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({
       <span className={`px-3 py-1 rounded-full text-xs font-medium ${badgeColor}`}>
         {badgeIcon} Top {percentage.toFixed(0)}%
       </span>
-};
+  );
   };
 
   export interface SimpleChartProps {
@@ -110,10 +110,10 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data }) => {
               className="bg-indigo-200 rounded-t flex-1 min-h-1"
               style={{ height: `${Math.max(height, 10)}%` }}
             />
-};
+  );
         })}
       </div>
-};
+  );
   };
 
   const unlockedAchievements = achievements.filter(a => a.unlocked);
@@ -305,7 +305,6 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data }) => {
         </Link>
       </div>
     </div>
-};
-};
+  );
 
 export { PerformanceMetrics }; 

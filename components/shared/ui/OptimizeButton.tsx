@@ -37,5 +37,5 @@ export default function OptimizeButton({ nodeId }: OptimizeButtonProps): JSX.Ele
     >
       {isOptimizing ? 'Optimisation...' : 'Optimiser le Node'}
     </button>
-};
+  );
 }

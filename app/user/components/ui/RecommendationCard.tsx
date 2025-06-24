@@ -22,7 +22,7 @@ const NodeCard: FC<NodeCardProps> = ({ nodeData, showUpgradePrompt = false }) =>
           Connecter mon nœud
         </button>
       </div>
-};
+  );
   }
 
   return (
@@ -67,7 +67,6 @@ const NodeCard: FC<NodeCardProps> = ({ nodeData, showUpgradePrompt = false }) =>
         </div>
       </div>
     </div>
-};
-};
+  );
 
 export default NodeCard;

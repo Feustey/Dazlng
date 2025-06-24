@@ -20,5 +20,5 @@ export const SparklesIcon: React.FC<SparklesIconProps> = ({ className = '', 'ari
         clipRule="evenodd" 
       />
     </svg>
-};
+  );
 }

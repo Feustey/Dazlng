@@ -35,8 +35,7 @@ const SignupConfirmation: React.FC = () => {
         </div>
       </div>
     </div>
-};
-};
+  );
 
 export default function HomePage(): React.FC {
   
@@ -71,7 +70,7 @@ export default function HomePage(): React.FC {
       ];
     },
     { ttl: 10 * 60 * 1000 } // 10 minutes de cache
-};
+  );
   useEffect(() => {
     AOS.init({ 
       once: false,
@@ -537,5 +536,5 @@ export default function HomePage(): React.FC {
 
       </main>
     </>
-};
+  );
 }

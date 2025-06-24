@@ -40,7 +40,7 @@ const plans = {
     price: '10 000 Sats/mois',
     features: ['Prédiction des fee rates', 'Optimisation automatique'],
   },
-};
+  );
 
 export interface FormData {
   name: string;
@@ -72,7 +72,7 @@ export default function SubscribeScreen(): React.FC {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <p className="text-lg text-error text-center">Plan non trouvé</p>
       </div>
-};
+  );
   }
 
   return (
@@ -143,5 +143,5 @@ export default function SubscribeScreen(): React.FC {
         </form>
       </div>
     </div>
-};
+  );
 }

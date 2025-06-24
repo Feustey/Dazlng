@@ -13,5 +13,5 @@ export default function PageLayout({ children, className = '', contentClassName 
         {children}
       </div>
     </div>
-};
+  );
 }

@@ -39,5 +39,5 @@ export default function DazpayCheckoutPage(): React.FC {
         Vous serez redirigé vers la page de contact dans quelques secondes...
       </p>
     </div>
-};
+  );
 }

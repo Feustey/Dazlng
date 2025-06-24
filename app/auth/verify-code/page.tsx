@@ -135,7 +135,7 @@ function VerifyCodeForm(): JSX.Element {
         </p>
       </div>
     </div>
-};
+  );
 }
 
 export default function VerifyCodePage(): JSX.Element {

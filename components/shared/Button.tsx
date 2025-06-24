@@ -9,13 +9,13 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const variantClasses = {
   primary: 'bg-primary text-white',
   secondary: 'bg-secondary text-white',
-};
+  );
 
 const sizeClasses = {
   sm: 'py-2 px-3 text-sm',
   md: 'py-3 px-5 text-base',
   lg: 'py-4 px-7 text-lg',
-};
+  );
 
 const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
@@ -31,8 +31,7 @@ const Button: React.FC<ButtonProps> = ({
     >
       {children}
     </button>
-};
-};
+  );
 
 export { Button };
 export default Button; 

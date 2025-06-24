@@ -17,5 +17,5 @@ export function TechnicalProof(): React.FC {
         </div>
       </div>
     </div>
-};
+  );
 }

@@ -23,7 +23,7 @@ ChartJS.register(
   Tooltip,
   Legend,
   Filler
-};
+  );
 export interface MetricCardProps {
   title: string;
   value: number;
@@ -63,7 +63,7 @@ const MetricCard = ({ title, value, change, icon, color }: MetricCardProps) => (
       </span>
     </div>
   </motion.div>
-};
+  );
 export interface PerformanceMetricsProps {
   metrics: {
   revenue: {
@@ -173,5 +173,5 @@ export const PerformanceMetrics = ({ metrics }: PerformanceMetricsProps) => {
         </div>
       </motion.div>
     </div>
-};
+  );
 }

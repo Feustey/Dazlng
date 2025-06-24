@@ -26,7 +26,7 @@ const ListActions = () => (
   <TopToolbar>
     {/* Actions pour les segments */}
   </TopToolbar>
-};
+  );
 const RowActions = () => {
   const record = useRecordContext();
   if (!record) return null;
@@ -37,7 +37,7 @@ const RowActions = () => {
       <EditButton />
       <DeleteButton />
     </div>
-};
+  );
 };
 
 // Liste des segments
@@ -57,7 +57,7 @@ export const SegmentList = () => (
       <RowActions />
     </Datagrid>
   </List>
-};
+  );
 // Affichage détaillé d'un segment
 export const SegmentShow = () => (
   <Show title="Détails du segment">
@@ -72,7 +72,7 @@ export const SegmentShow = () => (
       <DateField source="updated_at" label="Dernière mise à jour" />
     </SimpleShowLayout>
   </Show>
-};
+  );
 // Édition d'un segment
 export const SegmentEdit = () => (
   <Edit title="Modifier le segment">
@@ -83,7 +83,7 @@ export const SegmentEdit = () => (
       <BooleanInput source="auto_update" label="Mise à jour automatique" />
     </SimpleForm>
   </Edit>
-};
+  );
 // Création d'un nouveau segment
 export const SegmentCreate = () => (
   <Create title="Créer un segment">
@@ -101,7 +101,7 @@ export const SegmentCreate = () => (
       <BooleanInput source="auto_update" label="Mise à jour automatique" defaultValue={true} />
     </SimpleForm>
   </Create>
-};
+  );
 // Configuration de la ressource
 export const segmentResource = {
   list: SegmentList,

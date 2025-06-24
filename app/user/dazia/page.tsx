@@ -314,7 +314,7 @@ const DaziaPage: FC = () => {
           />
         ))}
       </div>
-};
+  );
   };
 
   const handleTabChange = (newValue: 'immediate' | 'short_term' | 'long_term') => {
@@ -331,7 +331,7 @@ const DaziaPage: FC = () => {
           </p>
         </div>
       </div>
-};
+  );
   }
 
   if (!pubkey) {
@@ -349,7 +349,7 @@ const DaziaPage: FC = () => {
           Connecter mon nœud
         </a>
       </div>
-};
+  );
   }
 
   if (error) {
@@ -360,7 +360,7 @@ const DaziaPage: FC = () => {
           <p className="mt-2 text-red-600">{error}</p>
         </div>
       </div>
-};
+  );
   }
 
   if (!data || data.recommendations.length === 0) {
@@ -372,7 +372,7 @@ const DaziaPage: FC = () => {
           Nous n'avons pas pu charger de recommandations pour votre nœud.
         </p>
       </div>
-};
+  );
   }
 
   return (
@@ -640,7 +640,6 @@ const DaziaPage: FC = () => {
         </div>
       )}
     </div>
-};
-};
+  );
 
 export default DaziaPage; 

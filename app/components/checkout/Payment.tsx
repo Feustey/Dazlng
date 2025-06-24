@@ -31,5 +31,5 @@ export function PaymentForm({ onBack, onSuccess }: PaymentFormProps): React.FC {
       </button>
       {error && <div className="text-red-500">{error}</div>}
     </form>
-};
+  );
 }

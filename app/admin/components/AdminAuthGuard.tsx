@@ -120,7 +120,7 @@ const AdminAuthGuard: FC<AdminAuthGuardProps> = ({ children }) => {
           )}
         </div>
       </div>
-};
+  );
   }
 
   // Si pas authentifié ou pas admin, ne rien afficher (la redirection est en cours)
@@ -130,6 +130,6 @@ const AdminAuthGuard: FC<AdminAuthGuardProps> = ({ children }) => {
 
   // Utilisateur authentifié et admin, afficher le contenu
   return <>{children}</>;
-};
+  );
 
 export default AdminAuthGuard; 

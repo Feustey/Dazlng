@@ -216,5 +216,5 @@ export default function TermsPage(): React.FC {
         </section>
       </main>
     </>
-};
+  );
 }

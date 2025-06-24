@@ -132,7 +132,7 @@ export const ProfileCompletionEnhanced: React.FC<ProfileCompletionEnhancedProps>
           </div>
         </div>
       </div>
-};
+  );
   }
 
   return (
@@ -290,7 +290,7 @@ export const ProfileCompletionEnhanced: React.FC<ProfileCompletionEnhancedProps>
                     ))}
                   </div>
                 </div>
-};
+  );
             })}
           </div>
         )}
@@ -310,5 +310,5 @@ export const ProfileCompletionEnhanced: React.FC<ProfileCompletionEnhancedProps>
         </div>
       </div>
     </div>
-};
+  );
 }

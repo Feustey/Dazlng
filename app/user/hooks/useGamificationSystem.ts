@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
 import { isValidLightningPubkey } from '@/lib/dazno-api';
 
-export export interface UserProfile {
+export interface UserProfile {
   id: string;
   email: string;
   nom?: string;
@@ -21,7 +21,7 @@ export export interface UserProfile {
   settings?: any;
 }
 
-export export interface ProfileField {
+export interface ProfileField {
   name: string;
   label: string;
   completed: boolean;
@@ -31,7 +31,7 @@ export export interface ProfileField {
   description?: string;
 }
 
-export export interface Achievement {
+export interface Achievement {
   id: string;
   title: string;
   description: string;
@@ -44,7 +44,7 @@ export export interface Achievement {
   rarity: 'common' | 'rare' | 'epic' | 'legendary';
 }
 
-export export interface GamificationData {
+export interface GamificationData {
   // Score & niveau
   userScore: number;
   level: number;

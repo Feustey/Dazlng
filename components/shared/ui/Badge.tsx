@@ -32,7 +32,7 @@ export default function Badge({
     <span className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`}>
       {children}
     </span>
-};
+  );
 }
 
 export { Badge }; 

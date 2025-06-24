@@ -17,7 +17,6 @@ const UserSidebar: FC = () => {
         <Link href="/user/settings" className="hover:text-indigo-600">Paramètres</Link>
       </nav>
     </aside>
-};
-};
+  );
 
 export default UserSidebar;

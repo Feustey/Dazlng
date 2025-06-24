@@ -6,7 +6,7 @@ export interface RecommendationCardProps {
   title: string;
   description?: string;
   isFree?: boolean;
-};
+  );
   onApply?: () => void;
   onUpgrade?: () => void;
   isPremium?: boolean;
@@ -59,7 +59,6 @@ const RecommendationCard: FC<RecommendationCardProps> = ({
         ) : null}
       </div>
     </div>
-};
-};
+  );
 
 export default RecommendationCard;

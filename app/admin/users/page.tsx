@@ -97,7 +97,7 @@ const generateMockCustomers = (): Customer[] => {
     }
   ];
   return mockCustomers;
-};
+  );
 
 const generateMockStats = (): CustomerStats => {
   return {
@@ -108,7 +108,7 @@ const generateMockStats = (): CustomerStats => {
     total_revenue: 2450000,
     avg_order_value: 85000
   };
-};
+  );
 
 export default function UsersPage(): JSX.Element {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -141,7 +141,7 @@ export default function UsersPage(): JSX.Element {
             customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
             customer.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
             customer.prenom.toLowerCase().includes(searchTerm.toLowerCase())
-};
+  );
         }
         
         if (selectedSegment !== 'all') {
@@ -298,7 +298,7 @@ export default function UsersPage(): JSX.Element {
           <div className="h-96 bg-gray-200 rounded"></div>
         </div>
       </div>
-};
+  );
   }
 
   return (
@@ -503,5 +503,5 @@ export default function UsersPage(): JSX.Element {
         </div>
       </div>
     </div>
-};
+  );
 }

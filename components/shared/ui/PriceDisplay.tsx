@@ -50,7 +50,7 @@ const PriceDisplay: React.FC<PriceDisplayProps> = ({
       <span className={`${sizeClasses[size]} ${colorClasses[color]} ${className}`}>
         Gratuit{period ? period : ''}
       </span>
-};
+  );
   }
 
   // Formatage du prix
@@ -60,8 +60,7 @@ const PriceDisplay: React.FC<PriceDisplayProps> = ({
     <span className={`${sizeClasses[size]} ${colorClasses[color]} ${className}`}>
       {formattedPrice}{period ? period : ''}
     </span>
-};
-};
+  );
 
 export default PriceDisplay;
 
@@ -107,8 +106,7 @@ export const SubscriptionPrice: React.FC<SubscriptionPriceProps> = ({
         </div>
       )}
     </div>
-};
-};
+  );
 
 // Composant pour comparer les prix
 export interface PriceComparisonProps {
@@ -139,5 +137,5 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
         </div>
       </div>
     </div>
-};
+  );
 }

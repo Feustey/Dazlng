@@ -142,5 +142,5 @@ export const CRMUserHeader: React.FC<CRMUserHeaderProps> = ({
         </div>
       </div>
     </div>
-};
+  );
 }

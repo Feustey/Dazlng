@@ -35,7 +35,7 @@ export function Select({ value, onValueChange, children, className = "" }: Selec
         {children}
       </select>
     </div>
-};
+  );
 }
 
 export function SelectTrigger({ children }: SelectTriggerProps): JSX.Element {

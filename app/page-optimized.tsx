@@ -34,8 +34,7 @@ const SignupConfirmation: React.FC = () => {
         </div>
       </div>
     </div>
-};
-};
+  );
 
 export default function OptimizedHomePage(): React.FC {
   useEffect(() => {
@@ -88,5 +87,5 @@ export default function OptimizedHomePage(): React.FC {
         <CTASection />
       </main>
     </>
-};
+  );
 }

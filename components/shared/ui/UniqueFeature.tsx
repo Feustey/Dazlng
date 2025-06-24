@@ -31,5 +31,5 @@ export function UniqueFeature(): React.FC {
         </p>
       </div>
     </section>
-};
+  );
 }

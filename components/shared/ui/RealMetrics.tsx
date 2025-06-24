@@ -24,7 +24,7 @@ const RealMetric: React.FC<MetricProps> = ({ number, label, description, color, 
       {description}
     </div>
   </div>
-};
+  );
 const RealMetrics: React.FC = () => {
     <section className="py-20 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4">
@@ -97,7 +97,6 @@ const RealMetrics: React.FC = () => {
         </div>
       </div>
     </section>
-};
-};
+  );
 
 export default RealMetrics; 

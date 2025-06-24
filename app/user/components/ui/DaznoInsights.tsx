@@ -154,8 +154,7 @@ export const DaznoInsights: React.FC<DaznoInsightsProps> = ({
         </div>
       ))}
     </div>
-};
-};
+  );
 
 // Fonction utilitaire pour formater les sats
 const formatSats = (sats: number): string => {

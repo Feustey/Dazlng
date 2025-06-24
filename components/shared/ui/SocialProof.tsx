@@ -44,7 +44,7 @@ const Testimonial: React.FC<TestimonialProps> = ({ name, title, content, avatar,
       <p className="text-gray-700 leading-relaxed pl-6 italic">{content}</p>
     </div>
   </div>
-};
+  );
 export interface MetricProps {
   number: string;
   label: string;
@@ -64,7 +64,7 @@ const Metric: React.FC<MetricProps> = ({ number, label, delay }) => (
       {label}
     </div>
   </div>
-};
+  );
 export const SocialProof: React.FC = () => {
     <section className="py-20 bg-white">
       <div className="max-w-6xl mx-auto px-4">
@@ -126,5 +126,5 @@ export const SocialProof: React.FC = () => {
         </div>
       </div>
     </section>
-};
+  );
 }

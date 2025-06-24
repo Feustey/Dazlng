@@ -51,7 +51,7 @@ const jsonLd = {
     },
     "reviewBody": "DazBox simplifie vraiment l'accès au Lightning Network. Installation en 5 minutes et revenus dès le premier jour."
   }
-};
+  );
 
 const DazBoxPage: React.FC = () => {
     <>
@@ -259,6 +259,5 @@ const DazBoxPage: React.FC = () => {
       </section>
     </>
   );
-};
 
 export default DazBoxPage;

@@ -10,7 +10,6 @@ const GradientLayout: React.FC<GradientLayoutProps> = ({ children, className = "
     <div className={`min-h-screen bg-gradient-to-br from-indigo-600 to-purple-700 ${className}`}>
       {children}
     </div>
-};
-};
+  );
 
 export default GradientLayout; 

@@ -54,5 +54,5 @@ export const CTASection: React.FC = () => {
         </div>
       </div>
     </section>
-};
+  );
 }

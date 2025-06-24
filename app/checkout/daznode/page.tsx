@@ -89,7 +89,7 @@ function CheckoutContent(): React.FC {
       form.email &&
       form.pubkey &&
       !pubkeyError
-};
+  );
   };
 
   const getPrice = (): number => {
@@ -181,7 +181,7 @@ function CheckoutContent(): React.FC {
           onCancel={() => setShowLightning(false)}
         />
       </div>
-};
+  );
   }
 
   if (paymentSuccess) {
@@ -195,7 +195,7 @@ function CheckoutContent(): React.FC {
           Vous recevrez un email de confirmation sous peu.
         </div>
       </div>
-};
+  );
   }
 
   return (
@@ -286,7 +286,7 @@ function CheckoutContent(): React.FC {
         </div>
       </div>
     </div>
-};
+  );
 }
 
 export default function Page(): JSX.Element {
@@ -294,5 +294,5 @@ export default function Page(): JSX.Element {
     <Suspense fallback={<div>Chargement...</div>}>
       <CheckoutContent />
     </Suspense>
-};
+  );
 }

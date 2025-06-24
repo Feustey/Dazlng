@@ -34,8 +34,7 @@ const SignupConfirmation: React.FC = () => {
         </div>
       </div>
     </div>
-};
-};
+  );
 
 export default function NewHomePage(): React.FC {
   useEffect(() => {

@@ -41,7 +41,7 @@ export default function MCPAnalysisPage(): React.FC {
           <p className="text-gray-600">Récupération des credentials JWT...</p>
         </div>
       </div>
-};
+  );
   }
 
   if (error) {
@@ -56,7 +56,7 @@ export default function MCPAnalysisPage(): React.FC {
           </Alert>
         </div>
       </div>
-};
+  );
   }
 
   return (
@@ -243,5 +243,5 @@ export default function MCPAnalysisPage(): React.FC {
         </div>
       </footer>
     </div>
-};
+  );
 }

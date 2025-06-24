@@ -7,6 +7,6 @@ export interface PageTitleProps {
 
 const PageTitle: React.FC<PageTitleProps> = ({ children }) => {
   return <GradientTitle>{children}</GradientTitle>;
-};
+  );
 
 export default PageTitle; 

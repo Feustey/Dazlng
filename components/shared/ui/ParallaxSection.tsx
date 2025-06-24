@@ -17,5 +17,5 @@ export default function ParallaxSection({ title, children, className = '' }: Par
         {children}
       </div>
     </section>
-};
+  );
 }

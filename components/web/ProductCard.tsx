@@ -26,5 +26,5 @@ export default function ProductCard(props: ProductCardProps): React.FC {
         ))}
       </ul>
     </Card>
-};
+  );
 }

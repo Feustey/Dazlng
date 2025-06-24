@@ -29,16 +29,14 @@ const Alert: React.FC<AlertProps> = ({ type = 'default', message, className = ''
       {message && <div>{message}</div>}
       {children}
     </div>
-};
-};
+  );
 
 const AlertDescription: React.FC<AlertDescriptionProps> = ({ children, className = '' }) => {
   return (
     <div className={`text-sm mt-1 ${className}`}>
       {children}
     </div>
-};
-};
+  );
 
 // Exports nommés
 export { Alert, AlertDescription };

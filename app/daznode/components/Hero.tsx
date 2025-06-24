@@ -229,7 +229,6 @@ const DazNodeHero: React.FC = () => {
         }
       `}</style>
     </section>
-};
-};
+  );
 
 export default DazNodeHero; 

@@ -1,5 +1,5 @@
 // Utilitaires pour la gestion des cookies de pubkey
-export export interface PubkeyData {
+export interface PubkeyData {
   pubkey: string;
   alias?: string;
   savedAt: string;

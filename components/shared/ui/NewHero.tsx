@@ -96,7 +96,6 @@ const NewHero: React.FC = () => {
         </div>
       </div>
     </section>
-};
-};
+  );
 
 export default NewHero; 

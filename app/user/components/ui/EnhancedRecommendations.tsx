@@ -113,7 +113,7 @@ const EnhancedRecommendations: React.FC<EnhancedRecommendationsProps> = ({
                   </button>
                 </div>
               </div>
-};
+  );
           })}
           
           {recommendations.length === 0 && (
@@ -125,7 +125,6 @@ const EnhancedRecommendations: React.FC<EnhancedRecommendationsProps> = ({
         </div>
       </div>
     </div>
-};
-};
+  );
 
 export default EnhancedRecommendations; 

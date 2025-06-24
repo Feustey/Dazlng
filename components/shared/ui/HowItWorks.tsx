@@ -29,7 +29,7 @@ const Step: React.FC<StepProps> = ({ number, icon, title, description, delay }) 
     <h3 className="text-xl font-bold text-gray-800">{title}</h3>
     <p className="text-gray-600 max-w-xs leading-relaxed">{description}</p>
   </div>
-};
+  );
 export const HowItWorks: React.FC = () => {
     <section id="how-it-works" className="py-20 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4">
@@ -103,5 +103,5 @@ export const HowItWorks: React.FC = () => {
         </div>
       </div>
     </section>
-};
+  );
 }

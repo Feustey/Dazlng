@@ -38,4 +38,4 @@ export const CRMLayout: React.FC<any> = (props: any) => (
       },
     }}
   />
-}
+);

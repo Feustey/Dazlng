@@ -35,10 +35,11 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, trend, icon: Icon
         )}
       </CardContent>
     </Card>
-};
+  );
 };
 
 export const CRMDashboard: React.FC = () => {
+  return (
     <div className="p-6 space-y-6">
       {/* En-tête */}
       <div className="flex items-center justify-between">
@@ -207,5 +208,5 @@ export const CRMDashboard: React.FC = () => {
         </CardContent>
       </Card>
     </div>
-};
+  );
 }

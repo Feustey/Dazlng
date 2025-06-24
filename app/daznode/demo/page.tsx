@@ -206,5 +206,5 @@ export default function DemoPage(): React.FC {
         </div>
       </div>
     </GradientLayout>
-};
+  );
 }

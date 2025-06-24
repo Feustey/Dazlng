@@ -15,5 +15,5 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
         <main className="flex-1 bg-gray-50 overflow-y-auto p-6">{children}</main>
       </div>
     </div>
-};
+  );
 }

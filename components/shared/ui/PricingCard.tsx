@@ -66,7 +66,6 @@ const PricingCard: FC<PricingCardProps> = ({
       )}
       {microcopy && <p className="text-xs text-gray-100 mt-2 text-center">{microcopy}</p>}
     </div>
-};
-};
+  );
 
 export default PricingCard; 

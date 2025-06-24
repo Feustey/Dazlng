@@ -63,7 +63,7 @@ const ProfileCompletion: React.FC<ProfileCompletionProps> = ({
           </Link>
         </div>
       </div>
-};
+  );
   }
 
   return (
@@ -131,7 +131,6 @@ const ProfileCompletion: React.FC<ProfileCompletionProps> = ({
         </Link>
       </div>
     </div>
-};
-};
+  );
 
 export default ProfileCompletion; 

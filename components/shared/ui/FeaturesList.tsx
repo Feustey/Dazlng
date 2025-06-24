@@ -16,5 +16,5 @@ export default function FeaturesList({
         <div key={index} className="text-base mb-2 text-gray-700 text-center">• {feature}</div>
       ))}
     </div>
-};
+  );
 }

@@ -79,7 +79,7 @@ const NodeAnalysis: React.FC<NodeAnalysisProps> = ({
         <Loader2 className="w-6 h-6 animate-spin mr-2" />
         <span>Initialisation de l'API Lightning...</span>
       </div>
-};
+    );
   }
 
   if (apiError) {
@@ -88,7 +88,7 @@ const NodeAnalysis: React.FC<NodeAnalysisProps> = ({
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>❌ Erreur API: {apiError}</AlertDescription>
       </Alert>
-};
+  );
   }
 
   if (loading) {
@@ -104,7 +104,7 @@ const NodeAnalysis: React.FC<NodeAnalysisProps> = ({
           </div>
         </div>
       </div>
-};
+  );
   }
 
   if (error) {
@@ -121,7 +121,7 @@ const NodeAnalysis: React.FC<NodeAnalysisProps> = ({
           </div>
         </AlertDescription>
       </Alert>
-};
+  );
   }
 
   if (!analysis) {
@@ -132,7 +132,7 @@ const NodeAnalysis: React.FC<NodeAnalysisProps> = ({
           Entrez une clé publique de nœud pour commencer l'analyse
         </p>
       </div>
-};
+  );
   }
 
   const { recommendations, priorities, summary } = analysis;
@@ -285,7 +285,6 @@ const NodeAnalysis: React.FC<NodeAnalysisProps> = ({
         </Button>
       </div>
     </div>
-};
-};
+  );
 
 export default NodeAnalysis; 

@@ -88,7 +88,6 @@ const FinalConversionCTA: React.FC = () => {
         </div>
       </div>
     </section>
-};
-};
+  );
 
 export default FinalConversionCTA; 

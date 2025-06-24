@@ -43,5 +43,5 @@ export const DaziaHeader = () => {
         ))}
       </div>
     </motion.div>
-};
+  );
 }

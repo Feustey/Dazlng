@@ -30,7 +30,6 @@ const StatsWidget: FC<StatsWidgetProps> = ({ title, value, unit, icon, trend, st
         <div className="text-xs mt-1 text-gray-400">{status}</div>
       )}
     </div>
-};
-};
+  );
 
 export default StatsWidget;

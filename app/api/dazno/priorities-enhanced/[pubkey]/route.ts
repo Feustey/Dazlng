@@ -62,7 +62,7 @@ export interface ActionPlan {
   long_term_vision: string
 }
 
-export export interface EnhancedPriorityAction {
+export interface EnhancedPriorityAction {
   priority: number
   action: string
   timeline: string
@@ -77,7 +77,7 @@ export export interface EnhancedPriorityAction {
   success_criteria?: string[]
 }
 
-export export interface EnhancedPriorityResponse {
+export interface EnhancedPriorityResponse {
   pubkey: string
   timestamp: string
   node_summary: {

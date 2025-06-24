@@ -53,7 +53,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
       </main>
       <Footer />
     </div>
-};
+  );
   if (useModernLayout) {
     return (
       <PerformanceProvider>
@@ -88,7 +88,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
           }}
         />
       </PerformanceProvider>
-};
+  );
   }
 
   return (
@@ -119,7 +119,6 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
         }}
       />
     </PerformanceProvider>
-};
-};
+  );
 
 export default ClientLayout; 

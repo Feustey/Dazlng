@@ -39,7 +39,6 @@ const NodeStatsPage: FC = () => {
         {/* Plus de widgets stats... */}
       </div>
     </div>
-};
-};
+  );
 
 export default NodeStatsPage;

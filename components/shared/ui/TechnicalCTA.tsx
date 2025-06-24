@@ -81,7 +81,6 @@ const TechnicalCTA: React.FC = () => {
         </div>
       </div>
     </section>
-};
-};
+  );
 
 export default TechnicalCTA; 

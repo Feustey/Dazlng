@@ -12,7 +12,7 @@ export default function LoginPage(): JSX.Element {
     <Suspense fallback={<div>Chargement...</div>}>
       <LoginPageContent supabase={supabase} />
     </Suspense>
-};
+  );
 }
 
 function LoginPageContent({ supabase }: { supabase: any }): JSX.Element {
@@ -141,5 +141,5 @@ function LoginPageContent({ supabase }: { supabase: any }): JSX.Element {
         </p>
       </div>
     </div>
-};
+  );
 }

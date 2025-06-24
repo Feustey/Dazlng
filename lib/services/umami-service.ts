@@ -151,7 +151,7 @@ declare global {
 export const umamiService = new UmamiService();
 
 // Types pour l'API Analytics
-export export interface UmamiAnalyticsResponse {
+export interface UmamiAnalyticsResponse {
   success: boolean;
   data: {
     stats: {

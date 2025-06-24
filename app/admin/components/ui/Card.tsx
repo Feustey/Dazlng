@@ -16,5 +16,5 @@ export function Card({ title, children, className = "" }: CardProps): JSX.Elemen
       )}
       <div className="p-6">{children}</div>
     </div>
-};
+  );
 }

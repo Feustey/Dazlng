@@ -57,7 +57,7 @@ export const RecommendationFilters = ({ onFilterChange }: RecommendationFiltersP
       prev.includes(category)
         ? prev.filter(c => c !== category)
         : [...prev, category]
-};
+  );
   };
 
   const toggleImpact = (impact: string) => {
@@ -65,7 +65,7 @@ export const RecommendationFilters = ({ onFilterChange }: RecommendationFiltersP
       prev.includes(impact)
         ? prev.filter(i => i !== impact)
         : [...prev, impact]
-};
+  );
   };
 
   const toggleDifficulty = (difficulty: string) => {
@@ -73,7 +73,7 @@ export const RecommendationFilters = ({ onFilterChange }: RecommendationFiltersP
       prev.includes(difficulty)
         ? prev.filter(d => d !== difficulty)
         : [...prev, difficulty]
-};
+  );
   };
 
   const clearFilters = () => {
@@ -214,5 +214,5 @@ export const RecommendationFilters = ({ onFilterChange }: RecommendationFiltersP
         </div>
       )}
     </div>
-};
+  );
 }

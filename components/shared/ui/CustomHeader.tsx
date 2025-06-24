@@ -70,7 +70,6 @@ const CustomHeader: React.FC = () => {
         </div>
       </div>
     </header>
-};
-};
+  );
 
 export default CustomHeader; 

@@ -125,8 +125,7 @@ export const UserFeedbackToast: React.FC<UserFeedbackToastProps> = ({
         </div>
       </div>
     </div>
-};
-};
+  );
 
 // Hook pour gérer les toasts
 export interface ToastMessage {
@@ -193,7 +192,7 @@ export const useUserFeedback = () => {
         />
       ))}
     </div>
-};
+  );
   return {
     showSuccess,
     showError,

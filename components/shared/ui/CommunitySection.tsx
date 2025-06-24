@@ -79,7 +79,6 @@ const CommunitySection: React.FC = () => {
         </div>
       </div>
     </section>
-};
-};
+  );
 
 export default CommunitySection; 

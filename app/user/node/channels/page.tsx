@@ -150,7 +150,7 @@ const NodeChannelsPage: FC = () => {
       <span className={`px-2 py-1 text-xs font-medium rounded-full ${colors[status]}`}>
         {labels[status]}
       </span>
-};
+  );
   };
 
   // États de chargement
@@ -164,7 +164,7 @@ const NodeChannelsPage: FC = () => {
           </div>
         </div>
       </div>
-};
+  );
   }
 
   // Vérification de l'authentification
@@ -178,7 +178,7 @@ const NodeChannelsPage: FC = () => {
           </a>
         </div>
       </div>
-};
+  );
   }
 
   if (error) {
@@ -211,7 +211,7 @@ const NodeChannelsPage: FC = () => {
           )}
         </div>
       </div>
-};
+  );
   }
 
   return (
@@ -388,7 +388,6 @@ const NodeChannelsPage: FC = () => {
         </div>
       )}
     </div>
-};
-};
+  );
 
 export default NodeChannelsPage;

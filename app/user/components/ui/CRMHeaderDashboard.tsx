@@ -165,5 +165,5 @@ export const CRMHeaderDashboard: React.FC<CRMHeaderDashboardProps> = ({
         </div>
       </div>
     </div>
-};
+  );
 }

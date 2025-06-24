@@ -472,7 +472,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
                 style={{ height: `${Math.max(height, 10)}%` }}
                 title={`Jour ${index + 1}: ${formatSats(value)}`}
               />
-};
+  );
           })}
         </div>
         <div className="flex justify-between text-sm text-gray-600">
@@ -480,7 +480,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
           <span>Aujourd'hui</span>
         </div>
       </div>
-};
+  );
   };
 
   // Si l'utilisateur n'est pas connecté
@@ -496,7 +496,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
           Se connecter
         </button>
       </div>
-};
+  );
   }
 
   // Si pas de pubkey configurée, afficher le formulaire de saisie
@@ -579,7 +579,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
           )}
         </div>
       </div>
-};
+  );
   }
 
   // Affichage principal avec les données du nœud
@@ -1275,7 +1275,6 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
         </div>
       )}
     </div>
-};
-};
+  );
 
 export default NodeManagement;

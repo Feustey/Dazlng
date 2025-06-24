@@ -115,7 +115,7 @@ export function LazyList<T>({
             >
               {renderItem(item, virtualItem.index)}
             </div>
-};
+  );
         })}
       </div>
 
@@ -129,5 +129,5 @@ export function LazyList<T>({
       {/* Élément observé pour détecter la fin */}
       <div ref={endRef} className="h-px" />
     </div>
-};
+  );
 }

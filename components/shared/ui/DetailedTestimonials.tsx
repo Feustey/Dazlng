@@ -89,7 +89,6 @@ const DetailedTestimonials: React.FC = () => {
         </div>
       </div>
     </section>
-};
-};
+  );
 
 export default DetailedTestimonials; 

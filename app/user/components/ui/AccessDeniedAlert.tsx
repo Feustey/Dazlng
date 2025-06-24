@@ -22,5 +22,5 @@ export default function AccessDeniedAlert(): JSX.Element | null {
       <h3 className="font-bold">Accès refusé</h3>
       <p>Vous n'avez pas les permissions nécessaires pour accéder à l'administration.</p>
     </div>
-};
+  );
 }

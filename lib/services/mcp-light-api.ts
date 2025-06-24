@@ -3,13 +3,13 @@
  * Gère l'authentification JWT et tous les appels Lightning Network
  * Intégration avec SparkSeer + OpenAI pour l'analyse de nœuds Lightning
  */
-export export interface MCPLightCredentials {
+export interface MCPLightCredentials {
   jwt_token: string;
   expires_at: string;
   token_type: string;
 }
 
-export export interface NodeStats {
+export interface NodeStats {
   alias: string;
   capacity: number;
   channel_count: number;
@@ -21,7 +21,7 @@ export export interface NodeStats {
   forwarding_efficiency?: number;
 }
 
-export export interface MCPNodeInfo {
+export interface MCPNodeInfo {
   pubkey: string;
   current_stats: NodeStats;
   historical_data?: Record<string, unknown>;
@@ -29,7 +29,7 @@ export export interface MCPNodeInfo {
   performance_metrics?: Record<string, unknown>;
 }
 
-export export interface SparkSeerRecommendation {
+export interface SparkSeerRecommendation {
   type: string;
   priority: 'low' | 'medium' | 'high';
   reasoning?: string;
@@ -40,7 +40,7 @@ export export interface SparkSeerRecommendation {
   confidence_score?: number;
 }
 
-export export interface PriorityAction {
+export interface PriorityAction {
   priority: number;
   action: string;
   timeline: string;
@@ -51,14 +51,14 @@ export export interface PriorityAction {
   cost_estimate?: number;
 }
 
-export export interface MCPRecommendationsResponse {
+export interface MCPRecommendationsResponse {
   pubkey: string;
   timestamp: string;
   recommendations: SparkSeerRecommendation[];
   sparkseer_version?: string;
 }
 
-export export interface MCPPrioritiesResponse {
+export interface MCPPrioritiesResponse {
   pubkey: string;
   timestamp: string;
   priority_actions: PriorityAction[];
@@ -67,7 +67,7 @@ export export interface MCPPrioritiesResponse {
   goals: string[];
 }
 
-export export interface NodeAnalysisResult {
+export interface NodeAnalysisResult {
   pubkey: string;
   timestamp: string;
   nodeInfo: MCPNodeInfo;
@@ -76,7 +76,7 @@ export export interface NodeAnalysisResult {
   summary: NodeSummary;
 }
 
-export export interface NodeSummary {
+export interface NodeSummary {
   node_alias: string;
   capacity_btc: string;
   capacity_sats: string;
@@ -103,40 +103,40 @@ export interface ApiResponse<T> {
 }
 
 // Nouvelles interfaces pour les endpoints RAG
-export export interface RAGDocument {
+export interface RAGDocument {
   id: string;
   content: string;
   metadata: Record<string, unknown>;
   created_at: string;
 }
 
-export export interface RAGQuery {
+export interface RAGQuery {
   query: string;
   context?: string;
   limit?: number;
 }
 
-export export interface RAGEmbedding {
+export interface RAGEmbedding {
   text: string;
   embedding: number[];
 }
 
 // Nouvelles interfaces pour les endpoints Simulation
-export export interface SimulationProfile {
+export interface SimulationProfile {
   id: string;
   name: string;
   description: string;
   parameters: Record<string, unknown>;
 }
 
-export export interface SimulationResult {
+export interface SimulationResult {
   success: boolean;
   data: Record<string, unknown>;
   metrics: Record<string, number>;
 }
 
 // Nouvelles interfaces pour les endpoints LNBits
-export export interface LNBitsPayment {
+export interface LNBitsPayment {
   payment_hash: string;
   bolt11: string;
   amount: number;
@@ -144,14 +144,14 @@ export export interface LNBitsPayment {
   created_at: string;
 }
 
-export export interface LNBitsWallet {
+export interface LNBitsWallet {
   id: string;
   name: string;
   balance: number;
   currency: string;
 }
 
-export export interface LNBitsChannel {
+export interface LNBitsChannel {
   id: string;
   remote_pubkey: string;
   capacity: number;

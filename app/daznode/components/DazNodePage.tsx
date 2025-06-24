@@ -44,7 +44,7 @@ const jsonLd = {
     "Support prioritaire 24/7",
     "SLA 99.98% avec compensation"
   ]
-};
+  );
 
 const DazNodePage: React.FC = () => {
     <main className="min-h-screen">
@@ -218,7 +218,6 @@ const DazNodePage: React.FC = () => {
         </div>
       </section>
     </main>
-};
-};
+  );
 
 export default DazNodePage; 

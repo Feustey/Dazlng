@@ -8,7 +8,7 @@ export type UserInfo = {
   postalCode: string;
   country: string;
   phone: string;
-};
+  );
 
 export interface UserInfoFormProps {
   onSubmit: (data: UserInfo) => void;
@@ -50,5 +50,5 @@ export function UserInfoForm({ onSubmit }: UserInfoFormProps): React.FC {
       {error && <div className="text-red-500">{error}</div>}
       <button type="submit" className="btn-primary w-full">Procéder au paiement</button>
     </form>
-};
+  );
 }

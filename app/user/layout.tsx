@@ -48,7 +48,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
           <p className="text-gray-600">Vérification de l'authentification...</p>
         </div>
       </div>
-};
+  );
   }
 
   // Rediriger si pas authentifié
@@ -123,7 +123,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
                       />
                     )}
                   </a>
-};
+  );
               })}
             </nav>
             
@@ -166,7 +166,6 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
         </div>
       </main>
     </div>
-};
-};
+  );
 
 export default UserLayout;

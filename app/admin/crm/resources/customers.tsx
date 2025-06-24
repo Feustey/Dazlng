@@ -28,7 +28,7 @@ const ListActions = () => (
   <TopToolbar>
     {/* Ajout d'actions personnalisées si nécessaire */}
   </TopToolbar>
-};
+  );
 const RowActions = () => {
   const record = useRecordContext();
   if (!record) return null;
@@ -39,7 +39,7 @@ const RowActions = () => {
       <EditButton />
       <DeleteButton />
     </div>
-};
+  );
 };
 
 // Liste des clients
@@ -60,7 +60,7 @@ export const CustomerList = () => (
       <RowActions />
     </Datagrid>
   </List>
-};
+  );
 // Affichage détaillé d'un client
 export const CustomerShow = () => (
   <Show title="Détails du client">
@@ -80,7 +80,7 @@ export const CustomerShow = () => (
       <DateField source="verified_at" label="Date de vérification" />
     </SimpleShowLayout>
   </Show>
-};
+  );
 // Édition d'un client
 export const CustomerEdit = () => (
   <Edit title="Modifier le client">
@@ -96,7 +96,7 @@ export const CustomerEdit = () => (
       <TextInput source="node_id" label="ID du nœud" fullWidth />
     </SimpleForm>
   </Edit>
-};
+  );
 // Création d'un nouveau client
 export const CustomerCreate = () => (
   <Create title="Créer un client">
@@ -112,7 +112,7 @@ export const CustomerCreate = () => (
       <TextInput source="node_id" label="ID du nœud" fullWidth />
     </SimpleForm>
   </Create>
-};
+  );
 // Configuration de la ressource
 export const customerResource = {
   list: CustomerList,

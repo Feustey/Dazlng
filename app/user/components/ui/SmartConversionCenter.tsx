@@ -279,5 +279,5 @@ export const SmartConversionCenter: React.FC<SmartConversionCenterProps> = ({
         </div>
       )}
     </div>
-};
+  );
 }

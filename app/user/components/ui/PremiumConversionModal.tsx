@@ -343,5 +343,5 @@ export const PremiumConversionModal: React.FC<PremiumConversionModalProps> = ({
         </div>
       </div>
     </div>
-};
+  );
 }

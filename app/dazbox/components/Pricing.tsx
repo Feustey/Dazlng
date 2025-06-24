@@ -191,6 +191,5 @@ const DazBoxPricing: React.FC = () => {
       </div>
     </section>
   );
-};
 
 export default DazBoxPricing; 

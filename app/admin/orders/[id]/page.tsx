@@ -121,7 +121,7 @@ export default function OrderDetailPage(): JSX.Element {
           <div className="h-4 bg-gray-200 rounded w-1/2"></div>
         </div>
       </div>
-};
+  );
   }
 
   if (error) {
@@ -135,7 +135,7 @@ export default function OrderDetailPage(): JSX.Element {
           </Link>
         </div>
       </div>
-};
+  );
   }
 
   if (!order) {
@@ -149,7 +149,7 @@ export default function OrderDetailPage(): JSX.Element {
           </Link>
         </div>
       </div>
-};
+  );
   }
 
   return (
@@ -363,5 +363,5 @@ export default function OrderDetailPage(): JSX.Element {
         </div>
       )}
     </div>
-};
+  );
 }

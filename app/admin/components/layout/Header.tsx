@@ -52,5 +52,5 @@ export default function Header(): React.FC {
         </div>
       </div>
     </header>
-};
+  );
 }

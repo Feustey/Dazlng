@@ -185,5 +185,5 @@ export default function T4GPage() {
         </div>
       </section>
     </div>
-};
+  );
 }

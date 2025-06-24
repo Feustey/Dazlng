@@ -49,7 +49,7 @@ function AuthErrorContent(): JSX.Element {
         </div>
       </div>
     </div>
-};
+  );
 }
 
 export default function AuthErrorPage(): JSX.Element {

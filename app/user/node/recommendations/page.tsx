@@ -8,7 +8,6 @@ const NodeRecommendationsPage: FC = () => {
         <p>Recommandations IA pour optimiser le nœud</p>
       </div>
     </div>
-};
-};
+  );
 
 export default NodeRecommendationsPage;

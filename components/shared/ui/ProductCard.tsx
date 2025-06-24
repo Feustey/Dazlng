@@ -38,7 +38,6 @@ const ProductCard = ({ title, subtitle, price, features, bonusFeatures }: Produc
         </div>
       )}
     </Card>
-};
-};
+  );
 
 export default ProductCard; 

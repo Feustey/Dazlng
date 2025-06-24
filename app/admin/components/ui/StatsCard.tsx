@@ -23,7 +23,8 @@ export function StatsCard({ title, value, icon, link, className = "", trend }: S
         <div className="text-3xl">{icon}</div>
       </div>
     </div>
-};
+  );
+
   if (link) {
     return <Link href={link}>{content}</Link>;
   }

@@ -84,7 +84,6 @@ const LightningPayment: React.FC<LightningPaymentProps> = ({
         </Button>
       </div>
     </div>
-};
-};
+  );
 
 export default LightningPayment; 

@@ -27,7 +27,6 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({
         {children}
       </div>
     </div>
-};
-};
+  );
 
 export default ModernLayout; 

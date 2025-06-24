@@ -191,7 +191,7 @@ export default function OpenAIPage(): JSX.Element | null {
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>{error}</AlertDescription>
       </Alert>
-};
+  );
   }
 
   if (!metrics) return null;
@@ -517,5 +517,5 @@ export default function OpenAIPage(): JSX.Element | null {
         </CardContent>
       </Card>
     </div>
-};
+  );
 }

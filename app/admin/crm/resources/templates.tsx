@@ -25,7 +25,7 @@ const ListActions = () => (
   <TopToolbar>
     {/* Actions pour les templates */}
   </TopToolbar>
-};
+  );
 const RowActions = () => {
   const record = useRecordContext();
   if (!record) return null;
@@ -36,7 +36,7 @@ const RowActions = () => {
       <EditButton />
       <DeleteButton />
     </div>
-};
+  );
 };
 
 // Liste des templates
@@ -56,7 +56,7 @@ export const TemplateList = () => (
       <RowActions />
     </Datagrid>
   </List>
-};
+  );
 // Affichage détaillé d'un template
 export const TemplateShow = () => (
   <Show title="Détails du template">
@@ -72,7 +72,7 @@ export const TemplateShow = () => (
       <DateField source="updated_at" label="Dernière mise à jour" />
     </SimpleShowLayout>
   </Show>
-};
+  );
 // Édition d'un template
 export const TemplateEdit = () => (
   <Edit title="Modifier le template">
@@ -85,7 +85,7 @@ export const TemplateEdit = () => (
       <BooleanInput source="is_active" label="Template actif" />
     </SimpleForm>
   </Edit>
-};
+  );
 // Création d'un nouveau template
 export const TemplateCreate = () => (
   <Create title="Créer un template">
@@ -130,7 +130,7 @@ export const TemplateCreate = () => (
       <BooleanInput source="is_active" label="Template actif" defaultValue={true} />
     </SimpleForm>
   </Create>
-};
+  );
 // Configuration de la ressource
 export const templateResource = {
   list: TemplateList,

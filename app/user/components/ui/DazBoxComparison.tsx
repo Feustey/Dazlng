@@ -132,7 +132,7 @@ const DazBoxComparison: React.FC<DazBoxComparisonProps> = ({ userNodeStats, hasN
           </Link>
         </div>
       </div>
-};
+  );
   }
 
   return (
@@ -227,7 +227,6 @@ const DazBoxComparison: React.FC<DazBoxComparisonProps> = ({ userNodeStats, hasN
         </Link>
       </div>
     </div>
-};
-};
+  );
 
 export { DazBoxComparison }; 

@@ -9,7 +9,7 @@ export default function RegisterPage(): React.FC {
     <Suspense fallback={<div>Chargement...</div>}>
       <RegisterPageContent />
     </Suspense>
-};
+  );
 }
 
 function RegisterPageContent(): React.FC {
@@ -329,5 +329,5 @@ function RegisterPageContent(): React.FC {
         </p>
       </div>
     </div>
-};
+  );
 }

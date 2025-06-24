@@ -22,7 +22,7 @@ export interface AdminApiResponse<T> {
 }
 
 // Types pour les filtres admin
-export export interface AdminFilterInput {
+export interface AdminFilterInput {
   page?: number;
   limit?: number;
   search?: string;
@@ -32,7 +32,7 @@ export export interface AdminFilterInput {
 }
 
 // Types pour les notifications admin
-export export interface AdminNotification {
+export interface AdminNotification {
   id: string;
   admin_id: string;
   type: 'info' | 'warning' | 'error' | 'success';
@@ -49,7 +49,7 @@ export export interface AdminNotification {
 }
 
 // Types pour les statistiques
-export export interface EnhancedStats {
+export interface EnhancedStats {
   users: {
     total: number;
     active: number;

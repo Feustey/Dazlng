@@ -56,7 +56,7 @@ export default function ProtonPayment({ sats: _sats, promoApplied, onSuccess, on
         <div className="text-xs text-gray-500 break-all mb-2">Transaction ID : {txId}</div>
         <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded" onClick={onCancel}>Fermer</button>
       </div>
-};
+  );
   }
 
   return (
@@ -97,5 +97,5 @@ export default function ProtonPayment({ sats: _sats, promoApplied, onSuccess, on
         </button>
       )}
     </div>
-};
+  );
 }

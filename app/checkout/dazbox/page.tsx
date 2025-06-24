@@ -448,7 +448,7 @@ function CheckoutContent(): React.FC {
           </div>
         </div>
       </div>
-};
+  );
   }
 
   // Étape de paiement
@@ -507,7 +507,7 @@ function CheckoutContent(): React.FC {
           </div>
         </div>
       </div>
-};
+  );
   }
 
   // Étape de succès
@@ -566,7 +566,7 @@ function CheckoutContent(): React.FC {
           </div>
         </div>
       </div>
-};
+  );
   }
 
   return null;
@@ -577,5 +577,5 @@ export default function CheckoutPage(): React.FC {
     <Suspense fallback={<div className="flex h-screen items-center justify-center"><p>Chargement...</p></div>}>
       <CheckoutContent />
     </Suspense>
-};
+  );
 }

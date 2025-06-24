@@ -19,5 +19,5 @@ export default function PerformanceProvider({ children }: PerformanceProviderPro
       
       {children}
     </>
-};
+  );
 }
