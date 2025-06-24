@@ -17,11 +17,12 @@ const CRMAdminProvider = dynamic(
       </div>
     )
   }
-};
+);
+
 export default function CRMPage(): React.FC {
   return (
     <div className="min-h-screen bg-gray-50">
       <CRMAdminProvider />
     </div>
-};
+  );
 }

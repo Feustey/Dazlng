@@ -36,7 +36,43 @@ export interface ApiResponse {
   error?: string;
 }
 
-const AnalyticsPage: React.FC = () => {) => clearInterval(interval);
+const AnalyticsPage: React.FC = () => {
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [timeRange, setTimeRange] = useState('7d');
+  const [source, setSource] = useState<'mock' | 'umami' | 'mock_fallback'>('mock');
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
+
+  const loadAnalytics = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const response = await fetch(`/api/admin/analytics?timeRange=${timeRange}`);
+      const data: ApiResponse = await response.json();
+      
+      if (data.success) {
+        setAnalyticsData(data.data);
+        setSource(data.source);
+        setLastUpdated(data.timestamp);
+      } else {
+        setError(data.error || 'Erreur lors du chargement des données');
+      }
+    } catch (err) {
+      setError('Erreur de connexion');
+    } finally {
+      setLoading(false);
+    }
+  }, [timeRange]);
+
+  useEffect(() => {
+    loadAnalytics();
+  }, [loadAnalytics]);
+
+  useEffect(() => {
+    const interval = setInterval(loadAnalytics, 30000);
+    return () => clearInterval(interval);
   }, [loadAnalytics]);
 
   const formatNumber = (num: number): string => {
@@ -81,7 +117,7 @@ const AnalyticsPage: React.FC = () => {) => clearInterval(interval);
       <span className={`px-2 py-1 rounded-full text-xs font-medium ${badge.color}`}>
         {badge.text}
       </span>
-};
+    );
   };
 
   if (loading && !analyticsData) {
@@ -97,7 +133,7 @@ const AnalyticsPage: React.FC = () => {) => clearInterval(interval);
           <div className="h-96 bg-gray-200 rounded"></div>
         </div>
       </div>
-};
+    );
   }
 
   if (error && !analyticsData) {
@@ -114,7 +150,7 @@ const AnalyticsPage: React.FC = () => {) => clearInterval(interval);
           </button>
         </div>
       </div>
-};
+    );
   }
 
   return (
@@ -326,7 +362,7 @@ const AnalyticsPage: React.FC = () => {) => clearInterval(interval);
         </div>
       )}
     </div>
-};
+  );
 };
 
 export default AnalyticsPage;

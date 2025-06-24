@@ -9,7 +9,7 @@ import Button from '@/components/shared/ui/Button';
 import { Alert, AlertDescription } from '@/components/shared/ui/Alert';
 import { Loader2, TrendingUp, Zap, Target, AlertCircle, CheckCircle, ExternalLink, RefreshCw } from 'lucide-react';
 
-export export interface NodeAnalysisProps {
+export interface NodeAnalysisProps {
   pubkey: string | null;
   onAnalysisComplete?: (result: NodeAnalysisResult) => void;
   userContext?: string;

@@ -157,7 +157,7 @@ const DazBoxClientHero: React.FC = () => {
         </div>
       </div>
     </section>
-};
+  );
 };
 
 export default DazBoxClientHero; 

@@ -2,7 +2,7 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY ?? "");
 
-export export interface WelcomeEmailData {
+export interface WelcomeEmailData {
   email: string;
   nom?: string;
   prenom?: string;

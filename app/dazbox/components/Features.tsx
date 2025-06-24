@@ -107,7 +107,7 @@ const DazBoxFeatures: React.FC = () => {) => observer.disconnect();
   
       </div>
     </section>
-};
+  );
 };
 
 export default DazBoxFeatures; 

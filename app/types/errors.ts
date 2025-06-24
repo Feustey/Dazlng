@@ -1,4 +1,4 @@
-export export enum AuthErrorType {
+export enum AuthErrorType {
   VALIDATION = 'VALIDATION',
   NETWORK = 'NETWORK',
   SERVER = 'SERVER',
@@ -6,7 +6,7 @@ export export enum AuthErrorType {
   UNAUTHORIZED = 'UNAUTHORIZED'
 }
 
-export export interface AuthError {
+export interface AuthError {
   type: AuthErrorType;
   message: string;
   details?: Record<string, string>;
@@ -15,6 +15,6 @@ export export interface AuthError {
   retryAfter?: number;
 }
 
-export export interface ValidationErrors {
+export interface ValidationErrors {
   [field: string]: string;
 }

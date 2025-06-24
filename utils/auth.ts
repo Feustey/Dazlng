@@ -21,7 +21,7 @@ export interface UserWithOrders extends Omit<User, 'password'> {
   }>;
 }
 
-export export interface AuthUser {
+export interface AuthUser {
   id: string;
   email?: string;
   pubkey?: string;
@@ -76,7 +76,7 @@ export async function loginUser(email: string, password: string): Promise<{ toke
     { id: user.id, email: user.email },
     JWT_SECRET,
     { expiresIn: '1h' }
-};
+  );
   return {
     token,
     user: {
@@ -169,7 +169,7 @@ export function verifyToken(token: string): { id: string; email: string } {
   }
 }
 
-export export interface AuthToken {
+export interface AuthToken {
   token: string;
   tenant_id: string;
   expires_at: string;

@@ -1,5 +1,5 @@
-import React from 'react';
 'use client';
+import React from 'react';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -205,7 +205,7 @@ const AdminAuthPage: FC<AdminAuthPageProps> = () => {
         </div>
       </div>
     </div>
-};
+  );
 };
 
 export default AdminAuthPage; 

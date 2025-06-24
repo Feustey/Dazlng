@@ -1,5 +1,5 @@
-import React from 'react';
 'use client';
+import React from 'react';
 
 import { Admin, Resource } from 'react-admin';
 import { getSupabaseBrowserClient } from '@/lib/supabase';
@@ -11,8 +11,8 @@ import { CRMDashboard } from '../components/dashboard/CRMDashboard';
 import { CRMLayout } from '../components/layout/CRMLayout';
 
 // Configuration Supabase - Utiliser une instance unique
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "" || '';
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "" || '';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
 // Validation des variables d'environnement
 if (!supabaseUrl || !supabaseKey) {
@@ -255,7 +255,7 @@ const i18nProvider = {
   getLocale: () => 'fr',
 };
 
-export export interface CRMAdminProviderProps {
+export interface CRMAdminProviderProps {
   children?: React.ReactNode;
 }
 
@@ -274,5 +274,7 @@ const CRMAdminProvider: React.FC<CRMAdminProviderProps> = ({ children: _children
       <Resource name="crm_email_campaigns" {...campaignResource} />
       <Resource name="crm_email_templates" {...templateResource} />
     </Admin>
+  );
 };
-}
+
+export { CRMAdminProvider };

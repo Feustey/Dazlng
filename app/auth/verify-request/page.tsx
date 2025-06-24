@@ -57,7 +57,7 @@ function VerifyRequestPage(): JSX.Element {
     <Suspense>
       <VerifyRequestInner />
     </Suspense>
-};
+  );
 }
 
 export default VerifyRequestPage; 

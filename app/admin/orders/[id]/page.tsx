@@ -108,7 +108,7 @@ export default function OrderDetailPage(): JSX.Element {
       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${color}`}>
         {status || "-"}
       </span>
-};
+    );
   }
 
   if (isLoading) {

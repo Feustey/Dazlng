@@ -164,7 +164,7 @@ export default function DashboardPage(): JSX.Element {
           <div className="h-96 bg-gray-200 rounded"></div>
         </div>
       </div>
-};
+    );
   }
 
   return (
@@ -462,5 +462,5 @@ export default function DashboardPage(): JSX.Element {
         </Link>
       </div>
     </div>
-};
+  );
 }

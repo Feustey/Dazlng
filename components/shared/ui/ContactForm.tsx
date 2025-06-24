@@ -8,7 +8,7 @@ import Link from 'next/link';
 import SuccessModal from './SuccessModal';
 import { toast } from 'react-hot-toast';
 
-export export interface ContactFormProps {
+export interface ContactFormProps {
   onSubmitSuccess?: () => void;
   onSubmitError?: (error: string) => void;
   buttonText?: string;
@@ -196,7 +196,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
         onClose={() => setShowSuccessModal(false)}
       />
     </>
-};
+  );
 };
 
 export default ContactForm; 

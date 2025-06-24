@@ -18,5 +18,5 @@ export default function AccountPage(): JSX.Element {
         <p className="mt-4 text-gray-600">Redirection vers votre compte...</p>
       </div>
     </div>
-};
+  );
 }

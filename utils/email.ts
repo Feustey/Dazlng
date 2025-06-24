@@ -30,14 +30,14 @@ function getResendInstance(): any {
   };
 }
 
-export export interface SendEmailParams {
+export interface SendEmailParams {
   to: string;
   subject: string;
   html: string;
   from?: string;
 }
 
-export export interface EmailTemplateParams {
+export interface EmailTemplateParams {
   title: string;
   subtitle?: string;
   username?: string;

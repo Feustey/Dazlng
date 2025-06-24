@@ -67,7 +67,7 @@ export const isValidLightningPubkey = (pubkey: string): boolean => {
 
 export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'expired';
 
-export export interface Invoice {
+export interface InvoiceExtended {
   id: string;
   paymentRequest: string;
   paymentHash: string;

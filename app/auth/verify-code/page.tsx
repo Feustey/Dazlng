@@ -143,5 +143,5 @@ export default function VerifyCodePage(): JSX.Element {
     <Suspense fallback={<div>Chargement...</div>}>
       <VerifyCodeForm />
     </Suspense>
-};
+  );
 }

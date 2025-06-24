@@ -258,7 +258,7 @@ const DazBoxPage: React.FC = () => {
         </div>
       </section>
     </>
-};
+  );
 };
 
 export default DazBoxPage;

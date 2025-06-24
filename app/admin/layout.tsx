@@ -3,10 +3,10 @@ import Layout from "./components/layout/Layout";
 import { ReactNode } from "react";
 import AdminAuthGuard from "./components/AdminAuthGuard";
 
-export default function AdminLayout({ children }: { children: ReactNode }): React.FC {
+export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <AdminAuthGuard>
       <Layout>{children}</Layout>
     </AdminAuthGuard>
-};
+  );
 }

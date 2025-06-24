@@ -190,7 +190,7 @@ const DazBoxPricing: React.FC = () => {
         </div>
       </div>
     </section>
-};
+  );
 };
 
 export default DazBoxPricing; 

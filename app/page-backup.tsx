@@ -88,5 +88,5 @@ export default function NewHomePage(): React.FC {
         <CTASection />
       </main>
     </>
-};
+  );
 }
