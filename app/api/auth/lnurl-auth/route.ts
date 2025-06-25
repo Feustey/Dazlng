@@ -3,7 +3,7 @@ import { getSupabaseAdminClient } from '@/lib/supabase';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 
-const JWT_SECRET = process.env.JWT_SECRET ?? "" || 'your-secret-key';
+const JWT_SECRET = (process.env.JWT_SECRET ?? "") || 'your-secret-key';
 
 // Stockage temporaire des challenges (en production, utiliser Redis)
 declare global {
@@ -137,7 +137,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       },
       JWT_SECRET,
       { expiresIn: '1h' }
-};
+    );
     // Nettoyer le challenge utilisé
     authChallenges.delete(challenge);
 

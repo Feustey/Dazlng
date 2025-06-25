@@ -45,7 +45,7 @@ export const metadata: Metadata = {
       ? 'https://dazno.de/assets/images/og-image.png'
       : 'http://localhost:3001/assets/images/og-image.png']
   }
-  );
+};
 
 export interface RootLayoutProps {
   children: React.ReactNode;
@@ -87,5 +87,6 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
       </body>
     </html>
   );
+};
 
 export default RootLayout; 

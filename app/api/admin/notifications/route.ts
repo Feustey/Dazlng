@@ -44,7 +44,7 @@ async function getNotificationsHandler(req: NextRequest, adminId: string): Promi
       'Erreur lors de la récupération des notifications',
       null,
       500
-};
+    );
   }
 }
 
@@ -61,7 +61,7 @@ async function createNotificationHandler(req: NextRequest, adminId: string): Pro
         ErrorCodes.VALIDATION_ERROR,
         'Données de notification invalides',
         validation.error.errors
-};
+      );
     }
     
     const { type, title, message, priority = 'medium', action } = validation.data;
@@ -77,7 +77,7 @@ async function createNotificationHandler(req: NextRequest, adminId: string): Pro
       'Erreur lors de la création de la notification',
       null,
       500
-};
+    );
   }
 }
 
@@ -87,8 +87,8 @@ async function createNotificationHandler(req: NextRequest, adminId: string): Pro
 export const GET = withEnhancedAdminAuth(
   getNotificationsHandler,
   { resource: 'notifications', action: 'read' }
-};
+);
 export const POST = withEnhancedAdminAuth(
   createNotificationHandler,
   { resource: 'notifications', action: 'write' }
-}
+);

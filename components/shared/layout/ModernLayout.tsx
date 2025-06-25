@@ -28,5 +28,6 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({
       </div>
     </div>
   );
+};
 
 export default ModernLayout; 

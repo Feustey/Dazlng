@@ -89,9 +89,9 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({
         {badgeIcon} Top {percentage.toFixed(0)}%
       </span>
   );
-  };
+};
 
-  export interface SimpleChartProps {
+export interface SimpleChartProps {
   data: number[];
 }
 
@@ -306,5 +306,6 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data }) => {
       </div>
     </div>
   );
+};
 
 export { PerformanceMetrics }; 

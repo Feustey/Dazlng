@@ -17,7 +17,8 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend
-  );
+);
+
 export interface AdvancedStatsProps {
   stats: {
   channelDistribution: {

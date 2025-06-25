@@ -116,7 +116,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     return NextResponse.json(
       { error: 'Erreur lors de la génération des recommandations' },
       { status: 500 }
-};
+);
   }
 }
 

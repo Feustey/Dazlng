@@ -7,6 +7,7 @@ import { useConversionTracking } from '../../../hooks/useConversionTracking';
 import { useScrollTracking } from '../../../hooks/useScrollTracking';
 
 const DazNodeHero: React.FC = () => {
+  return (
     <section className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 flex items-center justify-center px-4 py-20">
       {/* Background Effects */}
       <div className="absolute inset-0">
@@ -230,5 +231,6 @@ const DazNodeHero: React.FC = () => {
       `}</style>
     </section>
   );
+};
 
 export default DazNodeHero; 

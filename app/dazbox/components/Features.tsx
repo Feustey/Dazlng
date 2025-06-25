@@ -12,7 +12,32 @@ export interface Feature {
   stats?: string;
 }
 
-const DazBoxFeatures: React.FC = () => {) => observer.disconnect();
+const DazBoxFeatures: React.FC = () => {
+  const { trackProductInterest } = useConversionTracking();
+  const [visibleFeatures, setVisibleFeatures] = useState<string[]>([]);
+  const featureRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const featureId = entry.target.getAttribute('data-feature-id');
+            if (featureId && !visibleFeatures.includes(featureId)) {
+              setVisibleFeatures(prevVisible => [...prevVisible, featureId]);
+              trackProductInterest('dazbox', 'feature_view', { feature: featureId });
+            }
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    featureRefs.current.forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => observer.disconnect();
   }, [trackProductInterest]);
 
   const handleFeatureClick = (featureId: string): void => {
@@ -108,5 +133,6 @@ const DazBoxFeatures: React.FC = () => {) => observer.disconnect();
       </div>
     </section>
   );
+};
 
 export default DazBoxFeatures; 

@@ -641,5 +641,6 @@ const DaziaPage: FC = () => {
       )}
     </div>
   );
+};
 
 export default DaziaPage; 

@@ -1,10 +1,11 @@
-import React from 'react';
 'use client';
+
+import React from 'react';
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-export default function Header(): React.FC {
+export default function Header(): JSX.Element {
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 

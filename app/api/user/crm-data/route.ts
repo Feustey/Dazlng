@@ -64,7 +64,7 @@ export async function GET(_request: NextRequest) {
           } 
         },
         { status: 401 }
-};
+);
     }
 
     // Récupérer le profil utilisateur
@@ -84,7 +84,7 @@ export async function GET(_request: NextRequest) {
           } 
         },
         { status: 404 }
-};
+);
     }
 
     // Récupérer les commandes de l'utilisateur
@@ -148,7 +148,7 @@ export async function GET(_request: NextRequest) {
         } 
       },
       { status: 500 }
-};
+);
   }
 }
 

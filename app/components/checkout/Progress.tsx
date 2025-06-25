@@ -3,14 +3,14 @@ import React from "react";
 export type Step = {
   id: number;
   name: string;
-  );
+};
 
 export interface CheckoutProgressProps {
   steps: Step[];
   currentStep: number;
 }
 
-export function CheckoutProgress({ steps, currentStep }: CheckoutProgressProps): React.FC {
+export function CheckoutProgress({ steps, currentStep }: CheckoutProgressProps) {
   return (
     <div className="flex items-center justify-center gap-4">
       {steps.map((step: any, idx: any) => (

@@ -228,5 +228,6 @@ const DazBoxComparison: React.FC<DazBoxComparisonProps> = ({ userNodeStats, hasN
       </div>
     </div>
   );
+};
 
 export { DazBoxComparison }; 

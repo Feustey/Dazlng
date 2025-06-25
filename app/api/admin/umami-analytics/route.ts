@@ -107,9 +107,9 @@ export async function GET(req: NextRequest): Promise<Response> {
     const unit = searchParams.get('unit') || 'day';
     
     // Mode développement - données mock
-    const isDevelopment = !process.env.NODE_ENV ?? "" || process.env.NODE_ENV ?? "" !== 'production';
+    const isDevelopment = !(process.env.NODE_ENV ?? "") || (process.env.NODE_ENV ?? "") !== 'production';
     
-    if (isDevelopment || !process.env.UMAMI_API_URL ?? "" || !process.env.UMAMI_API_KEY ?? "") {
+    if (isDevelopment || !(process.env.UMAMI_API_URL ?? "") || !(process.env.UMAMI_API_KEY ?? "")) {
       console.log('[UMAMI-ANALYTICS] Mode développement ou configuration manquante - données mock utilisées');
       
       // Simuler un délai d'API
@@ -164,7 +164,7 @@ export async function GET(req: NextRequest): Promise<Response> {
 
     const [stats, pageviews, metrics, events] = results.map(r => 
       r.status === 'fulfilled' ? r.value : null
-};
+    );
     // Stats en temps réel
     const realtimeRes = await fetch(`${apiUrl}/websites/${websiteId}/active`, { headers });
     const realtime = realtimeRes.ok ? await realtimeRes.json() : null;
@@ -215,7 +215,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     }
 
     // Mode développement
-    const isDevelopment = !process.env.NODE_ENV ?? "" || process.env.NODE_ENV ?? "" !== 'production';
+    const isDevelopment = !(process.env.NODE_ENV ?? "") || (process.env.NODE_ENV ?? "") !== 'production';
     
     if (isDevelopment) {
       console.log('[UMAMI-ANALYTICS] Événement simulé:', { event, data });

@@ -1,5 +1,5 @@
-import React from 'react';
 'use client';
+import React from 'react';
 
 import { useWebVitals } from '../hooks/useWebVitals';
 import { PageLoader } from '../components/shared/ui/PageLoader';

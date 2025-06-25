@@ -22,7 +22,7 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
       return AdminResponseBuilder.error(
         ErrorCodes.VALIDATION_ERROR,
         filterResult.error || 'Paramètres invalides'
-};
+      );
     }
     
     const filters = filterResult.data!;
@@ -88,7 +88,7 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
       return AdminResponseBuilder.error(
         ErrorCodes.DATABASE_ERROR,
         'Erreur lors de la récupération des utilisateurs'
-};
+      );
     }
     
     if (!profiles || profiles.length === 0) {
@@ -125,12 +125,12 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
       // Abonnement actuel
       const activeSubscription = subscriptionsData.data?.find(
         s => s.user_id === profile.id && s.status === 'active'
-};
+      );
       // Dernière activité
       const lastActivity = new Date(profile.updated_at);
       const daysSinceLastActivity = Math.floor(
         (Date.now() - lastActivity.getTime()) / (1000 * 60 * 60 * 24)
-};
+      );
       return {
         ...profile,
         statistics: {
@@ -156,7 +156,7 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
         count: enrichedProfiles.length,
         filters: filterResult.data
       }
-};
+    );
     return AdminResponseBuilder.paginated(
       enrichedProfiles,
       count || 0,
@@ -170,7 +170,7 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
           includesActivity: true
         }
       }
-};
+    );
   } catch (error) {
     console.error('Erreur lors de la récupération des utilisateurs enrichis:', error);
     return AdminResponseBuilder.error(
@@ -178,7 +178,7 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
       'Erreur lors de la récupération des utilisateurs',
       null,
       500
-};
+    );
   }
 }
 
@@ -188,4 +188,4 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
 export const GET = withEnhancedAdminAuth(
   getEnhancedUsersHandler,
   { resource: 'users', action: 'read' }
-}
+);

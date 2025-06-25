@@ -3,13 +3,13 @@ import React from "react";
 export type OrderData = {
   fullName?: string;
   email?: string;
-  );
+};
 
 export interface OrderSummaryProps {
   data: OrderData;
 }
 
-export function OrderSummary({ data }: OrderSummaryProps): React.FC {
+export function OrderSummary({ data }: OrderSummaryProps) {
   const product = {
     name: "Dazbox",
     priceBTC: 0.004,

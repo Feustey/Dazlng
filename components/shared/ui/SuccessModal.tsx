@@ -100,5 +100,6 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
       </Dialog>
     </Transition>
   );
+};
 
 export default SuccessModal; 

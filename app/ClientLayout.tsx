@@ -120,5 +120,6 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
       />
     </PerformanceProvider>
   );
+};
 
 export default ClientLayout; 

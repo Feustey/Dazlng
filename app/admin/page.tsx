@@ -3,6 +3,6 @@ import type { FC } from 'react';
 
 const AdminRoot: FC = () => {
   return <AdminAuthPage />;
-  );
+};
 
 export default AdminRoot; 

@@ -206,5 +206,6 @@ const AdminAuthPage: FC<AdminAuthPageProps> = () => {
       </div>
     </div>
   );
+};
 
 export default AdminAuthPage; 

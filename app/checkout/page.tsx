@@ -1,5 +1,5 @@
-import React from 'react';
 "use client";
+import React from 'react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckoutProgress } from '../components/checkout/Progress';
@@ -7,7 +7,7 @@ import { OrderSummary } from '../components/checkout/Summary';
 import { PaymentForm } from '../components/checkout/Payment';
 import { UserInfoForm } from '../components/checkout/UserInfo';
 
-export default function DazBoxCheckout(): React.FC {
+export default function DazBoxCheckout() {
   const [step, setStep] = useState(1);
   const [orderData, setOrderData] = useState({});
 
@@ -17,7 +17,7 @@ export default function DazBoxCheckout(): React.FC {
     { id: 3, name: 'Confirmation' }
   ];
 
-  const renderStep = (): React.FC => {
+  const renderStep = () => {
     switch(step) {
       case 1:
         return (
@@ -35,7 +35,7 @@ export default function DazBoxCheckout(): React.FC {
               }}
             />
           </motion.div>
-  );
+        );
       case 2:
         return (
           <motion.div
@@ -50,7 +50,7 @@ export default function DazBoxCheckout(): React.FC {
               onSuccess={() => setStep(3)}
             />
           </motion.div>
-  );
+        );
       case 3:
         return (
           <motion.div
@@ -79,7 +79,7 @@ export default function DazBoxCheckout(): React.FC {
               </div>
             </div>
           </motion.div>
-  );
+        );
       default:
         return <div />;
     }

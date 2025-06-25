@@ -12,7 +12,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       return NextResponse.json(
         { error: 'Email, subject et contenu (text ou html) requis' },
         { status: 400 }
-};
+      );
     }
 
     const { error } = await resend.emails.send({
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       return NextResponse.json(
         { error: 'Échec de l\'envoi de l\'email' },
         { status: 500 }
-};
+      );
     }
 
     logger.info('Email envoyé avec succès:', { to, subject });
@@ -37,6 +37,6 @@ export async function POST(request: NextRequest): Promise<Response> {
     return NextResponse.json(
       { error: 'Échec de l\'envoi de l\'email' },
       { status: 500 }
-};
+    );
   }
 }

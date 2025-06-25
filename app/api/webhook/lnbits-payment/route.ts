@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: 'Erreur lors du traitement du webhook' },
       { status: 500 }
-};
+);
   }
 }
 

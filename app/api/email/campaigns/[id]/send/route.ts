@@ -16,7 +16,7 @@ export async function POST(
       return NextResponse.json(
         { success: false, error: { code: 'VALIDATION_ERROR', message: 'ID de campagne requis' } },
         { status: 400 }
-};
+);
     }
 
     // Envoie la campagne
@@ -44,7 +44,7 @@ export async function POST(
         } 
       },
       { status: 500 }
-};
+);
   }
 }
 
@@ -62,7 +62,7 @@ export async function PUT(
       return NextResponse.json(
         { success: false, error: { code: 'VALIDATION_ERROR', message: 'ID de campagne et email de test requis' } },
         { status: 400 }
-};
+);
     }
 
     // Valide l'email
@@ -71,7 +71,7 @@ export async function PUT(
       return NextResponse.json(
         { success: false, error: { code: 'VALIDATION_ERROR', message: 'Format d\'email invalide' } },
         { status: 400 }
-};
+);
     }
 
     // Envoie l'email de test
@@ -100,6 +100,6 @@ export async function PUT(
         } 
       },
       { status: 500 }
-};
+);
   }
 }

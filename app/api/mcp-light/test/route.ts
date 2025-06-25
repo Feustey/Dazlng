@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
           pubkey,
           'Test d\'intégration API',
           ['increase_revenue', 'improve_centrality']
-};
+);
       } catch (error) {
         console.error('Erreur lors de l\'analyse du nœud:', error);
         nodeAnalysis = { error: error instanceof Error ? error.message : 'Erreur inconnue' };
@@ -122,7 +122,7 @@ export async function POST(request: NextRequest) {
       pubkey,
       context || 'Analyse via API REST',
       goals || ['increase_revenue', 'improve_centrality']
-};
+);
     return NextResponse.json({
       success: true,
       data: analysis,

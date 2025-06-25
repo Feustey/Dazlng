@@ -25,7 +25,7 @@ const AdminAuthGuard: FC<AdminAuthGuardProps> = ({ children }) => {
 
   useEffect(() => {
     // Détecter l'environnement côté client uniquement pour éviter l'hydratation mismatch
-    setIsDevelopment(!process.env.NODE_ENV ?? "" || process.env.NODE_ENV ?? "" !== 'production');
+    setIsDevelopment((!process.env.NODE_ENV || process.env.NODE_ENV !== 'production'));
   }, []);
 
   useEffect(() => {
@@ -130,6 +130,6 @@ const AdminAuthGuard: FC<AdminAuthGuardProps> = ({ children }) => {
 
   // Utilisateur authentifié et admin, afficher le contenu
   return <>{children}</>;
-  );
+};
 
 export default AdminAuthGuard; 

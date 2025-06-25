@@ -38,6 +38,7 @@ const FinalConversionCTA = dynamic(() => import("../components/shared/ui/FinalCo
 
 // Composant client séparé pour gérer les paramètres d'URL
 const SignupConfirmation: React.FC = () => {
+  return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 backdrop-blur-sm">
       <div 
         className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl border border-indigo-200 transform transition-all animate-zoom-in"
@@ -62,10 +63,12 @@ const SignupConfirmation: React.FC = () => {
       </div>
     </div>
   );
+};
 
 // Composant wrapper avec animations optimisées
 export interface AnimatedSectionProps {
-  children: React.ReactNode; className?;
+  children: React.ReactNode; 
+  className?: string;
 }
 
 const AnimatedSection: React.FC<AnimatedSectionProps> = ({ 
@@ -88,8 +91,9 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
       {children}
     </section>
   );
+};
 
-export default function OptimizedHomePage(): React.FC {
+export default function OptimizedHomePage() {
   useEffect(() => {
     // Préchargement des images critiques
     const preloadImages = [

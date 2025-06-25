@@ -8,13 +8,13 @@ export type UserInfo = {
   postalCode: string;
   country: string;
   phone: string;
-  );
+};
 
 export interface UserInfoFormProps {
   onSubmit: (data: UserInfo) => void;
 }
 
-export function UserInfoForm({ onSubmit }: UserInfoFormProps): React.FC {
+export function UserInfoForm({ onSubmit }: UserInfoFormProps) {
   const [form, setForm] = useState<UserInfo>({
     fullName: "",
     email: "",

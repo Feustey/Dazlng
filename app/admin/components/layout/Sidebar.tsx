@@ -19,7 +19,7 @@ const sections = {
   crm: "CRM & Marketing", 
   commerce: "E-commerce",
   config: "Configuration"
-  );
+};
 
 export default function Sidebar(): JSX.Element {
   const groupedLinks = Object.entries(sections).map(([sectionKey, sectionName]) => ({

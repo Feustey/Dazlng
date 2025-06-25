@@ -121,7 +121,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     // Envoi d'un email de notification (en arrière-plan)
     try {
       const resend = new Resend(process.env.RESEND_API_KEY ?? "");
-      if (process.env.RESEND_API_KEY ?? "" && data && typeof data === 'object' && 'id' in data) {
+      if ((process.env.RESEND_API_KEY ?? "") && data && typeof data === 'object' && 'id' in data) {
         const html = generateEmailTemplate({
           title: `Nouvelle commande - ${product.name}`,
           username: `${customer.firstName} ${customer.lastName}`,

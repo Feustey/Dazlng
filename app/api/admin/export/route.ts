@@ -23,7 +23,7 @@ async function createExportHandler(req: NextRequest, adminId: string): Promise<R
         'Paramètres d\'export invalides',
         // @ts-expect-error - TypeScript narrowing issue with Zod validation
         validation.error.issues
-};
+      );
     }
     
     const exportRequest: ExportRequestInput = validation.data;
@@ -52,7 +52,7 @@ async function createExportHandler(req: NextRequest, adminId: string): Promise<R
       return AdminResponseBuilder.error(
         ErrorCodes.DATABASE_ERROR,
         'Erreur lors de la création de la demande d\'export'
-};
+      );
     }
     
     // Logger l'action
@@ -63,7 +63,7 @@ async function createExportHandler(req: NextRequest, adminId: string): Promise<R
       'export_job',
       exportJob.id,
       { type: exportRequest.type, format: exportRequest.format }
-};
+    );
     // Démarrer le traitement en arrière-plan
     processExportJob(exportJob.id, exportRequest);
     
@@ -80,7 +80,7 @@ async function createExportHandler(req: NextRequest, adminId: string): Promise<R
       'Erreur lors de la création de l\'export',
       null,
       500
-};
+    );
   }
 }
 
@@ -111,7 +111,7 @@ async function getExportJobsHandler(req: NextRequest, adminId: string): Promise<
       return AdminResponseBuilder.error(
         ErrorCodes.DATABASE_ERROR,
         'Erreur lors de la récupération des exports'
-};
+      );
     }
     
     return AdminResponseBuilder.success(jobs || []);
@@ -123,7 +123,7 @@ async function getExportJobsHandler(req: NextRequest, adminId: string): Promise<
       'Erreur lors de la récupération des exports',
       null,
       500
-};
+    );
   }
 }
 
@@ -290,7 +290,7 @@ async function generateExportFile(
       const csvHeaders = headers.join(',');
       const csvRows = processedData.map(item => 
         headers.map(header => `"${(item[header] || '').toString().replace(/"/g, '""')}"`).join(',')
-};
+      );
       return [csvHeaders, ...csvRows].join('\n');
       
     case 'xlsx':
@@ -331,8 +331,8 @@ async function saveExportFile(fileName: string, content: string): Promise<string
 export const POST = withEnhancedAdminAuth(
   createExportHandler,
   { resource: 'export', action: 'write' }
-};
+);
 export const GET = withEnhancedAdminAuth(
   getExportJobsHandler,
   { resource: 'export', action: 'read' }
-}
+);

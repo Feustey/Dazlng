@@ -8,9 +8,9 @@ export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest): Promise<ReturnType<typeof NextResponse.json>> {
   try {
     // Mode développement - bypass Supabase si non configuré
-    const isDevelopment = !process.env.NODE_ENV ?? "" || process.env.NODE_ENV ?? "" !== 'production';
+    const isDevelopment = !(process.env.NODE_ENV ?? "") || (process.env.NODE_ENV ?? "") !== 'production';
     
-    if (isDevelopment && (!process.env.NEXT_PUBLIC_SUPABASE_URL ?? "" || !process.env.SUPABASE_SERVICE_ROLE_KEY ?? "")) {
+    if (isDevelopment && (!(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "") || !(process.env.SUPABASE_SERVICE_ROLE_KEY ?? ""))) {
       console.log('[API] Mode développement - Supabase non configuré, utilisateur de test avec nœud retourné');
       return NextResponse.json({
         success: true,
@@ -127,7 +127,7 @@ export async function GET(request: NextRequest): Promise<ReturnType<typeof NextR
     console.error("Erreur lors de la récupération des informations utilisateur:", error);
     
     // Mode développement - fallback en cas d'erreur
-    const isDevelopment = !process.env.NODE_ENV ?? "" || process.env.NODE_ENV ?? "" !== 'production';
+    const isDevelopment = !(process.env.NODE_ENV ?? "") || (process.env.NODE_ENV ?? "") !== 'production';
     if (isDevelopment) {
       console.log('[API] Erreur en mode développement, utilisateur de fallback avec nœud retourné');
       return NextResponse.json({

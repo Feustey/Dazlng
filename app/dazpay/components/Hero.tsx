@@ -7,6 +7,7 @@ import { useConversionTracking } from '../../../hooks/useConversionTracking';
 import { useScrollTracking } from '../../../hooks/useScrollTracking';
 
 const DazPayHero: React.FC = () => {
+  return (
     <section className="relative min-h-screen bg-gradient-to-br from-orange-500 via-red-600 to-pink-700 flex items-center justify-center px-4 py-20">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
@@ -155,5 +156,6 @@ const DazPayHero: React.FC = () => {
       </div>
     </section>
   );
+};
 
 export default DazPayHero; 

@@ -44,9 +44,10 @@ const jsonLd = {
     "API pour intégrations e-commerce",
     "Support multidevice"
   ]
-  );
+};
 
 const DazPayPage: React.FC = () => {
+  return (
     <main className="min-h-screen">
       {/* Schema.org JSON-LD */}
       <script
@@ -267,5 +268,6 @@ const DazPayPage: React.FC = () => {
       </section>
     </main>
   );
+};
 
 export default DazPayPage; 

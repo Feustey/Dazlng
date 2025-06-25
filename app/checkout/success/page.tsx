@@ -1,9 +1,9 @@
-import React from 'react';
 "use client";
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-export default function CheckoutSuccess(): React.FC {
+export default function CheckoutSuccess() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

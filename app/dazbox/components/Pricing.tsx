@@ -19,6 +19,7 @@ export interface PricingPlan {
 }
 
 const DazBoxPricing: React.FC = () => {
+  return (
     <section id="pricing" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
@@ -191,5 +192,6 @@ const DazBoxPricing: React.FC = () => {
       </div>
     </section>
   );
+};
 
 export default DazBoxPricing; 

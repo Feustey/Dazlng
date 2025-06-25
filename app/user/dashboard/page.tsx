@@ -277,5 +277,6 @@ const UserDashboard: FC = () => {
       )}
     </div>
   );
+};
 
 export default UserDashboard;

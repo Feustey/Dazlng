@@ -44,9 +44,10 @@ const jsonLd = {
     "Support prioritaire 24/7",
     "SLA 99.98% avec compensation"
   ]
-  );
+};
 
 const DazNodePage: React.FC = () => {
+  return (
     <main className="min-h-screen">
       {/* Schema.org JSON-LD */}
       <script
@@ -219,5 +220,6 @@ const DazNodePage: React.FC = () => {
       </section>
     </main>
   );
+};
 
 export default DazNodePage; 

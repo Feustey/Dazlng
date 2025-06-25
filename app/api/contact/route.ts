@@ -68,7 +68,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       return NextResponse.json(
         { error: "Champs obligatoires manquants" },
         { status: 400 }
-};
+      );
     }
 
     // Validation email
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       return NextResponse.json(
         { error: "Email invalide" },
         { status: 400 }
-};
+      );
     }
 
     // Sauvegarder en base

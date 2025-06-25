@@ -42,7 +42,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     // Vérifier les actions de la transaction
     const transferActions = (transaction.trx.trx.actions as ProtonAction[]).filter(
       (action: ProtonAction) => action.account === 'eosio.token' && action.name === 'transfer'
-};
+    );
     if (transferActions.length === 0) {
       return NextResponse.json({ 
         verified: false, 
