@@ -7,7 +7,7 @@ export interface ApiStatusWidgetProps {
   className?: string;
 }
 
-export default function ApiStatusWidget({ className = '' }: ApiStatusWidgetProps): React.FC {
+const ApiStatusWidget: React.FC = ({ className = '' }: ApiStatusWidgetProps) => {
   const [apiStatus, setApiStatus] = useState<'checking' | 'up' | 'down'>('checking');
   const [lastCheck, setLastCheck] = useState<Date | null>(null);
 
@@ -105,4 +105,6 @@ export default function ApiStatusWidget({ className = '' }: ApiStatusWidgetProps
       )}
     </div>
   );
-}
+};
+
+export default ApiStatusWidget;

@@ -304,8 +304,8 @@ export function useGamificationSystem() {
       .sort((a: any, b: any) => b.points - a.points);
     
     const nextActions = incompleteFields
-      .sort((a: any, b: any) => {
-        const priorityOrder = { high: 3, medium: 2, low: 1 };
+      .sort((a: ProfileField, b: ProfileField) => {
+        const priorityOrder: Record<string, number> = { high: 3, medium: 2, low: 1 };
         return priorityOrder[b.priority] - priorityOrder[a.priority] || b.points - a.points;
       })
       .slice(0, 3);

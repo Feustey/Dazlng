@@ -557,15 +557,11 @@ const DaziaPage: FC = () => {
                   </p>
                 </div>
 
-                {(('implementation_details' in modal.recommendation && modal.recommendation.implementation_details?.steps) || 
-                  ('implementation_steps' in modal.recommendation && modal.recommendation.implementation_steps)) && (
+                {('implementation_details' in modal.recommendation && modal.recommendation.implementation_details?.steps) && (
                   <div>
                     <h4 className="font-semibold text-gray-900 mb-2">Étapes d'implémentation</h4>
                     <ol className="list-decimal list-inside space-y-1 text-gray-700">
-                      {('implementation_details' in modal.recommendation 
-                        ? modal.recommendation.implementation_details?.steps 
-                        : modal.recommendation.implementation_steps
-                      )?.map((step: any, idx: any) => (
+                      {modal.recommendation.implementation_details.steps?.map((step: any, idx: any) => (
                         <li key={idx}>{step}</li>
                       ))}
                     </ol>

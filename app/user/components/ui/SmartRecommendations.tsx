@@ -45,13 +45,15 @@ export const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
     : recommendations.filter(r => r.category === selectedCategory);
 
   // Trier par impact et disponibilité
-  const sortedRecommendations = [...filteredRecommendations].sort((a: any, b: any) => {
-    if (a.isPremium && !b.isPremium && !isPremium) return 1;
-    if (!a.isPremium && b.isPremium && !isPremium) return -1;
-    
-    const impactOrder = { high: 3, medium: 2, low: 1 };
-    return impactOrder[b.impact] - impactOrder[a.impact];
-  });
+  const sortedRecommendations = recommendations
+    .filter(r => selectedCategory === 'all' || r.category === selectedCategory)
+    .sort((a, b) => {
+      if (a.isPremium && !b.isPremium && !isPremium) return 1;
+      if (!a.isPremium && b.isPremium && !isPremium) return -1;
+      
+      const impactOrder: Record<string, number> = { high: 3, medium: 2, low: 1 };
+      return impactOrder[b.impact] - impactOrder[a.impact];
+    });
 
   const getImpactColor = (impact: string) => {
     switch (impact) {

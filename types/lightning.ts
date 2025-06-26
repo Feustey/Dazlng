@@ -2,6 +2,15 @@
  * Types standardisés pour les paiements Lightning
  */
 
+// Enum unifié pour les statuts de facture
+export enum InvoiceStatus {
+  PENDING = 'pending',
+  SETTLED = 'settled',
+  FAILED = 'failed',
+  EXPIRED = 'expired',
+  CANCELLED = 'cancelled'
+}
+
 // Statuts de paiement standardisés
 export type PaymentStatus = 'pending' | 'settled' | 'failed' | 'expired';
 
@@ -27,7 +36,7 @@ export interface CreateInvoiceParams {
 }
 
 // Réponse de statut de facture
-export interface InvoiceStatus {
+export interface InvoiceStatusResponse {
   status: PaymentStatus;
   amount: number;
   settledAt?: string;
@@ -61,7 +70,7 @@ export interface PaymentLogEntry {
 // Interface pour le service Lightning
 export interface LightningService {
   generateInvoice(params: CreateInvoiceParams): Promise<Invoice>;
-  checkInvoiceStatus(paymentHash: string): Promise<InvoiceStatus>;
+  checkInvoiceStatus(paymentHash: string): Promise<InvoiceStatusResponse>;
   watchInvoice(params: {
     paymentHash: string;
     onPaid: () => Promise<void>;

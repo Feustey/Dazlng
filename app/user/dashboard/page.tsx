@@ -82,31 +82,29 @@ const UserDashboard: FC = () => {
     <div className="space-y-6 p-6">
       {/* Header CRM avec données cohérentes */}
       <CRMHeaderDashboard
-        userProfile={profile}
+        userProfile={profile || { id: '', email: '' }}
         crmData={{
-          userScore: gamificationData.userScore,
-          segment: gamificationData.userScore >= 80 ? 'champion' : 
-                  gamificationData.userScore >= 60 ? 'premium' :
-                  gamificationData.userScore >= 40 ? 'client' : 'lead',
-          profileCompletion: gamificationData.profileCompletion,
-          hasNode: gamificationData.hasNode,
-          isPremium: gamificationData.isPremium,
-          engagementLevel: gamificationData.userScore
+          userScore: gamificationData?.userScore || 0,
+          profileCompletion: gamificationData?.profileCompletion || 0,
+          engagementLevel: (gamificationData?.userScore || 0) >= 80 ? 'high' : 
+                         (gamificationData?.userScore || 0) >= 60 ? 'medium' : 'low',
+          conversionPotential: 85,
+          lastActivity: new Date()
         }}
         onUpgradeToPremium={() => setShowPremiumModal(true)}
-        hasNode={gamificationData.hasNode}
-        isPremium={gamificationData.isPremium}
+        hasNode={gamificationData?.hasNode || false}
+        isPremium={gamificationData?.isPremium || false}
       />
 
       {/* ✅ Section complétion de profil avec données cohérentes */}
       <ProfileCompletionEnhanced
-        profileFields={gamificationData.profileFields}
-        completionPercentage={gamificationData.profileCompletion}
-        userScore={gamificationData.userScore}
+        profileFields={gamificationData?.profileFields || []}
+        completionPercentage={gamificationData?.profileCompletion || 0}
+        userScore={gamificationData?.userScore || 0}
       />
 
       {/* ✅ NOUVEAUTÉ : Centre d'achievements */}
-      {gamificationData.achievements.length > 0 && (
+      {gamificationData?.achievements && gamificationData.achievements.length > 0 && (
         <div className="bg-white rounded-xl shadow p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -187,17 +185,16 @@ const UserDashboard: FC = () => {
             id: 'premium-upgrade',
             title: 'Passez à Premium',
             description: 'Débloquez les optimisations IA et le support prioritaire',
-            impact: 'high',
-            difficulty: 'easy',
-            isFree: false,
+            impact: 'high' as const,
             estimatedGain: 150000,
             timeToImplement: '1 minute',
-            category: 'revenue'
+            category: 'revenue' as const,
+            isPremium: true
           }
         ]}
-        userScore={gamificationData.userScore}
-        isPremium={gamificationData.isPremium}
-        hasNode={gamificationData.hasNode}
+        userScore={gamificationData?.userScore || 0}
+        isPremium={gamificationData?.isPremium || false}
+        hasNode={gamificationData?.hasNode || false}
         onApplyRecommendation={applyRecommendation}
         onShowPremiumModal={() => setShowPremiumModal(true)}
       />
@@ -210,8 +207,8 @@ const UserDashboard: FC = () => {
           setShowPremiumModal(false);
           upgradeToPremium();
         }}
-        userScore={gamificationData.userScore}
-        hasNode={gamificationData.hasNode}
+        userScore={gamificationData?.userScore || 0}
+        hasNode={gamificationData?.hasNode || false}
         userName={profile?.prenom || profile?.email?.split('@')[0] || 'Bitcoiner'}
       />
 
@@ -227,10 +224,10 @@ const UserDashboard: FC = () => {
               healthScore: 85,
               routingEfficiency: 78,
               revenueGrowth: 12,
-              rankInNetwork: gamificationData.rank,
-              totalNodes: gamificationData.totalUsers
+              rankInNetwork: gamificationData?.rank || 0,
+              totalNodes: gamificationData?.totalUsers || 0
             }}
-            achievements={achievements}
+            achievements={[]}
             trendData={[10, 15, 12, 18, 25, 22, 30]}
           />
         </>

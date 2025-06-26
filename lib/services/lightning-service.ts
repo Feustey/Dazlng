@@ -1,178 +1,172 @@
-import { 
-  Invoice, 
-  InvoiceStatus, 
-  CreateInvoiceParams, 
-  LightningService as ILightningService 
-} from '@/types/lightning';
+import { LightningService, CreateInvoiceParams, Invoice, InvoiceStatus, PaymentStatus } from '@/types/lightning';
+import { createAuthenticatedLndGrpc } from 'lightning';
 
-export enum InvoiceStatus {
-  pending = "pending",
-  settled = "settled",
-  expired = "expired",
-  failed = "failed"
+// Type pour la réponse de statut
+export interface InvoiceStatusResponse {
+  status: PaymentStatus;
+  amount: number;
+  settledAt?: string;
+  metadata?: Record<string, unknown>;
 }
-import { validateData } from '@/lib/validations/lightning';
-import { createInvoiceSchema } from '@/lib/validations/lightning';
 
-export class LightningService implements ILightningService {
-  private apiUrl: string | null = null;
-  private apiKey: string | null = null;
-  private provider: string | null = null;
+export class LightningServiceImpl implements LightningService {
+  private client: any;
+  private provider: string;
 
   constructor() {
-    this.apiUrl = (process.env.DAZNODE_API_URL ?? "") || 'https://api.dazno.de';
-    this.apiKey = (process.env.DAZNODE_API_KEY ?? "") || '';
-    this.provider = 'daznode@getalby.com';
+    this.provider = 'lnd';
+    this.client = null;
+  }
 
-    if (!this.apiKey) {
-      console.warn('⚠️ DAZNODE_API_KEY non configurée');
+  async initialize(): Promise<void> {
+    try {
+      const config = {
+        lnd_host: process.env.LND_SOCKET || 'localhost:10009',
+        lnd_tls_cert: process.env.LND_TLS_CERT || '',
+        lnd_macaroon: process.env.LND_ADMIN_MACAROON || ''
+      };
+
+      this.client = await createAuthenticatedLndGrpc(config);
+      console.log('✅ LightningService: Client initialisé avec succès');
+    } catch (error) {
+      console.error('❌ LightningService: Erreur d\'initialisation:', error);
+      throw error;
     }
   }
 
-  /**
-   * Effectue une requête vers l'API DazNode
-   */
-  private async request<T>(path: string, options: RequestInit = {}): Promise<T> {
-    const response = await fetch(`${this.apiUrl}${path}`, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.apiKey}`,
-        ...options.headers,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Erreur API: ${response.status} ${response.statusText}`);
-    }
-
-    return response.json();
-  }
-
-  /**
-   * Génère une nouvelle facture Lightning
-   */
   async generateInvoice(params: CreateInvoiceParams): Promise<Invoice> {
     try {
-      // Validation des paramètres
-      const validation = validateData(createInvoiceSchema, params);
-      if (!validation.success) {
-        throw new Error(`Paramètres invalides: ${validation.error.message}`);
+      if (!this.client) {
+        await this.initialize();
       }
 
-      // Appel API
-      const response = await (this ?? Promise.reject(new Error("this is null"))).request<{
-        id: string;
-        paymentRequest: string;
-        paymentHash: string;
-        amount: number;
-        description: string;
-      }>('/api/v1/lightning/invoice/create', {
-        method: 'POST',
-        body: JSON.stringify({
-          amount: params.amount,
-          description: params.description,
-          expiry: params.expiry || 3600,
-          metadata: params.metadata
-        })
+      const { amount, description, expiry = 3600, metadata = {} } = params;
+
+      const invoice = await this.client.createInvoice({
+        tokens: amount,
+        description,
+        expires_at: new Date(Date.now() + expiry * 1000).toISOString(),
+        ...metadata
       });
 
-      // Construction de la réponse standardisée
       return {
-        id: response.id,
-        paymentRequest: response.paymentRequest,
-        paymentHash: response.paymentHash,
-        amount: params.amount,
-        description: params.description,
-        createdAt: new Date().toISOString(),
-        expiresAt: new Date(Date.now() + (params.expiry || 3600) * 1000).toISOString(),
-        status: InvoiceStatus.pending,
-        metadata: params.metadata
+        id: invoice.id,
+        paymentRequest: invoice.request,
+        paymentHash: invoice.id,
+        amount: invoice.tokens,
+        description: invoice.description,
+        createdAt: invoice.created_at,
+        expiresAt: invoice.expires_at,
+        status: 'pending',
+        metadata
       };
     } catch (error) {
-      console.error('❌ LightningService - Erreur génération facture:', error);
+      console.error('❌ LightningService: Erreur génération facture:', error);
       throw error;
     }
   }
 
-  /**
-   * Vérifie le statut d'une facture
-   */
-  async checkInvoiceStatus(paymentHash: string): Promise<InvoiceStatus> {
+  async checkInvoiceStatus(paymentHash: string): Promise<InvoiceStatusResponse> {
     try {
-      const response = await (this ?? Promise.reject(new Error("this is null"))).request<{
-        status: InvoiceStatus.pending | InvoiceStatus.settled | InvoiceStatus.failed | InvoiceStatus.expired;
-        amount: number;
-        settledAt?: string;
-        metadata?: Record<string, any>;
-      }>(`/api/v1/lightning/invoice/${paymentHash}/status`);
+      if (!this.client) {
+        await this.initialize();
+      }
+
+      const invoice = await this.client.getInvoice({ id: paymentHash });
+
+      let status: PaymentStatus = 'pending';
+      if (invoice.is_confirmed) {
+        status = 'settled';
+      } else if (invoice.is_canceled) {
+        status = 'failed';
+      } else if (new Date(invoice.expires_at) < new Date()) {
+        status = 'expired';
+      }
 
       return {
-        status: response.status,
-        amount: response.amount,
-        settledAt: response.settledAt,
-        metadata: response.metadata
+        status,
+        amount: invoice.tokens,
+        settledAt: invoice.confirmed_at,
+        metadata: invoice.metadata
       };
     } catch (error) {
-      console.error('❌ LightningService - Erreur vérification facture:', error);
+      console.error('❌ LightningService: Erreur vérification statut:', error);
       throw error;
     }
   }
 
-  /**
-   * Surveille une facture pour les changements de statut
-   */
   async watchInvoice(params: {
     paymentHash: string;
     onPaid: () => Promise<void>;
     onExpired: () => void;
     onError: (error: Error) => void;
   }): Promise<void> {
+    const { paymentHash, onPaid, onExpired, onError } = params;
+    
     try {
       const checkInterval = setInterval(async () => {
         try {
-          const status = await (this ?? Promise.reject(new Error("this is null"))).checkInvoiceStatus(params.paymentHash);
+          const status = await this.checkInvoiceStatus(paymentHash);
           
-          if (status.status === InvoiceStatus.settled) {
+          if (status.status === 'settled') {
             clearInterval(checkInterval);
-            await (params ?? Promise.reject(new Error("params is null"))).onPaid();
-          } else if (status.status === InvoiceStatus.expired || status.status === InvoiceStatus.failed) {
+            await onPaid();
+          } else if (status.status === 'expired' || status.status === 'failed') {
             clearInterval(checkInterval);
-            params.onExpired();
+            onExpired();
           }
         } catch (error) {
           clearInterval(checkInterval);
-          params.onError(error instanceof Error ? error : new Error('Erreur inconnue'));
+          onError(error as Error);
         }
       }, 2000);
 
-      // Nettoyage après 1 heure
+      // Timeout après 5 minutes
       setTimeout(() => {
         clearInterval(checkInterval);
-        params.onExpired();
-      }, 3600 * 1000);
+        onExpired();
+      }, 5 * 60 * 1000);
     } catch (error) {
-      params.onError(error instanceof Error ? error : new Error('Erreur inconnue'));
+      onError(error as Error);
     }
   }
 
-  /**
-   * Vérifie la santé du service
-   */
   async healthCheck(): Promise<{ isOnline: boolean; provider: string }> {
     try {
-      await (this ?? Promise.reject(new Error("this is null"))).request('/api/v1/lightning/health');
-      return { isOnline: true, provider: this.provider };
+      if (!this.client) {
+        await this.initialize();
+      }
+
+      await this.client.getWalletInfo({});
+      return { isOnline: true, provider: this.provider || 'lnd' };
     } catch (error) {
-      console.error('❌ LightningService - Erreur health check:', error);
-      return { isOnline: false, provider: this.provider };
+      console.error('❌ LightningService: Erreur health check:', error);
+      return { isOnline: false, provider: this.provider || 'lnd' };
+    }
+  }
+
+  async close(): Promise<void> {
+    if (this.client) {
+      try {
+        await this.client.removeAllListeners();
+        this.client = null;
+        console.log('✅ LightningService: Client fermé');
+      } catch (error) {
+        console.error('❌ LightningService: Erreur fermeture client:', error);
+      }
     }
   }
 }
 
-/**
- * Factory pour créer le service Lightning
- */
+// Fonction factory pour créer le service
 export function createLightningService(): LightningService {
-  return new LightningService();
+  return new LightningServiceImpl();
 }
+
+// Export des types pour compatibilité
+export {
+  InvoiceStatus,
+  type Invoice,
+  type CreateInvoiceParams,
+  type InvoiceStatusResponse
+};
