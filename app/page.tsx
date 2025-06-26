@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState, Suspense } from "react";
 import dynamic from "next/dynamic";
+import { DazFlowShowcase } from '../components/shared/ui/DazFlowShowcase';
 
 // Lazy loading des composants pour optimiser le First Load
 const NewRevenueHero = dynamic(() => import("../components/shared/ui/NewRevenueHero"), {
@@ -146,8 +147,13 @@ export default function OptimizedHomePage() {
           <WhyBecomeNodeRunner />
         </AnimatedSection>
 
+        {/* Section DazFlow Index */}
+        <AnimatedSection delay={250}>
+          <DazFlowShowcase />
+        </AnimatedSection>
+
         {/* Section Comment ça marche */}
-        <AnimatedSection delay={200}>
+        <AnimatedSection delay={300}>
           <HowItWorks />
         </AnimatedSection>
 

@@ -17,7 +17,7 @@ class MCPApiClient {
   private tokenExpiry: Date | null = null;
 
   constructor() {
-    this.baseUrl = process.env.MCP_API_URL ?? "" || 'https://api.mcp.dazlng.com';
+    this.baseUrl = (process.env.MCP_API_URL ?? "") || 'https://api.mcp.dazlng.com';
   }
 
   private async ensureValidToken(): Promise<string> {

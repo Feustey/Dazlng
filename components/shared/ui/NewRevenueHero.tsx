@@ -2,19 +2,26 @@ import React, { useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useConversionTracking } from '../../../hooks/useConversionTracking';
+import Link from 'next/link';
+import { Gauge, ArrowRight } from 'lucide-react';
 
 const NewRevenueHero: React.FC = () => {
   const router = useRouter();
-  const { trackEvent } = useConversionTracking();
+  const { trackStep } = useConversionTracking();
 
   const handleStartFree = (): void => {
-    trackEvent('cta_click', 'NewRevenueHero', 'Start free clicked');
+    trackStep('cta_click', 'Start free clicked', { location: 'NewRevenueHero' });
     router.push('/register');
   };
 
   const handleViewDemo = (): void => {
-    trackEvent('demo_click', 'NewRevenueHero', 'View demo clicked');
+    trackStep('demo_click', 'View demo clicked', { location: 'NewRevenueHero' });
     router.push('/demo');
+  };
+
+  const handleJoinCommunity = (): void => {
+    trackStep('community_click', 'Join community clicked', { location: 'NewRevenueHero' });
+    window.open('https://t.me/tokenforgood', '_blank');
   };
 
   return (
@@ -33,23 +40,65 @@ const NewRevenueHero: React.FC = () => {
         </div>
 
         {/* Nouveau titre centré sur les revenus */}
-        <div className="space-y-6">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight">
-            Générez des{' '}
-            <span className="bg-gradient-to-r from-yellow-400 to-green-400 text-transparent bg-clip-text">
-              revenus passifs
-            </span>
-            {' '}avec votre nœud Bitcoin
-          </h1>
-          
-          <h2 className="text-2xl md:text-3xl text-green-200 font-semibold">
-            Rejoignez une communauté de passionnés et contribuez à la révolution financière
-          </h2>
-          
-          <p className="text-xl md:text-2xl text-blue-100 max-w-4xl mx-auto leading-relaxed">
-            Transformez votre ordinateur en banque décentralisée. Gagnez des frais de transaction 
-            tout en renforçant le réseau Bitcoin. <strong className="text-yellow-300">Aucune compétence technique requise.</strong>
-          </p>
+        <div className="relative">
+          <div className="absolute top-4 right-4 md:top-8 md:right-8">
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg animate-pulse">
+              <div className="flex items-center">
+                <Gauge className="h-4 w-4 mr-2" />
+                Nouveau : DazFlow Index
+              </div>
+            </div>
+          </div>
+          <div className="text-center">
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+              Gagnez des{' '}
+              <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-transparent bg-clip-text">
+                Revenus Passifs
+              </span>{' '}
+              avec le Lightning Network
+            </h1>
+            <p className="text-xl md:text-2xl text-blue-100 mb-8 max-w-4xl mx-auto">
+              Devenez opérateur de nœud Lightning et générez des revenus automatiques. 
+              Avec <strong>DazFlow Index</strong>, optimisez vos performances avec une précision inégalée.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+              <Link
+                href="/user/node"
+                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-semibold rounded-xl hover:from-yellow-500 hover:to-orange-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+              >
+                <Gauge className="h-5 w-5 mr-2" />
+                Tester DazFlow Index
+                <ArrowRight className="h-5 w-5 ml-2" />
+              </Link>
+              <Link
+                href="/dazflow"
+                className="inline-flex items-center px-8 py-4 border-2 border-white text-white font-semibold rounded-xl hover:bg-white hover:text-blue-600 transition-all duration-200"
+              >
+                Découvrir DazFlow Index
+              </Link>
+            </div>
+
+            {/* Stats avec DazFlow Index */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl font-bold text-white mb-1">+45%</div>
+                <div className="text-blue-100 text-sm">Revenus avec DazFlow</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl font-bold text-white mb-1">99.9%</div>
+                <div className="text-blue-100 text-sm">Précision analyse</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl font-bold text-white mb-1">24/7</div>
+                <div className="text-blue-100 text-sm">Monitoring continu</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl font-bold text-white mb-1">2.3x</div>
+                <div className="text-blue-100 text-sm">ROI amélioré</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Métriques de revenus en avant */}

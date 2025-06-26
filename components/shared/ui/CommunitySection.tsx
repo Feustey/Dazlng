@@ -1,6 +1,36 @@
 import React from 'react';
 
 const CommunitySection: React.FC = () => {
+  const communityFeatures = [
+    {
+      icon: "🤝",
+      title: "Entraide & Support",
+      description: "Une communauté active pour vous accompagner à chaque étape",
+      features: [
+        "Support technique 24/7",
+        "Tutoriels vidéo exclusifs",
+        "Groupe d'entraide privé",
+        "Mentorat personnalisé"
+      ]
+    },
+    {
+      icon: "📚",
+      title: "Formation Continue",
+      description: "Apprenez les meilleures pratiques du Lightning Network",
+      features: [
+        "Webinaires hebdomadaires",
+        "Cours avancés gratuits",
+        "Partage d'expériences",
+        "Ressources exclusives"
+      ]
+    }
+  ];
+
+  const handleJoinCommunity = () => {
+    // Ouvrir le lien vers Token For Good
+    window.open('https://t.me/tokenforgood', '_blank');
+  };
+
   return (
     <section className="py-20 bg-gradient-to-b from-indigo-900 to-purple-900 text-white">
       <div className="max-w-7xl mx-auto px-4">

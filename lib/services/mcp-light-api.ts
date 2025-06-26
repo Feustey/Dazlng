@@ -159,6 +159,123 @@ export interface LNBitsChannel {
   remote_balance: number;
 }
 
+// Nouvelles interfaces pour les endpoints DazFlow index
+export interface DazFlowAnalysis {
+  node_id: string;
+  dazflow_capacity: number;
+  success_probability: number;
+  liquidity_efficiency: number;
+  network_centrality: number;
+  bottlenecks_count: number;
+  reliability_curve: ReliabilityPoint[];
+  bottlenecks: Bottleneck[];
+  recommendations: DazFlowRecommendation[];
+  timestamp: string;
+}
+
+export interface ReliabilityPoint {
+  amount: number;
+  probability: number;
+  confidence_interval: {
+    lower: number;
+    upper: number;
+  };
+  recommended: boolean;
+}
+
+export interface Bottleneck {
+  channel_id: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  type: 'liquidity_imbalance' | 'low_liquidity' | 'fee_misalignment' | 'connectivity_issue';
+  description: string;
+  impact_score: number;
+  suggested_actions: string[];
+}
+
+export interface DazFlowRecommendation {
+  id: string;
+  type: 'channel_optimization' | 'fee_adjustment' | 'liquidity_rebalancing' | 'connectivity_improvement';
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  title: string;
+  description: string;
+  expected_impact: {
+    revenue_increase: number;
+    risk_reduction: number;
+    implementation_cost: number;
+  };
+  implementation_steps: string[];
+  estimated_roi: number;
+}
+
+export interface NetworkHealthAnalysis {
+  global_metrics: {
+    average_dazflow_capacity: number;
+    network_efficiency: number;
+    bottleneck_distribution: {
+      low: number;
+      medium: number;
+      high: number;
+      critical: number;
+    };
+  };
+  recommendations: {
+    network_wide: string[];
+    node_specific: Record<string, string[]>;
+  };
+  timestamp: string;
+}
+
+export interface DazFlowOptimizationRequest {
+  node_id: string;
+  optimization_target: 'revenue_maximization' | 'risk_minimization' | 'balanced';
+  constraints?: {
+    max_channels?: number;
+    max_liquidity?: number;
+    min_fees?: number;
+  };
+}
+
+export interface DazFlowOptimizationResponse {
+  optimization_id: string;
+  current_performance: {
+    dazflow_capacity: number;
+    success_probability: number;
+    estimated_revenue: number;
+  };
+  optimized_performance: {
+    dazflow_capacity: number;
+    success_probability: number;
+    estimated_revenue: number;
+  };
+  improvements: {
+    capacity_increase: number;
+    probability_increase: number;
+    revenue_increase: number;
+  };
+  recommendations: DazFlowRecommendation[];
+  implementation_plan: {
+    steps: string[];
+    estimated_time: string;
+    estimated_cost: number;
+  };
+}
+
+import type {
+  RAGAdvancedQuery,
+  RAGQueryResponse,
+  RAGEvaluationRequest,
+  RAGEvaluationResponse,
+  RAGExpansionRequest,
+  RAGExpansionResponse,
+  RAGCacheStats,
+  RAGCacheInvalidationRequest,
+  RAGCacheInvalidationResponse,
+  LightningRAGQuery,
+  LightningRAGResponse,
+  LightningOptimizationRequest,
+  LightningOptimizationResponse
+} from '../../types/rag-advanced';
+
 class MCPLightAPI {
   private baseURL: string | null = null;
   private credentials: MCPLightCredentials | null = null;
@@ -312,7 +429,7 @@ class MCPLightAPI {
       console.log(`🔍 Analyse du nœud ${pubkey.substring(0, 10)}...`);
 
       // Exécuter toutes les requêtes en parallèle pour optimiser les performances
-      const [nodeInfo, recommendations, priorities] = await (Promise ?? Promise.reject(new Error("Promise is null"))).all([
+      const [nodeInfo, recommendations, priorities] = await Promise.all([
         this.getNodeInfo(pubkey),
         this.getRecommendations(pubkey),
         this.getPriorityActions(pubkey, userContext, userGoals)
@@ -409,42 +526,66 @@ class MCPLightAPI {
   }
 
   // Nouvelles méthodes pour les endpoints RAG
-  async createDocument(content: string, metadata: Record<string, unknown>): Promise<RAGDocument> {
-    return this.makeRequest('/rag/documents', {
+  async createRAGDocument(content: string, metadata: Record<string, unknown>) {
+    return this.makeRequest('/api/v1/rag/documents', {
       method: 'POST',
       body: JSON.stringify({ content, metadata })
     });
   }
 
-  async createDocumentsBatch(documents: Array<{ content: string; metadata: Record<string, unknown> }>): Promise<RAGDocument[]> {
-    return this.makeRequest('/rag/documents/batch', {
+  async createRAGDocumentsBatch(documents: Array<{ content: string; metadata: Record<string, unknown> }>) {
+    return this.makeRequest('/api/v1/rag/documents/batch', {
       method: 'POST',
       body: JSON.stringify({ documents })
     });
   }
 
-  async getDocument(documentId: string): Promise<RAGDocument> {
-    return this.makeRequest<RAGDocument>(`/rag/documents/${documentId}`);
+  async getRAGDocument(documentId: string) {
+    return this.makeRequest(`/api/v1/rag/documents/${documentId}`);
   }
 
-  async queryRAG(query: RAGQuery): Promise<Record<string, unknown>> {
-    return this.makeRequest('/rag/query', {
+  // --- Requêtes avancées ---
+  async advancedRAGQuery(query: RAGAdvancedQuery): Promise<RAGQueryResponse> {
+    return this.makeRequest('/api/v1/rag/query', {
       method: 'POST',
       body: JSON.stringify(query)
     });
   }
-
-  async generateEmbedding(text: string): Promise<RAGEmbedding> {
-    return this.makeRequest<RAGEmbedding>('/rag/embed', {
+  async evaluateRAGResponse(payload: RAGEvaluationRequest): Promise<RAGEvaluationResponse> {
+    return this.makeRequest('/api/v1/rag/evaluate', {
       method: 'POST',
-      body: JSON.stringify({ text })
+      body: JSON.stringify(payload)
+    });
+  }
+  async expandRAGQuery(payload: RAGExpansionRequest): Promise<RAGExpansionResponse> {
+    return this.makeRequest('/api/v1/rag/expansion', {
+      method: 'POST',
+      body: JSON.stringify(payload)
     });
   }
 
-  async analyzeContent(content: string): Promise<Record<string, unknown>> {
-    return this.makeRequest('/rag/analyze', {
+  // --- Cache RAG ---
+  async getRAGCacheStats(): Promise<RAGCacheStats> {
+    return this.makeRequest('/api/v1/rag/cache/stats');
+  }
+  async invalidateRAGCache(payload: RAGCacheInvalidationRequest): Promise<RAGCacheInvalidationResponse> {
+    return this.makeRequest('/api/v1/rag/cache/invalidate', {
       method: 'POST',
-      body: JSON.stringify({ content })
+      body: JSON.stringify(payload)
+    });
+  }
+
+  // --- Intégration Lightning-RAG ---
+  async integratedNodeQuery(payload: LightningRAGQuery): Promise<LightningRAGResponse> {
+    return this.makeRequest('/api/v1/integrated/node_query', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  }
+  async lightningOptimizeWithRAG(payload: LightningOptimizationRequest): Promise<LightningOptimizationResponse> {
+    return this.makeRequest('/api/v1/lightning/optimize', {
+      method: 'POST',
+      body: JSON.stringify(payload)
     });
   }
 
@@ -508,6 +649,181 @@ class MCPLightAPI {
   // Nouvelle méthode pour l'endpoint Automatisation
   async getConfig(): Promise<Record<string, unknown>> {
     return this.makeRequest('/lnbits/config');
+  }
+
+  // Nouvelles méthodes pour les endpoints DazFlow index
+  
+  /**
+   * Analyse DazFlow Index d'un nœud
+   */
+  async getDazFlowAnalysis(nodeId: string): Promise<DazFlowAnalysis> {
+    try {
+      return await this.makeRequest<DazFlowAnalysis>(`/analytics/dazflow/node/${nodeId}`);
+    } catch (error) {
+      console.error('❌ Erreur lors de l\'analyse DazFlow:', error);
+      throw new Error(`Impossible d'analyser le nœud ${nodeId}: ${error}`);
+    }
+  }
+
+  /**
+   * Courbe de fiabilité d'un nœud
+   */
+  async getReliabilityCurve(nodeId: string): Promise<ReliabilityPoint[]> {
+    try {
+      return await this.makeRequest<ReliabilityPoint[]>(`/analytics/reliability/curve/${nodeId}`);
+    } catch (error) {
+      console.error('❌ Erreur lors de la récupération de la courbe de fiabilité:', error);
+      throw new Error(`Impossible de récupérer la courbe de fiabilité pour ${nodeId}: ${error}`);
+    }
+  }
+
+  /**
+   * Identification des goulots d'étranglement
+   */
+  async getBottlenecks(nodeId: string): Promise<Bottleneck[]> {
+    try {
+      return await this.makeRequest<Bottleneck[]>(`/analytics/bottlenecks/${nodeId}`);
+    } catch (error) {
+      console.error('❌ Erreur lors de l\'identification des goulots:', error);
+      throw new Error(`Impossible d'identifier les goulots pour ${nodeId}: ${error}`);
+    }
+  }
+
+  /**
+   * Évaluation de la santé du réseau
+   */
+  async getNetworkHealth(): Promise<NetworkHealthAnalysis> {
+    try {
+      return await this.makeRequest<NetworkHealthAnalysis>('/analytics/network-health');
+    } catch (error) {
+      console.error('❌ Erreur lors de l\'évaluation de la santé réseau:', error);
+      throw new Error(`Impossible d'évaluer la santé du réseau: ${error}`);
+    }
+  }
+
+  /**
+   * Optimisation DazFlow Index
+   */
+  async optimizeDazFlow(request: DazFlowOptimizationRequest): Promise<DazFlowOptimizationResponse> {
+    try {
+      return await this.makeRequest<DazFlowOptimizationResponse>('/analytics/optimization/dazflow', {
+        method: 'POST',
+        body: JSON.stringify(request)
+      });
+    } catch (error) {
+      console.error('❌ Erreur lors de l\'optimisation DazFlow:', error);
+      throw new Error(`Impossible d'optimiser le nœud ${request.node_id}: ${error}`);
+    }
+  }
+
+  // --- ENDPOINTS RAG ---
+  async ragQuery(query: RAGAdvancedQuery) {
+    return this.makeRequest('/api/v1/rag/query', {
+      method: 'POST',
+      body: JSON.stringify(query)
+    });
+  }
+  async ragStats() {
+    return this.makeRequest('/api/v1/rag/stats', { method: 'GET' });
+  }
+  async ragIngest(document: { content: string; metadata?: Record<string, unknown> }) {
+    return this.makeRequest('/api/v1/rag/ingest', {
+      method: 'POST',
+      body: JSON.stringify(document)
+    });
+  }
+  async ragHistory(params?: { page?: number; limit?: number }) {
+    const url = '/api/v1/rag/history' + (params ? `?page=${params.page ?? 1}&limit=${params.limit ?? 20}` : '');
+    return this.makeRequest(url, { method: 'GET' });
+  }
+  async ragHealth() {
+    return this.makeRequest('/api/v1/rag/health', { method: 'GET' });
+  }
+  async ragAnalyzeNode(payload: { node_pubkey: string; context?: string }) {
+    return this.makeRequest('/api/v1/rag/analyze/node', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  }
+  async ragWorkflowExecute(payload: Record<string, unknown>) {
+    return this.makeRequest('/api/v1/rag/workflow/execute', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  }
+  async ragValidate(payload: Record<string, unknown>) {
+    return this.makeRequest('/api/v1/rag/validate', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  }
+  async ragBenchmark(payload: Record<string, unknown>) {
+    return this.makeRequest('/api/v1/rag/benchmark', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  }
+  async ragAssetsList() {
+    return this.makeRequest('/api/v1/rag/assets/list', { method: 'GET' });
+  }
+  async ragAsset(asset_id: string) {
+    return this.makeRequest(`/api/v1/rag/assets/${asset_id}`, { method: 'GET' });
+  }
+  async ragCacheClear() {
+    return this.makeRequest('/api/v1/rag/cache/clear', { method: 'POST' });
+  }
+  async ragCacheStats() {
+    return this.makeRequest('/api/v1/rag/cache/stats', { method: 'GET' });
+  }
+
+  // --- ENDPOINTS INTELLIGENCE ---
+  async intelligenceNodeAnalyze(payload: { node_pubkey: string; context?: string }) {
+    return this.makeRequest('/api/v1/intelligence/node/analyze', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  }
+  async intelligenceNetworkAnalyze(payload: Record<string, unknown>) {
+    return this.makeRequest('/api/v1/intelligence/network/analyze', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  }
+  async intelligenceOptimizationRecommend(payload: Record<string, unknown>) {
+    return this.makeRequest('/api/v1/intelligence/optimization/recommend', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  }
+  async intelligencePredictionGenerate(payload: Record<string, unknown>) {
+    return this.makeRequest('/api/v1/intelligence/prediction/generate', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  }
+  async intelligenceComparativeAnalyze(payload: Record<string, unknown>) {
+    return this.makeRequest('/api/v1/intelligence/comparative/analyze', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  }
+  async intelligenceAlertsConfigure(payload: Record<string, unknown>) {
+    return this.makeRequest('/api/v1/intelligence/alerts/configure', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  }
+  async intelligenceInsightsSummary() {
+    return this.makeRequest('/api/v1/intelligence/insights/summary', { method: 'GET' });
+  }
+  async intelligenceWorkflowAutomated(payload: Record<string, unknown>) {
+    return this.makeRequest('/api/v1/intelligence/workflow/automated', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  }
+  async intelligenceHealth() {
+    return this.makeRequest('/api/v1/intelligence/health/intelligence', { method: 'GET' });
   }
 }
 

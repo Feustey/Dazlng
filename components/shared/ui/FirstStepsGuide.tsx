@@ -1,6 +1,61 @@
 import React from 'react';
 
 const FirstStepsGuide: React.FC = () => {
+  const steps = [
+    {
+      day: "Jour 1",
+      icon: "🚀",
+      title: "Installation & Configuration",
+      description: "Mise en place de votre nœud Lightning en moins de 10 minutes",
+      color: "from-blue-500 to-blue-600",
+      tasks: [
+        "Réception et branchement de votre DazBox",
+        "Configuration automatique du nœud",
+        "Création de votre compte DazNode",
+        "Première connexion au dashboard"
+      ]
+    },
+    {
+      day: "Jour 2-3",
+      icon: "⚡",
+      title: "Ouverture des Premiers Canaux",
+      description: "Création de vos premiers canaux de liquidité",
+      color: "from-green-500 to-green-600",
+      tasks: [
+        "Analyse des recommandations DazFlow Index",
+        "Ouverture de 3-5 canaux optimaux",
+        "Configuration des frais de routage",
+        "Monitoring des premiers paiements"
+      ]
+    },
+    {
+      day: "Jour 4-5",
+      icon: "📊",
+      title: "Optimisation & Monitoring",
+      description: "Affinement de votre configuration pour maximiser les revenus",
+      color: "from-purple-500 to-purple-600",
+      tasks: [
+        "Analyse des performances avec DazFlow Index",
+        "Ajustement des paramètres de routage",
+        "Identification des goulots d'étranglement",
+        "Optimisation de la liquidité"
+      ]
+    },
+    {
+      day: "Jour 6-7",
+      icon: "💰",
+      title: "Premiers Revenus & Scale-up",
+      description: "Génération de vos premiers revenus et planification de la croissance",
+      color: "from-yellow-500 to-orange-500",
+      tasks: [
+        "Réception des premiers revenus de routage",
+        "Analyse des métriques de performance",
+        "Planification de l'expansion du nœud",
+        "Intégration à la communauté Token For Good"
+      ]
+    }
+  ];
+
   return (
     <section className="py-20 bg-gradient-to-b from-white to-gray-50">
       <div className="max-w-6xl mx-auto px-4">

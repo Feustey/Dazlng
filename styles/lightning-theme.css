@@ -1,0 +1,471 @@
+/* Lightning Theme - Global Styles for DazNode Optimization */
+
+/* Color Variables */
+:root {
+  /* Lightning Native Colors */
+  --lightning-yellow: #ffd700;
+  --lightning-orange: #f7931a;
+  --bitcoin-orange: #f7931a;
+  --sats-green: #00d4aa;
+  --trust-blue: #2563eb;
+  --tech-purple: #8b5cf6;
+  
+  /* Dark Theme */
+  --bg-primary: #0f0f0f;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #2d2d2d;
+  --text-primary: #ffffff;
+  --text-secondary: #d1d5db;
+  --text-tertiary: #9ca3af;
+  
+  /* Status Colors */
+  --success: #00ff88;
+  --warning: #ff6b35;
+  --error: #ef4444;
+  
+  /* Gradients */
+  --gradient-lightning: linear-gradient(45deg, var(--lightning-yellow), var(--lightning-orange));
+  --gradient-dark: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  --gradient-card: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+}
+
+/* Base Typography */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Typography Classes */
+.font-mono {
+  font-family: 'JetBrains Mono', 'SF Mono', monospace;
+}
+
+.hero-headline {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.technical-data {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--sats-green);
+}
+
+/* Lightning CTA Styles */
+.lightning-cta {
+  background: var(--gradient-lightning);
+  border: none;
+  color: var(--bg-secondary);
+  font-weight: 700;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.lightning-cta:before {
+  content: '⚡';
+  margin-right: 0.5rem;
+}
+
+.lightning-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(255, 215, 0, 0.4);
+}
+
+/* Lightning Pulse Animation */
+@keyframes lightning-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+}
+
+.lightning-pulse {
+  animation: lightning-pulse 2s infinite;
+}
+
+/* Pricing Card Styles */
+.pricing-card {
+  background: var(--gradient-card);
+  border: 2px solid transparent;
+  border-radius: 16px;
+  padding: 2rem;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.pricing-card.highlighted {
+  border-color: var(--lightning-yellow);
+  transform: scale(1.05);
+}
+
+.pricing-card.highlighted:before {
+  content: '⚡ POPULAIRE';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--lightning-yellow);
+  color: var(--bg-secondary);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.pricing-card .price-section .main-price .amount {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--lightning-yellow);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.pricing-card .price-section .commission-note {
+  color: var(--sats-green);
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 0.5rem;
+}
+
+.pricing-card .payment-methods .lightning-badge,
+.pricing-card .payment-methods .onchain-badge {
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid var(--lightning-yellow);
+  color: var(--lightning-yellow);
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+
+/* ROI Calculator Styles */
+.roi-calculator {
+  background: var(--gradient-dark);
+  border: 2px solid var(--lightning-yellow);
+  border-radius: 20px;
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+.roi-calculator .calculator-inputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.roi-calculator .input-group label {
+  color: var(--lightning-yellow);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.roi-calculator .input-group input,
+.roi-calculator .input-group select {
+  width: 100%;
+  background: var(--bg-tertiary);
+  border: 1px solid #444;
+  color: white;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.roi-calculator .input-group input:focus,
+.roi-calculator .input-group select:focus {
+  border-color: var(--lightning-yellow);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+}
+
+.roi-calculator .results-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.roi-calculator .result-card {
+  background: rgba(255, 215, 0, 0.05);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.roi-calculator .result-card h4 {
+  color: var(--lightning-yellow);
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.roi-calculator .result-card .big-number {
+  font-size: 1.8rem;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.roi-calculator .result-card .big-number.positive {
+  color: var(--success);
+}
+
+.roi-calculator .result-card .big-number.negative {
+  color: var(--error);
+}
+
+/* Lightning Checkout Styles */
+.lightning-checkout {
+  background: var(--bg-primary);
+  border: 2px solid var(--lightning-yellow);
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.lightning-checkout .amount-display .amount {
+  font-size: 2rem;
+  color: var(--lightning-yellow);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 800;
+}
+
+.lightning-checkout .qr-code img {
+  max-width: 200px;
+  border: 4px solid var(--lightning-yellow);
+  border-radius: 12px;
+}
+
+.lightning-checkout .invoice-input {
+  flex: 1;
+  background: var(--bg-tertiary);
+  border: 1px solid #444;
+  color: white;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+}
+
+.lightning-checkout .copy-btn {
+  background: var(--lightning-yellow);
+  border: none;
+  color: var(--bg-secondary);
+  padding: 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.lightning-checkout .supported-wallets .wallet-list span {
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid var(--lightning-yellow);
+  color: var(--lightning-yellow);
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+
+/* Live Metrics Styles */
+.live-metrics-card {
+  background: rgba(255, 215, 0, 0.05);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.live-metrics-card:hover {
+  border-color: var(--lightning-yellow);
+  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.1);
+}
+
+/* Channel Monitor Styles */
+.channel-card {
+  background: rgba(26, 26, 26, 0.5);
+  border: 1px solid #374151;
+  border-radius: 12px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+.channel-card:hover {
+  border-color: #6b7280;
+}
+
+.channel-card .balance-bar {
+  position: relative;
+  background: #374151;
+  border-radius: 6px;
+  height: 12px;
+  overflow: hidden;
+}
+
+.channel-card .local-balance {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: linear-gradient(to right, #3b82f6, #60a5fa);
+  transition: width 0.5s ease;
+}
+
+.channel-card .remote-balance {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  background: linear-gradient(to left, #10b981, #34d399);
+  transition: width 0.5s ease;
+}
+
+/* Health Score Colors */
+.health-0 { color: #ef4444; background: rgba(239, 68, 68, 0.2); }
+.health-1 { color: #f97316; background: rgba(249, 115, 22, 0.2); }
+.health-2 { color: #eab308; background: rgba(234, 179, 8, 0.2); }
+.health-3 { color: #22c55e; background: rgba(34, 197, 94, 0.2); }
+.health-4 { color: #10b981; background: rgba(16, 185, 129, 0.2); }
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .pricing-card {
+    padding: 1.5rem;
+  }
+  
+  .roi-calculator {
+    padding: 1.5rem;
+    margin: 1rem 0;
+  }
+  
+  .roi-calculator .calculator-inputs {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .hero-headline {
+    font-size: clamp(1.8rem, 8vw, 2.5rem);
+  }
+  
+  .lightning-checkout {
+    padding: 1.5rem;
+    margin: 0 1rem;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .lightning-pulse,
+  .channel-card .local-balance,
+  .channel-card .remote-balance {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* Dark mode enhancements */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+/* Print styles */
+@media print {
+  .lightning-cta,
+  .pricing-card,
+  .roi-calculator {
+    background: white !important;
+    color: black !important;
+    border: 1px solid #ccc !important;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .pricing-card,
+  .roi-calculator,
+  .lightning-checkout {
+    border-width: 3px;
+  }
+  
+  .lightning-cta {
+    border: 2px solid var(--bg-secondary);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--lightning-yellow);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--lightning-orange);
+}
+
+/* Selection colors */
+::selection {
+  background: var(--lightning-yellow);
+  color: var(--bg-secondary);
+}
+
+::-moz-selection {
+  background: var(--lightning-yellow);
+  color: var(--bg-secondary);
+}
+
+/* Focus styles for accessibility */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--lightning-yellow);
+  outline-offset: 2px;
+}
+
+/* Loading spinner for Lightning theme */
+.lightning-spinner {
+  border: 3px solid rgba(255, 215, 0, 0.3);
+  border-radius: 50%;
+  border-top: 3px solid var(--lightning-yellow);
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Utility Classes */
+.text-lightning { color: var(--lightning-yellow); }
+.text-bitcoin { color: var(--bitcoin-orange); }
+.text-sats { color: var(--sats-green); }
+.text-success { color: var(--success); }
+.text-warning { color: var(--warning); }
+.text-error { color: var(--error); }
+
+.bg-lightning { background-color: var(--lightning-yellow); }
+.bg-bitcoin { background-color: var(--bitcoin-orange); }
+.bg-sats { background-color: var(--sats-green); }
+
+.border-lightning { border-color: var(--lightning-yellow); }
+.border-bitcoin { border-color: var(--bitcoin-orange); }
+.border-sats { border-color: var(--sats-green); }
+
+.gradient-lightning { background: var(--gradient-lightning); }
+.gradient-dark { background: var(--gradient-dark); }
+.gradient-card { background: var(--gradient-card); }

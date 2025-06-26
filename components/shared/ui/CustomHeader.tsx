@@ -3,6 +3,7 @@ import React from 'react';
 import Image from 'next/image';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
 import { useRouter } from 'next/navigation';
+import { Gauge } from 'lucide-react';
 
 const CustomHeader: React.FC = () => {
   const { user, session } = useSupabase();
@@ -54,6 +55,10 @@ const CustomHeader: React.FC = () => {
             </a>
             <a href="/dazpay" className="text-gray-700 hover:text-indigo-600 font-medium">
               DazPay
+            </a>
+            <a href="/dazflow" className="text-gray-700 hover:text-indigo-600 font-medium flex items-center">
+              <Gauge className="h-4 w-4 mr-1" />
+              DazFlow Index
             </a>
             <a href="/contact" className="text-gray-700 hover:text-indigo-600 font-medium">
               Contact

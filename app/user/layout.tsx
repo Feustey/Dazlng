@@ -60,6 +60,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
     { href: '/user/dashboard', label: 'Dashboard', color: 'indigo' },
     { href: '/user/node', label: 'Mon Nœud', color: 'purple' },
     { href: '/user/dazia', label: 'Dazia IA', color: 'yellow' },
+    { href: '/user/rag-insights', label: 'RAG Insights', color: 'blue' },
     { href: '/user/subscriptions', label: 'Abonnements', color: 'green' },
     { href: '/user/settings', label: 'Paramètres', color: 'blue' }
   ];

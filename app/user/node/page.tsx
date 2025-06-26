@@ -12,6 +12,8 @@ import {
   clearPubkeyCookie,
   updatePubkeyAlias 
 } from '@/lib/utils/cookies';
+import DazFlowAnalytics from '@/components/dazno/DazFlowAnalytics';
+import { BarChart3 } from 'lucide-react';
 
 // Nouvelles interfaces pour les endpoints avancés
 export interface AmbossNodeInfo {
@@ -106,6 +108,14 @@ const NodeManagement: FC = () => {
   const [recommendationType, setRecommendationType] = useState<'standard' | 'amboss' | 'unified'>('unified');
   const [loadingAdvanced, setLoadingAdvanced] = useState(false);
 
+  // États pour DazFlow Index
+  const [dazFlowAnalysis, setDazFlowAnalysis] = useState<any>(null);
+  const [reliabilityCurve, setReliabilityCurve] = useState<any[]>([]);
+  const [bottlenecks, setBottlenecks] = useState<any[]>([]);
+  const [networkHealth, setNetworkHealth] = useState<any>(null);
+  const [loadingDazFlow, setLoadingDazFlow] = useState(false);
+  const [showDazFlow, setShowDazFlow] = useState(false);
+
   // Les appels API utilisent maintenant les endpoints proxy pour éviter CORS
 
   // Fonctions pour les nouveaux endpoints
@@ -182,6 +192,112 @@ const NodeManagement: FC = () => {
     } catch (error) {
       console.error('Erreur fetch unified recommendations:', error);
       return [];
+    }
+  };
+
+  // Fonctions pour DazFlow Index
+  const fetchDazFlowAnalysis = async (nodePubkey: string): Promise<any> => {
+    try {
+      const response = await fetch(`/api/dazno/dazflow/${nodePubkey}`, {
+        headers: {
+          'Authorization': `Bearer ${session?.access_token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.success ? data.data : null;
+    } catch (error) {
+      console.error('Erreur fetch DazFlow analysis:', error);
+      return null;
+    }
+  };
+
+  const fetchReliabilityCurve = async (nodePubkey: string): Promise<any[]> => {
+    try {
+      const response = await fetch(`/api/dazno/reliability/${nodePubkey}`, {
+        headers: {
+          'Authorization': `Bearer ${session?.access_token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.success ? data.data : [];
+    } catch (error) {
+      console.error('Erreur fetch reliability curve:', error);
+      return [];
+    }
+  };
+
+  const fetchBottlenecks = async (nodePubkey: string): Promise<any[]> => {
+    try {
+      const response = await fetch(`/api/dazno/bottlenecks/${nodePubkey}`, {
+        headers: {
+          'Authorization': `Bearer ${session?.access_token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.success ? data.data : [];
+    } catch (error) {
+      console.error('Erreur fetch bottlenecks:', error);
+      return [];
+    }
+  };
+
+  const fetchNetworkHealth = async (): Promise<any> => {
+    try {
+      const response = await fetch('/api/dazno/network-health', {
+        headers: {
+          'Authorization': `Bearer ${session?.access_token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.success ? data.data : null;
+    } catch (error) {
+      console.error('Erreur fetch network health:', error);
+      return null;
+    }
+  };
+
+  const loadDazFlowData = async (nodePubkey: string): Promise<void> => {
+    setLoadingDazFlow(true);
+    try {
+      const [analysis, curve, bottlenecksData, health] = await Promise.all([
+        fetchDazFlowAnalysis(nodePubkey),
+        fetchReliabilityCurve(nodePubkey),
+        fetchBottlenecks(nodePubkey),
+        fetchNetworkHealth()
+      ]);
+
+      setDazFlowAnalysis(analysis);
+      setReliabilityCurve(curve);
+      setBottlenecks(bottlenecksData);
+      setNetworkHealth(health);
+    } catch (error) {
+      console.error('Erreur lors du chargement des données DazFlow:', error);
+    } finally {
+      setLoadingDazFlow(false);
     }
   };
 
@@ -585,7 +701,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
 
   // Affichage principal avec les données du nœud
   return (
-    <div className="max-w-6xl mx-auto space-y-8">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
@@ -599,6 +715,169 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
       
         </div>
       </div>
+
+      {/* Section DazFlow Index */}
+      {showDazFlow && (
+        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 mb-6 border border-blue-200">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center">
+              <BarChart3 className="h-6 w-6 text-blue-600 mr-3" />
+              <h3 className="text-xl font-bold text-gray-900">DazFlow Index</h3>
+              <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                Nouveau
+              </span>
+            </div>
+            <button
+              onClick={() => setShowDazFlow(false)}
+              className="text-gray-400 hover:text-gray-600"
+            >
+              ✕
+            </button>
+          </div>
+
+          {loadingDazFlow ? (
+            <div className="text-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+              <p className="text-gray-600 mt-2">Analyse DazFlow en cours...</p>
+            </div>
+          ) : dazFlowAnalysis ? (
+            <div className="space-y-6">
+              {/* Métriques principales */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-white rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-blue-600">
+                    {dazFlowAnalysis.dazflow_capacity?.toFixed(2) || 'N/A'}
+                  </div>
+                  <div className="text-sm text-gray-600">Capacité DazFlow</div>
+                </div>
+                <div className="bg-white rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-green-600">
+                    {(dazFlowAnalysis.success_probability * 100)?.toFixed(1) || 'N/A'}%
+                  </div>
+                  <div className="text-sm text-gray-600">Probabilité Succès</div>
+                </div>
+                <div className="bg-white rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-purple-600">
+                    {(dazFlowAnalysis.liquidity_efficiency * 100)?.toFixed(1) || 'N/A'}%
+                  </div>
+                  <div className="text-sm text-gray-600">Efficacité Liquidité</div>
+                </div>
+                <div className="bg-white rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-orange-600">
+                    {dazFlowAnalysis.bottlenecks_count || 0}
+                  </div>
+                  <div className="text-sm text-gray-600">Goulots Identifiés</div>
+                </div>
+              </div>
+
+              {/* Goulots d'étranglement */}
+              {bottlenecks.length > 0 && (
+                <div className="bg-white rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-900 mb-3">Goulots d'Étranglement</h4>
+                  <div className="space-y-2">
+                    {bottlenecks.slice(0, 3).map((bottleneck, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                        <div>
+                          <div className="font-medium text-gray-900">{bottleneck.description}</div>
+                          <div className="text-sm text-gray-600">Type: {bottleneck.type}</div>
+                        </div>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          bottleneck.severity === 'critical' ? 'bg-red-100 text-red-800' :
+                          bottleneck.severity === 'high' ? 'bg-orange-100 text-orange-800' :
+                          bottleneck.severity === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                          'bg-green-100 text-green-800'
+                        }`}>
+                          {bottleneck.severity}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Recommandations DazFlow */}
+              {dazFlowAnalysis.recommendations?.length > 0 && (
+                <div className="bg-white rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-900 mb-3">Recommandations DazFlow</h4>
+                  <div className="space-y-3">
+                    {dazFlowAnalysis.recommendations.slice(0, 3).map((rec: any, index: number) => (
+                      <div key={index} className="border-l-4 border-blue-500 pl-4">
+                        <div className="font-medium text-gray-900">{rec.title}</div>
+                        <div className="text-sm text-gray-600 mt-1">{rec.description}</div>
+                        <div className="flex items-center mt-2 space-x-4 text-xs">
+                          <span className={`px-2 py-1 rounded-full ${
+                            rec.priority === 'critical' ? 'bg-red-100 text-red-800' :
+                            rec.priority === 'high' ? 'bg-orange-100 text-orange-800' :
+                            rec.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-green-100 text-green-800'
+                          }`}>
+                            {rec.priority}
+                          </span>
+                          <span className="text-green-600">
+                            +{rec.expected_impact?.revenue_increase?.toFixed(1) || 0}% revenus
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-gray-600 mb-4">Aucune analyse DazFlow disponible</p>
+              <button
+                onClick={() => pubkey && loadDazFlowData(pubkey)}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Lancer l'Analyse DazFlow
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Bouton pour afficher/masquer DazFlow Index */}
+      {!showDazFlow && (
+        <div className="mb-6">
+          <button
+            onClick={() => {
+              setShowDazFlow(true);
+              if (pubkey && !dazFlowAnalysis) {
+                loadDazFlowData(pubkey);
+              }
+            }}
+            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 flex items-center justify-center space-x-2"
+          >
+            <BarChart3 className="h-5 w-5" />
+            <span>Analyser avec DazFlow Index</span>
+            <span className="px-2 py-1 bg-white/20 rounded-full text-xs">Nouveau</span>
+          </button>
+        </div>
+      )}
+
+      {/* Nouvelle section DazFlow Analytics */}
+      {nodeInfo && (
+        <div className="bg-white rounded-xl shadow">
+          <div className="p-6 border-b border-gray-200">
+            <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+              <BarChart3 className="w-5 h-5 text-blue-600" />
+              DazFlow Index Analytics
+            </h2>
+            <p className="text-gray-600 mt-1">
+              Analyse avancée de la capacité de routage et de la fiabilité des paiements
+            </p>
+          </div>
+          <div className="p-6">
+            <DazFlowAnalytics 
+              nodeId={nodeInfo.pubkey} 
+              onAnalysisComplete={(result) => {
+                console.log('Analyse DazFlow terminée:', result);
+              }}
+            />
+          </div>
+        </div>
+      )}
 
       {loading && !nodeInfo && (
         <div className="text-center py-12">
