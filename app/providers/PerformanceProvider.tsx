@@ -1,17 +1,14 @@
 import React from 'react';
 'use client';
 
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect } from 'react';
 import { useWebVitals } from '@/hooks/useWebVitals';
-import { useCache } from '@/hooks/useCache';
 
 export interface PerformanceProviderProps {
   children: React.ReactNode;
 }
 
 export function PerformanceProvider({ children }: PerformanceProviderProps) {
-  const webVitalsRef = useRef<any>(null);
-  
   // Monitorer les Web Vitals
   useWebVitals();
 

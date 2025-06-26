@@ -28,7 +28,7 @@ const CreateOrderSchema = z.object({
 
 export type CreateOrderParams = z.infer<typeof CreateOrderSchema>;
 
-interface ApiResponse<T> {
+interface _ApiResponse<T> {
   success: boolean;
   data: T;
   error?: {

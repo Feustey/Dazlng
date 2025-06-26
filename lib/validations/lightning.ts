@@ -5,8 +5,8 @@ import { z } from 'zod';
  */
 
 // Validation des montants
-const MIN_AMOUNT = 1;
-const MAX_AMOUNT = 16777215; // Maximum pour un canal Lightning standard
+const _MIN_AMOUNT = 1;
+const _MAX_AMOUNT = 16777215; // Maximum pour un canal Lightning standard
 
 // Validation des statuts
 export const paymentStatusSchema = z.enum(['pending', 'settled', 'failed', 'expired'] as const);

@@ -5,6 +5,26 @@ import { useSupabase } from '@/app/providers/SupabaseProvider';
 import { useRouter } from 'next/navigation';
 
 const CustomHeader: React.FC = () => {
+  const { user, session } = useSupabase();
+  const router = useRouter();
+
+  const handleLogout = async (): Promise<void> => {
+    try {
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+      });
+
+      if (response.ok) {
+        router.push('/');
+        router.refresh();
+      } else {
+        console.error('Erreur lors de la déconnexion');
+      }
+    } catch (error) {
+      console.error('Erreur réseau lors de la déconnexion:', error);
+    }
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm shadow-sm z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

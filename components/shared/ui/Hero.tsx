@@ -16,7 +16,7 @@ export default function Hero({
   imageUrl,
   buttonText = 'Commencer',
   onButtonPress,
-}: HeroProps): React.FC {
+}: HeroProps) {
   return (
     <div className="relative w-full h-[420px]">
       <Image

@@ -155,8 +155,9 @@ export const DaznoInsights: React.FC<DaznoInsightsProps> = ({
       ))}
     </div>
   );
+};
 
 // Fonction utilitaire pour formater les sats
 const formatSats = (sats: number): string => {
   return new Intl.NumberFormat('fr-FR').format(sats);
-}
+};

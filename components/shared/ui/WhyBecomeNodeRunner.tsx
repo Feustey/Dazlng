@@ -1,6 +1,57 @@
 import React from 'react';
 
 const WhyBecomeNodeRunner: React.FC = () => {
+  const benefits = [
+    {
+      icon: "💰",
+      title: "Revenus Passifs",
+      description: "Générez des revenus automatiquement 24h/24 7j/7",
+      gradient: "from-green-500 to-emerald-600",
+      details: [
+        "0.1% à 0.5% de commission sur chaque transaction",
+        "Revenus proportionnels à la liquidité fournie",
+        "Optimisation automatique des frais par l'IA",
+        "Réinvestissement automatique des gains"
+      ]
+    },
+    {
+      icon: "🛡️",
+      title: "Contribuer au Réseau",
+      description: "Participez à la décentralisation de Bitcoin",
+      gradient: "from-blue-500 to-indigo-600",
+      details: [
+        "Renforcez la résilience du Lightning Network",
+        "Aidez à connecter l'écosystème Bitcoin",
+        "Participez à l'adoption mondiale de Bitcoin",
+        "Devenez un acteur de la révolution financière"
+      ]
+    },
+    {
+      icon: "🚀",
+      title: "Technologie Avancée",
+      description: "Bénéficiez d'une infrastructure de pointe",
+      gradient: "from-purple-500 to-pink-600",
+      details: [
+        "IA prédictive pour optimiser les performances",
+        "Monitoring 24/7 automatisé",
+        "Mise à jour automatique des canaux",
+        "Dashboard analytics en temps réel"
+      ]
+    },
+    {
+      icon: "📈",
+      title: "Croissance Continue",
+      description: "Profitez de l'expansion du Lightning Network",
+      gradient: "from-orange-500 to-red-600",
+      details: [
+        "Adoption croissante de Bitcoin et Lightning",
+        "Nouveaux cas d'usage quotidiennement",
+        "Partenariats avec exchanges majeurs",
+        "ROI moyen de 12% à 25% par an"
+      ]
+    }
+  ];
+
   return (
     <section id="why-become-runner" className="py-20 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-7xl mx-auto px-4">

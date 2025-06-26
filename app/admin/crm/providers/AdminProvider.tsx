@@ -182,7 +182,7 @@ const dataProvider = {
         .eq('id', id)
     );
 
-    const results = await Promise.all(promises);
+    const _results = await Promise.all(promises);
     
     return { data: params.ids };
   },

@@ -292,7 +292,7 @@ export class SegmentationService {
       const countQuery = sqlQuery.replace(
         'SELECT DISTINCT p.id, p.email, p.nom, p.prenom, p.created_at, p.email_verified, p.pubkey',
         'SELECT COUNT(DISTINCT p.id) as count'
-};
+      );
       const { data: countResult, error: countError } = await getSupabaseAdminClient().rpc('execute_raw_sql', { 
         query: countQuery 
       });

@@ -2,7 +2,6 @@ import { NextRequest } from 'next/server';
 import { OrderService } from '@/lib/services/order-service';
 import { rateLimit } from '@/lib/rate-limit';
 import { handleApiError, createApiResponse } from '@/lib/api-response';
-import { InvoiceStatus } from '@/types/lightning';
 import { createDaznoApiClient } from '@/lib/services/dazno-api';
 
 // Rate limiter : 60 requêtes par minute

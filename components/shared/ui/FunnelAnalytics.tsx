@@ -38,6 +38,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, icon, change, tre
       <p className="text-3xl font-bold text-gray-900">{value}</p>
     </div>
   );
+};
 
 export interface FunnelChartProps {
   steps: FunnelStep[];
@@ -96,6 +97,7 @@ const FunnelChart: React.FC<FunnelChartProps> = ({ steps }) => {
       </div>
     </div>
   );
+};
 
 export interface EventsListProps {
   events: TrackingEvent[];
@@ -126,8 +128,34 @@ const EventsList: React.FC<EventsListProps> = ({ events }) => {
       </div>
     </div>
   );
+};
 
-export const FunnelAnalytics: React.FC = () => {) => clearInterval(interval);
+export const FunnelAnalytics: React.FC = () => {
+  const { trackEvent, getLocalAnalytics, getFunnelMetrics } = useConversionTracking();
+  const [analytics, setAnalytics] = useState<TrackingEvent[]>([]);
+  const [metrics, setMetrics] = useState<any>(null);
+  const [funnelData, setFunnelData] = useState<FunnelStep[]>([]);
+
+  useEffect(() => {
+    const loadAnalytics = () => {
+      const localAnalytics = getLocalAnalytics();
+      const localMetrics = getFunnelMetrics();
+      setAnalytics(localAnalytics);
+      setMetrics(localMetrics);
+      
+      // Generate funnel data
+      const steps: FunnelStep[] = [
+        { name: 'Landing', count: localAnalytics.length, conversionRate: 100 },
+        { name: 'Hero View', count: Math.floor(localAnalytics.length * 0.8), conversionRate: 80 },
+        { name: 'Pricing View', count: Math.floor(localAnalytics.length * 0.4), conversionRate: 40 },
+        { name: 'Contact', count: Math.floor(localAnalytics.length * 0.1), conversionRate: 10 }
+      ];
+      setFunnelData(steps);
+    };
+
+    loadAnalytics();
+    const interval = setInterval(loadAnalytics, 5000);
+    return () => clearInterval(interval);
   }, [getLocalAnalytics, getFunnelMetrics]);
 
   const exportData = (): void => {
@@ -223,5 +251,6 @@ export const FunnelAnalytics: React.FC = () => {) => clearInterval(interval);
       </div>
     </div>
   );
+};
 
-export default FunnelAnalytics; 
+export default FunnelAnalytics;

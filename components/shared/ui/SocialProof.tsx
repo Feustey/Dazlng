@@ -44,7 +44,7 @@ const Testimonial: React.FC<TestimonialProps> = ({ name, title, content, avatar,
       <p className="text-gray-700 leading-relaxed pl-6 italic">{content}</p>
     </div>
   </div>
-  );
+);
 export interface MetricProps {
   number: string;
   label: string;
@@ -64,8 +64,40 @@ const Metric: React.FC<MetricProps> = ({ number, label, delay }) => (
       {label}
     </div>
   </div>
-  );
+);
 export const SocialProof: React.FC = () => {
+  const metrics = [
+    { number: "500+", label: "Nœuds déployés" },
+    { number: "99.9%", label: "Disponibilité" },
+    { number: "24/7", label: "Support" },
+    { number: "12.7 BTC", label: "Capacity totale" }
+  ];
+
+  const testimonials = [
+    {
+      name: "Marc Dupont",
+      title: "CEO, Bitcoin Solutions",
+      content: "DazNode a transformé notre infrastructure Lightning. Plus de force-closes, plus de nuits blanches.",
+      avatar: "/assets/images/avatars/avatar1.jpg",
+      rating: 5
+    },
+    {
+      name: "Sarah Martin",
+      title: "CTO, Lightning Pay",
+      content: "L'IA de DazNode détecte les problèmes avant même qu'ils n'arrivent. Impressionnant !",
+      avatar: "/assets/images/avatars/avatar2.jpg",
+      rating: 5
+    },
+    {
+      name: "Pierre Leclerc",
+      title: "Fondateur, Node Runner",
+      content: "ROI augmenté de 127% en 6 mois. Les résultats parlent d'eux-mêmes.",
+      avatar: "/assets/images/avatars/avatar3.jpg",
+      rating: 5
+    }
+  ];
+
+  return (
     <section className="py-20 bg-white">
       <div className="max-w-6xl mx-auto px-4">
         {/* En-tête */}
@@ -127,4 +159,4 @@ export const SocialProof: React.FC = () => {
       </div>
     </section>
   );
-}
+};

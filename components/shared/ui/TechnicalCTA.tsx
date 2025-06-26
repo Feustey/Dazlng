@@ -2,6 +2,17 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 
 const TechnicalCTA: React.FC = () => {
+  const router = useRouter();
+
+  const handleStartTrial = () => {
+    router.push('/register');
+  };
+
+  const handleViewDemo = () => {
+    router.push('/demo');
+  };
+
+  return (
     <section className="py-20 bg-gradient-to-br from-red-900 via-orange-900 to-yellow-900 text-white">
       <div className="max-w-4xl mx-auto px-4 text-center">
         {/* Urgence technique */}
@@ -82,5 +93,6 @@ const TechnicalCTA: React.FC = () => {
       </div>
     </section>
   );
+};
 
 export default TechnicalCTA; 

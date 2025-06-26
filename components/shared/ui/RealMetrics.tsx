@@ -24,8 +24,36 @@ const RealMetric: React.FC<MetricProps> = ({ number, label, description, color, 
       {description}
     </div>
   </div>
-  );
+);
 const RealMetrics: React.FC = () => {
+  const metrics = [
+    {
+      number: "99.97%",
+      label: "Uptime",
+      description: "Sur les 24 derniers mois",
+      color: "text-green-600"
+    },
+    {
+      number: "0",
+      label: "Force-closes",
+      description: "Depuis 6 mois",
+      color: "text-blue-600"
+    },
+    {
+      number: "127%",
+      label: "ROI moyen",
+      description: "Vs. gestion manuelle",
+      color: "text-purple-600"
+    },
+    {
+      number: "< 30s",
+      label: "Temps de réaction",
+      description: "Détection d'anomalies",
+      color: "text-orange-600"
+    }
+  ];
+
+  return (
     <section className="py-20 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4">
         {/* En-tête */}
@@ -98,5 +126,6 @@ const RealMetrics: React.FC = () => {
       </div>
     </section>
   );
+};
 
 export default RealMetrics; 

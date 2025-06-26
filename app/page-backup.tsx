@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, Suspense } from "react";
+import React, { useEffect, Suspense } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import NewHero from "@/components/shared/ui/NewHero";

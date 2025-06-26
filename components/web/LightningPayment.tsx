@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import QRCode from 'qrcode.react';
 import Button from '@/components/shared/ui/Button';
 import { useToast } from '@/hooks/useToast';
@@ -18,7 +18,6 @@ const LightningPayment: React.FC<LightningPaymentProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [qrUrl, setQrUrl] = useState(paymentRequest);
-  const [showWalletModal, setShowWalletModal] = useState(false);
   const { showToast } = useToast();
 
   const handleWebLNPay = async () => {
@@ -48,7 +47,8 @@ const LightningPayment: React.FC<LightningPaymentProps> = ({
   };
 
   const handleOpenWallet = () => {
-    setShowWalletModal(true);
+    // TODO: Implement wallet opening logic
+    console.log('Opening wallet...');
   };
 
   return (

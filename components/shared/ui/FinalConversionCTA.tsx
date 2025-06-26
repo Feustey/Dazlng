@@ -2,6 +2,25 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 
 const FinalConversionCTA: React.FC = () => {
+  const router = useRouter();
+
+  const guarantees = [
+    "Configuration complète de votre nœud Lightning",
+    "Premier canal ouvert avec liquidité",
+    "Monitoring IA activé et optimisé",
+    "Formation privée Discord incluse",
+    "Support prioritaire 24/7",
+    "Dashboard analytics personnalisé"
+  ];
+
+  const handleOrderDazBox = (): void => {
+    router.push('/checkout/dazbox');
+  };
+
+  const handleJoinCommunity = (): void => {
+    window.open('https://discord.gg/daznode', '_blank');
+  };
+
   return (
     <section className="py-20 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 text-white">
       <div className="max-w-6xl mx-auto px-4 text-center">

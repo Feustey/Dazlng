@@ -4,6 +4,19 @@ import { useRouter } from 'next/navigation';
 import { useConversionTracking } from '../../../hooks/useConversionTracking';
 
 const NewRevenueHero: React.FC = () => {
+  const router = useRouter();
+  const { trackEvent } = useConversionTracking();
+
+  const handleStartFree = (): void => {
+    trackEvent('cta_click', 'NewRevenueHero', 'Start free clicked');
+    router.push('/register');
+  };
+
+  const handleViewDemo = (): void => {
+    trackEvent('demo_click', 'NewRevenueHero', 'View demo clicked');
+    router.push('/demo');
+  };
+
   return (
     <section className="min-h-screen bg-gradient-to-br from-green-600 via-blue-700 to-purple-800 flex items-center justify-center px-4 py-20">
       <div className="max-w-7xl mx-auto text-center space-y-8">

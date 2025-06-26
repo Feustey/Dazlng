@@ -20,8 +20,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Payment hash requis' }, { status: 400 });
     }
 
-    const orderService = new OrderService();
-    // await orderService.handlePaymentWebhook(payload.payment_hash);
+    const _orderService = new OrderService();
+    // await _orderService.handlePaymentWebhook(payload.payment_hash);
 
     return NextResponse.json({ success: true });
 

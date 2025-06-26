@@ -14,7 +14,7 @@ export interface ProductCardProps {
   bonusFeatures?: Feature[];
 }
 
-const ProductCard = ({ title, subtitle, price, features, bonusFeatures }: ProductCardProps): React.FC => {
+const ProductCard: React.FC<ProductCardProps> = ({ title, subtitle, price, features, bonusFeatures }) => {
   return (
     <Card>
       <GradientTitle>{title}</GradientTitle>
@@ -39,5 +39,6 @@ const ProductCard = ({ title, subtitle, price, features, bonusFeatures }: Produc
       )}
     </Card>
   );
+};
 
 export default ProductCard; 

@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useConversionTracking } from '../../../hooks/useConversionTracking';
-import { useScrollTracking } from '../../../hooks/useScrollTracking';
 
 const DazPayHero: React.FC = () => {
   const router = useRouter();
@@ -15,7 +14,7 @@ const DazPayHero: React.FC = () => {
     router.push('/register');
   };
 
-  const handleLearnMore = (): void => {
+  const _handleLearnMore = (): void => {
     trackProductInterest('dazpay', 'hero_cta', { action: 'learn_more' });
     const element = document.getElementById('features');
     element?.scrollIntoView({ behavior: 'smooth' });

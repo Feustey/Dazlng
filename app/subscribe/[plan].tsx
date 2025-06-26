@@ -40,7 +40,7 @@ const plans = {
     price: '10 000 Sats/mois',
     features: ['Prédiction des fee rates', 'Optimisation automatique'],
   },
-  );
+};
 
 export interface FormData {
   name: string;
@@ -49,7 +49,7 @@ export interface FormData {
   phone: string;
 }
 
-export default function SubscribeScreen(): React.FC {
+export default function SubscribeScreen() {
   const params = useParams();
   const plan = params.plan;
   const planDetails = plans[plan as keyof typeof plans];

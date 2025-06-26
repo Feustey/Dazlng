@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState, Suspense } from "react";
 import dynamic from "next/dynamic";
-import { useInView } from "@/hooks/useInView";
 
 // Lazy loading des composants pour optimiser le First Load
 const NewRevenueHero = dynamic(() => import("../components/shared/ui/NewRevenueHero"), {

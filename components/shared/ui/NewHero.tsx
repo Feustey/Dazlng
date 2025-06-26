@@ -5,6 +5,34 @@ import { useConversionTracking } from '../../../hooks/useConversionTracking';
 import { useScrollTracking } from '../../../hooks/useScrollTracking';
 
 const NewHero: React.FC = () => {
+  const router = useRouter();
+  const { trackEvent } = useConversionTracking();
+  const { trackScroll } = useScrollTracking();
+
+  useEffect(() => {
+    trackEvent('hero_view', 'Hero', 'Page viewed');
+    trackScroll();
+  }, [trackEvent, trackScroll]);
+
+  const handleStartFree = () => {
+    trackEvent('cta_click', 'Hero', 'Start free clicked');
+    router.push('/register');
+  };
+
+  const handleViewDemo = () => {
+    trackEvent('demo_click', 'Hero', 'View demo clicked');
+    router.push('/demo');
+  };
+
+  const handleScrollToDemo = () => {
+    trackEvent('scroll_click', 'Hero', 'Scroll to demo clicked');
+    const demoSection = document.getElementById('demo-section');
+    if (demoSection) {
+      demoSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  return (
     <section className="min-h-screen bg-gradient-to-br from-indigo-600 to-purple-700 flex items-center justify-center px-4 py-20">
       <div className="max-w-6xl mx-auto text-center space-y-8">
         {/* Logo */}
@@ -97,5 +125,6 @@ const NewHero: React.FC = () => {
       </div>
     </section>
   );
+};
 
 export default NewHero; 

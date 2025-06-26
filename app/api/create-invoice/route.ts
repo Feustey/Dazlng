@@ -1,14 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseServerPublicClient } from '@/lib/supabase';
-import { createLightningService } from '@/lib/services/lightning-service';
-import { validateData, createInvoiceSchema } from '@/lib/validations/lightning';
-import type { Invoice, CreateInvoiceParams } from '@/types/lightning';
-import { OrderService } from '@/lib/services/order-service';
-import { PaymentLogger } from '@/lib/services/payment-logger';
-// import { ApiResponse } from '@/lib/api-response';
+import { NextResponse } from 'next/server';
 import { createDazNodeLightningService } from '@/lib/services/daznode-lightning-service';
-// import { validateRequestBody } from '@/lib/validations';
-import { z } from 'zod';
 
 export const dynamic = "force-dynamic";
 export const runtime = 'nodejs';
@@ -91,7 +82,7 @@ export async function POST(request: Request): Promise<Response> {
   }
 }
 
-function createErrorResponse(code: keyof typeof ErrorCodes, message: string, details?: unknown, status = 400): Response {
+function _createErrorResponse(code: keyof typeof ErrorCodes, message: string, details?: unknown, status = 400): Response {
   return NextResponse.json<ApiResponse<null>>({
     success: false,
     error: {

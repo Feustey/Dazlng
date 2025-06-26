@@ -6,7 +6,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import Link from "next/link";
 
-export default function TokenForGoodPage(): React.FC {
+export default function TokenForGoodPage() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       AOS.init({ 

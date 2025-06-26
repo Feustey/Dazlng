@@ -4,7 +4,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import Image from 'next/image';
 
-export default function TermsPage(): React.FC {
+export default function TermsPage() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       AOS.init({ 

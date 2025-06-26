@@ -32,6 +32,46 @@ const Step: React.FC<StepProps> = ({ number, icon, title, description, delay }) 
 );
 
 export const HowItWorks: React.FC = () => {
+  const router = useRouter();
+  const { trackUserAction } = useConversionTracking();
+
+  const steps = [
+    {
+      number: 1,
+      icon: <FaDownload />,
+      title: "Commandez",
+      description: "Choisissez votre plan et passez commande en quelques clics"
+    },
+    {
+      number: 2,
+      icon: <FaPlug />,
+      title: "Branchez",
+      description: "Recevez votre DazBox et connectez-la simplement"
+    },
+    {
+      number: 3,
+      icon: <FaCog />,
+      title: "Configurez",
+      description: "Notre IA configure automatiquement votre nœud"
+    },
+    {
+      number: 4,
+      icon: <FaChartLine />,
+      title: "Gagnez",
+      description: "Commencez à générer des revenus Lightning dès le premier jour"
+    }
+  ];
+
+  const handleOrderClick = (): void => {
+    trackUserAction('order_click', 'how_it_works_section');
+    router.push('/checkout/dazbox');
+  };
+
+  const handleQuestionClick = (): void => {
+    trackUserAction('question_click', 'how_it_works_section');
+    router.push('/contact');
+  };
+
   return (
     <section id="how-it-works" className="py-20 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4">

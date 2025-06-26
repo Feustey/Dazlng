@@ -1,5 +1,4 @@
 import React from 'react';
-import { useRouter } from 'next/navigation';
 
 const CommunitySection: React.FC = () => {
   return (

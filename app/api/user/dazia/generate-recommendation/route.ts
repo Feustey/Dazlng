@@ -1,12 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createSupabaseServerClient } from '@/lib/supabase-auth'
-import { getSupabaseAdminClient } from '@/lib/supabase'
-import { mcpLightAPI } from '@/lib/services/mcp-light-api'
-import { ApiResponse } from '@/types/database'
 import { createDaznoApiClient } from '@/lib/services/dazno-api'
 import { getSupabaseServerPublicClient } from '@/lib/supabase'
-// import { getNodePubkey, getNodePubkeyFromSession } from '@/lib/utils'
-import DaznoAPI from '@/lib/services/dazno-api'
 import { z } from 'zod'
 
 export interface DailyRecommendation {
@@ -80,14 +74,14 @@ export interface FallbackData {
 }
 
 // Validation schema
-const recommendationSchema = z.object({
+const _recommendationSchema = z.object({
   pubkey: z.string().min(66).max(66),
   category: z.enum(['channels', 'fees', 'liquidity', 'routing', 'security']).optional(),
   priority: z.number().min(1).max(5).optional(),
   status: z.enum(['pending', 'completed', 'skipped']).optional()
 })
 
-export async function POST(request: NextRequest): Promise<Response> {
+export async function POST(_request: NextRequest): Promise<Response> {
   try {
     const supabase = getSupabaseServerPublicClient();
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
@@ -122,11 +116,11 @@ export async function POST(request: NextRequest): Promise<Response> {
 
 // Fonctions utilitaires
 
-function isValidLightningPubkey(pubkey: string): boolean {
+function _isValidLightningPubkey(pubkey: string): boolean {
   return /^[0-9a-fA-F]{66}$/.test(pubkey);
 }
 
-function generateFallbackDaziaData(pubkey: string): FallbackData {
+function _generateFallbackDaziaData(pubkey: string): FallbackData {
   return {
     nodeInfo: {
       pubkey,
@@ -148,7 +142,7 @@ function generateFallbackDaziaData(pubkey: string): FallbackData {
   }
 }
 
-function generateSmartDescription(action: ActionData, nodeInfo: NodeInfoBasic): string {
+function _generateSmartDescription(action: ActionData, nodeInfo: NodeInfoBasic): string {
   const baseDescription = action.action || 'Optimiser votre nœud Lightning'
   const nodeContext = nodeInfo.alias ? ` pour ${nodeInfo.alias}` : ''
   const impact = action.expected_impact ? ` pour ${action.expected_impact}` : ''
@@ -156,7 +150,7 @@ function generateSmartDescription(action: ActionData, nodeInfo: NodeInfoBasic): 
   return `${baseDescription}${nodeContext}${impact}`
 }
 
-function mapImpact(impact: string | undefined): 'low' | 'medium' | 'high' {
+function _mapImpact(impact: string | undefined): 'low' | 'medium' | 'high' {
   if (!impact) return 'medium'
   const normalized = impact.toLowerCase()
   if (normalized.includes('high') || normalized.includes('fort')) return 'high'
@@ -164,7 +158,7 @@ function mapImpact(impact: string | undefined): 'low' | 'medium' | 'high' {
   return 'medium'
 }
 
-function mapDifficulty(difficulty: string | undefined): 'easy' | 'medium' | 'hard' {
+function _mapDifficulty(difficulty: string | undefined): 'easy' | 'medium' | 'hard' {
   if (!difficulty) return 'medium'
   const normalized = difficulty.toLowerCase()
   if (normalized.includes('easy') || normalized.includes('facile')) return 'easy'
@@ -172,15 +166,15 @@ function mapDifficulty(difficulty: string | undefined): 'easy' | 'medium' | 'har
   return 'medium'
 }
 
-function generateTimeEstimate(difficulty: string | undefined): string {
-  switch(mapDifficulty(difficulty)) {
+function _generateTimeEstimate(difficulty: string | undefined): string {
+  switch(_mapDifficulty(difficulty)) {
     case 'easy': return '15-30 minutes'
     case 'hard': return '2-4 heures'
     default: return '1-2 heures'
   }
 }
 
-function generateImplementationSteps(action: ActionData): string[] {
+function _generateImplementationSteps(action: ActionData): string[] {
   if (action.steps && action.steps.length > 0) {
     return action.steps
   }
@@ -193,7 +187,7 @@ function generateImplementationSteps(action: ActionData): string[] {
   ]
 }
 
-function generateSuccessCriteria(action: ActionData): string[] {
+function _generateSuccessCriteria(action: ActionData): string[] {
   if (action.success_metrics && action.success_metrics.length > 0) {
     return action.success_metrics
   }

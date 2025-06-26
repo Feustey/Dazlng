@@ -1,8 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { useConversionTracking } from '../../../hooks/useConversionTracking';
-import { useScrollTracking } from '../../../hooks/useScrollTracking';
 
 const DazBoxHero: React.FC = () => (
     <section className="relative min-h-screen bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 flex items-center justify-center px-4 py-20">
