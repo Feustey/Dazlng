@@ -16,15 +16,15 @@ import {
 
 export interface DaznoErrorResponse {
   message: string;
+  code?: string;
+  details?: unknown;
+}
 
 export enum InvoiceStatus {
   pending = "pending",
   settled = "settled",
   expired = "expired",
   failed = "failed"
-}
-  code?: string;
-  details?: unknown;
 }
 
 export interface DaznoServiceStatus {
@@ -50,7 +50,7 @@ class DaznoAPI {
   private initialized = false
 
   constructor() {
-    this.baseURL = process.env.NEXT_PUBLIC_DAZNO_API_URL ?? "" || 'https://api.dazno.de'
+    this.baseURL = (process.env.NEXT_PUBLIC_DAZNO_API_URL ?? "") || 'https://api.dazno.de'
   }
 
   /**
@@ -305,7 +305,7 @@ class DaznoAPI {
         method: 'POST',
         body: JSON.stringify(body),
       }
-};
+    );
     return res.status;
   }
 }

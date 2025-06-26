@@ -6,7 +6,7 @@ import { ErrorCodes } from '@/types/database'
 
 const resendApiKey = process.env.RESEND_API_KEY ?? "";
 const resend = new Resend(resendApiKey);
-const isDevelopment = process.env.NODE_ENV ?? "" === 'development';
+const isDevelopment = (process.env.NODE_ENV ?? "") === 'development';
 
 export interface ContactData {
   firstName: string;
@@ -131,7 +131,7 @@ export async function POST(request: NextRequest): Promise<Response> {
             subject: interest,
             message
           }),
-          replyTo: email
+          reply_to: email
         }),
         
         // Email de confirmation à l'utilisateur

@@ -7,6 +7,25 @@ import { useConversionTracking } from '../../../hooks/useConversionTracking';
 import { useScrollTracking } from '../../../hooks/useScrollTracking';
 
 const DazPayHero: React.FC = () => {
+  const router = useRouter();
+  const { trackProductInterest } = useConversionTracking();
+
+  const handleStartFree = (): void => {
+    trackProductInterest('dazpay', 'hero_cta', { action: 'start_free' });
+    router.push('/register');
+  };
+
+  const handleLearnMore = (): void => {
+    trackProductInterest('dazpay', 'hero_cta', { action: 'learn_more' });
+    const element = document.getElementById('features');
+    element?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleViewDemo = (): void => {
+    trackProductInterest('dazpay', 'hero_cta', { action: 'view_demo' });
+    router.push('/dazpay/demo');
+  };
+
   return (
     <section className="relative min-h-screen bg-gradient-to-br from-orange-500 via-red-600 to-pink-700 flex items-center justify-center px-4 py-20">
       {/* Background Pattern */}

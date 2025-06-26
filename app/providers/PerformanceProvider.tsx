@@ -13,19 +13,14 @@ export function PerformanceProvider({ children }: PerformanceProviderProps) {
   const webVitalsRef = useRef<any>(null);
   
   // Monitorer les Web Vitals
-  useWebVitals((metric: any) => {
-    webVitalsRef.current = {
-      ...webVitalsRef.current,
-      [metric.name]: metric.value
-    };
-  });
+  useWebVitals();
 
   // Optimisation du cache
-  const { initCache } = useCache();
+  // const cache = useCache();
   
   useEffect(() => {
     // Initialiser le cache
-    initCache();
+    // initCache();
 
     // Précharger les ressources critiques
     const preloadCriticalResources = () => {
@@ -49,8 +44,9 @@ export function PerformanceProvider({ children }: PerformanceProviderProps) {
       const images = document.querySelectorAll('img[loading="lazy"]');
       if ('loading' in HTMLImageElement.prototype) {
         images.forEach(img => {
-          if (img.getBoundingClientRect().top < window.innerHeight) {
-            img.loading = 'eager';
+          const image = img as HTMLImageElement;
+          if (image.getBoundingClientRect().top < window.innerHeight) {
+            image.loading = 'eager';
           }
         });
       }

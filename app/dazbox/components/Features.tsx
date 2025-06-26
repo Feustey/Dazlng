@@ -16,6 +16,31 @@ const DazBoxFeatures: React.FC = () => {
   const { trackProductInterest } = useConversionTracking();
   const [visibleFeatures, setVisibleFeatures] = useState<string[]>([]);
   const featureRefs = useRef<(HTMLDivElement | null)[]>([]);
+  
+  // Features data
+  const features = [
+    {
+      id: 'plug-play',
+      icon: '⚡',
+      title: 'Plug & Play',
+      description: 'Prêt à l\'emploi en 5 minutes',
+      benefit: 'Installation simple'
+    },
+    {
+      id: 'performance',
+      icon: '🚀',
+      title: 'Haute Performance',
+      description: 'Hardware optimisé pour Lightning',
+      benefit: 'Rapidité garantie'
+    },
+    {
+      id: 'support',
+      icon: '🛠️',
+      title: 'Support Expert',
+      description: 'Assistance technique 24/7',
+      benefit: 'Accompagnement complet'
+    }
+  ];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -65,7 +90,7 @@ const DazBoxFeatures: React.FC = () => {
         </div>
 
         {/* Features Grid */}
-        <div ref={featuresRef} className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature: any, index: any) => (
             <div
               key={feature.id}
@@ -75,7 +100,7 @@ const DazBoxFeatures: React.FC = () => {
                 group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl 
                 transform transition-all duration-700 cursor-pointer
                 hover:scale-105 border border-gray-100
-                ${visibleFeatures.has(feature.id) 
+                ${visibleFeatures.includes(feature.id) 
                   ? 'translate-y-0 opacity-100' 
                   : 'translate-y-8 opacity-0'
                 }

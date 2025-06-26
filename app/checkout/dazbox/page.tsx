@@ -42,7 +42,7 @@ export interface CheckoutState {
   transactionId?: string;
 }
 
-function CheckoutContent(): React.FC {
+function CheckoutContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, session } = useSupabase();
@@ -572,7 +572,7 @@ function CheckoutContent(): React.FC {
   return null;
 }
 
-export default function CheckoutPage(): React.FC {
+export default function CheckoutPage() {
   return (
     <Suspense fallback={<div className="flex h-screen items-center justify-center"><p>Chargement...</p></div>}>
       <CheckoutContent />

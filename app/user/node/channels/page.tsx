@@ -389,5 +389,6 @@ const NodeChannelsPage: FC = () => {
       )}
     </div>
   );
+};
 
 export default NodeChannelsPage;

@@ -55,7 +55,7 @@ export function useAuth(): UseAuthReturn {
           router.push('/');
         }
       }
-};
+    );
     return () => {
       subscription.unsubscribe();
     };

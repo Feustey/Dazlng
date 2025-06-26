@@ -48,10 +48,10 @@ export async function GET(): Promise<Response> {
         }
       },
       environment: {
-        url_configured: !!process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
-        key_configured: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
-        url_preview: process.env.NEXT_PUBLIC_SUPABASE_URL ?? ""?.substring(0, 30) + '...',
-        node_env: process.env.NODE_ENV ?? ""
+        url_configured: !!(process.env.NEXT_PUBLIC_SUPABASE_URL ?? ""),
+        key_configured: !!(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ""),
+        url_preview: (process.env.NEXT_PUBLIC_SUPABASE_URL ?? "")?.substring(0, 30) + '...',
+        node_env: (process.env.NODE_ENV ?? "")
       }
     });
 

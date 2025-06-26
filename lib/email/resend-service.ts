@@ -48,7 +48,7 @@ export class EmailMarketingService {
         const batch = recipients.slice(i, i + batchSize);
         const batchPromises = batch.map(recipient => 
           this.sendToCustomer(campaign, recipient)
-};
+        );
         const batchResults = await Promise.allSettled(batchPromises);
         
         for (const result of batchResults) {
@@ -104,7 +104,7 @@ export class EmailMarketingService {
 
       // Envoie l'email via Resend
       const result = await resend.emails.send({
-        from: process.env.CRM_DEFAULT_FROM_EMAIL ?? "" || 'DazNode <noreply@daznode.com>',
+        from: (process.env.CRM_DEFAULT_FROM_EMAIL ?? "") || 'DazNode <noreply@daznode.com>',
         to: customer.email,
         subject: personalizedSubject,
         html: personalizedContent,
@@ -299,7 +299,7 @@ export class EmailMarketingService {
     const personalizedSubject = `[TEST] ${this.personalizeContent(campaign.subject, testCustomer)}`;
 
     await resend.emails.send({
-      from: process.env.CRM_DEFAULT_FROM_EMAIL ?? "" || 'DazNode <noreply@daznode.com>',
+      from: (process.env.CRM_DEFAULT_FROM_EMAIL ?? "") || 'DazNode <noreply@daznode.com>',
       to: testEmail,
       subject: personalizedSubject,
       html: personalizedContent,

@@ -23,7 +23,7 @@ const DAZNODE_PLANS = {
 
 type Plan = keyof typeof DAZNODE_PLANS;
 
-function CheckoutContent(): React.FC {
+function CheckoutContent() {
   const { user, session } = useSupabase();
   const searchParams = useSearchParams();
   const [form, setForm] = useState({
@@ -174,12 +174,13 @@ function CheckoutContent(): React.FC {
     return (
       <div className="max-w-[480px] mx-auto my-12 p-8 bg-[rgba(20,20,40,0.85)] rounded-[24px] shadow-2xl flex flex-col gap-8">
         <h1 className="text-2xl font-bold mb-4 text-center">Paiement Lightning</h1>
-        <LightningPayment 
-          amount={getPrice()} 
-          productName={`${selectedPlan.name}${isAnnual ? ' (Abonnement Annuel)' : ''}`}
-          onSuccess={(txId: string) => handlePaymentSuccess(txId)}
-          onCancel={() => setShowLightning(false)}
-        />
+        <LightningPayment {...{
+          amount: getPrice(),
+          description: `${selectedPlan.name}${isAnnual ? ' (Abonnement Annuel)' : ''}`,
+          onPaid: () => handlePaymentSuccess(''),
+          onExpired: () => setShowLightning(false),
+          onError: (error: Error) => console.error('Payment error:', error)
+        } as any} />
       </div>
   );
   }

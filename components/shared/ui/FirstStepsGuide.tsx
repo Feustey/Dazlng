@@ -1,6 +1,7 @@
 import React from 'react';
 
 const FirstStepsGuide: React.FC = () => {
+  return (
     <section className="py-20 bg-gradient-to-b from-white to-gray-50">
       <div className="max-w-6xl mx-auto px-4">
         <div className="text-center mb-16">
@@ -78,5 +79,6 @@ const FirstStepsGuide: React.FC = () => {
       </div>
     </section>
   );
+};
 
 export default FirstStepsGuide; 

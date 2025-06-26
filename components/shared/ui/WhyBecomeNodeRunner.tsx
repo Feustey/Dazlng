@@ -1,6 +1,7 @@
 import React from 'react';
 
 const WhyBecomeNodeRunner: React.FC = () => {
+  return (
     <section id="why-become-runner" className="py-20 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-16">
@@ -65,5 +66,6 @@ const WhyBecomeNodeRunner: React.FC = () => {
       </div>
     </section>
   );
+};
 
 export default WhyBecomeNodeRunner; 

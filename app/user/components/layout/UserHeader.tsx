@@ -12,5 +12,6 @@ const UserHeader: FC = () => {
       </div>
     </header>
   );
+};
 
 export default UserHeader;

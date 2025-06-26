@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useConversionTracking } from '../../../hooks/useConversionTracking';
 
 const NewRevenueHero: React.FC = () => {
+  return (
     <section className="min-h-screen bg-gradient-to-br from-green-600 via-blue-700 to-purple-800 flex items-center justify-center px-4 py-20">
       <div className="max-w-7xl mx-auto text-center space-y-8">
         {/* Logo */}
@@ -113,5 +114,6 @@ const NewRevenueHero: React.FC = () => {
       </div>
     </section>
   );
+};
 
 export default NewRevenueHero; 

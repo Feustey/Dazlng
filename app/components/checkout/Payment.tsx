@@ -5,7 +5,7 @@ export interface PaymentFormProps {
   onSuccess: () => void;
 }
 
-export function PaymentForm({ onBack, onSuccess }: PaymentFormProps): React.FC {
+export function PaymentForm({ onBack, onSuccess }: PaymentFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 

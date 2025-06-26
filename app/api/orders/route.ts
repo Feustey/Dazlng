@@ -79,7 +79,9 @@ export async function POST(req: NextRequest): Promise<Response> {
       }, 400);
     }
 
-    const { user_id, product_type, plan, billing_cycle, amount, payment_method, customer, product, metadata } = validationResult.data;
+    const { product_type, customer, product } = validationResult.data;
+    const requestData = validationResult.data as any;
+    const { user_id, plan, billing_cycle, amount, payment_method, metadata } = requestData;
 
     console.log('POST', '/api/orders', user_id, { product_type, amount });
 
@@ -142,6 +144,7 @@ export async function POST(req: NextRequest): Promise<Response> {
 
         // Email à l'équipe
         await resend.emails.send({
+          from: 'DazNode <noreply@dazno.de>',
           to: 'contact@dazno.de',
           subject: `Nouvelle commande #${data.id} - ${product_type}`,
           html: generateEmailTemplate({
@@ -156,6 +159,7 @@ export async function POST(req: NextRequest): Promise<Response> {
 
         // Email de confirmation au client
         await resend.emails.send({
+          from: 'DazNode <noreply@dazno.de>',
           to: customer.email,
           subject: `Confirmation de commande #${data.id}`,
           html: generateEmailTemplate({

@@ -11,7 +11,7 @@ export interface ButtonProps {
   className?: string;
 }
 
-export default function Button(props: ButtonProps): React.FC {
+export default function Button(props: ButtonProps) {
   const {
     children,
     onClick,

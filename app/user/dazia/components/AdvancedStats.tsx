@@ -21,10 +21,10 @@ ChartJS.register(
 
 export interface AdvancedStatsProps {
   stats: {
-  channelDistribution: {
-  labels: string[];
-  data: number[];
-  );
+    channelDistribution: {
+      labels: string[];
+      data: number[];
+    };
     revenueByCategory: {
       labels: string[];
       data: number[];

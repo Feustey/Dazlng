@@ -46,5 +46,6 @@ const DazBoxOffer: FC = () => {
       </p>
     </section>
   );
+};
 
 export default DazBoxOffer; 

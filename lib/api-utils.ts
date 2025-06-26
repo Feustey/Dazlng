@@ -94,7 +94,7 @@ export async function withAuth(
         }
       },
       { status: 401 }
-};
+    );
   }
   
   try {
@@ -123,7 +123,7 @@ export async function withAdminAuth(
         }
       },
       { status: 403 }
-};
+    );
   }
   
   try {

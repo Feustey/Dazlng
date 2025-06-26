@@ -9,5 +9,6 @@ const OptimizePage: FC = () => {
       </div>
     </div>
   );
+};
 
 export default OptimizePage;

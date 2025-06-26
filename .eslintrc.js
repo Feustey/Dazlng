@@ -16,7 +16,8 @@ module.exports = {
     'react-native/no-unused-styles': 'off',
     'react/no-unescaped-entities': 'off',
     'jsx-a11y/alt-text': 'warn',
-    '@next/next/no-img-element': 'warn'
+    '@next/next/no-img-element': 'warn',
+    '@typescript-eslint/prefer-nullish-coalescing': 'off'
   },
   ignorePatterns: [
     '*.config.js',

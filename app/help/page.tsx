@@ -5,6 +5,39 @@ import "aos/dist/aos.css";
 import Image from 'next/image';
 
 const HelpPage: React.FC = () => {
+  const faqCategories = [
+    {
+      icon: '🚀',
+      title: 'Prise en main',
+      description: 'Apprenez les bases de DazNode et démarrez rapidement'
+    },
+    {
+      icon: '⚙️',
+      title: 'Configuration',
+      description: 'Configurez votre nœud Lightning Network'
+    },
+    {
+      icon: '💰',
+      title: 'Facturation',
+      description: 'Questions sur les prix et paiements'
+    }
+  ];
+
+  const faqQuestions = [
+    {
+      question: 'Comment installer DazNode ?',
+      answer: 'DazNode est très simple à installer. Suivez notre guide d\'installation étape par étape...'
+    },
+    {
+      question: 'Quel est le coût de DazNode ?',
+      answer: 'DazNode propose plusieurs plans tarifaires adaptés à vos besoins...'
+    },
+    {
+      question: 'Comment contacter le support ?',
+      answer: 'Vous pouvez nous contacter par email, chat ou téléphone 24/7...'
+    }
+  ];
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Centre d'aide DazNode</h1>

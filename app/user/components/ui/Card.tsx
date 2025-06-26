@@ -22,5 +22,6 @@ const UpgradePrompt: FC<UpgradePromptProps> = ({
       </button>
     </div>
   );
+};
 
 export default UpgradePrompt;

@@ -46,7 +46,18 @@ export async function GET(req: NextRequest): Promise<Response> {
     const lightningService = createDazNodeLightningService();
     
     // Vérifier le statut du paiement
-    const paymentStatus = await lightningService.checkInvoiceStatus(invoiceId || paymentHash);
+    const identifier = invoiceId || paymentHash;
+    if (!identifier) {
+      return NextResponse.json<ApiResponse<null>>({
+        success: false,
+        error: {
+          code: 'MISSING_PARAMETER',
+          message: 'invoice_id ou payment_hash requis'
+        }
+      }, { status: 400 });
+    }
+
+    const paymentStatus = await lightningService.checkInvoiceStatus(identifier);
 
     // Vérification de la structure de paymentStatus
     if (!paymentStatus || typeof paymentStatus !== 'object' || !('status' in paymentStatus)) {

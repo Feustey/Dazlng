@@ -5,9 +5,9 @@ import { validateData, createInvoiceSchema } from '@/lib/validations/lightning';
 import type { Invoice, CreateInvoiceParams } from '@/types/lightning';
 import { OrderService } from '@/lib/services/order-service';
 import { PaymentLogger } from '@/lib/services/payment-logger';
-import { ApiResponse } from '@/lib/api-response';
+// import { ApiResponse } from '@/lib/api-response';
 import { createDazNodeLightningService } from '@/lib/services/daznode-lightning-service';
-import { validateRequestBody } from '@/lib/validations';
+// import { validateRequestBody } from '@/lib/validations';
 import { z } from 'zod';
 
 export const dynamic = "force-dynamic";
@@ -71,7 +71,7 @@ export async function GET(): Promise<Response> {
 
 export async function POST(request: Request): Promise<Response> {
   try {
-    const data = await validateRequestBody(request, createInvoiceSchema);
+    const data = await request.json();
     const lightning = createDazNodeLightningService();
     const invoice = await lightning.generateInvoice(data);
     

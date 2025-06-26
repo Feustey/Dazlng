@@ -5,7 +5,7 @@ import { User } from '../types/database';
 import { NextRequest } from 'next/server';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
-const JWT_SECRET = process.env.JWT_SECRET ?? "" || 'your-secret-key';
+const JWT_SECRET = (process.env.JWT_SECRET ?? "") || 'your-secret-key';
 
 export interface UserWithOrders extends Omit<User, 'password'> {
   orders: Array<{

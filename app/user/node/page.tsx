@@ -79,6 +79,12 @@ export interface UnifiedRecommendation {
   unified_score: number;
 }
 
+// Graphique simple pour les tendances
+export interface SimpleChartProps {
+  data: number[];
+  title: string;
+}
+
 const NodeManagement: FC = () => {
   const { session } = useSupabase();
   const router = useRouter();
@@ -446,11 +452,6 @@ const NodeManagement: FC = () => {
       default: return 'text-gray-600 bg-gray-100 border-gray-200';
     }
   };
-
-  // Graphique simple pour les tendances
-  export interface SimpleChartProps {
-  data: number[]; title;
-}
 
 const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
     if (data.length === 0) return null;
@@ -1276,5 +1277,6 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
       )}
     </div>
   );
+};
 
 export default NodeManagement;

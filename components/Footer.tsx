@@ -41,6 +41,7 @@ const socialLinks = [
 ];
 
 const Footer: React.FC = () => {
+  return (
     <footer className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white overflow-hidden">
       {/* Éléments décoratifs en arrière-plan */}
       <div className="absolute inset-0 opacity-10 pointer-events-none select-none">

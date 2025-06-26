@@ -5,20 +5,20 @@ import { useState } from 'react';
 
 export interface RecommendationCardProps {
   recommendation: {
-  id: string;
-  title: string;
-  description: string;
-  impact: 'high' | 'medium' | 'low';
-  difficulty: 'easy' | 'medium' | 'hard';
-  priority: number;
-  estimated_gain: number;
-  category: 'liquidity' | 'connectivity' | 'fees' | 'security';
-  action_type: 'open_channel' | 'close_channel' | 'adjust_fees' | 'rebalance' | 'other';
-  target_node?: {
-  pubkey: string;
-  alias: string;
-  capacity: number;
-  );
+    id: string;
+    title: string;
+    description: string;
+    impact: 'high' | 'medium' | 'low';
+    difficulty: 'easy' | 'medium' | 'hard';
+    priority: number;
+    estimated_gain: number;
+    category: 'liquidity' | 'connectivity' | 'fees' | 'security';
+    action_type: 'open_channel' | 'close_channel' | 'adjust_fees' | 'rebalance' | 'other';
+    target_node?: {
+      pubkey: string;
+      alias: string;
+      capacity: number;
+    };
     steps: {
       order: number;
       description: string;

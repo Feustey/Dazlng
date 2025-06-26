@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       ],
     });
     return NextResponse.json({
-      text: response.content[0]?.text || '',
+      text: (response.content[0] as any)?.text || '',
       raw: response,
     });
   } catch (error: any) {

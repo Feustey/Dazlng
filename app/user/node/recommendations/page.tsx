@@ -9,5 +9,6 @@ const NodeRecommendationsPage: FC = () => {
       </div>
     </div>
   );
+};
 
 export default NodeRecommendationsPage;

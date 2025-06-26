@@ -40,7 +40,7 @@ export function OptimizedImage({
   onLoad,
   onError,
   ...props
-}: OptimizedImageProps): React.FC {
+}: OptimizedImageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 

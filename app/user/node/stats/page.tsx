@@ -40,5 +40,6 @@ const NodeStatsPage: FC = () => {
       </div>
     </div>
   );
+};
 
 export default NodeStatsPage;

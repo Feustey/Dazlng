@@ -7,7 +7,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // Vérifier le secret de la tâche CRON
-  if (req.headers['x-cron-secret'] !== process.env.CRON_SECRET ?? "") {
+  if (req.headers['x-cron-secret'] !== (process.env.CRON_SECRET ?? "")) {
     return res.status(401).json({ error: 'Non autorisé' });
   }
 

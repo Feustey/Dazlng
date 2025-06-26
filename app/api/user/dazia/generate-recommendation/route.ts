@@ -5,7 +5,7 @@ import { mcpLightAPI } from '@/lib/services/mcp-light-api'
 import { ApiResponse } from '@/types/database'
 import { createDaznoApiClient } from '@/lib/services/dazno-api'
 import { getSupabaseServerPublicClient } from '@/lib/supabase'
-import { getNodePubkey, getNodePubkeyFromSession } from '@/lib/utils'
+// import { getNodePubkey, getNodePubkeyFromSession } from '@/lib/utils'
 import DaznoAPI from '@/lib/services/dazno-api'
 import { z } from 'zod'
 
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
-    const pubkey = await getNodePubkeyFromSession(session);
+    const pubkey = session.user?.user_metadata?.pubkey || null;
     if (!pubkey) {
       return NextResponse.json({ error: 'Aucun nœud associé' }, { status: 400 });
     }
@@ -106,7 +106,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     const recommendations = await daznoApi.getPriorityActions(pubkey, {
       context: 'intermediate',
-      goals: ['increase_revenue', 'improve_reliability']
+      goals: ['increase_revenue', 'improve_connectivity']
     });
 
     return NextResponse.json({ success: true, data: recommendations });

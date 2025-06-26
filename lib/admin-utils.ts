@@ -439,7 +439,7 @@ export function withEnhancedAdminAuth(
           'Authentification admin requise',
           null,
           401
-};
+        );
       }
 
       // Vérification des permissions si spécifiées
@@ -448,14 +448,14 @@ export function withEnhancedAdminAuth(
           adminId,
           requiredPermissions.resource,
           requiredPermissions.action as any
-};
+        );
         if (!hasPermission) {
           return AdminResponseBuilder.error(
             'FORBIDDEN',
             'Permissions insuffisantes',
             null,
             403
-};
+          );
         }
       }
 
@@ -469,7 +469,7 @@ export function withEnhancedAdminAuth(
         'Erreur interne du serveur',
         null,
         500
-};
+      );
     }
   };
 }

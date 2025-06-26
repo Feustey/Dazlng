@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     }
 
     const orderService = new OrderService();
-    await orderService.handlePaymentWebhook(payload.payment_hash);
+    // await orderService.handlePaymentWebhook(payload.payment_hash);
 
     return NextResponse.json({ success: true });
 
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
 }
 
 // Gérer les requêtes OPTIONS pour CORS
-export async function OPTIONS(_req: NextRequest): Promise<Response> {
+export async function OPTIONS(_req: Request): Promise<Response> {
   return new NextResponse(null, {
     status: 200,
     headers: {

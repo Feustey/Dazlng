@@ -11,5 +11,6 @@ const GradientTitle: React.FC<GradientTitleProps> = ({ children, className = "" 
       {children}
     </h1>
   );
+};
 
 export default GradientTitle; 

@@ -7,6 +7,25 @@ import { useConversionTracking } from '../../../hooks/useConversionTracking';
 import { useScrollTracking } from '../../../hooks/useScrollTracking';
 
 const DazNodeHero: React.FC = () => {
+  const router = useRouter();
+  const { trackProductInterest } = useConversionTracking();
+
+  const handleStartProfessional = (): void => {
+    trackProductInterest('daznode', 'hero_cta', { action: 'start_professional' });
+    router.push('/checkout/daznode?plan=professional');
+  };
+
+  const handleLearnMore = (): void => {
+    trackProductInterest('daznode', 'hero_cta', { action: 'learn_more' });
+    const element = document.getElementById('features');
+    element?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleViewDemo = (): void => {
+    trackProductInterest('daznode', 'hero_cta', { action: 'view_demo' });
+    router.push('/demo');
+  };
+
   return (
     <section className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 flex items-center justify-center px-4 py-20">
       {/* Background Effects */}

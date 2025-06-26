@@ -19,6 +19,76 @@ export interface PricingPlan {
 }
 
 const DazBoxPricing: React.FC = () => {
+  const router = useRouter();
+  const { trackProductInterest } = useConversionTracking();
+  
+  // Format satoshis price for display
+  const formatSatsPrice = (sats: number): string => {
+    return `${sats.toLocaleString()} sats`;
+  };
+
+  // Handle plan selection
+  const handlePlanSelect = (plan: PricingPlan): void => {
+    trackProductInterest('dazbox', 'plan_select', { plan: plan.id });
+    router.push(`/checkout/dazbox?plan=${plan.id}`);
+  };
+
+  // Pricing plans data
+  const plans: PricingPlan[] = [
+    {
+      id: 'starter',
+      name: 'DazBox Starter',
+      description: 'Parfait pour débuter sur Lightning Network',
+      price: 400000,
+      originalPrice: 450000,
+      discount: '-11%',
+      features: [
+        'Nœud Lightning Network pré-configuré',
+        'Installation plug & play en 5 minutes',
+        'Interface utilisateur intuitive',
+        'Support technique 24/7',
+        'Mises à jour automatiques',
+        'Garantie 30 jours'
+      ],
+      recommended: true,
+      badge: 'Plus Populaire',
+      ctaText: 'Commencer Maintenant',
+      ctaVariant: 'primary'
+    },
+    {
+      id: 'pro',
+      name: 'DazBox Pro',
+      description: 'Pour les utilisateurs avancés',
+      price: 600000,
+      features: [
+        'Tout de DazBox Starter',
+        'Capacité de routage avancée',
+        'Monitoring en temps réel',
+        'Configuration personnalisée',
+        'API complète',
+        'Support prioritaire'
+      ],
+      ctaText: 'Passer au Pro',
+      ctaVariant: 'secondary'
+    },
+    {
+      id: 'enterprise',
+      name: 'DazBox Enterprise',
+      description: 'Solution complète pour entreprises',
+      price: 1000000,
+      features: [
+        'Tout de DazBox Pro',
+        'Multi-nœuds management',
+        'Intégration personnalisée',
+        'SLA garantie 99.9%',
+        'Support dédié',
+        'Formation incluse'
+      ],
+      ctaText: 'Nous Contacter',
+      ctaVariant: 'secondary'
+    }
+  ];
+
   return (
     <section id="pricing" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4">
@@ -37,7 +107,7 @@ const DazBoxPricing: React.FC = () => {
           
           {/* ROI Calculator CTA */}
           <button 
-            onClick={handleCalculateROI}
+            onClick={() => window.location.href = '/contact'}
             className="inline-flex items-center bg-green-100 text-green-800 px-6 py-3 rounded-full font-semibold hover:bg-green-200 transition-colors"
           >
             <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

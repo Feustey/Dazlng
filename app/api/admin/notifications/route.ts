@@ -30,7 +30,8 @@ async function getNotificationsHandler(req: NextRequest, adminId: string): Promi
     
     const notifications = await getAdminNotifications(adminId, unreadOnly);
     
-    return AdminResponseBuilder.success(notifications, {
+    return AdminResponseBuilder.success({
+      notifications,
       stats: {
         total: notifications.length,
         unread: notifications.filter(n => !n.read).length

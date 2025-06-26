@@ -40,7 +40,7 @@ export function getPubkeyFromCookie(): PubkeyData | null {
   const cookies = document.cookie.split(';');
   const pubkeyCookie = cookies.find(cookie => 
     cookie.trim().startsWith(`${PUBKEY_COOKIE_NAME}=`)
-};
+  );
   if (!pubkeyCookie) return null;
 
   try {

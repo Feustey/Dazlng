@@ -19,7 +19,7 @@ const CRMAdminProvider = dynamic(
   }
 );
 
-export default function CRMPage(): React.FC {
+export default function CRMPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <CRMAdminProvider />

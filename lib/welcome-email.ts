@@ -11,7 +11,7 @@ export interface WelcomeEmailData {
 export async function sendWelcomeEmail({ email, nom, prenom }: WelcomeEmailData): Promise<boolean> {
   try {
     const firstName = prenom || nom || 'Bienvenue';
-    const settingsUrl = `${process.env.NEXTAUTH_URL ?? "" || 'https://dazno.de'}/user/settings`;
+    const settingsUrl = `${(process.env.NEXTAUTH_URL ?? "") || 'https://dazno.de'}/user/settings`;
     
     const emailContent = {
       from: 'DazNode <noreply@dazno.de>',
@@ -54,7 +54,7 @@ export async function sendWelcomeEmail({ email, nom, prenom }: WelcomeEmailData)
             <div style="background: #fff5f5; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #f56565;">
               <h3 style="color: #c53030; margin-top: 0;">⚡ Vous n'avez pas encore de nœud Lightning ?</h3>
               <p style="margin-bottom: 15px;">Pas de problème ! Découvrez notre <strong>DazBox</strong> - un nœud Lightning prêt à l'emploi, livré configuré et optimisé.</p>
-              <a href="${process.env.NEXTAUTH_URL ?? "" || 'https://dazno.de'}/checkout/dazbox" style="color: #c53030; font-weight: bold; text-decoration: none;">
+              <a href="${(process.env.NEXTAUTH_URL ?? "") || 'https://dazno.de'}/checkout/dazbox" style="color: #c53030; font-weight: bold; text-decoration: none;">
                 📦 Découvrir la DazBox →
               </a>
             </div>
@@ -102,7 +102,7 @@ export async function sendWelcomeEmail({ email, nom, prenom }: WelcomeEmailData)
         Configurez votre compte : ${settingsUrl}
         
         Vous n'avez pas encore de nœud Lightning ?
-        Découvrez notre DazBox : ${process.env.NEXTAUTH_URL ?? "" || 'https://dazno.de'}/checkout/dazbox
+        Découvrez notre DazBox : ${(process.env.NEXTAUTH_URL ?? "") || 'https://dazno.de'}/checkout/dazbox
         
         Profitez de votre essai gratuit de 7 jours !
         

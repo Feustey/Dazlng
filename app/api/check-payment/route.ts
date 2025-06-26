@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
       return createApiResponse({
         success: true,
         data: {
-          status: 'settled' as InvoiceStatus,
+          status: 'settled',
           paidAt: order.paid_at
         }
       });

@@ -2,12 +2,12 @@ import React, { FC } from 'react';
 
 export interface NodeCardProps {
   nodeData: {
-  pubkey?: string;
-  alias?: string;
-  totalCapacity?: number;
-  activeChannels?: number;
-  status?: 'online' | 'offline' | 'syncing';
-} | null;
+    pubkey?: string;
+    alias?: string;
+    totalCapacity?: number;
+    activeChannels?: number;
+    status?: 'online' | 'offline' | 'syncing';
+  } | null;
   showUpgradePrompt?: boolean;
 }
 
@@ -68,5 +68,6 @@ const NodeCard: FC<NodeCardProps> = ({ nodeData, showUpgradePrompt = false }) =>
       </div>
     </div>
   );
+};
 
 export default NodeCard;

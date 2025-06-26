@@ -54,7 +54,7 @@ const SignupConfirmation: React.FC = () => {
             Votre adresse email a été vérifiée avec succès. Votre compte est maintenant actif et vous pouvez profiter de tous les services de dazno.de.
           </p>
           <button
-            onClick={closeConfirmation}
+            onClick={() => window.location.href = '/'}
             className="w-full bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors shadow-lg hover-lift"
           >
             Commencer l'aventure
@@ -69,6 +69,7 @@ const SignupConfirmation: React.FC = () => {
 export interface AnimatedSectionProps {
   children: React.ReactNode; 
   className?: string;
+  delay?: number;
 }
 
 const AnimatedSection: React.FC<AnimatedSectionProps> = ({ 
@@ -76,17 +77,13 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
   className = "", 
   delay = 0 
 }) => {
-  const { ref, inView } = useInView({ 
-    threshold: 0.1, 
-    triggerOnce: true,
-    delay 
-  });
+  const [inView, setInView] = useState(false);
   
   return (
     <section 
-      ref={ref}
       className={`${className} ${inView ? 'animate-fade-in' : 'opacity-0'}`}
       style={{ animationDelay: `${delay}ms` }}
+      onMouseEnter={() => setInView(true)}
     >
       {children}
     </section>

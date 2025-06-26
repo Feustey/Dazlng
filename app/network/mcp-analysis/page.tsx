@@ -8,7 +8,7 @@ import Button from '@/components/shared/ui/Button';
 import { Alert, AlertDescription } from '@/components/shared/ui/Alert';
 import { Zap, Search, Globe, Database } from 'lucide-react';
 
-export default function MCPAnalysisPage(): React.FC {
+export default function MCPAnalysisPage() {
   const [pubkey, setPubkey] = useState('');
   const [validatedPubkey, setValidatedPubkey] = useState<string | null>(null);
   const { initialized, loading, error, checkHealth, isValidPubkey } = useMCPLight();

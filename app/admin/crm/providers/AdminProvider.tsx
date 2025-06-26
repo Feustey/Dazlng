@@ -151,15 +151,16 @@ const dataProvider = {
     const start = (page - 1) * perPage;
     const end = start + perPage - 1;
 
-    let query = crmSupabaseClient
+    // Simplified query without deep type inference
+    const baseQuery = (crmSupabaseClient as any)
       .from(resource)
       .select('*', { count: 'exact' })
       .eq(params.target, params.id)
       .range(start, end);
 
-    if (field) {
-      query = query.order(field, { ascending: order === 'ASC' });
-    }
+    const query = field 
+      ? baseQuery.order(field, { ascending: order === 'ASC' })
+      : baseQuery;
 
     const { data, error, count } = await query;
 
@@ -172,6 +173,19 @@ const dataProvider = {
       total: count || 0,
     };
   },
+
+  updateMany: async (resource: string, params: any) => {
+    const promises = params.ids.map((id: any) =>
+      crmSupabaseClient
+        .from(resource)
+        .update(params.data)
+        .eq('id', id)
+    );
+
+    const results = await Promise.all(promises);
+    
+    return { data: params.ids };
+  },
 };
 
 // Auth provider pour développement local - accès libre
@@ -181,7 +195,7 @@ const authProvider = {
   checkError: () => Promise.resolve(),
   checkAuth: () => {
     // En développement local, toujours autorisé
-    if (process.env.NODE_ENV ?? "" === 'development') {
+    if ((process.env.NODE_ENV ?? "") === 'development') {
       return Promise.resolve();
     }
     // En production, vous pouvez ajouter une vraie logique d'auth ici

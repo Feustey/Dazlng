@@ -26,7 +26,7 @@ export interface CardDescriptionProps {
   className?: string;
 }
 
-export default function Card({ children, className = "" }: CardProps): React.FC {
+export default function Card({ children, className = "" }: CardProps) {
   return (
     <div className={`bg-white rounded-2xl shadow p-8 ${className}`}>
       {children}
@@ -34,7 +34,7 @@ export default function Card({ children, className = "" }: CardProps): React.FC 
   );
 }
 
-export function CardHeader({ children, className = "" }: CardHeaderProps): React.FC {
+export function CardHeader({ children, className = "" }: CardHeaderProps) {
   return (
     <div className={`pb-4 border-b border-gray-100 ${className}`}>
       {children}
@@ -42,7 +42,7 @@ export function CardHeader({ children, className = "" }: CardHeaderProps): React
   );
 }
 
-export function CardTitle({ children, className = "" }: CardTitleProps): React.FC {
+export function CardTitle({ children, className = "" }: CardTitleProps) {
   return (
     <h3 className={`text-lg font-semibold text-gray-900 ${className}`}>
       {children}
@@ -50,7 +50,7 @@ export function CardTitle({ children, className = "" }: CardTitleProps): React.F
   );
 }
 
-export function CardContent({ children, className = "" }: CardContentProps): React.FC {
+export function CardContent({ children, className = "" }: CardContentProps) {
   return (
     <div className={`pt-4 ${className}`}>
       {children}
@@ -58,7 +58,7 @@ export function CardContent({ children, className = "" }: CardContentProps): Rea
   );
 }
 
-export function CardDescription({ children, className = "" }: CardDescriptionProps): React.FC {
+export function CardDescription({ children, className = "" }: CardDescriptionProps) {
   return (
     <p className={`text-sm text-gray-600 ${className}`}>
       {children}

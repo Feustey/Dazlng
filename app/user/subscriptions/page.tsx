@@ -939,5 +939,6 @@ const SubscriptionsPage: FC = () => {
       </div>
     </div>
   );
+};
 
 export default SubscriptionsPage;

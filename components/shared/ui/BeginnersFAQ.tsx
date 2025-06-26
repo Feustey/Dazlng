@@ -1,6 +1,31 @@
 import React, { useState } from 'react';
 
 const BeginnersFAQ: React.FC = () => {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const toggleFAQ = (index: number) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
+  const faqs = [
+    {
+      category: "Débutant",
+      question: "Qu'est-ce qu'un nœud Lightning ?",
+      answer: "Un nœud Lightning est un programme qui participe au réseau Lightning Network, permettant des transactions Bitcoin instantanées et à faible coût."
+    },
+    {
+      category: "Technique",
+      question: "Comment démarrer mon premier nœud ?",
+      answer: "Vous pouvez commencer avec notre guide étape par étape qui vous accompagne dans la configuration de votre premier nœud Lightning."
+    },
+    {
+      category: "Économie",
+      question: "Combien peut-on gagner avec un nœud Lightning ?",
+      answer: "Les revenus dépendent de nombreux facteurs comme la liquidité, les frais de routage et la connectivité de votre nœud. En moyenne, les opérateurs expérimentés génèrent entre 1-5% de rendement annuel."
+    }
+  ];
+
+  return (
     <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-16">
@@ -66,5 +91,6 @@ const BeginnersFAQ: React.FC = () => {
       </div>
     </section>
   );
+};
 
 export default BeginnersFAQ; 

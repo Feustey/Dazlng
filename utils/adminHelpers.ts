@@ -7,7 +7,7 @@ const ADMIN_PUBKEY = process.env.ADMIN_PUBKEY ?? "";
 
 export async function validateAdminAccess(req: NextRequest): Promise<boolean> {
   // Bypass en local
-  if (process.env.NODE_ENV ?? "" === "development" || req.headers.get("host")?.startsWith("localhost")) {
+  if ((process.env.NODE_ENV ?? "") === "development" || req.headers.get("host")?.startsWith("localhost")) {
     return true;
   }
   // Exemple : vérification d'un header personnalisé contenant la signature

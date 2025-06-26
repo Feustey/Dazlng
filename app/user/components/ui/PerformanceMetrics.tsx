@@ -88,32 +88,7 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({
       <span className={`px-3 py-1 rounded-full text-xs font-medium ${badgeColor}`}>
         {badgeIcon} Top {percentage.toFixed(0)}%
       </span>
-  );
-};
-
-export interface SimpleChartProps {
-  data: number[];
-}
-
-const SimpleChart: React.FC<SimpleChartProps> = ({ data }) => {
-    const max = Math.max(...data);
-    const min = Math.min(...data);
-    const range = max - min || 1;
-
-    return (
-      <div className="flex items-end gap-1 h-16">
-        {data.map((value: any, index: any) => {
-          const height = ((value - min) / range) * 100;
-          return (
-            <div
-              key={index}
-              className="bg-indigo-200 rounded-t flex-1 min-h-1"
-              style={{ height: `${Math.max(height, 10)}%` }}
-            />
-  );
-        })}
-      </div>
-  );
+    );
   };
 
   const unlockedAchievements = achievements.filter(a => a.unlocked);
@@ -306,6 +281,31 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data }) => {
       </div>
     </div>
   );
+};
+
+export interface SimpleChartProps {
+  data: number[];
+}
+
+const SimpleChart: React.FC<SimpleChartProps> = ({ data }) => {
+    const max = Math.max(...data);
+    const min = Math.min(...data);
+    const range = max - min || 1;
+
+    return (
+      <div className="flex items-end gap-1 h-16">
+        {data.map((value: any, index: any) => {
+          const height = ((value - min) / range) * 100;
+          return (
+            <div
+              key={index}
+              className="bg-indigo-200 rounded-t flex-1 min-h-1"
+              style={{ height: `${Math.max(height, 10)}%` }}
+            />
+          );
+        })}
+      </div>
+    );
 };
 
 export { PerformanceMetrics }; 

@@ -4,7 +4,7 @@ import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 
-export default function RegisterPage(): React.FC {
+export default function RegisterPage() {
   return (
     <Suspense fallback={<div>Chargement...</div>}>
       <RegisterPageContent />
@@ -12,7 +12,7 @@ export default function RegisterPage(): React.FC {
   );
 }
 
-function RegisterPageContent(): React.FC {
+function RegisterPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const urlEmail = searchParams?.get("email") || "";

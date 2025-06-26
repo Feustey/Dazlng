@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useConversionTracking } from '../../../hooks/useConversionTracking';
 import { useScrollTracking } from '../../../hooks/useScrollTracking';
 
-const DazBoxHero: React.FC = () => {
+const DazBoxHero: React.FC = () => (
     <section className="relative min-h-screen bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 flex items-center justify-center px-4 py-20">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
@@ -75,7 +75,7 @@ const DazBoxHero: React.FC = () => {
           {/* Call-to-Action */}
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
             <button 
-              onClick={handleOrderNow}
+              onClick={() => window.location.href = '/checkout/dazbox'}
               className="group bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold px-8 py-4 text-lg rounded-xl shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2"
             >
               <span>Commander Maintenant</span>
@@ -85,7 +85,7 @@ const DazBoxHero: React.FC = () => {
             </button>
             
             <button 
-              onClick={handleLearnMore}
+              onClick={() => window.location.href = '/dazbox#features'}
               className="border-2 border-white text-white hover:bg-white hover:text-indigo-600 px-8 py-4 text-lg bg-transparent rounded-xl font-bold transition-all duration-300"
             >
               En Savoir Plus
@@ -131,7 +131,7 @@ const DazBoxHero: React.FC = () => {
             {/* Video demo button */}
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
               <button 
-                onClick={handleWatchDemo}
+                onClick={() => console.log('Demo video')}
                 className="group bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-full p-4 transition-all duration-300 hover:scale-110"
               >
                 <svg className="w-8 h-8 text-white group-hover:text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
@@ -155,6 +155,6 @@ const DazBoxHero: React.FC = () => {
         </div>
       </div>
     </section>
-  );
+);
 
 export default DazBoxHero; 

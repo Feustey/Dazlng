@@ -2,11 +2,11 @@ import React, { FC } from 'react';
 
 export interface RecommendationCardProps {
   recommendation: {
-  id: string | number;
-  title: string;
-  description?: string;
-  isFree?: boolean;
-  );
+    id: string | number;
+    title: string;
+    description?: string;
+    isFree?: boolean;
+  };
   onApply?: () => void;
   onUpgrade?: () => void;
   isPremium?: boolean;
@@ -60,5 +60,6 @@ const RecommendationCard: FC<RecommendationCardProps> = ({
       </div>
     </div>
   );
+};
 
 export default RecommendationCard;

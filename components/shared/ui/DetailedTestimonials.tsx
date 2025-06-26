@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 
 const DetailedTestimonials: React.FC = () => {
+  return (
     <section className="py-20 bg-gradient-to-b from-white to-gray-50">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-16">
@@ -90,5 +91,6 @@ const DetailedTestimonials: React.FC = () => {
       </div>
     </section>
   );
+};
 
 export default DetailedTestimonials; 

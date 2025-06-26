@@ -2,6 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 
 const FinalConversionCTA: React.FC = () => {
+  return (
     <section className="py-20 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 text-white">
       <div className="max-w-6xl mx-auto px-4 text-center">
         <div className="mb-12">
@@ -89,5 +90,6 @@ const FinalConversionCTA: React.FC = () => {
       </div>
     </section>
   );
+};
 
 export default FinalConversionCTA; 

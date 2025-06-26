@@ -39,6 +39,22 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, trend, icon: Icon
 };
 
 export const CRMDashboard: React.FC = () => {
+  // Données de métriques (en attendant l'intégration API)
+  const metrics = {
+    activeCustomers: 1247,
+    customerGrowth: 12.5,
+    emailOpenRate: 24.8,
+    openRateChange: 3.2,
+    conversionRate: 4.1,
+    conversionChange: -0.8,
+    sentEmails: 8743,
+    emailsChange: 18.3,
+    segmentCount: 8,
+    activeCampaigns: 3,
+    totalRevenue: 45780,
+    revenueGrowth: 8.5
+  };
+
   return (
     <div className="p-6 space-y-6">
       {/* En-tête */}

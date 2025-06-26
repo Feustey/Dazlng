@@ -18,5 +18,6 @@ const UserSidebar: FC = () => {
       </nav>
     </aside>
   );
+};
 
 export default UserSidebar;

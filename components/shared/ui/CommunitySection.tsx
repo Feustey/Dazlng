@@ -2,6 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 
 const CommunitySection: React.FC = () => {
+  return (
     <section className="py-20 bg-gradient-to-b from-indigo-900 to-purple-900 text-white">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-16">
@@ -80,5 +81,6 @@ const CommunitySection: React.FC = () => {
       </div>
     </section>
   );
+};
 
 export default CommunitySection; 

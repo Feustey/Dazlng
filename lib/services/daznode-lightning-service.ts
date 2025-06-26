@@ -13,8 +13,8 @@ export class DazNodeLightningService implements LightningService {
   private provider: string | null = null;
 
   constructor() {
-    this.apiUrl = process.env.DAZNODE_API_URL ?? "" || 'https://api.dazno.de';
-    this.apiKey = process.env.DAZNODE_API_KEY ?? "" || '';
+    this.apiUrl = (process.env.DAZNODE_API_URL ?? "") || 'https://api.dazno.de';
+    this.apiKey = (process.env.DAZNODE_API_KEY ?? "") || '';
     this.provider = 'daznode@getalby.com';
 
     if (!this.apiKey) {

@@ -47,6 +47,16 @@ const jsonLd = {
 };
 
 const DazNodePage: React.FC = () => {
+  const router = useRouter();
+
+  const handleStartProfessional = (): void => {
+    router.push('/checkout/daznode?plan=professional');
+  };
+
+  const handleStartEnterprise = (): void => {
+    router.push('/checkout/daznode?plan=enterprise');
+  };
+
   return (
     <main className="min-h-screen">
       {/* Schema.org JSON-LD */}

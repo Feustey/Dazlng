@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function DazpayCheckoutPage(): React.FC {
+export default function DazpayCheckoutPage() {
   const router = useRouter();
   useEffect(() => {
     const timer = setTimeout(() => {

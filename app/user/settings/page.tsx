@@ -404,5 +404,6 @@ const SettingsPage: FC = () => {
       )}
     </div>
   );
+};
 
 export default SettingsPage;
