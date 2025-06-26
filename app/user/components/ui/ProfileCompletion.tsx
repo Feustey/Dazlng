@@ -132,5 +132,6 @@ const ProfileCompletion: React.FC<ProfileCompletionProps> = ({
       </div>
     </div>
   );
+}
 
-export default ProfileCompletion; 
+export default ProfileCompletion;

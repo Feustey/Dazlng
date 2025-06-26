@@ -113,9 +113,9 @@ const EnhancedRecommendations: React.FC<EnhancedRecommendationsProps> = ({
                   </button>
                 </div>
               </div>
-  );
+            );
           })}
-          
+
           {recommendations.length === 0 && (
             <div className="text-center py-8 text-gray-500">
               <div className="text-4xl mb-4">💡</div>
@@ -126,5 +126,6 @@ const EnhancedRecommendations: React.FC<EnhancedRecommendationsProps> = ({
       </div>
     </div>
   );
+};
 
-export default EnhancedRecommendations; 
+export default EnhancedRecommendations;
