@@ -3,6 +3,9 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import DazNodeHero from './Hero';
+import { UnifiedPricingSection } from '@/components/shared/ui/UnifiedPricingSection';
+import { IntegratedROICalculator } from '@/components/shared/ui/IntegratedROICalculator';
+import { TechnicalProofsSection } from '@/components/shared/ui/TechnicalProofsSection';
 
 // Schema.org JSON-LD pour Rich Snippets
 const jsonLd = {
@@ -15,8 +18,16 @@ const jsonLd = {
   "offers": [
     {
       "@type": "Offer",
-      "name": "DazNode Professional",
-      "price": "10000",
+      "name": "DazNode Starter",
+      "price": "50000",
+      "priceCurrency": "SATS",
+      "availability": "https://schema.org/InStock",
+      "validFrom": "2025-01-01"
+    },
+    {
+      "@type": "Offer", 
+      "name": "DazNode Pro",
+      "price": "150000",
       "priceCurrency": "SATS",
       "availability": "https://schema.org/InStock",
       "validFrom": "2025-01-01"
@@ -48,14 +59,6 @@ const jsonLd = {
 
 const DazNodePage: React.FC = () => {
   const router = useRouter();
-
-  const handleStartProfessional = (): void => {
-    router.push('/checkout/daznode?plan=professional');
-  };
-
-  const handleStartEnterprise = (): void => {
-    router.push('/checkout/daznode?plan=enterprise');
-  };
 
   return (
     <main className="min-h-screen">
@@ -121,113 +124,14 @@ const DazNodePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section className="py-20 bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">
-              Plans Professionnels
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Choisissez la solution qui correspond à vos besoins professionnels
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* Plan Professional */}
-            <div className="bg-white rounded-3xl p-8 relative">
-              <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Professional</h3>
-                <p className="text-gray-600 mb-6">Pour les professionnels du Lightning Network</p>
-                <div className="text-4xl font-bold text-gray-900">10 000 Satoshis<span className="text-lg text-gray-500">/mois</span></div>
-              </div>
-              
-              <ul className="space-y-4 mb-8">
-                <li className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-700">Jusqu'à 5 nœuds</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-700">IA d'optimisation avancée</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-700">Analytics temps réel</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-700">Support prioritaire</span>
-                </li>
-              </ul>
-              
-              <button 
-                onClick={handleStartProfessional}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-xl transition-colors"
-              >
-                Commencer Maintenant
-              </button>
-            </div>
+      {/* ROI Calculator Section */}
+      <IntegratedROICalculator />
 
-            {/* Plan Enterprise */}
-            <div className="bg-gradient-to-br from-blue-600 to-purple-700 rounded-3xl p-8 relative text-white">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <span className="bg-yellow-400 text-black px-4 py-1 rounded-full text-sm font-bold">
-                  Recommandé
-                </span>
-              </div>
-              
-              <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold mb-2">Enterprise</h3>
-                <p className="text-blue-100 mb-6">Pour les entreprises et institutions</p>
-                <div className="text-4xl font-bold">400 000 Satoshis<span className="text-lg text-blue-200">/mois</span></div>
-              </div>
-              
-              <ul className="space-y-4 mb-8">
-                <li className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                  <span>Nœuds illimités</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                  <span>IA d'optimisation enterprise</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                  <span>Support dédié 24/7</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                  <span>SLA 99.98% garanti</span>
-                </li>
-              </ul>
-              
-              <button 
-                onClick={handleStartEnterprise}
-                className="w-full bg-white text-blue-600 hover:bg-blue-50 font-bold py-4 px-6 rounded-xl transition-colors"
-              >
-                Démarrer Enterprise
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Technical Proofs Section */}
+      <TechnicalProofsSection />
+
+      {/* Unified Pricing Section */}
+      <UnifiedPricingSection />
     </main>
   );
 };

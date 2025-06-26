@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 
-interface ROICalculation {
+export interface ROICalculation {
   monthlySavings: number;
   yearlySavings: number;
   planCostPerYear: number;
