@@ -119,7 +119,7 @@ function RegisterPageContent() {
 
       if (data.success) {
         // Redirection avec confirmation d'inscription
-        router.push(`/user/dashboard?welcome=true${plan ? `&plan=${plan}` : ''}`);
+        router.push(`/?signup=success`);
       } else {
         setError(data.error || 'Erreur lors de la création du compte');
       }

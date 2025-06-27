@@ -120,6 +120,56 @@ export async function POST(req: NextRequest): Promise<Response> {
       }, 500);
     }
 
+    // Après la création de la commande, vérifier si c'est un premier paiement pour un filleul
+    if (data && data.user_id) {
+      // Vérifier si l'utilisateur a un parrain
+      const { data: profile } = await getSupabaseAdminClient()
+        .from('profiles')
+        .select('referred_by')
+        .eq('id', data.user_id)
+        .single();
+      if (profile?.referred_by) {
+        // Vérifier si c'est le premier paiement payé
+        const { count } = await getSupabaseAdminClient()
+          .from('orders')
+          .select('id', { count: 'exact' })
+          .eq('user_id', data.user_id)
+          .eq('payment_status', 'paid');
+        if ((count ?? 0) === 1) {
+          // Incrémenter le compteur de parrainage du parrain
+          const { data: parrainProfile } = await getSupabaseAdminClient()
+            .from('profiles')
+            .select('referral_count, referral_credits')
+            .eq('id', profile.referred_by)
+            .single();
+          if (parrainProfile) {
+            await getSupabaseAdminClient()
+              .from('profiles')
+              .update({
+                referral_count: (parrainProfile.referral_count || 0) + 1,
+                referral_credits: (parrainProfile.referral_credits || 0) + 1
+              })
+              .eq('id', profile.referred_by);
+          }
+          // Ajouter 1 mois à la fin d'abonnement du parrain
+          const { data: sub } = await getSupabaseAdminClient()
+            .from('subscriptions')
+            .select('id, end_date')
+            .eq('user_id', profile.referred_by)
+            .eq('status', 'active')
+            .single();
+          if (sub) {
+            const newEndDate = sub.end_date ? new Date(sub.end_date) : new Date();
+            newEndDate.setMonth(newEndDate.getMonth() + 1);
+            await getSupabaseAdminClient()
+              .from('subscriptions')
+              .update({ end_date: newEndDate.toISOString() })
+              .eq('id', sub.id);
+          }
+        }
+      }
+    }
+
     // Envoi d'un email de notification (en arrière-plan)
     try {
       const resend = new Resend(process.env.RESEND_API_KEY ?? "");

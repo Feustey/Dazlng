@@ -16,12 +16,18 @@ export interface ProfileCompletionEnhancedProps {
   profileFields: ProfileField[];
   completionPercentage: number;
   userScore: number;
+  referralCode?: string;
+  referralCount?: number;
+  referralCredits?: number;
 }
 
 export const ProfileCompletionEnhanced: React.FC<ProfileCompletionEnhancedProps> = ({
   profileFields,
   completionPercentage,
-  userScore
+  userScore,
+  referralCode,
+  referralCount = 0,
+  referralCredits = 0
 }) => {
   const [showDetails, setShowDetails] = useState(false);
   
@@ -86,6 +92,26 @@ export const ProfileCompletionEnhanced: React.FC<ProfileCompletionEnhancedProps>
           <div className="text-right">
             <div className="text-2xl font-bold text-green-600">{earnedPoints}/{totalPossiblePoints}</div>
             <div className="text-xs text-green-600">Points XP</div>
+          </div>
+        </div>
+        
+        <div className="bg-white rounded-lg p-4 border border-purple-200 mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <Gift className="w-5 h-5 text-purple-500" />
+              <span className="font-medium text-purple-700">Parrainez vos amis</span>
+            </div>
+            <div className="text-sm text-gray-700 mb-1">Gagnez 1 mois d'abonnement par filleul !</div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-500">Votre lien :</span>
+              <span className="font-mono bg-purple-50 px-2 py-1 rounded text-purple-700 border border-purple-200 select-all">
+                {referralCode ? `https://daznode.com/register?ref=${referralCode}` : '...'}
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-end gap-1">
+            <div className="text-xs text-gray-500">Filleuls : <span className="font-bold text-purple-700">{referralCount}</span></div>
+            <div className="text-xs text-gray-500">Mois gagnés : <span className="font-bold text-green-700">{referralCredits}</span></div>
           </div>
         </div>
         

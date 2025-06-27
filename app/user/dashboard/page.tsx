@@ -10,6 +10,7 @@ import { ProfileCompletionEnhanced } from '../components/ui/ProfileCompletionEnh
 import { SmartConversionCenter } from '../components/ui/SmartConversionCenter';
 import { PremiumConversionModal } from '../components/ui/PremiumConversionModal';
 import { getSupabaseBrowserClient } from '@/lib/supabase';
+import ReferralWidget from '@/components/user/ReferralWidget';
 
 export interface UserProfile {
   id: string;
@@ -18,14 +19,19 @@ export interface UserProfile {
   nom?: string;
   node_id?: string;
   pubkey?: string;
+  referral_code?: string;
+  referral_count?: number;
+  referral_credits?: number;
 }
 
 const UserDashboard: FC = () => {
-  const { user } = useSupabase();
+  const { user, session } = useSupabase();
   const { gamificationData, achievements } = useGamificationSystem();
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [referrals, setReferrals] = useState([]);
+  const accessToken = session?.access_token;
 
   // Charger le profil utilisateur
   useEffect(() => {
@@ -39,7 +45,7 @@ const UserDashboard: FC = () => {
         const supabase = getSupabaseBrowserClient();
         const { data, error } = await supabase
           .from('profiles')
-          .select('id, email, prenom, nom, node_id, pubkey')
+          .select('id, email, prenom, nom, node_id, pubkey, referral_code, referral_count, referral_credits')
           .eq('id', user.id)
           .single();
 
@@ -57,6 +63,16 @@ const UserDashboard: FC = () => {
 
     loadProfile();
   }, [user]);
+
+  useEffect(() => {
+    if (profile?.referral_code && accessToken) {
+      fetch('/api/user/referrals', {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      })
+        .then(res => res.json())
+        .then(data => setReferrals(data.referrals || []));
+    }
+  }, [profile?.referral_code, accessToken]);
 
   const hasNode = Boolean(profile?.node_id);
 
@@ -101,7 +117,19 @@ const UserDashboard: FC = () => {
         profileFields={gamificationData?.profileFields || []}
         completionPercentage={gamificationData?.profileCompletion || 0}
         userScore={gamificationData?.userScore || 0}
+        referralCode={profile?.referral_code}
+        referralCount={profile?.referral_count}
+        referralCredits={profile?.referral_credits}
       />
+
+      {(gamificationData?.profileCompletion || 0) >= 100 && profile?.referral_code && (
+        <ReferralWidget
+          referralCode={profile.referral_code}
+          referralCount={profile.referral_count ?? 0}
+          referralCredits={profile.referral_credits ?? 0}
+          referrals={referrals}
+        />
+      )}
 
       {/* ✅ NOUVEAUTÉ : Centre d'achievements */}
       {gamificationData?.achievements && gamificationData.achievements.length > 0 && (

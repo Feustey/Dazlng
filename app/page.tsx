@@ -2,6 +2,7 @@
 import React, { useEffect, useState, Suspense } from "react";
 import dynamic from "next/dynamic";
 import { DazFlowShowcase } from '../components/shared/ui/DazFlowShowcase';
+import { useSearchParams, useRouter } from "next/navigation";
 
 // Lazy loading des composants pour optimiser le First Load
 const NewRevenueHero = dynamic(() => import("../components/shared/ui/NewRevenueHero"), {
@@ -37,7 +38,7 @@ const FinalConversionCTA = dynamic(() => import("../components/shared/ui/FinalCo
 });
 
 // Composant client séparé pour gérer les paramètres d'URL
-const SignupConfirmation: React.FC = () => {
+const SignupConfirmation: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 backdrop-blur-sm">
       <div 
@@ -54,7 +55,7 @@ const SignupConfirmation: React.FC = () => {
             Votre adresse email a été vérifiée avec succès. Votre compte est maintenant actif et vous pouvez profiter de tous les services de dazno.de.
           </p>
           <button
-            onClick={() => window.location.href = '/'}
+            onClick={onClose}
             className="w-full bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors shadow-lg hover-lift"
           >
             Commencer l'aventure
@@ -64,6 +65,26 @@ const SignupConfirmation: React.FC = () => {
     </div>
   );
 };
+
+// Gate d'affichage de la modale, à utiliser dans <Suspense>
+function SignupConfirmationGate() {
+  const searchParams = useSearchParams();
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
+  React.useEffect(() => {
+    if (searchParams.get("signup") === "success") {
+      setShowConfirmation(true);
+      // Nettoyer l'URL après affichage
+      const params = new URLSearchParams(window.location.search);
+      params.delete("signup");
+      const newUrl = window.location.pathname + (params.toString() ? "?" + params.toString() : "");
+      window.history.replaceState({}, "", newUrl);
+    }
+  }, [searchParams]);
+
+  if (!showConfirmation) return null;
+  return <SignupConfirmation onClose={() => setShowConfirmation(false)} />;
+}
 
 // Composant wrapper avec animations optimisées
 export interface AnimatedSectionProps {
@@ -91,6 +112,8 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
 };
 
 export default function OptimizedHomePage() {
+  const router = useRouter();
+
   useEffect(() => {
     // Préchargement des images critiques
     const preloadImages = [
@@ -132,11 +155,9 @@ export default function OptimizedHomePage() {
 
   return (
     <>
-      {/* Lightbox de confirmation d'inscription */}
       <Suspense fallback={null}>
-        <SignupConfirmation />
+        <SignupConfirmationGate />
       </Suspense>
-
       {/* Page structure optimisée avec nouveaux composants centrés sur les revenus */}
       <main className="min-h-screen w-full overflow-x-hidden scroll-smooth">
         {/* Hero Section centré sur les revenus passifs - Priority loading */}
