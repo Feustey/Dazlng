@@ -25,6 +25,35 @@ export const supabaseClientConfig = {
   }
 };
 
+// Configuration cross-domain pour Token For Good
+export const CROSS_DOMAIN_CONFIG = {
+  // Domaines autorisés pour le partage de session
+  ALLOWED_DOMAINS: [
+    'https://app.token-for-good.com',
+    'https://token-for-good.com',
+    'https://dazeno.de',
+    'https://www.dazeno.de'
+  ],
+  
+  // Configuration des cookies cross-domain
+  COOKIE_CONFIG: {
+    domain: '.dazeno.de', // Point pour partager entre sous-domaines
+    sameSite: 'None' as const,
+    secure: true, // Requis pour SameSite=None
+    httpOnly: false, // Permet l'accès côté client
+    maxAge: SUPABASE_SESSION_CONFIG.SESSION_DURATION, // 1 heure
+    path: '/'
+  },
+  
+  // Configuration CORS
+  CORS_CONFIG: {
+    origin: 'https://app.token-for-good.com',
+    credentials: true,
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  }
+} as const;
+
 /**
  * IMPORTANT: Configuration côté Supabase Dashboard
  * 
