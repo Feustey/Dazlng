@@ -1,288 +1,164 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { useMCPLight } from '@/hooks/useMCPLight';
-import { NodeAnalysisResult, PriorityAction, SparkSeerRecommendation } from '@/lib/services/mcp-light-api';
-import Card, { CardContent, CardHeader, CardTitle } from '@/components/shared/ui/Card';
-import Badge from '@/components/shared/ui/Badge';
+import React, { useEffect, useState } from 'react';
+import { daznoApi } from '@/lib/services/dazno-api';
+import { useToast } from '@/hooks/useToast';
 import Button from '@/components/shared/ui/Button';
-import { Alert, AlertDescription } from '@/components/shared/ui/Alert';
-import { Loader2, TrendingUp, Zap, Target, AlertCircle, CheckCircle, ExternalLink, RefreshCw } from 'lucide-react';
+import { NodeStatus } from '@/lib/services/dazno-api';
 
-export interface NodeAnalysisProps {
-  pubkey: string | null;
-  onAnalysisComplete?: (result: NodeAnalysisResult) => void;
-  userContext?: string;
-  userGoals?: string[];
+interface NodeAnalysisProps {
+  pubkey: string;
+  className?: string;
 }
 
-const NodeAnalysis: React.FC<NodeAnalysisProps> = ({ 
-  pubkey, 
-  onAnalysisComplete,
-  userContext = "Je veux optimiser les performances de mon nœud Lightning",
-  userGoals = ['increase_revenue', 'improve_centrality']
+const NodeAnalysis: React.FC<NodeAnalysisProps> = ({
+  pubkey,
+  className = '',
 }) => {
-  const { analyzeNode, loading: apiLoading, error: apiError } = useMCPLight();
-  const [analysis, setAnalysis] = useState<NodeAnalysisResult | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [nodeInfo, setNodeInfo] = useState<NodeStatus | null>(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const handleAnalyzeNode = useCallback(async () => {
-    if (!pubkey) return;
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const result = await analyzeNode(pubkey, userContext, userGoals);
-      setAnalysis(result);
-      onAnalysisComplete?.(result);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de l\'analyse';
-      setError(errorMessage);
-      console.error('Erreur analyse:', err);
-    } finally {
-      setLoading(false);
-    }
-  }, [pubkey, analyzeNode, userContext, userGoals, onAnalysisComplete]);
+  const { toast } = useToast();
 
   useEffect(() => {
-    if (pubkey) {
-      handleAnalyzeNode();
-    }
-  }, [pubkey, handleAnalyzeNode]);
+    const fetchNodeInfo = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const info = await daznoApi.getNodeStatus(pubkey);
+        setNodeInfo(info);
+      } catch (err) {
+        console.error('Failed to fetch node info:', err);
+        setError('Erreur lors de la récupération des informations du nœud');
+        toast({
+          title: 'Erreur',
+          description: 'Impossible de récupérer les informations du nœud',
+          variant: 'error',
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const getHealthScoreColor = (score: number): string => {
-    if (score >= 70) return 'text-green-500';
-    if (score >= 40) return 'text-yellow-500';
-    return 'text-red-500';
-  };
+    fetchNodeInfo();
+  }, [pubkey, toast]);
 
-  const getPriorityBadgeColor = (priority: number): 'destructive' | 'default' | 'secondary' | 'outline' => {
-    if (priority <= 2) return 'destructive';
-    if (priority <= 4) return 'default';
-    return 'secondary';
-  };
-
-  const getDifficultyColor = (difficulty: 'low' | 'medium' | 'high'): string => {
-    switch (difficulty) {
-      case 'low': return 'text-green-600';
-      case 'medium': return 'text-yellow-600';
-      case 'high': return 'text-red-600';
-      default: return 'text-gray-600';
-    }
-  };
-
-  if (apiLoading) {
+  if (loading) {
     return (
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="w-6 h-6 animate-spin mr-2" />
-        <span>Initialisation de l'API Lightning...</span>
+      <div className={`flex justify-center items-center p-4 ${className}`}>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
       </div>
     );
   }
 
-  if (apiError) {
+  if (error || !nodeInfo) {
     return (
-      <Alert className="m-4">
-        <AlertCircle className="h-4 w-4" />
-        <AlertDescription>❌ Erreur API: {apiError}</AlertDescription>
-      </Alert>
-  );
-  }
-
-  if (loading) {
-    return (
-      <div className="space-y-4 p-4">
-        <div className="flex items-center justify-center p-8">
-          <div className="text-center">
-            <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4 text-blue-500" />
-            <p className="text-lg font-medium">Analyse en cours...</p>
-            <p className="text-sm text-gray-600">
-              Récupération des données SparkSeer et génération des recommandations OpenAI
-            </p>
-          </div>
-        </div>
+      <div className={`text-center p-4 ${className}`}>
+        <p className="text-red-500 mb-4">{error || 'Erreur inattendue'}</p>
+        <Button
+          onClick={() => window.location.reload()}
+          variant="outline"
+        >
+          Réessayer
+        </Button>
       </div>
-  );
+    );
   }
-
-  if (error) {
-    return (
-      <Alert className="m-4">
-        <AlertCircle className="h-4 w-4" />
-        <AlertDescription>
-          <div className="space-y-2">
-            <h3 className="font-semibold">❌ Erreur d'Analyse</h3>
-            <p>{error}</p>
-            <Button onClick={handleAnalyzeNode} variant="outline" size="sm">
-              Réessayer
-            </Button>
-          </div>
-        </AlertDescription>
-      </Alert>
-  );
-  }
-
-  if (!analysis) {
-    return (
-      <div className="p-8 text-center">
-        <Zap className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-        <p className="text-gray-600">
-          Entrez une clé publique de nœud pour commencer l'analyse
-        </p>
-      </div>
-  );
-  }
-
-  const { recommendations, priorities, summary } = analysis;
 
   return (
-    <div className="space-y-6 p-4">
-      {/* Résumé du Nœud */}
-      <Card className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Zap className="w-6 h-6" />
-            {summary.node_alias}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center">
-              <p className="text-sm opacity-80">Capacité</p>
-              <p className="text-lg font-bold">
-                {summary.capacity_btc} BTC
-              </p>
-              <p className="text-xs opacity-60">
-                ({summary.capacity_sats} sats)
-              </p>
-            </div>
-            <div className="text-center">
-              <p className="text-sm opacity-80">Canaux</p>
-              <p className="text-lg font-bold">{summary.channel_count}</p>
-            </div>
-            <div className="text-center">
-              <p className="text-sm opacity-80">Rang Centralité</p>
-              <p className="text-lg font-bold">#{summary.centrality_rank}</p>
-            </div>
-            <div className="text-center">
-              <p className="text-sm opacity-80">Score Santé</p>
-              <p className={`text-lg font-bold ${getHealthScoreColor(summary.health_score)}`}>
-                {summary.health_score}/100
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+    <div className={`p-4 ${className}`}>
+      <div className="bg-white rounded-lg shadow p-6">
+        <h2 className="text-2xl font-bold mb-4">
+          {nodeInfo.alias}
+        </h2>
 
-      {/* Actions Prioritaires */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Target className="w-5 h-5" />
-            Actions Prioritaires
-            <Badge variant="secondary">{summary.priority_actions_count}</Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {priorities.priority_actions.map((action: PriorityAction, index: number) => (
-              <div key={index} className="flex gap-4 p-4 border rounded-lg">
-                <div className="flex-shrink-0">
-                  <Badge variant={getPriorityBadgeColor(action.priority)}>
-                    #{action.priority}
-                  </Badge>
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-semibold mb-2">{action.action}</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm text-gray-600">
-                    <p><strong>Timeline:</strong> {action.timeline}</p>
-                    <p><strong>Impact:</strong> {action.expected_impact}</p>
-                    <p className={getDifficultyColor(action.difficulty)}>
-                      <strong>Difficulté:</strong> {action.difficulty}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Recommandations SparkSeer */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="w-5 h-5" />
-            Recommandations SparkSeer
-            <Badge variant="secondary">{summary.recommendations_count}</Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {recommendations.recommendations.map((rec: SparkSeerRecommendation, index: number) => (
-              <div key={index} className="flex gap-4 p-4 border rounded-lg">
-                <div className="flex-shrink-0">
-                  <Badge variant={rec.priority === 'high' ? 'destructive' : rec.priority === 'medium' ? 'default' : 'secondary'}>
-                    {rec.priority}
-                  </Badge>
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h4 className="font-medium">{rec.type}</h4>
-                    {rec.confidence_score && (
-                      <Badge variant="outline">
-                        {Math.round(rec.confidence_score * 100)}% confiance
-                      </Badge>
-                    )}
-                  </div>
-                  {rec.reasoning && (
-                    <p className="text-sm text-gray-600 mb-2">{rec.reasoning}</p>
-                  )}
-                  {rec.expected_benefit && (
-                    <p className="text-sm font-medium text-green-600">
-                      <strong>Bénéfice:</strong> {rec.expected_benefit}
-                    </p>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Analyse OpenAI */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <CheckCircle className="w-5 h-5" />
-            Analyse OpenAI
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="prose prose-sm max-w-none">
-            <p className="whitespace-pre-wrap text-gray-700">
-              {priorities.openai_analysis}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <p className="text-gray-600">
+              Status: <span className={`font-medium ${nodeInfo.status === 'online' ? 'text-green-500' : 'text-red-500'}`}>
+                {nodeInfo.status === 'online' ? 'En ligne' : 'Hors ligne'}
+              </span>
             </p>
+            
+            {nodeInfo.lastSeen && (
+              <p className="text-gray-600">
+                Dernière activité: <span className="font-medium">
+                  {new Date(nodeInfo.lastSeen).toLocaleString()}
+                </span>
+              </p>
+            )}
           </div>
-        </CardContent>
-      </Card>
 
-      {/* Actions */}
-      <div className="flex flex-wrap gap-4 justify-center">
-        <Button onClick={handleAnalyzeNode} variant="outline" className="flex items-center gap-2">
-          <RefreshCw className="w-4 h-4" />
-          Actualiser l'Analyse
-        </Button>
-        <Button
-          onClick={() => window.open('https://api.dazno.de/docs', '_blank')}
-          variant="outline"
-          className="flex items-center gap-2"
-        >
-          <ExternalLink className="w-4 h-4" />
-          Documentation API
-        </Button>
+          <div className="space-y-2">
+            {nodeInfo.channels !== undefined && (
+              <p className="text-gray-600">
+                Canaux: <span className="font-medium">{nodeInfo.channels}</span>
+              </p>
+            )}
+            
+            {nodeInfo.capacity !== undefined && (
+              <p className="text-gray-600">
+                Capacité: <span className="font-medium">
+                  {nodeInfo.capacity.toLocaleString()} sats
+                </span>
+              </p>
+            )}
+          </div>
+        </div>
+
+        {nodeInfo.metrics && (
+          <div className="mt-6 border-t pt-4">
+            <h3 className="text-lg font-semibold mb-3">Métriques</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <p className="text-gray-600">Disponibilité</p>
+                <div className="flex items-center mt-1">
+                  <div className="flex-1 bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-green-500 h-2 rounded-full"
+                      style={{ width: `${nodeInfo.metrics.availability * 100}%` }}
+                    />
+                  </div>
+                  <span className="ml-2 text-sm font-medium">
+                    {Math.round(nodeInfo.metrics.availability * 100)}%
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <p className="text-gray-600">Fiabilité</p>
+                <div className="flex items-center mt-1">
+                  <div className="flex-1 bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-blue-500 h-2 rounded-full"
+                      style={{ width: `${nodeInfo.metrics.reliability * 100}%` }}
+                    />
+                  </div>
+                  <span className="ml-2 text-sm font-medium">
+                    {Math.round(nodeInfo.metrics.reliability * 100)}%
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <p className="text-gray-600">Performance</p>
+                <div className="flex items-center mt-1">
+                  <div className="flex-1 bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-yellow-500 h-2 rounded-full"
+                      style={{ width: `${nodeInfo.metrics.performance * 100}%` }}
+                    />
+                  </div>
+                  <span className="ml-2 text-sm font-medium">
+                    {Math.round(nodeInfo.metrics.performance * 100)}%
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

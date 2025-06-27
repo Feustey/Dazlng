@@ -1,90 +1,209 @@
 'use client';
 
-import React, { useState } from 'react';
-import QRCode from 'qrcode.react';
-import Button from '@/components/shared/ui/Button';
+import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/useToast';
+import { usePaymentService } from '@/hooks/usePaymentService';
+import { InvoiceStatus } from '@/types/lightning';
+import Button from '@/components/shared/ui/Button';
+import QRCode from 'qrcode.react';
 
-export interface LightningPaymentProps {
-  paymentRequest: string;
-  onSuccess?: () => void;
-  onError?: (error: Error) => void;
+declare global {
+  interface Window {
+    webln?: {
+      enable: () => Promise<void>;
+      sendPayment: (paymentRequest: string) => Promise<void>;
+    };
+  }
 }
 
-const LightningPayment: React.FC<LightningPaymentProps> = ({
-  paymentRequest,
+interface LightningPaymentProps {
+  amount: number;
+  description: string;
+  onSuccess?: () => void;
+  onError?: (error: Error) => void;
+  className?: string;
+}
+
+export const LightningPayment: React.FC<LightningPaymentProps> = ({
+  amount,
+  description,
   onSuccess,
-  onError
+  onError,
+  className = '',
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [qrUrl, setQrUrl] = useState(paymentRequest);
-  const { showToast } = useToast();
+  const [paymentRequest, setPaymentRequest] = useState<string>('');
+  const [paymentHash, setPaymentHash] = useState<string>('');
+  const [status, setStatus] = useState<'pending' | 'loading' | 'paid' | 'error'>('loading');
+  const [timeLeft, setTimeLeft] = useState<number>(300); // 5 minutes
+  const { toast } = useToast();
+  const { createInvoice, checkPayment, isLoading, error: paymentError } = usePaymentService();
 
-  const handleWebLNPay = async () => {
-    try {
-      setIsLoading(true);
-      // @ts-ignore
-      const webln = window.webln;
-      if (!webln) {
-        throw new Error('WebLN non disponible');
+  useEffect(() => {
+    const initializePayment = async () => {
+      try {
+        const invoice = await createInvoice(amount, description);
+        setPaymentRequest(invoice.paymentRequest);
+        setPaymentHash(invoice.paymentHash);
+        setStatus('pending');
+      } catch (error) {
+        console.error('Failed to create invoice:', error);
+        setStatus('error');
+        onError?.(error as Error);
       }
-      await webln.enable();
-      await webln.sendPayment(paymentRequest);
-      showToast('Paiement réussi !', 'success');
-      onSuccess?.();
-    } catch (error) {
-      console.error('❌ Erreur paiement WebLN:', error);
-      showToast(error instanceof Error ? error.message : 'Erreur de paiement', 'error');
-      onError?.(error instanceof Error ? error : new Error('Erreur de paiement'));
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    };
 
-  const handleCopyInvoice = () => {
-    navigator.clipboard.writeText(paymentRequest);
-    showToast('Facture copiée !', 'success');
-  };
+    initializePayment();
+  }, [amount, description, createInvoice, onError]);
 
-  const handleOpenWallet = () => {
-    // TODO: Implement wallet opening logic
-    console.log('Opening wallet...');
-  };
+  useEffect(() => {
+    if (!paymentHash || status !== 'pending') return;
+
+    const checkInterval = setInterval(async () => {
+      try {
+        const invoiceStatus = await checkPayment(paymentHash);
+        
+        if (invoiceStatus === InvoiceStatus.SETTLED) {
+          setStatus('paid');
+          toast({
+            title: 'Succès',
+            description: 'Paiement reçu !',
+            variant: 'success',
+          });
+          onSuccess?.();
+          clearInterval(checkInterval);
+        } else if (invoiceStatus === InvoiceStatus.EXPIRED) {
+          setStatus('error');
+          toast({
+            title: 'Erreur',
+            description: 'La facture a expiré',
+            variant: 'error',
+          });
+          clearInterval(checkInterval);
+        }
+      } catch (error) {
+        console.error('Failed to check payment:', error);
+      }
+    }, 2000);
+
+    return () => clearInterval(checkInterval);
+  }, [paymentHash, status, checkPayment, onSuccess, toast]);
+
+  useEffect(() => {
+    if (status !== 'pending') return;
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          setStatus('error');
+          toast({
+            title: 'Erreur',
+            description: 'La facture a expiré',
+            variant: 'error',
+          });
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [status, toast]);
+
+  if (isLoading || status === 'loading') {
+    return (
+      <div className={`flex justify-center items-center p-4 ${className}`}>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      </div>
+    );
+  }
+
+  if (paymentError || status === 'error') {
+    return (
+      <div className={`text-center p-4 ${className}`}>
+        <p className="text-red-500 mb-4">{paymentError || 'Une erreur est survenue'}</p>
+        <Button
+          onClick={() => window.location.reload()}
+          variant="outline"
+        >
+          Réessayer
+        </Button>
+      </div>
+    );
+  }
+
+  if (status === 'paid') {
+    return (
+      <div className={`text-center p-4 ${className}`}>
+        <p className="text-green-500 mb-2">Paiement reçu !</p>
+        <p className="text-sm text-gray-600">Merci pour votre paiement</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col items-center gap-4 p-4 bg-white rounded-lg shadow">
-      <div className="bg-white p-4 rounded-lg">
-        <QRCode value={qrUrl} size={256} level="H" />
+    <div className={`text-center p-4 ${className}`}>
+      <div className="mb-4">
+        <QRCode
+          value={paymentRequest}
+          size={256}
+          level="L"
+          includeMargin={true}
+          className="mx-auto"
+        />
       </div>
+      
+      <p className="mb-2 font-medium">
+        {amount.toLocaleString()} sats
+      </p>
+      
+      <p className="text-sm text-gray-600 mb-4">
+        Expire dans {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
+      </p>
 
-      <div className="flex flex-col gap-2 w-full">
+      <div className="flex flex-col gap-2">
         <Button
-          onClick={handleWebLNPay}
-          disabled={isLoading}
-          className="w-full"
-          variant="primary"
-        >
-          {isLoading ? 'Paiement en cours...' : 'Payer avec WebLN'}
-        </Button>
-
-        <Button
-          onClick={handleCopyInvoice}
-          className="w-full"
+          onClick={() => {
+            navigator.clipboard.writeText(paymentRequest);
+            toast({
+              title: 'Succès',
+              description: 'Facture copiée !',
+              variant: 'success',
+            });
+          }}
           variant="outline"
+          className="w-full"
         >
           Copier la facture
         </Button>
 
-        <Button
-          onClick={handleOpenWallet}
-          className="w-full"
-          variant="outline"
-        >
-          Ouvrir le portefeuille
-        </Button>
+        {window.webln && (
+          <Button
+            onClick={async () => {
+              try {
+                await window.webln?.enable();
+                await window.webln?.sendPayment(paymentRequest);
+                toast({
+                  title: 'Succès',
+                  description: 'Paiement envoyé !',
+                  variant: 'success',
+                });
+              } catch (error) {
+                console.error('WebLN payment failed:', error);
+                toast({
+                  title: 'Erreur',
+                  description: 'Erreur lors du paiement',
+                  variant: 'error',
+                });
+              }
+            }}
+            variant="default"
+            className="w-full"
+          >
+            Payer avec WebLN
+          </Button>
+        )}
       </div>
     </div>
   );
-};
-
-export default LightningPayment; 
+}; 

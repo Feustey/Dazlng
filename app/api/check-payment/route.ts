@@ -1,8 +1,9 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { OrderService } from '@/lib/services/order-service';
 import { rateLimit } from '@/lib/rate-limit';
 import { handleApiError, createApiResponse } from '@/lib/api-response';
 import { createDaznoApiClient } from '@/lib/services/dazno-api';
+import { logger } from '@/lib/logger';
 
 // Rate limiter : 60 requêtes par minute
 const rateLimiter = rateLimit({
@@ -86,5 +87,73 @@ export async function GET(req: NextRequest) {
 
   } catch (error) {
     return handleApiError(error);
+  }
+}
+
+let requestCount = 0;
+let lastReset = Date.now();
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  if (now - lastReset >= rateLimit.windowMs) {
+    requestCount = 0;
+    lastReset = now;
+  }
+
+  if (requestCount >= rateLimit.max) {
+    return false;
+  }
+
+  requestCount++;
+  return true;
+}
+
+export async function POST(req: Request) {
+  try {
+    const { paymentHash } = await req.json();
+
+    if (!paymentHash) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: { 
+            code: 'VALIDATION_ERROR',
+            message: 'Payment hash is required' 
+          } 
+        },
+        { status: 400 }
+      );
+    }
+
+    const daznoApi = createDaznoApiClient({
+      apiKey: process.env.DAZNO_API_KEY,
+    });
+
+    const status = await daznoApi.checkPayment(paymentHash);
+
+    return NextResponse.json({
+      success: true,
+      data: { status },
+      meta: {
+        timestamp: new Date().toISOString(),
+        version: '1.0.0'
+      }
+    });
+  } catch (error) {
+    logger.error('Error checking payment:', error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: {
+          code: 'INTERNAL_ERROR',
+          message: error instanceof Error ? error.message : 'An error occurred while checking the payment',
+        },
+        meta: {
+          timestamp: new Date().toISOString(),
+          version: '1.0.0'
+        }
+      },
+      { status: 500 }
+    );
   }
 }

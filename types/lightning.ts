@@ -3,13 +3,14 @@
  */
 
 // Enum unifié pour les statuts de facture
-export enum InvoiceStatus {
-  PENDING = 'pending',
-  SETTLED = 'settled',
-  FAILED = 'failed',
-  EXPIRED = 'expired',
-  CANCELLED = 'cancelled'
-}
+export const InvoiceStatus = {
+  PENDING: 'pending',
+  SETTLED: 'settled',
+  EXPIRED: 'expired',
+  FAILED: 'failed'
+} as const;
+
+export type InvoiceStatus = typeof InvoiceStatus[keyof typeof InvoiceStatus];
 
 // Statuts de paiement standardisés
 export type PaymentStatus = 'pending' | 'settled' | 'failed' | 'expired';
