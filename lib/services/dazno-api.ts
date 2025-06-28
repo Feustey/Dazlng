@@ -237,6 +237,13 @@ export class MCPLightAPI {
   async getNetworkRankings(category: string): Promise<NetworkRanking[]> {
     return this.request<NetworkRanking[]>(`/api/v1/rankings/${category}`);
   }
+
+  async getRecommendations(pubkey: string): Promise<DaznoRecommendationsResponse> {
+    if (!isValidLightningPubkey(pubkey)) {
+      throw new Error('Invalid Lightning pubkey format');
+    }
+    return this.request<DaznoRecommendationsResponse>(`/v1/node/${pubkey}/recommendations`);
+  }
 }
 
 // Export une instance par défaut du client API

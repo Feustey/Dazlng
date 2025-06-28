@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { Card } from "../components/ui/card";
+import { Card } from "../components/ui/Card";
 import { StatsCard } from "../components/ui/StatsCard";
 import { formatDate, formatSats } from "../../../utils/formatters";
 import Link from "next/link";

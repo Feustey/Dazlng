@@ -12,8 +12,6 @@ export async function GET(
     const pubkey = resolvedParams.pubkey
 
     const daznoApi = createDaznoApiClient()
-    await daznoApi.initialize()
-
     const data = await daznoApi.getRecommendations(pubkey)
 
     return NextResponse.json<ApiResponse<DaznoRecommendationsResponse>>({
