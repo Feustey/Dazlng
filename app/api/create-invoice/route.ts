@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createDazNodeLightningService } from '@/lib/services/daznode-lightning-service';
+import { createInvoiceFallbackService } from '@/lib/services/invoice-fallback-service';
 
 export const dynamic = "force-dynamic";
 export const runtime = 'nodejs';
@@ -61,24 +62,44 @@ export async function GET(): Promise<Response> {
 }
 
 export async function POST(request: Request): Promise<Response> {
+  let fallbackService: any = null;
+  
   try {
     const data = await request.json();
-    const lightning = createDazNodeLightningService();
-    const invoice = await lightning.generateInvoice(data);
+    
+    // Utilisation du service de fallback
+    fallbackService = createInvoiceFallbackService({
+      maxRetries: 3,
+      retryDelay: 1000,
+      enableLocalLnd: true,
+      enableMockService: process.env.NODE_ENV === 'development'
+    });
+
+    await fallbackService.forceHealthCheck();
+    const invoice = await fallbackService.generateInvoice(data);
     
     return NextResponse.json({
       success: true,
-      data: invoice
+      data: invoice,
+      meta: {
+        timestamp: new Date().toISOString(),
+        provider: (await fallbackService.healthCheck()).provider
+      }
     });
   } catch (error) {
-    console.error('❌ Erreur création facture:', error);
+    console.error('❌ Erreur création facture (fallback échoué):', error);
+    
     return NextResponse.json({
       success: false,
       error: {
         code: 'INVOICE_CREATION_ERROR',
-        message: error instanceof Error ? error.message : 'Erreur inconnue'
+        message: error instanceof Error ? error.message : 'Erreur inconnue - tous services indisponibles'
       }
-    }, { status: 500 });
+    }, { status: 503 });
+  } finally {
+    if (fallbackService) {
+      fallbackService.destroy();
+    }
   }
 }
 

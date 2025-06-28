@@ -61,3 +61,6 @@ export default function Button(props: ButtonProps) {
     </button>
   );
 }
+
+// Export named pour compatibilité
+export { Button };

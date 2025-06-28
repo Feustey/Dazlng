@@ -65,3 +65,6 @@ export function CardDescription({ children, className = "" }: CardDescriptionPro
     </p>
   );
 }
+
+// Export named pour compatibilité
+export { Card };
