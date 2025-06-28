@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { LightningPayment } from '@/components/web/LightningPayment';
-import Button from '@/components/shared/ui/button';
+import { Button } from '@/components/shared/ui';
 import { CheckCircle, Zap, Shield, TrendingUp, Star } from 'lucide-react';
 
 // Schéma de validation

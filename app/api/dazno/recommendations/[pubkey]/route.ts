@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createDaznoApiClient } from '@/lib/services/dazno-api'
+import { MCPLightAPI } from '@/lib/services/dazno-api'
 import { ApiResponse } from '@/types/database'
 import { DaznoRecommendationsResponse } from '@/types/dazno-api'
 
@@ -11,7 +11,7 @@ export async function GET(
     const resolvedParams = await params
     const pubkey = resolvedParams.pubkey
 
-    const daznoApi = createDaznoApiClient()
+    const daznoApi = new MCPLightAPI()
     const data = await daznoApi.getRecommendations(pubkey)
 
     return NextResponse.json<ApiResponse<DaznoRecommendationsResponse>>({

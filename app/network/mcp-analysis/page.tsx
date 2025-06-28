@@ -3,8 +3,7 @@
 import React, { useState } from 'react';
 import { useMCPLight } from '@/hooks/useMCPLight';
 import NodeAnalysis from '@/components/shared/NodeAnalysis';
-import Card, { CardContent, CardHeader, CardTitle } from '@/components/shared/ui/card';
-import Button from '@/components/shared/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, Button } from '@/components/shared/ui';
 import { Alert, AlertDescription } from '@/components/shared/ui/Alert';
 import { Zap, Search, Globe, Database } from 'lucide-react';
 

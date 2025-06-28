@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ApiResponse } from '@/types/database'
 import { logger } from '@/lib/logger'
-
-const API_BASE_URL = (process.env.NEXT_PUBLIC_DAZNO_API_URL ?? "") || 'https://api.dazno.de'
-const FALLBACK_API_URL = 'https://fallback-api.dazno.de'
+import { MCPLightAPI } from '@/lib/services/dazno-api'
 
 export async function POST(req: NextRequest): Promise<Response> {
   try {
@@ -12,54 +10,24 @@ export async function POST(req: NextRequest): Promise<Response> {
     
     // Récupérer les headers d'autorisation
     const authorization = req.headers.get('authorization')
+    const apiKey = authorization?.replace('Bearer ', '')
     
-    // Configuration de la requête
-    const requestConfig = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(authorization && { 'Authorization': authorization })
-      },
-      body: JSON.stringify(body)
-    }
+    // Créer l'instance de l'API avec la clé d'API si disponible
+    const daznoApi = new MCPLightAPI({
+      apiKey
+    })
 
-    // Essayer l'API principale
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/channels/recommendations/unified`, requestConfig)
-      
-      if (response.ok) {
-        const data = await response.json()
-        return NextResponse.json<ApiResponse<unknown>>({
-          success: true,
-          data,
-          meta: {
-            timestamp: new Date().toISOString(),
-            version: '1.0'
-          }
-        })
-      }
-      
-      logger.warn(`API principale indisponible (${response.status}), tentative avec fallback...`)
-      throw new Error(`API Error: ${response.status} - ${response.statusText}`)
-    } catch (mainApiError) {
-      // Essayer l'API de fallback
-      const fallbackResponse = await fetch(`${FALLBACK_API_URL}/api/v1/channels/recommendations/unified`, requestConfig)
-      
-      if (!fallbackResponse.ok) {
-        throw new Error(`Fallback API Error: ${fallbackResponse.status} - ${fallbackResponse.statusText}`)
-      }
+    // Récupérer les recommandations unifiées
+    const data = await daznoApi.getUnifiedRecommendations(body)
 
-      const fallbackData = await fallbackResponse.json()
-      return NextResponse.json<ApiResponse<unknown>>({
-        success: true,
-        data: fallbackData,
-        meta: {
-          timestamp: new Date().toISOString(),
-          version: '1.0',
-          source: 'fallback'
-        }
-      })
-    }
+    return NextResponse.json<ApiResponse<unknown>>({
+      success: true,
+      data,
+      meta: {
+        timestamp: new Date().toISOString(),
+        version: '1.0'
+      }
+    })
 
   } catch (error) {
     logger.error('Erreur proxy unified recommendations:', error)

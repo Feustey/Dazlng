@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import Card, { CardContent, CardHeader, CardTitle } from "@/components/shared/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/shared/ui";
 import { Alert, AlertDescription } from "@/components/shared/ui/Alert";
 import { Select, SelectItem } from "../components/ui/Select";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";

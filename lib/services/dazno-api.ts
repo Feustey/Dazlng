@@ -244,6 +244,13 @@ export class MCPLightAPI {
     }
     return this.request<DaznoRecommendationsResponse>(`/v1/node/${pubkey}/recommendations`);
   }
+
+  async getUnifiedRecommendations(params: { pubkey: string }): Promise<unknown> {
+    return this.request('/api/v1/channels/recommendations/unified', {
+      method: 'POST',
+      body: JSON.stringify(params)
+    });
+  }
 }
 
 // Export une instance par défaut du client API
