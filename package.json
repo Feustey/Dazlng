@@ -46,7 +46,9 @@
     "supabase:test": "tsx scripts/test-supabase-migration.ts",
     "supabase:validate": "npm run supabase:test && npm run supabase:migrate",
     "test:dazflow": "tsx scripts/test-dazflow-endpoints.ts",
-    "test:cross-domain-session": "tsx scripts/test-cross-domain-session.ts"
+    "test:cross-domain-session": "tsx scripts/test-cross-domain-session.ts",
+    "test:dazno-api": "tsx scripts/test-dazno-api.ts",
+    "check:dazno-config": "tsx scripts/check-dazno-config.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.55.0",

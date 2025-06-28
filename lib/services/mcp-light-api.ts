@@ -276,47 +276,37 @@ import type {
   LightningOptimizationResponse
 } from '../../types/rag-advanced';
 
-class MCPLightAPI {
-  private baseURL: string | null = null;
+export class MCPLightAPI {
+  private baseURL: string;
   private credentials: MCPLightCredentials | null = null;
   private initialized = false;
 
-  constructor() {
-    this.baseURL = process.env.NEXT_PUBLIC_DAZNO_API_URL || 'https://api.dazno.de';
+  constructor(baseURL: string = process.env.DAZNO_API_URL || 'https://api.dazno.de') {
+    this.baseURL = baseURL;
   }
 
-  /**
-   * Initialise l'API en récupérant les credentials JWT
-   * À appeler une seule fois au démarrage de l'app
-   */
   async initialize(): Promise<boolean> {
-    if (this.initialized) return true;
+    if (this.initialized) {
+      return true;
+    }
 
     try {
-      console.log('🔄 Initialisation MCP-Light API...');
-      
-      const response = await fetch(`${this.baseURL}/auth/credentials`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      // Vérifier la configuration
+      if (!this.baseURL) {
+        throw new Error('URL de base non configurée');
       }
 
-      this.credentials = await (response ?? Promise.reject(new Error("response is null"))).json();
+      // Vérifier la connectivité
+      const health = await this.checkHealth();
+      if (health.status !== 'ok') {
+        throw new Error('Service indisponible');
+      }
+
       this.initialized = true;
-      
-      console.log('✅ MCP-Light API initialisée avec succès');
-      console.log('🔑 JWT Token valide jusqu\'à:', new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toLocaleDateString());
-      
       return true;
     } catch (error) {
-      console.error('❌ Erreur initialisation MCP-Light API:', error);
-      this.initialized = false;
-      return false;
+      console.error('Erreur initialisation MCP Light API:', error);
+      throw error;
     }
   }
 
@@ -827,8 +817,5 @@ class MCPLightAPI {
   }
 }
 
-// Instance singleton
-export const mcpLightAPI = new MCPLightAPI();
-
-// Export par défaut
-export default mcpLightAPI; 
+// Exporter une instance unique
+export const mcpLightAPI = new MCPLightAPI(); 

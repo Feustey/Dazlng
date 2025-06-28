@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { MCPLightAPI } from '@/lib/services/dazno-api'
+import { mcpLightAPI } from '@/lib/services/mcp-light-api'
 import { ApiResponse } from '@/types/database'
-import { DaznoRecommendationsResponse } from '@/types/dazno-api'
+import { DaznoRecommendationsResponse, DaznoSparkSeerRecommendation } from '@/types/dazno-api'
 
 export async function GET(
   req: NextRequest,
@@ -11,12 +11,30 @@ export async function GET(
     const resolvedParams = await params
     const pubkey = resolvedParams.pubkey
 
-    const daznoApi = new MCPLightAPI()
-    const data = await daznoApi.getRecommendations(pubkey)
+    await mcpLightAPI.initialize()
+    const mcpResponse = await mcpLightAPI.getRecommendations(pubkey)
+
+    // Conversion du format MCP vers le format Dazno
+    const daznoRecommendations: DaznoSparkSeerRecommendation[] = mcpResponse.recommendations.map(rec => ({
+      type: rec.action_type === 'channel_open' ? 'channel' : 
+            rec.action_type === 'fee_update' ? 'fee' : 'close',
+      action: rec.type,
+      reason: rec.reasoning || '',
+      target_pubkey: rec.target_pubkey,
+      ideal_capacity: rec.suggested_amount,
+      current_fee: undefined,
+      recommended_fee: undefined
+    }))
+
+    const response: DaznoRecommendationsResponse = {
+      pubkey: mcpResponse.pubkey,
+      recommendations: daznoRecommendations,
+      generated_at: mcpResponse.timestamp
+    }
 
     return NextResponse.json<ApiResponse<DaznoRecommendationsResponse>>({
       success: true,
-      data,
+      data: response,
       meta: {
         timestamp: new Date().toISOString(),
         version: '1.0'

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ApiResponse } from '@/types/database'
 import { logger } from '@/lib/logger'
-import { MCPLightAPI } from '@/lib/services/dazno-api'
+import { mcpLightAPI } from '@/lib/services/mcp-light-api'
 
 export async function POST(req: NextRequest): Promise<Response> {
   try {
@@ -10,15 +10,17 @@ export async function POST(req: NextRequest): Promise<Response> {
     
     // Récupérer les headers d'autorisation
     const authorization = req.headers.get('authorization')
-    const apiKey = authorization?.replace('Bearer ', '')
-    
-    // Créer l'instance de l'API avec la clé d'API si disponible
-    const daznoApi = new MCPLightAPI({
-      apiKey
-    })
+    if (authorization) {
+      const apiKey = authorization.replace('Bearer ', '')
+      // Configurer l'API key si nécessaire
+      // Note: à implémenter dans MCPLightAPI si besoin
+    }
 
-    // Récupérer les recommandations unifiées
-    const data = await daznoApi.getUnifiedRecommendations(body)
+    // Initialiser l'API
+    await mcpLightAPI.initialize()
+
+    // Récupérer les recommandations
+    const data = await mcpLightAPI.getRecommendations(body.pubkey)
 
     return NextResponse.json<ApiResponse<unknown>>({
       success: true,
