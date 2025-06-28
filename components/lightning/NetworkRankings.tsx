@@ -5,7 +5,7 @@ import { createDaznoApiClient, NetworkRanking } from '@/lib/services/dazno-api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/shared/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/shared/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/shared/ui/table';
-import { useToast } from '@/components/shared/ui/use-toast';
+import toast from 'react-hot-toast';
 import { Loader2 } from 'lucide-react';
 
 type RankingCategory = 'capacity' | 'channels' | 'revenue' | 'centrality';
@@ -21,7 +21,6 @@ export default function NetworkRankings() {
   const [rankings, setRankings] = useState<NetworkRanking[]>([]);
   const [loading, setLoading] = useState(false);
   const [category, setCategory] = useState<RankingCategory>('capacity');
-  const { toast } = useToast();
 
   const daznoApi = createDaznoApiClient();
 
@@ -31,11 +30,7 @@ export default function NetworkRankings() {
       const result = await daznoApi.getNetworkRankings(cat);
       setRankings(result);
     } catch (error) {
-      toast({
-        title: 'Erreur',
-        description: 'Impossible de charger les classements du réseau',
-        variant: 'destructive',
-      });
+      toast.error('Impossible de charger les classements du réseau');
     } finally {
       setLoading(false);
     }

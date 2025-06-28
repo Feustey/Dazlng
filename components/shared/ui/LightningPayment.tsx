@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 // import { usePaymentService } from '@/lib/hooks/usePaymentService';
 import { InvoiceStatus } from '@/types/lightning';
-import Button from '@/components/shared/ui/Button';
+import Button from '@/components/shared/ui/button';
 import { toast } from 'sonner';
 import QRCode from 'react-qr-code';
 import { Loader2 } from 'lucide-react';

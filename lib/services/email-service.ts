@@ -116,3 +116,27 @@ export class EmailService {
     }
   }
 }
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+interface SendEmailParams {
+  to: string;
+  cc?: string;
+  subject: string;
+  html: string;
+}
+
+export async function sendEmail(params: SendEmailParams): Promise<void> {
+  try {
+    await resend.emails.send({
+      from: 'DazNode <no-reply@dazno.de>',
+      to: params.to,
+      ...(params.cc && { cc: params.cc }),
+      subject: params.subject,
+      html: params.html
+    });
+  } catch (error) {
+    console.error('❌ Erreur envoi email:', error);
+    throw error;
+  }
+}

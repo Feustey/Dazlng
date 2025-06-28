@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { mcpLightAPI } from '@/lib/services/mcp-light-api'
 import { ApiResponse } from '@/types/database'
-import { createClient } from '@/utils/supabase/server'
+import { createSupabaseServerClient } from '@/lib/supabase-auth'
 
 // Interfaces pour les types de données
 export interface NodeStats {
@@ -126,7 +126,7 @@ export async function POST(
     const _depth = body.depth || 'standard' // 'standard' ou 'detailed'
 
     // Vérifier si l'utilisateur a accès à cette fonctionnalité
-    const supabase = await createClient()
+    const supabase = await createSupabaseServerClient()
     const { data: { user } } = await supabase.auth.getUser()
     
     if (!user) {
@@ -509,7 +509,7 @@ function generateLongTermVision(goals: string[], _actions: EnhancedPriorityActio
 
 async function logUserActivity(userId: string, pubkey: string, action: string, data: EnhancedPriorityResponse): Promise<void> {
   try {
-    const supabase = await createClient()
+    const supabase = await createSupabaseServerClient()
     await supabase.from('user_activities').insert({
       user_id: userId,
       action_type: action,

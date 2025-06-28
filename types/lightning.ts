@@ -79,6 +79,8 @@ export interface LightningService {
     onError: (error: Error) => void;
   }): Promise<void>;
   healthCheck(): Promise<{ isOnline: boolean; provider: string }>;
+  createInvoice(params: { amount: number; description: string }): Promise<{ payment_hash: string }>;
+  checkPayment(paymentHash: string): Promise<boolean>;
 }
 
 // Types spécifiques pour les factures (pour compatibilité)

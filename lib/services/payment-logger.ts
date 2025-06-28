@@ -1,20 +1,14 @@
-import { createClient } from '@/utils/supabase/server';
-
-export enum InvoiceStatus {
-  pending = "pending",
-  settled = "settled",
-  expired = "expired",
-  failed = "failed"
-}
-import type { InvoiceStatus } from '@/types/lightning';
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { SupabaseClient } from '@supabase/supabase-js';
+
+type PaymentStatus = 'pending' | 'settled' | 'failed' | 'expired';
 
 export interface PaymentLogEntry {
   payment_hash: string;
   payment_request?: string;
   amount: number;
   description: string;
-  status: InvoiceStatus['status'];
+  status: PaymentStatus;
   created_at: string;
   updated_at: string;
   error?: string;
@@ -25,14 +19,10 @@ export interface PaymentLogEntry {
  * Service de logging des paiements Lightning
  */
 export class PaymentLogger {
-  private supabase: SupabaseClient | null = null;
+  private supabase: SupabaseClient;
 
   constructor() {
-    this.initSupabase();
-  }
-
-  private async initSupabase() {
-    this.supabase = await createClient();
+    this.supabase = getSupabaseAdminClient();
   }
 
   /**
@@ -40,12 +30,8 @@ export class PaymentLogger {
    */
   async logPayment(params: Partial<PaymentLogEntry> & { payment_hash: string }): Promise<void> {
     try {
-      if (!this.supabase) {
-        await (this ?? Promise.reject(new Error("this is null"))).initSupabase();
-      }
-
       // Récupération du log existant
-      const { data: existingLog } = await (this ?? Promise.reject(new Error("this is null"))).supabase
+      const { data: existingLog } = await this.supabase
         .from('payment_logs')
         .select('*')
         .eq('payment_hash', params.payment_hash)
@@ -55,7 +41,7 @@ export class PaymentLogger {
 
       if (existingLog) {
         // Mise à jour du log existant
-        await (this ?? Promise.reject(new Error("this is null"))).supabase
+        await this.supabase
           .from('payment_logs')
           .update({
             status: params.status || existingLog.status,
@@ -70,14 +56,14 @@ export class PaymentLogger {
 
       } else {
         // Création d'un nouveau log
-        await (this ?? Promise.reject(new Error("this is null"))).supabase
+        await this.supabase
           .from('payment_logs')
           .insert({
             payment_hash: params.payment_hash,
             payment_request: params.payment_request,
             amount: params.amount || 0,
             description: params.description || '',
-            status: params.status || InvoiceStatus.pending,
+            status: params.status || 'pending',
             created_at: params.created_at || now,
             updated_at: now,
             error: params.error,
@@ -94,11 +80,10 @@ export class PaymentLogger {
   /**
    * Met à jour le statut d'un paiement
    */
-  async updatePaymentStatus(paymentHash: string, status: InvoiceStatus): Promise<void> {
-    await (this ?? Promise.reject(new Error("this is null"))).logPayment({
+  async updatePaymentStatus(paymentHash: string, status: PaymentStatus): Promise<void> {
+    await this.logPayment({
       payment_hash: paymentHash,
-      status: status.status,
-      metadata: status.metadata
+      status: status
     });
   }
 
@@ -106,9 +91,9 @@ export class PaymentLogger {
    * Log une erreur de paiement
    */
   async logPaymentError(paymentHash: string, error: Error): Promise<void> {
-    await (this ?? Promise.reject(new Error("this is null"))).logPayment({
+    await this.logPayment({
       payment_hash: paymentHash,
-      status: InvoiceStatus.failed,
+      status: 'failed',
       error: error.message
     });
   }
@@ -117,7 +102,7 @@ export class PaymentLogger {
    * Récupère les logs de paiement
    */
   async getLogs(params: {
-    status?: InvoiceStatus['status'];
+    status?: PaymentStatus;
     limit?: number;
     offset?: number;
   }): Promise<{
@@ -125,10 +110,6 @@ export class PaymentLogger {
     total: number;
   }> {
     try {
-      if (!this.supabase) {
-        await (this ?? Promise.reject(new Error("this is null"))).initSupabase();
-      }
-
       let query = this.supabase
         .from('payment_logs')
         .select('*', { count: 'exact' });

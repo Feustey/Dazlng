@@ -7,7 +7,7 @@ import { Input } from '@/components/shared/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/shared/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/shared/ui/table';
 import { Button } from '@/components/shared/ui/button';
-import { useToast } from '@/components/shared/ui/use-toast';
+import toast from 'react-hot-toast';
 import { Loader2 } from 'lucide-react';
 
 const ITEMS_PER_PAGE = 10;
@@ -19,7 +19,6 @@ export default function NetworkExplorer() {
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState<'capacity' | 'channels' | 'rank'>('rank');
   const [page, setPage] = useState(1);
-  const { toast } = useToast();
 
   const daznoApi = createDaznoApiClient();
 
@@ -35,11 +34,7 @@ export default function NetworkExplorer() {
       setNodes(result.nodes);
       setTotal(result.total);
     } catch (error) {
-      toast({
-        title: 'Erreur',
-        description: 'Impossible de charger les nœuds du réseau',
-        variant: 'destructive',
-      });
+      toast.error('Impossible de charger les nœuds du réseau');
     } finally {
       setLoading(false);
     }

@@ -8,9 +8,9 @@ import {
   ReliabilityPoint,
   Bottleneck
 } from '@/lib/services/mcp-light-api';
-import Card, { CardContent, CardHeader, CardTitle } from '@/components/shared/ui/Card';
+import Card, { CardContent, CardHeader, CardTitle } from '@/components/shared/ui/card';
 import Badge from '@/components/shared/ui/Badge';
-import Button from '@/components/shared/ui/Button';
+import Button from '@/components/shared/ui/button';
 import { Alert, AlertDescription } from '@/components/shared/ui/Alert';
 import { 
   Loader2, 

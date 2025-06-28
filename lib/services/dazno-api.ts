@@ -32,6 +32,35 @@ export interface DaznoApiResponse<T> {
   };
 }
 
+export interface NodeMetrics {
+  channels: {
+    total: number;
+    active: number;
+    inactive: number;
+    pending: number;
+  };
+  capacity: {
+    total: number;
+    avg_channel: number;
+    max_channel: number;
+  };
+  revenue: {
+    fees_24h: number;
+    fees_7d: number;
+    fees_30d: number;
+  };
+  performance: {
+    success_rate: number;
+    routing_score: number;
+    uptime: number;
+  };
+  network: {
+    centrality: number;
+    betweenness: number;
+    degree: number;
+  };
+}
+
 export interface NodeStatus {
   pubkey: string;
   alias: string;
@@ -116,35 +145,54 @@ export interface DaznoHealthResponse {
   services?: DaznoServiceStatus[];
 }
 
+export interface ExplorerNode {
+  pubkey: string;
+  alias: string;
+  rank: number;
+  capacity: number;
+  channels: number;
+  fees: {
+    avg_base_fee: number;
+    avg_fee_rate: number;
+  };
+  last_update: string;
+}
+
+export interface NetworkRanking {
+  pubkey: string;
+  alias: string;
+  rank: number;
+  score: number;
+}
+
 const isValidLightningPubkey = (pubkey: string): boolean => {
   return /^[0-9a-fA-F]{66}$/.test(pubkey)
 }
 
-export interface DaznoApiClient {
-  getNodeStatus: (pubkey: string) => Promise<NodeStatus>;
-  createInvoice: (params: { amount: number; description: string; expiresIn?: number }) => Promise<{
-    paymentRequest: string;
-    paymentHash: string;
-  }>;
-  checkPayment: (paymentHash: string) => Promise<InvoiceStatus>;
-}
+export class MCPLightAPI {
+  private baseUrl: string;
+  private apiKey?: string;
 
-export function createDaznoApiClient(config?: { baseUrl?: string; apiKey?: string }): DaznoApiClient {
-  const baseUrl = config?.baseUrl || 'https://api.dazno.de';
-  const apiKey = config?.apiKey;
-
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
-  };
-
-  if (apiKey) {
-    headers['Authorization'] = `Bearer ${apiKey}`;
+  constructor(config?: { baseUrl?: string; apiKey?: string }) {
+    this.baseUrl = config?.baseUrl || 'https://api.dazno.de';
+    this.apiKey = config?.apiKey;
   }
 
-  async function handleResponse<T>(response: Response): Promise<T> {
+  private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+      ...(this.apiKey && { 'Authorization': `Bearer ${this.apiKey}` }),
+      ...options.headers
+    };
+
+    const response = await fetch(`${this.baseUrl}${endpoint}`, {
+      ...options,
+      headers
+    });
+
     if (!response.ok) {
       const error = await response.json().catch(() => ({ message: 'Unknown error' }));
-      logger.error('DaznoAPI Error:', error);
+      logger.error('MCPLightAPI Error:', error);
       throw new Error(error.message || `HTTP error! status: ${response.status}`);
     }
 
@@ -152,39 +200,49 @@ export function createDaznoApiClient(config?: { baseUrl?: string; apiKey?: strin
     return data.data;
   }
 
-  return {
-    async getNodeStatus(pubkey: string): Promise<NodeStatus> {
-      const response = await fetch(`${baseUrl}/api/v1/node/${pubkey}/status/complete`, {
-        headers,
-      });
-      return handleResponse<NodeStatus>(response);
-    },
+  async getNodeMetrics(pubkey: string): Promise<NodeMetrics> {
+    return this.request<NodeMetrics>(`/api/v1/node/${pubkey}/metrics`);
+  }
 
-    async createInvoice(params: { amount: number; description: string; expiresIn?: number }) {
-      const response = await fetch(`${baseUrl}/api/v1/lightning/invoice`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          amount: params.amount,
-          description: params.description,
-          expires_in: params.expiresIn || 300,
-        }),
-      });
-      return handleResponse<{ paymentRequest: string; paymentHash: string }>(response);
-    },
+  async getNodeStatus(pubkey: string): Promise<NodeStatus> {
+    return this.request<NodeStatus>(`/api/v1/node/${pubkey}/status/complete`);
+  }
 
-    async checkPayment(paymentHash: string): Promise<InvoiceStatus> {
-      const response = await fetch(`${baseUrl}/api/v1/lightning/invoice/${paymentHash}`, {
-        headers,
-      });
-      const data = await handleResponse<{ status: InvoiceStatus }>(response);
-      return data.status;
-    },
-  };
+  async createInvoice(params: { amount: number; description: string; expiresIn?: number }) {
+    return this.request<CreateInvoiceResponse>('/api/v1/lightning/invoice', {
+      method: 'POST',
+      body: JSON.stringify({
+        amount: params.amount,
+        description: params.description,
+        expires_in: params.expiresIn || 300,
+      })
+    });
+  }
+
+  async checkPayment(paymentHash: string): Promise<InvoiceStatus> {
+    const data = await this.request<CheckPaymentResponse>(`/api/v1/lightning/invoice/${paymentHash}`);
+    return data.status;
+  }
+
+  async getExplorerNodes(params: { search?: string; sortBy?: string; limit?: number; offset?: number }): Promise<{ nodes: ExplorerNode[]; total: number }> {
+    const queryParams = new URLSearchParams();
+    if (params.search) queryParams.set('search', params.search);
+    if (params.sortBy) queryParams.set('sortBy', params.sortBy);
+    if (params.limit) queryParams.set('limit', params.limit.toString());
+    if (params.offset) queryParams.set('offset', params.offset.toString());
+
+    return this.request<{ nodes: ExplorerNode[]; total: number }>(`/api/v1/explorer/nodes?${queryParams}`);
+  }
+
+  async getNetworkRankings(category: string): Promise<NetworkRanking[]> {
+    return this.request<NetworkRanking[]>(`/api/v1/rankings/${category}`);
+  }
 }
 
 // Export une instance par défaut du client API
-export const daznoApi = createDaznoApiClient();
+export const daznoApi = new MCPLightAPI();
 
-// Export la classe pour les types
-export default DaznoApiClient; 
+// Export une fonction factory pour créer de nouvelles instances
+export const createDaznoApiClient = (config?: { baseUrl?: string; apiKey?: string }) => {
+  return new MCPLightAPI(config);
+}; 

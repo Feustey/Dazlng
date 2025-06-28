@@ -3,7 +3,7 @@
 import React from 'react';
 import { useState } from 'react';
 import FormInput from './FormInput';
-import Button from './Button';
+import Button from './button';
 import Link from 'next/link';
 import SuccessModal from './SuccessModal';
 import { toast } from 'react-hot-toast';

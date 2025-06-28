@@ -1,4 +1,4 @@
-import { createClient } from '@/utils/supabase/server';
+import { createSupabaseServerClient } from '@/lib/supabase-auth';
 
 // Définition de l'interface Instrument selon la table SQL
 export interface Instrument {
@@ -8,7 +8,7 @@ export interface Instrument {
 }
 
 export default async function Instruments(): Promise<JSX.Element> {
-  const supabase = await createClient();
+  const supabase = await createSupabaseServerClient();
   
   try {
     const { data: instruments, error } = await supabase

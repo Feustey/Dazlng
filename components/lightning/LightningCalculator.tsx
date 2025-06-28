@@ -5,7 +5,7 @@ import { createDaznoApiClient } from '@/lib/services/dazno-api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/shared/ui/card';
 import { Input } from '@/components/shared/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/shared/ui/select';
-import { useToast } from '@/components/shared/ui/use-toast';
+import toast from 'react-hot-toast';
 import { Loader2 } from 'lucide-react';
 
 type Currency = 'sats' | 'btc' | 'eur' | 'usd';
@@ -23,17 +23,12 @@ export default function LightningCalculator() {
   const [to, setTo] = useState<Currency>('eur');
   const [result, setResult] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
 
   const daznoApi = createDaznoApiClient();
 
   const handleConvert = async () => {
     if (!amount || isNaN(Number(amount))) {
-      toast({
-        title: 'Erreur',
-        description: 'Veuillez entrer un montant valide',
-        variant: 'destructive',
-      });
+      toast.error('Veuillez entrer un montant valide');
       return;
     }
 
@@ -46,11 +41,7 @@ export default function LightningCalculator() {
       });
       setResult(value);
     } catch (error) {
-      toast({
-        title: 'Erreur',
-        description: 'Impossible de convertir le montant',
-        variant: 'destructive',
-      });
+      toast.error('Impossible de convertir le montant');
     } finally {
       setLoading(false);
     }

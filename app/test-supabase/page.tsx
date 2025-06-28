@@ -1,7 +1,7 @@
-import { createClient } from '@/utils/supabase/server';
+import { createSupabaseServerClient } from '@/lib/supabase-auth';
 
 export default async function TestSupabase(): Promise<JSX.Element> {
-  const supabase = await createClient();
+  const supabase = await createSupabaseServerClient();
   
   // Test de connexion basique
   const connectionTest = async (): Promise<{ success: boolean; error: string | null }> => {

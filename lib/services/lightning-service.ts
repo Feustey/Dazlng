@@ -156,6 +156,29 @@ export class LightningServiceImpl implements LightningService {
       }
     }
   }
+
+  async createInvoice(params: { amount: number; description: string }): Promise<{ payment_hash: string }> {
+    try {
+      const invoice = await this.generateInvoice({
+        amount: params.amount,
+        description: params.description
+      });
+      return { payment_hash: invoice.paymentHash };
+    } catch (error) {
+      console.error('❌ LightningService: Erreur création facture:', error);
+      throw error;
+    }
+  }
+
+  async checkPayment(paymentHash: string): Promise<boolean> {
+    try {
+      const status = await this.checkInvoiceStatus(paymentHash);
+      return status.status === 'settled';
+    } catch (error) {
+      console.error('❌ LightningService: Erreur vérification paiement:', error);
+      throw error;
+    }
+  }
 }
 
 // Fonction factory pour créer le service
