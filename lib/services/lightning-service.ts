@@ -1,4 +1,4 @@
-import { LightningService, CreateInvoiceParams, Invoice, InvoiceStatus, PaymentStatus } from '@/types/lightning';
+import { LightningService, CreateInvoiceParams, Invoice, INVOICE_STATUS, PaymentStatus } from '@/types/lightning';
 import { createAuthenticatedLndGrpc } from 'lightning';
 
 // Type pour la réponse de statut
@@ -188,7 +188,7 @@ export function createLightningService(): LightningService {
 
 // Export des types pour compatibilité
 export {
-  InvoiceStatus,
+  INVOICE_STATUS,
   type Invoice,
   type CreateInvoiceParams,
   type InvoiceStatusResponse
