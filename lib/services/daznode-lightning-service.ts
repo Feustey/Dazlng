@@ -136,10 +136,3 @@ export class DazNodeLightningService {
 export function createDazNodeLightningService(): DazNodeLightningService {
   return new DazNodeLightningService();
 }
-
-// Export des types
-export type { 
-  Invoice, 
-  InvoiceStatus, 
-  CreateInvoiceParams 
-}
