@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "title": "DazNode | Solutions Lightning Network pour tous",
+    "description": "Daznode simplifie l'accès au réseau Lightning avec des solutions clés en main. Nœuds personnels, services de paiement et IA dédiée pour particuliers et professionnels."
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "about": "À propos",
+    "contact": "Contact",
+    "dazbox": "DazBox",
+    "daznode": "DazNode",
+    "dazpay": "DazPay",
+    "login": "Connexion",
+    "register": "Inscription",
+    "dashboard": "Tableau de bord"
+  },
+  "home": {
+    "hero": {
+      "title": "Solutions Lightning Network pour tous",
+      "subtitle": "Simplifiez l'accès au réseau Lightning avec des solutions clés en main",
+      "cta": "Commencer maintenant"
+    },
+    "features": {
+      "title": "Fonctionnalités",
+      "dazbox": {
+        "title": "DazBox",
+        "description": "Votre nœud Lightning personnel clé en main"
+      },
+      "daznode": {
+        "title": "DazNode",
+        "description": "Services de nœud Lightning managé"
+      },
+      "dazpay": {
+        "title": "DazPay",
+        "description": "Solutions de paiement Lightning pour professionnels"
+      }
+    }
+  }
+} 

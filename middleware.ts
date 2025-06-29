@@ -1,6 +1,29 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
+import createMiddleware from 'next-intl/middleware';
+import { match } from '@formatjs/intl-localematcher';
+import Negotiator from 'negotiator';
+import { locales, defaultLocale } from './i18n.config';
+
+// Fonction pour détecter la langue du navigateur
+function getLocaleFromHeaders(headers: Headers): string {
+  const negotiatorHeaders: Record<string, string> = {};
+  headers.forEach((value, key) => (negotiatorHeaders[key] = value));
+
+  const languages = new Negotiator({ headers: negotiatorHeaders }).languages();
+  const locales = ['fr', 'en'];
+  const defaultLocale = 'fr';
+
+  return match(languages, locales, defaultLocale);
+}
+
+// Création du middleware next-intl
+export default createMiddleware({
+  locales: ['fr', 'en'],
+  defaultLocale: 'fr',
+  localePrefix: 'as-needed'
+});
 
 export async function middleware(request: NextRequest) {
   // Vérifier si c'est une requête API
@@ -36,9 +59,7 @@ export async function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
+// Configuration des routes à intercepter
 export const config = {
-  matcher: [
-    '/api/:path*',
-    '/((?!_next/static|_next/image|favicon.ico).*)',
-  ],
+  matcher: ['/((?!api|_next|.*\\..*).*)']
 }; 

@@ -2,11 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { createDaznoApiClient, ExplorerNode } from '@/lib/services/dazno-api';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/shared/ui/card';
-import { Input } from '@/components/shared/ui/input';
+import { Card, CardContent, CardHeader, CardTitle, Input, Button } from '@/components/shared/ui';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/shared/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/shared/ui/table';
-import { Button } from '@/components/shared/ui/button';
 import toast from 'react-hot-toast';
 import { Loader2 } from 'lucide-react';
 

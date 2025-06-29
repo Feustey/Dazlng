@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import mcpLightAPI, { 
+import { mcpLightAPI } from '@/lib/services/mcp-light-api';
+import { 
   NodeAnalysisResult, 
   MCPLightCredentials,
   type MCPNodeInfo,

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createDaznoApiClient, NetworkRanking } from '@/lib/services/dazno-api';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/shared/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/shared/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/shared/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/shared/ui/table';
 import toast from 'react-hot-toast';

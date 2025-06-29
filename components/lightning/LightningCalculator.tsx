@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import { createDaznoApiClient } from '@/lib/services/dazno-api';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/shared/ui/card';
-import { Input } from '@/components/shared/ui/input';
+import { Card, CardContent, CardHeader, CardTitle, Input } from '@/components/shared/ui';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/shared/ui/select';
 import toast from 'react-hot-toast';
 import { Loader2 } from 'lucide-react';

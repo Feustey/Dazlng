@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "title": "DazNode | Lightning Network Solutions for Everyone",
+    "description": "DazNode simplifies access to the Lightning Network with turnkey solutions. Personal nodes, payment services and dedicated AI for individuals and professionals."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete"
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "dazbox": "DazBox",
+    "daznode": "DazNode",
+    "dazpay": "DazPay",
+    "login": "Login",
+    "register": "Sign Up",
+    "dashboard": "Dashboard"
+  },
+  "home": {
+    "hero": {
+      "title": "Lightning Network Solutions for Everyone",
+      "subtitle": "Simplify Lightning Network access with turnkey solutions",
+      "cta": "Get Started"
+    },
+    "features": {
+      "title": "Features",
+      "dazbox": {
+        "title": "DazBox",
+        "description": "Your turnkey personal Lightning node"
+      },
+      "daznode": {
+        "title": "DazNode",
+        "description": "Managed Lightning node services"
+      },
+      "dazpay": {
+        "title": "DazPay",
+        "description": "Lightning payment solutions for businesses"
+      }
+    }
+  }
+} 

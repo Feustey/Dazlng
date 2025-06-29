@@ -9,8 +9,8 @@ export * from './NotificationBadge';
 export * from './ProtonPayment';
 export * from './FormInput';
 export * from './Hero';
-export * from './button';
-export * from './card';
+export * from './Button';
+export * from './Card';
 export * from './FeaturesList';
 export * from './HeroSection';
 export * from './PageTitle';
@@ -44,3 +44,9 @@ export { CTASection } from './CTASection';
 // Hooks de performance
 export { useWebVitals } from '../../../hooks/useWebVitals';
 export { useCache } from '../../../hooks/useCache';
+
+export * from './Input';
+export * from './Badge';
+export * from './ProductCard';
+export * from './LazyList';
+export * from './LanguageSwitcher';

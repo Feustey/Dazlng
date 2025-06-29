@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { daznoApi } from '@/lib/services/dazno-api';
 import { useToast } from '@/hooks/useToast';
-import Button from '@/components/shared/ui/button';
+import { Button } from '@/components/shared/ui';
 import { NodeStatus } from '@/lib/services/dazno-api';
 
 interface NodeAnalysisProps {

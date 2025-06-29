@@ -1,126 +1,49 @@
-import axios from 'axios';
-import { config } from 'dotenv';
-import { HttpsProxyAgent } from 'https-proxy-agent';
+import { config } from 'dotenv'
+import { mcpLightAPI } from '../lib/services/mcp-light-api'
 
-config(); // Charge les variables d'environnement
+config()
 
-const API_BASE_URL = 'http://api.dazno.de/v1';
-const TEST_PUBKEY = '03eec7245d6b7d2ccb30380bfbe2a3648cd7a942653f5aa340edcea1f283686619';
+const TEST_PUBKEY = '03eec7245d6b7d2ccb30380bfbe2a3648cd7a942653f5aa340edcea1f283686619'
 
-// Configuration du proxy local (optionnel)
-const proxyUrl = process.env.HTTP_PROXY || 'http://localhost:8000';
-const useProxy = process.env.USE_PROXY === 'true';
-
-interface TestResult {
-  endpoint: string;
-  status: 'success' | 'error';
-  response?: any;
-  error?: any;
-}
-
-async function testEndpoint(endpoint: string, method: 'GET' | 'POST' = 'GET', data?: any): Promise<TestResult> {
+async function testEndpoints() {
   try {
-    console.log(`🔄 Test de ${endpoint}...`);
-    
-    const config: any = {
-      method,
-      url: `${API_BASE_URL}${endpoint}`,
-      data,
-      headers: {
-        'Authorization': `Bearer ${process.env.DAZNO_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      timeout: 10000, // 10 secondes timeout
-      maxRedirects: 5 // Suivre les redirections automatiquement
-    };
+    console.log('🔄 Initialisation de MCPLightAPI...')
+    await mcpLightAPI.initialize()
+    console.log('✅ MCPLightAPI initialisé avec succès')
 
-    // Ajouter le proxy seulement si activé
-    if (useProxy) {
-      config.httpsAgent = new HttpsProxyAgent(proxyUrl);
-    }
-    
-    const response = await axios(config);
-    
-    console.log(`✅ ${endpoint} - Succès`);
-    return {
-      endpoint,
-      status: 'success',
-      response: response.data
-    };
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error(`❌ ${endpoint} - Erreur:`, {
-        status: error.response?.status,
-        message: error.message,
-        data: error.response?.data
-      });
-    } else {
-      console.error(`❌ ${endpoint} - Erreur inconnue:`, error);
-    }
-    
-    return {
-      endpoint,
-      status: 'error',
-      error: axios.isAxiosError(error) ? {
-        status: error.response?.status,
-        message: error.message,
-        data: error.response?.data
-      } : error
-    };
-  }
-}
-
-async function runTests() {
-  console.log('🚀 Démarrage des tests api.dazno.de...\n');
-  console.log(`Mode: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`Connexion: ${useProxy ? `Avec proxy (${proxyUrl})` : 'Directe'}\n`);
-
-  const tests = [
-    // Endpoints Lightning
-    testEndpoint('/lightning/explorer/nodes'),
-    testEndpoint('/lightning/rankings'),
-    testEndpoint('/lightning/network/global-stats'),
-    testEndpoint(`/node/${TEST_PUBKEY}/priorities-enhanced`),
-    testEndpoint('/lightning/calculator'),
-    testEndpoint('/lightning/decoder', 'POST', {
-      bolt11: 'lnbc1m1p...' // Remplacer par une facture BOLT11 valide
-    }),
-
-    // Endpoints Node
-    testEndpoint(`/node/${TEST_PUBKEY}/status/complete`),
-    testEndpoint(`/node/${TEST_PUBKEY}/lnd/status`),
-    testEndpoint(`/node/${TEST_PUBKEY}/info/amboss`),
-
-    // Endpoints Channels
-    testEndpoint('/channels/recommendations/amboss', 'POST', {
-      pubkey: TEST_PUBKEY
-    }),
-    testEndpoint('/channels/recommendations/unified', 'POST', {
-      pubkey: TEST_PUBKEY
+    // Test des recommandations
+    console.log('\n🔄 Test des recommandations...')
+    const recommendations = await mcpLightAPI.getRecommendations(TEST_PUBKEY)
+    console.log('✅ Recommandations récupérées:', {
+      pubkey: recommendations.pubkey,
+      count: recommendations.recommendations.length,
+      timestamp: recommendations.timestamp
     })
-  ];
 
-  const results = await Promise.all(tests);
-  
-  console.log('\n📊 Résultats des tests:');
-  console.log('=====================');
-  
-  const successCount = results.filter(r => r.status === 'success').length;
-  const errorCount = results.filter(r => r.status === 'error').length;
-  
-  console.log(`\n✅ Succès: ${successCount}`);
-  console.log(`❌ Erreurs: ${errorCount}`);
-  console.log(`📈 Taux de succès: ${((successCount / results.length) * 100).toFixed(1)}%`);
-  
-  if (errorCount > 0) {
-    console.log('\n🔍 Détails des erreurs:');
-    results
-      .filter(r => r.status === 'error')
-      .forEach(r => {
-        console.log(`\n${r.endpoint}:`);
-        console.log(JSON.stringify(r.error, null, 2));
-      });
+    // Test des priorités
+    console.log('\n🔄 Test des priorités...')
+    const priorities = await mcpLightAPI.getPriorityActions(TEST_PUBKEY)
+    console.log('✅ Priorités récupérées:', {
+      pubkey: priorities.pubkey,
+      count: priorities.priority_actions.length,
+      timestamp: priorities.timestamp
+    })
+
+    // Test de l'analyse complète
+    console.log('\n🔄 Test de l\'analyse complète...')
+    const analysis = await mcpLightAPI.analyzeNode(TEST_PUBKEY)
+    console.log('✅ Analyse complète récupérée:', {
+      pubkey: analysis.pubkey,
+      timestamp: analysis.timestamp,
+      health_score: analysis.summary.health_score
+    })
+
+    console.log('\n✅ Tous les tests ont réussi !')
+
+  } catch (error) {
+    console.error('\n❌ Erreur lors des tests:', error)
+    process.exit(1)
   }
 }
 
-runTests().catch(console.error); 
+testEndpoints().catch(console.error) 

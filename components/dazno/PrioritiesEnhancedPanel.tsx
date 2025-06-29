@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from 'react'
 import { usePrioritiesEnhanced } from '@/hooks/usePrioritiesEnhanced'
-import Card, { CardHeader, CardTitle, CardContent } from '@/components/shared/ui/card'
-import Badge from '@/components/shared/ui/Badge'
-import Button from '@/components/shared/ui/button'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/shared/ui'
+import { Badge } from '@/components/shared/ui'
+import { Button } from '@/components/shared/ui'
 import { Loader2, TrendingUp, AlertTriangle, Target, Clock, DollarSign, Zap } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -227,12 +227,10 @@ export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhance
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <Badge className={getDifficultyColor(action.difficulty)}>
+                    <Badge variant="default">
                       {action.difficulty}
                     </Badge>
-                    <Badge variant="outline">
-                      Priorité {action.priority}
-                    </Badge>
+                    <Badge variant="info">Priorité {action.priority}</Badge>
                   </div>
                 </div>
                 

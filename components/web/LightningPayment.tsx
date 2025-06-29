@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/useToast';
 import { usePaymentService } from '@/hooks/usePaymentService';
 import { InvoiceStatus } from '@/types/lightning';
-import Button from '@/components/shared/ui/button';
+import { Button } from '@/components/shared/ui';
 import QRCode from 'qrcode.react';
 
 declare global {
