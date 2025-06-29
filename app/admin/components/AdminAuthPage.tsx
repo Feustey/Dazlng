@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import type { FC } from 'react';
 
-interface AdminAuthPageProps {}
+type AdminAuthPageProps = Record<string, never>
 
 const AdminAuthPage: FC<AdminAuthPageProps> = () => {
   const router = useRouter();

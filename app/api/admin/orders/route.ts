@@ -4,6 +4,8 @@ import { withAdminAuth, handleApiError } from '@/lib/api-utils';
 import { z } from 'zod';
 import { ErrorCodes } from '@/types/database';
 
+export const dynamic = 'force-dynamic';
+
 // Schéma de validation pour les paramètres de requête
 const querySchema = z.object({
   id: z.string().uuid().optional(),

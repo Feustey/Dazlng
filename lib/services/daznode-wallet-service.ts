@@ -1,3 +1,6 @@
+import { WebSocket as WSWebSocket } from 'ws';
+import { createHash } from 'node:crypto';
+
 // Types pour NWC
 export interface NWCConfig {
   nostrWalletConnectUrl: string;
@@ -27,7 +30,7 @@ export interface NWCBalanceResult {
 
 class NWC {
   private url: string | null = null;
-  private ws: WebSocket | null = null;
+  private ws: WSWebSocket | null = null;
   private messageHandlers: Map<string, (response: any) => void> = new Map();
   private connected = false;
 
@@ -40,7 +43,7 @@ class NWC {
     
     return new Promise((resolve: any, reject: any) => {
       try {
-        this.ws = new WebSocket(this.url);
+        this.ws = new WSWebSocket(this.url);
         
         this.ws?.onopen = () => {
           this.connected = true;
@@ -129,8 +132,7 @@ class NWC {
 // Polyfill WebSocket pour Node.js
 if (typeof global !== 'undefined' && !global.WebSocket) {
   try {
-    const WebSocket = require('ws');
-    global.WebSocket = WebSocket;
+    global.WebSocket = WSWebSocket;
   } catch (error) {
     console.warn('⚠️ WebSocket polyfill non disponible - tests en mode browser uniquement');
   }
@@ -216,7 +218,7 @@ export class DazNodeWalletService {
    */
   async generateInvoice(params: DazNodeInvoiceParams): Promise<DazNodeInvoice> {
     try {
-      console.log('�� DazNodeWallet - Génération facture:', {
+      console.log('🔗 DazNodeWallet - Génération facture:', {
         amount: params.amount,
         description: params.description?.substring(0, 50),
         expiry: params.expiry,
@@ -433,9 +435,8 @@ export class DazNodeWalletService {
    * Génère un hash de test déterministe
    */
   private generateTestHash(): string {
-    const crypto = require('crypto');
     const timestamp = Date.now().toString();
-    return crypto.createHash('sha256').update(`daznode_test_${timestamp}`).digest('hex');
+    return createHash('sha256').update(`daznode_test_${timestamp}`).digest('hex');
   }
 
   /**
@@ -478,13 +479,9 @@ export class DazNodeWalletService {
    */
   private extractPaymentHashFromBolt11(bolt11: string): string | null {
     try {
-      // Méthode simplifiée d'extraction du payment hash depuis une facture BOLT11
-      // En pratique, il faudrait utiliser une librairie de décodage BOLT11 complète
       const match = bolt11.match(/lnbc[0-9]*[munp]?1[a-zA-Z0-9]{6,}/);
       if (match) {
-        // Générer un hash déterministe basé sur la facture
-        const crypto = require('crypto');
-        return crypto.createHash('sha256').update(bolt11).digest('hex').substring(0, 64);
+        return createHash('sha256').update(bolt11).digest('hex').substring(0, 64);
       }
       return null;
     } catch (error) {

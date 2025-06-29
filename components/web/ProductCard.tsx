@@ -1,5 +1,5 @@
-import React from 'react';
 'use client';
+import React from 'react';
 
 import Card from "../shared/ui/Card";
 import GradientTitle from "../shared/ui/GradientTitle";
