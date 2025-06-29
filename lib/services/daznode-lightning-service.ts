@@ -1,13 +1,7 @@
-import { Invoice, InvoiceStatus, CreateInvoiceParams, LightningService } from '@/types/lightning';
+import { Invoice, CreateInvoiceParams, InvoiceStatus } from '@/types/lightning';
+import { INVOICE_STATUS } from '@/types/lightning';
 
-export enum InvoiceStatus {
-  pending = "pending",
-  settled = "settled",
-  expired = "expired",
-  failed = "failed"
-}
-
-export class DazNodeLightningService implements LightningService {
+export class DazNodeLightningService {
   private apiUrl: string | null = null;
   private apiKey: string | null = null;
   private provider: string | null = null;
@@ -65,7 +59,7 @@ export class DazNodeLightningService implements LightningService {
         description: params.description,
         createdAt: new Date().toISOString(),
         expiresAt: new Date(Date.now() + (params.expiry || 3600) * 1000).toISOString(),
-        status: InvoiceStatus.pending,
+        status: INVOICE_STATUS.PENDING,
         metadata: params.metadata
       };
     } catch (error) {
@@ -77,7 +71,7 @@ export class DazNodeLightningService implements LightningService {
   async checkInvoiceStatus(paymentHash: string): Promise<InvoiceStatus> {
     try {
       const response = await (this ?? Promise.reject(new Error("this is null"))).request<{
-        status: InvoiceStatus.pending | InvoiceStatus.settled | InvoiceStatus.failed | InvoiceStatus.expired;
+        status: InvoiceStatus,
         amount: number;
         settledAt?: string;
         metadata?: Record<string, any>;
@@ -106,10 +100,10 @@ export class DazNodeLightningService implements LightningService {
         try {
           const status = await (this ?? Promise.reject(new Error("this is null"))).checkInvoiceStatus(params.paymentHash);
           
-          if (status.status === InvoiceStatus.settled) {
+          if (status.status === INVOICE_STATUS.SETTLED) {
             clearInterval(checkInterval);
             await (params ?? Promise.reject(new Error("params is null"))).onPaid();
-          } else if (status.status === InvoiceStatus.expired || status.status === InvoiceStatus.failed) {
+          } else if (status.status === INVOICE_STATUS.EXPIRED || status.status === INVOICE_STATUS.FAILED) {
             clearInterval(checkInterval);
             params.onExpired();
           }
