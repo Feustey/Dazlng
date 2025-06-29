@@ -9,6 +9,9 @@ import { CRMHeaderDashboard } from '../components/ui/CRMHeaderDashboard';
 import { ProfileCompletionEnhanced } from '../components/ui/ProfileCompletionEnhanced';
 import { SmartConversionCenter } from '../components/ui/SmartConversionCenter';
 import { PremiumConversionModal } from '../components/ui/PremiumConversionModal';
+import DashboardCharts from '../components/ui/DashboardCharts';
+import RealTimeStats from '../components/ui/RealTimeStats';
+import MobileOptimizedDashboard from '../components/ui/MobileOptimizedDashboard';
 import { getSupabaseBrowserClient } from '@/lib/supabase';
 import ReferralWidget from '@/components/user/ReferralWidget';
 
@@ -240,14 +243,64 @@ const UserDashboard: FC = () => {
         userName={profile?.prenom || profile?.email?.split('@')[0] || 'Bitcoiner'}
       />
 
+      {/* Version mobile optimisée */}
+      <MobileOptimizedDashboard
+        metrics={{
+          totalRevenue: hasNode ? 125000 : 0,
+          activeChannels: hasNode ? 8 : 0,
+          uptime: hasNode ? 95 : 0,
+          efficiency: hasNode ? 78 : 0,
+          revenueChange: hasNode ? 12.5 : 0,
+          channelsChange: hasNode ? 3.2 : 0
+        }}
+        profileCompletion={gamificationData?.profileCompletion || 0}
+        userScore={gamificationData?.userScore || 0}
+        userRank={gamificationData?.rank}
+        hasNode={hasNode}
+      />
+
+      {/* Statistiques réseau temps réel - Desktop */}
+      <div className="hidden md:block">
+        <RealTimeStats 
+          userStats={hasNode ? {
+            rank: gamificationData?.rank || 0,
+            score: gamificationData?.userScore || 0,
+            efficiency: 78
+          } : undefined}
+        />
+      </div>
+
+      {/* Graphiques du dashboard - Desktop */}
+      <div className="hidden md:block">
+        <DashboardCharts
+        metrics={{
+          totalRevenue: hasNode ? 125000 : 0,
+          activeChannels: hasNode ? 8 : 0,
+          uptime: hasNode ? 95 : 0,
+          efficiency: hasNode ? 78 : 0,
+          revenueChange: hasNode ? 12.5 : 0,
+          channelsChange: hasNode ? 3.2 : 0,
+          uptimeChange: hasNode ? 0.8 : 0,
+          efficiencyChange: hasNode ? -1.2 : 0
+        }}
+        trendData={{
+          revenue: hasNode ? [85000, 92000, 88000, 105000, 118000, 125000, 132000] : [0, 0, 0, 0, 0, 0, 0],
+          channels: hasNode ? [6, 7, 7, 8, 8, 8, 8] : [0, 0, 0, 0, 0, 0, 0],
+          uptime: hasNode ? [92, 94, 95, 94, 96, 95, 95] : [0, 0, 0, 0, 0, 0, 0]
+        }}
+        profileCompletion={gamificationData?.profileCompletion || 0}
+        userScore={gamificationData?.userScore || 0}
+      />
+      </div>
+
       {/* Section 2: Performance du nœud (si connecté) ou Onboarding */}
       {hasNode ? (
         <>
           <PerformanceMetrics
             metrics={{
-              monthlyRevenue: 0,
-              totalCapacity: 0,
-              activeChannels: 0,
+              monthlyRevenue: 125000,
+              totalCapacity: 2.5,
+              activeChannels: 8,
               uptime: 95,
               healthScore: 85,
               routingEfficiency: 78,
