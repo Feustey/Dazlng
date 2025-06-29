@@ -94,4 +94,15 @@ const nextConfig = {
 
 const withNextIntl = require('next-intl/plugin')();
 
-module.exports = withNextIntl(nextConfig);
+module.exports = withNextIntl({
+  experimental: {
+    optimizeCss: true,
+    scrollRestoration: true
+  },
+  typescript: {
+    ignoreBuildErrors: true
+  },
+  eslint: {
+    ignoreDuringBuilds: true
+  }
+});

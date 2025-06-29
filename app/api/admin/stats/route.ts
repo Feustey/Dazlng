@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { withAdminAuth, handleApiError } from '@/lib/api-utils';
 import { getSupabaseAdminClient } from '@/lib/supabase';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 /**

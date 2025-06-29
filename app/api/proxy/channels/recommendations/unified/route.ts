@@ -3,6 +3,8 @@ import { ApiResponse } from '@/types/database'
 import { logger } from '@/lib/logger'
 import { mcpLightAPI } from '@/lib/services/mcp-light-api'
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: NextRequest): Promise<Response> {
   try {
     // Récupérer le body de la requête

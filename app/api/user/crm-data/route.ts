@@ -49,6 +49,8 @@ export interface CRMRecommendation {
   appliedBy: number;
 }
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(_request: NextRequest) {
   try {
     const supabase = await createSupabaseServerClient();
