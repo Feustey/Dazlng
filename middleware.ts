@@ -18,11 +18,12 @@ function getLocaleFromHeaders(headers: Headers): string {
   return match(languages, locales, defaultLocale);
 }
 
-// Création du middleware next-intl
-export default createMiddleware({
+// Création du middleware next-intl avec détection automatique
+const intlMiddleware = createMiddleware({
   locales: ['fr', 'en'],
   defaultLocale: 'fr',
-  localePrefix: 'as-needed'
+  localePrefix: 'as-needed',
+  localeDetection: true
 });
 
 export async function middleware(request: NextRequest) {
@@ -56,8 +57,11 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  // Appliquer le middleware d'internationalisation pour les pages
+  return intlMiddleware(request);
 }
+
+export default intlMiddleware;
 
 // Configuration des routes à intercepter
 export const config = {

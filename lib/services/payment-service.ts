@@ -1,11 +1,6 @@
 import { createDazNodeLightningService } from './daznode-lightning-service';
-
-export enum InvoiceStatus {
-  pending = "pending",
-  settled = "settled",
-  expired = "expired",
-  failed = "failed"
-}
+import { Invoice, CreateInvoiceParams, InvoiceStatus } from '@/types/lightning';
+import { INVOICE_STATUS } from '@/types/lightning';
 import { PaymentLogger } from './payment-logger';
 import { OrderService } from './order-service';
 import { Order } from '@/types/database';
@@ -37,43 +32,7 @@ interface _ApiResponse<T> {
   };
 }
 
-export interface CreateInvoiceParams {
-  amount: number;
-  description: string;
-  metadata?: Record<string, string | number | boolean>;
-  expiry?: number;
-}
-
-export interface Invoice {
-  paymentRequest: string;
-  paymentHash: string;
-  amount: number;
-  expiresAt: string;
-  createdAt: string;
-}
-
-type InvoiceStatus = InvoiceStatus.settled | InvoiceStatus.pending | InvoiceStatus.expired | 'error';
-
-export interface WatchInvoiceParams {
-  invoice: Invoice;
-  checkInterval?: number;
-  maxAttempts?: number;
-  onPaid: () => Promise<void>;
-  onExpired: () => void;
-  onError: (error: Error) => void;
-  onRenewing: () => void;
-  onRenewed: (newInvoice: Invoice) => void;
-}
-
-export interface PaymentServiceConfig {
-  provider?: 'daznode' | 'lnd';
-}
-
-export interface PaymentStatus {
-  status: InvoiceStatus.pending | 'paid' | InvoiceStatus.failed | InvoiceStatus.expired;
-  settledAt?: string;
-  amount?: number;
-}
+export type PaymentStatus = 'pending' | 'settled' | 'failed' | 'expired';
 
 export interface PaymentServiceResult {
   success: boolean;
@@ -165,21 +124,21 @@ export class PaymentService {
 
           if (attempts >= maxAttempts) {
             clearInterval(watcher);
-            await (this ?? Promise.reject(new Error("this is null"))).logger?.updatePaymentStatus(params.invoice.paymentHash, InvoiceStatus.expired);
+            await (this ?? Promise.reject(new Error("this is null"))).logger?.updatePaymentStatus(params.invoice.paymentHash, INVOICE_STATUS.EXPIRED);
             params.onExpired();
             return;
           }
 
           const { status } = await (this ?? Promise.reject(new Error("this is null"))).checkInvoiceStatus(params.invoice.paymentHash);
 
-          if (status === InvoiceStatus.settled) {
+          if (status === INVOICE_STATUS.SETTLED) {
             clearInterval(watcher);
             await (this ?? Promise.reject(new Error("this is null"))).orderService?.markOrderPaid(params.orderId);
-            await (this ?? Promise.reject(new Error("this is null"))).logger?.updatePaymentStatus(params.invoice.paymentHash, InvoiceStatus.settled);
+            await (this ?? Promise.reject(new Error("this is null"))).logger?.updatePaymentStatus(params.invoice.paymentHash, INVOICE_STATUS.SETTLED);
             await (params ?? Promise.reject(new Error("params is null"))).onPaid();
-          } else if (status === InvoiceStatus.expired) {
+          } else if (status === INVOICE_STATUS.EXPIRED) {
             clearInterval(watcher);
-            await (this ?? Promise.reject(new Error("this is null"))).logger?.updatePaymentStatus(params.invoice.paymentHash, InvoiceStatus.expired);
+            await (this ?? Promise.reject(new Error("this is null"))).logger?.updatePaymentStatus(params.invoice.paymentHash, INVOICE_STATUS.EXPIRED);
             params.onExpired();
           }
         } catch (error) {
@@ -216,10 +175,10 @@ export class PaymentService {
       try {
         const { status } = await (this ?? Promise.reject(new Error("this is null"))).checkInvoiceStatus(params.paymentHash);
         
-        if (status === InvoiceStatus.settled) {
+        if (status === INVOICE_STATUS.SETTLED) {
           clearInterval(checkInterval);
           params.onPaid();
-        } else if (status === InvoiceStatus.expired) {
+        } else if (status === INVOICE_STATUS.EXPIRED) {
           clearInterval(checkInterval);
           params.onExpired();
         }

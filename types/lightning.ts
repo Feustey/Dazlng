@@ -3,14 +3,14 @@
  */
 
 // Enum unifié pour les statuts de facture
-export const InvoiceStatus = {
+export const INVOICE_STATUS = {
   PENDING: 'pending',
   SETTLED: 'settled',
   EXPIRED: 'expired',
   FAILED: 'failed'
 } as const;
 
-export type InvoiceStatus = typeof InvoiceStatus[keyof typeof InvoiceStatus];
+export type InvoiceStatus = typeof INVOICE_STATUS[keyof typeof INVOICE_STATUS];
 
 // Statuts de paiement standardisés
 export type PaymentStatus = 'pending' | 'settled' | 'failed' | 'expired';
@@ -85,4 +85,4 @@ export interface LightningService {
 
 // Types spécifiques pour les factures (pour compatibilité)
 export type { Invoice as LightningInvoice };
-export type { Invoice as DazNodeInvoice }; 
+export type { Invoice as DazNodeInvoice };
