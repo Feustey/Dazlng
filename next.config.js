@@ -40,7 +40,7 @@ const nextConfig = {
     return config;
   },
   eslint: {
-    ignoreDuringBuilds: false,
+    ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,
@@ -94,15 +94,4 @@ const nextConfig = {
 
 const withNextIntl = require('next-intl/plugin')();
 
-module.exports = withNextIntl({
-  experimental: {
-    optimizeCss: true,
-    scrollRestoration: true
-  },
-  typescript: {
-    ignoreBuildErrors: true
-  },
-  eslint: {
-    ignoreDuringBuilds: true
-  }
-});
+module.exports = withNextIntl(nextConfig);
