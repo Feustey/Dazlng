@@ -1,4 +1,4 @@
-export { Input } from "./Input";
+export { Input } from "./input";
 export { Button } from "./Button";
 export { LazyList } from "./LazyList";
 export { Card, CardHeader, CardTitle, CardContent, CardDescription } from "./Card";
