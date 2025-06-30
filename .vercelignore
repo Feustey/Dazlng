@@ -1,0 +1,30 @@
+# Fichiers de développement
+.env.local
+.env.development
+.env.test
+
+# Fichiers de test
+__tests__/
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+
+# Scripts de développement
+scripts/
+docs/
+
+# Fichiers de cache
+.next/cache/
+node_modules/.cache/
+
+# Fichiers de logs
+*.log
+npm-debug.log*
+
+# Fichiers temporaires
+.tmp/
+.temp/
+
+# Fichiers de configuration locale
+.claude-env/ 
