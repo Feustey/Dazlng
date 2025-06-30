@@ -2,7 +2,7 @@
 import React, { useState, Suspense, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-hot-toast';
-import { LightningPayment } from '@/components/shared/ui/LightningPayment';
+import LightningPayment from '@/components/shared/ui/LightningPayment';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
 import 'aos/dist/aos.css';
 
@@ -487,18 +487,8 @@ function CheckoutContent() {
                 <LightningPayment
                   amount={selectedPlan.priceSats}
                   description={`${selectedPlan.name} - Livraison à ${form.city}`}
-                  metadata={{
-                    product_type: 'dazbox',
-                    plan: plan,
-                    customer: form,
-                    delivery_address: `${form.address}, ${form.city} ${form.postalCode}, ${form.country}`,
-                    city: form.city,
-                    zip_code: form.postalCode,
-                    country: form.country,
-                    phone: form.phone,
-                    email: form.email
-                  }}
-                  onPaid={handlePaymentSuccess}
+                  orderId={checkoutState.orderId}
+                  onSuccess={handlePaymentSuccess}
                   onError={handlePaymentError}
                   onExpired={handlePaymentExpired}
                 />

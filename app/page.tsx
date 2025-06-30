@@ -3,6 +3,17 @@ import React, { useEffect, useState, Suspense } from "react";
 import dynamic from "next/dynamic";
 import { DazFlowShowcase } from '../components/shared/ui/DazFlowShowcase';
 import { useSearchParams, useRouter } from "next/navigation";
+import UXOptimizedNavbar from '../components/shared/ui/UXOptimizedNavbar';
+import UXOptimizedHero from '../components/shared/ui/UXOptimizedHero';
+import ProblemAgitationSection from '../components/shared/ui/ProblemAgitationSection';
+import SolutionDifferentiationSection from '../components/shared/ui/SolutionDifferentiationSection';
+import MobileFAQSection from '../components/shared/ui/MobileFAQSection';
+import MobileFeaturesSection from '../components/shared/ui/MobileFeaturesSection';
+import MobileTestimonialsSection from '../components/shared/ui/MobileTestimonialsSection';
+import SocialProofSection from '../components/shared/ui/SocialProofSection';
+import PricingSection from '../components/shared/ui/PricingSection';
+import ContactDemoSection from '../components/shared/ui/ContactDemoSection';
+import UXFooter from '../components/shared/ui/UXFooter';
 
 // Lazy loading optimisé avec skeleton amélioré
 const NewRevenueHero = dynamic(() => import("../components/shared/ui/NewRevenueHero"), {
@@ -226,58 +237,19 @@ export default function OptimizedHomePage() {
 
   return (
     <>
-      <Suspense fallback={null}>
-        <SignupConfirmationGate />
-      </Suspense>
-      
-      {/* Page structure optimisée avec layout full-width */}
-      <main className={`min-h-screen w-full overflow-x-hidden scroll-smooth layout-full-width ${
-        isPageLoaded ? 'opacity-100' : 'opacity-0'
-      } transition-opacity duration-500`}>
-        
-        {/* Hero Section - Priority loading */}
-        <NewRevenueHero />
-
-        {/* Section Pourquoi devenir opérateur de nœud */}
-        <AnimatedSection delay={100}>
-          <WhyBecomeNodeRunner />
-        </AnimatedSection>
-
-        {/* Section DazFlow Index */}
-        <AnimatedSection delay={200}>
-          <DazFlowShowcase />
-        </AnimatedSection>
-
-        {/* Section Comment ça marche */}
-        <AnimatedSection delay={300}>
-          <HowItWorks />
-        </AnimatedSection>
-
-        {/* Section Témoignages détaillés avec métriques financières */}
-        <AnimatedSection delay={400}>
-          <DetailedTestimonials />
-        </AnimatedSection>
-
-        {/* Section Guide des premiers pas */}
-        <AnimatedSection delay={500}>
-          <FirstStepsGuide />
-        </AnimatedSection>
-
-        {/* Section FAQ pour débutants */}
-        <AnimatedSection delay={600}>
-          <BeginnersFAQ />
-        </AnimatedSection>
-
-        {/* Section Communauté Token For Good */}
-        <AnimatedSection delay={700}>
-          <CommunitySection />
-        </AnimatedSection>
-
-        {/* Section CTA finale de conversion */}
-        <AnimatedSection delay={800}>
-          <FinalConversionCTA />
-        </AnimatedSection>
+      <UXOptimizedNavbar />
+      <main className="min-h-screen w-full overflow-x-hidden scroll-smooth layout-full-width">
+        <UXOptimizedHero />
+        <ProblemAgitationSection />
+        <SolutionDifferentiationSection />
+        <MobileFeaturesSection />
+        <MobileTestimonialsSection />
+        <SocialProofSection />
+        <PricingSection />
+        <MobileFAQSection />
+        <ContactDemoSection />
       </main>
+      <UXFooter />
     </>
   );
 }
