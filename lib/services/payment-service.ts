@@ -1,6 +1,5 @@
 import { createDazNodeLightningService } from './daznode-lightning-service';
 import { Invoice, CreateInvoiceParams, InvoiceStatus } from '@/types/lightning';
-import { INVOICE_STATUS } from '@/types/lightning';
 import { PaymentLogger } from './payment-logger';
 import { OrderService } from './order-service';
 import { Order } from '@/types/database';
@@ -43,6 +42,10 @@ export interface PaymentServiceResult {
   };
 }
 
+export interface PaymentServiceConfig {
+  provider?: 'daznode' | 'lnd';
+}
+
 export class PaymentService {
   private provider: 'daznode' | 'lnd';
   private logger: PaymentLogger | null = null;
@@ -64,11 +67,11 @@ export class PaymentService {
   }> {
     try {
       // Création de la commande
-      const order = await (this ?? Promise.reject(new Error("this is null"))).orderService?.createOrder(params);
+      const order = await this.orderService?.createOrder(params);
       const orderRef = order.id;
 
       // Génération de la facture
-      const invoice = await (this ?? Promise.reject(new Error("this is null"))).createInvoice({
+      const invoice = await this.createInvoice({
         amount: order.amount,
         description: `${params.product_type.toUpperCase()} - ${params.plan?.toUpperCase() || 'BASIC'} - ${orderRef}`,
         metadata: {
@@ -90,7 +93,7 @@ export class PaymentService {
    */
   async checkInvoiceStatus(paymentHash: string): Promise<InvoiceStatus> {
     try {
-      const status = await (this ?? Promise.reject(new Error("this is null"))).lightningService?.checkInvoiceStatus(paymentHash);
+      const status = await this.lightningService?.checkInvoiceStatus(paymentHash);
       return status as InvoiceStatus;
     } catch (error) {
       console.error('Erreur vérification facture:', error);
@@ -124,26 +127,26 @@ export class PaymentService {
 
           if (attempts >= maxAttempts) {
             clearInterval(watcher);
-            await (this ?? Promise.reject(new Error("this is null"))).logger?.updatePaymentStatus(params.invoice.paymentHash, INVOICE_STATUS.EXPIRED);
+            await this.logger?.updatePaymentStatus(params.invoice.paymentHash, 'expired');
             params.onExpired();
             return;
           }
 
-          const { status } = await (this ?? Promise.reject(new Error("this is null"))).checkInvoiceStatus(params.invoice.paymentHash);
+          const { status } = await this.checkInvoiceStatus(params.invoice.paymentHash);
 
-          if (status === INVOICE_STATUS.SETTLED) {
+          if (status === 'settled') {
             clearInterval(watcher);
-            await (this ?? Promise.reject(new Error("this is null"))).orderService?.markOrderPaid(params.orderId);
-            await (this ?? Promise.reject(new Error("this is null"))).logger?.updatePaymentStatus(params.invoice.paymentHash, INVOICE_STATUS.SETTLED);
-            await (params ?? Promise.reject(new Error("params is null"))).onPaid();
-          } else if (status === INVOICE_STATUS.EXPIRED) {
+            await this.orderService?.markOrderPaid(params.orderId);
+            await this.logger?.updatePaymentStatus(params.invoice.paymentHash, 'settled');
+            await params.onPaid();
+          } else if (status === 'expired') {
             clearInterval(watcher);
-            await (this ?? Promise.reject(new Error("this is null"))).logger?.updatePaymentStatus(params.invoice.paymentHash, INVOICE_STATUS.EXPIRED);
+            await this.logger?.updatePaymentStatus(params.invoice.paymentHash, 'expired');
             params.onExpired();
           }
         } catch (error) {
           clearInterval(watcher);
-          await (this ?? Promise.reject(new Error("this is null"))).logger?.logPaymentError(params.invoice.paymentHash, error instanceof Error ? error : new Error('Erreur inconnue'));
+          await this.logger?.logPaymentError(params.invoice.paymentHash, error instanceof Error ? error : new Error('Erreur inconnue'));
           params.onError(error instanceof Error ? error : new Error('Erreur inconnue'));
         }
       }, checkInterval);
@@ -156,8 +159,8 @@ export class PaymentService {
 
   async createInvoice(params: CreateInvoiceParams): Promise<Invoice> {
     try {
-      const invoice = await (this ?? Promise.reject(new Error("this is null"))).lightningService?.generateInvoice(params);
-      await (this ?? Promise.reject(new Error("this is null"))).logger?.log('invoice_created', invoice);
+      const invoice = await this.lightningService?.generateInvoice(params);
+      await this.logger?.logPayment('invoice_created', invoice);
       return invoice;
     } catch (error) {
       console.error('Erreur création facture:', error);
@@ -173,12 +176,12 @@ export class PaymentService {
   }): Promise<void> {
     const checkInterval = setInterval(async () => {
       try {
-        const { status } = await (this ?? Promise.reject(new Error("this is null"))).checkInvoiceStatus(params.paymentHash);
+        const { status } = await this.checkInvoiceStatus(params.paymentHash);
         
-        if (status === INVOICE_STATUS.SETTLED) {
+        if (status === 'settled') {
           clearInterval(checkInterval);
           params.onPaid();
-        } else if (status === INVOICE_STATUS.EXPIRED) {
+        } else if (status === 'expired') {
           clearInterval(checkInterval);
           params.onExpired();
         }
@@ -191,17 +194,16 @@ export class PaymentService {
 
   async checkPayment(paymentHash: string): Promise<PaymentServiceResult> {
     try {
-      const status = await (this ?? Promise.reject(new Error("this is null"))).lightningService?.checkPaymentStatus(paymentHash);
+      const status = await this.lightningService?.checkInvoiceStatus(paymentHash);
 
-      await (this ?? Promise.reject(new Error("this is null"))).logger?.updatePaymentStatus(paymentHash, status.status);
+      await this.logger?.updatePaymentStatus(paymentHash, status.status);
 
       return {
         success: true,
-        data: status
+        data: status.status
       };
-
     } catch (error) {
-      console.error('❌ PaymentService - Erreur vérification:', error);
+      console.error('Erreur vérification paiement:', error);
       return {
         success: false,
         error: {

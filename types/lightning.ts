@@ -66,6 +66,7 @@ export interface PaymentLogEntry {
   updated_at: string;
   error?: string;
   metadata?: Record<string, unknown>;
+  order_id?: string; // Ajout pour compatibilité
 }
 
 // Interface pour le service Lightning
@@ -81,8 +82,24 @@ export interface LightningService {
   healthCheck(): Promise<{ isOnline: boolean; provider: string }>;
   createInvoice(params: { amount: number; description: string }): Promise<{ payment_hash: string }>;
   checkPayment(paymentHash: string): Promise<boolean>;
+  close?(): Promise<void>;
 }
 
 // Types spécifiques pour les factures (pour compatibilité)
 export type { Invoice as LightningInvoice };
 export type { Invoice as DazNodeInvoice };
+
+// Types pour les paramètres DazNode
+export interface DazNodeInvoiceParams {
+  amount: number;
+  description: string;
+  metadata?: Record<string, unknown>;
+}
+
+// Types pour le statut DazNode
+export interface DazNodeInvoiceStatus {
+  status: PaymentStatus;
+  amount: number;
+  settledAt?: string;
+  metadata?: Record<string, unknown>;
+}

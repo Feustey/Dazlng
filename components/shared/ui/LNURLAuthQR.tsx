@@ -9,7 +9,7 @@ export interface LNURLAuthQRProps {
   onError: (error: string) => void;
 }
 
-export default function LNURLAuthQR({ challenge, onSuccess, onError }: LNURLAuthQRProps): React.FC {
+export const LNURLAuthQR: React.FC<LNURLAuthQRProps> = ({ challenge, onSuccess, onError }) => {
   const [lnurlAuth, setLnurlAuth] = useState<string>('');
   const [isChecking, setIsChecking] = useState(false);
 
@@ -110,3 +110,5 @@ export default function LNURLAuthQR({ challenge, onSuccess, onError }: LNURLAuth
     </div>
   );
 }
+
+export default LNURLAuthQR;

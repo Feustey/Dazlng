@@ -11,14 +11,14 @@ export class MCPClient {
   private readonly token: string;
 
   private constructor() {
-    if (!process.env.MCP_API_URL ?? "") {
+    if (!process.env.MCP_API_URL) {
       throw new Error('MCP_API_URL is not defined');
     }
-    if (!process.env.MCP_JWT_TOKEN ?? "") {
+    if (!process.env.MCP_JWT_TOKEN) {
       throw new Error('MCP_JWT_TOKEN is not defined');
     }
-    this.baseUrl = process.env.MCP_API_URL ?? "";
-    this.token = process.env.MCP_JWT_TOKEN ?? "";
+    this.baseUrl = process.env.MCP_API_URL;
+    this.token = process.env.MCP_JWT_TOKEN;
   }
 
   public static getInstance(): MCPClient {

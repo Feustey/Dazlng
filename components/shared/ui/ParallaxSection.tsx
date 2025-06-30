@@ -9,7 +9,7 @@ export interface ParallaxSectionProps {
   className?: string;
 }
 
-export default function ParallaxSection({ title, children, className = '' }: ParallaxSectionProps): React.FC {
+export const ParallaxSection: React.FC<ParallaxSectionProps> = ({ title, children, className = '' }) => {
   return (
     <section className={`parallax-section ${className} relative overflow-hidden`}>
       {title && <h2 className="text-2xl font-bold mb-6">{title}</h2>}
@@ -19,3 +19,5 @@ export default function ParallaxSection({ title, children, className = '' }: Par
     </section>
   );
 }
+
+export default ParallaxSection;

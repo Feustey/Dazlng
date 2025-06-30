@@ -22,41 +22,67 @@ function getLocaleFromHeaders(headers: Headers): string {
 const intlMiddleware = createMiddleware({
   locales: ['fr', 'en'],
   defaultLocale: 'fr',
-  localePrefix: 'as-needed',
+  localePrefix: 'always',
   localeDetection: true
 });
 
 export async function middleware(request: NextRequest) {
   // Vérifier si c'est une requête API
   if (request.nextUrl.pathname.startsWith('/api/')) {
-    // Ajouter les headers CORS
     const response = NextResponse.next();
     
+    // Headers CORS pour toutes les APIs
     response.headers.set('Access-Control-Allow-Origin', '*');
     response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     
-    return response;
-  }
-  
-  // Vérification de l'authentification pour les routes API
-  if (request.nextUrl.pathname.startsWith('/api/')) {
-    const res = NextResponse.next();
-    const supabase = createMiddlewareClient({ req: request, res });
+    // Routes API publiques - ne pas bloquer
+    const publicApiRoutes = [
+      '/api/auth/',
+      '/api/contact',
+      '/api/create-invoice',
+      '/api/check-invoice',
+      '/api/check-payment',
+      '/api/send-email',
+      '/api/prospect',
+      '/api/webhook',
+      '/api/dazno/',
+      '/api/daznode/',
+      '/api/lightning/',
+      '/api/network/',
+      '/api/orders',
+      '/api/subscriptions',
+      '/api/user',
+      '/api/users',
+      '/api/admin/stats',
+      '/api/admin/users',
+      '/api/admin/orders',
+      '/api/admin/payments',
+      '/api/admin/subscriptions'
+    ];
     
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    // Si pas de session et route protégée, retourner 401
-    if (!session && !request.nextUrl.pathname.startsWith('/api/auth/')) {
+    const isPublicRoute = publicApiRoutes.some(route => 
+      request.nextUrl.pathname.startsWith(route)
+    );
+    
+    if (isPublicRoute) {
+      return response;
+    }
+    
+    // Vérification auth uniquement pour routes API protégées
+    const supabase = createMiddlewareClient({ req: request, res: response });
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    if (!session) {
       return NextResponse.json(
         { error: 'Non autorisé' },
         { status: 401 }
       );
     }
+    
+    return response;
   }
-
+  
   // Appliquer le middleware d'internationalisation pour les pages
   return intlMiddleware(request);
 }

@@ -33,7 +33,7 @@ const Step: React.FC<StepProps> = ({ number, icon, title, description, delay }) 
 
 export const HowItWorks: React.FC = () => {
   const router = useRouter();
-  const { trackUserAction } = useConversionTracking();
+  const { trackEvent } = useConversionTracking();
 
   const steps = [
     {
@@ -63,12 +63,12 @@ export const HowItWorks: React.FC = () => {
   ];
 
   const handleOrderClick = (): void => {
-    trackUserAction('order_click', 'how_it_works_section');
+    trackEvent('order_click', 'how_it_works_section');
     router.push('/checkout/dazbox');
   };
 
   const handleQuestionClick = (): void => {
-    trackUserAction('question_click', 'how_it_works_section');
+    trackEvent('question_click', 'how_it_works_section');
     router.push('/contact');
   };
 

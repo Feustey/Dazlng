@@ -11,42 +11,28 @@ export interface UserLayoutProps {
 }
 
 const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
-  const { user, loading } = useSupabase();
+  const { user, signOut } = useSupabase();
   const router = useRouter();
   const pathname = usePathname();
+  const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
 
-  // Protection côté client
-  React.useEffect(() => {
-    if (!loading && !user) {
-      router.push(`/auth/login?callbackUrl=${encodeURIComponent(pathname)}`);
-    }
-  }, [user, loading, router, pathname]);
-
-  // Fonction de déconnexion
   const handleLogout = async (): Promise<void> => {
     try {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-      });
-
-      if (response.ok) {
-        router.push('/');
-        router.refresh();
-      } else {
-        console.error('Erreur lors de la déconnexion');
-      }
+      await signOut();
+      router.push('/');
+      router.refresh();
     } catch (error) {
-      console.error('Erreur réseau lors de la déconnexion:', error);
+      console.error('Erreur lors de la déconnexion:', error);
     }
   };
 
-  // Afficher un loader pendant la vérification
-  if (loading) {
+  // Page de chargement
+  if (user === undefined) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin h-12 w-12 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-gray-600">Vérification de l'authentification...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Chargement...</p>
         </div>
       </div>
     );
@@ -57,8 +43,6 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
     return null;
   }
 
-  const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
-
   const navItems = [
     { href: '/user/dashboard', label: 'Dashboard', color: 'indigo', icon: '📊' },
     { href: '/user/node', label: 'Mon Nœud', color: 'purple', icon: '⚡' },
@@ -68,8 +52,8 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
   ];
 
   const accountMenuItems = [
-    { href: '/user/subscriptions', label: 'Abonnements', icon: '💳' },
-    { href: '/user/settings', label: 'Paramètres', icon: '⚙️' }
+    { href: '/user/subscriptions', label: 'Abonnements', icon: '💳', color: 'blue' },
+    { href: '/user/settings', label: 'Paramètres', icon: '⚙️', color: 'gray' }
   ];
 
   const getTabStyles = (item: typeof navItems[0], isActive: boolean): string => {

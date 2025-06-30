@@ -497,11 +497,11 @@ export class DazNodeWalletService {
 export function createDazNodeWalletService(): DazNodeWalletService {
   console.log('🏗️ DazNodeWallet - Initialisation...');
 
-  const config: DazNodeWalletConfig = {
-    appPublicKey: process.env.APP_PUKEY ?? "" || process.env.DAZNODE_APP_PUBLIC_KEY ?? "" || '69620ced6b014d8b6013aa86c6b37cd86f28a5843ce8b430b5d96d7bc991c697',
-    walletPublicKey: process.env.WALLET_PUKEY ?? "" || process.env.DAZNODE_WALLET_PUBLIC_KEY ?? "" || 'de79365f2b0b81561d7eb12963173a80a3e78ff0c88262dcdde0118a9deb8e30',
-    relayUrl: process.env.DAZNODE_RELAY_URL ?? "" || 'wss://relay.getalby.com/v1',
-    secret: process.env.DAZNODE_WALLET_SECRET ?? "" || 'b5264968ca3e66af8afc23934c2480c7b0e180c7c62bab55d14f012d9d541324'
+  const config = {
+    appPublicKey: (process.env.APP_PUKEY ?? "") || (process.env.DAZNODE_APP_PUBLIC_KEY ?? "") || '69620ced6b014d8b6013aa86c6b37cd86f28a5843ce8b430b5d96d7bc991c697',
+    walletPublicKey: (process.env.WALLET_PUKEY ?? "") || (process.env.DAZNODE_WALLET_PUBLIC_KEY ?? "") || 'de79365f2b0b81561d7eb12963173a80a3e78ff0c88262dcdde0118a9deb8e30',
+    relayUrl: (process.env.DAZNODE_RELAY_URL ?? "") || 'wss://relay.getalby.com/v1',
+    secret: (process.env.DAZNODE_WALLET_SECRET ?? "") || 'b5264968ca3e66af8afc23934c2480c7b0e180c7c62bab55d14f012d9d541324'
   };
 
   // Validation de la configuration

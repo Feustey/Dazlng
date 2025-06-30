@@ -1,5 +1,6 @@
-import { Invoice, CreateInvoiceParams, InvoiceStatus } from '@/types/lightning';
-import { INVOICE_STATUS } from '@/types/lightning';
+import { LightningService, CreateInvoiceParams, Invoice } from '@/types/lightning';
+
+type PaymentStatus = 'pending' | 'settled' | 'failed' | 'expired';
 
 export class DazNodeLightningService {
   private apiUrl: string | null = null;
@@ -59,7 +60,7 @@ export class DazNodeLightningService {
         description: params.description,
         createdAt: new Date().toISOString(),
         expiresAt: new Date(Date.now() + (params.expiry || 3600) * 1000).toISOString(),
-        status: INVOICE_STATUS.PENDING,
+        status: 'pending',
         metadata: params.metadata
       };
     } catch (error) {
@@ -68,10 +69,10 @@ export class DazNodeLightningService {
     }
   }
 
-  async checkInvoiceStatus(paymentHash: string): Promise<InvoiceStatus> {
+  async checkInvoiceStatus(paymentHash: string): Promise<{ status: PaymentStatus; amount: number; settledAt?: string }> {
     try {
       const response = await this.request<{
-        status: InvoiceStatus,
+        status: PaymentStatus;
         amount: number;
         settledAt?: string;
         metadata?: Record<string, any>;
@@ -80,8 +81,7 @@ export class DazNodeLightningService {
       return {
         status: response.status,
         amount: response.amount,
-        settledAt: response.settledAt,
-        metadata: response.metadata
+        settledAt: response.settledAt
       };
     } catch (error) {
       console.error('❌ DazNodeLightning - Erreur vérification facture:', error);
@@ -100,10 +100,10 @@ export class DazNodeLightningService {
         try {
           const status = await this.checkInvoiceStatus(params.paymentHash);
           
-          if (status.status === INVOICE_STATUS.SETTLED) {
+          if (status.status === 'settled') {
             clearInterval(checkInterval);
             await params.onPaid();
-          } else if (status.status === INVOICE_STATUS.EXPIRED || status.status === INVOICE_STATUS.FAILED) {
+          } else if (status.status === 'expired' || status.status === 'failed') {
             clearInterval(checkInterval);
             params.onExpired();
           }
@@ -126,9 +126,9 @@ export class DazNodeLightningService {
   async healthCheck(): Promise<{ isOnline: boolean; provider: string }> {
     try {
       await this.request('/api/v1/lightning/health');
-      return { isOnline: true, provider: this.provider };
+      return { isOnline: true, provider: this.provider || 'daznode' };
     } catch (error) {
-      return { isOnline: false, provider: this.provider };
+      return { isOnline: false, provider: this.provider || 'daznode' };
     }
   }
 }

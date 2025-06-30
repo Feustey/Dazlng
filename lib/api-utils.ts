@@ -18,7 +18,7 @@ export function handleApiError(error: any): ApiResponse<null> {
     error: {
       code: isSupabaseError ? error.code : ErrorCodes.INTERNAL_ERROR,
       message,
-      details: process.env.NODE_ENV ?? "" === 'development' ? error : undefined
+      details: (process.env.NODE_ENV || '') === 'development' ? error : undefined
     }
   };
 }
@@ -65,7 +65,7 @@ export async function getAuthenticatedAdminUser(req: NextRequest): Promise<Supab
     const { data: adminRole } = await supabase
       .from('admin_roles')
       .select('role')
-      .eq('user_id', user.id)
+      .eq('user_id', user?.id || '')
       .single();
       
     return adminRole ? user : null;

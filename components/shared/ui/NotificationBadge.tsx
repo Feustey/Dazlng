@@ -7,7 +7,7 @@ export interface NotificationBadgeProps {
   show: boolean;
 }
 
-export default function NotificationBadge({ count = 0, show }: NotificationBadgeProps): React.FC | null {
+export const NotificationBadge: React.FC<NotificationBadgeProps> = ({ count = 0, show }) => {
   if (!show || count === 0) return null;
 
   return (
@@ -18,6 +18,8 @@ export default function NotificationBadge({ count = 0, show }: NotificationBadge
     </span>
   );
 }
+
+export default NotificationBadge;
 
 // Ajoute dans ton CSS global ou tailwind.config.js :
 // @keyframes scale-in { from { transform: scale(0); } to { transform: scale(1); } }

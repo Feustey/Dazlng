@@ -1,7 +1,7 @@
 type LogLevel = 'info' | 'error' | 'warn'
 
 const log = (level: LogLevel, message: string, data?: unknown): void => {
-  if (process.env.NODE_ENV ?? "" === 'development') {
+  if ((process.env.NODE_ENV || '') === 'development') {
     switch (level) {
       case 'error':
         console.error(message, data)

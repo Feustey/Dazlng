@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/useToast';
 import { usePaymentService } from '@/hooks/usePaymentService';
-import { INVOICE_STATUS } from '@/types/lightning';
 import { Button } from '@/components/shared/ui';
 import QRCode from 'qrcode.react';
 
@@ -62,7 +61,7 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
       try {
         const invoiceStatus = await checkPayment(paymentHash);
         
-        if (invoiceStatus === INVOICE_STATUS.SETTLED) {
+        if (invoiceStatus === 'settled') {
           setStatus('paid');
           toast({
             title: 'Succès',
@@ -71,7 +70,7 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
           });
           onSuccess?.();
           clearInterval(checkInterval);
-        } else if (invoiceStatus === INVOICE_STATUS.EXPIRED) {
+        } else if (invoiceStatus === 'expired') {
           setStatus('error');
           toast({
             title: 'Erreur',
@@ -206,4 +205,6 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
       </div>
     </div>
   );
-}; 
+};
+
+export default LightningPayment; 
