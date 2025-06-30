@@ -35,7 +35,7 @@ export class DazNodeLightningService {
 
   async generateInvoice(params: CreateInvoiceParams): Promise<Invoice> {
     try {
-      const response = await (this ?? Promise.reject(new Error("this is null"))).request<{
+      const response = await this.request<{
         id: string;
         paymentRequest: string;
         paymentHash: string;
@@ -70,7 +70,7 @@ export class DazNodeLightningService {
 
   async checkInvoiceStatus(paymentHash: string): Promise<InvoiceStatus> {
     try {
-      const response = await (this ?? Promise.reject(new Error("this is null"))).request<{
+      const response = await this.request<{
         status: InvoiceStatus,
         amount: number;
         settledAt?: string;
@@ -98,11 +98,11 @@ export class DazNodeLightningService {
     try {
       const checkInterval = setInterval(async () => {
         try {
-          const status = await (this ?? Promise.reject(new Error("this is null"))).checkInvoiceStatus(params.paymentHash);
+          const status = await this.checkInvoiceStatus(params.paymentHash);
           
           if (status.status === INVOICE_STATUS.SETTLED) {
             clearInterval(checkInterval);
-            await (params ?? Promise.reject(new Error("params is null"))).onPaid();
+            await params.onPaid();
           } else if (status.status === INVOICE_STATUS.EXPIRED || status.status === INVOICE_STATUS.FAILED) {
             clearInterval(checkInterval);
             params.onExpired();
@@ -125,7 +125,7 @@ export class DazNodeLightningService {
 
   async healthCheck(): Promise<{ isOnline: boolean; provider: string }> {
     try {
-      await (this ?? Promise.reject(new Error("this is null"))).request('/api/v1/lightning/health');
+      await this.request('/api/v1/lightning/health');
       return { isOnline: true, provider: this.provider };
     } catch (error) {
       return { isOnline: false, provider: this.provider };
