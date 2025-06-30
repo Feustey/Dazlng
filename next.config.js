@@ -7,7 +7,6 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
   experimental: {
-    optimizeCss: true,
     scrollRestoration: true,
   },
   webpack: (config, { isServer }) => {
@@ -28,7 +27,6 @@ const nextConfig = {
         os: false,
         path: false,
       };
-      
       // Ignorer les modules Lightning côté client
       config.externals = config.externals || [];
       config.externals.push({
@@ -36,7 +34,6 @@ const nextConfig = {
         '@grpc/grpc-js': '@grpc/grpc-js',
       });
     }
-    
     return config;
   },
   eslint: {
@@ -91,7 +88,5 @@ const nextConfig = {
     ]
   }
 }
-
 const withNextIntl = require('next-intl/plugin')();
-
 module.exports = withNextIntl(nextConfig);
