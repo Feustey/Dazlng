@@ -4,43 +4,87 @@ import dynamic from "next/dynamic";
 import { DazFlowShowcase } from '../components/shared/ui/DazFlowShowcase';
 import { useSearchParams, useRouter } from "next/navigation";
 
-// Lazy loading des composants pour optimiser le First Load
+// Lazy loading optimisé avec skeleton amélioré
 const NewRevenueHero = dynamic(() => import("../components/shared/ui/NewRevenueHero"), {
-  loading: () => <div className="h-screen bg-gradient-to-br from-green-600 via-blue-700 to-purple-800 animate-pulse" />
+  loading: () => (
+    <div className="min-h-screen bg-gradient-to-br from-green-600 via-blue-700 to-purple-800 flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-white/80 text-lg">Chargement...</p>
+      </div>
+    </div>
+  ),
+  ssr: true // Activer SSR pour le hero
 });
 
+// Autres composants avec lazy loading optimisé
 const WhyBecomeNodeRunner = dynamic(() => import("../components/shared/ui/WhyBecomeNodeRunner"), {
-  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
+  loading: () => (
+    <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
+      <div className="text-gray-400">Chargement...</div>
+    </div>
+  ),
+  ssr: false
 });
 
 const DetailedTestimonials = dynamic(() => import("../components/shared/ui/DetailedTestimonials"), {
-  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
+  loading: () => (
+    <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
+      <div className="text-gray-400">Chargement...</div>
+    </div>
+  ),
+  ssr: false
 });
 
 const HowItWorks = dynamic(() => import("@/components/shared/ui/HowItWorks").then(mod => ({ default: mod.HowItWorks })), {
-  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
+  loading: () => (
+    <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
+      <div className="text-gray-400">Chargement...</div>
+    </div>
+  ),
+  ssr: false
 });
 
 const CommunitySection = dynamic(() => import("../components/shared/ui/CommunitySection"), {
-  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
+  loading: () => (
+    <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
+      <div className="text-gray-400">Chargement...</div>
+    </div>
+  ),
+  ssr: false
 });
 
 const FirstStepsGuide = dynamic(() => import("../components/shared/ui/FirstStepsGuide"), {
-  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
+  loading: () => (
+    <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
+      <div className="text-gray-400">Chargement...</div>
+    </div>
+  ),
+  ssr: false
 });
 
 const BeginnersFAQ = dynamic(() => import("../components/shared/ui/BeginnersFAQ"), {
-  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
+  loading: () => (
+    <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
+      <div className="text-gray-400">Chargement...</div>
+    </div>
+  ),
+  ssr: false
 });
 
 const FinalConversionCTA = dynamic(() => import("../components/shared/ui/FinalConversionCTA"), {
-  loading: () => <div className="h-64 bg-gray-100 animate-pulse rounded-xl" />
+  loading: () => (
+    <div className="h-64 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
+      <div className="text-gray-400">Chargement...</div>
+    </div>
+  ),
+  ssr: false
 });
 
 // Composant client séparé pour gérer les paramètres d'URL
 const SignupConfirmation: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 backdrop-blur-sm">
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm">
       <div 
         className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl border border-indigo-200 transform transition-all animate-zoom-in"
       >
@@ -86,7 +130,7 @@ function SignupConfirmationGate() {
   return <SignupConfirmation onClose={() => setShowConfirmation(false)} />;
 }
 
-// Composant wrapper avec animations optimisées
+// Composant wrapper avec animations optimisées et Intersection Observer
 export interface AnimatedSectionProps {
   children: React.ReactNode; 
   className?: string;
@@ -99,12 +143,35 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
   delay = 0 
 }) => {
   const [inView, setInView] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated) {
+          setInView(true);
+          setHasAnimated(true);
+        }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      }
+    );
+
+    const element = document.querySelector(`[data-section="${className}"]`);
+    if (element) {
+      observer.observe(element);
+    }
+
+    return () => observer.disconnect();
+  }, [className, hasAnimated]);
   
   return (
     <section 
+      data-section={className}
       className={`${className} ${inView ? 'animate-fade-in' : 'opacity-0'}`}
       style={{ animationDelay: `${delay}ms` }}
-      onMouseEnter={() => setInView(true)}
     >
       {children}
     </section>
@@ -113,9 +180,13 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
 
 export default function OptimizedHomePage() {
   const router = useRouter();
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
 
   useEffect(() => {
-    // Préchargement des images critiques
+    // Marquer la page comme chargée
+    setIsPageLoaded(true);
+
+    // Préchargement des images critiques optimisé
     const preloadImages = [
       '/assets/images/logo-daznode.svg',
       '/assets/images/dazia-illustration.png'
@@ -129,7 +200,7 @@ export default function OptimizedHomePage() {
       document.head.appendChild(link);
     });
 
-    // Défilement fluide pour les ancres
+    // Défilement fluide pour les ancres optimisé
     const handleAnchorClicks = (e: Event) => {
       const target = e.target as HTMLAnchorElement;
       if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#')) {
@@ -158,9 +229,13 @@ export default function OptimizedHomePage() {
       <Suspense fallback={null}>
         <SignupConfirmationGate />
       </Suspense>
-      {/* Page structure optimisée avec nouveaux composants centrés sur les revenus */}
-      <main className="min-h-screen w-full overflow-x-hidden scroll-smooth">
-        {/* Hero Section centré sur les revenus passifs - Priority loading */}
+      
+      {/* Page structure optimisée avec layout full-width */}
+      <main className={`min-h-screen w-full overflow-x-hidden scroll-smooth layout-full-width ${
+        isPageLoaded ? 'opacity-100' : 'opacity-0'
+      } transition-opacity duration-500`}>
+        
+        {/* Hero Section - Priority loading */}
         <NewRevenueHero />
 
         {/* Section Pourquoi devenir opérateur de nœud */}
@@ -169,7 +244,7 @@ export default function OptimizedHomePage() {
         </AnimatedSection>
 
         {/* Section DazFlow Index */}
-        <AnimatedSection delay={250}>
+        <AnimatedSection delay={200}>
           <DazFlowShowcase />
         </AnimatedSection>
 
@@ -179,27 +254,27 @@ export default function OptimizedHomePage() {
         </AnimatedSection>
 
         {/* Section Témoignages détaillés avec métriques financières */}
-        <AnimatedSection delay={300}>
+        <AnimatedSection delay={400}>
           <DetailedTestimonials />
         </AnimatedSection>
 
         {/* Section Guide des premiers pas */}
-        <AnimatedSection delay={400}>
+        <AnimatedSection delay={500}>
           <FirstStepsGuide />
         </AnimatedSection>
 
         {/* Section FAQ pour débutants */}
-        <AnimatedSection delay={500}>
+        <AnimatedSection delay={600}>
           <BeginnersFAQ />
         </AnimatedSection>
 
         {/* Section Communauté Token For Good */}
-        <AnimatedSection delay={600}>
+        <AnimatedSection delay={700}>
           <CommunitySection />
         </AnimatedSection>
 
         {/* Section CTA finale de conversion */}
-        <AnimatedSection delay={700}>
+        <AnimatedSection delay={800}>
           <FinalConversionCTA />
         </AnimatedSection>
       </main>

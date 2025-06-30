@@ -10,30 +10,28 @@ export const INVOICE_STATUS = {
   FAILED: 'failed'
 } as const;
 
-export type InvoiceStatus = typeof INVOICE_STATUS[keyof typeof INVOICE_STATUS];
+export type InvoiceStatus = 'pending' | 'settled' | 'expired' | 'failed';
 
 // Statuts de paiement standardisés
 export type PaymentStatus = 'pending' | 'settled' | 'failed' | 'expired';
 
-// Interface de base pour une facture
+// Types pour les services Lightning
 export interface Invoice {
   id: string;
-  paymentRequest: string;
   paymentHash: string;
+  paymentRequest: string;
   amount: number;
   description: string;
+  status: InvoiceStatus;
   createdAt: string;
   expiresAt: string;
-  status: PaymentStatus;
-  metadata?: Record<string, unknown>;
+  settledAt?: string;
 }
 
-// Paramètres pour la création d'une facture
 export interface CreateInvoiceParams {
   amount: number;
   description: string;
-  expiry?: number; // En secondes
-  metadata?: Record<string, unknown>;
+  metadata?: Record<string, any>;
 }
 
 // Réponse de statut de facture
@@ -46,48 +44,45 @@ export interface InvoiceStatusResponse {
 
 // Configuration pour la surveillance des factures
 export interface WatchInvoiceConfig {
-  checkInterval?: number; // En millisecondes
-  maxAttempts?: number;
-  autoRenew?: boolean;
-  onPaid?: () => Promise<void>;
-  onExpired?: () => void;
-  onError?: (error: Error) => void;
-  onRenewing?: () => void;
-  onRenewed?: (newInvoice: Invoice) => void;
+  timeout?: number;
+  interval?: number;
 }
 
 // Interface pour les logs de paiement
 export interface PaymentLogEntry {
+  id: string;
   payment_hash: string;
   amount: number;
   description: string;
-  status: PaymentStatus;
+  status: string;
+  metadata?: Record<string, any>;
   created_at: string;
   updated_at: string;
-  error?: string;
-  metadata?: Record<string, unknown>;
-  order_id?: string; // Ajout pour compatibilité
 }
 
 // Interface pour le service Lightning
 export interface LightningService {
-  generateInvoice(params: CreateInvoiceParams): Promise<Invoice>;
-  checkInvoiceStatus(paymentHash: string): Promise<InvoiceStatusResponse>;
-  watchInvoice(params: {
-    paymentHash: string;
-    onPaid: () => Promise<void>;
-    onExpired: () => void;
-    onError: (error: Error) => void;
-  }): Promise<void>;
-  healthCheck(): Promise<{ isOnline: boolean; provider: string }>;
-  createInvoice(params: { amount: number; description: string }): Promise<{ payment_hash: string }>;
-  checkPayment(paymentHash: string): Promise<boolean>;
-  close?(): Promise<void>;
+  createInvoice(params: CreateInvoiceParams): Promise<Invoice>;
+  checkInvoice(paymentHash: string): Promise<Invoice>;
+  watchInvoice(paymentHash: string, config?: WatchInvoiceConfig): Promise<Invoice>;
+  healthCheck(): Promise<HealthCheckResult>;
+  close(): Promise<void>;
+}
+
+export interface HealthCheckResult {
+  isOnline: boolean;
+  provider: string;
+  nodeInfo?: {
+    publicKey: string;
+    alias: string;
+    channels: number;
+    blockHeight: number;
+  };
 }
 
 // Types spécifiques pour les factures (pour compatibilité)
-export type { Invoice as LightningInvoice };
-export type { Invoice as DazNodeInvoice };
+export type LightningInvoice = Invoice;
+export type DazNodeInvoice = Invoice;
 
 // Types pour les paramètres DazNode
 export interface DazNodeInvoiceParams {
@@ -103,3 +98,31 @@ export interface DazNodeInvoiceStatus {
   settledAt?: string;
   metadata?: Record<string, unknown>;
 }
+
+// Types pour les recommandations DazNode
+export interface DazNodeRecommendation {
+  id: string;
+  title: string;
+  description: string;
+  priority: 'high' | 'medium' | 'low';
+  category: string;
+  impact: number;
+  difficulty: number;
+  estimatedTime: number;
+  actions: string[];
+  metadata?: Record<string, unknown>;
+}
+
+// Schéma de validation pour les recommandations
+export const recommendationSchema = {
+  id: 'string',
+  title: 'string',
+  description: 'string',
+  priority: ['high', 'medium', 'low'],
+  category: 'string',
+  impact: 'number',
+  difficulty: 'number',
+  estimatedTime: 'number',
+  actions: 'array',
+  metadata: 'object'
+} as const;
