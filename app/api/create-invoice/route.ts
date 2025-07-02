@@ -1,6 +1,9 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { createDazNodeLightningService } from '@/lib/services/daznode-lightning-service';
 import { createInvoiceFallbackService } from '@/lib/services/invoice-fallback-service';
+import { LightningServiceImpl } from '@/lib/services/lightning-service';
+import { validateData, createInvoiceSchema } from '@/lib/validations/lightning';
+import { handleApiError } from '@/lib/api-response';
 
 export const dynamic = "force-dynamic";
 export const runtime = 'nodejs';
@@ -61,45 +64,66 @@ export async function GET(): Promise<Response> {
   });
 }
 
-export async function POST(request: Request): Promise<Response> {
-  let fallbackService: any = null;
-  
+export async function POST(req: NextRequest): Promise<Response> {
   try {
-    const data = await request.json();
+    // Extraction du token JWT depuis les headers
+    const authHeader = req.headers.get('authorization');
+    const jwtToken = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : null;
+
+    // Validation des données de la requête
+    const body = await req.json();
+    const validation = validateData(createInvoiceSchema, body);
     
-    // Utilisation du service de fallback
-    fallbackService = createInvoiceFallbackService({
-      maxRetries: 3,
-      retryDelay: 1000,
-      enableLocalLnd: true,
-      enableMockService: process.env.NODE_ENV === 'development'
+    if (!validation.success) {
+      return NextResponse.json({
+        success: false,
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'Données de requête invalides',
+          details: validation.error.format()
+        }
+      }, { status: 400 });
+    }
+
+    const { amount, description, metadata } = validation.data;
+
+    // Création du service Lightning avec JWT
+    const lightningService = new LightningServiceImpl();
+    
+    // Vérification si JWT est requis
+    if (lightningService.isJWTEnabled() && !jwtToken) {
+      return NextResponse.json({
+        success: false,
+        error: {
+          code: 'JWT_REQUIRED',
+          message: 'Token JWT requis pour les opérations Lightning',
+          details: {
+            jwt_enabled: true,
+            tenant: lightningService.getJWTTenant()
+          }
+        }
+      }, { status: 401 });
+    }
+
+    // Génération de la facture avec JWT
+    const result = await lightningService.generateInvoice({
+      amount,
+      description,
+      metadata
     });
 
-    await fallbackService.forceHealthCheck();
-    const invoice = await fallbackService.generateInvoice(data);
-    
     return NextResponse.json({
       success: true,
-      data: invoice,
+      data: result,
       meta: {
         timestamp: new Date().toISOString(),
-        provider: (await fallbackService.healthCheck()).provider
+        jwt_authenticated: lightningService.isJWTEnabled(),
+        tenant: lightningService.getJWTTenant()
       }
     });
+
   } catch (error) {
-    console.error('❌ Erreur création facture (fallback échoué):', error);
-    
-    return NextResponse.json({
-      success: false,
-      error: {
-        code: 'INVOICE_CREATION_ERROR',
-        message: error instanceof Error ? error.message : 'Erreur inconnue - tous services indisponibles'
-      }
-    }, { status: 503 });
-  } finally {
-    if (fallbackService) {
-      fallbackService.destroy();
-    }
+    return handleApiError(error);
   }
 }
 

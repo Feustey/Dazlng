@@ -5,6 +5,7 @@ import { Card } from "../components/ui/Card";
 import { StatsCard } from "../components/ui/StatsCard";
 import { formatDate, formatSats } from "../../../utils/formatters";
 import Link from "next/link";
+import React from 'react';
 
 export interface User {
   id: string;
@@ -187,9 +188,10 @@ export default function DashboardPage(): JSX.Element {
           </select>
           <Link
             href="/user/dashboard"
-            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2"
+            locale={locale}
+            className="text-blue-600 hover:text-blue-800 underline"
           >
-            🚀 Nouveau CRM
+            Voir le dashboard utilisateur
           </Link>
           <Link
             href="/admin/analytics"
@@ -417,12 +419,10 @@ export default function DashboardPage(): JSX.Element {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <Link
           href="/user/dashboard"
-          className="bg-gradient-to-br from-purple-600 to-purple-700 text-white p-4 rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all transform hover:scale-105 text-center border border-purple-500"
+          locale={locale}
+          className="text-blue-600 hover:text-blue-800 underline"
         >
-          <div className="text-2xl mb-2">🚀</div>
-          <div className="font-semibold">Nouveau CRM</div>
-          <div className="text-sm opacity-90">Interface optimisée</div>
-          <div className="text-xs bg-white/20 px-2 py-1 rounded mt-2 inline-block">Nouveau</div>
+          Voir le dashboard utilisateur
         </Link>
         
         <Link

@@ -13,6 +13,9 @@ import { AdvancedStats } from './components/AdvancedStats';
 import { daznoAPI, DaznoRecommendation } from '@/lib/dazno-api';
 import { SparklesIcon } from '@/app/components/icons/SparklesIcon';
 import { EnhancedRecommendation, DailyRecommendation, DaziaData } from '@/types/recommendations';
+import Link from 'next/link';
+import { Gauge, ArrowRight } from 'lucide-react';
+import { useLocale } from 'next-intl';
 
 export interface RecommendationModal {
   isOpen: boolean;
@@ -21,7 +24,7 @@ export interface RecommendationModal {
 }
 
 const DaziaPage: FC = () => {
-  const { pubkey, isLoaded: pubkeyLoaded } = usePubkeyCookie();
+  const { pubkey, isLoaded: pubkeyLoaded, setPubkey } = usePubkeyCookie();
   const { isLoading: _userLoading } = useGamificationSystem();
   const { loading: _subscriptionLoading } = useSubscription();
   const [recommendations, setRecommendations] = useState<EnhancedRecommendation[]>([]);
@@ -40,6 +43,7 @@ const DaziaPage: FC = () => {
     impact: [] as string[],
     difficulty: [] as string[]
   });
+  const locale = useLocale();
 
   // Charger les recommandations quand le pubkey est disponible
   useEffect(() => {
@@ -342,12 +346,17 @@ const DaziaPage: FC = () => {
         <p className="text-gray-600 mb-6">
           Connectez d'abord votre nœud Lightning dans l'onglet "Mon Nœud" pour accéder aux recommandations personnalisées.
         </p>
-        <a
-          href="/user/node"
-          className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-yellow-600 hover:bg-yellow-700"
-        >
-          Connecter mon nœud
-        </a>
+        <div className="text-center mt-8">
+          <Link
+            href="/user/node"
+            locale={locale}
+            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold rounded-xl hover:from-yellow-500 hover:to-orange-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+          >
+            <Gauge className="h-5 w-5 mr-2" />
+            Tester DazFlow Index
+            <ArrowRight className="h-5 w-5 ml-2" />
+          </Link>
+        </div>
       </div>
   );
   }

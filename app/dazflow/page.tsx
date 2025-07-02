@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useLocale } from 'next-intl';
 import { 
   BarChart3, 
   TrendingUp, 
@@ -27,7 +28,9 @@ import {
   TrendingUp as TrendingUpIcon
 } from 'lucide-react';
 
-export default function DazFlowPage() {
+const DazFlowPage: React.FC = () => {
+  const locale = useLocale();
+
   const features = [
     {
       icon: <Gauge className="h-8 w-8 text-blue-600" />,
@@ -127,56 +130,62 @@ export default function DazFlowPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <main className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-700 to-indigo-800 text-white py-20">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="bg-gradient-to-br from-blue-600 via-purple-700 to-indigo-800 text-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm font-medium mb-8">
+            <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium mb-6">
               <Gauge className="h-4 w-4 mr-2" />
               Nouveau : DazFlow Index
             </div>
-            
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Optimisez Vos Revenus Lightning avec{' '}
+              L'Index qui Révolutionne le{' '}
               <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-transparent bg-clip-text">
-                DazFlow Index
+                Lightning Network
               </span>
             </h1>
-            
             <p className="text-xl md:text-2xl text-blue-100 mb-8 max-w-4xl mx-auto">
-              L'index révolutionnaire qui analyse votre capacité de routage, identifie les goulots d'étranglement 
-              et optimise automatiquement vos revenus Lightning Network.
+              DazFlow Index combine IA avancée et données temps réel pour optimiser vos performances de nœud Lightning avec une précision inégalée.
             </p>
-
+            
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Link
                 href="/user/node"
+                locale={locale}
                 className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold rounded-xl hover:from-yellow-500 hover:to-orange-600 transition-all duration-200 shadow-lg hover:shadow-xl"
               >
                 <Gauge className="h-5 w-5 mr-2" />
-                Tester DazFlow Index
+                Tester Gratuitement
                 <ArrowRight className="h-5 w-5 ml-2" />
               </Link>
               <Link
                 href="/register"
+                locale={locale}
                 className="inline-flex items-center px-8 py-4 border-2 border-white text-white font-semibold rounded-xl hover:bg-white hover:text-blue-600 transition-all duration-200"
               >
-                Commencer Gratuitement
+                Commencer Maintenant
               </Link>
             </div>
 
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-              {metrics.map((metric, index) => (
-                <div key={index} className="text-center">
-                  <div className="flex justify-center mb-2">{metric.icon}</div>
-                  <div className="text-2xl md:text-3xl font-bold text-white mb-1">{metric.value}</div>
-                  <div className="text-blue-100 text-sm">{metric.label}</div>
-                  <div className="text-blue-200 text-xs mt-1">{metric.description}</div>
-                </div>
-              ))}
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl font-bold text-yellow-400 mb-1">+45%</div>
+                <div className="text-blue-100 text-sm">Revenus moyens</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl font-bold text-green-400 mb-1">99.9%</div>
+                <div className="text-blue-100 text-sm">Précision analyse</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl font-bold text-purple-400 mb-1">2.3x</div>
+                <div className="text-blue-100 text-sm">ROI amélioré</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl font-bold text-orange-400 mb-1">24/7</div>
+                <div className="text-blue-100 text-sm">Monitoring</div>
+              </div>
             </div>
           </div>
         </div>
@@ -186,172 +195,242 @@ export default function DazFlowPage() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              Fonctionnalités Révolutionnaires
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Fonctionnalités Avancées
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              DazFlow Index combine intelligence artificielle et analyse de données pour optimiser 
-              votre nœud Lightning comme jamais auparavant.
+              DazFlow Index intègre les dernières technologies d'IA pour optimiser vos nœuds Lightning Network
             </p>
           </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {features.map((feature, index) => (
-              <div key={index} className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-8 border border-gray-200 hover:shadow-xl transition-all duration-300">
-                <div className="flex items-start mb-6">
-                  <div className="flex-shrink-0 mr-4">
-                    {feature.icon}
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3">{feature.title}</h3>
-                    <p className="text-gray-600 mb-4">{feature.description}</p>
-                    <div className="space-y-2">
-                      {feature.metrics.map((metric, idx) => (
-                        <div key={idx} className="flex items-center text-sm text-gray-700">
-                          <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-                          {metric}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="bg-gray-50 rounded-2xl p-8 border border-gray-100">
+              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
+                <TrendingUp className="h-6 w-6 text-blue-600" />
               </div>
-            ))}
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Analyse Prédictive</h3>
+              <p className="text-gray-600 mb-4">
+                Notre IA analyse les patterns de trafic pour prédire les opportunités de routing optimales.
+              </p>
+              <div className="text-2xl font-bold text-blue-600">+45%</div>
+              <div className="text-sm text-gray-500">Amélioration des revenus</div>
+            </div>
+
+            <div className="bg-gray-50 rounded-2xl p-8 border border-gray-100">
+              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
+                <Zap className="h-6 w-6 text-purple-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Optimisation Temps Réel</h3>
+              <p className="text-gray-600 mb-4">
+                Ajustement automatique des paramètres de frais et de liquidité pour maximiser les profits.
+              </p>
+              <div className="text-2xl font-bold text-purple-600">99.9%</div>
+              <div className="text-sm text-gray-500">Précision d'analyse</div>
+            </div>
+
+            <div className="bg-gray-50 rounded-2xl p-8 border border-gray-100">
+              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-6">
+                <BarChart3 className="h-6 w-6 text-green-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Métriques Avancées</h3>
+              <p className="text-gray-600 mb-4">
+                Tableaux de bord détaillés avec métriques de performance et alertes intelligentes.
+              </p>
+              <div className="text-2xl font-bold text-green-600">24/7</div>
+              <div className="text-sm text-gray-500">Monitoring continu</div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Benefits Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 to-indigo-50">
+      {/* How it works */}
+      <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              Pourquoi Choisir DazFlow Index ?
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Comment ça marche ?
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Rejoignez les centaines de node runners qui ont déjà transformé leurs revenus 
-              grâce à notre technologie d'optimisation avancée.
+              DazFlow Index analyse votre nœud en temps réel et vous fournit des recommandations d'optimisation
             </p>
           </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {benefits.map((benefit, index) => (
-              <div key={index} className="text-center">
-                <div className="flex justify-center mb-4">
-                  <div className="p-3 bg-white rounded-full shadow-lg">
-                    {benefit.icon}
-                  </div>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{benefit.title}</h3>
-                <p className="text-gray-600">{benefit.description}</p>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span className="text-2xl font-bold text-blue-600">1</span>
               </div>
-            ))}
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Connexion</h3>
+              <p className="text-gray-600">
+                Connectez votre nœud Lightning en quelques clics. Support complet pour LND, Core Lightning et Umbrel.
+              </p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span className="text-2xl font-bold text-purple-600">2</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Analyse</h3>
+              <p className="text-gray-600">
+                Notre IA analyse vos données en temps réel et identifie les opportunités d'optimisation.
+              </p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span className="text-2xl font-bold text-green-600">3</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Optimisation</h3>
+              <p className="text-gray-600">
+                Appliquez les recommandations et voyez vos revenus augmenter automatiquement.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Testimonials Section */}
+      {/* Pricing */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              Ce que disent nos utilisateurs
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Plans et Tarifs
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Découvrez les témoignages de node runners qui ont transformé leurs revenus 
-              grâce à DazFlow Index.
+              Choisissez le plan qui correspond à vos besoins
             </p>
           </div>
-
+          
           <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-8 border border-gray-200">
-                <div className="flex items-center mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
-                  ))}
-                </div>
-                <p className="text-gray-700 mb-6 italic">"{testimonial.content}"</p>
-                <div>
-                  <div className="font-semibold text-gray-900">{testimonial.name}</div>
-                  <div className="text-sm text-gray-600">{testimonial.role}</div>
-                </div>
+            <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Gratuit</h3>
+              <div className="text-4xl font-bold text-gray-900 mb-6">
+                €0<span className="text-lg text-gray-500">/mois</span>
               </div>
-            ))}
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-center">
+                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                  <span>Analyse basique</span>
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                  <span>1 nœud</span>
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                  <span>Métriques essentielles</span>
+                </li>
+              </ul>
+              <Link
+                href="/register"
+                locale={locale}
+                className="w-full bg-gray-900 text-white py-3 px-6 rounded-xl font-semibold hover:bg-gray-800 transition-colors block text-center"
+              >
+                Commencer Gratuitement
+              </Link>
+            </div>
+            
+            <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl p-8 text-white relative">
+              <div className="absolute top-4 right-4 bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-semibold">
+                Populaire
+              </div>
+              <h3 className="text-2xl font-bold mb-4">Pro</h3>
+              <div className="text-4xl font-bold mb-6">
+                €29<span className="text-lg opacity-80">/mois</span>
+              </div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-center">
+                  <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
+                  <span>Analyse avancée IA</span>
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
+                  <span>Jusqu'à 5 nœuds</span>
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
+                  <span>Optimisation temps réel</span>
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
+                  <span>Support prioritaire</span>
+                </li>
+              </ul>
+              <Link
+                href="/register"
+                locale={locale}
+                className="w-full bg-white text-blue-600 py-3 px-6 rounded-xl font-semibold hover:bg-gray-100 transition-colors block text-center"
+              >
+                Commencer Pro
+              </Link>
+            </div>
+            
+            <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Enterprise</h3>
+              <div className="text-4xl font-bold text-gray-900 mb-6">
+                €99<span className="text-lg text-gray-500">/mois</span>
+              </div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-center">
+                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                  <span>Tout du plan Pro</span>
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                  <span>Nœuds illimités</span>
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                  <span>API personnalisée</span>
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                  <span>Support dédié 24/7</span>
+                </li>
+              </ul>
+              <Link
+                href="/contact"
+                locale={locale}
+                className="w-full bg-gray-900 text-white py-3 px-6 rounded-xl font-semibold hover:bg-gray-800 transition-colors block text-center"
+              >
+                Contactez-nous
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-600 via-purple-700 to-indigo-800 text-white">
+      {/* CTA Final */}
+      <section className="py-20 bg-gradient-to-br from-blue-600 to-purple-600 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Prêt à Optimiser Vos Revenus ?
+          <h2 className="text-4xl font-bold mb-6">
+            Prêt à Optimiser vos Revenus ?
           </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Rejoignez les 500+ node runners qui utilisent DazFlow Index pour maximiser 
-            leurs revenus Lightning Network.
+          <p className="text-xl mb-8 opacity-90">
+            Rejoignez les centaines de node runners qui utilisent déjà DazFlow Index
           </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/user/node"
-              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold rounded-xl hover:from-yellow-500 hover:to-orange-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+              locale={locale}
+              className="inline-flex items-center px-8 py-4 bg-white text-blue-600 font-semibold rounded-xl hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               <Gauge className="h-5 w-5 mr-2" />
-              Tester DazFlow Index
+              Tester Gratuitement
               <ArrowRight className="h-5 w-5 ml-2" />
             </Link>
             <Link
               href="/register"
+              locale={locale}
               className="inline-flex items-center px-8 py-4 border-2 border-white text-white font-semibold rounded-xl hover:bg-white hover:text-blue-600 transition-all duration-200"
             >
-              Commencer Gratuitement
+              Commencer Maintenant
             </Link>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-6 text-sm text-blue-200">
-            <div className="flex items-center">
-              <CheckCircle className="h-4 w-4 mr-2" />
-              <span>7 jours gratuits</span>
-            </div>
-            <div className="flex items-center">
-              <CheckCircle className="h-4 w-4 mr-2" />
-              <span>Aucune carte bancaire</span>
-            </div>
-            <div className="flex items-center">
-              <CheckCircle className="h-4 w-4 mr-2" />
-              <span>Configuration en 5 minutes</span>
-            </div>
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="flex items-center justify-center mb-6">
-              <Gauge className="h-8 w-8 text-blue-400 mr-3" />
-              <span className="text-2xl font-bold">DazFlow Index</span>
-            </div>
-            <p className="text-gray-400 mb-6">
-              Optimisation Lightning Network par Intelligence Artificielle
-            </p>
-            <div className="flex justify-center space-x-6">
-              <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">
-                Conditions
-              </Link>
-              <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">
-                Confidentialité
-              </Link>
-              <Link href="/contact" className="text-gray-400 hover:text-white transition-colors">
-                Contact
-              </Link>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
+    </main>
   );
-} 
+};
+
+export default DazFlowPage; 

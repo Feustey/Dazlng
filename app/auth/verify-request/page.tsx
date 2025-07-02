@@ -2,12 +2,15 @@
 
 import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import Link from 'next/link';
+import { useLocale } from 'next-intl';
 
 function VerifyRequestInner(): JSX.Element {
   const searchParams = useSearchParams();
   const router = useRouter();
   const email = searchParams?.get("email") || "";
   const [resent, setResent] = useState(false);
+  const locale = useLocale();
 
   const handleResend = (): void => {
     setResent(true);
@@ -15,39 +18,31 @@ function VerifyRequestInner(): JSX.Element {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold mb-4 text-indigo-700" tabIndex={0}>
-        Vérification de votre email
-      </h1>
-      <div
-        className="bg-indigo-50 text-indigo-800 px-4 py-3 rounded mb-4 border border-indigo-200"
-        role="status"
-        aria-live="polite"
-      >
-        <p>
-          Un email de connexion vient de vous être envoyé.<br />
-          <span className="font-semibold">Merci de vérifier votre boîte de réception</span> et cliquez sur le lien pour vous connecter.
-        </p>
-        <ul className="text-sm mt-2 list-disc list-inside text-indigo-700">
-          <li>Vérifiez aussi vos spams ou courriers indésirables.</li>
-          <li>Le lien est valable 24h.</li>
-        </ul>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <div>
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Vérification requise
+          </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Veuillez vérifier votre email pour continuer.
+          </p>
+        </div>
+        <div className="mt-8 space-y-6">
+          <div className="text-center">
+            <p className="text-gray-600 mb-4">
+              Un email de vérification a été envoyé à votre adresse email.
+            </p>
+            <Link
+              href="/auth/login"
+              locale={locale}
+              className="text-indigo-600 hover:text-indigo-500"
+            >
+              Retour à la connexion
+            </Link>
+          </div>
+        </div>
       </div>
-      <button
-        onClick={handleResend}
-        className="mt-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-        disabled={resent}
-        aria-busy={resent}
-      >
-        Renvoyer l'email
-      </button>
-      <a
-        href="/auth/login"
-        className="mt-4 text-indigo-600 hover:underline"
-        tabIndex={0}
-      >
-        Retour à la connexion
-      </a>
     </div>
   );
 }

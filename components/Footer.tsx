@@ -1,5 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useLocale } from 'next-intl';
 
 const socialLinks = [
   {
@@ -41,6 +43,8 @@ const socialLinks = [
 ];
 
 const Footer: React.FC = () => {
+  const locale = useLocale();
+
   return (
     <footer className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white overflow-hidden">
       {/* Éléments décoratifs en arrière-plan */}
@@ -93,16 +97,24 @@ const Footer: React.FC = () => {
               <h4 className="font-bold text-lg mb-4 text-blue-200">Produit</h4>
               <ul className="space-y-3">
                 <li>
-                  <a href="https://docs.dazno.de" target="_blank" rel="noopener noreferrer" 
-                     className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
-                    <span className="mr-2">→</span>DazDocs
-                  </a>
+                  <Link href="/daznode" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
+                    <span className="mr-2">→</span>DazNode
+                  </Link>
                 </li>
                 <li>
-                  <a href="/token-for-good" 
-                     className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
-                    <span className="mr-2">→</span>Token for Good
-                  </a>
+                  <Link href="/dazbox" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
+                    <span className="mr-2">→</span>DazBox
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/dazpay" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
+                    <span className="mr-2">→</span>DazPay
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/dazflow" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
+                    <span className="mr-2">→</span>DazFlow Index
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -112,16 +124,14 @@ const Footer: React.FC = () => {
               <h4 className="font-bold text-lg mb-4 text-blue-200">Entreprise</h4>
               <ul className="space-y-3">
                 <li>
-                  <a href="/about" 
-                     className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
+                  <Link href="/about" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
                     <span className="mr-2">→</span>À propos de nous
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/contact" 
-                     className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
+                  <Link href="/contact" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
                     <span className="mr-2">→</span>Contact
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -131,16 +141,14 @@ const Footer: React.FC = () => {
               <h4 className="font-bold text-lg mb-4 text-blue-200">Aide</h4>
               <ul className="space-y-3">
                 <li>
-                  <a href="/help" 
-                     className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
+                  <Link href="/help" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
                     <span className="mr-2">→</span>Support
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/terms" 
-                     className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
+                  <Link href="/terms" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
                     <span className="mr-2">→</span>Conditions
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>

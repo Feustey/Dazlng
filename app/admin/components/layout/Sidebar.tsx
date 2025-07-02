@@ -1,4 +1,7 @@
+import React from "react";
 import Link from "next/link";
+import { UserIcon } from "@heroicons/react/24/outline";
+import { useLocale } from 'next-intl';
 
 const links = [
   { href: "/admin/dashboard", label: "Dashboard", icon: "📊", section: "main" },
@@ -21,7 +24,9 @@ const sections = {
   config: "Configuration"
 };
 
-export default function Sidebar(): JSX.Element {
+const Sidebar: React.FC = () => {
+  const locale = useLocale();
+
   const groupedLinks = Object.entries(sections).map(([sectionKey, sectionName]) => ({
     name: sectionName,
     links: links.filter(link => link.section === sectionKey)
@@ -64,13 +69,11 @@ export default function Sidebar(): JSX.Element {
       <div className="mt-auto pt-4 border-t border-gray-700">
         <Link
           href="/user/dashboard"
-          className="flex items-center gap-2 px-3 py-2 bg-purple-600 hover:bg-purple-700 rounded transition-colors"
+          locale={locale}
+          className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50"
         >
-          <span className="text-lg">🚀</span>
-          <div className="text-sm">
-            <div className="font-medium">Nouveau CRM</div>
-            <div className="text-xs text-purple-200">Interface utilisateur</div>
-          </div>
+          <UserIcon className="mr-3 h-5 w-5" />
+          Dashboard Utilisateur
         </Link>
       </div>
     </aside>

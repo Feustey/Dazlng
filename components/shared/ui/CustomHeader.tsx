@@ -1,13 +1,16 @@
 "use client";
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
 import { useRouter } from 'next/navigation';
+import { useLocale } from 'next-intl';
 import { Gauge } from 'lucide-react';
 
 const CustomHeader: React.FC = () => {
   const { user, session } = useSupabase();
   const router = useRouter();
+  const locale = useLocale();
 
   const handleLogout = async (): Promise<void> => {
     try {
@@ -16,7 +19,7 @@ const CustomHeader: React.FC = () => {
       });
 
       if (response.ok) {
-        router.push('/');
+        router.push(`/${locale}`);
         router.refresh();
       } else {
         console.error('Erreur lors de la déconnexion');
@@ -32,7 +35,7 @@ const CustomHeader: React.FC = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <a href="/" aria-label="Accueil">
+            <Link href="/" locale={locale} aria-label="Accueil">
               <Image 
                 src="/assets/images/logo-daznode.svg"
                 alt="Daz3 Logo" 
@@ -42,27 +45,27 @@ const CustomHeader: React.FC = () => {
                 style={{ height: "auto" }}
                 priority 
               />
-            </a>
+            </Link>
           </div>
 
           {/* Navigation simple */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="/daznode" className="text-gray-700 hover:text-indigo-600 font-medium">
+            <Link href="/daznode" locale={locale} className="text-gray-700 hover:text-indigo-600 font-medium">
               DazNode
-            </a>
-            <a href="/dazbox" className="text-gray-700 hover:text-indigo-600 font-medium">
+            </Link>
+            <Link href="/dazbox" locale={locale} className="text-gray-700 hover:text-indigo-600 font-medium">
               DazBox
-            </a>
-            <a href="/dazpay" className="text-gray-700 hover:text-indigo-600 font-medium">
+            </Link>
+            <Link href="/dazpay" locale={locale} className="text-gray-700 hover:text-indigo-600 font-medium">
               DazPay
-            </a>
-            <a href="/dazflow" className="text-gray-700 hover:text-indigo-600 font-medium flex items-center">
+            </Link>
+            <Link href="/dazflow" locale={locale} className="text-gray-700 hover:text-indigo-600 font-medium flex items-center">
               <Gauge className="h-4 w-4 mr-1" />
               DazFlow Index
-            </a>
-            <a href="/contact" className="text-gray-700 hover:text-indigo-600 font-medium">
+            </Link>
+            <Link href="/contact" locale={locale} className="text-gray-700 hover:text-indigo-600 font-medium">
               Contact
-            </a>
+            </Link>
           </nav>
 
           {/* Boutons d'authentification adaptatifs */}
@@ -70,12 +73,13 @@ const CustomHeader: React.FC = () => {
             {user && session ? (
               // Utilisateur connecté
               <div className="flex items-center space-x-4">
-                <a 
+                <Link 
                   href="/user/dashboard" 
+                  locale={locale}
                   className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium"
                 >
                   Mon Compte
-                </a>
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="hidden md:inline-block px-4 py-2 text-gray-600 hover:text-gray-700 font-medium"
@@ -85,12 +89,13 @@ const CustomHeader: React.FC = () => {
               </div>
             ) : (
               // Utilisateur non connecté
-              <a 
+              <Link 
                 href="/auth/login" 
+                locale={locale}
                 className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium"
               >
                 Connexion
-              </a>
+              </Link>
             )}
           </div>
         </div>

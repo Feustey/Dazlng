@@ -1,6 +1,7 @@
 import { LightningService, CreateInvoiceParams, Invoice } from '@/types/lightning';
 import { validateData, createInvoiceSchema } from '@/lib/validations/lightning';
 import { PaymentLogger } from '@/lib/services/payment-logger';
+import jwt from 'jsonwebtoken';
 
 type PaymentStatus = 'pending' | 'settled' | 'failed' | 'expired';
 
@@ -24,11 +25,38 @@ export class LightningServiceImpl implements LightningService {
   private client: any;
   private provider: string;
   private paymentLogger: PaymentLogger;
+  private jwtEnabled: boolean;
+  private jwtSecret: string;
+  private jwtTenant: string;
 
   constructor() {
     this.provider = 'lnd';
     this.client = null;
     this.paymentLogger = new PaymentLogger();
+    this.jwtEnabled = process.env.LIGHTNING_JWT_ENABLED === 'true';
+    this.jwtSecret = process.env.JWT_SECRET || '';
+    this.jwtTenant = process.env.LIGHTNING_JWT_TENANT || 'daznode-lightning';
+    
+    if (this.jwtEnabled && !this.jwtSecret) {
+      console.warn('⚠️  JWT activé mais JWT_SECRET non configuré');
+    }
+  }
+
+  private async validateJWT(token: string): Promise<boolean> {
+    if (!this.jwtEnabled) return true;
+    
+    try {
+      const decoded = jwt.verify(token, this.jwtSecret) as any;
+      return decoded && decoded.tenant_id === this.jwtTenant;
+    } catch (error) {
+      console.error('❌ Erreur validation JWT:', error);
+      return false;
+    }
+  }
+
+  private async getJWTToken(): Promise<string | null> {
+    const tokenKey = `JWT_TOKEN_${this.jwtTenant.toUpperCase().replace('-', '_')}`;
+    return process.env[tokenKey] || null;
   }
 
   async initialize(): Promise<void> {
@@ -69,6 +97,14 @@ export class LightningServiceImpl implements LightningService {
     const startTime = Date.now();
     
     try {
+      // Validation JWT si activé
+      if (this.jwtEnabled) {
+        const token = await this.getJWTToken();
+        if (!token || !(await this.validateJWT(token))) {
+          throw new Error('JWT invalide ou manquant pour les opérations Lightning');
+        }
+      }
+
       // Validation des paramètres avec Zod (sans expiry car pas dans le schéma)
       const validation = validateData(createInvoiceSchema, {
         amount: params.amount,
@@ -114,7 +150,11 @@ export class LightningServiceImpl implements LightningService {
         amount: result.amount,
         description: result.description,
         status: 'pending',
-        metadata: metadata
+        metadata: { 
+          ...metadata,
+          jwt_authenticated: this.jwtEnabled,
+          tenant: this.jwtTenant
+        }
       });
 
       // Métriques de performance
@@ -147,6 +187,14 @@ export class LightningServiceImpl implements LightningService {
     const startTime = Date.now();
     
     try {
+      // Validation JWT si activé
+      if (this.jwtEnabled) {
+        const token = await this.getJWTToken();
+        if (!token || !(await this.validateJWT(token))) {
+          throw new Error('JWT invalide ou manquant pour les opérations Lightning');
+        }
+      }
+
       if (!this.client) {
         await this.initialize();
       }
@@ -241,6 +289,14 @@ export class LightningServiceImpl implements LightningService {
     const startTime = Date.now();
     
     try {
+      // Validation JWT si activé
+      if (this.jwtEnabled) {
+        const token = await this.getJWTToken();
+        if (!token || !(await this.validateJWT(token))) {
+          throw new Error('JWT invalide ou manquant pour les opérations Lightning');
+        }
+      }
+
       if (!this.client) {
         await this.initialize();
       }
@@ -297,6 +353,35 @@ export class LightningServiceImpl implements LightningService {
       console.error('❌ LightningService: Erreur vérification paiement:', error);
       throw error;
     }
+  }
+
+  // Méthode pour vérifier si JWT est activé
+  isJWTEnabled(): boolean {
+    return this.jwtEnabled;
+  }
+
+  // Méthode pour obtenir le tenant JWT
+  getJWTTenant(): string {
+    return this.jwtTenant;
+  }
+
+  // Méthode pour générer un nouveau token JWT
+  generateJWTToken(permissions: string[] = ['read', 'write']): string {
+    if (!this.jwtSecret) {
+      throw new Error('JWT_SECRET non configuré');
+    }
+
+    const payload = {
+      iss: 'dazno.de',
+      aud: 'daznode',
+      sub: this.jwtTenant,
+      tenant_id: this.jwtTenant,
+      permissions,
+      iat: Math.floor(Date.now() / 1000),
+      exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60) // 24 heures
+    };
+
+    return jwt.sign(payload, this.jwtSecret);
   }
 }
 

@@ -12,6 +12,9 @@ export { useToast } from '@/hooks/useToast';
 export { useCache } from '@/hooks/useCache';
 export { useConversionTracking } from '@/hooks/useConversionTracking';
 
+// Nouveau hook pour les liens localisés
+export { useLocalizedLink } from './useLocalizedLink';
+
 // Hooks RAG
 export {
   useRAGQuery,

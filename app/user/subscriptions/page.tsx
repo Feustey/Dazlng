@@ -3,6 +3,8 @@
 import React, { FC, useEffect, useState, useCallback } from 'react';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
 import QRCode from 'qrcode';
+import Link from 'next/link';
+import { useLocale } from 'next-intl';
 
 export interface Subscription {
   id: string;
@@ -82,6 +84,7 @@ type TabType = 'subscriptions' | 'invoices';
 
 const SubscriptionsPage: FC = () => {
   const { user, session, loading: authLoading } = useSupabase();
+  const locale = useLocale();
   const [currentSubscription, setCurrentSubscription] = useState<Subscription | null>(null);
   const [_availablePlans, setAvailablePlans] = useState<Plan[]>([]);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -453,10 +456,16 @@ const SubscriptionsPage: FC = () => {
     return (
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="text-center p-8">
-          <p className="text-red-600">Vous devez être connecté pour accéder à cette page.</p>
-          <a href="/auth/login" className="text-indigo-600 hover:underline mt-2 inline-block">
+          <p className="text-gray-600 mb-4">
+            Connectez-vous pour accéder à vos abonnements.
+          </p>
+          <Link
+            href="/auth/login"
+            locale={locale}
+            className="text-indigo-600 hover:underline mt-2 inline-block"
+          >
             Se connecter
-          </a>
+          </Link>
         </div>
       </div>
   );

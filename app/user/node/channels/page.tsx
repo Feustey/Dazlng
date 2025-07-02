@@ -3,6 +3,8 @@
 import React, { FC, useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
+import Link from 'next/link';
+import { useLocale } from 'next-intl';
 
 export interface Channel {
   id: string;
@@ -48,6 +50,7 @@ const NodeChannelsPage: FC = () => {
   const [filter, setFilter] = useState<string>('all');
   const [showNewChannelModal, setShowNewChannelModal] = useState(false);
   const router = useRouter();
+  const locale = useLocale();
 
   const getUserPubkey = (): string | null => {
     if (typeof window !== 'undefined') {
@@ -172,10 +175,16 @@ const NodeChannelsPage: FC = () => {
     return (
       <div className="space-y-8">
         <div className="text-center p-8">
-          <p className="text-red-600">Vous devez être connecté pour accéder à cette page.</p>
-          <a href="/auth/login" className="text-indigo-600 hover:underline mt-2 inline-block">
+          <p className="text-gray-600 mb-4">
+            Connectez-vous pour accéder à vos canaux Lightning.
+          </p>
+          <Link
+            href="/auth/login"
+            locale={locale}
+            className="text-indigo-600 hover:underline mt-2 inline-block"
+          >
             Se connecter
-          </a>
+          </Link>
         </div>
       </div>
   );

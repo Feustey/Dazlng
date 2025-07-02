@@ -3,20 +3,22 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useConversionTracking } from '../../../hooks/useConversionTracking';
 import Link from 'next/link';
+import { useLocale } from 'next-intl';
 import { Gauge, ArrowRight } from 'lucide-react';
 
 const NewRevenueHero: React.FC = () => {
   const router = useRouter();
   const { trackStep } = useConversionTracking();
+  const locale = useLocale();
 
   const handleStartFree = (): void => {
     trackStep('cta_click', 'Start free clicked', { location: 'NewRevenueHero' });
-    router.push('/register');
+    router.push(`/${locale}/register`);
   };
 
   const handleViewDemo = (): void => {
     trackStep('demo_click', 'View demo clicked', { location: 'NewRevenueHero' });
-    router.push('/demo');
+    router.push(`/${locale}/optimized-demo`);
   };
 
   const handleJoinCommunity = (): void => {
@@ -65,6 +67,7 @@ const NewRevenueHero: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Link
                 href="/user/node"
+                locale={locale}
                 className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-semibold rounded-xl hover:from-yellow-500 hover:to-orange-600 transition-all duration-200 shadow-lg hover:shadow-xl"
               >
                 <Gauge className="h-5 w-5 mr-2" />
@@ -73,6 +76,7 @@ const NewRevenueHero: React.FC = () => {
               </Link>
               <Link
                 href="/dazflow"
+                locale={locale}
                 className="inline-flex items-center px-8 py-4 border-2 border-white text-white font-semibold rounded-xl hover:bg-white hover:text-blue-600 transition-all duration-200"
               >
                 Découvrir DazFlow Index

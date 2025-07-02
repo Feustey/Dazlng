@@ -2,10 +2,13 @@
 
 import React, { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from 'next/link';
+import { useLocale } from 'next-intl';
 
 function AuthErrorContent(): JSX.Element {
   const searchParams = useSearchParams();
   const error = searchParams?.get("error");
+  const locale = useLocale();
 
   const getErrorMessage = (errorCode: string | null): string => {
     switch (errorCode) {
@@ -22,29 +25,28 @@ function AuthErrorContent(): JSX.Element {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
-        <div className="text-center">
-          <div className="text-red-500 text-6xl mb-4">⚠️</div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <div>
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Erreur d'authentification
-          </h1>
-          <p className="text-gray-600 mb-6">
+          </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
             {getErrorMessage(error)}
           </p>
-          <div className="space-y-3">
-            <a
+        </div>
+        <div className="mt-8 space-y-6">
+          <div className="text-center">
+            <p className="text-red-600 mb-4">
+              Impossible de vous connecter. Veuillez réessayer.
+            </p>
+            <Link
               href="/auth/login"
-              className="block w-full bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
+              locale={locale}
+              className="text-indigo-600 hover:text-indigo-500"
             >
-              Réessayer la connexion
-            </a>
-            <a
-              href="/"
-              className="block w-full bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200 transition"
-            >
-              Retour à l'accueil
-            </a>
+              Retour à la connexion
+            </Link>
           </div>
         </div>
       </div>
