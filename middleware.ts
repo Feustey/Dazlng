@@ -26,9 +26,151 @@ const intlMiddleware = createMiddleware({
   localeDetection: true
 });
 
+// Mappings des redirections d'anciennes URLs
+const redirects = new Map([
+  // Redirections principales
+  ['/home', '/'],
+  ['/accueil', '/'],
+  ['/index', '/'],
+  ['/index.html', '/'],
+  
+  // Redirections produits
+  ['/produits', '/'],
+  ['/products', '/'],
+  ['/services', '/'],
+  ['/solutions', '/'],
+  
+  // Redirections spécifiques produits
+  ['/node', '/daznode'],
+  ['/lightning-node', '/daznode'],
+  ['/personal-node', '/daznode'],
+  ['/node-personnel', '/daznode'],
+  
+  ['/box', '/dazbox'],
+  ['/hardware', '/dazbox'],
+  ['/materiel', '/dazbox'],
+  ['/equipement', '/dazbox'],
+  
+  ['/pay', '/dazpay'],
+  ['/payment', '/dazpay'],
+  ['/paiement', '/dazpay'],
+  ['/paiements', '/dazpay'],
+  
+  ['/flow', '/dazflow'],
+  ['/index-flow', '/dazflow'],
+  ['/dazflow-index', '/dazflow'],
+  ['/analytics', '/dazflow'],
+  
+  // Redirections pages d'information
+  ['/a-propos', '/about'],
+  ['/qui-sommes-nous', '/about'],
+  ['/equipe', '/about'],
+  ['/team', '/about'],
+  
+  ['/nous-contacter', '/contact'],
+  ['/contactez-nous', '/contact'],
+  ['/support', '/contact'],
+  
+  ['/aide', '/help'],
+  ['/faq', '/help'],
+  ['/questions', '/help'],
+  ['/assistance', '/help'],
+  
+  ['/conditions', '/terms'],
+  ['/conditions-utilisation', '/terms'],
+  ['/terms-of-service', '/terms'],
+  ['/mentions-legales', '/terms'],
+  ['/privacy', '/terms'],
+  ['/confidentialite', '/terms'],
+  
+  // Redirections authentification
+  ['/inscription', '/register'],
+  ['/signup', '/register'],
+  ['/creer-compte', '/register'],
+  ['/nouveau-compte', '/register'],
+  
+  ['/connexion', '/account'],
+  ['/login', '/account'],
+  ['/se-connecter', '/account'],
+  ['/mon-compte', '/account'],
+  ['/profile', '/account'],
+  ['/profil', '/account'],
+  
+  // Redirections réseau
+  ['/reseau', '/network'],
+  ['/lightning-network', '/network'],
+  ['/explorateur', '/network/explorer'],
+  ['/explorer', '/network/explorer'],
+  ['/analyse', '/network/mcp-analysis'],
+  ['/analysis', '/network/mcp-analysis'],
+  
+  // Redirections outils
+  ['/outils', '/instruments'],
+  ['/tools', '/instruments'],
+  ['/calculateurs', '/instruments'],
+  ['/calculators', '/instruments'],
+  
+  // Redirections spéciales
+  ['/t4g', '/token-for-good'],
+  ['/token4good', '/token-for-good'],
+  ['/good-token', '/token-for-good'],
+  
+  ['/demonstration', '/demo'],
+  ['/test', '/demo'],
+  ['/essai', '/demo'],
+  
+  // Redirections anciennes URLs avec paramètres
+  ['/checkout/daznode', '/checkout/daznode'],
+  ['/checkout/dazbox', '/checkout/dazbox'],
+  ['/checkout/dazpay', '/checkout/dazpay'],
+  
+  // Redirections locales
+  ['/fr/accueil', '/fr'],
+  ['/en/home', '/en'],
+  ['/fr/produits', '/fr'],
+  ['/en/products', '/en'],
+]);
+
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  
+  // Gestion des redirections d'anciennes URLs
+  const redirect = redirects.get(pathname);
+  if (redirect) {
+    const url = request.nextUrl.clone();
+    url.pathname = redirect;
+    return NextResponse.redirect(url, 301); // Redirection permanente
+  }
+  
+  // Redirections avec paramètres de requête
+  if (pathname === '/search' && request.nextUrl.searchParams.has('q')) {
+    const query = request.nextUrl.searchParams.get('q');
+    const url = request.nextUrl.clone();
+    url.pathname = '/network/explorer';
+    url.searchParams.set('search', query || '');
+    return NextResponse.redirect(url, 301);
+  }
+  
+  // Redirections d'anciens IDs de produits
+  if (pathname.startsWith('/product/')) {
+    const productId = pathname.split('/')[2];
+    const productMap: Record<string, string> = {
+      'daznode': '/daznode',
+      'dazbox': '/dazbox', 
+      'dazpay': '/dazpay',
+      'dazflow': '/dazflow'
+    };
+    
+    const redirectPath = productMap[productId];
+    if (redirectPath) {
+      const url = request.nextUrl.clone();
+      url.pathname = redirectPath;
+      return NextResponse.redirect(url, 301);
+    }
+  }
+  
   // Vérifier si c'est une requête API
-  if (request.nextUrl.pathname.startsWith('/api/')) {
+  if (pathname.startsWith('/api/')) {
     const response = NextResponse.next();
     
     // Headers CORS pour toutes les APIs
@@ -62,7 +204,7 @@ export async function middleware(request: NextRequest) {
     ];
     
     const isPublicRoute = publicApiRoutes.some(route => 
-      request.nextUrl.pathname.startsWith(route)
+      pathname.startsWith(route)
     );
     
     if (isPublicRoute) {
