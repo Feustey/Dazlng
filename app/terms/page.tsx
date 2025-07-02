@@ -4,6 +4,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import Image from 'next/image';
 
+export const dynamic = 'force-dynamic';
 export default function TermsPage() {
   useEffect(() => {
     if (typeof window !== 'undefined') {

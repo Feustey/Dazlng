@@ -2,6 +2,7 @@ import NetworkExplorer from '@/components/lightning/NetworkExplorer'
 import NetworkRankings from '@/components/lightning/NetworkRankings'
 import LightningCalculator from '@/components/lightning/LightningCalculator'
 
+export const dynamic = 'force-dynamic';
 export const metadata = {
   title: 'Explorateur du Réseau Lightning | DazNode',
   description: 'Explorez le réseau Lightning Network, trouvez des nœuds et analysez leurs performances.',

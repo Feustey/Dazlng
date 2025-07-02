@@ -9,6 +9,7 @@ import { LiveChannelMonitor } from '@/components/lightning/LiveChannelMonitor';
 import { ProofOfPerformance, LightningAnalyticsDashboard } from '@/components/lightning/ProofOfPerformance';
 import { MobileOptimizedPricing, MobileHero } from '@/components/mobile/MobileOptimized';
 
+export const dynamic = 'force-dynamic';
 export default function OptimizedDemoPage() {
   return (
     <div className="optimized-demo min-h-screen bg-gray-950">

@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
 
+export const dynamic = 'force-dynamic';
 function VerifyRequestInner(): JSX.Element {
   const searchParams = useSearchParams();
   const router = useRouter();

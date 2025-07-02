@@ -3,6 +3,7 @@ import DazBoxClientHero from './components/ClientHero';
 import DazBoxFeatures from './components/Features';
 import DazBoxPricing from './components/Pricing';
 
+export const dynamic = 'force-dynamic';
 // Export des métadonnées pour le SEO
 export { metadata } from './metadata';
 

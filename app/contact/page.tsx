@@ -6,6 +6,7 @@ import { QuestionMarkCircleIcon, UserGroupIcon, BoltIcon, RssIcon } from '@heroi
 import Image from 'next/image';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
 export default function ContactPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-600 to-purple-700">

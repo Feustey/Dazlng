@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState, Suspense } from "react";
-import dynamic from "next/dynamic";
-import { DazFlowShowcase } from '../components/shared/ui/DazFlowShowcase';
+import nextDynamic from "next/dynamic";
+import DazFlowShowcase from '../components/shared/ui/DazFlowShowcase';
 import { useSearchParams, useRouter } from "next/navigation";
 import UXOptimizedNavbar from '../components/shared/ui/UXOptimizedNavbar';
 import UXOptimizedHero from '../components/shared/ui/UXOptimizedHero';
@@ -15,8 +15,9 @@ import PricingSection from '../components/shared/ui/PricingSection';
 import ContactDemoSection from '../components/shared/ui/ContactDemoSection';
 import UXFooter from '../components/shared/ui/UXFooter';
 
+export const dynamic = 'force-dynamic';
 // Lazy loading optimisé avec skeleton amélioré
-const NewRevenueHero = dynamic(() => import("../components/shared/ui/NewRevenueHero"), {
+const NewRevenueHero = nextDynamic(() => import("../components/shared/ui/NewRevenueHero"), {
   loading: () => (
     <div className="min-h-screen bg-gradient-to-br from-green-600 via-blue-700 to-purple-800 flex items-center justify-center">
       <div className="text-center">
@@ -29,7 +30,7 @@ const NewRevenueHero = dynamic(() => import("../components/shared/ui/NewRevenueH
 });
 
 // Autres composants avec lazy loading optimisé
-const WhyBecomeNodeRunner = dynamic(() => import("../components/shared/ui/WhyBecomeNodeRunner"), {
+const WhyBecomeNodeRunner = nextDynamic(() => import("../components/shared/ui/WhyBecomeNodeRunner"), {
   loading: () => (
     <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
       <div className="text-gray-400">Chargement...</div>
@@ -38,7 +39,7 @@ const WhyBecomeNodeRunner = dynamic(() => import("../components/shared/ui/WhyBec
   ssr: false
 });
 
-const DetailedTestimonials = dynamic(() => import("../components/shared/ui/DetailedTestimonials"), {
+const DetailedTestimonials = nextDynamic(() => import("../components/shared/ui/DetailedTestimonials"), {
   loading: () => (
     <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
       <div className="text-gray-400">Chargement...</div>
@@ -47,7 +48,7 @@ const DetailedTestimonials = dynamic(() => import("../components/shared/ui/Detai
   ssr: false
 });
 
-const HowItWorks = dynamic(() => import("@/components/shared/ui/HowItWorks").then(mod => ({ default: mod.HowItWorks })), {
+const HowItWorks = nextDynamic(() => import("@/components/shared/ui/HowItWorks").then(mod => ({ default: mod.HowItWorks })), {
   loading: () => (
     <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
       <div className="text-gray-400">Chargement...</div>
@@ -56,7 +57,7 @@ const HowItWorks = dynamic(() => import("@/components/shared/ui/HowItWorks").the
   ssr: false
 });
 
-const CommunitySection = dynamic(() => import("../components/shared/ui/CommunitySection"), {
+const CommunitySection = nextDynamic(() => import("../components/shared/ui/CommunitySection"), {
   loading: () => (
     <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
       <div className="text-gray-400">Chargement...</div>
@@ -65,7 +66,7 @@ const CommunitySection = dynamic(() => import("../components/shared/ui/Community
   ssr: false
 });
 
-const FirstStepsGuide = dynamic(() => import("../components/shared/ui/FirstStepsGuide"), {
+const FirstStepsGuide = nextDynamic(() => import("../components/shared/ui/FirstStepsGuide"), {
   loading: () => (
     <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
       <div className="text-gray-400">Chargement...</div>
@@ -74,7 +75,7 @@ const FirstStepsGuide = dynamic(() => import("../components/shared/ui/FirstSteps
   ssr: false
 });
 
-const BeginnersFAQ = dynamic(() => import("../components/shared/ui/BeginnersFAQ"), {
+const BeginnersFAQ = nextDynamic(() => import("../components/shared/ui/BeginnersFAQ"), {
   loading: () => (
     <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
       <div className="text-gray-400">Chargement...</div>
@@ -83,7 +84,7 @@ const BeginnersFAQ = dynamic(() => import("../components/shared/ui/BeginnersFAQ"
   ssr: false
 });
 
-const FinalConversionCTA = dynamic(() => import("../components/shared/ui/FinalConversionCTA"), {
+const FinalConversionCTA = nextDynamic(() => import("../components/shared/ui/FinalConversionCTA"), {
   loading: () => (
     <div className="h-64 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
       <div className="text-gray-400">Chargement...</div>

@@ -6,6 +6,7 @@ import { StatsCard } from "../components/ui/StatsCard";
 import { formatDate, formatSats } from "../../../utils/formatters";
 import Link from "next/link";
 import React from 'react';
+import { useLocale } from 'next-intl';
 
 export interface User {
   id: string;
@@ -52,6 +53,7 @@ export interface FunnelMetrics {
 }
 
 export default function DashboardPage(): JSX.Element {
+  const locale = useLocale();
   const [recentUsers, setRecentUsers] = useState<User[]>([]);
   const [stats, setStats] = useState<Stats>({
     totalUsers: 0,

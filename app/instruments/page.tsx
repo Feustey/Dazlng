@@ -1,5 +1,6 @@
 import { createSupabaseServerClient } from '@/lib/supabase-auth';
 
+export const dynamic = 'force-dynamic';
 // Définition de l'interface Instrument selon la table SQL
 export interface Instrument {
   id: number;

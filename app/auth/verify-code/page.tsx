@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { getSupabaseBrowserClient } from '@/lib/supabase';
 
+export const dynamic = 'force-dynamic';
 function VerifyCodeForm(): JSX.Element {
   const searchParams = useSearchParams();
   const router = useRouter();

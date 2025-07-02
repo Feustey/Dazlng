@@ -1,6 +1,7 @@
 import React from 'react';
 import DazPayHero from './components/Hero';
 
+export const dynamic = 'force-dynamic';
 // Export des métadonnées pour le SEO
 export { metadata } from './metadata';
 

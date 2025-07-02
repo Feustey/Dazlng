@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
 
+export const dynamic = 'force-dynamic';
 function AuthErrorContent(): JSX.Element {
   const searchParams = useSearchParams();
   const error = searchParams?.get("error");

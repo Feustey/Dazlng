@@ -1,5 +1,6 @@
 import { createSupabaseServerClient } from '@/lib/supabase-auth';
 
+export const dynamic = 'force-dynamic';
 export default async function TestSupabase(): Promise<JSX.Element> {
   const supabase = await createSupabaseServerClient();
   

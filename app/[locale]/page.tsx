@@ -1,40 +1,41 @@
 "use client";
 import React, { useEffect, useState, Suspense } from "react";
-import dynamic from "next/dynamic";
-import { DazFlowShowcase } from '@/components/shared/ui/DazFlowShowcase';
+import nextDynamic from "next/dynamic";
+import DazFlowShowcase from '@/components/shared/ui/DazFlowShowcase';
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from 'next-intl';
 
+export const dynamic = 'force-dynamic';
 // Lazy loading des composants pour optimiser le First Load
-const NewRevenueHero = dynamic(() => import("@/components/shared/ui/NewRevenueHero"), {
+const NewRevenueHero = nextDynamic(() => import("@/components/shared/ui/NewRevenueHero"), {
   loading: () => <div className="h-screen bg-gradient-to-br from-green-600 via-blue-700 to-purple-800 animate-pulse" />
 });
 
-const WhyBecomeNodeRunner = dynamic(() => import("@/components/shared/ui/WhyBecomeNodeRunner"), {
+const WhyBecomeNodeRunner = nextDynamic(() => import("@/components/shared/ui/WhyBecomeNodeRunner"), {
   loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
 });
 
-const DetailedTestimonials = dynamic(() => import("@/components/shared/ui/DetailedTestimonials"), {
+const DetailedTestimonials = nextDynamic(() => import("@/components/shared/ui/DetailedTestimonials"), {
   loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
 });
 
-const HowItWorks = dynamic(() => import("@/components/shared/ui/HowItWorks").then(mod => ({ default: mod.HowItWorks })), {
+const HowItWorks = nextDynamic(() => import("@/components/shared/ui/HowItWorks").then(mod => ({ default: mod.HowItWorks })), {
   loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
 });
 
-const CommunitySection = dynamic(() => import("@/components/shared/ui/CommunitySection"), {
+const CommunitySection = nextDynamic(() => import("@/components/shared/ui/CommunitySection"), {
   loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
 });
 
-const FirstStepsGuide = dynamic(() => import("@/components/shared/ui/FirstStepsGuide"), {
+const FirstStepsGuide = nextDynamic(() => import("@/components/shared/ui/FirstStepsGuide"), {
   loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
 });
 
-const BeginnersFAQ = dynamic(() => import("@/components/shared/ui/BeginnersFAQ"), {
+const BeginnersFAQ = nextDynamic(() => import("@/components/shared/ui/BeginnersFAQ"), {
   loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
 });
 
-const FinalConversionCTA = dynamic(() => import("@/components/shared/ui/FinalConversionCTA"), {
+const FinalConversionCTA = nextDynamic(() => import("@/components/shared/ui/FinalConversionCTA"), {
   loading: () => <div className="h-64 bg-gray-100 animate-pulse rounded-xl" />
 });
 

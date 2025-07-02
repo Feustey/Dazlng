@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, Button } from '@/components/s
 import { Alert, AlertDescription } from '@/components/shared/ui/Alert';
 import { Zap, Search, Globe, Database } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
 export default function MCPAnalysisPage() {
   const [pubkey, setPubkey] = useState('');
   const [validatedPubkey, setValidatedPubkey] = useState<string | null>(null);

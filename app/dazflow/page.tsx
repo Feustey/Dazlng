@@ -3,6 +3,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
+export const dynamic = 'force-dynamic';
+
 import { 
   BarChart3, 
   TrendingUp, 

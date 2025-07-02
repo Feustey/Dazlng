@@ -4,6 +4,7 @@ import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 
+export const dynamic = 'force-dynamic';
 export default function RegisterPage() {
   return (
     <Suspense fallback={<div>Chargement...</div>}>

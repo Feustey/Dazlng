@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import GradientLayout from '../../../components/shared/layout/GradientLayout';
 
+export const dynamic = 'force-dynamic';
 export default function DemoPage() {
   const router = useRouter();
 
