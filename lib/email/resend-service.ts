@@ -104,7 +104,7 @@ export class EmailMarketingService {
 
       // Envoie l'email via Resend
       const result = await resend.emails.send({
-        from: (process.env.CRM_DEFAULT_FROM_EMAIL ?? "") || 'DazNode <noreply@daznode.com>',
+        from: (process.env.CRM_DEFAULT_FROM_EMAIL ?? "") || 'DazNode <noreply@dazno.de>',
         to: customer.email,
         subject: personalizedSubject,
         html: personalizedContent,

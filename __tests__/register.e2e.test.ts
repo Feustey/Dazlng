@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 const BASE_URL = process.env.TEST_BASE_URL || 'http://localhost:3000';
 
 describe('Parcours inscription - Créer son compte', () => {
-  const email = `testuser+${Date.now()}@daznode.com`;
+  const email = `testuser+${Date.now()}@dazno.de`;
   const prenom = 'Test';
   const nom = 'User';
   let otpCode: string;

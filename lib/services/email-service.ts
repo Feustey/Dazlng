@@ -29,8 +29,8 @@ export interface InternalDazBoxNotificationParams {
 
 export class EmailService {
   private resend: Resend | null = null;
-  private readonly INTERNAL_EMAIL = 'commandes@daznode.com';
-  private readonly FROM_EMAIL = 'contact@daznode.com';
+  private readonly INTERNAL_EMAIL = 'commandes@dazno.de';
+  private readonly FROM_EMAIL = 'contact@dazno.de';
 
   constructor() {
     this.resend = new Resend(process.env.RESEND_API_KEY ?? "");

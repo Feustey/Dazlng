@@ -8,7 +8,7 @@ export class DazNodeEmailService {
     const { email, pubkey, plan_type, amount, start_date, end_date } = subscription;
 
     await resend.emails.send({
-      from: 'DazNode <noreply@daznode.com>',
+      from: 'DazNode <noreply@dazno.de>',
       to: email,
       cc: 'admin@dazno.de',
       subject: 'Bienvenue sur DazNode ! 🎉',
@@ -90,7 +90,7 @@ export class DazNodeEmailService {
       .join('');
 
     await resend.emails.send({
-      from: 'DazNode <noreply@daznode.com>',
+      from: 'DazNode <noreply@dazno.de>',
       to: email,
       subject: '🎯 Vos recommandations DazNode personnalisées',
       html: `
@@ -102,11 +102,11 @@ export class DazNodeEmailService {
         <p>Ces recommandations ont été validées par nos experts et sont basées sur l'analyse de votre nœud et du réseau Lightning.</p>
 
         <p>Pour mettre en place ces recommandations et suivre vos progrès :</p>
-        <a href="https://daznode.com/user/node" style="background-color: #F59E0B; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+        <a href="https://dazno.de/user/node" style="background-color: #F59E0B; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
           Accéder au tableau de bord
         </a>
 
-        <p>Pour toute question sur ces recommandations, n'hésitez pas à nous contacter à support@daznode.com</p>
+        <p>Pour toute question sur ces recommandations, n'hésitez pas à nous contacter à support@dazno.de</p>
       `
     });
   }
