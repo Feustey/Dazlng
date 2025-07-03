@@ -13,6 +13,7 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['@heroicons/react', 'lucide-react'],
     scrollRestoration: true,
+    optimizeCss: true,
   },
   webpack: (config, { dev, isServer }) => {
     // Support SVG
@@ -106,6 +107,15 @@ const nextConfig = {
       },
       {
         source: '/assets/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/_next/static/css/(.*)',
         headers: [
           {
             key: 'Cache-Control',
