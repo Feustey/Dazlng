@@ -1,0 +1,173 @@
+# MCP V2 - Architecture & Standards de Développement
+
+## 📚 Documentation de Référence
+
+Les spécifications complètes et règles de développement sont disponibles dans :
+- [V2.md] - Spécifications fonctionnelles et techniques
+- [MCP_V2_RULES.md] - Standards et bonnes pratiques
+
+## 🏗 Architecture Générale
+
+### Services Core
+Tous les services doivent être implémentés dans `lib/services/` avec la structure suivante :
+
+```typescript
+// ✅ CORRECT - Service avec injection de dépendances
+class Service implements IService {
+  constructor(
+    private dependency1: IDependency1,
+    private dependency2: IDependency2
+  ) {}
+}
+
+// ❌ INCORRECT - Couplage fort
+class Service {
+  private dependency = new Dependency();
+}
+```
+
+### Validation des Données
+Utiliser Zod pour toute validation dans `lib/validations/` :
+
+```typescript
+// ✅ CORRECT - Schéma Zod
+const schema = z.object({
+  field: z.string().min(1),
+  amount: z.number().min(1000)
+});
+
+// ❌ INCORRECT - Validation manuelle
+if (!data.field || data.amount < 1000) {
+  throw new Error('Invalid data');
+}
+```
+
+## 🚀 Modules Principaux
+
+### 1. MCP Yield Finance
+- Service principal : [lib/services/mcp-yield-service.ts]
+- Validation : [lib/validations/yield.ts]
+- API Routes : [app/api/v1/yield/*]
+
+### 2. MCP Liquidity Subscriptions
+- Service principal : [lib/services/mcp-liquidity-service.ts]
+- Validation : [lib/validations/liquidity.ts]
+- API Routes : [app/api/v1/liquidity/*]
+
+### 3. MCP Marketplace & IA
+- Service principal : [lib/services/mcp-marketplace-service.ts]
+- IA Service : [lib/services/marketplace-ai.ts]
+- API Routes : [app/api/v1/marketplace/*]
+
+### 4. MCP LINER Index
+- Service principal : [lib/services/mcp-liner-service.ts]
+- Cache : [lib/services/liner-cache.ts]
+- API Routes : [app/api/v1/index/liner/*]
+
+## 📊 Base de Données
+
+### Schémas
+Toutes les migrations doivent être dans `supabase/migrations/` avec la nomenclature :
+```sql
+-- ✅ CORRECT
+YYYYMMDD_feature_name.sql
+
+-- ❌ INCORRECT
+migration_1.sql
+```
+
+### Indexes
+Créer des index optimisés avec conditions :
+```sql
+-- ✅ CORRECT
+CREATE INDEX idx_name ON table (column1, column2)
+WHERE condition = true;
+
+-- ❌ INCORRECT
+CREATE INDEX idx_name ON table (column);
+```
+
+## 🔒 Sécurité & Monitoring
+
+### JWT & Auth
+Utiliser les utilitaires dans [lib/auth/jwt.ts] :
+```typescript
+// ✅ CORRECT
+const token = await generateSecureToken(payload);
+
+// ❌ INCORRECT
+const token = jwt.sign(payload, process.env.SECRET);
+```
+
+### Logging
+Utiliser le logger structuré dans [lib/utils/logger.ts] :
+```typescript
+// ✅ CORRECT
+logger.info('Action performed', { 
+  action: 'yield_calculation',
+  duration: 123,
+  user: userId
+});
+
+// ❌ INCORRECT
+console.log('Action performed');
+```
+
+## 🎯 Standards de Code
+
+### TypeScript
+- `strict: true` dans tsconfig.json
+- Interfaces pour tous les modèles
+- Pas de `any`, utiliser `unknown`
+
+### API Routes
+Format de réponse standardisé :
+```typescript
+interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: {
+    code: string;
+    message: string;
+    details?: unknown;
+  };
+  meta: {
+    timestamp: string;
+    version: string;
+  };
+}
+```
+
+### Tests
+- Tests unitaires dans `__tests__/unit/`
+- Tests d'intégration dans `__tests__/integration/`
+- Tests e2e dans `__tests__/e2e/`
+
+## 📈 Métriques & Alerting
+
+### Métriques Business
+Implémenter dans [lib/monitoring/metrics.ts] :
+```typescript
+// ✅ CORRECT
+metrics.businessMetric('yield_generated', amount, {
+  strategy: strategyType,
+  user: userId
+});
+
+// ❌ INCORRECT
+metrics.counter('yield').inc(amount);
+```
+
+### Alerting
+Configurer dans [lib/monitoring/alerts.ts] :
+```typescript
+// ✅ CORRECT
+alerts.configure({
+  threshold: 0.01,
+  channel: 'slack',
+  escalation: ['level1', 'level2']
+});
+
+// ❌ INCORRECT
+if (errorRate > 0.01) sendAlert();
+```

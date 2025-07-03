@@ -7,7 +7,7 @@ export async function GET(req: NextRequest): Promise<Response> {
   try {
     const authorization = req.headers.get('authorization')
     
-    const response = await fetch(`${API_BASE_URL}/api/v1/simulate/profiles`, {
+    const response = await fetch(`${API_BASE_URL}/api/v1/simulate/node`, {
       headers: {
         'Content-Type': 'application/json',
         ...(authorization && { 'Authorization': authorization })
@@ -84,13 +84,13 @@ export async function POST(req: NextRequest): Promise<Response> {
     })
 
   } catch (error) {
-    console.error('Erreur proxy simulation node:', error)
+    console.error('Erreur proxy simulate node:', error)
     
     return NextResponse.json<ApiResponse<null>>({
       success: false,
       error: {
         code: 'PROXY_ERROR',
-        message: error instanceof Error ? error.message : 'Erreur lors de la simulation du nœud'
+        message: error instanceof Error ? error.message : 'Erreur lors de la simulation de nœud'
       }
     }, { status: 500 })
   }

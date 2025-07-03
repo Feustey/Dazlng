@@ -40,6 +40,19 @@ export interface BusinessMetrics {
   revenue_per_user: number;
 }
 
+export interface SystemMetrics {
+  cpu_usage: number;
+  memory_usage: number;
+  disk_usage: number;
+  network_throughput: number;
+  api_response_time: number;
+  error_rate: number;
+  active_connections: number;
+  cache_hit_rate: number;
+  database_connections: number;
+  redis_memory_usage: number;
+}
+
 export interface FunnelMetrics {
   visitors: number;
   signups: number;
@@ -466,4 +479,5 @@ export default function DashboardPage(): JSX.Element {
     </div>
   );
 }
+
 export const dynamic = "force-dynamic";

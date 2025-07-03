@@ -1,6 +1,6 @@
 # Bash commands
 - npm run build: Build the project
-- npm run typecheck: Run the typechecker
+- npm run type-check: Run the typechecker (note: hyphenated, not npm run typecheck)
 
 # Code style
 - Use ES modules (import/export) syntax, not CommonJS (require)
@@ -40,6 +40,13 @@
 # Documentation
 - Documenter toute intégration IA ou API externe dans ce fichier
 - Ajouter des liens vers la documentation officielle Next.js et Claude
+
+# Common Issues & Fixes
+- Always import required icons from lucide-react (e.g., Globe, Zap, Shield)
+- Avoid duplicate interface definitions in the same file
+- Ensure proper indentation alignment in switch statements
+- Place `export const dynamic = "force-dynamic"` with proper spacing at end of files
+- API proxy routes should match correct endpoints (/api/v1/simulate/node vs /profiles)
 
 # Liens utiles
 - Next.js config: https://nextjs.org/docs/pages/api-reference/next-config-js

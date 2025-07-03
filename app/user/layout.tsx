@@ -47,6 +47,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
     { href: '/user/dashboard', label: 'Dashboard', color: 'indigo', icon: '📊' },
     { href: '/user/node', label: 'Mon Nœud', color: 'purple', icon: '⚡' },
     { href: '/user/dazia', label: 'Dazia IA', color: 'yellow', icon: '🤖' },
+    { href: '/user/simulation', label: 'Simulation', color: 'orange', icon: '🔬' },
     { href: '/user/rag-insights', label: 'RAG Insights', color: 'blue', icon: '🧠' },
     { href: '/user/optimize', label: 'Optimisation', color: 'emerald', icon: '🚀' }
   ];
@@ -93,9 +94,15 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
       case 'yellow':
         return 'bg-yellow-400';
       case 'blue':
-        return 'bg-blue-600';
-      default:
-        return 'bg-indigo-600';
+          return 'bg-blue-600';
+        case 'orange':
+          return 'bg-orange-600';
+        case 'red':
+          return 'bg-red-600';
+        case 'pink':
+          return 'bg-pink-600';
+        default:
+          return 'bg-indigo-600';
     }
   };
 
@@ -237,4 +244,6 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
   );
 };
 
-export default UserLayout;export const dynamic = "force-dynamic";
+export default UserLayout;
+
+export const dynamic = "force-dynamic";
