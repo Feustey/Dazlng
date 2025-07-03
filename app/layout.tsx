@@ -162,25 +162,6 @@ export default function RootLayout({
             {children}
           </ClientLayout>
         </SupabaseProvider>
-        
-        {/* Script de performance pour Core Web Vitals */}
-        <Script id="web-vitals" strategy="afterInteractive">
-          {`
-            // Import web-vitals library dynamically
-            if (typeof window !== 'undefined') {
-              import('web-vitals').then((webVitals) => {
-                const { getCLS, getFID, getFCP, getLCP, getTTFB } = webVitals;
-                getCLS(console.log);
-                getFID(console.log);
-                getFCP(console.log);
-                getLCP(console.log);
-                getTTFB(console.log);
-              }).catch(error => {
-                console.warn('Web Vitals failed to load:', error);
-              });
-            }
-          `}
-        </Script>
       </body>
     </html>
   );
