@@ -102,7 +102,7 @@ export default function RootLayout({
     <html lang="fr" className={inter.className}>
       <head>
         {/* Preload des ressources critiques pour Core Web Vitals */}
-        {/* (Supprimé : preload du logo-daznode.svg car non critique) */}
+        {/* (Supprimé : preload CSS Next.js, car Next.js gère automatiquement le CSS critique) */}
         
         {/* DNS prefetch pour les domaines externes */}
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
