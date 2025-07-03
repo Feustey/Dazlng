@@ -151,7 +151,7 @@ export async function POST(request: Request) {
 
     // Mise à jour du log de paiement
     const paymentLogger = new PaymentLogger();
-    await paymentLogger.updatePaymentStatus(validation.data.paymentHash, status);
+    await paymentLogger.updatePaymentStatus(validation.data.paymentHash, status.status as any);
 
     // Réponse formatée
     return NextResponse.json<ApiResponse<InvoiceStatus>>({

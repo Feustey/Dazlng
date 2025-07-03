@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createDaznoApiClient } from '@/lib/services/dazno-api'
 import { ApiResponse } from '@/types/database'
 import { DaznoNodeInfoDetailed } from '@/types/dazno-api'
+import type { NodeStatus } from '@/lib/services/dazno-api'
 
 export async function GET(
   req: NextRequest,
@@ -12,11 +13,10 @@ export async function GET(
     const pubkey = resolvedParams.pubkey
 
     const daznoApi = createDaznoApiClient()
-    await daznoApi.initialize()
 
-    const data = await daznoApi.getNodeInfo(pubkey)
+    const data = await daznoApi.getNodeStatus(pubkey)
 
-    return NextResponse.json<ApiResponse<DaznoNodeInfoDetailed>>({
+    return NextResponse.json<ApiResponse<NodeStatus>>({
       success: true,
       data,
       meta: {

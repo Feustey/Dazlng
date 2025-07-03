@@ -3,90 +3,524 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <!-- Page d'accueil -->
   <url>
-    <loc>https://daznode.com/</loc>
+    <loc>https://dazno.de/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/"/>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dazno.de/"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/fr</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dazno.de/"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/en</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dazno.de/"/>
   </url>
 
-  <!-- À propos -->
   <url>
-    <loc>https://daznode.com/about</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/about"/>
+    <loc>https://dazno.de/fr</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dazno.de/"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/en</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dazno.de/"/>
   </url>
 
-  <!-- Contact -->
+  <!-- Pages produits -->
   <url>
-    <loc>https://daznode.com/contact</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/contact"/>
-  </url>
-
-  <!-- DazBox -->
-  <url>
-    <loc>https://daznode.com/dazbox</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/dazbox"/>
-  </url>
-
-  <!-- DazNode -->
-  <url>
-    <loc>https://daznode.com/daznode</loc>
+    <loc>https://dazno.de/daznode</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/daznode"/>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/daznode"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/daznode"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dazno.de/daznode"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/fr/daznode</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/daznode"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/daznode"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/en/daznode</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/daznode"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/daznode"/>
   </url>
 
-  <!-- Commander DazBox -->
   <url>
-    <loc>https://daznode.com/checkout/dazbox</loc>
-    <changefreq>monthly</changefreq>
+    <loc>https://dazno.de/dazbox</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/dazbox"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/dazbox"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dazno.de/dazbox"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/fr/dazbox</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/dazbox"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/dazbox"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/en/dazbox</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/dazbox"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/dazbox"/>
+  </url>
+
+  <url>
+    <loc>https://dazno.de/dazpay</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/dazpay"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/dazpay"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dazno.de/dazpay"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/fr/dazpay</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/dazpay"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/dazpay"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/en/dazpay</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/dazpay"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/dazpay"/>
+  </url>
+
+  <url>
+    <loc>https://dazno.de/dazflow</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/dazflow"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/dazflow"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dazno.de/dazflow"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/fr/dazflow</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/dazflow"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/dazflow"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/en/dazflow</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/dazflow"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/dazflow"/>
+  </url>
+
+  <!-- Pages réseau -->
+  <url>
+    <loc>https://dazno.de/network</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/network"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/network"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dazno.de/network"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/fr/network</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/network"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/network"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/en/network</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/network"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/network"/>
+  </url>
+
+  <url>
+    <loc>https://dazno.de/network/explorer</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/network/explorer"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/network/explorer"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/fr/network/explorer</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/network/explorer"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/network/explorer"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/en/network/explorer</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/network/explorer"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/network/explorer"/>
+  </url>
+
+  <url>
+    <loc>https://dazno.de/network/mcp-analysis</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/network/mcp-analysis"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/network/mcp-analysis"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/fr/network/mcp-analysis</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/network/mcp-analysis"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/network/mcp-analysis"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/en/network/mcp-analysis</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/network/mcp-analysis"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/network/mcp-analysis"/>
+  </url>
+
+  <!-- Pages outils -->
+  <url>
+    <loc>https://dazno.de/instruments</loc>
+    <changefreq>weekly</changefreq>
     <priority>0.6</priority>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/checkout/dazbox"/>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/instruments"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/instruments"/>
   </url>
-
-  <!-- Abonnement DazNode -->
+  
   <url>
-    <loc>https://daznode.com/checkout/daznode</loc>
+    <loc>https://dazno.de/fr/instruments</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/checkout/daznode"/>
+    <priority>0.6</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/instruments"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/instruments"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/en/instruments</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/instruments"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/instruments"/>
   </url>
 
-  <!-- Token for Good -->
+  <!-- Pages utilisateur -->
   <url>
-    <loc>https://daznode.com/token-for-good</loc>
+    <loc>https://dazno.de/register</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/token-for-good"/>
+    <priority>0.8</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/register"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/register"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/fr/register</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/register"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/register"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/en/register</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/register"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/register"/>
   </url>
 
-  <!-- Conditions Générales -->
+  <!-- Pages légales -->
   <url>
-    <loc>https://daznode.com/terms</loc>
+    <loc>https://dazno.de/terms</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/terms"/>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/terms"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/terms"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/fr/terms</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/terms"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/terms"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/en/terms</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/terms"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/terms"/>
   </url>
 
-  <!-- Abonnement -->
   <url>
-    <loc>https://daznode.com/subscribe</loc>
+    <loc>https://dazno.de/about</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/subscribe"/>
+    <priority>0.7</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/about"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/about"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/fr/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/about"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/about"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/en/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/about"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/about"/>
   </url>
 
-  <!-- Aide -->
   <url>
-    <loc>https://daznode.com/help</loc>
+    <loc>https://dazno.de/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/contact"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/contact"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/fr/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/contact"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/contact"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/en/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/contact"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/contact"/>
+  </url>
+
+  <url>
+    <loc>https://dazno.de/help</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://daznode.com/help"/>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/help"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/help"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/fr/help</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/help"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/help"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/en/help</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/help"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/help"/>
+  </url>
+
+  <!-- Pages spéciales -->
+  <url>
+    <loc>https://dazno.de/token-for-good</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/token-for-good"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/token-for-good"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/fr/token-for-good</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/token-for-good"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/token-for-good"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/en/token-for-good</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/token-for-good"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/token-for-good"/>
+  </url>
+
+  <!-- Pages checkout -->
+  <url>
+    <loc>https://dazno.de/checkout/daznode</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/checkout/daznode"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/checkout/daznode"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/fr/checkout/daznode</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/checkout/daznode"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/checkout/daznode"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/en/checkout/daznode</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/checkout/daznode"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/checkout/daznode"/>
+  </url>
+
+  <url>
+    <loc>https://dazno.de/checkout/dazbox</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/checkout/dazbox"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/checkout/dazbox"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/fr/checkout/dazbox</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/checkout/dazbox"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/checkout/dazbox"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/en/checkout/dazbox</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/checkout/dazbox"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/checkout/dazbox"/>
+  </url>
+
+  <url>
+    <loc>https://dazno.de/checkout/dazpay</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/checkout/dazpay"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/checkout/dazpay"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/fr/checkout/dazpay</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/checkout/dazpay"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/checkout/dazpay"/>
+  </url>
+  
+  <url>
+    <loc>https://dazno.de/en/checkout/dazpay</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2025-01-27</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dazno.de/fr/checkout/dazpay"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dazno.de/en/checkout/dazpay"/>
   </url>
 
 </urlset>

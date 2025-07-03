@@ -1,9 +1,9 @@
-# robots.txt pour daznode.com
+# robots.txt pour dazno.de
 
 # Règles globales pour tous les robots
 User-agent: *
 Allow: /
-Sitemap: https://daznode.com/sitemap.xml
+Sitemap: https://dazno.de/sitemap.xml
 
 # Bloquer les robots d'IA d'OpenAI
 User-agent: GPTBot
@@ -48,3 +48,17 @@ User-agent: cohere-ai
 Disallow: /
 User-agent: anthropic-ai
 Disallow: /
+
+# Permettre l'indexation des ressources importantes
+User-agent: *
+Allow: /assets/
+Allow: /api/network/stats
+Allow: /api/dazno/
+
+# Bloquer les pages sensibles
+Disallow: /admin/
+Disallow: /api/auth/
+Disallow: /user/
+Disallow: /checkout/
+Disallow: /_next/
+Disallow: /api/webhook/

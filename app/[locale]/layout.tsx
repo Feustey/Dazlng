@@ -6,6 +6,7 @@ import { SupabaseProvider } from '../providers/SupabaseProvider';
 import { NextIntlClientProvider } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { locales } from '@/i18n/settings';
+import { seoConfig } from '@/lib/seo-config';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -28,16 +29,34 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
   return {
     title: {
       default: messages.metadata.title,
-      template: `%s | ${messages.metadata.title}`
+      template: `%s | DazNode`
     },
     description: messages.metadata.description,
-    metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
+    metadataBase: new URL(seoConfig.baseUrl),
+    alternates: {
+      canonical: `${seoConfig.baseUrl}/${locale}`,
+      languages: {
+        'fr': `${seoConfig.baseUrl}/fr`,
+        'en': `${seoConfig.baseUrl}/en`,
+        'x-default': seoConfig.baseUrl
+      }
+    },
     openGraph: {
       type: 'website',
       locale: locale === 'fr' ? 'fr_FR' : 'en_US',
       title: messages.metadata.title,
       description: messages.metadata.description,
-      siteName: 'DazNode'
+      siteName: 'DazNode',
+      url: `${seoConfig.baseUrl}/${locale}`
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: messages.metadata.title,
+      description: messages.metadata.description,
+      creator: '@daznode'
+    },
+    verification: {
+      google: 'your-google-site-verification'
     }
   };
 }
@@ -57,6 +76,12 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
+      <head>
+        {/* Balises hreflang pour le SEO international */}
+        <link rel="alternate" hrefLang="fr" href={`${seoConfig.baseUrl}/fr`} />
+        <link rel="alternate" hrefLang="en" href={`${seoConfig.baseUrl}/en`} />
+        <link rel="alternate" hrefLang="x-default" href={seoConfig.baseUrl} />
+      </head>
       <body className={inter.className}>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <SupabaseProvider>

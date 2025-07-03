@@ -1,30 +1,68 @@
 import React from 'react';
+import { Metadata } from 'next';
 import DazBoxClientHero from './components/ClientHero';
 import DazBoxFeatures from './components/Features';
 import DazBoxPricing from './components/Pricing';
+import { seoConfig } from '@/lib/seo-config';
 
-export const dynamic = 'force-dynamic';
-// Export des métadonnées pour le SEO
-export { metadata } from './metadata';
-
-// Schema.org JSON-LD pour Rich Snippets
-const jsonLd = {
+// Structured data avancé pour DazBox
+const dazBoxStructuredData = {
   "@context": "https://schema.org",
   "@type": "Product",
   "name": "DazBox",
   "description": "Solution Lightning Network Plug & Play pour générer des revenus passifs",
   "brand": {
     "@type": "Organization",
-    "name": "DazNode"
+    "name": "DazNode",
+    "url": seoConfig.baseUrl
   },
+  "manufacturer": {
+    "@type": "Organization",
+    "name": "DazNode",
+    "url": seoConfig.baseUrl
+  },
+  "model": "DazBox v2.0",
+  "sku": "DB-2024-001",
+  "mpn": "DAZBOX-2024",
+  "category": "Hardware",
+  "url": `${seoConfig.baseUrl}/dazbox`,
+  "image": [
+    `${seoConfig.baseUrl}/assets/images/dazbox-hero.png`,
+    `${seoConfig.baseUrl}/assets/images/dazbox-dashboard.png`
+  ],
   "offers": [
     {
       "@type": "Offer",
       "name": "DazBox Starter",
-      "price": "400 000",
+      "price": "400",
       "priceCurrency": "EUR",
       "availability": "https://schema.org/InStock",
-      "validFrom": "2025-01-01"
+      "validFrom": "2025-01-01",
+      "description": "Kit de démarrage Lightning Network",
+      "itemCondition": "https://schema.org/NewCondition",
+      "shippingDetails": {
+        "@type": "OfferShippingDetails",
+        "shippingRate": {
+          "@type": "MonetaryAmount",
+          "value": "0",
+          "currency": "EUR"
+        },
+        "deliveryTime": {
+          "@type": "ShippingDeliveryTime",
+          "handlingTime": {
+            "@type": "QuantitativeValue",
+            "minValue": 1,
+            "maxValue": 2,
+            "unitCode": "DAY"
+          },
+          "transitTime": {
+            "@type": "QuantitativeValue",
+            "minValue": 3,
+            "maxValue": 7,
+            "unitCode": "DAY"
+          }
+        }
+      }
     },
     {
       "@type": "Offer",
@@ -32,35 +70,181 @@ const jsonLd = {
       "price": "449",
       "priceCurrency": "EUR",
       "availability": "https://schema.org/InStock",
-      "validFrom": "2025-01-01"
+      "validFrom": "2025-01-01",
+      "description": "Solution professionnelle avec support prioritaire",
+      "itemCondition": "https://schema.org/NewCondition",
+      "shippingDetails": {
+        "@type": "OfferShippingDetails",
+        "shippingRate": {
+          "@type": "MonetaryAmount",
+          "value": "0",
+          "currency": "EUR"
+        },
+        "deliveryTime": {
+          "@type": "ShippingDeliveryTime",
+          "handlingTime": {
+            "@type": "QuantitativeValue",
+            "minValue": 1,
+            "maxValue": 2,
+            "unitCode": "DAY"
+          },
+          "transitTime": {
+            "@type": "QuantitativeValue",
+            "minValue": 2,
+            "maxValue": 5,
+            "unitCode": "DAY"
+          }
+        }
+      }
     }
   ],
   "aggregateRating": {
     "@type": "AggregateRating",
     "ratingValue": "4.8",
-    "reviewCount": "127"
+    "reviewCount": "127",
+    "bestRating": "5",
+    "worstRating": "1"
   },
-  "review": {
-    "@type": "Review",
-    "reviewRating": {
-      "@type": "Rating",
-      "ratingValue": "5"
+  "review": [
+    {
+      "@type": "Review",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5",
+        "bestRating": "5"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "Bitcoin Expert"
+      },
+      "reviewBody": "DazBox simplifie vraiment l'accès au Lightning Network. Installation en 5 minutes et revenus dès le premier jour.",
+      "datePublished": "2024-12-15"
     },
-    "author": {
-      "@type": "Person",
-      "name": "Bitcoin Expert"
+    {
+      "@type": "Review",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5",
+        "bestRating": "5"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "Lightning Developer"
+      },
+      "reviewBody": "Matériel de qualité, interface intuitive. Parfait pour débuter avec Lightning Network.",
+      "datePublished": "2024-12-20"
+    }
+  ],
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "Puissance",
+      "value": "15W"
     },
-    "reviewBody": "DazBox simplifie vraiment l'accès au Lightning Network. Installation en 5 minutes et revenus dès le premier jour."
+    {
+      "@type": "PropertyValue",
+      "name": "Connectivité",
+      "value": "Ethernet + WiFi"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "Stockage",
+      "value": "500GB SSD"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "RAM",
+      "value": "4GB"
+    }
+  ],
+  "warranty": {
+    "@type": "WarrantyPromise",
+    "warrantyScope": "https://schema.org/ComprehensiveWarranty",
+    "durationOfWarranty": {
+      "@type": "QuantitativeValue",
+      "value": 2,
+      "unitCode": "ANN"
+    }
+  },
+  "serviceType": "Lightning Network Node Management",
+  "areaServed": [
+    {
+      "@type": "Country",
+      "name": "France"
+    },
+    {
+      "@type": "Country", 
+      "name": "Belgique"
+    },
+    {
+      "@type": "Country",
+      "name": "Suisse"
+    }
+  ]
+};
+
+export const metadata: Metadata = {
+  title: 'DazBox | Solution Lightning Network Plug & Play',
+  description: 'DazBox simplifie le réseau Lightning avec une solution plug & play. Déployez votre nœud Lightning en 5 minutes, gagnez des sats et participez à l\'économie Bitcoin.',
+  keywords: [
+    'DazBox',
+    'Lightning Network',
+    'Bitcoin',
+    'nœud Lightning',
+    'plug and play',
+    'solution Bitcoin',
+    'paiement crypto',
+    'finance décentralisée',
+    'earning sats',
+    'routing fees'
+  ],
+  authors: [{ name: 'DazNode' }],
+  creator: 'DazNode',
+  publisher: 'DazNode',
+  robots: 'index, follow',
+  openGraph: {
+    type: 'website',
+    locale: 'fr_FR',
+    url: `${seoConfig.baseUrl}/dazbox`,
+    title: 'DazBox | Solution Lightning Network Plug & Play',
+    description: 'DazBox simplifie le réseau Lightning avec une solution plug & play. Déployez votre nœud Lightning en 5 minutes, gagnez des sats et participez à l\'économie Bitcoin.',
+    siteName: 'DazNode',
+    images: [
+      {
+        url: `${seoConfig.baseUrl}/assets/images/dazbox-og.png`,
+        width: 1200,
+        height: 630,
+        alt: 'DazBox - Solution Lightning Network Plug & Play'
+      }
+    ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'DazBox | Solution Lightning Network Plug & Play',
+    description: 'DazBox simplifie le réseau Lightning avec une solution plug & play. Déployez votre nœud Lightning en 5 minutes.',
+    images: [`${seoConfig.baseUrl}/assets/images/dazbox-og.png`],
+    creator: '@daznode'
+  },
+  alternates: {
+    canonical: `${seoConfig.baseUrl}/dazbox`,
+    languages: {
+      'fr': `${seoConfig.baseUrl}/fr/dazbox`,
+      'en': `${seoConfig.baseUrl}/en/dazbox`,
+      'x-default': `${seoConfig.baseUrl}/dazbox`
+    }
+  },
+  verification: {
+    google: 'your-google-site-verification'
   }
 };
 
 const DazBoxPage: React.FC = () => {
   return (
     <>
-      {/* JSON-LD Schema pour le SEO */}
+      {/* Structured data avancé */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(dazBoxStructuredData) }}
       />
       
       {/* Hero Section */}
@@ -87,80 +271,38 @@ const DazBoxPage: React.FC = () => {
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Testimonial 1 */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg">
+            <div className="bg-white p-6 rounded-xl shadow-lg">
               <div className="flex items-center mb-4">
-                <div className="flex text-yellow-400">
-                  {[...Array(5)].map((_: any, i: any) => (
-                    <svg key={i} className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
+                <div className="text-yellow-400 text-2xl">★★★★★</div>
+                <span className="ml-2 text-sm text-gray-600">Bitcoin Expert</span>
               </div>
-              <p className="text-gray-600 mb-4">
-                "Ma DazBox génère 150 Sats/mois en revenus passifs. L'installation a pris exactement 4 minutes. Incroyable !"
+              <p className="text-gray-700">
+                "DazBox simplifie vraiment l'accès au Lightning Network. Installation en 5 minutes et revenus dès le premier jour."
               </p>
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
-                  M
-                </div>
-                <div className="ml-3">
-                  <p className="font-semibold text-gray-900">Marc D.</p>
-                  <p className="text-sm text-gray-500">Entrepreneur</p>
-                </div>
-              </div>
             </div>
             
             {/* Testimonial 2 */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg">
+            <div className="bg-white p-6 rounded-xl shadow-lg">
               <div className="flex items-center mb-4">
-                <div className="flex text-yellow-400">
-                  {[...Array(5)].map((_: any, i: any) => (
-                    <svg key={i} className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
+                <div className="text-yellow-400 text-2xl">★★★★★</div>
+                <span className="ml-2 text-sm text-gray-600">Lightning Developer</span>
               </div>
-              <p className="text-gray-600 mb-4">
-                "Le support est fantastique. J'ai eu un problème à 2h du matin, résolu en 10 minutes par chat."
+              <p className="text-gray-700">
+                "Matériel de qualité, interface intuitive. Parfait pour débuter avec Lightning Network."
               </p>
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">
-                  S
-                </div>
-                <div className="ml-3">
-                  <p className="font-semibold text-gray-900">Sophie L.</p>
-                  <p className="text-sm text-gray-500">Développeuse</p>
-                </div>
-              </div>
             </div>
             
             {/* Testimonial 3 */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg">
+            <div className="bg-white p-6 rounded-xl shadow-lg">
               <div className="flex items-center mb-4">
-                <div className="flex text-yellow-400">
-                  {[...Array(5)].map((_: any, i: any) => (
-                    <svg key={i} className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
+                <div className="text-yellow-400 text-2xl">★★★★★</div>
+                <span className="ml-2 text-sm text-gray-600">Crypto Enthusiast</span>
               </div>
-              <p className="text-gray-600 mb-4">
-                "ROI atteint en 4 mois. Maintenant c'est du profit pur. Mes amis veulent tous une DazBox !"
+              <p className="text-gray-700">
+                "Support client exceptionnel et revenus passifs qui dépassent mes attentes. Je recommande !"
               </p>
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold">
-                  A
-                </div>
-                <div className="ml-3">
-                  <p className="font-semibold text-gray-900">Antoine M.</p>
-                  <p className="text-sm text-gray-500">Investisseur</p>
-                </div>
-              </div>
             </div>
           </div>
         </div>

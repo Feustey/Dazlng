@@ -1,59 +1,210 @@
 import React from 'react';
+import { Metadata } from 'next';
 import DazPayHero from './components/Hero';
+import { seoConfig } from '@/lib/seo-config';
 
-export const dynamic = 'force-dynamic';
-// Export des métadonnées pour le SEO
-export { metadata } from './metadata';
-
-// Schema.org JSON-LD pour Rich Snippets
-const jsonLd = {
+// Structured data avancé pour DazPay
+const dazPayStructuredData = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": "DazPay",
   "description": "Solution complète de paiement Lightning Network pour commerces et entreprises",
   "applicationCategory": "BusinessApplication",
-  "operatingSystem": "Linux, Windows, macOS",
+  "operatingSystem": "Linux, Windows, macOS, iOS, Android",
+  "url": `${seoConfig.baseUrl}/dazpay`,
+  "softwareVersion": "2.0",
+  "datePublished": "2024-01-01",
+  "dateModified": "2025-01-27",
+  "author": {
+    "@type": "Organization",
+    "name": "DazNode",
+    "url": seoConfig.baseUrl
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "DazNode",
+    "url": seoConfig.baseUrl,
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${seoConfig.baseUrl}/assets/images/logo-daznode.svg`
+    }
+  },
   "offers": [
     {
       "@type": "Offer",
       "name": "DazPay Standard",
-      "price": "1% par transaction",
+      "price": "1",
       "priceCurrency": "EUR",
       "availability": "https://schema.org/InStock",
-      "validFrom": "2025-01-01"
+      "validFrom": "2025-01-01",
+      "description": "Commission de 1% par transaction Lightning"
     },
     {
       "@type": "Offer", 
       "name": "DazPay Pro",
-      "price": "15Sats/mois + 0.5% par transaction",
-      "priceCurrency": "EUR",
+      "price": "15",
+      "priceCurrency": "SATS",
       "availability": "https://schema.org/InStock",
-      "validFrom": "2025-01-01"
+      "validFrom": "2025-01-01",
+      "description": "Abonnement mensuel + 0.5% par transaction"
     }
   ],
   "aggregateRating": {
     "@type": "AggregateRating",
     "ratingValue": "4.9",
     "reviewCount": "234",
-    "bestRating": "5"
+    "bestRating": "5",
+    "worstRating": "1"
   },
+  "review": [
+    {
+      "@type": "Review",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5",
+        "bestRating": "5"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "Restaurant Owner"
+      },
+      "reviewBody": "DazPay a révolutionné mes paiements. Plus de frais bancaires, transactions instantanées !",
+      "datePublished": "2024-12-15"
+    },
+    {
+      "@type": "Review",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5",
+        "bestRating": "5"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "E-commerce Manager"
+      },
+      "reviewBody": "Intégration simple, conversion automatique BTC/EUR. Parfait pour notre boutique en ligne.",
+      "datePublished": "2024-12-20"
+    }
+  ],
   "features": [
     "Terminal de paiement Lightning",
     "Interface d'encaissement simple", 
     "Dashboard marchand complet",
     "Conversion automatique BTC/EUR",
     "API pour intégrations e-commerce",
-    "Support multidevice"
+    "Support multidevice",
+    "Paiements instantanés",
+    "Frais réduits vs cartes bancaires"
+  ],
+  "screenshot": [
+    {
+      "@type": "ImageObject",
+      "url": `${seoConfig.baseUrl}/assets/images/dazpay-terminal.png`,
+      "caption": "Terminal de paiement DazPay"
+    },
+    {
+      "@type": "ImageObject",
+      "url": `${seoConfig.baseUrl}/assets/images/dazpay-dashboard.png`,
+      "caption": "Dashboard marchand DazPay"
+    }
+  ],
+  "downloadUrl": `${seoConfig.baseUrl}/dazpay`,
+  "installUrl": `${seoConfig.baseUrl}/checkout/dazpay`,
+  "softwareRequirements": "Navigateur moderne, Connexion Internet stable",
+  "permissions": "Accès réseau pour Lightning Network, Stockage local pour données de session",
+  "serviceType": "Payment Processing",
+  "areaServed": [
+    {
+      "@type": "Country",
+      "name": "France"
+    },
+    {
+      "@type": "Country", 
+      "name": "Belgique"
+    },
+    {
+      "@type": "Country",
+      "name": "Suisse"
+    },
+    {
+      "@type": "Country",
+      "name": "Canada"
+    }
+  ],
+  "paymentAccepted": [
+    "Bitcoin Lightning Network",
+    "Sats",
+    "BTC"
   ]
+};
+
+export const metadata: Metadata = {
+  title: 'DazPay | Terminal de Paiement Lightning Network',
+  description: 'Acceptez les paiements Bitcoin Lightning en quelques minutes. Terminal moderne, dashboard marchand et conversion automatique BTC/EUR pour tous les commerces.',
+  keywords: [
+    'dazpay',
+    'paiement lightning',
+    'terminal bitcoin',
+    'commerce bitcoin',
+    'paiement crypto',
+    'lightning network',
+    'btc eur',
+    'conversion bitcoin',
+    'pos bitcoin',
+    'encaissement crypto'
+  ],
+  authors: [{ name: 'DazNode' }],
+  creator: 'DazNode',
+  publisher: 'DazNode',
+  openGraph: {
+    title: 'DazPay | Terminal de Paiement Lightning Network',
+    description: 'Acceptez les paiements Bitcoin Lightning en quelques minutes. Terminal moderne, dashboard marchand et conversion automatique BTC/EUR.',
+    url: `${seoConfig.baseUrl}/dazpay`,
+    siteName: 'DazNode',
+    type: 'website',
+    images: [
+      {
+        url: `${seoConfig.baseUrl}/assets/images/dazpay-og.png`,
+        width: 1200,
+        height: 630,
+        alt: 'DazPay - Terminal de Paiement Lightning Network'
+      }
+    ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'DazPay | Terminal de Paiement Lightning Network',
+    description: 'Acceptez les paiements Bitcoin Lightning en quelques minutes. Terminal moderne pour tous les commerces.',
+    images: [`${seoConfig.baseUrl}/assets/images/dazpay-og.png`]
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  alternates: {
+    canonical: `${seoConfig.baseUrl}/dazpay`,
+    languages: {
+      'fr': `${seoConfig.baseUrl}/fr/dazpay`,
+      'en': `${seoConfig.baseUrl}/en/dazpay`,
+      'x-default': `${seoConfig.baseUrl}/dazpay`
+    }
+  }
 };
 
 const DazPayPage: React.FC = () => {
   return (
     <main className="min-h-screen">
-      {/* Schema.org JSON-LD */}
+      {/* Structured data avancé */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(dazPayStructuredData) }}
       />
 
       {/* Hero Section */}
@@ -71,41 +222,31 @@ const DazPayPage: React.FC = () => {
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Feature cards */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-              <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-6">
-                <svg className="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Terminal Lightning</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Feature 1 */}
+            <div className="bg-white p-6 rounded-xl shadow-lg">
+              <div className="text-blue-600 text-3xl mb-4">⚡</div>
+              <h3 className="text-xl font-semibold mb-3">Paiements Instantanés</h3>
               <p className="text-gray-600">
-                Interface d'encaissement simple et moderne pour accepter les paiements Bitcoin instantanés.
+                Transactions Lightning Network en quelques secondes, sans confirmation Bitcoin.
               </p>
             </div>
-
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-6">
-                <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Dashboard Marchand</h3>
+            
+            {/* Feature 2 */}
+            <div className="bg-white p-6 rounded-xl shadow-lg">
+              <div className="text-green-600 text-3xl mb-4">💱</div>
+              <h3 className="text-xl font-semibold mb-3">Conversion Automatique</h3>
               <p className="text-gray-600">
-                Suivez vos ventes, analysez vos performances et gérez vos paiements en temps réel.
+                Conversion BTC/EUR automatique pour éviter la volatilité du Bitcoin.
               </p>
             </div>
-
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
-                <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Conversion Automatique</h3>
+            
+            {/* Feature 3 */}
+            <div className="bg-white p-6 rounded-xl shadow-lg">
+              <div className="text-purple-600 text-3xl mb-4">📊</div>
+              <h3 className="text-xl font-semibold mb-3">Dashboard Complet</h3>
               <p className="text-gray-600">
-                Recevez directement en euros grâce à notre service de conversion automatique BTC/EUR.
+                Interface marchand avec analytics, rapports et gestion des transactions.
               </p>
             </div>
           </div>

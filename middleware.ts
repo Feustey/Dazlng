@@ -4,7 +4,7 @@ import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import createMiddleware from 'next-intl/middleware';
 import { match } from '@formatjs/intl-localematcher';
 import Negotiator from 'negotiator';
-import { locales, defaultLocale } from './i18n.config';
+import { locales, defaultLocale } from './i18n/settings';
 
 // Fonction pour détecter la langue du navigateur
 function getLocaleFromHeaders(headers: Headers): string {
@@ -23,7 +23,8 @@ const intlMiddleware = createMiddleware({
   locales: ['fr', 'en'],
   defaultLocale: 'fr',
   localePrefix: 'always',
-  localeDetection: true
+  localeDetection: true,
+  alternateLinks: true
 });
 
 // Mappings des redirections d'anciennes URLs
@@ -223,6 +224,18 @@ export async function middleware(request: NextRequest) {
     }
     
     return response;
+  }
+  
+  // Gestion des redirections SEO pour l'internationalisation
+  if (pathname === '/') {
+    // Détecter la langue préférée du navigateur
+    const acceptLanguage = request.headers.get('accept-language');
+    const preferredLocale = acceptLanguage?.includes('en') ? 'en' : 'fr';
+    
+    // Rediriger vers la version localisée
+    const url = request.nextUrl.clone();
+    url.pathname = `/${preferredLocale}`;
+    return NextResponse.redirect(url, 302);
   }
   
   // Appliquer le middleware d'internationalisation pour les pages
