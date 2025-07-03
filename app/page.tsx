@@ -197,21 +197,6 @@ export default function OptimizedHomePage() {
   useEffect(() => {
     // Marquer la page comme chargée
     setIsPageLoaded(true);
-
-    // Préchargement des images critiques optimisé
-    const preloadImages = [
-      '/assets/images/logo-daznode.svg',
-      '/assets/images/dazia-illustration.png'
-    ];
-    
-    preloadImages.forEach(src => {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'image';
-      link.href = src;
-      document.head.appendChild(link);
-    });
-
     // Défilement fluide pour les ancres optimisé
     const handleAnchorClicks = (e: Event) => {
       const target = e.target as HTMLAnchorElement;
@@ -231,7 +216,6 @@ export default function OptimizedHomePage() {
         }
       }
     };
-
     document.addEventListener('click', handleAnchorClicks);
     return () => document.removeEventListener('click', handleAnchorClicks);
   }, []);

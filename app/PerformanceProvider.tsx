@@ -17,62 +17,28 @@ export default function PerformanceProvider({ children }: PerformanceProviderPro
     const timer = setTimeout(() => {
       setIsInitialLoad(false);
     }, 500);
-
-    // Optimisations de performance
-    const optimizePerformance = () => {
-      // Préchargement des ressources critiques
-      const criticalResources = [
-        '/assets/images/logo-daznode.svg',
-        '/api/user',
-        '/api/network/stats'
-      ];
-
-      criticalResources.forEach(url => {
-        if (url.startsWith('/assets/')) {
-          const link = document.createElement('link');
-          link.rel = 'preload';
-          link.as = 'image';
-          link.href = url;
-          document.head.appendChild(link);
-        } else {
-          const link = document.createElement('link');
-          link.rel = 'preload';
-          link.as = 'fetch';
-          link.href = url;
-          document.head.appendChild(link);
-        }
+    // Optimisation des polices
+    if ('fonts' in document) {
+      document.fonts.ready.then(() => {
+        document.body.classList.add('fonts-loaded');
       });
-
-      // Optimisation des polices
-      if ('fonts' in document) {
-        document.fonts.ready.then(() => {
-          document.body.classList.add('fonts-loaded');
+    }
+    // Optimisation des images lazy loading
+    if ('loading' in HTMLImageElement.prototype) {
+      const images = document.querySelectorAll('img[loading="lazy"]');
+      const imageObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const img = entry.target as HTMLImageElement;
+            img.loading = 'eager';
+            imageObserver.unobserve(img);
+          }
         });
-      }
-
-      // Optimisation des images lazy loading
-      if ('loading' in HTMLImageElement.prototype) {
-        const images = document.querySelectorAll('img[loading="lazy"]');
-        const imageObserver = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              const img = entry.target as HTMLImageElement;
-              img.loading = 'eager';
-              imageObserver.unobserve(img);
-            }
-          });
-        });
-
-        images.forEach(img => imageObserver.observe(img));
-      }
-    };
-
-    // Exécuter les optimisations après un délai
-    const optimizationTimer = setTimeout(optimizePerformance, 1000);
-
+      });
+      images.forEach(img => imageObserver.observe(img));
+    }
     return () => {
       clearTimeout(timer);
-      clearTimeout(optimizationTimer);
     };
   }, []);
 
