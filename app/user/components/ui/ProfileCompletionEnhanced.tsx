@@ -338,3 +338,4 @@ export const ProfileCompletionEnhanced: React.FC<ProfileCompletionEnhancedProps>
     </div>
   );
 };
+export const dynamic = "force-dynamic";

@@ -32,3 +32,4 @@ export function OrderSummary({ data }: OrderSummaryProps) {
     </div>
   );
 }
+export const dynamic = "force-dynamic";

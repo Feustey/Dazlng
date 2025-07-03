@@ -33,3 +33,4 @@ export function PaymentForm({ onBack, onSuccess }: PaymentFormProps) {
     </form>
   );
 }
+export const dynamic = "force-dynamic";

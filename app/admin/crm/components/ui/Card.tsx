@@ -51,3 +51,4 @@ export const CardTitle: React.FC<CardTitleProps> = ({ children, className = '' }
     </h3>
   );
 };
+export const dynamic = "force-dynamic";

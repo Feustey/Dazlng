@@ -230,4 +230,4 @@ const DazBoxComparison: React.FC<DazBoxComparisonProps> = ({ userNodeStats, hasN
   );
 };
 
-export { DazBoxComparison }; 
+export { DazBoxComparison }; export const dynamic = "force-dynamic";

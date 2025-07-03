@@ -161,3 +161,4 @@ export const DaznoInsights: React.FC<DaznoInsightsProps> = ({
 const formatSats = (sats: number): string => {
   return new Intl.NumberFormat('fr-FR').format(sats);
 };
+export const dynamic = "force-dynamic";

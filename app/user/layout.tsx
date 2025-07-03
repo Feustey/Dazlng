@@ -237,4 +237,4 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
   );
 };
 
-export default UserLayout;
+export default UserLayout;export const dynamic = "force-dynamic";

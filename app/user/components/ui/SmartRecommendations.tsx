@@ -299,3 +299,4 @@ export const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
     </div>
   );
 }
+export const dynamic = "force-dynamic";

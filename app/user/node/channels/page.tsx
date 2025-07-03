@@ -400,4 +400,4 @@ const NodeChannelsPage: FC = () => {
   );
 };
 
-export default NodeChannelsPage;
+export default NodeChannelsPage;export const dynamic = "force-dynamic";

@@ -216,3 +216,4 @@ export const RecommendationFilters = ({ onFilterChange }: RecommendationFiltersP
     </div>
   );
 }
+export const dynamic = "force-dynamic";

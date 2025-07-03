@@ -140,3 +140,4 @@ export const templateResource = {
   icon: FileText,
   options: { label: 'Templates' }
 }
+export const dynamic = "force-dynamic";

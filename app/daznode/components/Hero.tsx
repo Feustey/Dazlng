@@ -251,4 +251,4 @@ const DazNodeHero: React.FC = () => {
   );
 };
 
-export default DazNodeHero; 
+export default DazNodeHero; export const dynamic = "force-dynamic";

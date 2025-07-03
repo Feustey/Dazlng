@@ -102,3 +102,5 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
     }, { status: 500 });
   }
 }
+
+export const dynamic = "force-dynamic";

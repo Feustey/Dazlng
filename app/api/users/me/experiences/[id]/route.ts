@@ -154,3 +154,5 @@ export async function DELETE(
     return NextResponse.json(handleApiError(error), { status: 500 });
   }
 }
+
+export const dynamic = "force-dynamic";

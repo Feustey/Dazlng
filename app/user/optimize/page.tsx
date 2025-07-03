@@ -11,4 +11,4 @@ const OptimizePage: FC = () => {
   );
 };
 
-export default OptimizePage;
+export default OptimizePage;export const dynamic = "force-dynamic";

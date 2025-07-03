@@ -128,4 +128,4 @@ const EnhancedRecommendations: React.FC<EnhancedRecommendationsProps> = ({
   );
 };
 
-export default EnhancedRecommendations;
+export default EnhancedRecommendations;export const dynamic = "force-dynamic";

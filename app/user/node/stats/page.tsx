@@ -42,4 +42,4 @@ const NodeStatsPage: FC = () => {
   );
 };
 
-export default NodeStatsPage;
+export default NodeStatsPage;export const dynamic = "force-dynamic";

@@ -25,3 +25,5 @@ export async function POST(request: NextRequest, context: { params: Promise<{ id
 );
   }
 }
+
+export const dynamic = "force-dynamic";

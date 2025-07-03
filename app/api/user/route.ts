@@ -42,3 +42,5 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
   return NextResponse.json({ nom, prenom, pubkey, compte_x, compte_nostr, node_id });
 }
+
+export const dynamic = "force-dynamic";

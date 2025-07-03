@@ -103,3 +103,4 @@ export function PerformanceProvider({ children }: PerformanceProviderProps) {
 
   return <>{children}</>;
 }
+export const dynamic = "force-dynamic";

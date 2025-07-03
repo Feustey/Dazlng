@@ -7,3 +7,4 @@ const UserRoot: FC = () => {
 };
 
 export default UserRoot;
+export const dynamic = "force-dynamic";

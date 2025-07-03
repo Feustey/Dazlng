@@ -48,3 +48,5 @@ export async function POST(request: Request): Promise<NextResponse> {
     )
   }
 }
+
+export const dynamic = "force-dynamic";

@@ -45,3 +45,4 @@ export const DaziaHeader = () => {
     </motion.div>
   );
 }
+export const dynamic = "force-dynamic";

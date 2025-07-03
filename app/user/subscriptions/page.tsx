@@ -951,3 +951,4 @@ const SubscriptionsPage: FC = () => {
 };
 
 export default SubscriptionsPage;
+export const dynamic = "force-dynamic";

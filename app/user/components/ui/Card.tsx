@@ -24,4 +24,4 @@ const UpgradePrompt: FC<UpgradePromptProps> = ({
   );
 };
 
-export default UpgradePrompt;
+export default UpgradePrompt;export const dynamic = "force-dynamic";

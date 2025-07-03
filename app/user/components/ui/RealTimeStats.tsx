@@ -262,4 +262,4 @@ const RealTimeStats: React.FC<RealTimeStatsProps> = ({ userStats }) => {
   );
 };
 
-export default RealTimeStats;
+export default RealTimeStats;export const dynamic = "force-dynamic";

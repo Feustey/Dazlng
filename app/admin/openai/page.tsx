@@ -519,3 +519,4 @@ export default function OpenAIPage(): JSX.Element | null {
     </div>
   );
 }
+export const dynamic = "force-dynamic";

@@ -12,3 +12,5 @@ export async function GET(): Promise<Response> {
     }
   });
 }
+
+export const dynamic = "force-dynamic";

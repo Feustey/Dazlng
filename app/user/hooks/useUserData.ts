@@ -389,3 +389,4 @@ export function useUserData(): UseUserDataReturn {
     upgradeToPremium
   };
 }
+export const dynamic = "force-dynamic";

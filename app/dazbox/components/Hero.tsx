@@ -154,4 +154,4 @@ const DazBoxHero: React.FC = () => (
     </section>
 );
 
-export default DazBoxHero; 
+export default DazBoxHero; export const dynamic = "force-dynamic";

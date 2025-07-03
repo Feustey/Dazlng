@@ -168,3 +168,5 @@ async function verifyLNURLSignature(message: string, signature: string, pubkey: 
     return false;
   }
 }
+
+export const dynamic = "force-dynamic";

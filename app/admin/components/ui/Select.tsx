@@ -53,3 +53,4 @@ export function SelectContent({ children }: SelectContentProps): JSX.Element {
 export function SelectItem({ value, children }: SelectItemProps): JSX.Element {
   return <option value={value}>{children}</option>;
 }
+export const dynamic = "force-dynamic";

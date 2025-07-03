@@ -365,3 +365,4 @@ export default function OrderDetailPage(): JSX.Element {
     </div>
   );
 }
+export const dynamic = "force-dynamic";

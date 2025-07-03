@@ -14,4 +14,4 @@ const UserHeader: FC = () => {
   );
 };
 
-export default UserHeader;
+export default UserHeader;export const dynamic = "force-dynamic";

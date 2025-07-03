@@ -208,4 +208,4 @@ const AdminAuthPage: FC<AdminAuthPageProps> = () => {
   );
 };
 
-export default AdminAuthPage; 
+export default AdminAuthPage; export const dynamic = "force-dynamic";

@@ -41,3 +41,4 @@ export default function DazpayCheckoutPage() {
     </div>
   );
 }
+export const dynamic = "force-dynamic";

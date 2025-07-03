@@ -405,4 +405,4 @@ const DazBoxPage: React.FC = () => {
   );
 };
 
-export default DazBoxPage;
+export default DazBoxPage;export const dynamic = "force-dynamic";

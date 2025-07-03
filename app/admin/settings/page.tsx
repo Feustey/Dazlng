@@ -6,3 +6,4 @@ export default function SettingsPage(): JSX.Element {
     </div>
   );
 }
+export const dynamic = "force-dynamic";

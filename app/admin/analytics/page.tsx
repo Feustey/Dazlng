@@ -366,3 +366,4 @@ const AnalyticsPage: React.FC = () => {
 };
 
 export default AnalyticsPage;
+export const dynamic = "force-dynamic";

@@ -26,4 +26,4 @@ const StatsWidget: FC<StatsWidgetProps> = ({ title, value, icon, trend }) => {
   );
 };
 
-export default StatsWidget;
+export default StatsWidget;export const dynamic = "force-dynamic";

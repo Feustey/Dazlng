@@ -677,3 +677,4 @@ export default function CommunicationsPage(): JSX.Element {
     </div>
   )
 }
+export const dynamic = "force-dynamic";

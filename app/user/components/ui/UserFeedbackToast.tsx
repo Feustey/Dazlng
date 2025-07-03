@@ -203,3 +203,4 @@ export const useUserFeedback = () => {
     ToastContainer
   };
 }
+export const dynamic = "force-dynamic";

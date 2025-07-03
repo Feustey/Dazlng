@@ -93,4 +93,6 @@ export default async function RootLayout({
       </body>
     </html>
   );
-} 
+}
+
+export const dynamic = "force-dynamic";

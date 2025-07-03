@@ -161,3 +161,5 @@ export async function POST(req: NextRequest): Promise<Response> {
     return handleApiError(error)
   }
 }
+
+export const dynamic = "force-dynamic";

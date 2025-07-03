@@ -10,3 +10,4 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     </AdminAuthGuard>
   );
 }
+export const dynamic = "force-dynamic";

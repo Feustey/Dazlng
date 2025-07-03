@@ -43,3 +43,5 @@ async function getMetricsHandler(req: NextRequest, _user: SupabaseUser): Promise
 }
 
 export const GET = withAdmin(getMetricsHandler);
+
+export const dynamic = "force-dynamic";

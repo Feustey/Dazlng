@@ -41,3 +41,5 @@ async function getHealthHandler(_req: NextRequest, _user: SupabaseUser): Promise
 }
 
 export const GET = withAdmin(getHealthHandler);
+
+export const dynamic = "force-dynamic";

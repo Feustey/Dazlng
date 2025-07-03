@@ -144,3 +144,4 @@ export const CRMUserHeader: React.FC<CRMUserHeaderProps> = ({
     </div>
   );
 }
+export const dynamic = "force-dynamic";

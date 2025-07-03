@@ -5,4 +5,4 @@ const AdminRoot: FC = () => {
   return <AdminAuthPage />;
 };
 
-export default AdminRoot; 
+export default AdminRoot; export const dynamic = "force-dynamic";

@@ -137,3 +137,5 @@ export async function GET(_req: NextRequest): Promise<Response> {
     }, { status: 500 });
   }
 }
+
+export const dynamic = "force-dynamic";

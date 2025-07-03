@@ -158,4 +158,4 @@ const DazBoxClientHero: React.FC = () => {
   );
 };
 
-export default DazBoxClientHero; 
+export default DazBoxClientHero; export const dynamic = "force-dynamic";

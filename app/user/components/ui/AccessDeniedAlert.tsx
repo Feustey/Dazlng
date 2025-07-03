@@ -24,3 +24,4 @@ export default function AccessDeniedAlert(): JSX.Element | null {
     </div>
   );
 }
+export const dynamic = "force-dynamic";

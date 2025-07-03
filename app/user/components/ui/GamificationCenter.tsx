@@ -227,3 +227,4 @@ export const GamificationCenter: React.FC<GamificationCenterProps> = ({
     </div>
   );
 }
+export const dynamic = "force-dynamic";

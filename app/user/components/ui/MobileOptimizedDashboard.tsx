@@ -306,4 +306,4 @@ const MobileOptimizedDashboard: React.FC<MobileOptimizedDashboardProps> = ({
   );
 };
 
-export default MobileOptimizedDashboard;
+export default MobileOptimizedDashboard;export const dynamic = "force-dynamic";

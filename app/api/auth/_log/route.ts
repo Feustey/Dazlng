@@ -11,3 +11,5 @@ export async function POST(req: NextRequest): Promise<Response> {
     return NextResponse.json({ success: true }) // Toujours retourner success pour les logs
   }
 }
+
+export const dynamic = "force-dynamic";

@@ -569,3 +569,4 @@ export default function CheckoutPage() {
     </Suspense>
   );
 }
+export const dynamic = "force-dynamic";

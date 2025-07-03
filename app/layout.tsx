@@ -184,4 +184,4 @@ export default function RootLayout({
       </body>
     </html>
   );
-} 
+} export const dynamic = "force-dynamic";

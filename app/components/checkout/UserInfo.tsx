@@ -52,3 +52,4 @@ export function UserInfoForm({ onSubmit }: UserInfoFormProps) {
     </form>
   );
 }
+export const dynamic = "force-dynamic";

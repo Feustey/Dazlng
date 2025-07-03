@@ -373,3 +373,4 @@ export function useGamificationSystem() {
     achievements: gamificationData?.achievements || []
   };
 }
+export const dynamic = "force-dynamic";

@@ -358,3 +358,4 @@ const UserDashboard: FC = () => {
 };
 
 export default UserDashboard;
+export const dynamic = "force-dynamic";

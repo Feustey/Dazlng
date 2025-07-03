@@ -83,3 +83,4 @@ export const useSupabase = (): SupabaseContext => {
   }
   return context
 }
+export const dynamic = "force-dynamic";

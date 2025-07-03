@@ -17,3 +17,4 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
     </div>
   );
 }
+export const dynamic = "force-dynamic";

@@ -176,4 +176,4 @@ const DazPayHero: React.FC = () => {
   );
 };
 
-export default DazPayHero; 
+export default DazPayHero; export const dynamic = "force-dynamic";

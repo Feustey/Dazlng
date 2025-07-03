@@ -177,3 +177,5 @@ function calculateProfileCompletion(profile: any): number {
 
   return Math.round((completedFields.length / fields.length) * 100);
 }
+
+export const dynamic = "force-dynamic";

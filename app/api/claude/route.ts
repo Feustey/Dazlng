@@ -27,3 +27,5 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: error.message || 'Erreur Claude' }, { status: 500 });
   }
 }
+
+export const dynamic = "force-dynamic";

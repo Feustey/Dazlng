@@ -160,4 +160,4 @@ const DazBoxFeatures: React.FC = () => {
   );
 };
 
-export default DazBoxFeatures; 
+export default DazBoxFeatures; export const dynamic = "force-dynamic";

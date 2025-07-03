@@ -8,3 +8,4 @@ export default function DazNodeCheckoutPage() {
     </div>
   );
 }
+export const dynamic = "force-dynamic";

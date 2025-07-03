@@ -62,4 +62,4 @@ const RecommendationCard: FC<RecommendationCardProps> = ({
   );
 };
 
-export default RecommendationCard;
+export default RecommendationCard;export const dynamic = "force-dynamic";

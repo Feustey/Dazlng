@@ -336,3 +336,5 @@ export const GET = withEnhancedAdminAuth(
   getExportJobsHandler,
   { resource: 'export', action: 'read' }
 );
+
+export const dynamic = "force-dynamic";

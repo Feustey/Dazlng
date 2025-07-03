@@ -31,3 +31,4 @@ export function StatsCard({ title, value, icon, link, className = "", trend }: S
 
   return content;
 }
+export const dynamic = "force-dynamic";

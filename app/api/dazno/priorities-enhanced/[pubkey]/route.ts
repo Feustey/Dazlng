@@ -521,3 +521,5 @@ async function logUserActivity(userId: string, pubkey: string, action: string, d
     console.warn('⚠️ Impossible de logger l\'activité utilisateur:', error)
   }
 }
+
+export const dynamic = "force-dynamic";

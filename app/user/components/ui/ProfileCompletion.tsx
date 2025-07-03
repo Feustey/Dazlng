@@ -134,4 +134,4 @@ const ProfileCompletion: React.FC<ProfileCompletionProps> = ({
   );
 }
 
-export default ProfileCompletion;
+export default ProfileCompletion;export const dynamic = "force-dynamic";

@@ -143,3 +143,4 @@ function LoginPageContent({ supabase }: { supabase: any }): JSX.Element {
     </div>
   );
 }
+export const dynamic = "force-dynamic";

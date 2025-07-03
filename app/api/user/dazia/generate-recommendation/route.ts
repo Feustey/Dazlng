@@ -194,3 +194,5 @@ function _generateSuccessCriteria(action: ActionData): string[] {
     'Retour positif des pairs connectés'
   ]
 }
+
+export const dynamic = "force-dynamic";

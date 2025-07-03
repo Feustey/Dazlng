@@ -93,3 +93,5 @@ export const POST = withEnhancedAdminAuth(
   createNotificationHandler,
   { resource: 'notifications', action: 'write' }
 );
+
+export const dynamic = "force-dynamic";

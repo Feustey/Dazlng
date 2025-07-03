@@ -308,4 +308,4 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data }) => {
     );
 };
 
-export { PerformanceMetrics }; 
+export { PerformanceMetrics }; export const dynamic = "force-dynamic";

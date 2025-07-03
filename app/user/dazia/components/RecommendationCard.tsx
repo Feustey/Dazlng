@@ -150,3 +150,4 @@ export const RecommendationCard = ({
     </motion.div>
   );
 }
+export const dynamic = "force-dynamic";

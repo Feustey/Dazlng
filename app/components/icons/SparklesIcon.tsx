@@ -22,3 +22,4 @@ export const SparklesIcon: React.FC<SparklesIconProps> = ({ className = '', 'ari
     </svg>
   );
 }
+export const dynamic = "force-dynamic";

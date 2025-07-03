@@ -16,4 +16,6 @@ export async function GET(req: NextRequest) {
 export async function OPTIONS() {
   const corsHeaders = CrossDomainSessionService.getCorsHeaders();
   return new NextResponse(null, { status: 200, headers: corsHeaders });
-} 
+}
+
+export const dynamic = "force-dynamic"; 

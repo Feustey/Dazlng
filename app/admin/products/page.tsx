@@ -6,3 +6,4 @@ export default function ProductsPage(): JSX.Element {
     </div>
   );
 }
+export const dynamic = "force-dynamic";

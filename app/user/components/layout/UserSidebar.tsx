@@ -19,4 +19,4 @@ const UserSidebar: React.FC = () => {
   );
 };
 
-export default UserSidebar;
+export default UserSidebar;export const dynamic = "force-dynamic";

@@ -83,3 +83,4 @@ export default function PerformanceProvider({ children }: PerformanceProviderPro
     </div>
   );
 }
+export const dynamic = "force-dynamic";

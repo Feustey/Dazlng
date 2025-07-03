@@ -136,4 +136,4 @@ const DazNodePage: React.FC = () => {
   );
 };
 
-export default DazNodePage; 
+export default DazNodePage; export const dynamic = "force-dynamic";

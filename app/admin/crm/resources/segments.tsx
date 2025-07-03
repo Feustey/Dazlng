@@ -111,3 +111,4 @@ export const segmentResource = {
   icon: Target,
   options: { label: 'Segments' }
 }
+export const dynamic = "force-dynamic";

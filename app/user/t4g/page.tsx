@@ -188,3 +188,4 @@ export default function T4GPage() {
     </div>
   );
 }
+export const dynamic = "force-dynamic";

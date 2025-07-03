@@ -371,4 +371,4 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
   );
 };
 
-export default DashboardCharts;
+export default DashboardCharts;export const dynamic = "force-dynamic";

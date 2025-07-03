@@ -68,3 +68,4 @@ export default function PaymentDetailPage(): JSX.Element {
     </div>
   );
 }
+export const dynamic = "force-dynamic";

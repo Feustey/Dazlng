@@ -144,3 +144,4 @@ export const campaignResource = {
   icon: Send,
   options: { label: 'Campagnes' }
 }
+export const dynamic = "force-dynamic";

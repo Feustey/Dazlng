@@ -246,3 +246,4 @@ export const ConversionCenterPremium: React.FC<ConversionCenterPremiumProps> = (
     </div>
   );
 }
+export const dynamic = "force-dynamic";

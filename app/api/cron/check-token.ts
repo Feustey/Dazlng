@@ -49,3 +49,4 @@ async function checkTokenExpiry(): Promise<void> {
     throw error;
   }
 }
+export const dynamic = "force-dynamic";

@@ -407,3 +407,4 @@ const SettingsPage: FC = () => {
 };
 
 export default SettingsPage;
+export const dynamic = "force-dynamic";

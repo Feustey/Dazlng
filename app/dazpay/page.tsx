@@ -412,4 +412,4 @@ const DazPayPage: React.FC = () => {
   );
 };
 
-export default DazPayPage; 
+export default DazPayPage; export const dynamic = "force-dynamic";

@@ -74,3 +74,4 @@ export function useWalletAuth(): WalletAuthState & {
     disconnect,
   }
 }
+export const dynamic = "force-dynamic";

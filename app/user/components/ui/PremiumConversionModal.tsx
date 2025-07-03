@@ -345,3 +345,4 @@ export const PremiumConversionModal: React.FC<PremiumConversionModalProps> = ({
     </div>
   );
 }
+export const dynamic = "force-dynamic";

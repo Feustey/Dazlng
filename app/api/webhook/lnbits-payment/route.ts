@@ -45,3 +45,5 @@ export async function OPTIONS(_req: Request): Promise<Response> {
     },
   });
 }
+
+export const dynamic = "force-dynamic";

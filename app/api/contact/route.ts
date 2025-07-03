@@ -318,3 +318,5 @@ function generateUserConfirmationEmail(data: Pick<ContactData, 'firstName' | 'su
     </html>
   `
 }
+
+export const dynamic = "force-dynamic";

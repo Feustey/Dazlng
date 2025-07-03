@@ -91,3 +91,4 @@ export default function NewHomePage() {
     </>
   );
 }
+export const dynamic = "force-dynamic";

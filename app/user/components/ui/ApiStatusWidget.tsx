@@ -108,3 +108,4 @@ const ApiStatusWidget: React.FC = ({ className = '' }: ApiStatusWidgetProps) => 
 };
 
 export default ApiStatusWidget;
+export const dynamic = "force-dynamic";

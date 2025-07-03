@@ -11,4 +11,4 @@ const NodeRecommendationsPage: FC = () => {
   );
 };
 
-export default NodeRecommendationsPage;
+export default NodeRecommendationsPage;export const dynamic = "force-dynamic";

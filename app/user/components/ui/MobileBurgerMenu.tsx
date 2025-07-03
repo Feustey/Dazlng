@@ -224,4 +224,4 @@ const MobileBurgerMenu: React.FC<MobileBurgerMenuProps> = ({
   );
 };
 
-export default MobileBurgerMenu;
+export default MobileBurgerMenu;export const dynamic = "force-dynamic";

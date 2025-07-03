@@ -7,3 +7,5 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
 export async function POST(_request: NextRequest): Promise<NextResponse> {
   return NextResponse.json({ message: 'Auth check endpoint placeholder' });
 }
+
+export const dynamic = "force-dynamic";

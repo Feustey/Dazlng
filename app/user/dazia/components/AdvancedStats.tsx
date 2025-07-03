@@ -233,3 +233,4 @@ export const AdvancedStats = ({ stats }: AdvancedStatsProps) => {
     </div>
   );
 }
+export const dynamic = "force-dynamic";

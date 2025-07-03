@@ -25,3 +25,4 @@ export function CheckoutProgress({ steps, currentStep }: CheckoutProgressProps) 
     </div>
   );
 }
+export const dynamic = "force-dynamic";

@@ -70,4 +70,4 @@ const NodeCard: FC<NodeCardProps> = ({ nodeData, showUpgradePrompt = false }) =>
   );
 };
 
-export default NodeCard;
+export default NodeCard;export const dynamic = "force-dynamic";

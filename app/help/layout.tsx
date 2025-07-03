@@ -13,3 +13,4 @@ export default function HelpLayout({
 }) {
   return children;
 }
+export const dynamic = "force-dynamic";

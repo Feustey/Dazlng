@@ -40,3 +40,5 @@ export async function GET(req: NextRequest): Promise<Response> {
     pubkey: challengeData.pubkey 
   });
 }
+
+export const dynamic = "force-dynamic";

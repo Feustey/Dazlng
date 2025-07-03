@@ -80,3 +80,5 @@ export async function POST(req: NextRequest): Promise<Response> {
     }
   });
 }
+
+export const dynamic = "force-dynamic";

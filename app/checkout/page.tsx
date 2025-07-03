@@ -105,3 +105,4 @@ export default function DazBoxCheckout() {
     </div>
   );
 }
+export const dynamic = "force-dynamic";

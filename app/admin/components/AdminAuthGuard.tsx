@@ -132,4 +132,4 @@ const AdminAuthGuard: FC<AdminAuthGuardProps> = ({ children }) => {
   return <>{children}</>;
 };
 
-export default AdminAuthGuard; 
+export default AdminAuthGuard; export const dynamic = "force-dynamic";

@@ -175,3 +175,4 @@ export const PerformanceMetrics = ({ metrics }: PerformanceMetricsProps) => {
     </div>
   );
 }
+export const dynamic = "force-dynamic";

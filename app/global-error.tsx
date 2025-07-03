@@ -22,3 +22,4 @@ export default function GlobalError({ error }: { error: Error & { digest?: strin
     </html>
   );
 }
+export const dynamic = "force-dynamic";

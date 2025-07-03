@@ -21,3 +21,5 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
   return NextResponse.json({ success: true });
 }
+
+export const dynamic = "force-dynamic";

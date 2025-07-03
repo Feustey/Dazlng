@@ -25,3 +25,5 @@ export async function POST(req: NextRequest): Promise<Response> {
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }
+
+export const dynamic = "force-dynamic";

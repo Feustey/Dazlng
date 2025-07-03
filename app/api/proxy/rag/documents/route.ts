@@ -94,3 +94,5 @@ export async function GET(req: NextRequest): Promise<Response> {
     }, { status: 500 })
   }
 }
+
+export const dynamic = "force-dynamic";

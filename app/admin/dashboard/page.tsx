@@ -466,3 +466,4 @@ export default function DashboardPage(): JSX.Element {
     </div>
   );
 }
+export const dynamic = "force-dynamic";

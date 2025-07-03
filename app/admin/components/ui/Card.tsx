@@ -18,3 +18,4 @@ export function Card({ title, children, className = "" }: CardProps): JSX.Elemen
     </div>
   );
 }
+export const dynamic = "force-dynamic";

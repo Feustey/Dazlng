@@ -281,3 +281,4 @@ export const SmartConversionCenter: React.FC<SmartConversionCenterProps> = ({
     </div>
   );
 }
+export const dynamic = "force-dynamic";

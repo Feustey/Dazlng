@@ -53,3 +53,5 @@ export async function GET(): Promise<NextResponse> {
     ]
   });
 }
+
+export const dynamic = "force-dynamic";

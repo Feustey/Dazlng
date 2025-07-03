@@ -142,3 +142,5 @@ export async function PUT(req: NextRequest): Promise<NextResponse<ApiResponse>> 
     }, { status: 500 });
   }
 }
+
+export const dynamic = "force-dynamic";

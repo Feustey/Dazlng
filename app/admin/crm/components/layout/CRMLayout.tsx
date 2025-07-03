@@ -39,3 +39,4 @@ export const CRMLayout: React.FC<any> = (props: any) => (
     }}
   />
 );
+export const dynamic = "force-dynamic";

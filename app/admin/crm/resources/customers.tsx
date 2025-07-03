@@ -122,3 +122,4 @@ export const customerResource = {
   icon: Users,
   options: { label: 'Clients' }
 }
+export const dynamic = "force-dynamic";

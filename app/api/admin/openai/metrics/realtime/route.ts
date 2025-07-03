@@ -41,3 +41,5 @@ async function getRealtimeMetricsHandler(_req: NextRequest, _user: SupabaseUser)
 }
 
 export const GET = withAdmin(getRealtimeMetricsHandler);
+
+export const dynamic = "force-dynamic";

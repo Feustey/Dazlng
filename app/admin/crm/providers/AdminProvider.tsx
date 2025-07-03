@@ -292,3 +292,4 @@ const CRMAdminProvider: React.FC<CRMAdminProviderProps> = ({ children: _children
 };
 
 export { CRMAdminProvider };
+export const dynamic = "force-dynamic";

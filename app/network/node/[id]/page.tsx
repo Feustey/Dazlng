@@ -28,3 +28,4 @@ export default async function Page(): Promise<JSX.Element> {
     notFound();
   }
 }
+export const dynamic = "force-dynamic";

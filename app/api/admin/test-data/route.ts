@@ -179,3 +179,5 @@ export async function GET(req: NextRequest): Promise<Response> {
     note: "Les données existantes seront mises à jour si elles existent déjà"
   });
 }
+
+export const dynamic = "force-dynamic";

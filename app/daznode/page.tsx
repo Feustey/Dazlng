@@ -186,3 +186,4 @@ const DazNodePageWrapper: React.FC = () => {
 };
 
 export default DazNodePageWrapper;
+export const dynamic = "force-dynamic";

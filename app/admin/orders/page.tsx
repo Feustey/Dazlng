@@ -91,3 +91,4 @@ export default function OrdersPage(): JSX.Element {
     </div>
   );
 }
+export const dynamic = "force-dynamic";

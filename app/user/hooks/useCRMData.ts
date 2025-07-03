@@ -260,3 +260,4 @@ export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
     recommendations: crmData?.recommendations || []
   };
 }
+export const dynamic = "force-dynamic";

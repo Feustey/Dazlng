@@ -264,4 +264,4 @@ const DazBoxPricing: React.FC = () => {
   );
 };
 
-export default DazBoxPricing; 
+export default DazBoxPricing; export const dynamic = "force-dynamic";

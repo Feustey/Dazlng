@@ -55,3 +55,4 @@ export default function Header(): JSX.Element {
     </header>
   );
 }
+export const dynamic = "force-dynamic";

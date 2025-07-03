@@ -226,3 +226,4 @@ export const CRMDashboard: React.FC = () => {
     </div>
   );
 }
+export const dynamic = "force-dynamic";

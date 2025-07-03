@@ -106,3 +106,4 @@ export function useAuth(): UseAuthReturn {
     getAccessToken
   };
 }
+export const dynamic = "force-dynamic";

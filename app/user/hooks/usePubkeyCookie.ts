@@ -69,3 +69,4 @@ export function usePubkeyCookie(): UsePubkeyCookieReturn {
     isLoaded
   };
 }
+export const dynamic = "force-dynamic";
