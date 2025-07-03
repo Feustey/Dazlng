@@ -1556,3 +1556,4 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
 };
 
 export default NodeManagement;
+export const dynamic = "force-dynamic";

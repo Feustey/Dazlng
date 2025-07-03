@@ -425,4 +425,4 @@ const RAGInsightsPage: React.FC = () => {
   );
 };
 
-export default RAGInsightsPage; 
+export default RAGInsightsPage; export const dynamic = "force-dynamic";

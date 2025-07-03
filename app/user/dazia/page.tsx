@@ -648,4 +648,4 @@ const DaziaPage: FC = () => {
   );
 };
 
-export default DaziaPage; 
+export default DaziaPage; export const dynamic = "force-dynamic";
