@@ -19,12 +19,27 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }): J
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const [mounted, setMounted] = useState(false)
   const router = useRouter()
   
   // Utilisation correcte du client navigateur
-  const supabase = useMemo(() => getSupabaseBrowserClient(), [])
+  const supabase = useMemo(() => {
+    try {
+      return getSupabaseBrowserClient()
+    } catch (error) {
+      console.error('Erreur création client Supabase:', error)
+      return null
+    }
+  }, [])
+
+  // Gestion du montage côté client
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
+    if (!supabase || !mounted) return
+
     const getSession = async (): Promise<void> => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession()
@@ -63,10 +78,17 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }): J
     )
 
     return () => subscription.unsubscribe()
-  }, [supabase, router]);
+  }, [supabase, router, mounted]);
 
   const signOut = async (): Promise<void> => {
-    await supabase.auth.signOut()
+    if (supabase) {
+      await supabase.auth.signOut()
+    }
+  }
+
+  // Éviter l'hydratation si pas encore monté
+  if (!mounted) {
+    return <div className="min-h-screen bg-gray-50" />
   }
 
   return (
@@ -83,4 +105,5 @@ export const useSupabase = (): SupabaseContext => {
   }
   return context
 }
+
 export const dynamic = "force-dynamic";

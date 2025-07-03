@@ -6,20 +6,22 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
 
-// Vérification des variables d'environnement requises
-if (!supabaseUrl) {
-  throw new Error('NEXT_PUBLIC_SUPABASE_URL est manquante dans les variables d\'environnement');
-}
-
-if (!supabaseAnonKey) {
-  throw new Error('NEXT_PUBLIC_SUPABASE_ANON_KEY est manquante dans les variables d\'environnement');
-}
-
 /**
  * Crée un client Supabase pour le CONTEXTE NAVIGATEUR (Client-Side Components).
  * La librairie gère le singleton en interne.
  */
 export function getSupabaseBrowserClient() {
+  // Vérification des variables d'environnement avec gestion d'erreur
+  if (!supabaseUrl) {
+    console.error('NEXT_PUBLIC_SUPABASE_URL est manquante dans les variables d\'environnement');
+    throw new Error('Configuration Supabase manquante');
+  }
+
+  if (!supabaseAnonKey) {
+    console.error('NEXT_PUBLIC_SUPABASE_ANON_KEY est manquante dans les variables d\'environnement');
+    throw new Error('Configuration Supabase manquante');
+  }
+
   return createBrowserClient(supabaseUrl, supabaseAnonKey);
 }
 
@@ -28,6 +30,10 @@ export function getSupabaseBrowserClient() {
  * Utilise la clé anonyme pour les opérations publiques côté serveur.
  */
 export function getSupabaseServerPublicClient(): SupabaseClient {
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error('Configuration Supabase manquante côté serveur');
+  }
+
   return createClient(supabaseUrl, supabaseAnonKey, {
     auth: {
       autoRefreshToken: false,
@@ -43,6 +49,11 @@ export function getSupabaseServerPublicClient(): SupabaseClient {
  */
 export function getSupabaseAdminClient(): SupabaseClient {
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
+  
+  if (!supabaseUrl) {
+    throw new Error('NEXT_PUBLIC_SUPABASE_URL est manquante côté serveur');
+  }
+  
   if (!supabaseServiceKey) {
     throw new Error('La clé de service Supabase (SUPABASE_SERVICE_ROLE_KEY) est manquante côté serveur.');
   }
