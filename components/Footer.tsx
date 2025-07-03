@@ -121,17 +121,27 @@ const Footer: React.FC = () => {
           </div>
           <div className="col-span-1">
             <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-white/20 h-full">
-              <h4 className="font-bold text-lg mb-4 text-blue-200">Entreprise</h4>
+              <h4 className="font-bold text-lg mb-4 text-blue-200">Transparence</h4>
               <ul className="space-y-3">
                 <li>
                   <Link href="/about" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
-                    <span className="mr-2">→</span>À propos de nous
+                    <span className="mr-2">→</span>Notre équipe
                   </Link>
                 </li>
                 <li>
-                  <Link href="/contact" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
-                    <span className="mr-2">→</span>Contact
+                  <Link href="/docs" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
+                    <span className="mr-2">→</span>Documentation technique
                   </Link>
+                </li>
+                <li>
+                  <Link href="/docs/security/audit-2024" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
+                    <span className="mr-2">→</span>Audits de sécurité
+                  </Link>
+                </li>
+                <li>
+                  <a href="https://github.com/daznode" target="_blank" rel="noopener noreferrer" className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
+                    <span className="mr-2">→</span>Code source
+                  </a>
                 </li>
               </ul>
             </div>
@@ -143,6 +153,11 @@ const Footer: React.FC = () => {
                 <li>
                   <Link href="/help" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
                     <span className="mr-2">→</span>Support
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/contact" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
+                    <span className="mr-2">→</span>Contact
                   </Link>
                 </li>
                 <li>
