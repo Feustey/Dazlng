@@ -23,7 +23,6 @@ export default function PerformanceProvider({ children }: PerformanceProviderPro
       // Préchargement des ressources critiques
       const criticalResources = [
         '/assets/images/logo-daznode.svg',
-        '/assets/images/dazia-illustration.png',
         '/api/user',
         '/api/network/stats'
       ];

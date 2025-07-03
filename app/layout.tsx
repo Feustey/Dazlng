@@ -108,12 +108,6 @@ export default function RootLayout({
           as="image" 
           type="image/svg+xml"
         />
-        <link 
-          rel="preload" 
-          href="/assets/images/hero-bg.jpg" 
-          as="image" 
-          type="image/jpeg"
-        />
         
         {/* DNS prefetch pour les domaines externes */}
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
@@ -174,12 +168,15 @@ export default function RootLayout({
           {`
             // Import web-vitals library dynamically
             if (typeof window !== 'undefined') {
-              import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+              import('web-vitals').then((webVitals) => {
+                const { getCLS, getFID, getFCP, getLCP, getTTFB } = webVitals;
                 getCLS(console.log);
                 getFID(console.log);
                 getFCP(console.log);
                 getLCP(console.log);
                 getTTFB(console.log);
+              }).catch(error => {
+                console.warn('Web Vitals failed to load:', error);
               });
             }
           `}

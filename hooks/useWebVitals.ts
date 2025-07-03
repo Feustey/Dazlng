@@ -13,7 +13,9 @@ export function useWebVitals(): void {
     if (typeof window === 'undefined') return;
 
     // Import web-vitals de manière dynamique
-    import('web-vitals').then(({ onCLS, onINP, onFCP, onLCP, onTTFB }) => {
+    import('web-vitals').then((webVitals) => {
+      const { onCLS, onINP, onFCP, onLCP, onTTFB } = webVitals;
+      
       const reportWebVital = (metric: WebVitalsMetric): void => {
         // Log en développement
         if (process.env.NODE_ENV === 'development') {
@@ -36,6 +38,8 @@ export function useWebVitals(): void {
       onFCP(reportWebVital);
       onLCP(reportWebVital);
       onTTFB(reportWebVital);
+    }).catch(error => {
+      console.warn('Web Vitals failed to load:', error);
     });
   }, []);
 } 
