@@ -163,8 +163,9 @@ export async function getUserData(userId: string): Promise<UserWithOrders> {
 
 export function verifyToken(token: string): { id: string; email: string } {
   try {
-    return jwt.verify(token, JWT_SECRET) as { id: string; email: string };
-  } catch {
+    const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email: string };
+    return decoded;
+  } catch (error) {
     throw new Error('Token invalide');
   }
 }
@@ -175,22 +176,7 @@ export interface AuthToken {
   expires_at: string;
 }
 
-export const getAuthToken = async (): Promise<AuthToken> => {
-  const response = await fetch('https://api.mcp.dazlng.com/auth/token', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      api_key: process.env.MCP_API_KEY ?? "",
-      tenant_id: process.env.MCP_TENANT_ID ?? ""
-    })
-  });
-  if (!response.ok) {
-    throw new Error("Échec de l'authentification");
-  }
-  return response.json();
-};
+
 
 /**
  * Récupère l'utilisateur authentifié à partir d'une requête API
@@ -231,10 +217,8 @@ export async function getUserFromRequest(req: NextRequest): Promise<AuthUser | n
  */
 export async function getUserFromSession(): Promise<AuthUser | null> {
   try {
-    const cookieStore = await cookies();
-    const supabaseServer = createServerComponentClient({ 
-      cookies: () => cookieStore 
-    } as any);
+    // Utiliser le client serveur public sans cookies
+    const supabaseServer = getSupabaseServerPublicClient();
     
     const { data: { session }, error } = await supabaseServer.auth.getSession();
     
@@ -334,13 +318,13 @@ export async function getCurrentUser(req: NextRequest): Promise<User | null> {
     const token = req.headers.get('authorization')?.replace('Bearer ', '');
     if (!token) return null;
 
-    const { userId } = verifyToken(token);
+    const { id } = verifyToken(token);
     const supabase = getSupabaseAdminClient();
     
     const { data: user, error } = await supabase
       .from('users')
       .select('*')
-      .eq('id', userId)
+      .eq('id', id)
       .single();
 
     if (error || !user) return null;

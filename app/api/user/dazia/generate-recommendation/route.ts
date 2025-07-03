@@ -96,12 +96,8 @@ export async function POST(_request: NextRequest): Promise<Response> {
     }
 
     const daznoApi = createDaznoApiClient();
-    await daznoApi.initialize();
 
-    const recommendations = await daznoApi.getPriorityActions(pubkey, {
-      context: 'intermediate',
-      goals: ['increase_revenue', 'improve_connectivity']
-    });
+    const recommendations = await daznoApi.getRecommendations(pubkey);
 
     return NextResponse.json({ success: true, data: recommendations });
 

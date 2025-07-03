@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { LightningPayment } from '@/components/shared/ui/LightningPayment';
+import LightningPayment from '@/components/shared/ui/LightningPayment';
 import { useToast } from '@/hooks/useToast';
 
 interface Plan {
@@ -110,13 +110,7 @@ export const LightningCheckout: React.FC<LightningCheckoutProps> = ({
           <LightningPayment
             amount={Math.round(amount * 1.01)} // Include commission
             description={`${plan.name} - DazNode`}
-            metadata={{
-              plan: plan.name,
-              amount: amount,
-              commission: Math.round(amount * 0.01),
-              total: Math.round(amount * 1.01)
-            }}
-            onPaid={handlePaymentSuccess}
+            onSuccess={handlePaymentSuccess}
             onError={handlePaymentError}
             onExpired={handlePaymentExpired}
           />

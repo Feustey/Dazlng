@@ -28,7 +28,7 @@ declare global {
   }
 }
 
-interface TrackingHook {
+export interface TrackingHook {
   trackStep: (stepName: string, action: string, options?: {
     location?: string;
     metadata?: Record<string, any>;
@@ -40,7 +40,9 @@ interface TrackingHook {
   trackScrollDepth: (depth: number, location: string) => void;
   trackDemoInteraction: (action: 'start' | 'complete' | 'skip', metadata?: Record<string, any>) => void;
   trackProductInterest: (product: 'dazbox' | 'daznode' | 'dazpay', action: string, metadata?: Record<string, any>) => void;
-  getLocalAnalytics: () => TrackingEvent[];
+  trackEvent: (eventName: string, properties?: Record<string, any>) => void;
+  trackConversion: (conversionType: string, value?: number) => void;
+  getLocalAnalytics: () => any;
   getFunnelMetrics: () => any;
   getSessionId: () => string;
 }
@@ -199,6 +201,16 @@ export const useConversionTracking = (): TrackingHook => {
     };
   }, [getLocalAnalytics, getSessionId]);
 
+  const trackEvent = useCallback((eventName: string, properties?: Record<string, any>) => {
+    console.log('📊 Tracking event:', eventName, properties);
+    // Implémentation de tracking
+  }, []);
+
+  const trackConversion = useCallback((conversionType: string, value?: number) => {
+    console.log('📊 Conversion:', conversionType, value);
+    // Implémentation de tracking
+  }, []);
+
   return {
     trackStep,
     trackCTAClick,
@@ -207,6 +219,8 @@ export const useConversionTracking = (): TrackingHook => {
     trackScrollDepth,
     trackDemoInteraction,
     trackProductInterest,
+    trackEvent,
+    trackConversion,
     getLocalAnalytics,
     getFunnelMetrics,
     getSessionId

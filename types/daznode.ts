@@ -89,6 +89,16 @@ export const DazNodePerformanceSchema = z.object({
   }))
 });
 
+// Schéma Zod pour le contenu d'une recommandation DazNode
+export const DazNodeRecommendationContentSchema = z.object({
+  title: z.string().min(1),
+  description: z.string().min(1),
+  priority: z.enum(['high', 'medium', 'low']),
+  impact: z.string().min(1),
+  actions: z.array(z.string().min(1)),
+  metrics: z.record(z.number())
+});
+
 // Types dérivés des schémas
 export type DazNodeSubscriptionInput = z.infer<typeof DazNodeSubscriptionSchema>;
 export type DazNodePerformanceInput = z.infer<typeof DazNodePerformanceSchema>; 

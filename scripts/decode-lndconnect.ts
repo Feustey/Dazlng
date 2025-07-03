@@ -127,9 +127,8 @@ async function testWithDecodedInfo() {
     if (health.isOnline) {
       console.log('🎉 CONNEXION RÉUSSIE !');
       console.log('📊 Informations du nœud:');
-      console.log(`   - Public Key: ${health.walletInfo?.publicKey?.substring(0, 20)}...`);
-      console.log(`   - Alias: ${health.walletInfo?.alias}`);
-      console.log(`   - Block Height: ${health.walletInfo?.blockHeight}`);
+      console.log(`   - Provider: ${health.provider}`);
+      console.log(`   - Status: En ligne`);
       
       // Test génération facture
       console.log('\n📄 Test génération facture...');

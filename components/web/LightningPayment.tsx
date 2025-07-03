@@ -61,7 +61,7 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
       try {
         const invoiceStatus = await checkPayment(paymentHash);
         
-        if (invoiceStatus === 'settled') {
+        if ((invoiceStatus as unknown as string) === 'settled' || (invoiceStatus as unknown as string) === 'paid') {
           setStatus('paid');
           toast({
             title: 'Succès',
@@ -70,7 +70,7 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
           });
           onSuccess?.();
           clearInterval(checkInterval);
-        } else if (invoiceStatus === 'expired') {
+        } else if ((invoiceStatus as unknown as string) === 'expired') {
           setStatus('error');
           toast({
             title: 'Erreur',

@@ -217,14 +217,11 @@ export default function MCPAnalysisPage() {
 
           {/* Main Content */}
           <div className="lg:col-span-2">
-            <NodeAnalysis 
-              pubkey={validatedPubkey}
-              onAnalysisComplete={(result: any) => {
-                console.log('Analyse terminée:', result);
-              }}
-              userContext="Je veux optimiser les performances de mon nœud Lightning Network"
-              userGoals={['increase_revenue', 'improve_centrality', 'optimize_liquidity']}
-            />
+            {validatedPubkey && (
+              <NodeAnalysis 
+                pubkey={validatedPubkey}
+              />
+            )}
           </div>
         </div>
       </div>

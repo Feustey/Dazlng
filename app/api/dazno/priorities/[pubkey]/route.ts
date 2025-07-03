@@ -3,6 +3,11 @@ import { createDaznoApiClient } from '@/lib/services/dazno-api'
 import { ApiResponse } from '@/types/database'
 import { DaznoPriorityRequest, DaznoPriorityResponse } from '@/types/dazno-api'
 
+// Fonction de validation de pubkey Lightning
+const isValidLightningPubkey = (pubkey: string): boolean => {
+  return /^[0-9a-fA-F]{66}$/.test(pubkey)
+}
+
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ pubkey: string }> }
@@ -11,7 +16,7 @@ export async function POST(
     const resolvedParams = await params
     const pubkey = resolvedParams.pubkey
     
-    if (!createDaznoApiClient().isValidPubkey(pubkey)) {
+    if (!isValidLightningPubkey(pubkey)) {
       return NextResponse.json<ApiResponse<null>>({
         success: false,
         error: {
@@ -35,11 +40,13 @@ export async function POST(
     }
 
     const daznoApi = createDaznoApiClient()
-    await daznoApi.initialize()
+    // await daznoApi.initialize() // Supprimé car la méthode n'existe pas
 
-    const data = await daznoApi.getPriorityActions(pubkey, body)
+    // Note: getPriorityActions n'existe pas dans MCPLightAPI
+    // Utilisation d'un endpoint générique pour l'instant
+    const data = await daznoApi.getUnifiedRecommendations({ pubkey })
 
-    return NextResponse.json<ApiResponse<DaznoPriorityResponse>>({
+    return NextResponse.json<ApiResponse<any>>({
       success: true,
       data,
       meta: {

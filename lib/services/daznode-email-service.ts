@@ -22,7 +22,7 @@ export class DazNodeEmailService {
           <li>Plan : ${plan_type === 'yearly' ? 'Annuel' : 'Mensuel'}</li>
           <li>Montant : ${amount} sats</li>
           <li>Début : ${new Date(start_date).toLocaleDateString()}</li>
-          <li>Fin : ${new Date(end_date).toLocaleDateString()}</li>
+          <li>Fin : ${end_date ? new Date(end_date).toLocaleDateString() : 'Non définie'}</li>
         </ul>
 
         <p>Nos experts vont analyser votre nœud et vous enverront vos premières recommandations personnalisées dans les prochaines 24h.</p>

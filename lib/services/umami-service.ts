@@ -127,14 +127,14 @@ class UmamiService {
    * Vérifier si Umami est disponible
    */
   isAvailable(): boolean {
-    return this.isEnabled;
+    return this.isEnabled ?? false;
   }
 
   /**
    * Obtenir l'ID du site
    */
   getWebsiteId(): string {
-    return this.websiteId;
+    return this.websiteId ?? '';
   }
 }
 

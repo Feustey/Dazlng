@@ -25,5 +25,4 @@ export function createTestClient() {
   }
 }
 
-export { TEST_EMAIL, TEST_NAME, TEST_PUBKEY };
-export type { TestResult }; 
+export { TEST_EMAIL, TEST_NAME, TEST_PUBKEY }; 

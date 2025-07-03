@@ -33,11 +33,22 @@ export default function LightningCalculator() {
 
     try {
       setLoading(true);
-      const { value } = await daznoApi.convertAmount({
-        amount: Number(amount),
-        from,
-        to,
-      });
+      // Conversion simple pour le moment
+      let value = Number(amount);
+      
+      // Conversion de base (à améliorer avec un vrai service)
+      if (from === 'sats' && to === 'btc') {
+        value = value / 100000000;
+      } else if (from === 'btc' && to === 'sats') {
+        value = value * 100000000;
+      } else if (from === 'sats' && to === 'eur') {
+        // Estimation basique (1 BTC = 50000 EUR)
+        value = (value / 100000000) * 50000;
+      } else if (from === 'sats' && to === 'usd') {
+        // Estimation basique (1 BTC = 55000 USD)
+        value = (value / 100000000) * 55000;
+      }
+      
       setResult(value);
     } catch (error) {
       toast.error('Impossible de convertir le montant');

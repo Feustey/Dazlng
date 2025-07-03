@@ -10,22 +10,22 @@ const NewHero: React.FC = () => {
   const { trackScroll } = useScrollTracking();
 
   useEffect(() => {
-    trackEvent('hero_view', 'Hero', 'Page viewed');
-    trackScroll();
-  }, [trackEvent, trackScroll]);
+    trackEvent('hero_view', { location: 'Hero', action: 'Page viewed' });
+    // trackScroll est automatique via le hook useScrollTracking
+  }, [trackEvent]);
 
   const handleStartFree = () => {
-    trackEvent('cta_click', 'Hero', 'Start free clicked');
+    trackEvent('cta_click', { location: 'Hero', action: 'Start free clicked' });
     router.push('/register');
   };
 
   const handleViewDemo = () => {
-    trackEvent('demo_click', 'Hero', 'View demo clicked');
+    trackEvent('demo_click', { location: 'Hero', action: 'View demo clicked' });
     router.push('/demo');
   };
 
   const handleScrollToDemo = () => {
-    trackEvent('scroll_click', 'Hero', 'Scroll to demo clicked');
+    trackEvent('scroll_click', { location: 'Hero', action: 'Scroll to demo clicked' });
     const demoSection = document.getElementById('demo-section');
     if (demoSection) {
       demoSection.scrollIntoView({ behavior: 'smooth' });

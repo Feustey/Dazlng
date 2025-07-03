@@ -75,7 +75,6 @@ class InvoiceFallbackTester {
         const params: CreateInvoiceParams = {
           amount: 1000,
           description: 'Test facture fallback',
-          expiry: 3600,
           metadata: { test: true }
         };
 
@@ -108,8 +107,7 @@ class InvoiceFallbackTester {
         // Génération d'une facture d'abord
         const params: CreateInvoiceParams = {
           amount: 1000,
-          description: 'Test statut fallback',
-          expiry: 3600
+          description: 'Test statut fallback'
         };
 
         const invoice = await service.generateInvoice(params);
@@ -168,8 +166,7 @@ class InvoiceFallbackTester {
         
         const params: CreateInvoiceParams = {
           amount: 500,
-          description: 'Test mock service',
-          expiry: 1800
+          description: 'Test mock service'
         };
 
         const invoice = await service.generateInvoice(params);
@@ -235,8 +232,7 @@ class InvoiceFallbackTester {
         
         const params: CreateInvoiceParams = {
           amount: 2000,
-          description: 'Test watch invoice',
-          expiry: 3600
+          description: 'Test watch invoice'
         };
 
         const invoice = await service.generateInvoice(params);

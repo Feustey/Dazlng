@@ -16,7 +16,7 @@ const mockLogger = {
 };
 
 // Mock de @/lib/logger
-Module._cache[path.resolve(__dirname, '../lib/logger.ts')] = {
+(Module as any)._cache[path.resolve(__dirname, '../lib/logger.ts')] = {
   exports: { logger: mockLogger }
 };
 

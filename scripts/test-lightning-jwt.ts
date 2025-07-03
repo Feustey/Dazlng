@@ -55,7 +55,7 @@ class LightningJWTTest {
       
       this.addResult(
         'Génération token JWT',
-        isValidToken,
+        Boolean(isValidToken),
         !isValidToken ? 'Token invalide' : undefined,
         { tokenLength: token?.length }
       );

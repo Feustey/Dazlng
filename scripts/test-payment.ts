@@ -1,14 +1,18 @@
 import { createUnifiedLightningService } from '../lib/services/unified-lightning-service';
-import { createOrder, updateOrder, markOrderPaid } from '../lib/services/order-service';
+import { OrderService } from '../lib/services/order-service';
+import type { UnifiedInvoiceStatusResponse } from '../lib/services/unified-lightning-service';
 
 async function testPayment() {
   try {
     console.log('🚀 Test de paiement DazBox...');
 
+    // Créer une instance du service de commande
+    const orderService = new OrderService();
+
     // 1. Création de la commande
     console.log('\n1. Création de la commande...');
-    const order = await createOrder({
-      product: 'dazbox',
+    const order = await orderService.createOrder({
+      product_type: 'dazbox',
       amount: 50000,
       customer: {
         name: 'Test User',
@@ -31,7 +35,7 @@ async function testPayment() {
 
     // 3. Mise à jour de la commande
     console.log('\n3. Mise à jour de la commande...');
-    await updateOrder(order.id, {
+    await orderService.updateOrder(order.id, {
       payment_hash: invoice.paymentHash,
       payment_request: invoice.paymentRequest,
       order_ref: orderRef
@@ -40,34 +44,42 @@ async function testPayment() {
 
     // 4. Surveillance du paiement
     console.log('\n4. Surveillance du paiement...');
-    await new Promise((resolve, reject) => {
-      lightningService.watchInvoiceWithRenewal(invoice, {
-        checkInterval: 3000,
-        maxAttempts: 240,
-        onPaid: async () => {
-          await markOrderPaid(order.id);
-          console.log('✅ Paiement reçu !');
-          resolve(true);
-        },
-        onExpired: () => {
-          console.log('⚠️ Facture expirée');
-          reject(new Error('Facture expirée'));
-        },
-        onError: (error) => {
-          console.error('❌ Erreur:', error);
-          reject(error);
-        },
-        onRenewing: () => {
-          console.log('🔄 Renouvellement de la facture...');
-        },
-        onRenewed: (newInvoice) => {
-          console.log('✅ Nouvelle facture générée:', newInvoice.paymentRequest);
-        }
-      });
-    });
+    let attempts = 0;
+    const maxAttempts = 240;
+    const checkInterval = 3000;
 
-  } catch (error) {
-    console.error('❌ Erreur:', error);
+    const checkPayment = async (): Promise<void> => {
+      try {
+        const status: UnifiedInvoiceStatusResponse = await lightningService.watchInvoice(invoice.paymentHash, {
+          timeout: checkInterval,
+          interval: 1000
+        });
+
+        if (status.status === 'settled' as any) {
+          await orderService.markOrderPaid(order.id);
+          console.log('✅ Paiement reçu !');
+          return;
+        }
+
+        attempts++;
+        if (attempts >= maxAttempts) {
+          throw new Error('Timeout: Paiement non reçu dans le délai imparti');
+        }
+
+        // Continuer la surveillance
+        setTimeout(checkPayment, checkInterval);
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
+        console.error('❌ Erreur:', errorMessage);
+        throw error;
+      }
+    };
+
+    await checkPayment();
+
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
+    console.error('❌ Erreur:', errorMessage);
     process.exit(1);
   }
 }

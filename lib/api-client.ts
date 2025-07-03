@@ -1,4 +1,4 @@
-import { getAuthToken } from '../utils/auth';
+import { getAuthToken } from '../utils/auth-client';
 
 type ApiError = {
   message: string;
@@ -25,6 +25,9 @@ class MCPApiClient {
       const authToken = await getAuthToken();
       this.token = authToken.token;
       this.tokenExpiry = new Date(authToken.expires_at);
+    }
+    if (!this.token) {
+      throw new Error('Impossible d\'obtenir un token d\'authentification valide');
     }
     return this.token;
   }

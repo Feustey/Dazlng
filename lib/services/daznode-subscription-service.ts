@@ -25,7 +25,7 @@ export class DazNodeSubscriptionService {
       const amount = validated.yearly_discount ? this.YEARLY_PRICE : this.MONTHLY_PRICE;
 
       // Création de la facture Lightning
-      const invoice = await this.lightning.createInvoice({
+      const invoice = await this.lightning.generateInvoice({
         amount,
         description: `DazNode ${validated.yearly_discount ? 'Annuel' : 'Mensuel'} - ${validated.email}`
       });
@@ -38,7 +38,7 @@ export class DazNodeSubscriptionService {
           pubkey: validated.pubkey,
           plan_type: validated.plan_type,
           amount,
-          payment_hash: invoice.payment_hash,
+          payment_hash: invoice.paymentHash,
           payment_status: 'pending',
           recommendations_sent: false,
           admin_validated: false
@@ -57,7 +57,7 @@ export class DazNodeSubscriptionService {
       });
 
       return {
-        payment_hash: invoice.payment_hash,
+        payment_hash: invoice.paymentHash,
         subscription_id: subscription.id
       };
     } catch (error) {
@@ -69,13 +69,21 @@ export class DazNodeSubscriptionService {
   async confirmPayment(payment_hash: string): Promise<void> {
     try {
       // Vérification du paiement
-      const isPaid = await this.lightning.checkPayment(payment_hash);
+      const status = await this.lightning.checkInvoiceStatus(payment_hash);
+      const isPaid = status.status === 'settled';
       if (!isPaid) {
         throw new Error('Paiement non reçu');
       }
 
       // Mise à jour du statut
-      const { data: subscription, error } = await this.supabase
+      const { data: subscription, error: fetchError } = await this.supabase
+        .from('daznode_subscriptions')
+        .select()
+        .eq('payment_hash', payment_hash)
+        .single();
+      if (fetchError) throw fetchError;
+
+      const { data: updatedSubscription, error } = await this.supabase
         .from('daznode_subscriptions')
         .update({
           payment_status: 'paid',
@@ -89,7 +97,7 @@ export class DazNodeSubscriptionService {
       if (error) throw error;
 
       // Envoi email confirmation client
-      await this.sendConfirmationEmail(subscription);
+      await this.sendConfirmationEmail(updatedSubscription);
 
     } catch (error) {
       console.error('❌ Erreur confirmation paiement:', error);

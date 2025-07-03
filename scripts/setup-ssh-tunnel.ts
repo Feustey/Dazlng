@@ -166,13 +166,8 @@ async function _testLightningViaTunnel() {
       console.log('🎉 CONNEXION LIGHTNING RÉUSSIE VIA TUNNEL !');
       console.log(`⚡ Durée: ${duration}ms`);
       console.log('\n📊 Informations du nœud:');
-      console.log(`   Alias: ${health.walletInfo?.alias || 'N/A'}`);
-      console.log(`   Pubkey: ${health.walletInfo?.publicKey?.substring(0, 20)}...`);
-      console.log(`   Version: ${health.walletInfo?.version}`);
-      console.log(`   Height: ${health.walletInfo?.blockHeight}`);
-      console.log(`   Canaux: ${health.walletInfo?.activeChannelsCount}`);
-      console.log(`   Peers: ${health.walletInfo?.peersCount}`);
-      
+      console.log(`   Provider: ${health.provider}`);
+      console.log(`   Status: En ligne`);
       // Test facture
       console.log('\n📄 Test génération facture...');
       const invoice = await service.generateInvoice({
@@ -180,11 +175,9 @@ async function _testLightningViaTunnel() {
         description: 'Test via tunnel SSH',
         expiry: 3600
       });
-      
       console.log('✅ Facture générée via tunnel !');
       console.log(`   ID: ${invoice.id}`);
       console.log(`   Amount: ${invoice.amount} sats`);
-      
       return true;
     } else {
       console.log('❌ Health check échoué');

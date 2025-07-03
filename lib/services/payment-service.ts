@@ -160,7 +160,13 @@ export class PaymentService {
   async createInvoice(params: CreateInvoiceParams): Promise<Invoice> {
     try {
       const invoice = await this.lightningService?.generateInvoice(params);
-      await this.logger?.logPayment('invoice_created', invoice);
+      await this.logger?.logPayment({
+        payment_hash: invoice.paymentHash,
+        amount: invoice.amount,
+        description: invoice.description,
+        status: 'pending',
+        metadata: { event: 'invoice_created' }
+      });
       return invoice;
     } catch (error) {
       console.error('Erreur création facture:', error);

@@ -63,12 +63,12 @@ export const HowItWorks: React.FC = () => {
   ];
 
   const handleOrderClick = (): void => {
-    trackEvent('order_click', 'how_it_works_section');
+    trackEvent('order_click', { section: 'how_it_works_section' });
     router.push('/checkout/dazbox');
   };
 
   const handleQuestionClick = (): void => {
-    trackEvent('question_click', 'how_it_works_section');
+    trackEvent('question_click', { section: 'how_it_works_section' });
     router.push('/contact');
   };
 

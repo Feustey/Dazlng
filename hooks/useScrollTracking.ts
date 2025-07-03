@@ -1,20 +1,32 @@
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useConversionTracking } from './useConversionTracking';
 
 interface ScrollTrackingOptions {
-  pageName: string;
+  pageName?: string;
   thresholds?: number[]; // Pourcentages de scroll à tracker (par défaut : [25, 50, 75, 100])
   debounceMs?: number; // Délai de debounce en ms (par défaut : 500)
 }
 
-export const useScrollTracking = ({
-  pageName,
-  thresholds = [25, 50, 75, 100],
-  debounceMs = 500
-}: ScrollTrackingOptions): { resetTrackedThresholds: () => void } => {
+export const useScrollTracking = (options: ScrollTrackingOptions = {}): { 
+  resetTrackedThresholds: () => void;
+  trackScroll: (threshold: number) => void;
+} => {
+  const { pageName = 'unknown', thresholds = [25, 50, 75, 100], debounceMs = 500 } = options;
   const { trackScrollDepth } = useConversionTracking();
-  const trackedThresholds = useRef<Set<number>>(new Set());
+  const [trackedThresholds, setTrackedThresholds] = useState<Set<number>>(new Set());
   const debounceTimer = useRef<NodeJS.Timeout>();
+
+  const resetTrackedThresholds = useCallback(() => {
+    setTrackedThresholds(new Set());
+  }, []);
+
+  const trackScroll = useCallback((threshold: number) => {
+    if (!trackedThresholds.has(threshold)) {
+      setTrackedThresholds(prev => new Set([...prev, threshold]));
+      trackScrollDepth(threshold, pageName);
+      console.log(`📊 Scroll threshold reached: ${threshold}% on ${pageName}`);
+    }
+  }, [trackedThresholds, pageName, trackScrollDepth]);
 
   useEffect(() => {
     let ticking = false;
@@ -34,9 +46,8 @@ export const useScrollTracking = ({
           // Debounce the tracking
           debounceTimer.current = setTimeout(() => {
             thresholds.forEach(threshold => {
-              if (scrollPercent >= threshold && !trackedThresholds.current.has(threshold)) {
-                trackedThresholds.current.add(threshold);
-                trackScrollDepth(threshold, pageName);
+              if (scrollPercent >= threshold && !trackedThresholds.has(threshold)) {
+                trackScroll(threshold);
               }
             });
           }, debounceMs);
@@ -55,14 +66,12 @@ export const useScrollTracking = ({
         clearTimeout(debounceTimer.current);
       }
     };
-  }, [pageName, thresholds, debounceMs, trackScrollDepth]);
+  }, [trackedThresholds, thresholds, debounceMs, trackScroll]);
 
-  // Fonction pour reset les seuils trackés (utile pour les SPA)
-  const resetTrackedThresholds = (): void => {
-    trackedThresholds.current.clear();
+  return {
+    resetTrackedThresholds,
+    trackScroll
   };
-
-  return { resetTrackedThresholds };
 };
 
 export default useScrollTracking; 

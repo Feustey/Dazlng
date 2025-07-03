@@ -95,7 +95,7 @@ const DetailedTestimonials: React.FC = () => {
                     {Object.entries(testimonial.metrics).map(([key, value], metricIndex) => (
                       <div key={metricIndex}>
                         <div className={`text-lg font-bold bg-gradient-to-r ${testimonial.gradient} text-transparent bg-clip-text`}>
-                          {value}
+                          {String(value)}
                         </div>
                         <div className="text-xs text-gray-500 capitalize">
                           {key === 'monthlyEarnings' ? 'Revenus mensuels' : 

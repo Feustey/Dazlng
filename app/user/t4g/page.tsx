@@ -19,17 +19,17 @@ export interface UserProfile {
   t4g_tokens: number;
 }
 
-export interface CRMData {
-  userScore: number;
+// Import de l'interface CRMData depuis types/index.ts
+import { CRMData } from '../types';
+
+// Interface étendue pour les besoins spécifiques de cette page
+export interface ExtendedCRMData extends CRMData {
   segment: 'lead' | 'client' | 'premium' | 'champion';
-  engagementLevel: number;
   conversionProbability: number;
-  lastActivity: string;
   totalOrders: number;
   totalSpent: number;
   isPremium: boolean;
   hasNode: boolean;
-  profileCompletion: number;
   lightningAdoption: boolean;
   recommendations: any[];
 }
@@ -73,12 +73,13 @@ export default function T4GPage() {
   }, [user]);
 
   // TODO: Remplacer par un vrai fetch CRMData (mock ici)
-  const crmData: CRMData | null = profile ? {
+  const crmData: ExtendedCRMData | null = profile ? {
     userScore: 72,
     segment: 'client',
-    engagementLevel: 68,
+    engagementLevel: 'medium',
     conversionProbability: 0.42,
-    lastActivity: '2024-06-01',
+    conversionPotential: 0.65,
+    lastActivity: new Date('2024-06-01'),
     totalOrders: 2,
     totalSpent: 120000,
     isPremium: false,

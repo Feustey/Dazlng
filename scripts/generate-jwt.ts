@@ -25,7 +25,7 @@ function generateJWT(tenant_id: string, permissions: string[] = ['read']): strin
     exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60) // 24 heures
   };
 
-  return jwt.sign(payload, JWT_SECRET);
+  return jwt.sign(payload, JWT_SECRET as string);
 }
 
 // Exemple d'utilisation

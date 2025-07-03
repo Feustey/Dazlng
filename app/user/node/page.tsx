@@ -871,9 +871,6 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
           <div className="p-6">
             <DazFlowAnalytics 
               nodeId={nodeInfo.pubkey} 
-              onAnalysisComplete={(result) => {
-                console.log('Analyse DazFlow terminée:', result);
-              }}
             />
           </div>
         </div>
@@ -1055,19 +1052,19 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
               {/* Centralité */}
               <div className="space-y-4">
                 <h3 className="font-medium text-gray-700 border-b pb-2">Centralité du réseau</h3>
-                {nodeInfo.betweenness_centrality !== undefined && (
+                {nodeInfo?.betweenness_centrality !== undefined && (
                   <div className="flex justify-between">
                     <span className="text-sm text-gray-600">Betweenness:</span>
                     <span className="font-medium">{(nodeInfo.betweenness_centrality * 100).toFixed(3)}%</span>
                   </div>
                 )}
-                {nodeInfo.closeness_centrality !== undefined && (
+                {nodeInfo?.closeness_centrality !== undefined && (
                   <div className="flex justify-between">
                     <span className="text-sm text-gray-600">Closeness:</span>
                     <span className="font-medium">{(nodeInfo.closeness_centrality * 100).toFixed(3)}%</span>
                   </div>
                 )}
-                {nodeInfo.eigenvector_centrality !== undefined && (
+                {nodeInfo?.eigenvector_centrality !== undefined && (
                   <div className="flex justify-between">
                     <span className="text-sm text-gray-600">Eigenvector:</span>
                     <span className="font-medium">{(nodeInfo.eigenvector_centrality * 100).toFixed(3)}%</span>
@@ -1078,19 +1075,19 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
               {/* Frais et HTLC */}
               <div className="space-y-4">
                 <h3 className="font-medium text-gray-700 border-b pb-2">Configuration des frais</h3>
-                {nodeInfo.base_fee_median !== undefined && (
+                {nodeInfo?.base_fee_median !== undefined && (
                   <div className="flex justify-between">
                     <span className="text-sm text-gray-600">Frais de base (médian):</span>
                     <span className="font-medium">{nodeInfo.base_fee_median} sats</span>
                   </div>
                 )}
-                {nodeInfo.fee_rate_median !== undefined && (
+                {nodeInfo?.fee_rate_median !== undefined && (
                   <div className="flex justify-between">
                     <span className="text-sm text-gray-600">Taux de frais (médian):</span>
                     <span className="font-medium">{nodeInfo.fee_rate_median} ppm</span>
                   </div>
                 )}
-                {nodeInfo.htlc_minimum_msat !== undefined && (
+                {nodeInfo?.htlc_minimum_msat !== undefined && (
                   <div className="flex justify-between">
                     <span className="text-sm text-gray-600">HTLC min:</span>
                     <span className="font-medium">{(nodeInfo.htlc_minimum_msat / 1000).toFixed(0)} sats</span>
@@ -1101,19 +1098,19 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
               {/* Performance */}
               <div className="space-y-4">
                 <h3 className="font-medium text-gray-700 border-b pb-2">Performance (7 jours)</h3>
-                {nodeInfo.routed_payments_7d !== undefined && (
+                {nodeInfo?.routed_payments_7d !== undefined && (
                   <div className="flex justify-between">
                     <span className="text-sm text-gray-600">Paiements routés:</span>
                     <span className="font-medium">{nodeInfo.routed_payments_7d.toLocaleString()}</span>
                   </div>
                 )}
-                {nodeInfo.routing_revenue_7d !== undefined && (
+                {nodeInfo?.routing_revenue_7d !== undefined && (
                   <div className="flex justify-between">
                     <span className="text-sm text-gray-600">Revenus de routage:</span>
                     <span className="font-medium">{formatSats(nodeInfo.routing_revenue_7d)}</span>
                   </div>
                 )}
-                {nodeInfo.peer_count !== undefined && (
+                {nodeInfo?.peer_count !== undefined && (
                   <div className="flex justify-between">
                     <span className="text-sm text-gray-600">Nombre de pairs:</span>
                     <span className="font-medium">{nodeInfo.peer_count}</span>

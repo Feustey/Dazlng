@@ -2,18 +2,18 @@ import { useState, useEffect, useCallback } from 'react';
 import { mcpLightAPI } from '@/lib/services/mcp-light-api';
 import {
   DazFlowAnalysis,
-  DazFlowOptimization,
+  DazFlowOptimizationResponse,
   ReliabilityPoint,
   Bottleneck,
-  NetworkHealthMetrics
+  NetworkHealthAnalysis
 } from '@/lib/services/mcp-light-api';
 
 export interface DazFlowData {
   dazFlow: DazFlowAnalysis | null;
   reliability: { reliability_curve: ReliabilityPoint[] } | null;
   bottlenecks: { bottlenecks: Bottleneck[] } | null;
-  optimization: DazFlowOptimization | null;
-  networkHealth: NetworkHealthMetrics | null;
+  optimization: DazFlowOptimizationResponse | null;
+  networkHealth: NetworkHealthAnalysis | null;
   loading: boolean;
   error: string | null;
 }
@@ -35,14 +35,14 @@ export const useDazFlow = (nodeId: string | null) => {
     setData(prev => ({ ...prev, loading: true, error: null }));
 
     try {
-      const dazFlowResult = await mcpLightAPI.analyzeDazFlow(nodeId);
+      const dazFlowResult = await mcpLightAPI.getDazFlowAnalysis(nodeId);
       const networkHealth = await mcpLightAPI.getNetworkHealth();
 
       setData({
-        dazFlow: dazFlowResult.dazFlow,
-        reliability: dazFlowResult.reliability,
-        bottlenecks: dazFlowResult.bottlenecks,
-        optimization: dazFlowResult.optimization,
+        dazFlow: dazFlowResult,
+        reliability: { reliability_curve: dazFlowResult.reliability_curve },
+        bottlenecks: { bottlenecks: dazFlowResult.bottlenecks },
+        optimization: null, // À implémenter si nécessaire
         networkHealth,
         loading: false,
         error: null

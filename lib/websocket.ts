@@ -1,4 +1,4 @@
-import { io, Socket } from 'socket.io-client/build/esm';
+import { io, Socket } from 'socket.io-client';
 
 class WebSocketService {
   private socket: Socket | null = null;
