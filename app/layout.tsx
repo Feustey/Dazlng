@@ -172,16 +172,21 @@ export default function RootLayout({
         {/* Script de performance pour Core Web Vitals */}
         <Script id="web-vitals" strategy="afterInteractive">
           {`
-            import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';
-            
-            getCLS(console.log);
-            getFID(console.log);
-            getFCP(console.log);
-            getLCP(console.log);
-            getTTFB(console.log);
+            // Import web-vitals library dynamically
+            if (typeof window !== 'undefined') {
+              import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+                getCLS(console.log);
+                getFID(console.log);
+                getFCP(console.log);
+                getLCP(console.log);
+                getTTFB(console.log);
+              });
+            }
           `}
         </Script>
       </body>
     </html>
   );
-} export const dynamic = "force-dynamic";
+}
+
+export const dynamic = "force-dynamic";
