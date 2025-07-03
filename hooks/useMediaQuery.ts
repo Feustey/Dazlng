@@ -1,9 +1,13 @@
+'use client';
 import { useState, useEffect } from 'react';
 
 export function useMediaQuery(query: string): boolean {
   const [matches, setMatches] = useState(false);
 
   useEffect(() => {
+    // Check if we're in the browser
+    if (typeof window === 'undefined') return;
+    
     // Créer la media query
     const mediaQuery = window.matchMedia(query);
 

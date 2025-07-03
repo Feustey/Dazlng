@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useRef, useState, useCallback } from 'react';
 
 interface UseInViewOptions {
@@ -52,8 +53,8 @@ export function useInView(options: UseInViewOptions = {}): UseInViewReturn {
     const element = ref.current;
     if (!element) return;
 
-    // Vérifier le support d'IntersectionObserver
-    if (!window.IntersectionObserver) {
+    // Check if we're in the browser and support IntersectionObserver
+    if (typeof window === 'undefined' || !window.IntersectionObserver) {
       // Fallback: considérer comme visible immédiatement
       setInView(true);
       return;
@@ -109,7 +110,7 @@ export function useInViewList(
   const refs = useRef<(HTMLElement | null)[]>(new Array(count).fill(null));
 
   useEffect(() => {
-    if (!window.IntersectionObserver) {
+    if (typeof window === 'undefined' || !window.IntersectionObserver) {
       // Fallback: tout visible
       setInViewStates(new Array(count).fill(true));
       return;

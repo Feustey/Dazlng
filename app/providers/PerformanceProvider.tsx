@@ -21,6 +21,8 @@ export function PerformanceProvider({ children }: PerformanceProviderProps) {
 
     // Précharger les ressources critiques
     const preloadCriticalResources = () => {
+      if (typeof window === 'undefined') return;
+      
       const criticalUrls = [
         '/api/user',
         '/api/network/stats',
