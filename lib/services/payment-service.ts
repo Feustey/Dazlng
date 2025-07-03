@@ -1,9 +1,11 @@
-import { createDazNodeLightningService } from './daznode-lightning-service';
+import { getSupabaseAdminClient } from '@/lib/supabase';
+import { createDaznoApiOnlyService } from './dazno-api-only';
 import { Invoice, CreateInvoiceParams, InvoiceStatus } from '@/types/lightning';
 import { PaymentLogger } from './payment-logger';
 import { OrderService } from './order-service';
 import { Order } from '@/types/database';
 import { z } from 'zod';
+import { logger } from '@/lib/logger';
 
 // Schéma de validation pour la création d'une commande
 const CreateOrderSchema = z.object({
@@ -43,13 +45,13 @@ export interface PaymentServiceResult {
 }
 
 export interface PaymentServiceConfig {
-  provider?: 'daznode' | 'lnd';
+  provider?: 'daznode';
 }
 
 export class PaymentService {
-  private provider: 'daznode' | 'lnd';
+  private provider: 'daznode';
   private logger: PaymentLogger | null = null;
-  private lightningService = createDazNodeLightningService();
+  private lightningService = createDaznoApiOnlyService();
   private orderService = new OrderService();
 
   constructor(config?: PaymentServiceConfig) {
@@ -217,6 +219,88 @@ export class PaymentService {
           message: error instanceof Error ? error.message : 'Erreur inconnue'
         }
       };
+    }
+  }
+
+  async createPayment(orderId: string, amount: number, description: string): Promise<{ success: boolean; paymentHash?: string; error?: string }> {
+    try {
+      logger.info('💰 Création paiement', { orderId, amount, provider: this.provider });
+
+      // Créer la facture Lightning
+      const invoice = await this.lightningService.generateInvoice({
+        amount,
+        description,
+        metadata: {
+          orderId,
+          provider: this.provider
+        }
+      });
+
+      // Logger le paiement
+      if (this.logger) {
+        await this.logger.logPayment({
+          payment_hash: invoice.paymentHash,
+          amount,
+          description,
+          status: 'pending',
+          metadata: { orderId, provider: this.provider }
+        });
+      }
+
+      logger.info('✅ Paiement créé avec succès', { paymentHash: invoice.paymentHash });
+      return { success: true, paymentHash: invoice.paymentHash };
+
+    } catch (error) {
+      logger.error('❌ Erreur création paiement:', error);
+      return { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Erreur inconnue' 
+      };
+    }
+  }
+
+  async checkPaymentStatus(paymentHash: string): Promise<{ status: string; orderId?: string }> {
+    try {
+      logger.info('🔍 Vérification statut paiement', { paymentHash });
+
+      const status = await this.lightningService.checkInvoiceStatus(paymentHash);
+      
+      if (status.status === 'settled') {
+        // Logger le paiement réussi
+        if (this.logger) {
+          await this.logger.updatePaymentStatus(paymentHash, 'paid' as any);
+        }
+
+        logger.info('✅ Paiement confirmé', { paymentHash });
+        return { status: 'paid' };
+      }
+
+      return { status: status.status };
+
+    } catch (error) {
+      logger.error('❌ Erreur vérification paiement:', error);
+      return { status: 'error' };
+    }
+  }
+
+  async getPaymentHistory(orderId: string): Promise<any[]> {
+    try {
+      const supabase = getSupabaseAdminClient();
+      const { data: payments, error } = await supabase
+        .from('payments')
+        .select('*')
+        .eq('order_id', orderId)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        logger.error('❌ Erreur récupération historique paiements:', error);
+        return [];
+      }
+
+      return payments || [];
+    } catch (error) {
+      logger.error('❌ Erreur historique paiements:', error);
+      return [];
     }
   }
 }

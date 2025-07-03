@@ -1,50 +1,49 @@
-import { NextResponse } from 'next/server';
-import { z } from 'zod';
-import { dazNodeSubscriptionService } from '@/lib/services/daznode-subscription-service';
-import { dazNodeEmailService } from '@/lib/services/daznode-email-service';
+import { NextRequest, NextResponse } from 'next/server';
+import { DazNodeSubscriptionService } from '@/lib/services/daznode-subscription-service';
+import { DazNodeEmailService } from '@/lib/services/daznode-email-service';
 
-// Schéma de validation
-const confirmSchema = z.object({
-  payment_hash: z.string().min(1, 'Hash de paiement requis')
-});
+export const dynamic = "force-dynamic";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest): Promise<Response> {
   try {
-    // Valider les données
-    const data = await req.json();
-    const { payment_hash } = confirmSchema.parse(data);
+    const { payment_hash } = await req.json();
 
-    // Confirmer le paiement
-    await dazNodeSubscriptionService.confirmPayment(payment_hash);
-
-    // Envoyer l'email de confirmation (sans subscription pour le moment)
-    await dazNodeEmailService.sendSubscriptionConfirmation({} as any);
-
-    return NextResponse.json({
-      success: true,
-      data: { message: 'Paiement confirmé avec succès' }
-    });
-  } catch (error) {
-    console.error('❌ Erreur route /api/daznode/confirm-payment:', error);
-
-    if (error instanceof z.ZodError) {
+    if (!payment_hash) {
       return NextResponse.json({
         success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: 'Données invalides',
-          details: error.errors
-        }
+        error: 'Payment hash requis'
       }, { status: 400 });
     }
 
+    const dazNodeSubscriptionService = new DazNodeSubscriptionService();
+    const dazNodeEmailService = new DazNodeEmailService();
+
+    // Vérifier le statut du paiement
+    const result = await dazNodeSubscriptionService.checkSubscriptionStatus(payment_hash);
+
+    if (result.status === 'paid' && result.subscription) {
+      // Envoyer l'email de confirmation
+      await dazNodeEmailService.sendSubscriptionConfirmation(result.subscription);
+      
+      return NextResponse.json({
+        success: true,
+        message: 'Paiement confirmé avec succès',
+        subscription: result.subscription
+      });
+    } else {
+      return NextResponse.json({
+        success: false,
+        error: 'Paiement non confirmé',
+        status: result.status
+      }, { status: 400 });
+    }
+
+  } catch (error) {
+    console.error('❌ Erreur confirmation paiement:', error);
+    
     return NextResponse.json({
       success: false,
-      error: {
-        code: 'CONFIRMATION_ERROR',
-        message: error instanceof Error ? error.message : 'Erreur inattendue'
-      }
-    }, { status: 400 });
+      error: 'Erreur lors de la confirmation du paiement'
+    }, { status: 500 });
   }
 } 
-export const dynamic = "force-dynamic";

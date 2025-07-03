@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useToast } from '../../../hooks/useToast';
-import { InvoiceStatus } from '../../../types/lightning';
+import type { InvoiceStatus } from '@/types/lightning';
 import { Button } from '@/components/shared/ui';
 import { toast } from 'sonner';
 import QRCode from 'react-qr-code';
@@ -27,7 +27,7 @@ const LightningPayment: React.FC<LightningPaymentProps> = ({
   orderId,
   className = ''
 }) => {
-  const [status, setStatus] = useState<InvoiceStatus>('pending');
+  const [status, setStatus] = useState<InvoiceStatus['status']>('pending');
   const [error, setError] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState<number>(300); // 5 minutes
   const [paymentRequest, setPaymentRequest] = useState<string>('');
@@ -95,7 +95,7 @@ const LightningPayment: React.FC<LightningPaymentProps> = ({
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Erreur inconnue');
       setError(error.message);
-      setStatus('failed');
+      setStatus('expired');
       onError?.(error);
       showToast({ title: error.message, variant: 'error' });
     }

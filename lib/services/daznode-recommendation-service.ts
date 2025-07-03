@@ -1,9 +1,11 @@
 import { getSupabaseAdminClient } from '@/lib/supabase';
 import { DazNodeRecommendation, DazNodeRecommendationContentSchema } from '@/types/daznode';
-import { dazNodeEmailService } from './daznode-email-service';
+import { DazNodeEmailService } from './daznode-email-service';
 import { MCPLightAPI } from './mcp-light-api';
 import { sendEmail } from '@/lib/services/email-service';
 import { dazNodeSubscriptionService } from './daznode-subscription-service';
+
+const dazNodeEmailService = new DazNodeEmailService();
 
 interface CreateRecommendationParams {
   subscription_id: string;
@@ -66,10 +68,7 @@ export class DazNodeRecommendationService {
           .select()
           .single();
         if (insertedRec && subscription) {
-          await dazNodeEmailService.sendRecommendations(
-            subscription as import('@/types/daznode').DazNodeSubscription,
-            [insertedRec]
-          );
+          await this.sendRecommendationsEmail(subscription);
         }
       }
 
@@ -121,25 +120,7 @@ export class DazNodeRecommendationService {
           .eq('id', recs[0].subscription_id)
           .single();
         if (subscription) {
-          // Adapter les recs pour ne passer que le champ content conforme
-          const formattedRecs = recs.map(r => ({
-            ...r,
-            content: r.content || (() => {
-              const metrics: Record<string, number> = (typeof r.cost_estimate === 'number') ? { cost: r.cost_estimate } : {};
-              return {
-                title: r.action,
-                description: r.expected_impact,
-                priority: r.difficulty || 'medium',
-                impact: r.expected_impact,
-                actions: [r.action],
-                metrics
-              };
-            })()
-          }));
-          await dazNodeEmailService.sendRecommendations(
-            subscription as import('@/types/daznode').DazNodeSubscription,
-            formattedRecs
-          );
+          await this.sendRecommendationsEmail(subscription);
         }
 
         // Marquer comme envoyées
@@ -231,10 +212,7 @@ export class DazNodeRecommendationService {
             .select()
             .single();
           if (insertedRec && subscription) {
-            await dazNodeEmailService.sendRecommendations(
-              subscription as import('@/types/daznode').DazNodeSubscription,
-              [insertedRec]
-            );
+            await this.sendRecommendationsEmail(subscription);
           }
 
           console.log(`✅ Recommandation quotidienne générée pour ${subscription.pubkey}`);
@@ -325,19 +303,7 @@ export class DazNodeRecommendationService {
     }
 
     // Envoyer l'email avec les recommandations
-    await dazNodeEmailService.sendRecommendations(subscription as import('@/types/daznode').DazNodeSubscription, recommendations);
-
-    // Mettre à jour le statut des recommandations
-    const { error: updateError } = await this.supabase
-      .from('daznode_recommendations')
-      .update({ status: 'sent' })
-      .eq('subscription_id', subscription_id)
-      .eq('status', 'validated');
-
-    if (updateError) {
-      console.error('❌ Erreur mise à jour statut recommandations:', updateError);
-      throw new Error('Erreur lors de la mise à jour du statut des recommandations');
-    }
+    await this.sendRecommendationsEmail(subscription);
   }
 
   async getRecommendationsForNode(pubkey: string): Promise<DazNodeRecommendation[]> {
@@ -419,9 +385,6 @@ export class DazNodeRecommendationService {
 
       // Envoyer l'email avec les recommandations
       await this.sendRecommendationsEmail(subscription);
-
-      // Marquer comme envoyé
-      await dazNodeSubscriptionService.markRecommendationsSent(subscriptionId);
 
     } catch (error) {
       console.error('❌ Erreur validation/envoi recommandations:', error);

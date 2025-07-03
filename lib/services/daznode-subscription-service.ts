@@ -1,196 +1,163 @@
-import { DazNodeSubscription, DazNodeSubscriptionSchema } from '@/types/daznode';
 import { getSupabaseAdminClient } from '@/lib/supabase';
-import { createLightningService } from '@/lib/services/lightning-service';
-import { sendEmail } from '@/lib/services/email-service';
+import { createDaznoApiOnlyService } from './dazno-api-only';
+import { logger } from '@/lib/logger';
+
+export interface SubscriptionData {
+  pubkey: string;
+  plan: string;
+  billingCycle: 'monthly' | 'yearly';
+  amount: number;
+  customerEmail: string;
+  customerName: string;
+}
+
+export interface Subscription {
+  id: string;
+  pubkey: string;
+  plan: string;
+  billingCycle: string;
+  amount: number;
+  customerEmail: string;
+  customerName: string;
+  status: string;
+  createdAt: string;
+}
 
 export class DazNodeSubscriptionService {
-  private supabase = getSupabaseAdminClient();
-  private lightning = createLightningService();
+  private lightningService = createDaznoApiOnlyService();
 
-  // Prix en sats
-  private readonly MONTHLY_PRICE = 50000;
-  private readonly YEARLY_PRICE = 500000; // 10 mois
-
-  async createSubscription(data: {
-    email: string;
-    pubkey: string;
-    plan_type: 'monthly' | 'yearly';
-    yearly_discount: boolean;
-  }): Promise<{ payment_hash: string; subscription_id: string }> {
+  async createSubscription(data: SubscriptionData): Promise<{ success: boolean; invoiceId?: string; error?: string }> {
     try {
-      // Validation des données
-      const validated = DazNodeSubscriptionSchema.parse(data);
+      logger.info('📦 Création souscription DazNode', { pubkey: data.pubkey, plan: data.plan });
 
-      // Calcul du montant
-      const amount = validated.yearly_discount ? this.YEARLY_PRICE : this.MONTHLY_PRICE;
-
-      // Création de la facture Lightning
-      const invoice = await this.lightning.generateInvoice({
-        amount,
-        description: `DazNode ${validated.yearly_discount ? 'Annuel' : 'Mensuel'} - ${validated.email}`
+      // 1. Créer la facture Lightning
+      const invoice = await this.lightningService.generateInvoice({
+        amount: data.amount,
+        description: `Souscription DazNode ${data.plan} - ${data.billingCycle}`,
+        metadata: {
+          type: 'subscription',
+          pubkey: data.pubkey,
+          plan: data.plan,
+          billingCycle: data.billingCycle,
+          customerEmail: data.customerEmail,
+          customerName: data.customerName
+        }
       });
 
-      // Création de l'abonnement en base
-      const { data: subscription, error } = await this.supabase
-        .from('daznode_subscriptions')
+      // 2. Enregistrer la souscription en base
+      const supabase = getSupabaseAdminClient();
+      const { data: subscription, error } = await supabase
+        .from('subscriptions')
         .insert({
-          email: validated.email,
-          pubkey: validated.pubkey,
-          plan_type: validated.plan_type,
-          amount,
-          payment_hash: invoice.paymentHash,
-          payment_status: 'pending',
-          recommendations_sent: false,
-          admin_validated: false
+          user_id: data.pubkey,
+          plan_id: data.plan,
+          status: 'pending',
+          start_date: new Date().toISOString(),
+          metadata: {
+            billingCycle: data.billingCycle,
+            amount: data.amount,
+            customerEmail: data.customerEmail,
+            customerName: data.customerName,
+            paymentHash: invoice.paymentHash
+          }
         })
         .select()
         .single();
 
-      if (error) throw error;
-
-      // Envoi email admin
-      await this.notifyAdmin({
-        email: validated.email,
-        pubkey: validated.pubkey,
-        plan_type: validated.plan_type,
-        subscription_id: subscription.id
-      });
-
-      return {
-        payment_hash: invoice.paymentHash,
-        subscription_id: subscription.id
-      };
-    } catch (error) {
-      console.error('❌ Erreur création abonnement:', error);
-      throw error;
-    }
-  }
-
-  async confirmPayment(payment_hash: string): Promise<void> {
-    try {
-      // Vérification du paiement
-      const status = await this.lightning.checkInvoiceStatus(payment_hash);
-      const isPaid = status.status === 'settled';
-      if (!isPaid) {
-        throw new Error('Paiement non reçu');
+      if (error) {
+        logger.error('❌ Erreur création souscription en base:', error);
+        return { success: false, error: 'Erreur base de données' };
       }
 
-      // Mise à jour du statut
-      const { data: subscription, error: fetchError } = await this.supabase
-        .from('daznode_subscriptions')
-        .select()
-        .eq('payment_hash', payment_hash)
-        .single();
-      if (fetchError) throw fetchError;
+      logger.info('✅ Souscription créée avec succès', { 
+        subscriptionId: subscription.id, 
+        invoiceId: invoice.paymentHash 
+      });
 
-      const { data: updatedSubscription, error } = await this.supabase
-        .from('daznode_subscriptions')
-        .update({
-          payment_status: 'paid',
-          start_date: new Date().toISOString(),
-          end_date: this.calculateEndDate(subscription.plan_type)
-        })
-        .eq('payment_hash', payment_hash)
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      // Envoi email confirmation client
-      await this.sendConfirmationEmail(updatedSubscription);
+      return { 
+        success: true, 
+        invoiceId: invoice.paymentHash 
+      };
 
     } catch (error) {
-      console.error('❌ Erreur confirmation paiement:', error);
-      throw error;
+      logger.error('❌ Erreur création souscription:', error);
+      return { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Erreur inconnue' 
+      };
     }
   }
 
-  private async notifyAdmin(data: {
-    email: string;
-    pubkey: string;
-    plan_type: string;
-    subscription_id: string;
-  }) {
-    await sendEmail({
-      to: 'admin@dazno.de',
-      subject: '🚀 Nouvelle souscription DazNode',
-      html: `
-        <h2>Nouvelle souscription DazNode</h2>
-        <p><strong>Email:</strong> ${data.email}</p>
-        <p><strong>Pubkey:</strong> ${data.pubkey}</p>
-        <p><strong>Plan:</strong> ${data.plan_type}</p>
-        <p><strong>ID:</strong> ${data.subscription_id}</p>
-        <p>Veuillez valider les recommandations dans le dashboard admin.</p>
-      `
-    });
-  }
+  async checkSubscriptionStatus(paymentHash: string): Promise<{ status: string; subscription?: Subscription }> {
+    try {
+      logger.info('🔍 Vérification statut souscription', { paymentHash });
 
-  private async sendConfirmationEmail(subscription: DazNodeSubscription) {
-    await sendEmail({
-      to: subscription.email,
-      cc: 'admin@dazno.de',
-      subject: '✨ Bienvenue sur DazNode !',
-      html: `
-        <h2>Bienvenue sur DazNode !</h2>
-        <p>Votre abonnement a été activé avec succès.</p>
-        <p>Nos experts vont analyser votre nœud et vous envoyer des recommandations personnalisées très prochainement.</p>
-        <p><strong>Plan:</strong> ${subscription.plan_type}</p>
-        <p><strong>Nœud:</strong> ${subscription.pubkey}</p>
-        <p>À très vite !</p>
-      `
-    });
-  }
+      // 1. Vérifier le statut du paiement Lightning
+      const paymentStatus = await this.lightningService.checkInvoiceStatus(paymentHash);
 
-  private calculateEndDate(plan_type: 'monthly' | 'yearly'): string {
-    const date = new Date();
-    if (plan_type === 'yearly') {
-      date.setFullYear(date.getFullYear() + 1);
-    } else {
-      date.setMonth(date.getMonth() + 1);
-    }
-    return date.toISOString();
-  }
+      if (paymentStatus.status === 'settled') {
+        // 2. Récupérer la souscription correspondante
+        const supabase = getSupabaseAdminClient();
+        const { data: subscription, error } = await supabase
+          .from('subscriptions')
+          .select('*')
+          .eq('metadata->paymentHash', paymentHash)
+          .single();
 
-  async getActiveSubscription(pubkey: string): Promise<DazNodeSubscription | null> {
-    const { data: subscription, error } = await this.supabase
-      .from('daznode_subscriptions')
-      .select()
-      .eq('pubkey', pubkey)
-      .eq('payment_status', 'paid')
-      .gt('end_date', new Date().toISOString())
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .single();
+        if (error || !subscription) {
+          logger.error('❌ Souscription non trouvée:', error);
+          return { status: 'subscription_not_found' };
+        }
 
-    if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
-      console.error('❌ Erreur récupération abonnement:', error);
-      throw new Error('Erreur lors de la récupération de l\'abonnement');
-    }
+        // 3. Mettre à jour le statut de la souscription
+        const { error: updateError } = await supabase
+          .from('subscriptions')
+          .update({ 
+            status: 'active',
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', subscription.id);
 
-    return subscription;
-  }
+        if (updateError) {
+          logger.error('❌ Erreur mise à jour souscription:', updateError);
+        }
 
-  async markRecommendationsSent(subscriptionId: string): Promise<void> {
-    const { error } = await this.supabase
-      .from('daznode_subscriptions')
-      .update({ recommendations_sent: true })
-      .eq('id', subscriptionId);
+        logger.info('✅ Souscription activée', { subscriptionId: subscription.id });
+        return { 
+          status: 'paid', 
+          subscription: subscription as Subscription 
+        };
+      }
 
-    if (error) {
-      console.error('❌ Erreur mise à jour recommendations_sent:', error);
-      throw new Error('Erreur lors de la mise à jour du statut des recommandations');
+      return { status: paymentStatus.status };
+
+    } catch (error) {
+      logger.error('❌ Erreur vérification souscription:', error);
+      return { status: 'error' };
     }
   }
 
-  async validateSubscription(subscriptionId: string): Promise<void> {
-    const { error } = await this.supabase
-      .from('daznode_subscriptions')
-      .update({ admin_validated: true })
-      .eq('id', subscriptionId);
+  async getSubscription(pubkey: string): Promise<Subscription | null> {
+    try {
+      const supabase = getSupabaseAdminClient();
+      const { data: subscription, error } = await supabase
+        .from('subscriptions')
+        .select('*')
+        .eq('user_id', pubkey)
+        .eq('status', 'active')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
 
-    if (error) {
-      console.error('❌ Erreur validation admin:', error);
-      throw new Error('Erreur lors de la validation admin');
+      if (error) {
+        logger.error('❌ Erreur récupération souscription:', error);
+        return null;
+      }
+
+      return subscription as Subscription;
+    } catch (error) {
+      logger.error('❌ Erreur récupération souscription:', error);
+      return null;
     }
   }
 }

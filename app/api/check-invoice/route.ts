@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createDazNodeLightningService } from '@/lib/services/daznode-lightning-service';
-import { createLightningService } from '@/lib/services/lightning-service';
+import { createDaznoApiOnlyService } from '@/lib/services/dazno-api-only';
 import { validateData, checkInvoiceSchema } from '@/lib/validations/lightning';
 import { ApiResponse } from '@/lib/api-response';
-import { PaymentLogger } from '@/lib/services/payment-logger';
 import type { InvoiceStatus } from '@/types/lightning';
 
-// Headers CORS pour permettre les requêtes depuis le navigateur
+const PROVIDER = 'api.dazno.de';
+
+// Headers CORS
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
@@ -18,14 +18,11 @@ export async function OPTIONS(): Promise<Response> {
 }
 
 export async function GET(req: NextRequest): Promise<Response> {
-  console.log('🔍 check-invoice - Vérification via daznode@getalby.com');
-  
   try {
     const { searchParams } = new URL(req.url);
     const invoiceId = searchParams.get('id');
     const paymentHash = searchParams.get('payment_hash');
 
-    // Validation des paramètres d'entrée
     if (!invoiceId && !paymentHash) {
       return NextResponse.json<ApiResponse<null>>({
         success: false,
@@ -35,18 +32,14 @@ export async function GET(req: NextRequest): Promise<Response> {
         },
         meta: {
           timestamp: new Date().toISOString(),
-          provider: 'daznode@getalby.com'
+          provider: PROVIDER
         }
       }, { status: 400 });
     }
 
-    console.log('✅ check-invoice - Paramètres validés:', { invoiceId, paymentHash });
-
-    // Utilisation du service Lightning daznode@getalby.com
-    const lightningService = createDazNodeLightningService();
-    
-    // Vérifier le statut du paiement
+    const lightningService = createDaznoApiOnlyService();
     const identifier = invoiceId || paymentHash;
+    
     if (!identifier) {
       return NextResponse.json<ApiResponse<null>>({
         success: false,
@@ -59,28 +52,6 @@ export async function GET(req: NextRequest): Promise<Response> {
 
     const paymentStatus = await lightningService.checkInvoiceStatus(identifier);
 
-    // Vérification de la structure de paymentStatus
-    if (!paymentStatus || typeof paymentStatus !== 'object' || !('status' in paymentStatus)) {
-      return NextResponse.json<ApiResponse<null>>({
-        success: false,
-        error: {
-          code: 'LIGHTNING_ERROR',
-          message: 'Statut de facture invalide ou inconnu',
-          details: paymentStatus
-        },
-        meta: {
-          timestamp: new Date().toISOString(),
-          provider: 'daznode@getalby.com'
-        }
-      }, { status: 500 });
-    }
-
-    console.log('✅ check-invoice - Statut vérifié via daznode@getalby.com:', {
-      identifier: invoiceId || paymentHash,
-      status: paymentStatus.status,
-      settled: paymentStatus.status === 'settled'
-    });
-
     return NextResponse.json<ApiResponse<any>>({
       success: true,
       data: {
@@ -91,42 +62,34 @@ export async function GET(req: NextRequest): Promise<Response> {
         settled_at: paymentStatus.settledAt,
         invoice_id: invoiceId,
         details: paymentStatus,
-        provider: 'daznode@getalby.com'
+        provider: PROVIDER
       },
       meta: {
         timestamp: new Date().toISOString(),
-        provider: 'daznode@getalby.com'
+        provider: PROVIDER
       }
     });
     
   } catch (error) {
-    console.error('❌ check-invoice - Erreur daznode@getalby.com:', error);
+    console.error('❌ check-invoice - Erreur:', error);
     
     return NextResponse.json<ApiResponse<null>>({
       success: false,
       error: {
         code: 'LIGHTNING_ERROR',
-        message: 'Erreur lors de la vérification via daznode@getalby.com',
+        message: 'Erreur lors de la vérification',
         details: error instanceof Error ? error.message : 'Erreur inconnue'
       },
       meta: {
         timestamp: new Date().toISOString(),
-        provider: 'daznode@getalby.com'
+        provider: PROVIDER
       }
     }, { status: 500 });
   }
 }
 
-export const dynamic = "force-dynamic";
-export const runtime = 'nodejs';
-
-/**
- * POST /api/check-invoice
- * Vérifie le statut d'une facture Lightning
- */
 export async function POST(request: Request) {
   try {
-    // Récupération et validation des données
     const body = await request.json();
     const validation = validateData(checkInvoiceSchema, body);
 
@@ -140,26 +103,20 @@ export async function POST(request: Request) {
         },
         meta: {
           timestamp: new Date().toISOString(),
-          provider: 'daznode@getalby.com'
+          provider: PROVIDER
         }
       }, { status: 400 });
     }
 
-    // Vérification du statut
-    const lightningService = createLightningService();
+    const lightningService = createDaznoApiOnlyService();
     const status = await lightningService.checkInvoiceStatus(validation.data.paymentHash);
 
-    // Mise à jour du log de paiement
-    const paymentLogger = new PaymentLogger();
-    await paymentLogger.updatePaymentStatus(validation.data.paymentHash, status.status as any);
-
-    // Réponse formatée
     return NextResponse.json<ApiResponse<InvoiceStatus>>({
       success: true,
       data: status,
       meta: {
         timestamp: new Date().toISOString(),
-        provider: 'daznode@getalby.com'
+        provider: PROVIDER
       }
     });
 
@@ -174,8 +131,11 @@ export async function POST(request: Request) {
       },
       meta: {
         timestamp: new Date().toISOString(),
-        provider: 'daznode@getalby.com'
+        provider: PROVIDER
       }
     }, { status: 500 });
   }
 }
+
+export const dynamic = "force-dynamic";
+export const runtime = 'nodejs';
