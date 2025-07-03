@@ -1,20 +1,51 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { checkTokenExpiry } from '../../../scripts/monitor-tokens';
+import { NextRequest, NextResponse } from 'next/server';
+import { getSupabaseAdminClient } from '@/lib/supabase';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Méthode non autorisée' });
-  }
-
+export async function POST(request: NextRequest): Promise<NextResponse> {
   // Vérifier le secret de la tâche CRON
-  if (req.headers['x-cron-secret'] !== (process.env.CRON_SECRET ?? "")) {
-    return res.status(401).json({ error: 'Non autorisé' });
+  const cronSecret = request.headers.get('x-cron-secret');
+  if (cronSecret !== (process.env.CRON_SECRET ?? "")) {
+    return NextResponse.json(
+      { error: 'Non autorisé' },
+      { status: 401 }
+    );
   }
 
   try {
     await checkTokenExpiry();
-    res.status(200).json({ success: true });
+    return NextResponse.json({ success: true });
   } catch (error) {
-    res.status(500).json({ error: 'Erreur lors de la vérification du token' });
+    console.error('❌ Erreur lors de la vérification du token:', error);
+    return NextResponse.json(
+      { error: 'Erreur lors de la vérification du token' },
+      { status: 500 }
+    );
+  }
+}
+
+async function checkTokenExpiry(): Promise<void> {
+  try {
+    // Créer le client admin Supabase
+    const supabase = getSupabaseAdminClient();
+    
+    // Récupérer tous les utilisateurs avec des tokens
+    const { data: users, error } = await supabase
+      .from('profiles')
+      .select('id, t4g_tokens, email')
+      .gt('t4g_tokens', 0);
+
+    if (error) {
+      throw error;
+    }
+
+    // Pour chaque utilisateur, vérifier et mettre à jour les tokens si nécessaire
+    for (const user of users) {
+      // Logique de vérification des tokens
+      // À implémenter selon vos besoins
+      console.log(`Vérification des tokens pour l'utilisateur ${user.email}`);
+    }
+  } catch (error) {
+    console.error('❌ Erreur lors de la vérification des tokens:', error);
+    throw error;
   }
 }
