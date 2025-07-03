@@ -1,6 +1,6 @@
 import { getRequestConfig } from 'next-intl/server';
 import type { GetRequestConfigParams } from 'next-intl/server';
-import { locales, defaultLocale } from '../i18n.config';
+import { locales, defaultLocale } from '../i18n.config.js';
 
 export default getRequestConfig(async (params: GetRequestConfigParams) => {
   const locale = params.locale || defaultLocale;

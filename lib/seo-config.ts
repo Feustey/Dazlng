@@ -2,7 +2,7 @@ export const seoConfig = {
   // Configuration de base
   baseUrl: process.env.NODE_ENV === 'production' 
     ? 'https://dazno.de' 
-    : 'http://localhost:3001',
+    : 'http://localhost:3000',
   
   // Métadonnées par défaut
   defaultMetadata: {
