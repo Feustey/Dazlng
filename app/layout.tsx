@@ -3,7 +3,7 @@ import './globals.css';
 import { Metadata } from 'next';
 import ClientLayout from './ClientLayout';
 import React from 'react';
-import { SupabaseProvider } from './providers/SupabaseProvider'
+import { SupabaseProvider } from './providers/SupabaseProvider';
 import Script from 'next/script';
 import { seoConfig } from '@/lib/seo-config';
 
@@ -101,9 +101,6 @@ export default function RootLayout({
   return (
     <html lang="fr" className={inter.className}>
       <head>
-        {/* Preload des ressources critiques pour Core Web Vitals */}
-        {/* (Supprimé : preload CSS Next.js, car Next.js gère automatiquement le CSS critique) */}
-        
         {/* DNS prefetch pour les domaines externes */}
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
@@ -138,20 +135,6 @@ export default function RootLayout({
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
       </head>
       <body className="antialiased">
-        {/* Scripts de performance non-bloquants */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'GA_MEASUREMENT_ID');
-          `}
-        </Script>
-        
         <SupabaseProvider>
           <ClientLayout>
             {children}
