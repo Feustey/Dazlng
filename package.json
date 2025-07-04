@@ -42,7 +42,12 @@
     "supabase:validate": "npm run supabase:test && npm run supabase:migrate",
     "test:cross-domain-session": "tsx scripts/test-cross-domain-session.ts",
     "test:dazno-api": "tsx scripts/test-dazno-api.ts",
-    "check:dazno-config": "tsx scripts/check-dazno-config.ts"
+    "check:dazno-config": "tsx scripts/check-dazno-config.ts",
+    "test:mcp-fix": "tsx scripts/test-mcp-fix.ts",
+    "test:mcp-quick": "tsx scripts/quick-mcp-test.ts",
+    "deploy:mcp-fix": "chmod +x scripts/execute-deployment.sh && ./scripts/execute-deployment.sh",
+    "deploy:mcp-safe": "chmod +x scripts/deploy-with-test.sh && ./scripts/deploy-with-test.sh",
+    "deploy:mcp-final": "chmod +x scripts/final-deploy.sh && ./scripts/final-deploy.sh"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.55.0",

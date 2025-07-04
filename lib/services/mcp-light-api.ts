@@ -298,8 +298,8 @@ export class MCPLightAPI {
 
       // Vérifier la connectivité
       const health = await this.checkHealth();
-      if (health.status !== 'ok') {
-        throw new Error('Service indisponible');
+      if (health.status !== 'healthy') {
+        throw new Error(`Service indisponible: ${health.status}`);
       }
 
       this.initialized = true;
@@ -313,9 +313,10 @@ export class MCPLightAPI {
   /**
    * Effectue une requête authentifiée à l'API avec fallback
    */
-  private async makeRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-    if (!this.initialized) {
-      const success = await (this ?? Promise.reject(new Error("this is null"))).initialize();
+  private async makeRequest<T>(endpoint: string, options: RequestInit = {}, skipInitialization = false): Promise<T> {
+    // Éviter la boucle infinie pour checkHealth
+    if (!this.initialized && !skipInitialization) {
+      const success = await this.initialize();
       if (!success) {
         console.warn('⚠️ API MCP-Light indisponible, utilisation du mode fallback');
         throw new Error('API_UNAVAILABLE');
@@ -340,7 +341,7 @@ export class MCPLightAPI {
     });
 
     if (!response.ok) {
-      const errorData = await (response ?? Promise.reject(new Error("response is null"))).text();
+      const errorData = await response.text();
       throw new Error(`API Error ${response.status}: ${errorData}`);
     }
 
@@ -351,7 +352,36 @@ export class MCPLightAPI {
    * Vérifie l'état de santé de l'API
    */
   async checkHealth(): Promise<{ status: string; timestamp: string; services?: Record<string, unknown> }> {
-    return this.makeRequest('/health');
+    try {
+      // Test de connectivité basique sans credentials
+      const response = await fetch(`${this.baseURL}/health`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return {
+          status: 'healthy',
+          timestamp: new Date().toISOString(),
+          services: data
+        };
+      } else {
+        return {
+          status: 'unhealthy',
+          timestamp: new Date().toISOString(),
+          services: { error: `HTTP ${response.status}` }
+        };
+      }
+    } catch (error) {
+      return {
+        status: 'unreachable',
+        timestamp: new Date().toISOString(),
+        services: { error: error instanceof Error ? error.message : 'Unknown error' }
+      };
+    }
   }
 
   /**
