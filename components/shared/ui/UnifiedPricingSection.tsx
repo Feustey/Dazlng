@@ -167,7 +167,7 @@ export const UnifiedPricingSection: React.FC = () => {
         
         <div className="text-center mt-12">
           <p className="text-gray-400 text-sm">
-            💡 <strong>Garantie satisfaction :</strong> Premier mois remboursé si vous n'évitez pas au moins un force-close
+            💡 <strong>{t('UnifiedPricingSection.garantie_satisfaction_')}</strong> Premier mois remboursé si vous n'évitez pas au moins un force-close
           </p>
         </div>
       </div>

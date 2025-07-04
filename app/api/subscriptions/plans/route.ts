@@ -32,7 +32,7 @@ export async function GET(_req: NextRequest): Promise<Response> {
       {
         id: 'free',
         name: 'Gratuit',
-        description: 'Parfait pour commencer',
+        description: "route.routerouteparfait_pour_commenc",
         price: 0,
         currency: 'SATS',
         interval: 'month',
@@ -51,7 +51,7 @@ export async function GET(_req: NextRequest): Promise<Response> {
       {
         id: 'basic',
         name: 'Basic',
-        description: 'Optimisation et statistiques avancées',
+        description: "route.routerouteoptimisation_et_stat",
         price: 10000,
         currency: 'SATS',
         interval: 'month',
@@ -73,7 +73,7 @@ export async function GET(_req: NextRequest): Promise<Response> {
       {
         id: 'premium',
         name: 'Premium',
-        description: 'Toutes les fonctionnalités + IA avancée',
+        description: "route.routeroutetoutes_les_fonctionn",
         price: 30000,
         currency: 'SATS',
         interval: 'month',
@@ -98,7 +98,7 @@ export async function GET(_req: NextRequest): Promise<Response> {
       {
         id: 'enterprise',
         name: 'Business',
-        description: 'Solution sur mesure pour les entreprises avec commissions réduites',
+        description: "route.routeroutesolution_sur_mesure_",
         price: 15000,
         currency: 'SATS',
         interval: 'month',

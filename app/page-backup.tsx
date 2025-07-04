@@ -22,7 +22,7 @@ const SignupConfirmation: React.FC = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">Inscription confirmée !</h2>
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">{t('page-backup.inscription_confirme_')}</h2>
           <p className="text-gray-600 mb-6">
             Votre adresse email a été vérifiée avec succès. Votre compte est maintenant actif et vous pouvez profiter de tous les services de dazno.de.
           </p>

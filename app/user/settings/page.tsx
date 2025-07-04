@@ -38,7 +38,7 @@ const SettingsPage: FC = () => {
         const res = await fetch('/api/auth/me', {
           headers: { 
             Authorization: `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json'
+            "settings.settingssettingscontenttype": 'application/json'
           }
         });
         
@@ -125,7 +125,7 @@ const SettingsPage: FC = () => {
       const res = await fetch('/api/user/profile', {
         method: 'PUT',
         headers: { 
-          'Content-Type': 'application/json', 
+          "settings.settingssettingscontenttype": 'application/json', 
           Authorization: `Bearer ${session.access_token}` 
         },
         body: JSON.stringify(form),
@@ -161,7 +161,7 @@ const SettingsPage: FC = () => {
         <div className="flex items-center justify-center min-h-96">
           <div className="text-center">
             <div className="animate-spin h-12 w-12 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p className="text-gray-600">Chargement de vos paramètres...</p>
+            <p className="text-gray-600">{t('settings.chargement_de_vos_paramtres')}</p>
           </div>
         </div>
       </div>
@@ -173,7 +173,7 @@ const SettingsPage: FC = () => {
     return (
       <div className="max-w-2xl mx-auto space-y-8">
         <div className="text-center p-8">
-          <p className="text-red-600">Vous devez être connecté pour accéder à cette page.</p>
+          <p className="text-red-600">{t('settings.vous_devez_tre_connect_pour_ac')}</p>
         </div>
       </div>
   );
@@ -182,7 +182,7 @@ const SettingsPage: FC = () => {
   return (
     <div className="max-w-2xl mx-auto space-y-8">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Paramètres</h1>
+        <h1 className="text-3xl font-bold text-gray-900">{t('settings.paramtres')}</h1>
         <div className="text-sm text-gray-500">
           Connecté en tant que {user.email}
         </div>
@@ -198,18 +198,18 @@ const SettingsPage: FC = () => {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
               value={form.nom} 
               onChange={handleChange}
-              placeholder="Votre nom de famille" 
+              placeholder="settings.settingssettingsvotre_nom_de_f" 
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Prénom</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t('settings.prnom')}</label>
             <input 
               type="text" 
               name="prenom" 
               className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
               value={form.prenom} 
               onChange={handleChange}
-              placeholder="Votre prénom" 
+              placeholder="settings.settingssettingsvotre_prnom" 
             />
           </div>
           <div className="md:col-span-2">
@@ -223,81 +223,81 @@ const SettingsPage: FC = () => {
               disabled
               title="L'email ne peut pas être modifié"
             />
-            <p className="text-xs text-gray-500 mt-1">L'adresse email ne peut pas être modifiée</p>
+            <p className="text-xs text-gray-500 mt-1">{t('settings.ladresse_email_ne_peut_pas_tre')}</p>
           </div>
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Clé publique Lightning</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t('settings.cl_publique_lightning')}</label>
             <input 
               type="text" 
               name="pubkey" 
               className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors font-mono text-sm" 
               value={form.pubkey} 
               onChange={handleChange}
-              placeholder="02a1b2c3d4e5f6..."
+              placeholder="settings.settingssettings02a1b2c3d4e5f6"
             />
-            <p className="text-xs text-gray-500 mt-1">Votre clé publique Bitcoin/Lightning pour l'authentification avancée</p>
+            <p className="text-xs text-gray-500 mt-1">{t('settings.votre_cl_publique_bitcoinlight')}</p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Compte X (Twitter)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t('settings.compte_x_twitter')}</label>
             <input 
               type="text" 
               name="compte_x" 
               className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
               value={form.compte_x} 
               onChange={handleChange}
-              placeholder="@votre_handle" 
+              placeholder="settings.settingssettingsvotre_handle" 
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Clé publique Nostr</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t('settings.cl_publique_nostr')}</label>
             <input 
               type="text" 
               name="compte_nostr" 
               className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors font-mono text-sm" 
               value={form.compte_nostr} 
               onChange={handleChange}
-              placeholder="npub1..." 
+              placeholder="settings.settingssettingsnpub1" 
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Compte Telegram</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t('settings.compte_telegram')}</label>
             <input 
               type="text" 
               name="compte_telegram" 
               className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
               value={form.compte_telegram} 
               onChange={handleChange}
-              placeholder="@votre_username" 
+              placeholder="settings.settingssettingsvotre_username" 
             />
-            <p className="text-xs text-gray-500 mt-1">Format: @username (5-32 caractères)</p>
+            <p className="text-xs text-gray-500 mt-1">{t('settings.format_username_532_caractres')}</p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t('settings.tlphone')}</label>
             <input 
               type="tel" 
               name="phone" 
               className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
               value={form.phone} 
               onChange={handleChange}
-              placeholder="+33123456789" 
+              placeholder="settings.settingssettings33123456789" 
             />
-            <p className="text-xs text-gray-500 mt-1">Format international recommandé (ex: +33123456789)</p>
+            <p className="text-xs text-gray-500 mt-1">{t('settings.format_international_recommand')}</p>
           </div>
         </div>
 
         {/* Section Adresse */}
         <div className="border-t pt-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">📍 Adresse</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('settings._adresse')}</h3>
           <div className="grid grid-cols-1 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Adresse complète</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('settings.adresse_complte')}</label>
               <input 
                 type="text" 
                 name="address" 
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
                 value={form.address} 
                 onChange={handleChange}
-                placeholder="123 rue de la Paix" 
+                placeholder="settings.settingssettings123_rue_de_la_" 
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -313,7 +313,7 @@ const SettingsPage: FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Code postal</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('settings.code_postal')}</label>
                 <input 
                   type="text" 
                   name="code_postal" 

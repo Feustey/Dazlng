@@ -47,7 +47,7 @@ export const AdvancedStats = ({ stats }: AdvancedStatsProps) => {
     labels: stats.channelDistribution.labels,
     datasets: [
       {
-        label: 'Distribution des canaux',
+        label: "user.useruserdistribution_des_canau",
         data: stats.channelDistribution.data,
         backgroundColor: 'rgba(234, 179, 8, 0.5)',
         borderColor: 'rgb(234, 179, 8)',
@@ -60,7 +60,7 @@ export const AdvancedStats = ({ stats }: AdvancedStatsProps) => {
     labels: stats.revenueByCategory.labels,
     datasets: [
       {
-        label: 'Revenus par catégorie',
+        label: "user.useruserrevenus_par_catgorie",
         data: stats.revenueByCategory.data,
         backgroundColor: 'rgba(16, 185, 129, 0.5)',
         borderColor: 'rgb(16, 185, 129)',
@@ -92,11 +92,11 @@ export const AdvancedStats = ({ stats }: AdvancedStatsProps) => {
           animate={{ opacity: 1, y: 0 }}
           className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
         >
-          <h3 className="text-lg font-semibold text-gray-900">Centralité</h3>
+          <h3 className="text-lg font-semibold text-gray-900">{t('user.centralit')}</h3>
           <div className="mt-4 space-y-4">
             <div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Centralité</span>
+                <span className="text-sm text-gray-600">{t('user.centralit')}</span>
                 <span className="text-lg font-semibold text-gray-900">
                   {stats.networkMetrics.centrality.toFixed(2)}
                 </span>
@@ -149,11 +149,11 @@ export const AdvancedStats = ({ stats }: AdvancedStatsProps) => {
           transition={{ delay: 0.1 }}
           className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
         >
-          <h3 className="text-lg font-semibold text-gray-900">Configuration des frais</h3>
+          <h3 className="text-lg font-semibold text-gray-900">{t('user.configuration_des_frais')}</h3>
           <div className="mt-4 space-y-4">
             <div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Base Fee</span>
+                <span className="text-sm text-gray-600">{t('user.base_fee')}</span>
                 <span className="text-lg font-semibold text-gray-900">
                   {stats.feeMetrics.baseFee} sats
                 </span>
@@ -168,7 +168,7 @@ export const AdvancedStats = ({ stats }: AdvancedStatsProps) => {
             </div>
             <div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Fee Rate</span>
+                <span className="text-sm text-gray-600">{t('user.fee_rate')}</span>
                 <span className="text-lg font-semibold text-gray-900">
                   {stats.feeMetrics.feeRate} ppm
                 </span>
@@ -183,7 +183,7 @@ export const AdvancedStats = ({ stats }: AdvancedStatsProps) => {
             </div>
             <div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">HTLC Fee</span>
+                <span className="text-sm text-gray-600">{t('user.htlc_fee')}</span>
                 <span className="text-lg font-semibold text-gray-900">
                   {stats.feeMetrics.htlcFee} sats
                 </span>

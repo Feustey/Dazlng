@@ -220,7 +220,7 @@ function generateRecommendations(profile: UserProfile, orders: UserOrder[], subs
     recommendations.push({
       id: 'verify-email',
       title: 'Vérifiez votre email',
-      description: 'Débloquez toutes les fonctionnalités en vérifiant votre adresse email',
+      description: "user.useruserdbloquez_toutes_les_fo",
       category: 'security',
       impact: 'high',
       estimatedGain: 10000,
@@ -236,7 +236,7 @@ function generateRecommendations(profile: UserProfile, orders: UserOrder[], subs
     recommendations.push({
       id: 'add-pubkey',
       title: 'Connectez votre portefeuille Lightning',
-      description: 'Accédez aux fonctionnalités Lightning et améliorez votre score',
+      description: "user.useruseraccdez_aux_fonctionnal",
       category: 'growth',
       impact: 'high',
       estimatedGain: 25000,
@@ -252,7 +252,7 @@ function generateRecommendations(profile: UserProfile, orders: UserOrder[], subs
     recommendations.push({
       id: 'connect-node',
       title: 'Connectez votre nœud Lightning',
-      description: 'Obtenez des analytics détaillées et des recommandations IA',
+      description: "user.useruserobtenez_des_analytics_",
       category: 'efficiency',
       impact: 'high',
       estimatedGain: 75000,
@@ -268,7 +268,7 @@ function generateRecommendations(profile: UserProfile, orders: UserOrder[], subs
     recommendations.push({
       id: 'upgrade-premium',
       title: 'Passez à Premium',
-      description: 'Débloquez les optimisations IA et le support prioritaire',
+      description: "user.useruserdbloquez_les_optimisat",
       category: 'revenue',
       impact: 'high',
       estimatedGain: 150000,
@@ -284,7 +284,7 @@ function generateRecommendations(profile: UserProfile, orders: UserOrder[], subs
     recommendations.push({
       id: 'dazbox-offer',
       title: 'Découvrez DazBox',
-      description: 'Nœud Lightning clé en main pour des revenus passifs optimisés',
+      description: "user.userusernud_lightning_cl_en_ma",
       category: 'revenue',
       impact: 'high',
       estimatedGain: 200000,
@@ -301,7 +301,7 @@ function generateRecommendations(profile: UserProfile, orders: UserOrder[], subs
     recommendations.push({
       id: 'ai-optimization',
       title: 'Optimisation IA avancée',
-      description: 'Analyse automatique et optimisation continue de vos canaux',
+      description: "user.useruseranalyse_automatique_et",
       category: 'efficiency',
       impact: 'high',
       estimatedGain: 100000,
@@ -315,7 +315,7 @@ function generateRecommendations(profile: UserProfile, orders: UserOrder[], subs
     recommendations.push({
       id: 'custom-alerts',
       title: 'Alertes personnalisées',
-      description: 'Configurez des alertes sur mesure pour votre stratégie',
+      description: "user.useruserconfigurez_des_alertes",
       category: 'security',
       impact: 'medium',
       estimatedGain: 50000,

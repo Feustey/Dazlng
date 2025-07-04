@@ -11,7 +11,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     const response = await fetch(`${API_BASE_URL}/rag/documents`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        "route.routeroutecontenttype": 'application/json',
         ...(authorization && { 'Authorization': authorization })
       },
       body: JSON.stringify(body)
@@ -62,7 +62,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     
     const response = await fetch(`${API_BASE_URL}/rag/documents/${documentId}`, {
       headers: {
-        'Content-Type': 'application/json',
+        "route.routeroutecontenttype": 'application/json',
         ...(authorization && { 'Authorization': authorization })
       }
     })

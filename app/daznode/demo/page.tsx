@@ -53,7 +53,7 @@ export default function DemoPage() {
                   <div className="w-10 h-10 bg-gradient-to-r from-yellow-400 to-pink-500 rounded-full flex items-center justify-center text-black font-bold">
                     1
                   </div>
-                  <h3 className="text-2xl font-bold text-white">Inscription en 30 secondes</h3>
+                  <h3 className="text-2xl font-bold text-white">{t('common.inscription_en_30_secondes')}</h3>
                 </div>
                 <p className="text-indigo-200 text-lg">
                   Créez votre compte et accédez immédiatement à votre tableau de bord personnalisé.
@@ -77,7 +77,7 @@ export default function DemoPage() {
                 <div className="h-48 rounded-lg overflow-hidden">
                   <Image
                     src="/assets/images/onboarding-daznode.png"
-                    alt="Écran d'inscription Daznode"
+                    alt="common.commoncommoncran_d"inscription Daznode"
                     width={400}
                     height={192}
                     className="w-full h-full object-cover"
@@ -92,7 +92,7 @@ export default function DemoPage() {
                 <div className="h-48 rounded-lg overflow-hidden">
                   <Image
                     src="/assets/images/dashboard-daznode.png"
-                    alt="Dashboard de gestion Daznode"
+                    alt="common.commoncommondashboard_de_gesti"
                     width={400}
                     height={192}
                     className="w-full h-full object-cover"
@@ -104,7 +104,7 @@ export default function DemoPage() {
                   <div className="w-10 h-10 bg-gradient-to-r from-yellow-400 to-pink-500 rounded-full flex items-center justify-center text-black font-bold">
                     2
                   </div>
-                  <h3 className="text-2xl font-bold text-white">Déploiement automatique</h3>
+                  <h3 className="text-2xl font-bold text-white">{t('common.dploiement_automatique')}</h3>
                 </div>
                 <p className="text-indigo-200 text-lg">
                   Votre nœud Lightning est déployé automatiquement sur notre infrastructure haute performance.
@@ -133,7 +133,7 @@ export default function DemoPage() {
                   <div className="w-10 h-10 bg-gradient-to-r from-yellow-400 to-pink-500 rounded-full flex items-center justify-center text-black font-bold">
                     3
                   </div>
-                  <h3 className="text-2xl font-bold text-white">Gestion simplifiée</h3>
+                  <h3 className="text-2xl font-bold text-white">{t('common.gestion_simplifie')}</h3>
                 </div>
                 <p className="text-indigo-200 text-lg">
                   Gérez vos canaux, surveillez vos transactions et optimisez vos revenus depuis une interface unifiée.
@@ -157,7 +157,7 @@ export default function DemoPage() {
                 <div className="h-48 rounded-lg overflow-hidden">
                   <Image
                     src="/assets/images/gestion-daznode.png"
-                    alt="Interface de gestion Daznode"
+                    alt="common.commoncommoninterface_de_gesti"
                     width={400}
                     height={192}
                     className="w-full h-full object-cover"
@@ -174,15 +174,15 @@ export default function DemoPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="text-center">
                   <div className="text-4xl font-bold text-yellow-300 mb-2">500+</div>
-                  <div className="text-indigo-200">Nœuds déployés</div>
+                  <div className="text-indigo-200">{t('common.nuds_dploys')}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-4xl font-bold text-yellow-300 mb-2">99.9%</div>
-                  <div className="text-indigo-200">Disponibilité</div>
+                  <div className="text-indigo-200">{t('common.disponibilit')}</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-yellow-300 mb-2">5min</div>
-                  <div className="text-indigo-200">Temps de déploiement</div>
+                  <div className="text-4xl font-bold text-yellow-300 mb-2">{t('common.5min')}</div>
+                  <div className="text-indigo-200">{t('common.temps_de_dploiement')}</div>
                 </div>
               </div>
             </div>
@@ -199,7 +199,7 @@ export default function DemoPage() {
                 Démarrer Gratuitement
               </button>
               <p className="text-indigo-200 text-sm">
-                <span className="text-yellow-300 font-bold">Essai gratuit IA de 7 jours</span> • 
+                <span className="text-yellow-300 font-bold">{t('common.essai_gratuit_ia_de_7_jours')}</span> • 
                 Pas de carte bancaire requise
               </p>
             </div>

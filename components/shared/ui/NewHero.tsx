@@ -58,9 +58,9 @@ const NewHero: React.FC = () => {
           </h1>
           
           <p className="text-xl md:text-2xl text-indigo-100 max-w-3xl mx-auto leading-relaxed">
-            <strong className="text-red-300">Channel force-close à 3h du matin ?</strong> 
-            <strong className="text-orange-300">Liquidity stuck pendant des heures ?</strong>
-            <strong className="text-yellow-300">Routing fees qui plombent votre ROI ?</strong>
+            <strong className="text-red-300">{t('NewHero.channel_forceclose_3h_du_matin')}</strong> 
+            <strong className="text-orange-300">{t('NewHero.liquidity_stuck_pendant_des_he')}</strong>
+            <strong className="text-yellow-300">{t('NewHero.routing_fees_qui_plombent_votr')}</strong>
             <br />
             Notre IA surveille, optimise et répare automatiquement.
           </p>
@@ -70,15 +70,15 @@ const NewHero: React.FC = () => {
         <div className="flex flex-wrap justify-center items-center gap-6 text-indigo-200 text-sm">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-            <span>500+ nœuds déployés</span>
+            <span>{t('NewHero.500_nuds_dploys')}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-            <span>99.9% de disponibilité</span>
+            <span>{t('NewHero.999_de_disponibilit')}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-            <span>Installation en 5 minutes</span>
+            <span>{t('NewHero.installation_en_5_minutes')}</span>
           </div>
         </div>
 
@@ -102,7 +102,7 @@ const NewHero: React.FC = () => {
         {/* Bénéfice immédiat */}
         <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 mt-12 max-w-2xl mx-auto">
           <p className="text-white font-medium">
-            <span className="text-yellow-300 font-bold">Essai gratuit de 7 jours</span> • 
+            <span className="text-yellow-300 font-bold">{t('NewHero.essai_gratuit_de_7_jours')}</span> • 
             Pas de carte bancaire requise • 
             Support 24/7
           </p>
@@ -114,7 +114,7 @@ const NewHero: React.FC = () => {
             onClick={handleScrollToDemo}
             className="group text-yellow-300 hover:text-yellow-200 transition-all duration-300 flex flex-col items-center"
           >
-            <span className="text-sm font-medium mb-2">Découvrir comment</span>
+            <span className="text-sm font-medium mb-2">{t('NewHero.dcouvrir_comment')}</span>
             <div className="w-12 h-12 rounded-full bg-yellow-300 text-indigo-700 flex items-center justify-center group-hover:bg-yellow-200 transition-colors">
               <svg className="w-6 h-6 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />

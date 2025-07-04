@@ -1,4 +1,5 @@
 import React from 'react';
+import { Target } from '@/components/shared/ui/IconRegistry';
 import {
   List,
   Datagrid,
@@ -19,7 +20,7 @@ import {
   DeleteButton,
   useRecordContext,
 } from 'react-admin';
-import { Target } from 'lucide-react';
+
 
 // Actions personnalisées
 const ListActions = () => (
@@ -43,7 +44,7 @@ const RowActions = () => {
 // Liste des segments
 export const SegmentList = () => (
   <List 
-    title="Segments de clients"
+    title="admin.adminadminsegments_de_clients"
     actions={<ListActions />}
     perPage={25}
     sort={{ field: 'created_at', order: 'DESC' }}
@@ -60,7 +61,7 @@ export const SegmentList = () => (
   );
 // Affichage détaillé d'un segment
 export const SegmentShow = () => (
-  <Show title="Détails du segment">
+  <Show title="admin.adminadmindtails_du_segment">
     <SimpleShowLayout>
       <TextField source="id" label="ID" />
       <TextField source="name" label="Nom du segment" />
@@ -75,7 +76,7 @@ export const SegmentShow = () => (
   );
 // Édition d'un segment
 export const SegmentEdit = () => (
-  <Edit title="Modifier le segment">
+  <Edit title="admin.adminadminmodifier_le_segment">
     <SimpleForm>
       <TextInput source="name" label="Nom du segment" required fullWidth />
       <TextInput source="description" label="Description" multiline rows={3} fullWidth />
@@ -86,7 +87,7 @@ export const SegmentEdit = () => (
   );
 // Création d'un nouveau segment
 export const SegmentCreate = () => (
-  <Create title="Créer un segment">
+  <Create title="admin.adminadmincrer_un_segment">
     <SimpleForm>
       <TextInput source="name" label="Nom du segment" required fullWidth />
       <TextInput source="description" label="Description" multiline rows={3} fullWidth />

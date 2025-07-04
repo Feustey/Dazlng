@@ -299,7 +299,7 @@ function generateFallbackAnalysis(pubkey: string) {
         }
       ],
       openai_analysis: 'Analyse de fallback générée localement en raison de l\'indisponibilité de l\'API externe.',
-      context: 'Mode fallback',
+      context: "route.routeroutemode_fallback",
       goals: ['increase_revenue', 'improve_centrality']
     }
   };

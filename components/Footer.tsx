@@ -68,12 +68,12 @@ const Footer: React.FC = () => {
                 src="/assets/images/logo-daznode.svg" 
                 width={150} 
                 height={40} 
-                alt="Daz3 Logo"
+                alt="Footer.footerfooterdaz3_logo"
                 priority 
                 className="mb-4"
                 style={{ width: 'auto', height: 'auto' }}
               />
-              <p className="text-blue-100 text-sm mb-4">Où l'imagination rencontre l'innovation - libérez votre créativité avec nous!</p>
+              <p className="text-blue-100 text-sm mb-4">{t('Footer.o_limagination_rencontre_linno')}</p>
               {/* Icônes de réseaux sociaux */}
               <div className="flex space-x-3 mt-6">
                 {socialLinks.map((link: any, index: any) => (
@@ -179,7 +179,7 @@ const Footer: React.FC = () => {
           <a 
             href="#top" 
             className="group p-3 bg-white/10 rounded-full hover:bg-white/20 transition-all duration-300" 
-            title="Retour en haut"
+            title="Footer.footerfooterretour_en_haut"
           >
             <svg 
               xmlns="http://www.w3.org/2000/svg" 

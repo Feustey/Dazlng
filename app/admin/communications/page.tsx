@@ -209,7 +209,7 @@ export default function CommunicationsPage(): JSX.Element {
             id: '1',
             name: 'Onboarding Lightning Network',
             subject: 'Bienvenue dans l\'écosystème Lightning !',
-            content: '<p>Découvrez comment connecter votre nœud...</p>',
+            content: '<p>{t('admin.dcouvrez_comment_connecter_vot')}</p>',
             status: 'sent',
             segment_ids: ['new-users'],
             sent_at: new Date().toISOString(),
@@ -245,7 +245,7 @@ export default function CommunicationsPage(): JSX.Element {
             id: '1',
             name: 'Welcome Email',
             subject: 'Bienvenue sur DazNode !',
-            content: '<html><body><h1>Bonjour {{prenom}},</h1><p>Bienvenue sur DazNode...</p></body></html>',
+            content: '<html><body><h1>Bonjour {{prenom}},</h1><p>{t('admin.bienvenue_sur_daznode')}</p></body></html>',
             category: 'onboarding',
             is_active: true,
             variables: { prenom: 'Prénom du client', nom: 'Nom du client' },
@@ -255,7 +255,7 @@ export default function CommunicationsPage(): JSX.Element {
             id: '2',
             name: 'Newsletter Monthly',
             subject: 'Actualités Lightning - {{mois}}',
-            content: '<html><body><h1>Newsletter {{mois}}</h1><p>Découvrez les nouveautés...</p></body></html>',
+            content: '<html><body><h1>Newsletter {{mois}}</h1><p>{t('admin.dcouvrez_les_nouveauts')}</p></body></html>',
             category: 'newsletter',
             is_active: true,
             variables: { mois: 'Mois courant' },
@@ -309,8 +309,8 @@ export default function CommunicationsPage(): JSX.Element {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Email Marketing</h1>
-          <p className="text-gray-600">Gestion des campagnes email et communications</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('admin.email_marketing')}</h1>
+          <p className="text-gray-600">{t('admin.gestion_des_campagnes_email_et')}</p>
         </div>
         <div className="flex space-x-2">
           <Link
@@ -352,19 +352,19 @@ export default function CommunicationsPage(): JSX.Element {
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="bg-white p-4 rounded-lg shadow border">
-              <div className="text-sm text-gray-600">Emails Envoyés</div>
+              <div className="text-sm text-gray-600">{t('admin.emails_envoys')}</div>
               <div className="text-2xl font-bold text-blue-600">{emailStats.total_sent.toLocaleString()}</div>
             </div>
             <div className="bg-white p-4 rounded-lg shadow border">
-              <div className="text-sm text-gray-600">Taux d'Ouverture</div>
+              <div className="text-sm text-gray-600">{t('admin.taux_douverture')}</div>
               <div className="text-2xl font-bold text-green-600">{emailStats.open_rate.toFixed(1)}%</div>
             </div>
             <div className="bg-white p-4 rounded-lg shadow border">
-              <div className="text-sm text-gray-600">Taux de Clic</div>
+              <div className="text-sm text-gray-600">{t('admin.taux_de_clic')}</div>
               <div className="text-2xl font-bold text-purple-600">{emailStats.click_rate.toFixed(1)}%</div>
             </div>
             <div className="bg-white p-4 rounded-lg shadow border">
-              <div className="text-sm text-gray-600">Taux de Rebond</div>
+              <div className="text-sm text-gray-600">{t('admin.taux_de_rebond')}</div>
               <div className="text-2xl font-bold text-red-600">{emailStats.bounce_rate.toFixed(1)}%</div>
             </div>
           </div>
@@ -379,8 +379,8 @@ export default function CommunicationsPage(): JSX.Element {
               className="bg-blue-600 text-white p-6 rounded-lg hover:bg-blue-700 transition-colors text-center"
             >
               <div className="text-3xl mb-2">🚀</div>
-              <div className="font-semibold">Nouvelle Campagne</div>
-              <div className="text-sm opacity-90">Créer une campagne email</div>
+              <div className="font-semibold">{t('admin.nouvelle_campagne')}</div>
+              <div className="text-sm opacity-90">{t('admin.crer_une_campagne_email')}</div>
             </button>
             
             <button
@@ -391,8 +391,8 @@ export default function CommunicationsPage(): JSX.Element {
               className="bg-green-600 text-white p-6 rounded-lg hover:bg-green-700 transition-colors text-center"
             >
               <div className="text-3xl mb-2">📝</div>
-              <div className="font-semibold">Nouveau Template</div>
-              <div className="text-sm opacity-90">Créer un template email</div>
+              <div className="font-semibold">{t('admin.nouveau_template')}</div>
+              <div className="text-sm opacity-90">{t('admin.crer_un_template_email')}</div>
             </button>
             
             <Link
@@ -400,8 +400,8 @@ export default function CommunicationsPage(): JSX.Element {
               className="bg-purple-600 text-white p-6 rounded-lg hover:bg-purple-700 transition-colors text-center block"
             >
               <div className="text-3xl mb-2">👥</div>
-              <div className="font-semibold">Gérer Contacts</div>
-              <div className="text-sm opacity-90">Voir la base clients</div>
+              <div className="font-semibold">{t('admin.grer_contacts')}</div>
+              <div className="text-sm opacity-90">{t('admin.voir_la_base_clients')}</div>
             </Link>
           </div>
         </div>
@@ -411,7 +411,7 @@ export default function CommunicationsPage(): JSX.Element {
       {activeTab === 'campaigns' && (
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold">Campagnes Email</h2>
+            <h2 className="text-lg font-semibold">{t('admin.campagnes_email')}</h2>
             <button
               onClick={() => setShowNewCampaign(true)}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -426,7 +426,7 @@ export default function CommunicationsPage(): JSX.Element {
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Campagne</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Envoyés</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('admin.envoys')}</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ouvertures</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clics</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
@@ -491,7 +491,7 @@ export default function CommunicationsPage(): JSX.Element {
       {activeTab === 'templates' && (
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold">Templates Email</h2>
+            <h2 className="text-lg font-semibold">{t('admin.templates_email')}</h2>
             <button
               onClick={() => setShowNewTemplate(true)}
               className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
@@ -516,12 +516,12 @@ export default function CommunicationsPage(): JSX.Element {
                 </div>
                 
                 <div className="mb-4">
-                  <p className="text-sm font-medium text-gray-900 mb-1">Sujet:</p>
+                  <p className="text-sm font-medium text-gray-900 mb-1">{t('admin.sujet')}</p>
                   <p className="text-sm text-gray-600">{template.subject}</p>
                 </div>
                 
                 <div className="mb-4">
-                  <p className="text-sm font-medium text-gray-900 mb-1">Variables:</p>
+                  <p className="text-sm font-medium text-gray-900 mb-1">{t('admin.variables')}</p>
                   <div className="flex flex-wrap gap-1">
                     {Object.keys(template.variables).map((variable: any) => (
                       <span key={variable} className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800">
@@ -551,7 +551,7 @@ export default function CommunicationsPage(): JSX.Element {
           {/* Logs des emails */}
           <div className="bg-white rounded-lg shadow border">
             <div className="p-4 border-b">
-              <h2 className="text-lg font-semibold">Logs des emails</h2>
+              <h2 className="text-lg font-semibold">{t('admin.logs_des_emails')}</h2>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -560,7 +560,7 @@ export default function CommunicationsPage(): JSX.Element {
                     <th className="px-4 py-2 text-left">Type</th>
                     <th className="px-4 py-2 text-left">Destinataire</th>
                     <th className="px-4 py-2 text-left">Statut</th>
-                    <th className="px-4 py-2 text-left">Envoyé le</th>
+                    <th className="px-4 py-2 text-left">{t('admin.envoy_le')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -586,7 +586,7 @@ export default function CommunicationsPage(): JSX.Element {
           {/* Messages de contact */}
           <div className="bg-white rounded-lg shadow border">
             <div className="p-4 border-b">
-              <h2 className="text-lg font-semibold">Messages de contact</h2>
+              <h2 className="text-lg font-semibold">{t('admin.messages_de_contact')}</h2>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -596,7 +596,7 @@ export default function CommunicationsPage(): JSX.Element {
                     <th className="px-4 py-2 text-left">Email</th>
                     <th className="px-4 py-2 text-left">Sujet</th>
                     <th className="px-4 py-2 text-left">Statut</th>
-                    <th className="px-4 py-2 text-left">Reçu le</th>
+                    <th className="px-4 py-2 text-left">{t('admin.reu_le')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -628,7 +628,7 @@ export default function CommunicationsPage(): JSX.Element {
       {showNewCampaign && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-lg font-semibold mb-4">Nouvelle Campagne</h3>
+            <h3 className="text-lg font-semibold mb-4">{t('admin.nouvelle_campagne')}</h3>
             <p className="text-gray-600 mb-4">
               Fonctionnalité en développement. Utilisez le CRM avancé pour créer des campagnes complètes.
             </p>
@@ -653,7 +653,7 @@ export default function CommunicationsPage(): JSX.Element {
       {showNewTemplate && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-lg font-semibold mb-4">Nouveau Template</h3>
+            <h3 className="text-lg font-semibold mb-4">{t('admin.nouveau_template')}</h3>
             <p className="text-gray-600 mb-4">
               Fonctionnalité en développement. Utilisez le CRM avancé pour créer des templates complets.
             </p>

@@ -24,22 +24,22 @@ export async function GET(_req: NextRequest): Promise<Response> {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Test QR Code Lightning</title>
+      <title>{t('route.test_qr_code_lightning')}</title>
       <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body class="bg-gray-100 p-8">
       <div class="max-w-md mx-auto">
-        <h1 class="text-2xl font-bold mb-6 text-center">Test Modale QR Code Lightning</h1>
+        <h1 class="text-2xl font-bold mb-6 text-center">{t('route.test_modale_qr_code_lightning')}</h1>
         
         <button onclick="showModal()" class="w-full bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition">
           ⚡ Afficher la facture Lightning
         </button>
         
         <div class="mt-6 p-4 bg-white rounded-lg shadow">
-          <h3 class="font-semibold mb-2">Informations de test :</h3>
-          <p><strong>Montant :</strong> 15,000 sats</p>
-          <p><strong>Description :</strong> Test QR Code - Plan Premium</p>
-          <p><strong>QR Code :</strong> ✅ Généré</p>
+          <h3 class="font-semibold mb-2">{t('route.informations_de_test_')}</h3>
+          <p><strong>{t('route.montant_')}</strong>{t('route._15000_sats')}</p>
+          <p><strong>{t('route.description_')}</strong>{t('route._test_qr_code_plan_premium')}</p>
+          <p><strong>{t('route.qr_code_')}</strong>{t('route._gnr')}</p>
         </div>
       </div>
       
@@ -53,17 +53,17 @@ export async function GET(_req: NextRequest): Promise<Response> {
                 <div class="w-16 h-16 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span class="text-2xl">⚡</span>
                 </div>
-                <h3 class="text-xl font-bold mb-2">Facture Lightning</h3>
-                <p class="text-gray-600">Plan Premium - Test</p>
+                <h3 class="text-xl font-bold mb-2">{t('route.facture_lightning')}</h3>
+                <p class="text-gray-600">{t('route.plan_premium_test')}</p>
               </div>
               
               <div class="bg-gray-50 rounded-lg p-4 mb-6">
                 <div class="text-center">
-                  <div class="text-2xl font-bold text-purple-600 mb-4">15,000 sats</div>
+                  <div class="text-2xl font-bold text-purple-600 mb-4">{t('route.15000_sats')}</div>
                   
                   <!-- QR Code -->
                   <div class="flex justify-center mb-4">
-                    <img src="${qrCodeDataUrl}" alt="QR Code Lightning Invoice" class="border-2 border-gray-200 rounded-lg" />
+                    <img src="${qrCodeDataUrl}" alt="route.routerouteqr_code_lightning_in" class="border-2 border-gray-200 rounded-lg" />
                   </div>
                   
                   <div class="text-xs text-gray-500 break-all font-mono p-2 bg-white rounded border">${paymentRequest}</div>
@@ -86,8 +86,8 @@ export async function GET(_req: NextRequest): Promise<Response> {
               </div>
               
               <div class="mt-4 text-xs text-gray-500 text-center">
-                <p>🔒 Paiement sécurisé via Lightning Network</p>
-                <p>Cette facture expire dans 1 heure</p>
+                <p>{t('route._paiement_scuris_via_lightning')}</p>
+                <p>{t('route.cette_facture_expire_dans_1_he')}</p>
               </div>
             </div>
           \`;
@@ -101,7 +101,7 @@ export async function GET(_req: NextRequest): Promise<Response> {
     
     return new NextResponse(htmlContent, {
       headers: {
-        'Content-Type': 'text/html',
+        "route.routeroutecontenttype": 'text/html',
       },
     });
     

@@ -1,10 +1,15 @@
-export const locales = ['fr', 'en'] as const;
-export const defaultLocale = 'fr' as const;
+// ⚠️ DÉPRÉCIÉ: Utilisez i18n/config.ts à la place
+// Ce fichier est conservé pour la compatibilité mais sera supprimé dans la v2
 
-export type Locale = typeof locales[number];
+import { i18nConfig, getStaticParams, isValidLocale, type Locale } from './config';
 
-export const getStaticParams = () => locales.map((locale) => ({ locale }));
+// Exports pour compatibilité
+export const locales = i18nConfig.locales;
+export const defaultLocale = i18nConfig.defaultLocale;
+export type { Locale };
+export { getStaticParams, isValidLocale };
 
-export function isValidLocale(locale: string): locale is Locale {
-  return locales.includes(locale as Locale);
+// Avertissement en développement
+if (process.env.NODE_ENV === 'development') {
+  console.warn('⚠️ i18n/settings.ts est déprécié. Utilisez i18n/config.ts à la place.');
 } 

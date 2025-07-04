@@ -12,13 +12,13 @@ const DAZBOX_PLANS = {
     name: 'DazBox Starter',
     type: 'dazbox',
     priceSats: 400000,
-    description: 'Parfait pour débuter sur Lightning Network'
+    description: "checkout.checkoutcheckoutparfait_pour_d"
   },
   pro: {
     name: 'DazBox Pro',
     type: 'dazbox',
     priceSats: 500000,
-    description: 'Solution complète pour maximiser vos revenus'
+    description: "checkout.checkoutcheckoutsolution_compl"
   }
 } as const;
 
@@ -185,7 +185,7 @@ function CheckoutContent() {
       const response = await fetch('/api/orders', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          "checkout.checkoutcheckoutcontenttype": 'application/json',
           ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {})
         },
         body: JSON.stringify(orderData)
@@ -234,7 +234,7 @@ function CheckoutContent() {
             {/* Formulaire */}
             <div className="lg:col-span-2">
               <div className="bg-white rounded-xl shadow-lg p-8">
-                <h2 className="text-xl font-semibold mb-6">Informations de livraison</h2>
+                <h2 className="text-xl font-semibold mb-6">{t('checkout.informations_de_livraison')}</h2>
                 
                 <form onSubmit={handleFormSubmit} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-4">
@@ -250,7 +250,7 @@ function CheckoutContent() {
                         className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent ${
                           formErrors.firstName ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        placeholder="Votre prénom"
+                        placeholder="checkout.checkoutcheckoutvotre_prnom"
                       />
                       {formErrors.firstName && (
                         <p className="mt-1 text-sm text-red-600">{formErrors.firstName}</p>
@@ -269,7 +269,7 @@ function CheckoutContent() {
                         className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent ${
                           formErrors.lastName ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        placeholder="Votre nom"
+                        placeholder="checkout.checkoutcheckoutvotre_nom"
                       />
                       {formErrors.lastName && (
                         <p className="mt-1 text-sm text-red-600">{formErrors.lastName}</p>
@@ -289,7 +289,7 @@ function CheckoutContent() {
                       className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent ${
                         formErrors.email ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="votre@email.com"
+                      placeholder="checkout.checkoutcheckoutvotreemailcom"
                     />
                     {formErrors.email && (
                       <p className="mt-1 text-sm text-red-600">{formErrors.email}</p>
@@ -308,7 +308,7 @@ function CheckoutContent() {
                       className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent ${
                         formErrors.address ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="Numéro et nom de rue"
+                      placeholder="checkout.checkoutcheckoutnumro_et_nom_d"
                     />
                     {formErrors.address && (
                       <p className="mt-1 text-sm text-red-600">{formErrors.address}</p>
@@ -328,7 +328,7 @@ function CheckoutContent() {
                         className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent ${
                           formErrors.city ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        placeholder="Votre ville"
+                        placeholder="checkout.checkoutcheckoutvotre_ville"
                       />
                       {formErrors.city && (
                         <p className="mt-1 text-sm text-red-600">{formErrors.city}</p>
@@ -347,7 +347,7 @@ function CheckoutContent() {
                         className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent ${
                           formErrors.postalCode ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        placeholder="Code postal"
+                        placeholder="checkout.checkoutcheckoutcode_postal"
                       />
                       {formErrors.postalCode && (
                         <p className="mt-1 text-sm text-red-600">{formErrors.postalCode}</p>
@@ -372,7 +372,7 @@ function CheckoutContent() {
                       <option value="Suisse">Suisse</option>
                       <option value="Luxembourg">Luxembourg</option>
                       <option value="Canada">Canada</option>
-                      <option value="Autre">Autre (nous contacter)</option>
+                      <option value="Autre">{t('checkout.autre_nous_contacter')}</option>
                     </select>
                     {formErrors.country && (
                       <p className="mt-1 text-sm text-red-600">{formErrors.country}</p>
@@ -389,7 +389,7 @@ function CheckoutContent() {
                       value={form.phone}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                      placeholder="Votre numéro de téléphone"
+                      placeholder="checkout.checkoutcheckoutvotre_numro_de"
                     />
                   </div>
 
@@ -412,7 +412,7 @@ function CheckoutContent() {
             {/* Résumé de commande */}
             <div className="lg:col-span-1">
               <div className="bg-white rounded-xl shadow-lg p-6 sticky top-8">
-                <h3 className="text-lg font-semibold mb-4">Résumé de commande</h3>
+                <h3 className="text-lg font-semibold mb-4">{t('checkout.rsum_de_commande')}</h3>
                 
                 <div className="space-y-4">
                   <div className="flex justify-between">
@@ -434,13 +434,13 @@ function CheckoutContent() {
                 </div>
 
                 <div className="mt-6 p-4 bg-orange-50 rounded-lg">
-                  <h4 className="font-semibold text-orange-800 mb-2">Inclus dans votre DazBox :</h4>
+                  <h4 className="font-semibold text-orange-800 mb-2">{t('checkout.inclus_dans_votre_dazbox_')}</h4>
                   <ul className="text-sm text-orange-700 space-y-1">
-                    <li>✅ Nœud Lightning pré-configuré</li>
-                    <li>✅ Interface web intuitive</li>
-                    <li>✅ Support technique inclus</li>
-                    <li>✅ Mises à jour automatiques</li>
-                    <li>✅ Configuration par nos experts</li>
+                    <li>{t('checkout._nud_lightning_prconfigur')}</li>
+                    <li>{t('checkout._interface_web_intuitive')}</li>
+                    <li>{t('checkout._support_technique_inclus')}</li>
+                    <li>{t('checkout._mises_jour_automatiques')}</li>
+                    <li>{t('checkout._configuration_par_nos_experts')}</li>
                   </ul>
                 </div>
               </div>
@@ -468,7 +468,7 @@ function CheckoutContent() {
                 
                 <div className="mt-4 p-4 bg-gray-50 rounded-lg">
                   <div className="text-sm text-gray-600">
-                    <p><strong>Livraison à :</strong></p>
+                    <p><strong>{t('checkout.livraison_')}</strong></p>
                     <p>{form.firstName} {form.lastName}</p>
                     <p>{form.address}</p>
                     <p>{form.city} {form.postalCode}</p>
@@ -523,19 +523,19 @@ function CheckoutContent() {
             <div className="bg-gray-50 rounded-lg p-6 mb-6">
               <div className="text-sm">
                 <div>
-                  <span className="text-gray-500">Numéro de commande :</span>
+                  <span className="text-gray-500">{t('checkout.numro_de_commande_')}</span>
                   <p className="font-semibold">{checkoutState.orderId}</p>
                 </div>
               </div>
             </div>
             
             <div className="space-y-4 text-left">
-              <h3 className="font-semibold">Prochaines étapes :</h3>
+              <h3 className="font-semibold">{t('checkout.prochaines_tapes_')}</h3>
               <ul className="space-y-2 text-gray-600">
-                <li>📧 Vous recevrez un email de confirmation</li>
-                <li>📦 Notre équipe prépare votre DazBox</li>
-                <li>🚚 Expédition sous 2-3 jours ouvrés</li>
-                <li>🔧 Un expert vous contactera pour l'installation</li>
+                <li>{t('checkout._vous_recevrez_un_email_de_con')}</li>
+                <li>{t('checkout._notre_quipe_prpare_votre_dazb')}</li>
+                <li>{t('checkout._expdition_sous_23_jours_ouvrs')}</li>
+                <li>{t('checkout._un_expert_vous_contactera_pou')}</li>
               </ul>
             </div>
             
@@ -564,7 +564,7 @@ function CheckoutContent() {
 
 export default function CheckoutPage() {
   return (
-    <Suspense fallback={<div className="flex h-screen items-center justify-center"><p>Chargement...</p></div>}>
+    <Suspense fallback={<div className="flex h-screen items-center justify-center"><p>{t('checkout.chargement')}</p></div>}>
       <CheckoutContent />
     </Suspense>
   );

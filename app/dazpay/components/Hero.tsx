@@ -63,19 +63,19 @@ const DazPayHero: React.FC = () => {
           <div className="grid sm:grid-cols-2 gap-4 text-orange-100">
             <div className="flex items-center gap-3">
               <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-              <span className="font-medium">Installation instantanée</span>
+              <span className="font-medium">{t('Hero.installation_instantane')}</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-              <span className="font-medium">Conversion BTC/EUR</span>
+              <span className="font-medium">{t('Hero.conversion_btceur')}</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-              <span className="font-medium">Dashboard marchand</span>
+              <span className="font-medium">{t('Hero.dashboard_marchand')}</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-              <span className="font-medium">Support multidevice</span>
+              <span className="font-medium">{t('Hero.support_multidevice')}</span>
             </div>
           </div>
 
@@ -83,12 +83,12 @@ const DazPayHero: React.FC = () => {
           <div className="bg-gradient-to-r from-yellow-400 to-orange-400 rounded-2xl p-6 text-black">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
-                <p className="font-bold text-lg">Offre de Lancement</p>
-                <p className="text-orange-800">Premier mois gratuit</p>
+                <p className="font-bold text-lg">{t('Hero.offre_de_lancement')}</p>
+                <p className="text-orange-800">{t('Hero.premier_mois_gratuit')}</p>
               </div>
               <div className="text-right">
                 <p className="text-2xl font-bold">1%</p>
-                <p className="text-sm text-orange-800">par transaction</p>
+                <p className="text-sm text-orange-800">{t('Hero.par_transaction')}</p>
               </div>
             </div>
           </div>
@@ -99,7 +99,7 @@ const DazPayHero: React.FC = () => {
               onClick={handleStartFree}
               className="group bg-white text-orange-600 font-bold px-8 py-4 text-lg rounded-xl shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2"
             >
-              <span>Commencer Gratuitement</span>
+              <span>{t('Hero.commencer_gratuitement')}</span>
               <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
@@ -118,7 +118,7 @@ const DazPayHero: React.FC = () => {
             <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
             </svg>
-            <span>Pas d'engagement, résiliable à tout moment</span>
+            <span>{t('Hero.pas_dengagement_rsiliable_tout')}</span>
           </div>
         </div>
 
@@ -132,7 +132,7 @@ const DazPayHero: React.FC = () => {
             <div className="relative bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
               <Image
                 src="/assets/images/dazpay-terminal.png"
-                alt="DazPay - Terminal de Paiement Lightning Network"
+                alt="Hero.heroherodazpay_terminal_de_pai"
                 width={400}
                 height={300}
                 className="w-full h-auto object-contain"
@@ -164,7 +164,7 @@ const DazPayHero: React.FC = () => {
       {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
         <div className="text-white/60 text-center">
-          <p className="text-sm mb-2">Découvrir les fonctionnalités</p>
+          <p className="text-sm mb-2">{t('Hero.dcouvrir_les_fonctionnalits')}</p>
           <div className="w-8 h-8 border-2 border-white/40 rounded-full flex items-center justify-center mx-auto">
             <svg className="w-4 h-4 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />

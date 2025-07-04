@@ -97,7 +97,7 @@ export const useDaznoAPI = (): UseDaznoAPIReturn => {
     try {
       const response = await fetch(`/api/dazno/priorities/${pubkey}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "useDaznoAPI.usedaznoapiusedaznoapicontentt": 'application/json' },
         body: JSON.stringify(request)
       })
 

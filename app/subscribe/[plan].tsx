@@ -70,7 +70,7 @@ export default function SubscribeScreen() {
   if (!planDetails) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <p className="text-lg text-error text-center">Plan non trouvé</p>
+        <p className="text-lg text-error text-center">{t('[plan].plan_non_trouv')}</p>
       </div>
   );
   }
@@ -83,7 +83,7 @@ export default function SubscribeScreen() {
           <p className="text-4xl font-bold text-primary">{planDetails.price}</p>
         </div>
         <div className="bg-white p-5 rounded-lg mb-8">
-          <h2 className="text-lg font-bold text-secondary mb-4">Services inclus :</h2>
+          <h2 className="text-lg font-bold text-secondary mb-4">{t('[plan].services_inclus_')}</h2>
           <ul className="space-y-2">
             {planDetails.features.map((feature: any, index: any) => (
               <li key={index} className="text-base text-gray-700">• {feature}</li>
@@ -92,12 +92,12 @@ export default function SubscribeScreen() {
         </div>
         <form className="space-y-5" onSubmit={handleSubmit}>
           <div>
-            <label className="block text-base font-semibold text-text mb-1">Nom complet</label>
+            <label className="block text-base font-semibold text-text mb-1">{t('[plan].nom_complet')}</label>
             <input
               className="w-full bg-background border-2 border-gray-400 rounded-lg py-3 px-4 text-base text-text mb-1"
               value={form.name}
               onChange={e => setForm({ ...form, name: e.target.value })}
-              placeholder="Votre nom"
+              placeholder="[plan].planplanvotre_nom"
               type="text"
               required
             />
@@ -108,7 +108,7 @@ export default function SubscribeScreen() {
               className="w-full bg-background border-2 border-gray-400 rounded-lg py-3 px-4 text-base text-text mb-1"
               value={form.email}
               onChange={e => setForm({ ...form, email: e.target.value })}
-              placeholder="votre@email.com"
+              placeholder="[plan].planplanvotreemailcom"
               type="email"
               autoComplete="email"
               required
@@ -120,17 +120,17 @@ export default function SubscribeScreen() {
               className="w-full bg-background border-2 border-gray-400 rounded-lg py-3 px-4 text-base text-text mb-1"
               value={form.company}
               onChange={e => setForm({ ...form, company: e.target.value })}
-              placeholder="Nom de votre entreprise"
+              placeholder="[plan].planplannom_de_votre_entrepris"
               type="text"
             />
           </div>
           <div>
-            <label className="block text-base font-semibold text-text mb-1">Téléphone</label>
+            <label className="block text-base font-semibold text-text mb-1">{t('[plan].tlphone')}</label>
             <input
               className="w-full bg-background border-2 border-gray-400 rounded-lg py-3 px-4 text-base text-text mb-1"
               value={form.phone}
               onChange={e => setForm({ ...form, phone: e.target.value })}
-              placeholder="Votre numéro de téléphone"
+              placeholder="[plan].planplanvotre_numro_de_tlphone"
               type="tel"
             />
           </div>

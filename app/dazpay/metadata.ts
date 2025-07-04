@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'DazPay | Terminal de Paiement Lightning Network',
-  description: 'Acceptez les paiements Bitcoin Lightning en quelques minutes. Terminal moderne, dashboard marchand et conversion automatique BTC/EUR pour tous les commerces.',
+  description: "metadata.metadatametadataacceptez_les_p",
   keywords: [
     'dazpay',
     'paiement lightning',
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   publisher: 'DazNode',
   openGraph: {
     title: 'DazPay | Terminal de Paiement Lightning Network',
-    description: 'Acceptez les paiements Bitcoin Lightning en quelques minutes. Terminal moderne, dashboard marchand et conversion automatique BTC/EUR.',
+    description: "metadata.metadatametadataacceptez_les_p",
     url: 'https://dazno.de/dazpay',
     siteName: 'DazNode',
     type: 'website',
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'DazPay | Terminal de Paiement Lightning Network',
-    description: 'Acceptez les paiements Bitcoin Lightning en quelques minutes. Terminal moderne pour tous les commerces.',
+    description: "metadata.metadatametadataacceptez_les_p",
     images: ['https://dazno.de/assets/images/dazpay-og.png']
   },
   robots: {
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
       index: true,
       follow: true,
       'max-video-preview': -1,
-      'max-image-preview': 'large',
+      "metadata.metadatametadatamaximageprevie": 'large',
       'max-snippet': -1,
     },
   },

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Users } from '@/components/shared/ui/IconRegistry';
 import {
   List,
   Datagrid,
@@ -21,7 +22,7 @@ import {
   DeleteButton,
   useRecordContext,
 } from 'react-admin';
-import { Users } from 'lucide-react';
+
 
 // Actions personnalisées
 const ListActions = () => (
@@ -63,7 +64,7 @@ export const CustomerList = () => (
   );
 // Affichage détaillé d'un client
 export const CustomerShow = () => (
-  <Show title="Détails du client">
+  <Show title="admin.adminadmindtails_du_client">
     <SimpleShowLayout>
       <TextField source="id" label="ID" />
       <EmailField source="email" label="Email" />
@@ -83,7 +84,7 @@ export const CustomerShow = () => (
   );
 // Édition d'un client
 export const CustomerEdit = () => (
-  <Edit title="Modifier le client">
+  <Edit title="admin.adminadminmodifier_le_client">
     <SimpleForm>
       <TextInput source="email" label="Email" type="email" fullWidth />
       <TextInput source="prenom" label="Prénom" fullWidth />
@@ -99,7 +100,7 @@ export const CustomerEdit = () => (
   );
 // Création d'un nouveau client
 export const CustomerCreate = () => (
-  <Create title="Créer un client">
+  <Create title="admin.adminadmincrer_un_client">
     <SimpleForm>
       <TextInput source="email" label="Email" type="email" required fullWidth />
       <TextInput source="prenom" label="Prénom" fullWidth />

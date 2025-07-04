@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Zap, TrendingUp, DollarSign, Clock, Star, Lock, ChevronRight } from 'lucide-react';
+import { Zap, TrendingUp, DollarSign, Clock, Star, Lock, ChevronRight } from '@/components/shared/ui/IconRegistry';
+
 
 export interface SmartRecommendation {
   id: string;
@@ -138,13 +139,13 @@ export const SmartConversionCenter: React.FC<SmartConversionCenterProps> = ({
             <div className="text-lg font-bold text-green-600">
               {Math.round(totalPotentialGain / 1000)}k
             </div>
-            <div className="text-xs text-green-800">Sats potentiels</div>
+            <div className="text-xs text-green-800">{t('user.sats_potentiels')}</div>
           </div>
           <div className="bg-orange-50 rounded-lg p-3 border border-orange-100">
             <div className="text-lg font-bold text-orange-600">
               {recommendations.filter(r => r.impact === 'high').length}
             </div>
-            <div className="text-xs text-orange-800">Impact élevé</div>
+            <div className="text-xs text-orange-800">{t('user.impact_lev')}</div>
           </div>
         </div>
       </div>
@@ -275,7 +276,7 @@ export const SmartConversionCenter: React.FC<SmartConversionCenterProps> = ({
       {filteredRecommendations.length === 0 && (
         <div className="text-center py-8 text-gray-500">
           <div className="text-4xl mb-4">🎯</div>
-          <p>Aucune recommandation disponible dans cette catégorie.</p>
+          <p>{t('user.aucune_recommandation_disponib')}</p>
         </div>
       )}
     </div>

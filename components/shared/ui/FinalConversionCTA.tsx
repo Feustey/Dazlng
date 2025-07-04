@@ -69,15 +69,15 @@ const FinalConversionCTA: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           <div className="text-center">
             <div className="text-4xl font-bold text-green-400 mb-2">847</div>
-            <div className="text-purple-200">Node runners actifs</div>
+            <div className="text-purple-200">{t('FinalConversionCTA.node_runners_actifs')}</div>
           </div>
           <div className="text-center">
             <div className="text-4xl font-bold text-yellow-400 mb-2">127€</div>
-            <div className="text-purple-200">Revenus mensuels moyens</div>
+            <div className="text-purple-200">{t('FinalConversionCTA.revenus_mensuels_moyens')}</div>
           </div>
           <div className="text-center">
             <div className="text-4xl font-bold text-pink-400 mb-2">18.5%</div>
-            <div className="text-purple-200">ROI annuel moyen</div>
+            <div className="text-purple-200">{t('FinalConversionCTA.roi_annuel_moyen')}</div>
           </div>
         </div>
 

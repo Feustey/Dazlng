@@ -1,6 +1,7 @@
 import Image from "next/image";
-import { FaBolt } from "react-icons/fa";
+
 import type { FC } from "react";
+import { Zap } from '@/components/shared/ui/IconRegistry';
 
 const DazBoxOffer: FC = () => {
   return (
@@ -26,11 +27,11 @@ const DazBoxOffer: FC = () => {
 
       {/* Liste des avantages */}
       <ul className="mb-6 space-y-1 text-sm text-left w-full max-w-md mx-auto">
-        <li>✅ Installation plug & play : branchez, connectez, c'est prêt !</li>
-        <li>✅ Zéro intermédiaire : votre argent, votre contrôle</li>
-        <li>✅ Interface intuitive pour tous</li>
-        <li>✅ Assistant IA intégré pour vous guider</li>
-        <li>✅ 400 000 satoshis inclus (≈ 0,004 BTC ≈ 399 Sats), livraison offerte</li>
+        <li>{t('DazBoxOffer._installation_plug_play_branch')}</li>
+        <li>{t('DazBoxOffer._zro_intermdiaire_votre_argent')}</li>
+        <li>{t('DazBoxOffer._interface_intuitive_pour_tous')}</li>
+        <li>{t('DazBoxOffer._assistant_ia_intgr_pour_vous_')}</li>
+        <li>{t('DazBoxOffer._400_000_satoshis_inclus_0004_')}</li>
       </ul>
 
       {/* CTA */}
@@ -38,7 +39,7 @@ const DazBoxOffer: FC = () => {
         href="/checkout/dazbox"
         className="flex items-center justify-center gap-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white text-lg font-bold rounded-xl shadow-lg transition w-full md:w-auto"
       >
-        <FaBolt className="w-5 h-5" />
+        <Zap className="w-5 h-5" />
         Commander ma DazBox
       </a>
       <p className="text-xs text-gray-100 mt-2 text-center">

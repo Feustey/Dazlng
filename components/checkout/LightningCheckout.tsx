@@ -73,14 +73,14 @@ export const LightningCheckout: React.FC<LightningCheckoutProps> = ({
 
         {/* Plan Summary */}
         <div className="bg-gray-50 rounded-xl p-6 mb-8">
-          <h3 className="font-semibold text-gray-900 mb-3">Récapitulatif de votre commande</h3>
+          <h3 className="font-semibold text-gray-900 mb-3">{t('checkout.rcapitulatif_de_votre_commande')}</h3>
           <div className="space-y-2">
             <div className="flex justify-between">
               <span className="text-gray-600">Plan {plan.name}</span>
               <span className="font-mono">{amount.toLocaleString()} sats</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Commission (1%)</span>
+              <span className="text-gray-600">{t('checkout.commission_1')}</span>
               <span className="font-mono">{Math.round(amount * 0.01).toLocaleString()} sats</span>
             </div>
             <div className="border-t pt-2 flex justify-between font-semibold">
@@ -92,7 +92,7 @@ export const LightningCheckout: React.FC<LightningCheckoutProps> = ({
 
         {/* Features Included */}
         <div className="mb-8">
-          <h4 className="font-semibold text-gray-900 mb-3">Inclus dans votre plan :</h4>
+          <h4 className="font-semibold text-gray-900 mb-3">{t('checkout.inclus_dans_votre_plan_')}</h4>
           <ul className="space-y-2">
             {plan.features.map((feature, index) => (
               <li key={index} className="flex items-center gap-3">
@@ -118,7 +118,7 @@ export const LightningCheckout: React.FC<LightningCheckoutProps> = ({
 
         {/* Supported Wallets */}
         <div className="mt-8 text-center">
-          <p className="text-sm text-gray-600 mb-3">Portefeuilles supportés :</p>
+          <p className="text-sm text-gray-600 mb-3">{t('checkout.portefeuilles_supports_')}</p>
           <div className="flex flex-wrap justify-center gap-2">
             {['Alby', 'Phoenix', 'Breez', 'Wallet of Satoshi', 'BlueWallet', 'Zap'].map((wallet) => (
               <span key={wallet} className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">
@@ -136,7 +136,7 @@ export const LightningCheckout: React.FC<LightningCheckoutProps> = ({
             </svg>
             <div>
               <p className="text-sm text-yellow-800">
-                <strong>Sécurité :</strong> Votre paiement est traité directement sur le réseau Lightning. 
+                <strong>{t('checkout.scurit_')}</strong> Votre paiement est traité directement sur le réseau Lightning. 
                 Aucune donnée sensible n'est stockée sur nos serveurs.
               </p>
             </div>

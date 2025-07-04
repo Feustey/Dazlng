@@ -173,7 +173,7 @@ export async function GET(req: NextRequest): Promise<Response> {
   return NextResponse.json({
     info: "Endpoint pour créer des données de test",
     usage: "POST /api/admin/test-data",
-    description: "Crée un utilisateur, une commande DazBox, une livraison et un paiement de test",
+    description: "admin.adminadmincre_un_utilisateur_u",
     test_order_id: "7d2d8bcb-2dd1-43da-a341-73c0757aecc4",
     test_user: "alice.dubois@example.fr",
     note: "Les données existantes seront mises à jour si elles existent déjà"

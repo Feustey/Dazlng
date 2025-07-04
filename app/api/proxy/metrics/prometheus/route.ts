@@ -12,7 +12,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     const response = await fetch(`${API_BASE_URL}/metrics/prometheus`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        "route.routeroutecontenttype": 'application/json',
         ...(authorization && { 'Authorization': authorization })
       }
     })
@@ -25,8 +25,8 @@ export async function GET(req: NextRequest): Promise<Response> {
 
     return new NextResponse(data, {
       headers: {
-        'Content-Type': 'text/plain',
-        'Cache-Control': 'no-cache'
+        "route.routeroutecontenttype": 'text/plain',
+        "route.routeroutecachecontrol": 'no-cache'
       }
     })
 

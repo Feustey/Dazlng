@@ -5,8 +5,9 @@ import { usePrioritiesEnhanced } from '@/hooks/usePrioritiesEnhanced'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/shared/ui'
 import { Badge } from '@/components/shared/ui'
 import { Button } from '@/components/shared/ui'
-import { Loader2, TrendingUp, AlertTriangle, Target, Clock, DollarSign, Zap } from 'lucide-react'
+
 import { cn } from '@/lib/utils'
+import { Loader2, TrendingUp, AlertTriangle, Target, Clock, DollarSign, Zap } from '@/components/shared/ui/IconRegistry';
 
 export interface PrioritiesEnhancedPanelProps {
   pubkey: string
@@ -25,7 +26,7 @@ export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhance
     if (pubkey) {
       fetchPriorities(pubkey, {
         goals: selectedGoals,
-        context: "Je veux optimiser mon nœud Lightning pour maximiser les revenus et améliorer ma position dans le réseau",
+        context: "PrioritiesEnhancedPanel.prioritiesenhancedpanelpriorit",
         logActivity: true
       })
     }
@@ -34,7 +35,7 @@ export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhance
   const handleRefresh = () => {
     fetchPriorities(pubkey, {
       goals: selectedGoals,
-      context: "Analyse actualisée pour optimisation continue",
+      context: "PrioritiesEnhancedPanel.prioritiesenhancedpanelpriorit",
       logActivity: true
     })
   }
@@ -89,7 +90,7 @@ export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhance
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <span>Analyse Enhanced du Nœud</span>
+            <span>{t('PrioritiesEnhancedPanel.analyse_enhanced_du_nud')}</span>
             <Button onClick={handleRefresh} size="sm" variant="outline">
               Actualiser
             </Button>
@@ -108,7 +109,7 @@ export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhance
             </div>
             
             <div className="bg-green-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-green-900">Score de Santé</h4>
+              <h4 className="font-semibold text-green-900">{t('PrioritiesEnhancedPanel.score_de_sant')}</h4>
               <div className="flex items-center gap-2">
                 <div className="text-2xl font-bold text-green-700">
                   {data.node_summary.health_score}/100
@@ -118,7 +119,7 @@ export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhance
             </div>
             
             <div className="bg-purple-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-purple-900">Score d'Opportunité</h4>
+              <h4 className="font-semibold text-purple-900">{t('PrioritiesEnhancedPanel.score_dopportunit')}</h4>
               <div className="flex items-center gap-2">
                 <div className="text-2xl font-bold text-purple-700">
                   {data.ai_analysis.opportunity_score}/100
@@ -133,17 +134,17 @@ export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhance
       {/* Analyse AI */}
       <Card>
         <CardHeader>
-          <CardTitle>Analyse Intelligence Artificielle</CardTitle>
+          <CardTitle>{t('PrioritiesEnhancedPanel.analyse_intelligence_artificie')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <h4 className="font-semibold mb-2">Résumé</h4>
+            <h4 className="font-semibold mb-2">{t('PrioritiesEnhancedPanel.rsum')}</h4>
             <p className="text-gray-700">{data.ai_analysis.summary}</p>
           </div>
           
           {data.ai_analysis.key_insights.length > 0 && (
             <div>
-              <h4 className="font-semibold mb-2">Points Clés</h4>
+              <h4 className="font-semibold mb-2">{t('PrioritiesEnhancedPanel.points_cls')}</h4>
               <ul className="list-disc list-inside space-y-1">
                 {data.ai_analysis.key_insights.map((insight: any, index: any) => (
                   <li key={index} className="text-gray-700">{insight}</li>
@@ -153,7 +154,7 @@ export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhance
           )}
           
           <div>
-            <h4 className="font-semibold mb-2">Évaluation des Risques</h4>
+            <h4 className="font-semibold mb-2">{t('PrioritiesEnhancedPanel.valuation_des_risques')}</h4>
             <p className="text-gray-700">{data.ai_analysis.risk_assessment}</p>
           </div>
         </CardContent>
@@ -162,7 +163,7 @@ export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhance
       {/* Plan d'action */}
       <Card>
         <CardHeader>
-          <CardTitle>Plan d'Action Structuré</CardTitle>
+          <CardTitle>{t('PrioritiesEnhancedPanel.plan_daction_structur')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {data.action_plan.immediate_actions.length > 0 && (
@@ -212,7 +213,7 @@ export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhance
       {/* Actions prioritaires détaillées */}
       <Card>
         <CardHeader>
-          <CardTitle>Actions Prioritaires Détaillées</CardTitle>
+          <CardTitle>{t('PrioritiesEnhancedPanel.actions_prioritaires_dtailles')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -249,7 +250,7 @@ export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhance
                 
                 {action.implementation_details && action.implementation_details.steps.length > 0 && (
                   <div>
-                    <p className="text-xs font-medium text-gray-600 mb-1">Étapes:</p>
+                    <p className="text-xs font-medium text-gray-600 mb-1">{t('PrioritiesEnhancedPanel.tapes')}</p>
                     <ol className="list-decimal list-inside text-xs text-gray-600 space-y-1">
                       {action.implementation_details.steps.map((step: any, i: any) => (
                         <li key={i}>{step}</li>
@@ -260,7 +261,7 @@ export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhance
                 
                 {action.implementation_details && action.implementation_details.requirements.length > 0 && (
                   <div>
-                    <p className="text-xs font-medium text-gray-600 mb-1">Prérequis:</p>
+                    <p className="text-xs font-medium text-gray-600 mb-1">{t('PrioritiesEnhancedPanel.prrequis')}</p>
                     <ul className="list-disc list-inside text-xs text-gray-600 space-y-1">
                       {action.implementation_details.requirements.map((req: any, i: any) => (
                         <li key={i}>{req}</li>
@@ -271,7 +272,7 @@ export function PrioritiesEnhancedPanel({ pubkey, className }: PrioritiesEnhance
                 
                 {action.implementation_details && action.implementation_details.tools_needed && action.implementation_details.tools_needed.length > 0 && (
                   <div>
-                    <p className="text-xs font-medium text-gray-600 mb-1">Outils nécessaires:</p>
+                    <p className="text-xs font-medium text-gray-600 mb-1">{t('PrioritiesEnhancedPanel.outils_ncessaires')}</p>
                     <div className="flex flex-wrap gap-1">
                       {action.implementation_details.tools_needed.map((tool: any, i: any) => (
                         <Badge key={i} variant="secondary" className="text-xs">

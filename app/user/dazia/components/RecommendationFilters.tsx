@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
-import { Search, Filter, X } from 'lucide-react';
+
 import { useState } from 'react';
+import { Search, Filter, X } from '@/components/shared/ui/IconRegistry';
 
 export interface FilterOption {
   id: string;
@@ -25,14 +26,14 @@ export const RecommendationFilters = ({ onFilterChange }: RecommendationFiltersP
   const [isExpanded, setIsExpanded] = useState(false);
 
   const categories: FilterOption[] = [
-    { id: 'liquidity', label: 'Liquidité', value: 'liquidity' },
-    { id: 'connectivity', label: 'Connectivité', value: 'connectivity' },
+    { id: 'liquidity', label: "user.useruserliquidit", value: 'liquidity' },
+    { id: 'connectivity', label: "user.useruserconnectivit", value: 'connectivity' },
     { id: 'fees', label: 'Frais', value: 'fees' },
-    { id: 'security', label: 'Sécurité', value: 'security' }
+    { id: 'security', label: "user.useruserscurit", value: 'security' }
   ];
 
   const impactLevels: FilterOption[] = [
-    { id: 'high', label: 'Élevé', value: 'high' },
+    { id: 'high', label: "user.useruserlev", value: 'high' },
     { id: 'medium', label: 'Moyen', value: 'medium' },
     { id: 'low', label: 'Faible', value: 'low' }
   ];
@@ -114,7 +115,7 @@ export const RecommendationFilters = ({ onFilterChange }: RecommendationFiltersP
               setSearch(e.target.value);
               handleFilterChange();
             }}
-            placeholder="Rechercher une recommandation..."
+            placeholder="user.useruserrechercher_une_recomma"
             className="w-full rounded-lg border border-gray-200 py-2 pl-10 pr-4 text-sm focus:border-yellow-500 focus:outline-none focus:ring-1 focus:ring-yellow-500"
           />
         </div>
@@ -128,7 +129,7 @@ export const RecommendationFilters = ({ onFilterChange }: RecommendationFiltersP
         <div className="mt-4 space-y-4">
           {/* Catégories */}
           <div>
-            <h4 className="mb-2 text-sm font-medium text-gray-700">Catégories</h4>
+            <h4 className="mb-2 text-sm font-medium text-gray-700">{t('user.catgories')}</h4>
             <div className="flex flex-wrap gap-2">
               {categories.map((category: any) => (
                 <button
@@ -174,7 +175,7 @@ export const RecommendationFilters = ({ onFilterChange }: RecommendationFiltersP
 
           {/* Difficulté */}
           <div>
-            <h4 className="mb-2 text-sm font-medium text-gray-700">Difficulté</h4>
+            <h4 className="mb-2 text-sm font-medium text-gray-700">{t('user.difficult')}</h4>
             <div className="flex flex-wrap gap-2">
               {difficultyLevels.map((difficulty: any) => (
                 <button
@@ -209,7 +210,7 @@ export const RecommendationFilters = ({ onFilterChange }: RecommendationFiltersP
             className="flex items-center space-x-1 text-sm text-gray-600 hover:text-gray-900"
           >
             <X className="h-4 w-4" />
-            <span>Effacer les filtres</span>
+            <span>{t('user.effacer_les_filtres')}</span>
           </button>
         </div>
       )}

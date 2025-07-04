@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { TrendingUp, Activity, Zap, Users } from 'lucide-react';
+
 import { Line } from 'react-chartjs-2';
+import { TrendingUp, Activity, Zap, Users } from '@/components/shared/ui/IconRegistry';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -95,7 +96,7 @@ export const PerformanceMetrics = ({ metrics }: PerformanceMetricsProps) => {
     labels: metrics.revenue.history.map((h: any) => h.date),
     datasets: [
       {
-        label: 'Revenus (sats)',
+        label: "user.useruserrevenus_sats",
         data: metrics.revenue.history.map((h: any) => h.value),
         borderColor: 'rgb(59, 130, 246)',
         backgroundColor: 'rgba(59, 130, 246, 0.1)',
@@ -103,7 +104,7 @@ export const PerformanceMetrics = ({ metrics }: PerformanceMetricsProps) => {
         tension: 0.4,
       },
       {
-        label: 'Efficacité (%)',
+        label: "user.useruserefficacit_",
         data: metrics.efficiency.history.map((h: any) => h.value),
         borderColor: 'rgb(16, 185, 129)',
         backgroundColor: 'rgba(16, 185, 129, 0.1)',
@@ -131,14 +132,14 @@ export const PerformanceMetrics = ({ metrics }: PerformanceMetricsProps) => {
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard
-          title="Revenus 7j"
+          title="user.useruserrevenus_7j"
           value={metrics.revenue.current}
           change={metrics.revenue.change}
           icon={<Zap className="h-6 w-6 text-blue-500" />}
           color="bg-blue-50"
         />
         <MetricCard
-          title="Efficacité"
+          title="user.useruserefficacit"
           value={metrics.efficiency.current}
           change={metrics.efficiency.change}
           icon={<Activity className="h-6 w-6 text-green-500" />}

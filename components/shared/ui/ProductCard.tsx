@@ -31,7 +31,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ title, subtitle, price, featu
       </ul>
       {bonusFeatures && (
         <div className="bg-gray-100 rounded p-4 mt-4">
-          <span className="font-bold mb-2 text-[#C026D3] block text-center">Bonus inclus :</span>
+          <span className="font-bold mb-2 text-[#C026D3] block text-center">{t('ProductCard.bonus_inclus_')}</span>
           {bonusFeatures.map((feature: any, index: any) => (
             <span key={index} className="mb-1 text-gray-700 text-sm block text-center">{feature.text}</span>
           ))}

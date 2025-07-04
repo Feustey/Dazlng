@@ -14,14 +14,14 @@ export const RealTestimonials: React.FC = () => {
             <div className="flex items-center mb-4">
               <Image
                 src="/assets/images/avatar-male.svg"
-                alt="Jean D."
+                alt="RealTestimonials.realtestimonialshomejean_d"
                 width={48}
                 height={48}
                 className="w-12 h-12 rounded-full mr-4"
               />
               <div>
-                <h3 className="font-bold">Jean D.</h3>
-                <p className="text-gray-600">Node Runner</p>
+                <h3 className="font-bold">{t("RealTestimonials.realtestimonialshomejean_d")}</h3>
+                <p className="text-gray-600">{t('RealTestimonials.node_runner')}</p>
               </div>
             </div>
             <p className="text-gray-700">
@@ -33,14 +33,14 @@ export const RealTestimonials: React.FC = () => {
             <div className="flex items-center mb-4">
               <Image
                 src="/assets/images/avatar-female.svg"
-                alt="Marie L."
+                alt="RealTestimonials.realtestimonialshomemarie_l"
                 width={48}
                 height={48}
                 className="w-12 h-12 rounded-full mr-4"
               />
               <div>
-                <h3 className="font-bold">Marie L.</h3>
-                <p className="text-gray-600">Développeuse Bitcoin</p>
+                <h3 className="font-bold">{t("RealTestimonials.realtestimonialshomemarie_l")}</h3>
+                <p className="text-gray-600">{t('RealTestimonials.dveloppeuse_bitcoin')}</p>
               </div>
             </div>
             <p className="text-gray-700">
@@ -52,14 +52,14 @@ export const RealTestimonials: React.FC = () => {
             <div className="flex items-center mb-4">
               <Image
                 src="/assets/images/avatar-leaticia.png"
-                alt="Pierre M."
+                alt="RealTestimonials.realtestimonialsrealtestimonia"
                 width={48}
                 height={48}
                 className="w-12 h-12 rounded-full mr-4"
               />
               <div>
-                <h3 className="font-bold">Pierre M.</h3>
-                <p className="text-gray-600">Entrepreneur Crypto</p>
+                <h3 className="font-bold">{t("RealTestimonials.realtestimonialsrealtestimonia")}</h3>
+                <p className="text-gray-600">{t('RealTestimonials.entrepreneur_crypto')}</p>
               </div>
             </div>
             <p className="text-gray-700">

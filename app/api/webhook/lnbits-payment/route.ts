@@ -39,9 +39,9 @@ export async function OPTIONS(_req: Request): Promise<Response> {
   return new NextResponse(null, {
     status: 200,
     headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, X-Api-Key',
+      "route.routerouteaccesscontrolallowor": '*',
+      "route.routerouteaccesscontrolallowme": 'POST, OPTIONS',
+      "route.routerouteaccesscontrolallowhe": 'Content-Type, X-Api-Key',
     },
   });
 }

@@ -81,29 +81,29 @@ export const LiveMetricsDisplay: React.FC = () => {
           <div className="bg-gradient-to-br from-purple-500/10 to-purple-700/10 border border-purple-500/20 rounded-xl p-6 text-center">
             <div className="text-purple-400 text-3xl mb-2">🟣</div>
             <div className="text-2xl font-bold text-purple-400 font-mono">{metrics.activeNodes}</div>
-            <div className="text-sm text-gray-400">Nodes Actifs</div>
-            <div className="text-xs text-green-400 mt-1">↗ +12 cette semaine</div>
+            <div className="text-sm text-gray-400">{t('LiveMetrics.nodes_actifs')}</div>
+            <div className="text-xs text-green-400 mt-1">{t('LiveMetrics._12_cette_semaine')}</div>
           </div>
 
           <div className="bg-gradient-to-br from-yellow-400/10 to-orange-400/10 border border-yellow-400/20 rounded-xl p-6 text-center">
             <div className="text-yellow-400 text-3xl mb-2">⚡</div>
             <div className="text-2xl font-bold text-yellow-400 font-mono">{metrics.totalRevenue}</div>
-            <div className="text-sm text-gray-400">Revenus Générés</div>
+            <div className="text-sm text-gray-400">{t('LiveMetrics.revenus_gnrs')}</div>
             <div className="text-xs text-green-400 mt-1">↗ +{metrics.revenueGrowth}% ce mois</div>
           </div>
 
           <div className="bg-gradient-to-br from-green-400/10 to-green-600/10 border border-green-400/20 rounded-xl p-6 text-center">
             <div className="text-green-400 text-3xl mb-2">📈</div>
             <div className="text-2xl font-bold text-green-400 font-mono">{metrics.averageROI}</div>
-            <div className="text-sm text-gray-400">ROI Moyen</div>
-            <div className="text-xs text-blue-400 mt-1">Clients actifs</div>
+            <div className="text-sm text-gray-400">{t('LiveMetrics.roi_moyen')}</div>
+            <div className="text-xs text-blue-400 mt-1">{t('LiveMetrics.clients_actifs')}</div>
           </div>
 
           <div className="bg-gradient-to-br from-blue-400/10 to-blue-600/10 border border-blue-400/20 rounded-xl p-6 text-center">
             <div className="text-blue-400 text-3xl mb-2">🛡️</div>
             <div className="text-2xl font-bold text-blue-400 font-mono">{metrics.forceClosePrevented}</div>
-            <div className="text-sm text-gray-400">Force-closes Évités</div>
-            <div className="text-xs text-yellow-400 mt-1">Ce mois</div>
+            <div className="text-sm text-gray-400">{t('LiveMetrics.forcecloses_vits')}</div>
+            <div className="text-xs text-yellow-400 mt-1">{t('LiveMetrics.ce_mois')}</div>
           </div>
         </div>
 
@@ -117,10 +117,10 @@ export const LiveMetricsDisplay: React.FC = () => {
             <div className="text-3xl font-bold text-orange-400 font-mono mb-2">
               {metrics.totalCapacity}
             </div>
-            <div className="text-sm text-gray-400 mb-3">Capacité totale sous gestion</div>
+            <div className="text-sm text-gray-400 mb-3">{t('LiveMetrics.capacit_totale_sous_gestion')}</div>
             <div className="flex justify-between text-xs">
               <span className="text-gray-500">Publique</span>
-              <span className="text-orange-400">Vérifiable sur 1ML</span>
+              <span className="text-orange-400">{t('LiveMetrics.vrifiable_sur_1ml')}</span>
             </div>
           </div>
 
@@ -132,10 +132,10 @@ export const LiveMetricsDisplay: React.FC = () => {
             <div className="text-3xl font-bold text-green-400 font-mono mb-2">
               {metrics.averageUptime}%
             </div>
-            <div className="text-sm text-gray-400 mb-3">Disponibilité moyenne</div>
+            <div className="text-sm text-gray-400 mb-3">{t('LiveMetrics.disponibilit_moyenne')}</div>
             <div className="flex justify-between text-xs">
               <span className="text-gray-500">SLA</span>
-              <span className="text-green-400">99.5% garanti</span>
+              <span className="text-green-400">{t('LiveMetrics.995_garanti')}</span>
             </div>
           </div>
 
@@ -147,7 +147,7 @@ export const LiveMetricsDisplay: React.FC = () => {
             <div className="text-3xl font-bold text-purple-400 font-mono mb-2">
               {metrics.communitySize.toLocaleString()}
             </div>
-            <div className="text-sm text-gray-400 mb-3">Utilisateurs actifs</div>
+            <div className="text-sm text-gray-400 mb-3">{t('LiveMetrics.utilisateurs_actifs')}</div>
             <div className="flex justify-between text-xs">
               <span className="text-gray-500">Discord</span>
               <span className="text-purple-400">Rejoindre</span>
@@ -163,7 +163,7 @@ export const TechnicalProofsSection: React.FC = () => {
   const [proofs] = useState<TechnicalProof[]>([
     {
       title: "Architecture Open-Source",
-      description: "Code audité et vérifiable par la communauté",
+      description: "LiveMetrics.livemetricslivemetricscode_aud",
       verificationLink: "https://github.com/daznode/core",
       status: "verified",
       technicalDetails: [
@@ -175,7 +175,7 @@ export const TechnicalProofsSection: React.FC = () => {
     },
     {
       title: "Nodes de Production Vérifiables",
-      description: "Consultez nos performances en direct sur les explorateurs",
+      description: "LiveMetrics.livemetricslivemetricsconsulte",
       verificationLink: "https://1ml.com/node/03864ef025fde8fb587d989186ce6a4a186895ee44a926bfc370e2c366597a3f8f",
       status: "verified",
       technicalDetails: [
@@ -187,7 +187,7 @@ export const TechnicalProofsSection: React.FC = () => {
     },
     {
       title: "Audit de Sécurité",
-      description: "Audits réguliers par des experts en sécurité Bitcoin",
+      description: "LiveMetrics.livemetricslivemetricsaudits_r",
       status: "verified",
       technicalDetails: [
         "Audit Trail of Bits (Q4 2023)",
@@ -279,19 +279,19 @@ export const TechnicalProofsSection: React.FC = () => {
           <div className="inline-flex items-center space-x-8 bg-gray-800/30 rounded-full px-8 py-4">
             <div className="flex items-center">
               <span className="text-green-400 mr-2">🔒</span>
-              <span className="text-sm text-gray-300">SOC 2 Certified</span>
+              <span className="text-sm text-gray-300">{t('LiveMetrics.soc_2_certified')}</span>
             </div>
             <div className="flex items-center">
               <span className="text-blue-400 mr-2">🛡️</span>
-              <span className="text-sm text-gray-300">Bug Bounty Active</span>
+              <span className="text-sm text-gray-300">{t('LiveMetrics.bug_bounty_active')}</span>
             </div>
             <div className="flex items-center">
               <span className="text-yellow-400 mr-2">⚡</span>
-              <span className="text-sm text-gray-300">Lightning Native</span>
+              <span className="text-sm text-gray-300">{t('LiveMetrics.lightning_native')}</span>
             </div>
             <div className="flex items-center">
               <span className="text-purple-400 mr-2">🔬</span>
-              <span className="text-sm text-gray-300">Open Source</span>
+              <span className="text-sm text-gray-300">{t('LiveMetrics.open_source')}</span>
             </div>
           </div>
         </div>

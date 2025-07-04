@@ -114,7 +114,7 @@ const RealTimeStats: React.FC<RealTimeStatsProps> = ({ userStats }) => {
           </div>
         </div>
         <div className="text-right">
-          <div className="text-sm text-gray-500">Dernière mise à jour</div>
+          <div className="text-sm text-gray-500">{t('user.dernire_mise_jour')}</div>
           <div className="text-xs text-gray-400">
             {new Date().toLocaleTimeString('fr-FR')}
           </div>
@@ -174,7 +174,7 @@ const RealTimeStats: React.FC<RealTimeStatsProps> = ({ userStats }) => {
       {userStats && (
         <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-6 border border-purple-200">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-800">🏆 Votre Position</h3>
+            <h3 className="text-lg font-semibold text-gray-800">{t('user._votre_position')}</h3>
             <div className="flex items-center space-x-2">
               <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
                 Rang #{userStats.rank}
@@ -185,7 +185,7 @@ const RealTimeStats: React.FC<RealTimeStatsProps> = ({ userStats }) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="text-center">
               <div className="text-3xl font-bold text-purple-600">{userStats.score}</div>
-              <div className="text-sm text-gray-600">Score Total</div>
+              <div className="text-sm text-gray-600">{t('user.score_total')}</div>
               <div className="w-full bg-purple-200 rounded-full h-2 mt-2">
                 <div 
                   className="bg-purple-600 h-2 rounded-full transition-all duration-1000"
@@ -196,7 +196,7 @@ const RealTimeStats: React.FC<RealTimeStatsProps> = ({ userStats }) => {
             
             <div className="text-center">
               <div className="text-3xl font-bold text-blue-600">{userStats.efficiency}%</div>
-              <div className="text-sm text-gray-600">Efficacité</div>
+              <div className="text-sm text-gray-600">{t('user.efficacit')}</div>
               <div className="w-full bg-blue-200 rounded-full h-2 mt-2">
                 <div 
                   className="bg-blue-600 h-2 rounded-full transition-all duration-1000"
@@ -209,7 +209,7 @@ const RealTimeStats: React.FC<RealTimeStatsProps> = ({ userStats }) => {
               <div className="text-3xl font-bold text-green-600">
                 {Math.round(((networkStats.totalNodes - userStats.rank) / networkStats.totalNodes) * 100)}%
               </div>
-              <div className="text-sm text-gray-600">Top Percentile</div>
+              <div className="text-sm text-gray-600">{t('stats.topPercentile')}</div>
               <div className="w-full bg-green-200 rounded-full h-2 mt-2">
                 <div 
                   className="bg-green-600 h-2 rounded-full transition-all duration-1000"
@@ -224,7 +224,7 @@ const RealTimeStats: React.FC<RealTimeStatsProps> = ({ userStats }) => {
       {/* Santé du réseau */}
       <div className="bg-gray-50 rounded-lg p-4">
         <div className="flex items-center justify-between mb-3">
-          <h4 className="font-medium text-gray-800">💚 Santé du Réseau</h4>
+          <h4 className="font-medium text-gray-800">{t('user._sant_du_rseau')}</h4>
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-green-500 rounded-full"></div>
             <span className="text-sm text-green-600 font-medium">Excellent</span>
@@ -236,7 +236,7 @@ const RealTimeStats: React.FC<RealTimeStatsProps> = ({ userStats }) => {
             <div className="text-lg font-bold text-green-600">
               {Math.round((networkStats.onlineNodes / networkStats.totalNodes) * 100)}%
             </div>
-            <div className="text-xs text-gray-600">Nœuds Actifs</div>
+            <div className="text-xs text-gray-600">{t('user.nuds_actifs')}</div>
           </div>
           <div>
             <div className="text-lg font-bold text-blue-600">
@@ -248,13 +248,13 @@ const RealTimeStats: React.FC<RealTimeStatsProps> = ({ userStats }) => {
             <div className="text-lg font-bold text-purple-600">
               {Math.round(networkStats.totalChannels / networkStats.totalNodes * 10) / 10}
             </div>
-            <div className="text-xs text-gray-600">Canaux/Nœud</div>
+            <div className="text-xs text-gray-600">{t('user.canauxnud')}</div>
           </div>
           <div>
             <div className="text-lg font-bold text-orange-600">
               {Math.round(networkStats.totalCapacity / networkStats.totalNodes * 100) / 100}
             </div>
-            <div className="text-xs text-gray-600">BTC/Nœud</div>
+            <div className="text-xs text-gray-600">{t('user.btcnud')}</div>
           </div>
         </div>
       </div>

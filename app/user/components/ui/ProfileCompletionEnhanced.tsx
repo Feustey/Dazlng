@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { CheckCircle, Circle, Star, Target, Gift, TrendingUp } from 'lucide-react';
+import { CheckCircle, Circle, Star, Target, Gift, TrendingUp } from '@/components/shared/ui/IconRegistry';
+
 
 export interface ProfileField {
   name: string;
@@ -91,7 +92,7 @@ export const ProfileCompletionEnhanced: React.FC<ProfileCompletionEnhancedProps>
           </div>
           <div className="text-right">
             <div className="text-2xl font-bold text-green-600">{earnedPoints}/{totalPossiblePoints}</div>
-            <div className="text-xs text-green-600">Points XP</div>
+            <div className="text-xs text-green-600">{t('user.points_xp')}</div>
           </div>
         </div>
         
@@ -99,11 +100,11 @@ export const ProfileCompletionEnhanced: React.FC<ProfileCompletionEnhancedProps>
           <div>
             <div className="flex items-center gap-2 mb-1">
               <Gift className="w-5 h-5 text-purple-500" />
-              <span className="font-medium text-purple-700">Parrainez vos amis</span>
+              <span className="font-medium text-purple-700">{t('user.parrainez_vos_amis')}</span>
             </div>
-            <div className="text-sm text-gray-700 mb-1">Gagnez 1 mois d'abonnement par filleul !</div>
+            <div className="text-sm text-gray-700 mb-1">{t('user.gagnez_1_mois_dabonnement_par_')}</div>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-500">Votre lien :</span>
+              <span className="text-xs text-gray-500">{t('user.votre_lien_')}</span>
               <span className="font-mono bg-purple-50 px-2 py-1 rounded text-purple-700 border border-purple-200 select-all">
                 {referralCode ? `https://daznode.com/register?ref=${referralCode}` : '...'}
               </span>
@@ -121,13 +122,13 @@ export const ProfileCompletionEnhanced: React.FC<ProfileCompletionEnhancedProps>
               <Star className="w-5 h-5 text-yellow-500" />
               <span className="font-medium text-gray-700">Statut</span>
             </div>
-            <div className="text-lg font-bold text-green-600">Lightning Pro</div>
+            <div className="text-lg font-bold text-green-600">{t('user.lightning_pro')}</div>
           </div>
           
           <div className="bg-white rounded-lg p-4 border border-green-200">
             <div className="flex items-center gap-2 mb-2">
               <Target className="w-5 h-5 text-blue-500" />
-              <span className="font-medium text-gray-700">Score Global</span>
+              <span className="font-medium text-gray-700">{t('user.score_global')}</span>
             </div>
             <div className="text-lg font-bold text-blue-600">{userScore}/100</div>
           </div>
@@ -137,7 +138,7 @@ export const ProfileCompletionEnhanced: React.FC<ProfileCompletionEnhancedProps>
               <Gift className="w-5 h-5 text-purple-500" />
               <span className="font-medium text-gray-700">Avantages</span>
             </div>
-            <div className="text-sm text-purple-600">Accès complet + Bonus</div>
+            <div className="text-sm text-purple-600">{t('user.accs_complet_bonus')}</div>
           </div>
         </div>
 
@@ -221,7 +222,7 @@ export const ProfileCompletionEnhanced: React.FC<ProfileCompletionEnhancedProps>
         <div className="mb-6">
           <div className="flex items-center gap-2 mb-3">
             <TrendingUp className="w-5 h-5 text-red-600" />
-            <h3 className="text-lg font-medium text-amber-800">Actions prioritaires</h3>
+            <h3 className="text-lg font-medium text-amber-800">{t('user.actions_prioritaires')}</h3>
             <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-bold">
               +{highPriorityFields.reduce((sum: number, field: ProfileField) => sum + (field.points || 10), 0)} XP
             </span>

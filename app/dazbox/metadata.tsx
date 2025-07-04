@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'DazBox | Solution Lightning Network Plug & Play',
-  description: 'DazBox simplifie le réseau Lightning avec une solution plug & play. Déployez votre nœud Lightning en 5 minutes, gagnez des sats et participez à l\'économie Bitcoin.',
+  description: "metadata.metadatametadatadazbox_simplif"économie Bitcoin.',
   keywords: [
     'DazBox',
     'Lightning Network',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     locale: 'fr_FR',
     url: 'https://dazno.de/dazbox',
     title: 'DazBox | Solution Lightning Network Plug & Play',
-    description: 'DazBox simplifie le réseau Lightning avec une solution plug & play. Déployez votre nœud Lightning en 5 minutes, gagnez des sats et participez à l\'économie Bitcoin.',
+    description: "metadata.metadatametadatadazbox_simplif"économie Bitcoin.',
     siteName: 'DazNode',
     images: [
       {
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'DazBox | Solution Lightning Network Plug & Play',
-    description: 'DazBox simplifie le réseau Lightning avec une solution plug & play. Déployez votre nœud Lightning en 5 minutes.',
+    description: "metadata.metadatametadatadazbox_simplif",
     images: ['https://dazno.de/assets/images/dazbox-og.png'],
     creator: '@daznode'
   },

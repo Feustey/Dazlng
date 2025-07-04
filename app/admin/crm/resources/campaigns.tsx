@@ -1,4 +1,5 @@
 import React from 'react';
+import { Send } from '@/components/shared/ui/IconRegistry';
 import {
   List,
   Datagrid,
@@ -17,7 +18,7 @@ import {
   useRecordContext,
   ChipField,
 } from 'react-admin';
-import { Send } from 'lucide-react';
+
 
 // Actions personnalisées
 const ListActions = () => (
@@ -68,7 +69,7 @@ const StatusField = ({ record }: StatusFieldProps) => {
 // Liste des campagnes
 export const CampaignList = () => (
   <List 
-    title="Campagnes Email"
+    title="admin.adminadmincampagnes_email"
     actions={<ListActions />}
     perPage={25}
     sort={{ field: 'created_at', order: 'DESC' }}
@@ -86,7 +87,7 @@ export const CampaignList = () => (
   );
 // Affichage détaillé d'une campagne
 export const CampaignShow = () => (
-  <Show title="Détails de la campagne">
+  <Show title="admin.adminadmindtails_de_la_campagn">
     <SimpleShowLayout>
       <TextField source="id" label="ID" />
       <TextField source="name" label="Nom de la campagne" />
@@ -106,7 +107,7 @@ export const CampaignShow = () => (
   );
 // Édition d'une campagne
 export const CampaignEdit = () => (
-  <Edit title="Modifier la campagne">
+  <Edit title="admin.adminadminmodifier_la_campagne">
     <SimpleForm>
       <TextInput source="name" label="Nom de la campagne" required fullWidth />
       <TextInput source="subject" label="Sujet" required fullWidth />
@@ -118,7 +119,7 @@ export const CampaignEdit = () => (
   );
 // Création d'une nouvelle campagne
 export const CampaignCreate = () => (
-  <Create title="Créer une campagne">
+  <Create title="admin.adminadmincrer_une_campagne">
     <SimpleForm>
       <TextInput source="name" label="Nom de la campagne" required fullWidth />
       <TextInput source="subject" label="Sujet" required fullWidth />
@@ -128,7 +129,7 @@ export const CampaignCreate = () => (
         multiline 
         rows={10} 
         fullWidth 
-        defaultValue='<html><body><h1>Bonjour {{prenom}},</h1><p>Contenu de votre email...</p></body></html>'
+        defaultValue='<html><body><h1>Bonjour {{prenom}},</h1><p>{t('admin.contenu_de_votre_email')}</p></body></html>'
       />
       <TextInput source="template_id" label="Template ID" fullWidth />
       <TextInput source="segment_ids" label="Segments (IDs séparés par des virgules)" fullWidth />

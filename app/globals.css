@@ -2,10 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Optimisations Core Web Vitals */
-
-/* 1. Optimisation LCP (Largest Contentful Paint) */
-/* Preload des polices critiques */
+/* Optimisations Core Web Vitals - Version optimisée */
 @font-face {
   font-family: 'Inter';
   font-style: normal;
@@ -15,134 +12,43 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url('https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYAZ9hiA.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-/* 2. Optimisation CLS (Cumulative Layout Shift) */
-/* Réserver l'espace pour les images */
+/* Optimisations essentielles uniquement */
 img {
   max-width: 100%;
   height: auto;
   display: block;
 }
 
-/* Aspect ratio containers pour éviter les shifts */
-.aspect-video {
-  aspect-ratio: 16 / 9;
-}
-
-.aspect-square {
-  aspect-ratio: 1 / 1;
-}
-
-/* 3. Optimisation FID (First Input Delay) */
-/* Réduire les reflows et repaints */
 * {
   box-sizing: border-box;
 }
 
-/* 4. Optimisations générales de performance */
-/* Utiliser transform et opacity pour les animations */
+/* Animations optimisées GPU */
 .animate-fade-in {
   animation: fadeIn 0.3s ease-in-out;
+  will-change: opacity, transform;
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* 5. Optimisations pour mobile */
+/* Responsive optimisé */
 @media (max-width: 768px) {
-  /* Réduire les animations sur mobile pour économiser la batterie */
-  .animate-fade-in {
-    animation: none;
-    opacity: 1;
-  }
+  .animate-fade-in { animation: none; opacity: 1; }
 }
 
-/* 6. Optimisations d'accessibilité */
-/* Focus visible pour la navigation clavier */
+/* Focus accessible */
 *:focus {
   outline: 2px solid #3B82F6;
   outline-offset: 2px;
 }
 
-/* 7. Optimisations de contraste */
-/* S'assurer que le texte est lisible */
-.text-gray-900 {
-  color: #111827;
-}
+/* Scroll smooth */
+html { scroll-behavior: smooth; }
 
-.text-gray-700 {
-  color: #374151;
-}
-
-.text-gray-600 {
-  color: #4B5563;
-}
-
-/* 8. Optimisations de responsive */
-/* Breakpoints cohérents */
-@media (min-width: 640px) {
-  .container {
-    max-width: 640px;
-  }
-}
-
-@media (min-width: 768px) {
-  .container {
-    max-width: 768px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .container {
-    max-width: 1024px;
-  }
-}
-
-@media (min-width: 1280px) {
-  .container {
-    max-width: 1280px;
-  }
-}
-
-@media (min-width: 1536px) {
-  .container {
-    max-width: 1536px;
-  }
-}
-
-/* 9. Optimisations de scroll */
-/* Smooth scroll pour une meilleure UX */
-html {
-  scroll-behavior: smooth;
-}
-
-/* 10. Optimisations de sélection */
-/* Améliorer la lisibilité du texte sélectionné */
+/* Sélection optimisée */
 ::selection {
   background-color: #3B82F6;
   color: white;
@@ -153,8 +59,7 @@ html {
   color: white;
 }
 
-/* 11. Optimisations de loading */
-/* Skeleton loading pour améliorer la perception de performance */
+/* Skeleton optimisé */
 .skeleton {
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
@@ -162,35 +67,11 @@ html {
 }
 
 @keyframes loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
-/* 12. Optimisations de print */
-@media print {
-  .no-print {
-    display: none !important;
-  }
-  
-  body {
-    font-size: 12pt;
-    line-height: 1.4;
-  }
-  
-  h1, h2, h3, h4, h5, h6 {
-    page-break-after: avoid;
-  }
-  
-  img {
-    page-break-inside: avoid;
-  }
-}
-
-/* 13. Optimisations de dark mode */
+/* Dark mode */
 @media (prefers-color-scheme: dark) {
   :root {
     --bg-primary: #1f2937;
@@ -198,20 +79,16 @@ html {
   }
 }
 
-/* 14. Optimisations de réduction de mouvement */
+/* Réduction des animations */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
   }
 }
 
-/* 15. Optimisations de performance spécifiques */
-/* Utiliser will-change avec parcimonie */
+/* Optimisations de performance */
 .will-change-transform {
   will-change: transform;
 }
@@ -220,28 +97,23 @@ html {
   will-change: opacity;
 }
 
-/* 16. Optimisations de contenu */
-/* Améliorer la lisibilité */
+/* Optimisations de texte */
 p {
   line-height: 1.6;
-  margin-bottom: 1rem;
 }
 
 h1, h2, h3, h4, h5, h6 {
   line-height: 1.2;
-  margin-bottom: 0.5rem;
+  font-weight: 600;
 }
 
-/* 17. Optimisations de formulaires */
-/* Améliorer l'UX des formulaires */
+/* Optimisations de formulaires */
 input, textarea, select {
-  font-size: 16px; /* Évite le zoom sur iOS */
+  font-family: inherit;
 }
 
-/* 18. Optimisations de navigation */
-/* Améliorer la navigation mobile */
+/* Optimisations de navigation */
 .nav-link {
-  position: relative;
   transition: color 0.2s ease;
 }
 
@@ -249,26 +121,8 @@ input, textarea, select {
   color: #3B82F6;
 }
 
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background-color: #3B82F6;
-  transition: width 0.2s ease;
-}
-
-.nav-link:hover::after {
-  width: 100%;
-}
-
-/* 19. Optimisations de boutons */
-/* Améliorer l'accessibilité des boutons */
+/* Optimisations de boutons */
 .btn {
-  position: relative;
-  overflow: hidden;
   transition: all 0.2s ease;
 }
 
@@ -276,8 +130,7 @@ input, textarea, select {
   transform: translateY(1px);
 }
 
-/* 20. Optimisations de cards */
-/* Améliorer l'UX des cards */
+/* Optimisations de cartes */
 .card {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -285,306 +138,6 @@ input, textarea, select {
 .card:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-}
-
-/* Optimisations de performance critiques */
-@layer base {
-  /* Optimisation des fonts */
-  html {
-    font-display: swap;
-    scroll-behavior: smooth;
-    text-rendering: optimizeSpeed;
-  }
-  
-  /* Optimisation du rendu */
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-  }
-  
-  /* Préparation GPU pour les animations */
-  .will-animate {
-    will-change: transform, opacity;
-    transform: translateZ(0);
-    backface-visibility: hidden;
-  }
-
-  /* Optimisation du body */
-  body {
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-}
-
-/* Animations optimisées pour remplacer AOS */
-@layer utilities {
-  /* Animation de base - fade in optimisée */
-  .animate-fade-in {
-    opacity: 0;
-    transform: translateY(20px) translateZ(0);
-    animation: fadeInUp 0.6s ease-out forwards;
-    will-change: transform, opacity;
-  }
-  
-  /* Animation slide up optimisée */
-  .animate-slide-up {
-    opacity: 0;
-    transform: translateY(30px) translateZ(0);
-    animation: slideUp 0.5s ease-out forwards;
-    will-change: transform, opacity;
-  }
-  
-  /* Animation slide down optimisée */
-  .animate-slide-down {
-    opacity: 0;
-    transform: translateY(-30px) translateZ(0);
-    animation: slideDown 0.5s ease-out forwards;
-    will-change: transform, opacity;
-  }
-  
-  /* Animation slide left optimisée */
-  .animate-slide-left {
-    opacity: 0;
-    transform: translateX(30px) translateZ(0);
-    animation: slideLeft 0.5s ease-out forwards;
-    will-change: transform, opacity;
-  }
-  
-  /* Animation slide right optimisée */
-  .animate-slide-right {
-    opacity: 0;
-    transform: translateX(-30px) translateZ(0);
-    animation: slideRight 0.5s ease-out forwards;
-    will-change: transform, opacity;
-  }
-  
-  /* Animation zoom in optimisée */
-  .animate-zoom-in {
-    opacity: 0;
-    transform: scale(0.9) translateZ(0);
-    animation: zoomIn 0.4s ease-out forwards;
-    will-change: transform, opacity;
-  }
-  
-  /* Animation zoom out optimisée */
-  .animate-zoom-out {
-    opacity: 0;
-    transform: scale(1.1) translateZ(0);
-    animation: zoomOut 0.4s ease-out forwards;
-    will-change: transform, opacity;
-  }
-  
-  /* Animation pulse douce optimisée */
-  .animate-pulse-gentle {
-    animation: pulseGentle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    will-change: opacity;
-  }
-  
-  /* Animation de chargement skeleton optimisée */
-  .animate-skeleton {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 200% 100%;
-    animation: skeleton 1.5s infinite;
-    will-change: background-position;
-  }
-  
-  /* Délais pour les animations en cascade */
-  .animate-delay-100 { animation-delay: 100ms; }
-  .animate-delay-200 { animation-delay: 200ms; }
-  .animate-delay-300 { animation-delay: 300ms; }
-  .animate-delay-400 { animation-delay: 400ms; }
-  .animate-delay-500 { animation-delay: 500ms; }
-}
-
-/* Keyframes optimisées avec GPU */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px) translateZ(0);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) translateZ(0);
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px) translateZ(0);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) translateZ(0);
-  }
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-30px) translateZ(0);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) translateZ(0);
-  }
-}
-
-@keyframes slideLeft {
-  from {
-    opacity: 0;
-    transform: translateX(30px) translateZ(0);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0) translateZ(0);
-  }
-}
-
-@keyframes slideRight {
-  from {
-    opacity: 0;
-    transform: translateX(-30px) translateZ(0);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0) translateZ(0);
-  }
-}
-
-@keyframes zoomIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9) translateZ(0);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateZ(0);
-  }
-}
-
-@keyframes zoomOut {
-  from {
-    opacity: 0;
-    transform: scale(1.1) translateZ(0);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateZ(0);
-  }
-}
-
-@keyframes pulseGentle {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-
-@keyframes skeleton {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-/* Classes utilitaires pour les performances */
-@layer utilities {
-  /* Optimisation GPU */
-  .gpu-accelerated {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-    will-change: transform;
-  }
-  
-  /* Anti-aliasing optimisé */
-  .text-smooth {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  
-  /* Scroll optimisé */
-  .scroll-smooth {
-    scroll-behavior: smooth;
-  }
-  
-  /* États de chargement */
-  .loading-skeleton {
-    @apply animate-skeleton bg-gray-200 rounded;
-  }
-  
-  /* Intersection observer helpers optimisés */
-  .fade-in-on-scroll {
-    opacity: 0;
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    transform: translateY(20px) translateZ(0);
-    will-change: transform, opacity;
-  }
-  
-  .fade-in-on-scroll.visible {
-    opacity: 1;
-    transform: translateY(0) translateZ(0);
-  }
-  
-  /* États hover optimisés */
-  .hover-lift {
-    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
-    will-change: transform, box-shadow;
-  }
-  
-  .hover-lift:hover {
-    transform: translateY(-2px) translateZ(0);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  }
-
-  /* Layout optimisé */
-  .layout-full-width {
-    width: 100%;
-    max-width: none;
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  .layout-contained {
-    width: 100%;
-    max-width: 1280px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  @media (min-width: 640px) {
-    .layout-contained {
-      padding-left: 1.5rem;
-      padding-right: 1.5rem;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .layout-contained {
-      padding-left: 2rem;
-      padding-right: 2rem;
-    }
-  }
-}
-
-/* Media queries pour les performances sur mobile */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
 }
 
 /* Optimisations pour les écrans haute densité */
@@ -595,18 +148,16 @@ input, textarea, select {
   }
 }
 
-/* Performance Provider styles */
+/* Classes utilitaires de performance */
 .performance-provider.loading {
-  opacity: 0.8;
-  transition: opacity 0.3s ease-out;
+  opacity: 0;
 }
 
 .performance-provider.loaded {
   opacity: 1;
-  transition: opacity 0.3s ease-out;
+  transition: opacity 0.3s ease;
 }
 
-/* Fonts loaded state */
 .fonts-loaded {
   font-display: swap;
 } 

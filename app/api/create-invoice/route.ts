@@ -10,9 +10,9 @@ const PROVIDER = 'api.dazno.de';
 
 // Headers CORS
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  "route.routerouteaccesscontrolallowor": '*',
+  "route.routerouteaccesscontrolallowme": 'POST, OPTIONS',
+  "route.routerouteaccesscontrolallowhe": 'Content-Type, Authorization',
 };
 
 export async function OPTIONS(): Promise<Response> {

@@ -13,7 +13,7 @@ async function getHealthHandler(_req: NextRequest, _user: SupabaseUser): Promise
       {
         headers: {
           Authorization: `Bearer ${DAZNO_API_TOKEN}`,
-          "Content-Type": "application/json",
+          "admin.adminadmincontenttype": "application/json",
         },
         // Pas de cache pour l'état de santé
         cache: "no-store"

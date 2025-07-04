@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Aide - DazNode',
-  description: 'Centre d\'aide DazNode'
+  description: "layout.layoutlayoutcentre_d"aide DazNode'
 };
 
 export default function HelpLayout({

@@ -57,7 +57,7 @@ export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
       recommendations.push({
         id: 'verify-email',
         title: 'Vérifiez votre email',
-        description: 'Débloquez toutes les fonctionnalités en vérifiant votre adresse email',
+        description: "user.useruserdbloquez_toutes_les_fo",
         category: 'security',
         impact: 'high',
         estimatedGain: 10000,
@@ -72,8 +72,8 @@ export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
     if (!profile.pubkey) {
       recommendations.push({
         id: 'add-pubkey',
-        title: 'Connectez votre portefeuille Lightning',
-        description: 'Accédez aux fonctionnalités Lightning et améliorez votre score',
+        title: "user.useruserconnectez_votre_portef",
+        description: "user.useruseraccdez_aux_fonctionnal",
         category: 'growth',
         impact: 'high',
         estimatedGain: 25000,
@@ -89,7 +89,7 @@ export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
       recommendations.push({
         id: 'connect-node',
         title: 'Connectez votre nœud Lightning',
-        description: 'Obtenez des analytics détaillées et des recommandations IA',
+        description: "user.useruserobtenez_des_analytics_",
         category: 'efficiency',
         impact: 'high',
         estimatedGain: 75000,
@@ -105,7 +105,7 @@ export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
       recommendations.push({
         id: 'upgrade-premium',
         title: 'Passez à Premium',
-        description: 'Débloquez les optimisations IA et le support prioritaire',
+        description: "user.useruserdbloquez_les_optimisat",
         category: 'revenue',
         impact: 'high',
         estimatedGain: 150000,
@@ -121,7 +121,7 @@ export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
       recommendations.push({
         id: 'dazbox-offer',
         title: 'Découvrez DazBox',
-        description: 'Nœud Lightning clé en main pour des revenus passifs optimisés',
+        description: "user.userusernud_lightning_cl_en_ma",
         category: 'revenue',
         impact: 'high',
         estimatedGain: 200000,
@@ -150,66 +150,66 @@ export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
     return [
       {
         name: 'email_verified',
-        label: 'Email vérifié',
+        label: "user.useruseremail_vrifi",
         completed: profile.email_verified,
         priority: 'high',
         href: '/user/settings',
         points: 20,
-        description: 'Vérifiez votre email pour sécuriser votre compte'
+        description: "user.useruservrifiez_votre_email_po"
       },
       {
         name: 'nom',
-        label: 'Nom de famille',
+        label: "user.userusernom_de_famille",
         completed: !!profile.nom,
         priority: 'medium',
         href: '/user/settings',
         points: 10,
-        description: 'Complétez votre identité'
+        description: "user.userusercompltez_votre_identit"
       },
       {
         name: 'prenom',
-        label: 'Prénom',
+        label: "user.useruserprnom",
         completed: !!profile.prenom,
         priority: 'medium',
         href: '/user/settings',
         points: 10,
-        description: 'Personnalisez votre expérience'
+        description: "user.useruserpersonnalisez_votre_ex"
       },
       {
         name: 'pubkey',
-        label: 'Clé publique Lightning',
+        label: "user.userusercl_publique_lightning",
         completed: !!profile.pubkey,
         priority: 'high',
         href: '/user/settings',
         points: 15,
-        description: 'Connectez votre portefeuille Lightning'
+        description: "user.useruserconnectez_votre_portef"
       },
       {
         name: 'node_id',
-        label: 'Nœud Lightning',
+        label: "user.userusernud_lightning",
         completed: !!profile.node_id,
         priority: 'high',
         href: '/user/node',
         points: 20,
-        description: 'Connectez votre nœud pour les analytics'
+        description: "user.useruserconnectez_votre_nud_po"
       },
       {
         name: 'compte_x',
-        label: 'Compte X (Twitter)',
+        label: "user.userusercompte_x_twitter",
         completed: !!profile.compte_x,
         priority: 'low',
         href: '/user/settings',
         points: 5,
-        description: 'Partagez vos performances'
+        description: "user.useruserpartagez_vos_performan"
       },
       {
         name: 'compte_nostr',
-        label: 'Compte Nostr',
+        label: "user.userusercompte_nostr",
         completed: !!profile.compte_nostr,
         priority: 'low',
         href: '/user/settings',
         points: 5,
-        description: 'Rejoignez la communauté décentralisée'
+        description: "user.useruserrejoignez_la_communaut"
       }
     ];
   };

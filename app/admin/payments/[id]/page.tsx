@@ -52,9 +52,9 @@ export default function PaymentDetailPage(): JSX.Element {
     return <span className={`inline-block px-2 py-1 rounded text-xs font-semibold ${color}`}>{status || "-"}</span>;
   }
 
-  if (isLoading) return <div>Chargement...</div>;
+  if (isLoading) return <div>{t('admin.chargement')}</div>;
   if (error) return <div className="text-red-500">{error}</div>;
-  if (!payment) return <div>Paiement introuvable</div>;
+  if (!payment) return <div>{t('admin.paiement_introuvable')}</div>;
 
   return (
     <div className="p-6">

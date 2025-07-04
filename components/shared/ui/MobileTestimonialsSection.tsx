@@ -1,6 +1,7 @@
 import React from 'react';
-import { Star, Quote, TrendingUp, Shield, Zap, Clock } from 'lucide-react';
+
 import MobileAccordion from './MobileAccordion';
+import { Star, Quote, TrendingUp, Shield, Zap, Clock } from '@/components/shared/ui/IconRegistry';
 
 const MobileTestimonialsSection: React.FC = () => {
   const testimonialItems = [
@@ -22,7 +23,7 @@ const MobileTestimonialsSection: React.FC = () => {
           <div className="bg-[#00D4AA]/10 border border-[#00D4AA]/20 rounded-lg p-3">
             <div className="flex items-center gap-2 text-[#00D4AA] font-semibold">
               <TrendingUp className="h-4 w-4" />
-              <span>+60% de revenus en 3 mois</span>
+              <span>{t('MobileTestimonialsSection.60_de_revenus_en_3_mois')}</span>
             </div>
           </div>
         </div>
@@ -46,7 +47,7 @@ const MobileTestimonialsSection: React.FC = () => {
           <div className="bg-[#F7931A]/10 border border-[#F7931A]/20 rounded-lg p-3">
             <div className="flex items-center gap-2 text-[#F7931A] font-semibold">
               <Clock className="h-4 w-4" />
-              <span>15h économisées par semaine</span>
+              <span>{t('MobileTestimonialsSection.15h_conomises_par_semaine')}</span>
             </div>
           </div>
         </div>
@@ -70,7 +71,7 @@ const MobileTestimonialsSection: React.FC = () => {
           <div className="bg-[#FFE500]/10 border border-[#FFE500]/20 rounded-lg p-3">
             <div className="flex items-center gap-2 text-[#FFE500] font-semibold">
               <Shield className="h-4 w-4" />
-              <span>Interface intuitive</span>
+              <span>{t('MobileTestimonialsSection.interface_intuitive')}</span>
             </div>
           </div>
         </div>
@@ -83,7 +84,7 @@ const MobileTestimonialsSection: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Ils <span className="text-[#F7931A]">témoignent</span>
+            Ils <span className="text-[#F7931A]">{t('MobileTestimonialsSection.tmoignent')}</span>
           </h2>
           <p className="text-gray-300">
             Découvrez les expériences de nos utilisateurs

@@ -22,7 +22,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
           <div className="flex justify-center mb-6">
             <Image
               src="/assets/images/logo-daznode.svg"
-              alt="Logo DazNode"
+              alt="AuthLayout.authlayoutauthlayoutlogo_dazno"
               width={120}
               height={48}
               className="h-12 w-auto"
@@ -47,7 +47,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
         {/* Note confidentialité */}
         <p className="text-xs text-gray-500 text-center mt-6">
           Vos données sont protégées et ne seront jamais partagées.<br />
-          <span className="italic">Besoin d'aide ? Contactez-nous.</span>
+          <span className="italic">{t('AuthLayout.besoin_daide_contacteznous')}</span>
         </p>
       </div>
     </div>

@@ -32,7 +32,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Chargement...</p>
+          <p className="text-gray-600">{t('user.chargement')}</p>
         </div>
       </div>
     );
@@ -45,16 +45,16 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
 
   const navItems = [
     { href: '/user/dashboard', label: 'Dashboard', color: 'indigo', icon: '📊' },
-    { href: '/user/node', label: 'Mon Nœud', color: 'purple', icon: '⚡' },
-    { href: '/user/dazia', label: 'Dazia IA', color: 'yellow', icon: '🤖' },
+    { href: '/user/node', label: "user.userusermon_nud", color: 'purple', icon: '⚡' },
+    { href: '/user/dazia', label: "user.useruserdazia_ia", color: 'yellow', icon: '🤖' },
     { href: '/user/simulation', label: 'Simulation', color: 'orange', icon: '🔬' },
-    { href: '/user/rag-insights', label: 'RAG Insights', color: 'blue', icon: '🧠' },
+    { href: '/user/rag-insights', label: "user.useruserrag_insights", color: 'blue', icon: '🧠' },
     { href: '/user/optimize', label: 'Optimisation', color: 'emerald', icon: '🚀' }
   ];
 
   const accountMenuItems = [
     { href: '/user/subscriptions', label: 'Abonnements', icon: '💳', color: 'blue' },
-    { href: '/user/settings', label: 'Paramètres', icon: '⚙️', color: 'gray' }
+    { href: '/user/settings', label: "user.useruserparamtres", icon: '⚙️', color: 'gray' }
   ];
 
   const getTabStyles = (item: typeof navItems[0], isActive: boolean): string => {
@@ -136,7 +136,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
                   <h1 className="text-lg md:text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                     DazNode
                   </h1>
-                  <p className="text-xs text-gray-500">Lightning Network Dashboard</p>
+                  <p className="text-xs text-gray-500">{t('user.lightning_network_dashboard')}</p>
                 </div>
               </div>
               
@@ -186,7 +186,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
                   }`}
                 >
                   <span className="text-base">👤</span>
-                  <span className="hidden lg:inline">Mon compte</span>
+                  <span className="hidden lg:inline">{t('user.mon_compte')}</span>
                   <svg 
                     className={`w-4 h-4 transition-transform duration-200 ${
                       isAccountMenuOpen ? 'rotate-180' : ''
@@ -224,7 +224,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
                       className="flex items-center space-x-3 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150 w-full text-left"
                     >
                       <span className="text-base">🚪</span>
-                      <span>Se déconnecter</span>
+                      <span>{t('user.se_dconnecter')}</span>
                     </button>
                   </div>
                 )}

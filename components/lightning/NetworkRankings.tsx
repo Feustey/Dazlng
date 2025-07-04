@@ -6,15 +6,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/shared/ui
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/shared/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/shared/ui/table';
 import toast from 'react-hot-toast';
-import { Loader2 } from 'lucide-react';
+import { Loader2 } from '@/components/shared/ui/IconRegistry';
+
 
 type RankingCategory = 'capacity' | 'channels' | 'revenue' | 'centrality';
 
 const CATEGORIES: { value: RankingCategory; label: string }[] = [
-  { value: 'capacity', label: 'Capacité' },
+  { value: 'capacity', label: "NetworkRankings.networkrankingsnetworkrankings" },
   { value: 'channels', label: 'Canaux' },
   { value: 'revenue', label: 'Revenus' },
-  { value: 'centrality', label: 'Centralité' },
+  { value: 'centrality', label: "NetworkRankings.networkrankingsnetworkrankings" },
 ];
 
 export default function NetworkRankings() {
@@ -58,7 +59,7 @@ export default function NetworkRankings() {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Classements du Réseau Lightning</CardTitle>
+        <CardTitle>{t('NetworkRankings.classements_du_rseau_lightning')}</CardTitle>
       </CardHeader>
       <CardContent>
         <Tabs value={category} onValueChange={(value) => setCategory(value as RankingCategory)}>

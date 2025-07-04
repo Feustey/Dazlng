@@ -6,7 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle, Input, Button } from '@/compo
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/shared/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/shared/ui/table';
 import toast from 'react-hot-toast';
-import { Loader2 } from 'lucide-react';
+import { Loader2 } from '@/components/shared/ui/IconRegistry';
+
 
 const ITEMS_PER_PAGE = 10;
 
@@ -53,22 +54,22 @@ export default function NetworkExplorer() {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Explorateur du Réseau Lightning</CardTitle>
+        <CardTitle>{t('NetworkExplorer.explorateur_du_rseau_lightning')}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex gap-4 mb-6">
           <Input
-            placeholder="Rechercher un nœud..."
+            placeholder="NetworkExplorer.networkexplorernetworkexplorer"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="max-w-sm"
           />
           <Select value={sortBy} onValueChange={(value: 'capacity' | 'channels' | 'rank') => setSortBy(value)}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Trier par..." />
+              <SelectValue placeholder="NetworkExplorer.networkexplorernetworkexplorer" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="capacity">Capacité</SelectItem>
+              <SelectItem value="capacity">{t('NetworkExplorer.capacit')}</SelectItem>
               <SelectItem value="channels">Canaux</SelectItem>
               <SelectItem value="rank">Rang</SelectItem>
             </SelectContent>
@@ -81,10 +82,10 @@ export default function NetworkExplorer() {
               <TableRow>
                 <TableHead>Rang</TableHead>
                 <TableHead>Alias</TableHead>
-                <TableHead>Capacité (sats)</TableHead>
+                <TableHead>{t('NetworkExplorer.capacit_sats')}</TableHead>
                 <TableHead>Canaux</TableHead>
-                <TableHead>Frais moyens</TableHead>
-                <TableHead>Dernière mise à jour</TableHead>
+                <TableHead>{t('NetworkExplorer.frais_moyens')}</TableHead>
+                <TableHead>{t('NetworkExplorer.dernire_mise_jour')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

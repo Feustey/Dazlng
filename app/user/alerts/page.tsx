@@ -3,24 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
 import { usePubkeyCookie } from '@/app/user/hooks/usePubkeyCookie';
-import { 
-  Bell, 
-  AlertTriangle,
-  CheckCircle,
-  XCircle,
-  Settings,
-  Eye,
-  EyeOff,
-  Zap,
-  TrendingUp,
-  TrendingDown,
-  Activity,
-  Shield,
-  Clock,
-  Mail,
-  Smartphone,
-  Globe
-} from 'lucide-react';
+import { AlertTriangle, CheckCircle, Settings, Zap, TrendingUp, Activity, Shield, Clock, Mail, Globe, XCircle, Bell, Smartphone, Eye } from '@/components/shared/ui/IconRegistry';
+
 
 interface Alert {
   id: string;
@@ -112,7 +96,7 @@ const AlertPage: React.FC = () => {
           priority: 'medium',
           category: 'node',
           actions: [
-            { label: 'Voir détails', action: 'view_details', url: '/user/node' },
+            { label: "user.useruservoir_dtails", action: 'view_details', url: '/user/node' },
             { label: 'Optimiser', action: 'optimize', url: '/user/optimize' }
           ]
         },
@@ -126,7 +110,7 @@ const AlertPage: React.FC = () => {
           priority: 'high',
           category: 'channel',
           actions: [
-            { label: 'Recréer canal', action: 'recreate_channel' },
+            { label: "user.useruserrecrer_canal", action: 'recreate_channel' },
             { label: 'Analyser', action: 'analyze', url: '/user/node' }
           ]
         },
@@ -140,7 +124,7 @@ const AlertPage: React.FC = () => {
           priority: 'low',
           category: 'revenue',
           actions: [
-            { label: 'Voir recommandation', action: 'view_recommendation', url: '/user/dazia' }
+            { label: "user.useruservoir_recommandation", action: 'view_recommendation', url: '/user/dazia' }
           ]
         },
         {
@@ -187,7 +171,7 @@ const AlertPage: React.FC = () => {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${session?.access_token}`,
-          'Content-Type': 'application/json'
+          "user.userusercontenttype": 'application/json'
         },
         body: JSON.stringify(updatedConfig)
       });
@@ -256,7 +240,7 @@ const AlertPage: React.FC = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
               <Bell className="h-8 w-8 text-pink-600 mr-3" />
-              <h1 className="text-2xl font-bold text-gray-900">Alertes & Surveillance</h1>
+              <h1 className="text-2xl font-bold text-gray-900">{t('user.alertes_surveillance')}</h1>
               {unreadCount > 0 && (
                 <span className="ml-3 px-2 py-1 bg-pink-100 text-pink-800 text-xs font-medium rounded-full">
                   {unreadCount} non lue{unreadCount > 1 ? 's' : ''}
@@ -303,7 +287,7 @@ const AlertPage: React.FC = () => {
 
                   {/* Canaux de notification */}
                   <div>
-                    <h3 className="text-sm font-medium text-gray-900 mb-3">Canaux de notification</h3>
+                    <h3 className="text-sm font-medium text-gray-900 mb-3">{t('user.canaux_de_notification')}</h3>
                     <div className="space-y-2">
                       <label className="flex items-center">
                         <input
@@ -339,14 +323,14 @@ const AlertPage: React.FC = () => {
                           className="rounded border-gray-300 text-pink-600 focus:ring-pink-500"
                         />
                         <Bell className="h-4 w-4 ml-2 text-gray-500" />
-                        <span className="ml-2 text-sm text-gray-700">Dans l'app</span>
+                        <span className="ml-2 text-sm text-gray-700">{t('user.dans_lapp')}</span>
                       </label>
                     </div>
                   </div>
 
                   {/* Seuils */}
                   <div>
-                    <h3 className="text-sm font-medium text-gray-900 mb-3">Seuils d'alerte</h3>
+                    <h3 className="text-sm font-medium text-gray-900 mb-3">{t('user.seuils_dalerte')}</h3>
                     <div className="space-y-3">
                       <div>
                         <label className="block text-xs text-gray-600 mb-1">
@@ -379,7 +363,7 @@ const AlertPage: React.FC = () => {
 
                   {/* Catégories */}
                   <div>
-                    <h3 className="text-sm font-medium text-gray-900 mb-3">Catégories</h3>
+                    <h3 className="text-sm font-medium text-gray-900 mb-3">{t('user.catgories')}</h3>
                     <div className="space-y-2">
                       {Object.entries(config.categories).map(([category, enabled]) => (
                         <label key={category} className="flex items-center">
@@ -456,7 +440,7 @@ const AlertPage: React.FC = () => {
                 {loading ? (
                   <div className="text-center py-8">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600 mx-auto"></div>
-                    <p className="text-gray-600 mt-2">Chargement des alertes...</p>
+                    <p className="text-gray-600 mt-2">{t('user.chargement_des_alertes')}</p>
                   </div>
                 ) : filteredAlerts.length === 0 ? (
                   <div className="text-center py-8">
@@ -536,7 +520,7 @@ const AlertPage: React.FC = () => {
                             <button
                               onClick={() => markAsRead(alert.id)}
                               className="text-gray-400 hover:text-gray-600"
-                              title="Marquer comme lu"
+                              title="user.userusermarquer_comme_lu"
                             >
                               <Eye className="h-4 w-4" />
                             </button>

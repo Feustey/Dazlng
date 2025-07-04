@@ -248,7 +248,7 @@ export default function UsersPage(): JSX.Element {
   const exportCustomers = async () => {
     try {
       const csvContent = [
-        ['Email', 'Nom', 'Prénom', 'Segment', 'Score', 'Commandes', 'CA Total', 'Lightning', 'Date inscription'],
+        ['Email', 'Nom', 'Prénom', 'Segment', 'Score', 'Commandes', "admin.ca_total", 'Lightning', 'Date inscription'],
         ...customers.map(customer => [
           customer.email,
           customer.nom,
@@ -306,8 +306,8 @@ export default function UsersPage(): JSX.Element {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Gestion des Clients</h1>
-          <p className="text-gray-600">Vue d'ensemble et gestion de votre base clients</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('admin.gestion_des_clients')}</h1>
+          <p className="text-gray-600">{t('admin.vue_densemble_et_gestion_de_vo')}</p>
         </div>
         <div className="flex space-x-2">
           <button
@@ -329,11 +329,11 @@ export default function UsersPage(): JSX.Element {
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
           <div className="bg-white p-4 rounded-lg shadow border">
-            <div className="text-sm text-gray-600">Total Clients</div>
+            <div className="text-sm text-gray-600">{t('admin.total_clients')}</div>
             <div className="text-2xl font-bold text-gray-900">{stats.total_customers}</div>
           </div>
           <div className="bg-white p-4 rounded-lg shadow border">
-            <div className="text-sm text-gray-600">Clients Actifs</div>
+            <div className="text-sm text-gray-600">{t('admin.clients_actifs')}</div>
             <div className="text-2xl font-bold text-green-600">{stats.active_customers}</div>
           </div>
           <div className="bg-white p-4 rounded-lg shadow border">
@@ -341,15 +341,15 @@ export default function UsersPage(): JSX.Element {
             <div className="text-2xl font-bold text-purple-600">{stats.premium_customers}</div>
           </div>
           <div className="bg-white p-4 rounded-lg shadow border">
-            <div className="text-sm text-gray-600">Lightning Users</div>
+            <div className="text-sm text-gray-600">{t('admin.lightning_users')}</div>
             <div className="text-2xl font-bold text-yellow-600">{stats.lightning_users}</div>
           </div>
           <div className="bg-white p-4 rounded-lg shadow border">
-            <div className="text-sm text-gray-600">CA Total</div>
+            <div className="text-sm text-gray-600">{t('admin.ca_total')}</div>
             <div className="text-2xl font-bold text-green-600">{formatSats(stats.total_revenue)}</div>
           </div>
           <div className="bg-white p-4 rounded-lg shadow border">
-            <div className="text-sm text-gray-600">Panier Moyen</div>
+            <div className="text-sm text-gray-600">{t('admin.panier_moyen')}</div>
             <div className="text-2xl font-bold text-blue-600">{formatSats(stats.avg_order_value)}</div>
           </div>
         </div>
@@ -361,7 +361,7 @@ export default function UsersPage(): JSX.Element {
           <div className="flex-1">
             <input
               type="text"
-              placeholder="Rechercher par email, nom ou prénom..."
+              placeholder="admin.adminadminrechercher_par_email"
               value={searchTerm}
               onChange={(e: any) => setSearchTerm(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -373,7 +373,7 @@ export default function UsersPage(): JSX.Element {
               onChange={(e: any) => setSelectedSegment(e.target.value)}
               className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
-              <option value="all">Tous les segments</option>
+              <option value="all">{t('admin.tous_les_segments')}</option>
               <option value="prospect">Prospects</option>
               <option value="lead">Leads</option>
               <option value="customer">Clients</option>
@@ -394,7 +394,7 @@ export default function UsersPage(): JSX.Element {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Segment</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Commandes</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CA Total</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('admin.ca_total')}</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lightning</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Inscription</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>

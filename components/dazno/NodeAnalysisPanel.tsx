@@ -50,7 +50,7 @@ export const NodeAnalysisPanel: React.FC<NodeAnalysisPanelProps> = ({
       <div className={`bg-red-50 border border-red-200 rounded-lg p-4 ${className}`}>
         <div className="flex">
           <div className="text-red-800">
-            <h3 className="text-sm font-medium">Erreur d'analyse</h3>
+            <h3 className="text-sm font-medium">{t('NodeAnalysisPanel.erreur_danalyse')}</h3>
             <p className="text-sm mt-1">{dazno.error}</p>
           </div>
           <button
@@ -82,8 +82,8 @@ export const NodeAnalysisPanel: React.FC<NodeAnalysisPanelProps> = ({
               onChange={(e: any) => setContext(e.target.value as DaznoPriorityRequest['context'])}
               className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
             >
-              <option value="beginner">Débutant</option>
-              <option value="intermediate">Intermédiaire</option>
+              <option value="beginner">{t('NodeAnalysisPanel.dbutant')}</option>
+              <option value="intermediate">{t('NodeAnalysisPanel.intermdiaire')}</option>
               <option value="expert">Expert</option>
             </select>
           </div>
@@ -94,9 +94,9 @@ export const NodeAnalysisPanel: React.FC<NodeAnalysisPanelProps> = ({
             </label>
             <div className="space-y-2">
               {[
-                { value: 'increase_revenue', label: 'Augmenter les revenus' },
-                { value: 'improve_connectivity', label: 'Améliorer la connectivité' },
-                { value: 'reduce_costs', label: 'Réduire les coûts' }
+                { value: 'increase_revenue', label: "NodeAnalysisPanel.nodeanalysispanelnodeanalysisp" },
+                { value: 'improve_connectivity', label: "NodeAnalysisPanel.nodeanalysispanelnodeanalysisp" },
+                { value: 'reduce_costs', label: "NodeAnalysisPanel.nodeanalysispanelnodeanalysisp" }
               ].map(goal => (
                 <label key={goal.value} className="flex items-center">
                   <input
@@ -146,7 +146,7 @@ export const NodeAnalysisPanel: React.FC<NodeAnalysisPanelProps> = ({
               <div className="text-2xl font-bold text-blue-600">
                 {dazno.complete.health_score}%
               </div>
-              <div className="text-sm text-gray-600">Score de santé</div>
+              <div className="text-sm text-gray-600">{t('NodeAnalysisPanel.score_de_sant')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600">
@@ -164,12 +164,12 @@ export const NodeAnalysisPanel: React.FC<NodeAnalysisPanelProps> = ({
               <div className="text-2xl font-bold text-orange-600">
                 #{dazno.complete.node_info.centrality_rank}
               </div>
-              <div className="text-sm text-gray-600">Rang centralité</div>
+              <div className="text-sm text-gray-600">{t('NodeAnalysisPanel.rang_centralit')}</div>
             </div>
           </div>
 
           <div className="bg-gray-50 rounded-lg p-4">
-            <h4 className="font-medium text-gray-900 mb-2">Prochaines étapes</h4>
+            <h4 className="font-medium text-gray-900 mb-2">{t('NodeAnalysisPanel.prochaines_tapes')}</h4>
             <ul className="space-y-1">
               {dazno.complete.next_steps.map((step: any, index: any) => (
                 <li key={index} className="text-sm text-gray-700 flex items-start">
@@ -239,7 +239,7 @@ export const NodeAnalysisPanel: React.FC<NodeAnalysisPanelProps> = ({
 
           {dazno.priorities.openai_analysis && (
             <div className="mt-6 bg-blue-50 rounded-lg p-4">
-              <h4 className="font-medium text-blue-900 mb-2">Analyse OpenAI</h4>
+              <h4 className="font-medium text-blue-900 mb-2">{t('NodeAnalysisPanel.analyse_openai')}</h4>
               <p className="text-sm text-blue-800 whitespace-pre-wrap">
                 {dazno.priorities.openai_analysis}
               </p>

@@ -30,25 +30,25 @@ const RealMetrics: React.FC = () => {
     {
       number: "99.97%",
       label: "Uptime",
-      description: "Sur les 24 derniers mois",
+      description: "RealMetrics.realmetricsrealmetricssur_les_",
       color: "text-green-600"
     },
     {
       number: "0",
-      label: "Force-closes",
-      description: "Depuis 6 mois",
+      label: "RealMetrics.realmetricsrealmetricsforceclo",
+      description: "RealMetrics.realmetricsrealmetricsdepuis_6",
       color: "text-blue-600"
     },
     {
       number: "127%",
-      label: "ROI moyen",
-      description: "Vs. gestion manuelle",
+      label: "RealMetrics.realmetricsrealmetricsroi_moye",
+      description: "RealMetrics.realmetricsrealmetricsvs_gesti",
       color: "text-purple-600"
     },
     {
       number: "< 30s",
-      label: "Temps de réaction",
-      description: "Détection d'anomalies",
+      label: "RealMetrics.realmetricsrealmetricstemps_de",
+      description: "RealMetrics.realmetricsrealmetricsdtection"anomalies",
       color: "text-orange-600"
     }
   ];
@@ -87,7 +87,7 @@ const RealMetrics: React.FC = () => {
           </h3>
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h4 className="text-lg font-semibold text-blue-300 mb-3">Nos nodes publics :</h4>
+              <h4 className="text-lg font-semibold text-blue-300 mb-3">{t('RealMetrics.nos_nodes_publics_')}</h4>
               <div className="space-y-2 font-mono text-sm">
                 <div className="bg-black/30 p-2 rounded">
                   <span className="text-green-400">✓</span> 03a2b4c5d6e7f8... (1ML rank #47)
@@ -101,23 +101,23 @@ const RealMetrics: React.FC = () => {
               </div>
             </div>
             <div>
-              <h4 className="text-lg font-semibold text-purple-300 mb-3">Métriques temps réel :</h4>
+              <h4 className="text-lg font-semibold text-purple-300 mb-3">{t('RealMetrics.mtriques_temps_rel_')}</h4>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span>Capacity totale:</span>
-                  <span className="text-yellow-400">12.7 BTC</span>
+                  <span>{t('RealMetrics.capacity_totale')}</span>
+                  <span className="text-yellow-400">{t('RealMetrics.127_btc')}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Canaux actifs:</span>
+                  <span>{t('RealMetrics.canaux_actifs')}</span>
                   <span className="text-green-400">247</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Force-closes évités:</span>
-                  <span className="text-blue-400">34/34 (6 mois)</span>
+                  <span>{t('RealMetrics.forcecloses_vits')}</span>
+                  <span className="text-blue-400">{t('RealMetrics.3434_6_mois')}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Revenue optimisé:</span>
-                  <span className="text-orange-400">+127% vs. manuel</span>
+                  <span>{t('RealMetrics.revenue_optimis')}</span>
+                  <span className="text-orange-400">{t('RealMetrics.127_vs_manuel')}</span>
                 </div>
               </div>
             </div>

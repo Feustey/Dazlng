@@ -22,7 +22,7 @@ const teamMembers: TeamMember[] = [
     name: "Thomas Laurent",
     role: "Fondateur & CEO",
     bio: "Expert Bitcoin depuis 2017, ancien développeur chez Ledger. Spécialisé dans l'infrastructure Lightning Network et la sécurité des nœuds.",
-    expertise: ["Bitcoin", "Lightning Network", "Infrastructure", "Sécurité"],
+    expertise: ["Bitcoin", "Lightning Network", "Infrastructure", "common.scurit"],
     linkedin: "https://linkedin.com/in/thomas-laurent-daznode",
     github: "https://github.com/thomaslaurent",
     twitter: "https://twitter.com/thomaslaurent",
@@ -88,7 +88,7 @@ const AboutPage: React.FC = () => {
               <p className="text-gray-700 text-sm mb-4">{member.bio}</p>
               
               <div className="mb-4">
-                <h4 className="text-sm font-semibold text-gray-900 mb-2">Expertise :</h4>
+                <h4 className="text-sm font-semibold text-gray-900 mb-2">{t('common.expertise_')}</h4>
                 <div className="flex flex-wrap gap-2">
                   {member.expertise.map((skill, skillIndex) => (
                     <span 
@@ -130,14 +130,14 @@ const AboutPage: React.FC = () => {
 
         {/* Valeurs et Mission */}
         <div className="bg-white rounded-xl shadow-lg p-8 mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">Notre Mission</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">{t('common.notre_mission')}</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🌐</span>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Démocratisation</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('common.dmocratisation')}</h3>
               <p className="text-gray-600">
                 Rendre les technologies Bitcoin et Lightning accessibles à tous, 
                 sans prérequis techniques complexes.
@@ -148,7 +148,7 @@ const AboutPage: React.FC = () => {
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🔒</span>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Sécurité</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('common.scurit')}</h3>
               <p className="text-gray-600">
                 Priorité absolue à la sécurité des fonds et des données de nos utilisateurs, 
                 avec des audits réguliers.
@@ -170,24 +170,24 @@ const AboutPage: React.FC = () => {
 
         {/* Statistiques Vérifiables */}
         <div className="bg-white rounded-xl shadow-lg p-8 mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">Nos Chiffres</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">{t('common.nos_chiffres')}</h2>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center">
               <div className="text-3xl font-bold text-blue-600 mb-2">847</div>
-              <div className="text-sm text-gray-600">Nœuds actifs</div>
+              <div className="text-sm text-gray-600">{t('common.nuds_actifs')}</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-green-600 mb-2">99.9%</div>
-              <div className="text-sm text-gray-600">Uptime moyen</div>
+              <div className="text-sm text-gray-600">{t('common.uptime_moyen')}</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600 mb-2">15.7 BTC</div>
-              <div className="text-sm text-gray-600">Capacité totale</div>
+              <div className="text-3xl font-bold text-purple-600 mb-2">{t('common.157_btc')}</div>
+              <div className="text-sm text-gray-600">{t('common.capacit_totale')}</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-orange-600 mb-2">4.8/5</div>
-              <div className="text-sm text-gray-600">Note utilisateurs</div>
+              <div className="text-sm text-gray-600">{t('common.note_utilisateurs')}</div>
             </div>
           </div>
           
@@ -200,7 +200,7 @@ const AboutPage: React.FC = () => {
 
         {/* Contact */}
         <div className="bg-blue-50 rounded-xl p-8 text-center">
-          <h3 className="text-2xl font-bold text-blue-900 mb-4">Envie de nous rejoindre ?</h3>
+          <h3 className="text-2xl font-bold text-blue-900 mb-4">{t('common.envie_de_nous_rejoindre_')}</h3>
           <p className="text-blue-800 mb-6">
             Nous recrutons des talents passionnés par Bitcoin et Lightning Network.
           </p>

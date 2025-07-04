@@ -58,7 +58,7 @@ export class EmailConversionService {
         <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>DazNode - Transformez votre expérience</title>
+          <title>{t('EmailConversionService.daznode_transformez_votre_expr')}</title>
           <style>
             body {
               margin: 0;
@@ -151,16 +151,16 @@ export class EmailConversionService {
             </div>
             <div class="content">
               <h1 class="title">🎉 Félicitations ${name || 'utilisateur'} !</h1>
-              <p class="text">Vous avez utilisé DazNode <strong>${loginCount} fois</strong> - nous voyons que vous appréciez nos services !</p>
+              <p class="text">Vous avez utilisé DazNode <strong>${loginCount} fois</strong>{t('EmailConversionService._nous_voyons_que_vous_apprciez')}</p>
               
               <div class="highlight-box">
-                <h3 style="color: #4f46e5; margin-top: 0;">✨ Créez votre compte permanent et profitez de :</h3>
+                <h3 style="color: #4f46e5; margin-top: 0;">{t('EmailConversionService._crez_votre_compte_permanent_e')}</h3>
                 <ul class="benefits-list">
-                  <li>🔒 <strong>Sauvegarde sécurisée</strong> de vos données et configurations</li>
+                  <li>🔒 <strong>{t('EmailConversionService.sauvegarde_scurise')}</strong>{t('EmailConversionService._de_vos_donnes_et_configuratio')}</li>
                   <li>⚡ <strong>Synchronisation</strong> entre tous vos appareils</li>
-                  <li>📊 <strong>Analytics avancés</strong> de vos nodes</li>
+                  <li>📊 <strong>{t('EmailConversionService.analytics_avancs')}</strong>{t('EmailConversionService._de_vos_nodes')}</li>
                   <li>🔔 <strong>Notifications</strong> en temps réel</li>
-                  <li>🎯 <strong>Support prioritaire</strong></li>
+                  <li>🎯 <strong>{t('EmailConversionService.support_prioritaire')}</strong></li>
                 </ul>
               </div>
 
@@ -175,7 +175,7 @@ export class EmailConversionService {
               </p>
             </div>
             <div class="footer">
-              <p class="copyright">© 2025 DazNode - Votre passerelle vers le Lightning Network</p>
+              <p class="copyright">{t('EmailConversionService._2025_daznode_votre_passerelle')}</p>
             </div>
           </div>
         </body>
@@ -227,30 +227,30 @@ export class EmailConversionService {
       </head>
       <body>
         <div class="header">
-          <img src="https://nextjs-boilerplate-1l6z3th4v-feusteys-projects.vercel.app/assets/images/logo-daznode-white.svg" alt="DAZ Node" height="40" style="margin-bottom: 10px;" />
-          <h1 style="margin: 0; font-size: 24px;">DAZ Node</h1>
+          <img src="https://nextjs-boilerplate-1l6z3th4v-feusteys-projects.vercel.app/assets/images/logo-daznode-white.svg" alt="EmailConversionService.emailconversionserviceemailcon" height="40" style="margin-bottom: 10px;" />
+          <h1 style="margin: 0; font-size: 24px;">{t("EmailConversionService.emailconversionserviceemailcon")}</h1>
         </div>
         <div class="content">
           <div class="welcome">
             <h2>🎉 Bienvenue ${name || 'sur DAZ Node'} !</h2>
-            <p>Nous sommes ravis de vous accueillir dans l'écosystème DAZ Node.</p>
+            <p>{t('EmailConversionService.nous_sommes_ravis_de_vous_accu')}</p>
           </div>
 
           <div class="quick-start">
-            <h3>🚀 Pour commencer :</h3>
+            <h3>{t('EmailConversionService._pour_commencer_')}</h3>
             <ol>
-              <li>Explorez nos produits : DazBox, DazNode et DazPay</li>
-              <li>Connectez votre node Lightning si vous en avez un</li>
-              <li>Découvrez les analytics en temps réel</li>
+              <li>{t('EmailConversionService.explorez_nos_produits_dazbox_d')}</li>
+              <li>{t('EmailConversionService.connectez_votre_node_lightning')}</li>
+              <li>{t('EmailConversionService.dcouvrez_les_analytics_en_temp')}</li>
             </ol>
           </div>
 
-          <p>💡 <strong>Astuce :</strong> Si vous utilisez régulièrement DAZ Node, nous vous proposerons bientôt de créer un compte permanent pour sauvegarder vos données.</p>
+          <p>💡 <strong>{t('EmailConversionService.astuce_')}</strong>{t('EmailConversionService._si_vous_utilisez_rgulirement_')}</p>
           
-          <p>Des questions ? Notre équipe est là pour vous aider !</p>
+          <p>{t('EmailConversionService.des_questions_notre_quipe_est_')}</p>
         </div>
         <div class="footer">
-          <p>© 2024 DAZ Node. Tous droits réservés.</p>
+          <p>{t('EmailConversionService._2024_daz_node_tous_droits_rse')}</p>
         </div>
       </body>
       </html>
@@ -277,20 +277,20 @@ export class EmailConversionService {
       </head>
       <body>
         <div class="header">
-          <img src="https://nextjs-boilerplate-1l6z3th4v-feusteys-projects.vercel.app/assets/images/logo-daznode-white.svg" alt="DAZ Node" height="40" style="margin-bottom: 10px;" />
-          <h1 style="margin: 0; font-size: 24px;">DAZ Node</h1>
+          <img src="https://nextjs-boilerplate-1l6z3th4v-feusteys-projects.vercel.app/assets/images/logo-daznode-white.svg" alt="EmailConversionService.emailconversionserviceemailcon" height="40" style="margin-bottom: 10px;" />
+          <h1 style="margin: 0; font-size: 24px;">{t("EmailConversionService.emailconversionserviceemailcon")}</h1>
         </div>
         <div class="content">
           <h2>🌟 ${name || 'Utilisateur'}, votre engagement nous impressionne !</h2>
           
           <div class="stats">
-            <p><strong>📈 Vos statistiques :</strong></p>
+            <p><strong>{t('EmailConversionService._vos_statistiques_')}</strong></p>
             <p>✅ ${loginCount} connexions réussies<br>
             ✅ Utilisateur actif et engagé<br>
             ✅ Prêt pour les fonctionnalités avancées</p>
           </div>
 
-          <p>Il est temps de passer au niveau supérieur avec un compte permanent !</p>
+          <p>{t('EmailConversionService.il_est_temps_de_passer_au_nive')}</p>
           
           <div style="text-align: center;">
             <a href="${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/register?conversion=true&email=${encodeURIComponent(email)}" class="cta-button">
@@ -299,7 +299,7 @@ export class EmailConversionService {
           </div>
         </div>
         <div class="footer">
-          <p>© 2024 DAZ Node. Tous droits réservés.</p>
+          <p>{t('EmailConversionService._2024_daz_node_tous_droits_rse')}</p>
         </div>
       </body>
       </html>
@@ -325,21 +325,21 @@ export class EmailConversionService {
       </head>
       <body>
         <div class="header">
-          <img src="https://nextjs-boilerplate-1l6z3th4v-feusteys-projects.vercel.app/assets/images/logo-daznode-white.svg" alt="DAZ Node" height="40" style="margin-bottom: 10px;" />
-          <h1 style="margin: 0; font-size: 24px;">DAZ Node</h1>
+          <img src="https://nextjs-boilerplate-1l6z3th4v-feusteys-projects.vercel.app/assets/images/logo-daznode-white.svg" alt="EmailConversionService.emailconversionserviceemailcon" height="40" style="margin-bottom: 10px;" />
+          <h1 style="margin: 0; font-size: 24px;">{t("EmailConversionService.emailconversionserviceemailcon")}</h1>
         </div>
         <div class="content">
           <div class="welcome-back">
             <h2>👋 Bon retour ${name || 'sur DAZ Node'} !</h2>
-            <p>C'est votre <strong>${loginCount}ème connexion</strong> - merci pour votre fidélité !</p>
+            <p>C'est votre <strong>${loginCount}ème connexion</strong>{t('EmailConversionService._merci_pour_votre_fidlit_')}</p>
           </div>
 
-          <p>Vos données temporaires sont prêtes. Vous pouvez reprendre là où vous vous étiez arrêté.</p>
+          <p>{t('EmailConversionService.vos_donnes_temporaires_sont_pr')}</p>
           
-          <p>🔍 <strong>Nouveautés :</strong> Découvrez nos dernières améliorations dans l'interface utilisateur.</p>
+          <p>🔍 <strong>{t('EmailConversionService.nouveauts_')}</strong>{t('EmailConversionService._dcouvrez_nos_dernires_amliora')}</p>
         </div>
         <div class="footer">
-          <p>© 2024 DAZ Node. Tous droits réservés.</p>
+          <p>{t('EmailConversionService._2024_daz_node_tous_droits_rse')}</p>
         </div>
       </body>
       </html>
@@ -367,29 +367,29 @@ export class EmailConversionService {
         </head>
         <body>
           <div class="header">
-            <img src="https://nextjs-boilerplate-1l6z3th4v-feusteys-projects.vercel.app/assets/images/logo-daznode-white.svg" alt="DAZ Node" height="40" style="margin-bottom: 10px;" />
-            <h1 style="margin: 0; font-size: 24px;">DAZ Node</h1>
+            <img src="https://nextjs-boilerplate-1l6z3th4v-feusteys-projects.vercel.app/assets/images/logo-daznode-white.svg" alt="EmailConversionService.emailconversionserviceemailcon" height="40" style="margin-bottom: 10px;" />
+            <h1 style="margin: 0; font-size: 24px;">{t("EmailConversionService.emailconversionserviceemailcon")}</h1>
           </div>
           <div class="content">
             <div class="success">
               <h2>🎉 Félicitations ${name || 'utilisateur'} !</h2>
-              <p>Votre compte permanent DAZ Node a été créé avec succès.</p>
+              <p>{t('EmailConversionService.votre_compte_permanent_daz_nod')}</p>
             </div>
 
             <div class="next-steps">
-              <h3>🚀 Prochaines étapes :</h3>
+              <h3>{t('EmailConversionService._prochaines_tapes_')}</h3>
               <ul>
-                <li>Configurez votre profil complet</li>
-                <li>Activez les notifications</li>
-                <li>Explorez toutes les fonctionnalités premium</li>
-                <li>Rejoignez notre communauté</li>
+                <li>{t('EmailConversionService.configurez_votre_profil_comple')}</li>
+                <li>{t('EmailConversionService.activez_les_notifications')}</li>
+                <li>{t('EmailConversionService.explorez_toutes_les_fonctionna')}</li>
+                <li>{t('EmailConversionService.rejoignez_notre_communaut')}</li>
               </ul>
             </div>
 
-            <p>Merci de faire confiance à DAZ Node. Nous sommes impatients de vous accompagner dans votre parcours Lightning Network !</p>
+            <p>{t('EmailConversionService.merci_de_faire_confiance_daz_n')}</p>
           </div>
           <div class="footer">
-            <p>© 2024 DAZ Node. Tous droits réservés.</p>
+            <p>{t('EmailConversionService._2024_daz_node_tous_droits_rse')}</p>
           </div>
         </body>
         </html>

@@ -1,7 +1,12 @@
 import { NetworkService } from '../lib/network-service';
-import apiClient from '../lib/api-client';
+import { mcpClient } from '../lib/api-client';
 
-jest.mock('../lib/api-client');
+jest.mock('../lib/api-client', () => ({
+  mcpClient: {
+    getNetworkSummary: jest.fn(),
+    optimizeNode: jest.fn()
+  }
+}));
 
 describe('NetworkService', () => {
   beforeEach(() => {
@@ -15,7 +20,7 @@ describe('NetworkService', () => {
       averageLoad: 0.75,
       alerts: []
     };
-    (apiClient.get as jest.Mock).mockResolvedValue({ data: mockSummary });
+    (mcpClient.getNetworkSummary as jest.Mock).mockResolvedValue(mockSummary);
     const result = await NetworkService.getNetworkSummary();
     expect(result).toEqual(mockSummary);
   });
@@ -27,7 +32,7 @@ describe('NetworkService', () => {
         data: { code: 'SERVER_ERROR', message: 'Erreur serveur' }
       }
     };
-    (apiClient.get as jest.Mock).mockRejectedValue(mockError);
+    (mcpClient.getNetworkSummary as jest.Mock).mockRejectedValue(mockError);
     await expect(NetworkService.getNetworkSummary()).rejects.toMatchObject({
       status: 500,
       code: 'SERVER_ERROR'

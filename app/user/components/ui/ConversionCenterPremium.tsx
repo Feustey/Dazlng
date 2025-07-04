@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { X, Star, Zap, TrendingUp, Shield, Headphones } from 'lucide-react';
+import { X, Star, Zap, TrendingUp, Shield, Headphones } from '@/components/shared/ui/IconRegistry';
+
 
 export interface ConversionCenterPremiumProps {
   isOpen: boolean;
@@ -26,25 +27,25 @@ export const ConversionCenterPremium: React.FC<ConversionCenterPremiumProps> = (
     {
       icon: <Zap className="w-6 h-6 text-yellow-500" />,
       title: "Recommandations IA Personnalisées",
-      description: "Dazia analyse votre nœud 24/7 et propose des optimisations spécifiques",
+      description: "user.useruserdazia_analyse_votre_nu",
       value: "+15-30% de revenus"
     },
     {
       icon: <TrendingUp className="w-6 h-6 text-green-500" />,
       title: "Analytics Avancées",
-      description: "Métriques détaillées, projections et comparaisons avec le réseau",
+      description: "user.userusermtriques_dtailles_proj",
       value: "Insights exclusifs"
     },
     {
       icon: <Shield className="w-6 h-6 text-blue-500" />,
       title: "Monitoring Proactif",
-      description: "Alertes automatiques pour les problèmes de performance",
+      description: "user.useruseralertes_automatiques_p",
       value: "99.9% uptime"
     },
     {
       icon: <Headphones className="w-6 h-6 text-purple-500" />,
       title: "Support Prioritaire",
-      description: "Accès direct aux experts Lightning Network",
+      description: "user.useruseraccs_direct_aux_expert",
       value: "Support 24/7"
     }
   ];
@@ -70,8 +71,8 @@ export const ConversionCenterPremium: React.FC<ConversionCenterPremiumProps> = (
           <div className="flex items-center gap-4">
             <div className="text-4xl">🚀</div>
             <div>
-              <h2 className="text-2xl font-bold">Passez à Premium</h2>
-              <p className="text-purple-100">Débloquez le potentiel complet de votre nœud Lightning</p>
+              <h2 className="text-2xl font-bold">{t('user.passez_premium')}</h2>
+              <p className="text-purple-100">{t('user.dbloquez_le_potentiel_complet_')}</p>
             </div>
           </div>
           
@@ -79,7 +80,7 @@ export const ConversionCenterPremium: React.FC<ConversionCenterPremiumProps> = (
           <div className="mt-4 bg-white bg-opacity-20 rounded-lg p-3">
             <div className="flex justify-between items-center">
               <span className="text-sm">Votre score actuel: {userScore}/100</span>
-              <span className="text-sm">Score Premium moyen: 85/100</span>
+              <span className="text-sm">{t('user.score_premium_moyen_85100')}</span>
             </div>
             <div className="w-full bg-white bg-opacity-30 rounded-full h-2 mt-2">
               <div 
@@ -93,9 +94,9 @@ export const ConversionCenterPremium: React.FC<ConversionCenterPremiumProps> = (
         {/* Tabs */}
         <div className="flex border-b">
           {[
-            { key: 'features', label: 'Fonctionnalités', icon: <Star className="w-4 h-4" /> },
-            { key: 'roi', label: 'Rentabilité', icon: <TrendingUp className="w-4 h-4" /> },
-            { key: 'testimonials', label: 'Témoignages', icon: <Shield className="w-4 h-4" /> }
+            { key: 'features', label: "user.useruserfonctionnalits", icon: <Star className="w-4 h-4" /> },
+            { key: 'roi', label: "user.useruserrentabilit", icon: <TrendingUp className="w-4 h-4" /> },
+            { key: 'testimonials', label: "user.userusertmoignages", icon: <Shield className="w-4 h-4" /> }
           ].map(tab => (
             <button
               key={tab.key}
@@ -138,30 +139,30 @@ export const ConversionCenterPremium: React.FC<ConversionCenterPremiumProps> = (
           {activeTab === 'roi' && (
             <div className="space-y-6">
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-6 border border-green-200">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Analyse de Rentabilité Personnalisée</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">{t('user.analyse_de_rentabilit_personna')}</h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-green-600">29 000 sats</div>
-                    <div className="text-sm text-gray-600">Coût mensuel Premium</div>
+                    <div className="text-3xl font-bold text-green-600">{t('user.29_000_sats')}</div>
+                    <div className="text-sm text-gray-600">{t('user.cot_mensuel_premium')}</div>
                   </div>
                   
                   <div className="text-center">
                     <div className="text-3xl font-bold text-blue-600">
                       {Math.round(roiCalculation.monthlySavings / 1000)}k sats
                     </div>
-                    <div className="text-sm text-gray-600">Gains estimés/mois</div>
+                    <div className="text-sm text-gray-600">{t('user.gains_estimsmois')}</div>
                   </div>
                   
                   <div className="text-center">
                     <div className="text-3xl font-bold text-purple-600">{roiCalculation.paybackMonths}</div>
-                    <div className="text-sm text-gray-600">Mois pour rentabilité</div>
+                    <div className="text-sm text-gray-600">{t('user.mois_pour_rentabilit')}</div>
                   </div>
                 </div>
                 
                 <div className="mt-6 bg-white rounded-lg p-4">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium">Projection 6 mois</span>
+                    <span className="text-sm font-medium">{t('user.projection_6_mois')}</span>
                     <span className="text-sm text-green-600 font-bold">
                       +{Math.round((roiCalculation.monthlySavings * 6 - 29000 * 6) / 1000)}k sats
                     </span>
@@ -223,8 +224,8 @@ export const ConversionCenterPremium: React.FC<ConversionCenterPremiumProps> = (
         <div className="border-t bg-gray-50 p-6 rounded-b-2xl">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-lg font-bold text-gray-900">Commencez dès aujourd'hui</div>
-              <div className="text-sm text-gray-600">Garantie satisfaction 30 jours • Annulation à tout moment</div>
+              <div className="text-lg font-bold text-gray-900">{t('user.commencez_ds_aujourdhui')}</div>
+              <div className="text-sm text-gray-600">{t('user.garantie_satisfaction_30_jours')}</div>
             </div>
             <div className="flex gap-3">
               <button

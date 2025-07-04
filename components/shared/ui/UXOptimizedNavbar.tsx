@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X } from 'lucide-react';
+import { Menu, X } from '@/components/shared/ui/IconRegistry';
+
 
 const NAV_LINKS = [
-  { href: "#problem-section", label: "Problème" },
+  { href: "#problem-section", label: "UXOptimizedNavbar.uxoptimizednavbaruxoptimizedna" },
   { href: "#solution-section", label: "Solution" },
   { href: "#proof-section", label: "Preuves" },
-  { href: "#how-section", label: "Comment ça marche" },
+  { href: "#how-section", label: "UXOptimizedNavbar.uxoptimizednavbaruxoptimizedna" },
   { href: "#pricing-section", label: "Tarifs" },
-  { href: "#contact-section", label: "Contact/Demo" },
+  { href: "#contact-section", label: "UXOptimizedNavbar.uxoptimizednavbaruxoptimizedna" },
 ];
 
 const UXOptimizedNavbar: React.FC = () => {

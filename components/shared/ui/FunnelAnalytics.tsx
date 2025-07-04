@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { FaChartLine, FaUsers, FaMousePointer, FaEye, FaArrowRight, FaDownload } from 'react-icons/fa';
+
 import { useConversionTracking, TrackingEvent } from '../../../hooks/useConversionTracking';
+import { TrendingUp, Users, MousePointer, Eye, ArrowRight, Download } from '@/components/shared/ui/IconRegistry';
 
 export interface FunnelStep {
   name: string;
@@ -52,7 +53,7 @@ const FunnelChart: React.FC<FunnelChartProps> = ({ steps }) => {
   return (
     <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
       <h3 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-        <FaChartLine className="text-indigo-600" />
+        <TrendingUp className="text-indigo-600" />
         Funnel de Conversion
       </h3>
       
@@ -90,7 +91,7 @@ const FunnelChart: React.FC<FunnelChartProps> = ({ steps }) => {
             
             {/* Flèche vers l'étape suivante */}
             {index < steps.length - 1 && (
-              <FaArrowRight className="text-gray-400 text-sm flex-shrink-0" />
+              <ArrowRight className="text-gray-400 text-sm flex-shrink-0" />
             )}
           </div>
         ))}
@@ -109,7 +110,7 @@ const EventsList: React.FC<EventsListProps> = ({ events }) => {
   return (
     <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
       <h3 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-        <FaEye className="text-indigo-600" />
+        <Eye className="text-indigo-600" />
         Événements Récents
       </h3>
       
@@ -180,7 +181,7 @@ export const FunnelAnalytics: React.FC = () => {
         {/* En-tête */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Analytics du Funnel</h1>
+            <h1 className="text-3xl font-bold text-gray-900">{t('FunnelAnalytics.analytics_du_funnel')}</h1>
             <p className="text-gray-600 mt-2">
               Suivi en temps réel des conversions et comportements utilisateurs
             </p>
@@ -189,7 +190,7 @@ export const FunnelAnalytics: React.FC = () => {
             onClick={exportData}
             className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
           >
-            <FaDownload />
+            <Download />
             Exporter les données
           </button>
         </div>
@@ -197,27 +198,27 @@ export const FunnelAnalytics: React.FC = () => {
         {/* Métriques principales */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <MetricCard
-            title="Total Événements"
+            title="FunnelAnalytics.funnelanalyticsfunnelanalytics"
             value={totalEvents}
-            icon={<FaEye />}
+            icon={<Eye />}
             trend="up"
           />
           <MetricCard
-            title="Sessions Uniques"
+            title="FunnelAnalytics.funnelanalyticsfunnelanalytics"
             value={uniqueSessions}
-            icon={<FaUsers />}
+            icon={<Users />}
             trend="up"
           />
           <MetricCard
-            title="Événements/Session"
+            title="FunnelAnalytics.funnelanalyticsfunnelanalytics"
             value={avgEventsPerSession}
-            icon={<FaMousePointer />}
+            icon={<MousePointer />}
             trend="neutral"
           />
           <MetricCard
-            title="Durée Session (min)"
+            title="FunnelAnalytics.funnelanalyticsfunnelanalytics"
             value={sessionDuration}
-            icon={<FaChartLine />}
+            icon={<TrendingUp />}
             trend="neutral"
           />
         </div>
@@ -231,18 +232,18 @@ export const FunnelAnalytics: React.FC = () => {
         {/* Informations de session */}
         {metrics && (
           <div className="mt-8 bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Session Actuelle</h3>
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">{t('FunnelAnalytics.session_actuelle')}</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
               <div>
-                <span className="text-gray-600">Session ID:</span>
+                <span className="text-gray-600">{t('FunnelAnalytics.session_id')}</span>
                 <p className="font-mono text-xs text-gray-800 break-all">{metrics.sessionId}</p>
               </div>
               <div>
-                <span className="text-gray-600">Événements:</span>
+                <span className="text-gray-600">{t('FunnelAnalytics.vnements')}</span>
                 <p className="font-semibold text-gray-800">{metrics.totalEvents}</p>
               </div>
               <div>
-                <span className="text-gray-600">Durée:</span>
+                <span className="text-gray-600">{t('FunnelAnalytics.dure')}</span>
                 <p className="font-semibold text-gray-800">{Math.round(metrics.sessionDuration / 1000)}s</p>
               </div>
             </div>

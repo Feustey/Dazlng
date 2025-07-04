@@ -33,7 +33,7 @@ const NodeAnalysis: React.FC<NodeAnalysisProps> = ({
         setError('Erreur lors de la récupération des informations du nœud');
         toast({
           title: 'Erreur',
-          description: 'Impossible de récupérer les informations du nœud',
+          description: "NodeAnalysis.nodeanalysisnodeanalysisimposs",
           variant: 'error',
         });
       } finally {
@@ -109,11 +109,11 @@ const NodeAnalysis: React.FC<NodeAnalysisProps> = ({
 
         {nodeInfo.metrics && (
           <div className="mt-6 border-t pt-4">
-            <h3 className="text-lg font-semibold mb-3">Métriques</h3>
+            <h3 className="text-lg font-semibold mb-3">{t('NodeAnalysis.mtriques')}</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <p className="text-gray-600">Disponibilité</p>
+                <p className="text-gray-600">{t('NodeAnalysis.disponibilit')}</p>
                 <div className="flex items-center mt-1">
                   <div className="flex-1 bg-gray-200 rounded-full h-2">
                     <div
@@ -128,7 +128,7 @@ const NodeAnalysis: React.FC<NodeAnalysisProps> = ({
               </div>
 
               <div>
-                <p className="text-gray-600">Fiabilité</p>
+                <p className="text-gray-600">{t('NodeAnalysis.fiabilit')}</p>
                 <div className="flex items-center mt-1">
                   <div className="flex-1 bg-gray-200 rounded-full h-2">
                     <div

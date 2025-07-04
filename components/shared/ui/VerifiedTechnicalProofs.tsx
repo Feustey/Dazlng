@@ -22,42 +22,42 @@ const VerifiedTechnicalProofs: React.FC = () => {
     {
       id: 'node-performance',
       title: 'Performance de nos Nœuds',
-      description: 'Métriques vérifiables sur les explorateurs Lightning publics',
+      description: "VerifiedTechnicalProofs.verifiedtechnicalproofsverifie",
       verificationLink: 'https://1ml.com/node/03864ef025fde8fb587d989186ce6a4a186895ee44a926bfc370e2c366597a3f8f',
       status: 'verified',
       metrics: [
         { label: 'Uptime', value: '99.9', unit: '%', trend: 'stable' },
-        { label: 'Capacité', value: '15.7', unit: 'BTC', trend: 'up' },
+        { label: "VerifiedTechnicalProofs.verifiedtechnicalproofsverifie", value: '15.7', unit: 'BTC', trend: 'up' },
         { label: 'Canaux', value: '127', unit: '', trend: 'up' },
-        { label: 'Frais moyens', value: '45', unit: 'ppm', trend: 'stable' }
+        { label: "VerifiedTechnicalProofs.verifiedtechnicalproofsverifie", value: '45', unit: 'ppm', trend: 'stable' }
       ],
       lastUpdated: '2024-01-15T10:30:00Z'
     },
     {
       id: 'ai-predictions',
       title: 'Précision des Prédictions IA',
-      description: 'Validation des algorithmes de prédiction sur données historiques',
+      description: "VerifiedTechnicalProofs.verifiedtechnicalproofsverifie",
       verificationLink: 'https://github.com/daznode/ai-models/tree/main/validation',
       status: 'verified',
       metrics: [
-        { label: 'Précision globale', value: '87.3', unit: '%', trend: 'up' },
-        { label: 'Force-closes évités', value: '156', unit: '', trend: 'up' },
-        { label: 'Faux positifs', value: '2.1', unit: '%', trend: 'down' },
-        { label: 'Temps de détection', value: '4.2', unit: 'h', trend: 'down' }
+        { label: "VerifiedTechnicalProofs.verifiedtechnicalproofsverifie", value: '87.3', unit: '%', trend: 'up' },
+        { label: "VerifiedTechnicalProofs.verifiedtechnicalproofsverifie", value: '156', unit: '', trend: 'up' },
+        { label: "VerifiedTechnicalProofs.verifiedtechnicalproofsverifie", value: '2.1', unit: '%', trend: 'down' },
+        { label: "VerifiedTechnicalProofs.verifiedtechnicalproofsverifie", value: '4.2', unit: 'h', trend: 'down' }
       ],
       lastUpdated: '2024-01-15T09:15:00Z'
     },
     {
       id: 'security-audit',
       title: 'Audits de Sécurité',
-      description: 'Audits indépendants et programme de bug bounty actif',
+      description: "VerifiedTechnicalProofs.verifiedtechnicalproofsverifie",
       verificationLink: 'https://hackerone.com/daznode',
       status: 'verified',
       metrics: [
-        { label: 'Vulnérabilités critiques', value: '0', unit: '', trend: 'stable' },
-        { label: 'Bugs corrigés', value: '23', unit: '', trend: 'up' },
-        { label: 'Prix moyen bug bounty', value: '2.5', unit: 'BTC', trend: 'up' },
-        { label: 'Dernier audit', value: '2024-01', unit: '', trend: 'stable' }
+        { label: "VerifiedTechnicalProofs.verifiedtechnicalproofsverifie", value: '0', unit: '', trend: 'stable' },
+        { label: "VerifiedTechnicalProofs.verifiedtechnicalproofsverifie", value: '23', unit: '', trend: 'up' },
+        { label: "VerifiedTechnicalProofs.verifiedtechnicalproofsverifie", value: '2.5', unit: 'BTC', trend: 'up' },
+        { label: "VerifiedTechnicalProofs.verifiedtechnicalproofsverifie", value: '2024-01', unit: '', trend: 'stable' }
       ],
       lastUpdated: '2024-01-15T08:45:00Z'
     }

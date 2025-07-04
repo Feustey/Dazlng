@@ -34,7 +34,7 @@ export function usePrioritiesEnhanced(): UsePrioritiesEnhancedResult {
       const response = await fetch(`/api/dazno/priorities-enhanced/${pubkey}`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          "usePrioritiesEnhanced.useprioritiesenhancedusepriori": 'application/json',
         },
         body: JSON.stringify({
           context: options.context || "Optimisation complète du nœud Lightning",

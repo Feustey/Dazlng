@@ -227,7 +227,7 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
       {/* Métriques principales */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <MetricCard
-          title="Revenus Lightning"
+          title="user.useruserrevenus_lightning"
           value={`${metrics.totalRevenue.toLocaleString()} sats`}
           change={metrics.revenueChange}
           icon="💰"
@@ -235,7 +235,7 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
           color="green"
         />
         <MetricCard
-          title="Canaux Actifs"
+          title="user.userusercanaux_actifs"
           value={metrics.activeChannels}
           change={metrics.channelsChange}
           icon="🔗"
@@ -251,7 +251,7 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
           color="purple"
         />
         <MetricCard
-          title="Efficacité"
+          title="user.useruserefficacit"
           value={`${metrics.efficiency}%`}
           change={metrics.efficiencyChange}
           icon="🎯"
@@ -271,7 +271,7 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
               <span className="text-2xl font-bold text-green-600">
                 +{metrics.revenueChange}%
               </span>
-              <span className="text-sm text-gray-500">vs semaine précédente</span>
+              <span className="text-sm text-gray-500">{t('user.vs_semaine_prcdente')}</span>
             </div>
           </div>
           <LineChart 
@@ -320,11 +320,11 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-              <span className="text-sm text-gray-600">Votre nœud</span>
+              <span className="text-sm text-gray-600">{t('user.votre_nud')}</span>
             </div>
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
-              <span className="text-sm text-gray-600">Moyenne réseau</span>
+              <span className="text-sm text-gray-600">{t('user.moyenne_rseau')}</span>
             </div>
           </div>
         </div>
@@ -332,38 +332,38 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-600 mb-2">{metrics.efficiency}%</div>
-            <div className="text-sm text-gray-600 mb-4">Efficacité de routage</div>
+            <div className="text-sm text-gray-600 mb-4">{t('user.efficacit_de_routage')}</div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
                 className="bg-purple-500 h-2 rounded-full transition-all duration-1000"
                 style={{ width: `${metrics.efficiency}%` }}
               />
             </div>
-            <div className="text-xs text-gray-500 mt-1">Moyenne: 65%</div>
+            <div className="text-xs text-gray-500 mt-1">{t('user.moyenne_65')}</div>
           </div>
           
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-600 mb-2">{metrics.uptime}%</div>
-            <div className="text-sm text-gray-600 mb-4">Disponibilité</div>
+            <div className="text-sm text-gray-600 mb-4">{t('user.disponibilit')}</div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
                 className="bg-purple-500 h-2 rounded-full transition-all duration-1000"
                 style={{ width: `${metrics.uptime}%` }}
               />
             </div>
-            <div className="text-xs text-gray-500 mt-1">Moyenne: 92%</div>
+            <div className="text-xs text-gray-500 mt-1">{t('user.moyenne_92')}</div>
           </div>
           
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-600 mb-2">{metrics.activeChannels}</div>
-            <div className="text-sm text-gray-600 mb-4">Canaux actifs</div>
+            <div className="text-sm text-gray-600 mb-4">{t("user.userusercanaux_actifs")}</div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
                 className="bg-purple-500 h-2 rounded-full transition-all duration-1000"
                 style={{ width: `${Math.min((metrics.activeChannels / 20) * 100, 100)}%` }}
               />
             </div>
-            <div className="text-xs text-gray-500 mt-1">Recommandé: 15-20</div>
+            <div className="text-xs text-gray-500 mt-1">{t('user.recommand_1520')}</div>
           </div>
         </div>
       </div>

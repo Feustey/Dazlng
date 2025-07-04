@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'DazFlow Index - Analyse Avancée des Nœuds Lightning | DazNode',
-  description: 'Découvrez DazFlow Index, l\'analyse avancée qui révolutionne la gestion des nœuds Lightning. Optimisez vos revenus de routage avec une précision inégalée grâce à l\'intelligence artificielle.',
+  description: "metadata.metadatametadatadcouvrez_dazfl"analyse avancée qui révolutionne la gestion des nœuds Lightning. Optimisez vos revenus de routage avec une précision inégalée grâce à l\'intelligence artificielle.',
   keywords: [
     'dazflow index',
     'analyse nœud lightning',
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   robots: 'index, follow',
   openGraph: {
     title: 'DazFlow Index - Analyse Avancée des Nœuds Lightning',
-    description: 'Optimisez vos revenus de routage Lightning avec une précision inégalée grâce à l\'intelligence artificielle.',
+    description: "metadata.metadatametadataoptimisez_vos_"intelligence artificielle.',
     images: [
       {
         url: 'https://daznode.com/assets/images/dazflow-index-og.png',
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'DazFlow Index - Analyse Avancée des Nœuds Lightning',
-    description: 'Optimisez vos revenus de routage Lightning avec une précision inégalée grâce à l\'intelligence artificielle.',
+    description: "metadata.metadatametadataoptimisez_vos_"intelligence artificielle.',
     images: ['https://daznode.com/assets/images/dazflow-index-og.png']
   }
 }; 

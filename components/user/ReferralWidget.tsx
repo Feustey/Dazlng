@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Gift, Copy, Check, Share2, Users, Info } from 'lucide-react';
+import { Gift, Copy, Check, Share2, Users, Info } from '@/components/shared/ui/IconRegistry';
+
 
 interface ReferralWidgetProps {
   referralCode: string;
@@ -27,7 +28,7 @@ export const ReferralWidget: React.FC<ReferralWidgetProps> = ({
     if (navigator.share) {
       await navigator.share({
         title: 'Rejoins-moi sur DazNode !',
-        text: "Inscris-toi et on gagne tous les deux 1 mois d'abonnement !",
+        text: "user.useruserinscristoi_et_on_gagne"abonnement !",
         url: referralLink,
       });
     } else {
@@ -39,7 +40,7 @@ export const ReferralWidget: React.FC<ReferralWidgetProps> = ({
     <div className="bg-white rounded-lg p-4 border border-purple-200 mb-4">
       <div className="flex items-center gap-2 mb-2">
         <Gift className="w-5 h-5 text-purple-500" />
-        <span className="font-medium text-purple-700">Parrainez vos amis</span>
+        <span className="font-medium text-purple-700">{t('user.parrainez_vos_amis')}</span>
         <span className="relative group">
           <Info className="w-4 h-4 text-gray-400 cursor-pointer" />
           <span className="absolute left-1/2 -translate-x-1/2 mt-2 px-2 py-1 rounded bg-gray-800 text-white text-xs opacity-0 group-hover:opacity-100 transition whitespace-normal z-10 min-w-[180px] max-w-xs text-center">
@@ -49,14 +50,14 @@ export const ReferralWidget: React.FC<ReferralWidgetProps> = ({
       </div>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
         <div className="flex flex-wrap items-center gap-2 w-full">
-          <span className="text-xs text-gray-500">Votre lien :</span>
+          <span className="text-xs text-gray-500">{t('user.votre_lien_')}</span>
           <span className="font-mono bg-purple-50 px-2 py-1 rounded text-purple-700 border border-purple-200 select-all break-all overflow-x-auto max-w-[180px] sm:max-w-xs">
             {referralLink}
           </span>
           <button
             onClick={handleCopy}
             className="px-2 py-1 rounded bg-purple-100 hover:bg-purple-200 text-purple-700 text-xs flex items-center gap-1"
-            title="Copier le lien"
+            title="user.userusercopier_le_lien"
           >
             {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
             {copied ? 'Copié !' : 'Copier'}
@@ -79,7 +80,7 @@ export const ReferralWidget: React.FC<ReferralWidgetProps> = ({
         <div className="mt-4">
           <div className="flex items-center gap-2 mb-1">
             <Users className="w-4 h-4 text-gray-500" />
-            <span className="text-xs text-gray-700 font-medium">Historique de vos filleuls</span>
+            <span className="text-xs text-gray-700 font-medium">{t('user.historique_de_vos_filleuls')}</span>
           </div>
           <ul className="text-xs text-gray-600 space-y-1">
             {referrals.map((r, i) => (
@@ -87,9 +88,9 @@ export const ReferralWidget: React.FC<ReferralWidgetProps> = ({
                 <span>{r.email}</span>
                 <span className="text-gray-400">({new Date(r.joinedAt).toLocaleDateString()})</span>
                 {r.paid ? (
-                  <span className="ml-2 px-2 py-0.5 rounded bg-green-100 text-green-700">Abonnement payé</span>
+                  <span className="ml-2 px-2 py-0.5 rounded bg-green-100 text-green-700">{t('user.abonnement_pay')}</span>
                 ) : (
-                  <span className="ml-2 px-2 py-0.5 rounded bg-yellow-100 text-yellow-700">En attente</span>
+                  <span className="ml-2 px-2 py-0.5 rounded bg-yellow-100 text-yellow-700">{t('user.en_attente')}</span>
                 )}
               </li>
             ))}

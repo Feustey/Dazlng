@@ -17,7 +17,7 @@ async function getMetricsHandler(req: NextRequest, _user: SupabaseUser): Promise
       {
         headers: {
           Authorization: `Bearer ${DAZNO_API_TOKEN}`,
-          "Content-Type": "application/json",
+          "admin.adminadmincontenttype": "application/json",
         },
       }
     );

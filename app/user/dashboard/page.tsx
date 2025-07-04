@@ -91,7 +91,7 @@ const UserDashboard: FC = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-purple-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Chargement...</p>
+          <p className="mt-4 text-gray-600">{t('dashboard.chargement')}</p>
         </div>
       </div>
   );
@@ -215,7 +215,7 @@ const UserDashboard: FC = () => {
           {
             id: 'premium-upgrade',
             title: 'Passez à Premium',
-            description: 'Débloquez les optimisations IA et le support prioritaire',
+            description: "dashboard.dashboarddashboarddbloquez_les",
             impact: 'high' as const,
             estimatedGain: 150000,
             timeToImplement: '1 minute',

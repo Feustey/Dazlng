@@ -24,17 +24,17 @@ const RealisticValueProps: React.FC = () => {
               <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mr-4">
                 <span className="text-white text-xl">📊</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900">Monitoring Avancé</h3>
+              <h3 className="text-xl font-bold text-gray-900">{t('RealisticValueProps.monitoring_avanc')}</h3>
             </div>
             <p className="text-gray-700 mb-4">
               Surveillance en temps réel de votre nœud avec alertes personnalisables 
               et métriques détaillées de performance.
             </p>
             <ul className="text-sm text-gray-600 space-y-1">
-              <li>• Uptime et connectivité</li>
-              <li>• Métriques de routage</li>
-              <li>• Alertes configurables</li>
-              <li>• Historique des performances</li>
+              <li>{t('RealisticValueProps._uptime_et_connectivit')}</li>
+              <li>{t('RealisticValueProps._mtriques_de_routage')}</li>
+              <li>{t('RealisticValueProps._alertes_configurables')}</li>
+              <li>{t('RealisticValueProps._historique_des_performances')}</li>
             </ul>
           </div>
 
@@ -44,17 +44,17 @@ const RealisticValueProps: React.FC = () => {
               <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mr-4">
                 <span className="text-white text-xl">🎯</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900">Optimisation Basée sur les Données</h3>
+              <h3 className="text-xl font-bold text-gray-900">{t('RealisticValueProps.optimisation_base_sur_les_donn')}</h3>
             </div>
             <p className="text-gray-700 mb-4">
               Recommandations personnalisées basées sur l'analyse de vos données 
               et des patterns observés sur le réseau Lightning.
             </p>
             <ul className="text-sm text-gray-600 space-y-1">
-              <li>• Analyse des frais de routage</li>
-              <li>• Suggestions d'optimisation</li>
-              <li>• Comparaison avec le réseau</li>
-              <li>• Suivi des améliorations</li>
+              <li>{t('RealisticValueProps._analyse_des_frais_de_routage')}</li>
+              <li>{t('RealisticValueProps._suggestions_doptimisation')}</li>
+              <li>{t('RealisticValueProps._comparaison_avec_le_rseau')}</li>
+              <li>{t('RealisticValueProps._suivi_des_amliorations')}</li>
             </ul>
           </div>
 
@@ -64,17 +64,17 @@ const RealisticValueProps: React.FC = () => {
               <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mr-4">
                 <span className="text-white text-xl">🛠️</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900">Support Technique</h3>
+              <h3 className="text-xl font-bold text-gray-900">{t('RealisticValueProps.support_technique')}</h3>
             </div>
             <p className="text-gray-700 mb-4">
               Assistance technique spécialisée Lightning Network avec réponse 
               garantie sous 24h pour les utilisateurs premium.
             </p>
             <ul className="text-sm text-gray-600 space-y-1">
-              <li>• Support par email et chat</li>
-              <li>• Documentation détaillée</li>
-              <li>• Guides pas à pas</li>
-              <li>• Communauté active</li>
+              <li>{t('RealisticValueProps._support_par_email_et_chat')}</li>
+              <li>{t('RealisticValueProps._documentation_dtaille')}</li>
+              <li>{t('RealisticValueProps._guides_pas_pas')}</li>
+              <li>{t('RealisticValueProps._communaut_active')}</li>
             </ul>
           </div>
 
@@ -84,17 +84,17 @@ const RealisticValueProps: React.FC = () => {
               <div className="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center mr-4">
                 <span className="text-white text-xl">🔒</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900">Sécurité Renforcée</h3>
+              <h3 className="text-xl font-bold text-gray-900">{t('RealisticValueProps.scurit_renforce')}</h3>
             </div>
             <p className="text-gray-700 mb-4">
               Bonnes pratiques de sécurité et monitoring des menaces 
               pour protéger vos fonds et votre infrastructure.
             </p>
             <ul className="text-sm text-gray-600 space-y-1">
-              <li>• Audit de sécurité régulier</li>
-              <li>• Détection d'anomalies</li>
-              <li>• Sauvegardes automatiques</li>
-              <li>• Chiffrement des données</li>
+              <li>{t('RealisticValueProps._audit_de_scurit_rgulier')}</li>
+              <li>{t('RealisticValueProps._dtection_danomalies')}</li>
+              <li>{t('RealisticValueProps._sauvegardes_automatiques')}</li>
+              <li>{t('RealisticValueProps._chiffrement_des_donnes')}</li>
             </ul>
           </div>
 
@@ -104,17 +104,17 @@ const RealisticValueProps: React.FC = () => {
               <div className="w-12 h-12 bg-yellow-600 rounded-lg flex items-center justify-center mr-4">
                 <span className="text-white text-xl">📈</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900">Analytics Détaillées</h3>
+              <h3 className="text-xl font-bold text-gray-900">{t('RealisticValueProps.analytics_dtailles')}</h3>
             </div>
             <p className="text-gray-700 mb-4">
               Tableaux de bord complets avec métriques de revenus, 
               performance et tendances pour optimiser votre stratégie.
             </p>
             <ul className="text-sm text-gray-600 space-y-1">
-              <li>• Revenus de routage</li>
-              <li>• Performance des canaux</li>
-              <li>• Tendances du réseau</li>
-              <li>• Rapports exportables</li>
+              <li>{t('RealisticValueProps._revenus_de_routage')}</li>
+              <li>{t('RealisticValueProps._performance_des_canaux')}</li>
+              <li>{t('RealisticValueProps._tendances_du_rseau')}</li>
+              <li>{t('RealisticValueProps._rapports_exportables')}</li>
             </ul>
           </div>
 
@@ -124,17 +124,17 @@ const RealisticValueProps: React.FC = () => {
               <div className="w-12 h-12 bg-indigo-600 rounded-lg flex items-center justify-center mr-4">
                 <span className="text-white text-xl">🔌</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900">Intégration Facile</h3>
+              <h3 className="text-xl font-bold text-gray-900">{t('RealisticValueProps.intgration_facile')}</h3>
             </div>
             <p className="text-gray-700 mb-4">
               Connexion simple de votre nœud existant en quelques minutes 
               sans interruption de service.
             </p>
             <ul className="text-sm text-gray-600 space-y-1">
-              <li>• Support LND et Core Lightning</li>
-              <li>• Configuration automatique</li>
-              <li>• Pas d'interruption</li>
-              <li>• Migration transparente</li>
+              <li>{t('RealisticValueProps._support_lnd_et_core_lightning')}</li>
+              <li>{t('RealisticValueProps._configuration_automatique')}</li>
+              <li>{t('RealisticValueProps._pas_dinterruption')}</li>
+              <li>{t('RealisticValueProps._migration_transparente')}</li>
             </ul>
           </div>
         </div>

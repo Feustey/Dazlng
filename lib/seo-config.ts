@@ -7,7 +7,7 @@ export const seoConfig = {
   // Métadonnées par défaut
   defaultMetadata: {
     title: 'DazNode | Solutions Lightning Network pour tous',
-    description: 'Daznode simplifie l\'accès au réseau Lightning avec des solutions clés en main. Nœuds personnels, services de paiement et IA dédiée pour particuliers et professionnels.',
+    description: "seo-config.seoconfigseoconfigdaznode_simp"accès au réseau Lightning avec des solutions clés en main. Nœuds personnels, services de paiement et IA dédiée pour particuliers et professionnels.',
     keywords: ['lightning network', 'bitcoin', 'daznode', 'dazbox', 'dazpay', 'paiement crypto', 'nœud lightning', 'finance décentralisée'],
     authors: [{ name: 'DazNode' }],
     creator: 'DazNode',
@@ -19,52 +19,52 @@ export const seoConfig = {
   pageMetadata: {
     '/': {
       title: 'DazNode | Solutions Lightning Network pour tous',
-      description: 'Daznode simplifie l\'accès au réseau Lightning avec des solutions clés en main. Nœuds personnels, services de paiement et IA dédiée.',
+      description: "seo-config.seoconfigseoconfigdaznode_simp"accès au réseau Lightning avec des solutions clés en main. Nœuds personnels, services de paiement et IA dédiée.',
       keywords: ['lightning network', 'bitcoin', 'daznode', 'solutions lightning', 'finance décentralisée'],
     },
     '/daznode': {
       title: 'DazNode | Nœud Lightning Personnel',
-      description: 'Créez et gérez votre propre nœud Lightning Network avec DazNode. Solution clé en main pour particuliers et professionnels.',
+      description: "seo-config.seoconfigseoconfigcrez_et_grez",
       keywords: ['nœud lightning', 'lightning node', 'bitcoin node', 'daznode', 'lightning network'],
     },
     '/dazbox': {
       title: 'DazBox | Matériel Lightning Network',
-      description: 'Matériel spécialisé pour nœuds Lightning Network. Solutions hardware optimisées pour la performance et la fiabilité.',
+      description: "seo-config.seoconfigseoconfigmatriel_spci",
       keywords: ['hardware lightning', 'matériel bitcoin', 'dazbox', 'lightning hardware', 'node equipment'],
     },
     '/dazpay': {
       title: 'DazPay | Paiements Lightning Network',
-      description: 'Acceptez les paiements Lightning Network sur votre site web. Solution de paiement crypto simple et rapide.',
+      description: "seo-config.seoconfigseoconfigacceptez_les",
       keywords: ['paiement lightning', 'bitcoin payment', 'dazpay', 'crypto payment', 'lightning payments'],
     },
     '/dazflow': {
       title: 'DazFlow Index | Analyse Lightning Network',
-      description: 'Index d\'analyse avancée pour optimiser vos performances Lightning Network. IA dédiée et métriques temps réel.',
+      description: "seo-config.seoconfigseoconfigindex_d"analyse avancée pour optimiser vos performances Lightning Network. IA dédiée et métriques temps réel.',
       keywords: ['dazflow', 'lightning analytics', 'lightning index', 'network analysis', 'lightning optimization'],
     },
     '/network': {
       title: 'Lightning Network | Explorer et Analyse',
-      description: 'Explorez le réseau Lightning Network en temps réel. Statistiques, analyses et outils pour comprendre le réseau.',
+      description: "seo-config.seoconfigseoconfigexplorez_le_",
       keywords: ['lightning network', 'network explorer', 'bitcoin network', 'lightning stats', 'network analysis'],
     },
     '/about': {
       title: 'À propos | DazNode',
-      description: 'Découvrez l\'équipe DazNode et notre mission de démocratiser l\'accès au réseau Lightning Network.',
+      description: "seo-config.seoconfigseoconfigdcouvrez_l"équipe DazNode et notre mission de démocratiser l\'accès au réseau Lightning Network.',
       keywords: ['daznode team', 'about daznode', 'lightning network company', 'bitcoin company'],
     },
     '/contact': {
       title: 'Contact | DazNode',
-      description: 'Contactez l\'équipe DazNode pour toute question sur nos solutions Lightning Network.',
+      description: "seo-config.seoconfigseoconfigcontactez_l"équipe DazNode pour toute question sur nos solutions Lightning Network.',
       keywords: ['contact daznode', 'support lightning', 'daznode contact', 'lightning support'],
     },
     '/help': {
       title: 'Aide et Support | DazNode',
-      description: 'Centre d\'aide et support pour toutes nos solutions Lightning Network. FAQ et guides détaillés.',
+      description: "seo-config.seoconfigseoconfigcentre_d"aide et support pour toutes nos solutions Lightning Network. FAQ et guides détaillés.',
       keywords: ['aide daznode', 'support lightning', 'faq lightning', 'lightning help', 'daznode support'],
     },
     '/register': {
       title: 'Inscription | DazNode',
-      description: 'Créez votre compte DazNode et accédez à toutes nos solutions Lightning Network.',
+      description: "seo-config.seoconfigseoconfigcrez_votre_c",
       keywords: ['inscription daznode', 'créer compte', 'signup lightning', 'daznode register'],
     },
   },

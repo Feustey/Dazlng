@@ -12,7 +12,7 @@ export const DaziaHeader = () => {
       <div className="relative z-10">
         <div className="flex items-center gap-3">
           <SparklesIcon className="h-8 w-8 text-white" />
-          <h1 className="text-3xl font-bold text-white">Dazia IA</h1>
+          <h1 className="text-3xl font-bold text-white">{t('user.dazia_ia')}</h1>
         </div>
         <p className="mt-2 text-lg text-white/90">
           Votre assistant IA personnel pour optimiser votre nœud Lightning

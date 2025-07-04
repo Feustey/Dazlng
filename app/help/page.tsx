@@ -7,17 +7,17 @@ const HelpPage: React.FC = () => {
     {
       icon: '🚀',
       title: 'Prise en main',
-      description: 'Apprenez les bases de DazNode et démarrez rapidement'
+      description: "common.commoncommonapprenez_les_bases"
     },
     {
       icon: '⚙️',
       title: 'Configuration',
-      description: 'Configurez votre nœud Lightning Network'
+      description: "common.commoncommonconfigurez_votre_n"
     },
     {
       icon: '💰',
       title: 'Facturation',
-      description: 'Questions sur les prix et paiements'
+      description: "common.commoncommonquestions_sur_les_"
     }
   ];
 
@@ -38,7 +38,7 @@ const HelpPage: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Centre d'aide DazNode</h1>
+      <h1 className="text-3xl font-bold mb-6">{t('common.centre_daide_daznode')}</h1>
       
       {/* Catégories */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">

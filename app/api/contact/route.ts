@@ -237,20 +237,20 @@ function generateAdminNotificationEmail(data: ContactData): string {
     <body>
       <div class="container">
         <div class="header">
-          <h2>📧 Nouveau message de contact</h2>
+          <h2>{t('route._nouveau_message_de_contact')}</h2>
         </div>
         <div class="content">
           <div class="field">
-            <span class="label">De :</span> ${data.firstName} ${data.lastName}
+            <span class="label">{t('route.de_')}</span> ${data.firstName} ${data.lastName}
           </div>
           <div class="field">
-            <span class="label">Email :</span> <a href="mailto:${data.email}">${data.email}</a>
+            <span class="label">{t('route.email_')}</span> <a href="mailto:${data.email}">${data.email}</a>
           </div>
           <div class="field">
-            <span class="label">Sujet :</span> ${subjectLabels[data.subject] || data.subject}
+            <span class="label">{t('route.sujet_')}</span> ${subjectLabels[data.subject] || data.subject}
           </div>
           <div class="message-box">
-            <h3 style="margin-top: 0;">Message :</h3>
+            <h3 style="margin-top: 0;">{t('route.message_')}</h3>
             ${data.message.replace(/\n/g, '<br>')}
           </div>
         </div>
@@ -286,32 +286,32 @@ function generateUserConfirmationEmail(data: Pick<ContactData, 'firstName' | 'su
     <body>
       <div class="container">
         <div class="header">
-          <h1 style="margin: 0;">✅ Message bien reçu !</h1>
+          <h1 style="margin: 0;">{t('route._message_bien_reu_')}</h1>
         </div>
         <div class="content">
           <p>Bonjour ${data.firstName},</p>
           <p>Nous avons bien reçu votre message concernant "<strong>${subjectLabels[data.subject] || data.subject}</strong>".</p>
-          <p>Notre équipe examine attentivement chaque demande et vous répondra dans les plus brefs délais (généralement sous 24h ouvrées).</p>
+          <p>{t('route.notre_quipe_examine_attentivem')}</p>
           
           <div class="message-preview">
-            <h3 style="margin-top: 0;">Rappel de votre message :</h3>
+            <h3 style="margin-top: 0;">{t('route.rappel_de_votre_message_')}</h3>
             <p>${data.message.replace(/\n/g, '<br>')}</p>
           </div>
           
-          <p>En attendant, n'hésitez pas à :</p>
+          <p>{t('route.en_attendant_nhsitez_pas_')}</p>
           <ul>
-            <li>Rejoindre notre <a href="https://t.me/+_tiT3od1q_Q0MjI0">canal Telegram</a></li>
-            <li>Consulter notre documentation</li>
-            <li>Découvrir nos solutions sur <a href="https://dazno.de">dazno.de</a></li>
+            <li>Rejoindre notre <a href="https://t.me/+_tiT3od1q_Q0MjI0">{t('route.canal_telegram')}</a></li>
+            <li>{t('route.consulter_notre_documentation')}</li>
+            <li>Découvrir nos solutions sur <a href="https://dazno.de">{t('route.daznode')}</a></li>
           </ul>
           
           <center>
-            <a href="https://dazno.de" class="button">Visiter notre site</a>
+            <a href="https://dazno.de" class="button">{t('route.visiter_notre_site')}</a>
           </center>
         </div>
         <div class="footer">
-          <p style="margin: 5px 0;">L'équipe DazNode</p>
-          <p style="margin: 5px 0;">⚡ Propulsé par Lightning Network</p>
+          <p style="margin: 5px 0;">{t('route.lquipe_daznode')}</p>
+          <p style="margin: 5px 0;">{t('route._propuls_par_lightning_network')}</p>
         </div>
       </div>
     </body>

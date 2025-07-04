@@ -1,6 +1,3 @@
-module.exports = {
-  defaultLocale: 'fr',
-  locales: ['fr', 'en'],
-  localeDetection: true,
-  localePrefix: 'always'
-}; 
+const { getNextIntlConfig } = require('./i18n/config.ts');
+
+module.exports = getNextIntlConfig(); 

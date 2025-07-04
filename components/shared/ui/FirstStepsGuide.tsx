@@ -6,7 +6,7 @@ const FirstStepsGuide: React.FC = () => {
       day: "Jour 1",
       icon: "🚀",
       title: "Installation & Configuration",
-      description: "Mise en place de votre nœud Lightning en moins de 10 minutes",
+      description: "FirstStepsGuide.firststepsguidefirststepsguide",
       color: "from-blue-500 to-blue-600",
       tasks: [
         "Réception et branchement de votre DazBox",
@@ -19,7 +19,7 @@ const FirstStepsGuide: React.FC = () => {
       day: "Jour 2-3",
       icon: "⚡",
       title: "Ouverture des Premiers Canaux",
-      description: "Création de vos premiers canaux de liquidité",
+      description: "FirstStepsGuide.firststepsguidefirststepsguide",
       color: "from-green-500 to-green-600",
       tasks: [
         "Analyse des recommandations DazFlow Index",
@@ -32,7 +32,7 @@ const FirstStepsGuide: React.FC = () => {
       day: "Jour 4-5",
       icon: "📊",
       title: "Optimisation & Monitoring",
-      description: "Affinement de votre configuration pour maximiser les revenus",
+      description: "FirstStepsGuide.firststepsguidefirststepsguide",
       color: "from-purple-500 to-purple-600",
       tasks: [
         "Analyse des performances avec DazFlow Index",
@@ -45,7 +45,7 @@ const FirstStepsGuide: React.FC = () => {
       day: "Jour 6-7",
       icon: "💰",
       title: "Premiers Revenus & Scale-up",
-      description: "Génération de vos premiers revenus et planification de la croissance",
+      description: "FirstStepsGuide.firststepsguidefirststepsguide",
       color: "from-yellow-500 to-orange-500",
       tasks: [
         "Réception des premiers revenus de routage",
@@ -125,9 +125,9 @@ const FirstStepsGuide: React.FC = () => {
           </p>
           <div className="bg-white/20 rounded-xl p-4 backdrop-blur-sm">
             <p className="text-lg font-medium">
-              <span className="text-yellow-300">✅ Garantie satisfait ou remboursé 30 jours</span><br />
-              <span className="text-green-200">✅ Support illimité pendant votre premier mois</span><br />
-              <span className="text-blue-200">✅ Mentor personnel assigné</span>
+              <span className="text-yellow-300">{t('FirstStepsGuide._garantie_satisfait_ou_rembour')}</span><br />
+              <span className="text-green-200">{t('FirstStepsGuide._support_illimit_pendant_votre')}</span><br />
+              <span className="text-blue-200">{t('FirstStepsGuide._mentor_personnel_assign')}</span>
             </p>
           </div>
         </div>

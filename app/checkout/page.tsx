@@ -65,15 +65,15 @@ export default function DazBoxCheckout() {
                   <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto">
                     <span className="text-green-500 text-4xl">✔</span>
                   </div>
-                  <h1 className="text-3xl font-bold mt-6 mb-2">Commande Confirmée !</h1>
-                  <p className="text-gray-600">Merci pour votre confiance. Votre DazBox sera bientôt prête.</p>
+                  <h1 className="text-3xl font-bold mt-6 mb-2">{t('checkout.commande_confirme_')}</h1>
+                  <p className="text-gray-600">{t('checkout.merci_pour_votre_confiance_vot')}</p>
                 </div>
                 <div className="border-t border-gray-200 pt-6">
-                  <h2 className="text-xl font-semibold mb-4">Prochaines étapes</h2>
+                  <h2 className="text-xl font-semibold mb-4">{t('checkout.prochaines_tapes')}</h2>
                   <ul className="space-y-2 text-left">
-                    <li>1. Vous recevrez un email de confirmation</li>
-                    <li>2. Notre équipe prépare votre DazBox</li>
-                    <li>3. Un expert vous contactera pour l'installation</li>
+                    <li>{t('checkout.1_vous_recevrez_un_email_de_co')}</li>
+                    <li>{t('checkout.2_notre_quipe_prpare_votre_daz')}</li>
+                    <li>{t('checkout.3_un_expert_vous_contactera_po')}</li>
                   </ul>
                 </div>
               </div>

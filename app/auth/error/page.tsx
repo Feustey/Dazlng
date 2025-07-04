@@ -57,7 +57,7 @@ function AuthErrorContent(): JSX.Element {
 
 export default function AuthErrorPage(): JSX.Element {
   return (
-    <Suspense fallback={<div>Chargement...</div>}>
+    <Suspense fallback={<div>{t('auth.chargement')}</div>}>
       <AuthErrorContent />
     </Suspense>
   );

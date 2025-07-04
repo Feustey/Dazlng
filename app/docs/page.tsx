@@ -7,17 +7,17 @@ const DocsPage: React.FC = () => {
   const documentationSections = [
     {
       title: "Architecture Technique",
-      description: "Détails techniques de notre infrastructure",
+      description: "common.commoncommondtails_techniques_",
       items: [
         { title: "Architecture des nœuds", link: "/docs/architecture/nodes" },
         { title: "API Documentation", link: "/docs/api" },
-        { title: "Sécurité", link: "/docs/security" },
+        { title: "common.scurit", link: "/docs/security" },
         { title: "Performance", link: "/docs/performance" }
       ]
     },
     {
       title: "Intégration",
-      description: "Guides d'intégration et exemples de code",
+      description: "common.commonhomeguides_d"intégration et exemples de code",
       items: [
         { title: "Guide de démarrage", link: "/docs/integration/getting-started" },
         { title: "SDK JavaScript", link: "/docs/integration/sdk" },
@@ -27,7 +27,7 @@ const DocsPage: React.FC = () => {
     },
     {
       title: "Monitoring",
-      description: "Configuration et utilisation des outils de monitoring",
+      description: "common.commoncommonconfiguration_et_u",
       items: [
         { title: "Configuration des alertes", link: "/docs/monitoring/alerts" },
         { title: "Métriques disponibles", link: "/docs/monitoring/metrics" },
@@ -37,7 +37,7 @@ const DocsPage: React.FC = () => {
     },
     {
       title: "Troubleshooting",
-      description: "Solutions aux problèmes courants",
+      description: "common.commoncommonsolutions_aux_prob",
       items: [
         { title: "Problèmes de connexion", link: "/docs/troubleshooting/connection" },
         { title: "Erreurs de paiement", link: "/docs/troubleshooting/payments" },
@@ -97,7 +97,7 @@ const DocsPage: React.FC = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Code Source</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">{t('common.code_source')}</h3>
               <p className="text-gray-600 mb-4">
                 Une grande partie de notre code est open source et disponible 
                 sur GitHub pour audit et contribution.
@@ -134,7 +134,7 @@ const DocsPage: React.FC = () => {
             </div>
             
             <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Audits et Sécurité</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">{t('common.audits_et_scurit')}</h3>
               <p className="text-gray-600 mb-4">
                 Nos audits de sécurité et rapports de vulnérabilités 
                 sont publics et accessibles.
@@ -178,27 +178,27 @@ const DocsPage: React.FC = () => {
             <div className="text-center">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Performance</h3>
               <div className="space-y-2 text-sm text-gray-600">
-                <div>Uptime: 99.9%</div>
-                <div>Latence moyenne: 45ms</div>
-                <div>Throughput: 1.2M tx/jour</div>
+                <div>{t('home.uptime_999')}</div>
+                <div>{t('common.latence_moyenne_45ms')}</div>
+                <div>{t('common.throughput_12m_txjour')}</div>
               </div>
             </div>
             
             <div className="text-center">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Sécurité</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('common.scurit')}</h3>
               <div className="space-y-2 text-sm text-gray-600">
-                <div>Vulnérabilités critiques: 0</div>
-                <div>Bugs corrigés: 23</div>
-                <div>Dernier audit: Jan 2024</div>
+                <div>{t('common.vulnrabilits_critiques_0')}</div>
+                <div>{t('common.bugs_corrigs_23')}</div>
+                <div>{t('common.dernier_audit_jan_2024')}</div>
               </div>
             </div>
             
             <div className="text-center">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Communauté</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('common.communaut')}</h3>
               <div className="space-y-2 text-sm text-gray-600">
-                <div>Contributeurs: 47</div>
-                <div>Stars GitHub: 1.2k</div>
-                <div>Forks: 234</div>
+                <div>{t('common.contributeurs_47')}</div>
+                <div>{t('common.stars_github_12k')}</div>
+                <div>{t('home.forks_234')}</div>
               </div>
             </div>
           </div>

@@ -43,7 +43,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             title: 'Merci pour votre commande !',
             username: `${order.customer.firstName} ${order.customer.lastName}`,
             mainContent: `Nous avons bien reçu votre paiement pour <b>${order.product?.name || 'votre commande'}</b>. Voici le récapitulatif :`,
-            detailedContent: `<ul><li><b>Produit :</b> ${order.product?.name || ''}</li><li><b>Quantité :</b> ${order.product?.quantity || ''}</li><li><b>Total :</b> <span style=\"color:#F7931A;font-weight:bold;\">${order.total || ''} sats</span></li><li><b>Date :</b> ${order.created_at ? new Date(order.created_at).toLocaleDateString() : ''}</li></ul><div><b>Adresse de livraison :</b><br>${order.customer.address}, ${order.customer.city}, ${order.customer.postalCode}, ${order.customer.country}<br>${order.customer.phone ? `Téléphone : ${order.customer.phone}` : ''}</div>`,
+            detailedContent: `<ul><li><b>{t('route.produit_')}</b> ${order.product?.name || ''}</li><li><b>{t('route.quantit_')}</b> ${order.product?.quantity || ''}</li><li><b>{t('route.total_')}</b> <span style=\"color:#F7931A;font-weight:bold;\">${order.total || ''} sats</span></li><li><b>{t('route.date_')}</b> ${order.created_at ? new Date(order.created_at).toLocaleDateString() : ''}</li></ul><div><b>{t('route.adresse_de_livraison_')}</b><br>${order.customer.address}, ${order.customer.city}, ${order.customer.postalCode}, ${order.customer.country}<br>${order.customer.phone ? `Téléphone : ${order.customer.phone}` : ''}</div>`,
             ctaText: 'Suivre ma commande',
             ctaLink: 'https://dazno.de/account/orders'
           });

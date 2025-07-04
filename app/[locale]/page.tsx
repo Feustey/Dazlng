@@ -3,7 +3,7 @@ import React, { useEffect, useState, Suspense } from "react";
 import nextDynamic from "next/dynamic";
 import DazFlowShowcase from '@/components/shared/ui/DazFlowShowcase';
 import { useSearchParams } from "next/navigation";
-import { useTranslations } from 'next-intl';
+import { useAdvancedTranslation } from '@/hooks/useAdvancedTranslation';
 
 export const dynamic = 'force-dynamic';
 // Lazy loading des composants pour optimiser le First Load
@@ -41,7 +41,7 @@ const FinalConversionCTA = nextDynamic(() => import("@/components/shared/ui/Fina
 
 // Composant client séparé pour gérer les paramètres d'URL
 const SignupConfirmation: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const t = useTranslations('common');
+  const { t } = useAdvancedTranslation('common');
   
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 backdrop-blur-sm">
@@ -114,7 +114,7 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
 };
 
 export default function HomePage() {
-  const t = useTranslations('home');
+  const { t } = useAdvancedTranslation('home');
 
   useEffect(() => {
     // Défilement fluide pour les ancres

@@ -136,7 +136,7 @@ const MobileOptimizedDashboard: React.FC<MobileOptimizedDashboardProps> = ({
               />
               <MobileStatsCard
                 icon="🎯"
-                title="Efficacité"
+                title="user.useruserefficacit"
                 value={`${metrics.efficiency}%`}
                 color="orange"
                 compact
@@ -235,7 +235,7 @@ const MobileOptimizedDashboard: React.FC<MobileOptimizedDashboardProps> = ({
               
               <button className="flex flex-col items-center p-3 bg-yellow-50 border border-yellow-200 rounded-lg hover:bg-yellow-100 transition-colors">
                 <span className="text-2xl mb-1">🤖</span>
-                <span className="text-xs font-medium text-yellow-700">Dazia IA</span>
+                <span className="text-xs font-medium text-yellow-700">{t('user.dazia_ia')}</span>
               </button>
             </>
           ) : (
@@ -269,7 +269,7 @@ const MobileOptimizedDashboard: React.FC<MobileOptimizedDashboardProps> = ({
                 className="flex flex-col items-center p-3 bg-yellow-50 border border-yellow-200 rounded-lg hover:bg-yellow-100 transition-colors"
               >
                 <span className="text-2xl mb-1">🤖</span>
-                <span className="text-xs font-medium text-yellow-700">Dazia IA</span>
+                <span className="text-xs font-medium text-yellow-700">{t('user.dazia_ia')}</span>
               </button>
             </>
           )}
@@ -285,16 +285,16 @@ const MobileOptimizedDashboard: React.FC<MobileOptimizedDashboardProps> = ({
         
         <div className="grid grid-cols-2 gap-4 text-center">
           <div className="bg-gray-50 rounded-lg p-3">
-            <div className="text-lg font-bold text-blue-600">15.8K</div>
-            <div className="text-xs text-gray-600">Nœuds</div>
+            <div className="text-lg font-bold text-blue-600">{t('user.158k')}</div>
+            <div className="text-xs text-gray-600">{t('user.nuds')}</div>
           </div>
           <div className="bg-gray-50 rounded-lg p-3">
-            <div className="text-lg font-bold text-green-600">68.4K</div>
+            <div className="text-lg font-bold text-green-600">{t('user.684k')}</div>
             <div className="text-xs text-gray-600">Canaux</div>
           </div>
           <div className="bg-gray-50 rounded-lg p-3">
-            <div className="text-lg font-bold text-purple-600">4.95K</div>
-            <div className="text-xs text-gray-600">BTC Total</div>
+            <div className="text-lg font-bold text-purple-600">{t('user.495k')}</div>
+            <div className="text-xs text-gray-600">{t('user.btc_total')}</div>
           </div>
           <div className="bg-gray-50 rounded-lg p-3">
             <div className="text-lg font-bold text-orange-600">99.7%</div>

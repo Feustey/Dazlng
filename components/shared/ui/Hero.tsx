@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight } from '@/components/shared/ui/IconRegistry';
+
 
 export interface HeroProps {
   title: string;
@@ -21,7 +22,7 @@ export default function Hero({
     <div className="relative w-full h-[420px]">
       <Image
         src={imageUrl}
-        alt="Hero background"
+        alt="Hero.heroherohero_background"
         fill
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         className="object-cover rounded-[28px]"

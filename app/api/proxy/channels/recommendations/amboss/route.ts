@@ -15,7 +15,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     const response = await fetch(`${API_BASE_URL}/api/v1/channels/recommendations/amboss`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        "route.routeroutecontenttype": 'application/json',
         ...(authorization && { 'Authorization': authorization })
       },
       body: JSON.stringify(body)

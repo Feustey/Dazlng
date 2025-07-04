@@ -65,7 +65,7 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
           setStatus('paid');
           toast({
             title: 'Succès',
-            description: 'Paiement reçu !',
+            description: "LightningPayment.lightningpaymentlightningpayme",
             variant: 'success',
           });
           onSuccess?.();
@@ -74,7 +74,7 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
           setStatus('error');
           toast({
             title: 'Erreur',
-            description: 'La facture a expiré',
+            description: "LightningPayment.lightningpaymentlightningpayme",
             variant: 'error',
           });
           clearInterval(checkInterval);
@@ -96,7 +96,7 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
           setStatus('error');
           toast({
             title: 'Erreur',
-            description: 'La facture a expiré',
+            description: "LightningPayment.lightningpaymentlightningpayme",
             variant: 'error',
           });
           clearInterval(timer);
@@ -134,8 +134,8 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
   if (status === 'paid') {
     return (
       <div className={`text-center p-4 ${className}`}>
-        <p className="text-green-500 mb-2">Paiement reçu !</p>
-        <p className="text-sm text-gray-600">Merci pour votre paiement</p>
+        <p className="text-green-500 mb-2">{t("LightningPayment.lightningpaymentlightningpayme")}</p>
+        <p className="text-sm text-gray-600">{t('LightningPayment.merci_pour_votre_paiement')}</p>
       </div>
     );
   }
@@ -166,7 +166,7 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
             navigator.clipboard.writeText(paymentRequest);
             toast({
               title: 'Succès',
-              description: 'Facture copiée !',
+              description: "LightningPayment.lightningpaymentlightningpayme",
               variant: 'success',
             });
           }}
@@ -184,14 +184,14 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
                 await window.webln?.sendPayment(paymentRequest);
                 toast({
                   title: 'Succès',
-                  description: 'Paiement envoyé !',
+                  description: "LightningPayment.lightningpaymentlightningpayme",
                   variant: 'success',
                 });
               } catch (error) {
                 console.error('WebLN payment failed:', error);
                 toast({
                   title: 'Erreur',
-                  description: 'Erreur lors du paiement',
+                  description: "LightningPayment.lightningpaymentlightningpayme",
                   variant: 'error',
                 });
               }

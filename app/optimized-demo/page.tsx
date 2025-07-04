@@ -107,15 +107,15 @@ export default function OptimizedDemoPage() {
           <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-6 text-sm text-gray-400">
             <div className="flex items-center">
               <span className="text-green-400 mr-2">✓</span>
-              <span>7 jours gratuits</span>
+              <span>{t('common.7_jours_gratuits')}</span>
             </div>
             <div className="flex items-center">
               <span className="text-green-400 mr-2">✓</span>
-              <span>Aucune carte bancaire</span>
+              <span>{t('common.aucune_carte_bancaire')}</span>
             </div>
             <div className="flex items-center">
               <span className="text-green-400 mr-2">✓</span>
-              <span>Configuration en 5 minutes</span>
+              <span>{t('common.configuration_en_5_minutes')}</span>
             </div>
           </div>
 
@@ -124,11 +124,11 @@ export default function OptimizedDemoPage() {
             <div className="flex items-center justify-center space-x-8 mb-4">
               <div className="text-center">
                 <div className="text-2xl font-bold text-yellow-400">500+</div>
-                <div className="text-xs text-gray-400">Node Runners</div>
+                <div className="text-xs text-gray-400">{t('home.node_runners')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-400">₿47.3</div>
-                <div className="text-xs text-gray-400">Sous Gestion</div>
+                <div className="text-xs text-gray-400">{t('common.sous_gestion')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-purple-400">99.7%</div>
@@ -136,7 +136,7 @@ export default function OptimizedDemoPage() {
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-blue-400">87%</div>
-                <div className="text-xs text-gray-400">Précision IA</div>
+                <div className="text-xs text-gray-400">{t('common.prcision_ia')}</div>
               </div>
             </div>
             
@@ -157,7 +157,7 @@ export default function OptimizedDemoPage() {
               <span className="text-white font-bold text-xl">DazNode</span>
               <div className="flex items-center text-sm text-gray-400">
                 <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-                <span>Système opérationnel</span>
+                <span>{t('common.systme_oprationnel')}</span>
               </div>
             </div>
 

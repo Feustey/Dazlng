@@ -40,15 +40,15 @@ export function UserInfoForm({ onSubmit }: UserInfoFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <input name="fullName" placeholder="Nom complet*" value={form.fullName} onChange={handleChange} className="input" />
-      <input name="email" placeholder="Email*" value={form.email} onChange={handleChange} className="input" />
-      <input name="address" placeholder="Adresse*" value={form.address} onChange={handleChange} className="input" />
-      <input name="city" placeholder="Ville*" value={form.city} onChange={handleChange} className="input" />
-      <input name="postalCode" placeholder="Code postal*" value={form.postalCode} onChange={handleChange} className="input" />
-      <input name="country" placeholder="Pays*" value={form.country} onChange={handleChange} className="input" />
-      <input name="phone" placeholder="Téléphone" value={form.phone} onChange={handleChange} className="input" />
+      <input name="fullName" placeholder="checkout.checkoutcheckoutnom_complet" value={form.fullName} onChange={handleChange} className="input" />
+      <input name="email" placeholder="checkout.checkoutcheckoutemail" value={form.email} onChange={handleChange} className="input" />
+      <input name="address" placeholder="checkout.checkoutcheckoutadresse" value={form.address} onChange={handleChange} className="input" />
+      <input name="city" placeholder="checkout.checkoutcheckoutville" value={form.city} onChange={handleChange} className="input" />
+      <input name="postalCode" placeholder="checkout.checkoutcheckoutcode_postal" value={form.postalCode} onChange={handleChange} className="input" />
+      <input name="country" placeholder="checkout.checkoutcheckoutpays" value={form.country} onChange={handleChange} className="input" />
+      <input name="phone" placeholder="checkout.checkoutcheckouttlphone" value={form.phone} onChange={handleChange} className="input" />
       {error && <div className="text-red-500">{error}</div>}
-      <button type="submit" className="btn-primary w-full">Procéder au paiement</button>
+      <button type="submit" className="btn-primary w-full">{t('checkout.procder_au_paiement')}</button>
     </form>
   );
 }

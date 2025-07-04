@@ -25,27 +25,27 @@ export class DazNodeEmailService {
       
       const htmlContent = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #2563eb;">🎉 Confirmation de souscription DazNode</h2>
+          <h2 style="color: #2563eb;">{t('daznode-email-service._confirmation_de_souscription_')}</h2>
           
           <p>Bonjour ${subscription.customerName},</p>
           
-          <p>Votre souscription DazNode a été confirmée avec succès !</p>
+          <p>{t('daznode-email-service.votre_souscription_daznode_a_t')}</p>
           
           <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="margin-top: 0;">Détails de votre souscription :</h3>
+            <h3 style="margin-top: 0;">{t('daznode-email-service.dtails_de_votre_souscription_')}</h3>
             <ul>
-              <li><strong>Plan :</strong> ${subscription.plan}</li>
-              <li><strong>Cycle de facturation :</strong> ${subscription.billingCycle}</li>
-              <li><strong>Montant :</strong> ${subscription.amount} sats</li>
-              <li><strong>Statut :</strong> Actif</li>
+              <li><strong>{t('daznode-email-service.plan_')}</strong> ${subscription.plan}</li>
+              <li><strong>{t('daznode-email-service.cycle_de_facturation_')}</strong> ${subscription.billingCycle}</li>
+              <li><strong>{t('daznode-email-service.montant_')}</strong> ${subscription.amount} sats</li>
+              <li><strong>{t('daznode-email-service.statut_')}</strong>{t('daznode-email-service._actif')}</li>
             </ul>
           </div>
           
-          <p>Vous pouvez maintenant accéder à toutes les fonctionnalités de votre plan DazNode.</p>
+          <p>{t('daznode-email-service.vous_pouvez_maintenant_accder_')}</p>
           
-          <p>Merci de votre confiance !</p>
+          <p>{t('daznode-email-service.merci_de_votre_confiance_')}</p>
           
-          <p>L'équipe DazNode</p>
+          <p>{t('daznode-email-service.lquipe_daznode')}</p>
         </div>
       `;
 
@@ -76,24 +76,24 @@ export class DazNodeEmailService {
       
       const htmlContent = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #2563eb;">⏰ Rappel de souscription DazNode</h2>
+          <h2 style="color: #2563eb;">{t('daznode-email-service._rappel_de_souscription_daznod')}</h2>
           
           <p>Bonjour ${subscription.customerName},</p>
           
-          <p>Ceci est un rappel concernant votre souscription DazNode.</p>
+          <p>{t('daznode-email-service.ceci_est_un_rappel_concernant_')}</p>
           
           <div style="background-color: #fef3c7; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="margin-top: 0;">Votre souscription :</h3>
+            <h3 style="margin-top: 0;">{t('daznode-email-service.votre_souscription_')}</h3>
             <ul>
-              <li><strong>Plan :</strong> ${subscription.plan}</li>
-              <li><strong>Cycle :</strong> ${subscription.billingCycle}</li>
-              <li><strong>Montant :</strong> ${subscription.amount} sats</li>
+              <li><strong>{t('daznode-email-service.plan_')}</strong> ${subscription.plan}</li>
+              <li><strong>{t('daznode-email-service.cycle_')}</strong> ${subscription.billingCycle}</li>
+              <li><strong>{t('daznode-email-service.montant_')}</strong> ${subscription.amount} sats</li>
             </ul>
           </div>
           
-          <p>Votre souscription est actuellement active. Merci de votre confiance !</p>
+          <p>{t('daznode-email-service.votre_souscription_est_actuell')}</p>
           
-          <p>L'équipe DazNode</p>
+          <p>{t('daznode-email-service.lquipe_daznode')}</p>
         </div>
       `;
 

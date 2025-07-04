@@ -5,7 +5,8 @@ import { useMCPLight } from '@/hooks/useMCPLight';
 import NodeAnalysis from '@/components/shared/NodeAnalysis';
 import { Card, CardContent, CardHeader, CardTitle, Button } from '@/components/shared/ui';
 import { Alert, AlertDescription } from '@/components/shared/ui/Alert';
-import { Zap, Search, Globe, Database } from 'lucide-react';
+import { Zap, Search, Globe, Database } from '@/components/shared/ui/IconRegistry';
+
 
 export const dynamic = 'force-dynamic';
 export default function MCPAnalysisPage() {
@@ -37,8 +38,8 @@ export default function MCPAnalysisPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <h2 className="text-xl font-semibold text-gray-900">Initialisation de l'API Lightning...</h2>
-          <p className="text-gray-600">Récupération des credentials JWT...</p>
+          <h2 className="text-xl font-semibold text-gray-900">{t('network.initialisation_de_lapi_lightni')}</h2>
+          <p className="text-gray-600">{t('network.rcupration_des_credentials_jwt')}</p>
         </div>
       </div>
   );
@@ -50,7 +51,7 @@ export default function MCPAnalysisPage() {
         <div className="max-w-md w-full">
           <Alert type="error">
             <AlertDescription>
-              <h3 className="font-semibold mb-2">❌ Erreur d'Initialisation API</h3>
+              <h3 className="font-semibold mb-2">{t('network._erreur_dinitialisation_api')}</h3>
               <p>{error}</p>
             </AlertDescription>
           </Alert>
@@ -109,7 +110,7 @@ export default function MCPAnalysisPage() {
                       type="text"
                       value={pubkey}
                       onChange={(e: any) => setPubkey(e.target.value)}
-                      placeholder="Entrez la clé publique (66 caractères hex)"
+                      placeholder="network.networknetworkentrez_la_cl_pub"
                       maxLength={66}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-mono text-sm"
                     />
@@ -127,7 +128,7 @@ export default function MCPAnalysisPage() {
                 </form>
 
                 <div className="mt-4 pt-4 border-t border-gray-200">
-                  <p className="text-xs text-gray-500 mb-2">Exemple de pubkey :</p>
+                  <p className="text-xs text-gray-500 mb-2">{t('network.exemple_de_pubkey_')}</p>
                   <button
                     onClick={() => setPubkey('02778f4a4eb3a2344b9fd8ee72e7ec5f03f803e5f5273e2e1a2af508910cf2b12b')}
                     className="text-xs font-mono text-blue-600 hover:text-blue-800 break-all"
@@ -149,7 +150,7 @@ export default function MCPAnalysisPage() {
               <CardContent>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Statut :</span>
+                    <span className="text-sm text-gray-600">{t('network.statut_')}</span>
                     <span className={`text-sm font-medium ${initialized ? 'text-green-600' : 'text-red-600'}`}>
                       {initialized ? '✅ Connectée' : '❌ Déconnectée'}
                     </span>
@@ -166,7 +167,7 @@ export default function MCPAnalysisPage() {
 
                   {healthStatus && (
                     <div className="mt-3 p-3 bg-gray-50 rounded-md">
-                      <p className="text-xs font-medium text-gray-700">Réponse API :</p>
+                      <p className="text-xs font-medium text-gray-700">{t('network.rponse_api_')}</p>
                       <pre className="text-xs text-gray-600 mt-1 overflow-x-auto">
                         {JSON.stringify(healthStatus, null, 2)}
                       </pre>
@@ -232,7 +233,7 @@ export default function MCPAnalysisPage() {
           <div className="text-center text-sm text-gray-600">
             <p>
               Powered by{' '}
-              <span className="font-semibold text-blue-600">MCP-Light API</span> •{' '}
+              <span className="font-semibold text-blue-600">{t('network.mcplight_api')}</span> •{' '}
               <span className="font-semibold text-green-600">SparkSeer</span> +{' '}
               <span className="font-semibold text-purple-600">OpenAI</span>
             </p>

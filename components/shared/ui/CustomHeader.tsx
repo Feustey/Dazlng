@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
-import { Gauge } from 'lucide-react';
+import { IconRegistry } from '@/components/shared/ui/IconRegistry';
 
 const CustomHeader: React.FC = () => {
   const { user, session } = useSupabase();
@@ -38,7 +38,7 @@ const CustomHeader: React.FC = () => {
             <Link href="/" locale={locale} aria-label="Accueil">
               <Image 
                 src="/assets/images/logo-daznode.svg"
-                alt="Daz3 Logo" 
+                alt="CustomHeader.customheaderfooterdaz3_logo" 
                 width={150} 
                 height={40} 
                 className="h-10 w-auto"
@@ -60,7 +60,7 @@ const CustomHeader: React.FC = () => {
               DazPay
             </Link>
             <Link href="/dazflow" locale={locale} className="text-gray-700 hover:text-indigo-600 font-medium flex items-center">
-              <Gauge className="h-4 w-4 mr-1" />
+              <IconRegistry.Gauge className="h-4 w-4 mr-1" />
               DazFlow Index
             </Link>
             <Link href="/contact" locale={locale} className="text-gray-700 hover:text-indigo-600 font-medium">

@@ -23,21 +23,21 @@ const DazBoxFeatures: React.FC = () => {
       id: 'plug-play',
       icon: '⚡',
       title: 'Plug & Play',
-      description: 'Prêt à l\'emploi en 5 minutes',
+      description: "Features.featuresfeaturesprt_l"emploi en 5 minutes',
       benefit: 'Installation simple'
     },
     {
       id: 'performance',
       icon: '🚀',
       title: 'Haute Performance',
-      description: 'Hardware optimisé pour Lightning',
+      description: "Features.featuresfeatureshardware_optim",
       benefit: 'Rapidité garantie'
     },
     {
       id: 'support',
       icon: '🛠️',
       title: 'Support Expert',
-      description: 'Assistance technique 24/7',
+      description: "Features.featuresfeaturesassistance_tec",
       benefit: 'Accompagnement complet'
     }
   ];

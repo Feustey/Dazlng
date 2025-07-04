@@ -99,7 +99,7 @@ class DaznoApiClient {
     try {
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         headers: {
-          'Content-Type': 'application/json',
+          "dazno-api.daznoapidaznoapicontenttype": 'application/json',
           ...options?.headers,
         },
         ...options,
@@ -174,7 +174,7 @@ class DaznoApiClient {
           id: 'fallback-1',
           type: 'channel_optimization',
           title: 'Optimiser la gestion des canaux',
-          description: 'Analysez vos canaux pour identifier les opportunités d\'optimisation.',
+          description: "dazno-api.daznoapidaznoapianalysez_vos_c"optimisation.',
           impact: 'medium' as const,
           difficulty: 'medium' as const,
           priority: 1,
@@ -187,7 +187,7 @@ class DaznoApiClient {
           id: 'fallback-2',
           type: 'fee_adjustment',
           title: 'Ajuster les frais de routing',
-          description: 'Optimisez vos frais pour améliorer la rentabilité.',
+          description: "dazno-api.daznoapidaznoapioptimisez_vos_",
           impact: 'high' as const,
           difficulty: 'easy' as const,
           priority: 2,
@@ -200,7 +200,7 @@ class DaznoApiClient {
           id: 'fallback-3',
           type: 'liquidity_management',
           title: 'Équilibrer la liquidité',
-          description: 'Rééquilibrez vos canaux pour améliorer le routing.',
+          description: "dazno-api.daznoapidaznoapirquilibrez_vos",
           impact: 'medium' as const,
           difficulty: 'hard' as const,
           priority: 3,

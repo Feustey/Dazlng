@@ -6,7 +6,8 @@ import "aos/dist/aos.css";
 import DazBoxOffer from "@/components/shared/ui/DazBoxOffer";
 import PricingCard from "@/components/shared/ui/PricingCard";
 import { OptimizedImage, LazyList, useCache } from "@/components/shared/ui";
-import { FaServer, FaBox, FaCreditCard } from "react-icons/fa";
+import { Server, Box, CreditCard } from '@/components/shared/ui/IconRegistry';
+
 
 // Composant client séparé pour gérer les paramètres d'URL
 const SignupConfirmation: React.FC = () => {
@@ -23,7 +24,7 @@ const SignupConfirmation: React.FC = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">Inscription confirmée !</h2>
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">{t('page-old.inscription_confirme_')}</h2>
           <p className="text-gray-600 mb-6">
             Votre adresse email a été vérifiée avec succès. Votre compte est maintenant actif et vous pouvez profiter de tous les services de Daznode.
           </p>
@@ -128,7 +129,7 @@ export default function HomePage() {
             {/* Titre principal */}
             <div className="text-center">
               <h1 className="text-4xl md:text-6xl font-bold text-white animate-fade-in">
-                <span className="bg-gradient-to-r from-yellow-300 via-pink-400 to-yellow-400 text-transparent bg-clip-text">l'accès Lightning</span> pour tous
+                <span className="bg-gradient-to-r from-yellow-300 via-pink-400 to-yellow-400 text-transparent bg-clip-text">{t('page-old.laccs_lightning')}</span> pour tous
               </h1>
             </div>
           </div>
@@ -169,7 +170,7 @@ export default function HomePage() {
               data-aos-delay="800"
             >
               <div className="overflow-hidden relative h-6">
-                <span className="inline-block transform group-hover:-translate-y-full transition-transform duration-300 ease-in-out">Découvrir</span>
+                <span className="inline-block transform group-hover:-translate-y-full transition-transform duration-300 ease-in-out">{t('page-old.dcouvrir')}</span>
                 <span className="inline-block transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out absolute left-0 top-0">Explorer</span>
               </div>
               <div className="mt-3 w-12 h-12 rounded-full bg-yellow-300 text-indigo-700 flex items-center justify-center overflow-hidden group-hover:bg-yellow-200 transition-colors">
@@ -186,8 +187,8 @@ export default function HomePage() {
         <section className="relative w-full bg-gradient-to-r from-yellow-600 to-purple-700 text-white rounded-xl p-6 shadow-lg border border-indigo-500/50">
           <div className="container mx-auto px-4 py-20 md:py-32 flex flex-col md:flex-row items-center justify-between">
             <div className="bg-orange md:w-1/2 mb-10 md:mb-0" data-aos="fade-right">
-              <h1 className="text-4xl md:text-6xl font-bold mb-4">Votre Coffre-Fort Bitcoin Personnel<br/><span className="text-yellow-300">Simplicité, Sécurité, Autonomie</span></h1>
-              <p className="text-xl md:text-2xl mb-8">La DazBox vous offre tout le pouvoir du Bitcoin sans aucune complexité. <br />Plug & Play, elle vous garantit le contrôle total avec une sécurité maximale.</p>
+              <h1 className="text-4xl md:text-6xl font-bold mb-4">Votre Coffre-Fort Bitcoin Personnel<br/><span className="text-yellow-300">{t('page-old.simplicit_scurit_autonomie')}</span></h1>
+              <p className="text-xl md:text-2xl mb-8">La DazBox vous offre tout le pouvoir du Bitcoin sans aucune complexité. <br />{t('page-old.plug_play_elle_vous_garantit_l')}</p>
               <ul className="space-y-3 md:space-y-4 from-white to-gray-50">
                 <li className="flex items-start" data-aos="fade-up" data-aos-delay="400">
                   <span className="bg-green-100 p-1 rounded-full mr-3 flex-shrink-0">
@@ -195,7 +196,7 @@ export default function HomePage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                     </svg>
                   </span>
-                  <span className="text-base sm:text-lg text-yellow-50">Installation ultra-simple : branchez, connectez, c'est prêt !</span>
+                  <span className="text-base sm:text-lg text-yellow-50">{t('page-old.installation_ultrasimple_branc')}</span>
                 </li>
                 <li className="flex items-start" data-aos="fade-up" data-aos-delay="500">
                   <span className="bg-green-100 p-1 rounded-full mr-3 flex-shrink-0">
@@ -203,7 +204,7 @@ export default function HomePage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                     </svg>
                   </span>
-                  <span className="text-base sm:text-lg text-gray-50">Votre argent vous appartient vraiment – zéro intermédiaire</span>
+                  <span className="text-base sm:text-lg text-gray-50">{t('page-old.votre_argent_vous_appartient_v')}</span>
                 </li>
                 <li className="flex items-start" data-aos="fade-up" data-aos-delay="600">
                   <span className="bg-green-100 p-1 rounded-full mr-3 flex-shrink-0">
@@ -211,7 +212,7 @@ export default function HomePage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                     </svg>
                   </span>
-                  <span className="text-base sm:text-lg text-red-50">Interface intuitive pensée pour tous</span>
+                  <span className="text-base sm:text-lg text-red-50">{t('page-old.interface_intuitive_pense_pour')}</span>
                 </li>
                 <li className="flex items-start" data-aos="fade-up" data-aos-delay="700">
                   <span className="bg-green-100 p-1 rounded-full mr-3 flex-shrink-0">
@@ -219,7 +220,7 @@ export default function HomePage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                     </svg>
                   </span>
-                  <span className="text-base sm:text-lg text-red-1000">Assistant IA intégré pour vous guider</span>
+                  <span className="text-base sm:text-lg text-red-1000">{t('page-old.assistant_ia_intgr_pour_vous_g')}</span>
                 </li>
                 <li className="flex items-start" data-aos="fade-up" data-aos-delay="800">
                   <span className="bg-green-100 p-1 rounded-full mr-3 flex-shrink-0">
@@ -227,7 +228,7 @@ export default function HomePage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                     </svg>
                   </span>
-                  <span className="text-base sm:text-lg text-yellow-50">400 000 satoshis, soit 0,004 BTC – livraison incluse</span>
+                  <span className="text-base sm:text-lg text-yellow-50">{t('page-old.400_000_satoshis_soit_0004_btc')}</span>
                 </li>
               </ul>
             </div>
@@ -249,7 +250,7 @@ export default function HomePage() {
                     <div className="absolute inset-0 bg-gradient-to-r from-purple-50 to-purple-100 rounded-2xl transform -rotate-6 hidden md:block"></div>
                     <div className="relative bg-white rounded-2xl shadow-lg p-4 sm:p-6 flex items-center justify-center h-full">
                       <OptimizedImage
-                        alt="Illustration DazNode"
+                        alt="page-old.pageoldpageoldillustration_daz"
                         src="/assets/images/dazia-illustration.png"
                         width={400}
                         height={250}
@@ -261,24 +262,24 @@ export default function HomePage() {
                   {/* Offres à droite */}
                   <div className="space-y-4 md:space-y-6 order-2" data-aos="fade-left" data-aos-delay="300">
                     <h3 className="text-2xl sm:text-3xl font-bold text-purple-600">DazNode</h3>
-                    <p className="text-xl sm:text-2xl font-semibold bg-gradient-to-r from-yellow-300 via-pink-400 to-yellow-400 text-transparent bg-clip-text leading-relaxed">Optimisez votre nœud Lightning avec l&apos;intelligence artificielle</p>
+                    <p className="text-xl sm:text-2xl font-semibold bg-gradient-to-r from-yellow-300 via-pink-400 to-yellow-400 text-transparent bg-clip-text leading-relaxed">{t('page-old.optimisez_votre_nud_lightning_')}</p>
                     <ul className="space-y-4 md:space-y-6">
                       <li className="bg-purple-50 rounded-xl p-4 sm:p-6 border-l-4 border-purple-600 flex flex-col sm:flex-row sm:items-center sm:justify-between" data-aos="fade-left" data-aos-delay="400">
-                        <span className="font-semibold text-purple-900">Statistiques de base et monitoring essentiel</span>
-                        <span className="mt-2 sm:mt-0 sm:ml-4 font-bold text-purple-900 whitespace-nowrap">une semaine offerte</span>
+                        <span className="font-semibold text-purple-900">{t('page-old.statistiques_de_base_et_monito')}</span>
+                        <span className="mt-2 sm:mt-0 sm:ml-4 font-bold text-purple-900 whitespace-nowrap">{t('page-old.une_semaine_offerte')}</span>
                       </li>
                       <li className="bg-purple-50 rounded-xl p-4 sm:p-6 border-l-4 border-purple-600 flex flex-col sm:flex-row sm:items-center sm:justify-between" data-aos="fade-left" data-aos-delay="500">
-                        <span className="font-semibold text-purple-900">Routing optimisé et analyses avancées</span>
-                        <span className="mt-2 sm:mt-0 sm:ml-4 font-bold text-purple-900 whitespace-nowrap">10K sats/mois</span>
+                        <span className="font-semibold text-purple-900">{t('page-old.routing_optimis_et_analyses_av')}</span>
+                        <span className="mt-2 sm:mt-0 sm:ml-4 font-bold text-purple-900 whitespace-nowrap">{t('page-old.10k_satsmois')}</span>
                       </li>
                       <li className="bg-purple-50 rounded-xl p-4 sm:p-6 border-l-4 border-purple-600 flex flex-col sm:flex-row sm:items-center sm:justify-between" data-aos="fade-left" data-aos-delay="600">
-                        <span className="font-semibold text-purple-900">Toute la puissance de notre IA et son heuristic</span>
-                        <span className="mt-2 sm:mt-0 sm:ml-4 font-bold text-purple-900 whitespace-nowrap">30K sats/mois</span>
+                        <span className="font-semibold text-purple-900">{t('page-old.toute_la_puissance_de_notre_ia')}</span>
+                        <span className="mt-2 sm:mt-0 sm:ml-4 font-bold text-purple-900 whitespace-nowrap">{t('page-old.30k_satsmois')}</span>
                       </li>
                     </ul>
                     <div className="pt-6 md:pt-8" data-aos="fade-up" data-aos-delay="700">
                       <a className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold text-white bg-purple-600 rounded-xl hover:bg-purple-700 transition-colors duration-200 shadow-lg hover:shadow-xl" href="/daznode">
-                        <span>Découvrir DazNode</span>
+                        <span>{t('page-old.dcouvrir_daznode')}</span>
                         <svg className="w-5 h-5 ml-2 hidden sm:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                         </svg>
@@ -292,7 +293,7 @@ export default function HomePage() {
                 <div className="grid md:grid-cols-2 gap-6 md:gap-12">
                   <div className="space-y-4 md:space-y-6 order-2 md:order-1" data-aos="fade-right" data-aos-delay="300">
                     <h3 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-white via-yellow-200 to-white text-transparent bg-clip-text">DazPay</h3>
-                    <p className="text-lg sm:text-xl text-white leading-relaxed font-semibold">Solution de paiement Lightning pour les commerces</p>
+                    <p className="text-lg sm:text-xl text-white leading-relaxed font-semibold">{t('page-old.solution_de_paiement_lightning')}</p>
                     <ul className="space-y-3 md:space-y-4">
                       <li className="flex items-start">
                         <span className="bg-white/80 p-1 rounded-full mr-3 flex-shrink-0">
@@ -300,7 +301,7 @@ export default function HomePage() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                           </svg>
                         </span>
-                        <span className="text-lg text-white font-medium">Terminal de paiement Lightning intuitif</span>
+                        <span className="text-lg text-white font-medium">{t('page-old.terminal_de_paiement_lightning')}</span>
                       </li>
                       <li className="flex items-start">
                         <span className="bg-white/80 p-1 rounded-full mr-3 flex-shrink-0">
@@ -308,7 +309,7 @@ export default function HomePage() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                           </svg>
                         </span>
-                        <span className="text-lg text-white font-medium">Dashboard de gestion complet</span>
+                        <span className="text-lg text-white font-medium">{t('page-old.dashboard_de_gestion_complet')}</span>
                       </li>
                       <li className="flex items-start">
                         <span className="bg-white/80 p-1 rounded-full mr-3 flex-shrink-0">
@@ -316,12 +317,12 @@ export default function HomePage() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                           </svg>
                         </span>
-                        <span className="text-lg text-white font-medium">Compatible avec votre DazBox existante</span>
+                        <span className="text-lg text-white font-medium">{t('page-old.compatible_avec_votre_dazbox_e')}</span>
                       </li>
                     </ul>
                     <div className="pt-6 md:pt-8" data-aos="fade-up" data-aos-delay="700">
                       <a className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold text-emerald-700 bg-white rounded-xl hover:bg-emerald-100 transition-colors duration-200 shadow-lg hover:shadow-xl" href="/contact">
-                        <span>Une démo !</span>
+                        <span>{t('page-old.une_dmo_')}</span>
                         <svg className="w-5 h-5 ml-2 hidden sm:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                         </svg>
@@ -332,7 +333,7 @@ export default function HomePage() {
                     <div className="absolute inset-0 bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-2xl transform -rotate-6 hidden md:block"></div>
                     <div className="relative bg-white rounded-2xl shadow-lg p-4 sm:p-6">
                       <OptimizedImage
-                        alt="Illustration DazPay"
+                        alt="page-old.pageoldpageoldillustration_daz"
                         src="/assets/images/dazpay-illustration.png"
                         width={400}
                         height={250}
@@ -369,7 +370,7 @@ export default function HomePage() {
         {/* SECTION 3 - Pourquoi choisir Daz ? */}
         <section className="py-20 bg-transparent">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl md:text-5xl font-bold text-orange-600 text-center mb-6" data-aos="fade-up">La DazBox : Votre Première Étape vers la Liberté Financière</h2><br/>
+            <h2 className="text-3xl md:text-5xl font-bold text-orange-600 text-center mb-6" data-aos="fade-up">{t('page-old.la_dazbox_votre_premire_tape_v')}</h2><br/>
             <div className="grid md:grid-cols-3 gap-8">
               <PricingCard
                 title="DazNode"
@@ -380,10 +381,10 @@ export default function HomePage() {
                   "Routing optimisé par IA",
                   "Analyses et recommandations"
                 ]}
-                cta="Découvrir DazNode"
+                cta="page-old.dcouvrir_daznode"
                 ctaHref="/daznode"
                 color="from-green-400 via-cyan-500 to-indigo-500"
-                icon={<FaServer />}
+                icon={<Server />}
                 microcopy="1 semaine offerte, sans engagement"
               />
               <PricingCard
@@ -400,7 +401,7 @@ export default function HomePage() {
                 ctaHref="/checkout/dazbox"
                 highlight
                 color="from-orange-400 via-pink-500 to-purple-600"
-                icon={<FaBox />}
+                icon={<Box />}
                 microcopy="Livraison rapide et paiement sécurisé"
               />
               <PricingCard
@@ -408,13 +409,13 @@ export default function HomePage() {
                 price="set up offert"
                 features={[
                   "Terminal de paiement Lightning",
-                  "Dashboard de gestion complet",
+                  "page-old.dashboard_de_gestion_complet",
                   "Master your node DazBox"
                 ]}
                 cta="Parlons ensemble"
                 ctaHref="/contact"
                 color="from-emerald-400 to-emerald-600"
-                icon={<FaCreditCard />}
+                icon={<CreditCard />}
                 microcopy="Accompagnement personnalisé"
               />
             </div>
@@ -428,30 +429,30 @@ export default function HomePage() {
           </div>
           <div className="container mx-auto px-4 py-16 sm:py-20 md:py-24">
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6" data-aos="fade-up">Prenez le Contrôle Dès Maintenant</h2>
-              <p className="text-lg sm:text-xl md:text-2xl mb-8 text-indigo-100" data-aos="fade-up" data-aos-delay="100">Pourquoi attendre pour découvrir la liberté financière ? La DazBox vous est livrée prête à l'emploi, avec 3 mois d'assistance premium inclus. En quelques minutes, vous ferez partie de la révolution financière qui change déjà le monde.</p>
-              <p className="text-lg sm:text-xl md:text-2xl mb-8 text-indigo-100" data-aos="fade-up" data-aos-delay="100">Rejoignez les milliers d'utilisateurs qui ont fait le pas vers leur indépendance financière. Commandez votre DazBox aujourd'hui et découvrez pourquoi nos clients la considèrent comme l'investissement le plus intelligent et le plus simple pour entrer dans le monde du Bitcoin.</p>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6" data-aos="fade-up">{t('page-old.prenez_le_contrle_ds_maintenan')}</h2>
+              <p className="text-lg sm:text-xl md:text-2xl mb-8 text-indigo-100" data-aos="fade-up" data-aos-delay="100">{t('page-old.pourquoi_attendre_pour_dcouvri')}</p>
+              <p className="text-lg sm:text-xl md:text-2xl mb-8 text-indigo-100" data-aos="fade-up" data-aos-delay="100">{t('page-old.rejoignez_les_milliers_dutilis')}</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center" data-aos="fade-up" data-aos-delay="200">
-                <a className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold border-2 border-white text-white hover:bg-white/10 rounded-xl transition-all duration-200" href="/checkout/dazbox">Je Commande Ma DazBox</a>
+                <a className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold border-2 border-white text-white hover:bg-white/10 rounded-xl transition-all duration-200" href="/checkout/dazbox">{t('page-old.je_commande_ma_dazbox')}</a>
               </div>
               <div className="mt-12 flex flex-wrap justify-center items-center gap-6" data-aos="fade-up" data-aos-delay="300">
                 <div className="flex items-center bg-white/10 rounded-full px-4 py-2">
                   <svg className="w-5 h-5 mr-2 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
                   </svg>
-                  <span className="text-sm">Installation 5 min</span>
+                  <span className="text-sm">{t('page-old.installation_5_min')}</span>
                 </div>
                 <div className="flex items-center bg-white/10 rounded-full px-4 py-2">
                   <svg className="w-5 h-5 mr-2 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
                   </svg>
-                  <span className="text-sm">Support 24/7</span>
+                  <span className="text-sm">{t('page-old.support_247')}</span>
                 </div>
                 <div className="flex items-center bg-white/10 rounded-full px-4 py-2">
                   <svg className="w-5 h-5 mr-2 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
                   </svg>
-                  <span className="text-sm">3 mois Premium inclus</span>
+                  <span className="text-sm">{t('page-old.3_mois_premium_inclus')}</span>
                 </div>
               </div>
             </div>
@@ -510,13 +511,13 @@ export default function HomePage() {
                 className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
                 emptyComponent={
                   <div className="text-center py-8">
-                    <p className="text-gray-500">Aucun témoignage disponible pour le moment.</p>
+                    <p className="text-gray-500">{t('page-old.aucun_tmoignage_disponible_pou')}</p>
                   </div>
                 }
               />
             ) : (
               <div className="text-center py-8">
-                <p className="text-gray-500">Aucun témoignage disponible pour le moment.</p>
+                <p className="text-gray-500">{t('page-old.aucun_tmoignage_disponible_pou')}</p>
               </div>
             )}
           </div>
@@ -526,11 +527,11 @@ export default function HomePage() {
         {/* SECTION 6 - Partenaires */}
         <section className="bg-black-20 rounded-2xl shadow-xl overflow-hidden flex flex-col justify-between transition-all hover:shadow-2xl hover:-translate-y-1 duration-300" data-aos="fade-up" data-aos-delay="200">
           <div className="container mx-auto px-4">
-            <h2 className="text-center text-2xl font-bold bg-gradient-to-r from-yellow-300 via-pink-400 to-yellow-400 text-transparent bg-clip-text mb-10">Partenaires :</h2>
+            <h2 className="text-center text-2xl font-bold bg-gradient-to-r from-yellow-300 via-pink-400 to-yellow-400 text-transparent bg-clip-text mb-10">{t('page-old.partenaires_')}</h2>
             <div className="flex flex-wrap justify-center items-center gap-12">
-              <a href="https://blockchainforgood.fr" target="_blank" rel="noopener noreferrer"><Image alt="Blockchain for Good" src="/assets/images/logo-blockchain_for_good.svg" width={120} height={60} className="h-12 w-auto grayscale hover:grayscale-0 transition-all" /></a>
+              <a href="https://blockchainforgood.fr" target="_blank" rel="noopener noreferrer"><Image alt="page-old.pageoldpageoldblockchain_for_g" src="/assets/images/logo-blockchain_for_good.svg" width={120} height={60} className="h-12 w-auto grayscale hover:grayscale-0 transition-all" /></a>
               <a href="https://inoval.fr" target="_blank" rel="noopener noreferrer"><OptimizedImage alt="Inoval" src="/assets/images/logo-inoval.png" width={120} height={60} className="h-12 w-auto grayscale hover:grayscale-0 transition-all" loading="lazy" /></a>
-              <a href="https://nantesbitcoinmeetup.notion.site/Nantes-Bitcoin-Meetup-c2202d5100754ad1b57c02c83193da96" target="_blank" rel="noopener noreferrer"><OptimizedImage alt="Nantes Bitcoin Meetup" src="/assets/images/logo-meetup.jpg" width={120} height={60} className="h-12 w-auto grayscale hover:grayscale-0 transition-all" loading="lazy" /></a>
+              <a href="https://nantesbitcoinmeetup.notion.site/Nantes-Bitcoin-Meetup-c2202d5100754ad1b57c02c83193da96" target="_blank" rel="noopener noreferrer"><OptimizedImage alt="page-old.pageoldpageoldnantes_bitcoin_m" src="/assets/images/logo-meetup.jpg" width={120} height={60} className="h-12 w-auto grayscale hover:grayscale-0 transition-all" loading="lazy" /></a>
               <br/>
             </div>
           </div>

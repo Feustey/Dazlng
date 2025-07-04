@@ -2,7 +2,7 @@ export default function ProductsPage(): JSX.Element {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">Produits</h1>
-      <p>Gérez les produits proposés sur la plateforme. Ajoutez, modifiez ou supprimez des produits ici.</p>
+      <p>{t('admin.grez_les_produits_proposs_sur_')}</p>
     </div>
   );
 }

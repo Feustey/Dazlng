@@ -106,7 +106,7 @@ export const ProofOfPerformance: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400 mx-auto"></div>
-            <p className="text-gray-400 mt-4">Chargement des performances en direct...</p>
+            <p className="text-gray-400 mt-4">{t('ProofOfPerformance.chargement_des_performances_en')}</p>
           </div>
         </div>
       </div>
@@ -149,7 +149,7 @@ export const ProofOfPerformance: React.FC = () => {
         {/* Global Stats */}
         <div className="global-stats grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <div className="stat-card bg-gradient-to-br from-green-500/10 to-green-600/10 border border-green-500/20 rounded-xl p-6 text-center">
-            <h4 className="text-green-400 font-semibold mb-2">💰 Économies Clients</h4>
+            <h4 className="text-green-400 font-semibold mb-2">{t('ProofOfPerformance._conomies_clients')}</h4>
             <div className="big-number text-3xl font-bold text-green-400 font-mono mb-2">
               {formatSats(totalSavings)}
             </div>
@@ -160,26 +160,26 @@ export const ProofOfPerformance: React.FC = () => {
           </div>
           
           <div className="stat-card bg-gradient-to-br from-blue-500/10 to-blue-600/10 border border-blue-500/20 rounded-xl p-6 text-center">
-            <h4 className="text-blue-400 font-semibold mb-2">🎯 Précision IA</h4>
+            <h4 className="text-blue-400 font-semibold mb-2">{t('ProofOfPerformance._prcision_ia')}</h4>
             <div className="big-number text-3xl font-bold text-blue-400 font-mono mb-2">
               {performance.length > 0 ? 
                 Math.round(performance.reduce((sum, n) => sum + n.aiPredictionAccuracy, 0) / performance.length) 
                 : 0}%
             </div>
-            <small className="text-gray-400">Prédictions correctes</small>
+            <small className="text-gray-400">{t('ProofOfPerformance.prdictions_correctes')}</small>
             <div className="text-xs text-blue-300 mt-2">
               Basé sur {performance.reduce((sum, n) => sum + n.forceClosesAvoided, 0)} prédictions
             </div>
           </div>
           
           <div className="stat-card bg-gradient-to-br from-purple-500/10 to-purple-600/10 border border-purple-500/20 rounded-xl p-6 text-center">
-            <h4 className="text-purple-400 font-semibold mb-2">⚡ Uptime Moyen</h4>
+            <h4 className="text-purple-400 font-semibold mb-2">{t('ProofOfPerformance._uptime_moyen')}</h4>
             <div className="big-number text-3xl font-bold text-purple-400 font-mono mb-2">
               {performance.length > 0 ? 
                 (performance.reduce((sum, n) => sum + n.uptimePercent, 0) / performance.length).toFixed(1)
                 : 0}%
             </div>
-            <small className="text-gray-400">Disponibilité réseau</small>
+            <small className="text-gray-400">{t('ProofOfPerformance.disponibilit_rseau')}</small>
             <div className="text-xs text-purple-300 mt-2">
               SLA 99.5% garanti
             </div>
@@ -226,21 +226,21 @@ export const ProofOfPerformance: React.FC = () => {
                 {/* Performance Metrics */}
                 <div className="performance-metrics grid grid-cols-2 lg:grid-cols-4 gap-4">
                   <div className="metric bg-gray-700/50 rounded-lg p-3 text-center">
-                    <label className="block text-gray-400 text-xs mb-1">Revenus routing</label>
+                    <label className="block text-gray-400 text-xs mb-1">{t('ProofOfPerformance.revenus_routing')}</label>
                     <span className="text-green-400 font-mono font-semibold">
                       {formatSats(node.routingRevenue30d)}
                     </span>
                   </div>
                   
                   <div className="metric bg-gray-700/50 rounded-lg p-3 text-center">
-                    <label className="block text-gray-400 text-xs mb-1">Force-closes évités</label>
+                    <label className="block text-gray-400 text-xs mb-1">{t('ProofOfPerformance.forcecloses_vits')}</label>
                     <span className="text-blue-400 font-mono font-semibold">
                       {node.forceClosesAvoided}
                     </span>
                   </div>
                   
                   <div className="metric bg-gray-700/50 rounded-lg p-3 text-center">
-                    <label className="block text-gray-400 text-xs mb-1">Précision IA</label>
+                    <label className="block text-gray-400 text-xs mb-1">{t('ProofOfPerformance.prcision_ia')}</label>
                     <span className="text-purple-400 font-mono font-semibold">
                       {node.aiPredictionAccuracy.toFixed(1)}%
                     </span>
@@ -285,32 +285,32 @@ export const ProofOfPerformance: React.FC = () => {
             <div className="flex items-center">
               <span className="text-green-400 mr-2 text-lg">🔒</span>
               <div className="text-left">
-                <div className="text-sm font-medium text-white">Audité</div>
-                <div className="text-xs text-gray-400">Trail of Bits</div>
+                <div className="text-sm font-medium text-white">{t('ProofOfPerformance.audit')}</div>
+                <div className="text-xs text-gray-400">{t('ProofOfPerformance.trail_of_bits')}</div>
               </div>
             </div>
             
             <div className="flex items-center">
               <span className="text-blue-400 mr-2 text-lg">🛡️</span>
               <div className="text-left">
-                <div className="text-sm font-medium text-white">Bug Bounty</div>
-                <div className="text-xs text-gray-400">$10k rewards</div>
+                <div className="text-sm font-medium text-white">{t('ProofOfPerformance.bug_bounty')}</div>
+                <div className="text-xs text-gray-400">{t('ProofOfPerformance.10k_rewards')}</div>
               </div>
             </div>
             
             <div className="flex items-center">
               <span className="text-yellow-400 mr-2 text-lg">⚡</span>
               <div className="text-left">
-                <div className="text-sm font-medium text-white">Lightning Native</div>
-                <div className="text-xs text-gray-400">100% Bitcoin</div>
+                <div className="text-sm font-medium text-white">{t('ProofOfPerformance.lightning_native')}</div>
+                <div className="text-xs text-gray-400">{t('ProofOfPerformance.100_bitcoin')}</div>
               </div>
             </div>
             
             <div className="flex items-center">
               <span className="text-purple-400 mr-2 text-lg">🔬</span>
               <div className="text-left">
-                <div className="text-sm font-medium text-white">Open Source</div>
-                <div className="text-xs text-gray-400">Vérifiable</div>
+                <div className="text-sm font-medium text-white">{t('ProofOfPerformance.open_source')}</div>
+                <div className="text-xs text-gray-400">{t('ProofOfPerformance.vrifiable')}</div>
               </div>
             </div>
           </div>
@@ -366,7 +366,7 @@ export const LightningAnalyticsDashboard: React.FC = () => {
       <div className="lightning-analytics bg-gray-950 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400 mx-auto"></div>
-          <p className="text-gray-400 mt-4">Chargement des analytics Lightning...</p>
+          <p className="text-gray-400 mt-4">{t('ProofOfPerformance.chargement_des_analytics_light')}</p>
         </div>
       </div>
     );
@@ -394,33 +394,33 @@ export const LightningAnalyticsDashboard: React.FC = () => {
 
         <div className="analytics-grid grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <div className="metric-card bg-gradient-to-br from-green-500/10 to-green-600/10 border border-green-500/20 rounded-xl p-6 text-center">
-            <h4 className="text-green-400 font-semibold mb-2">🎯 Taux de Conversion</h4>
+            <h4 className="text-green-400 font-semibold mb-2">{t('ProofOfPerformance._taux_de_conversion')}</h4>
             <div className="big-number text-3xl font-bold text-green-400 font-mono mb-2">
               {conversionRate.toFixed(1)}%
             </div>
-            <small className="text-gray-400">Invoices payées / générées</small>
+            <small className="text-gray-400">{t('ProofOfPerformance.invoices_payes_gnres')}</small>
             <div className="text-xs text-green-300 mt-2">
               {analytics.paidInvoices.toLocaleString()} / {analytics.totalInvoices.toLocaleString()}
             </div>
           </div>
           
           <div className="metric-card bg-gradient-to-br from-yellow-400/10 to-orange-400/10 border border-yellow-400/20 rounded-xl p-6 text-center">
-            <h4 className="text-yellow-400 font-semibold mb-2">⚡ Temps Moyen Paiement</h4>
+            <h4 className="text-yellow-400 font-semibold mb-2">{t('ProofOfPerformance._temps_moyen_paiement')}</h4>
             <div className="big-number text-3xl font-bold text-yellow-400 font-mono mb-2">
               {averagePaymentTimeFormatted}
             </div>
-            <small className="text-gray-400">De la génération à la confirmation</small>
+            <small className="text-gray-400">{t('ProofOfPerformance.de_la_gnration_la_confirmation')}</small>
             <div className="text-xs text-yellow-300 mt-2">
               Lightning speed ⚡
             </div>
           </div>
           
           <div className="metric-card bg-gradient-to-br from-purple-500/10 to-purple-600/10 border border-purple-500/20 rounded-xl p-6 text-center">
-            <h4 className="text-purple-400 font-semibold mb-2">💰 Revenus Mensuels</h4>
+            <h4 className="text-purple-400 font-semibold mb-2">{t('ProofOfPerformance._revenus_mensuels')}</h4>
             <div className="big-number text-3xl font-bold text-purple-400 font-mono mb-2">
               {(analytics.revenueBySats.monthly.reduce((a, b) => a + b, 0) / 1000000).toFixed(1)}M sats
             </div>
-            <small className="text-gray-400">Total abonnements actifs</small>
+            <small className="text-gray-400">{t('ProofOfPerformance.total_abonnements_actifs')}</small>
             <div className="text-xs text-purple-300 mt-2">
               +{((analytics.revenueBySats.monthly[5] / analytics.revenueBySats.monthly[4] - 1) * 100).toFixed(0)}% ce mois
             </div>

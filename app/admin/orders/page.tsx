@@ -48,7 +48,7 @@ export default function OrdersPage(): JSX.Element {
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">Commandes</h1>
       {isLoading ? (
-        <div>Chargement...</div>
+        <div>{t('admin.chargement')}</div>
       ) : error ? (
         <div className="text-red-500">{error}</div>
       ) : (
@@ -75,13 +75,13 @@ export default function OrdersPage(): JSX.Element {
                   <td className="py-2 px-4">{order.payment_status}</td>
                   <td className="py-2 px-4">{formatDate(order.created_at)}</td>
                   <td className="py-2 px-4">
-                    <Link href={`/admin/orders/${order.id}`} className="text-blue-500 hover:underline">Détails</Link>
+                    <Link href={`/admin/orders/${order.id}`} className="text-blue-500 hover:underline">{t('admin.dtails')}</Link>
                   </td>
                 </tr>
               ))}
               {orders.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="py-4 text-center text-gray-500">Aucune commande trouvée</td>
+                  <td colSpan={7} className="py-4 text-center text-gray-500">{t('admin.aucune_commande_trouve')}</td>
                 </tr>
               )}
             </tbody>

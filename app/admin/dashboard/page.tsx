@@ -188,8 +188,8 @@ export default function DashboardPage(): JSX.Element {
       {/* Header avec sélecteur de période */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard Business</h1>
-          <p className="text-gray-600">Vue d'ensemble des performances de DazNode</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('dashboard.dashboard_business')}</h1>
+          <p className="text-gray-600">{t('dashboard.vue_densemble_des_performances')}</p>
         </div>
         <div className="flex space-x-2">
           <select
@@ -197,9 +197,9 @@ export default function DashboardPage(): JSX.Element {
             onChange={(e: any) => setSelectedPeriod(e.target.value)}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
-            <option value="7">7 derniers jours</option>
-            <option value="30">30 derniers jours</option>
-            <option value="90">90 derniers jours</option>
+            <option value="7">{t('dashboard.7_derniers_jours')}</option>
+            <option value="30">{t('dashboard.30_derniers_jours')}</option>
+            <option value="90">{t('dashboard.90_derniers_jours')}</option>
           </select>
           <Link
             href="/user/dashboard"
@@ -220,27 +220,27 @@ export default function DashboardPage(): JSX.Element {
       {/* KPIs Principaux */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatsCard 
-          title="Utilisateurs Totaux" 
+          title="dashboard.dashboarddashboardutilisateurs" 
           value={stats.totalUsers} 
           icon="👥" 
           link="/admin/users"
           trend={businessMetrics ? `+${businessMetrics.weekly_signups} cette semaine` : undefined}
         />
         <StatsCard 
-          title="Abonnements Actifs" 
+          title="dashboard.dashboarddashboardabonnements_" 
           value={stats.activeSubscriptions} 
           icon="🔄" 
           link="/admin/subscriptions" 
         />
         <StatsCard 
-          title="Revenu Total" 
+          title="dashboard.dashboarddashboardrevenu_total" 
           value={formatSats(stats.totalRevenue)} 
           icon="💰" 
           link="/admin/payments"
           trend={businessMetrics ? `${formatCurrency(businessMetrics.monthly_revenue)} ce mois` : undefined}
         />
         <StatsCard 
-          title="Commandes en Attente" 
+          title="dashboard.dashboarddashboardcommandes_en" 
           value={stats.pendingOrders} 
           icon="🛒" 
           link="/admin/orders?status=pending" 
@@ -251,34 +251,34 @@ export default function DashboardPage(): JSX.Element {
       {businessMetrics && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-white p-4 rounded-lg shadow border">
-            <div className="text-sm text-gray-600">Taux de Conversion</div>
+            <div className="text-sm text-gray-600">{t('dashboard.taux_de_conversion')}</div>
             <div className="text-2xl font-bold text-green-600">{formatPercentage(businessMetrics.conversion_rate)}</div>
-            <div className="text-xs text-gray-500">Visiteurs → Clients</div>
+            <div className="text-xs text-gray-500">{t('dashboard.visiteurs_clients')}</div>
           </div>
           
           <div className="bg-white p-4 rounded-lg shadow border">
-            <div className="text-sm text-gray-600">CLV (Customer Lifetime Value)</div>
+            <div className="text-sm text-gray-600">{t('dashboard.clv_customer_lifetime_value')}</div>
             <div className="text-2xl font-bold text-purple-600">{formatCurrency(businessMetrics.customer_lifetime_value)}</div>
-            <div className="text-xs text-gray-500">Valeur moyenne par client</div>
+            <div className="text-xs text-gray-500">{t('dashboard.valeur_moyenne_par_client')}</div>
           </div>
           
           <div className="bg-white p-4 rounded-lg shadow border">
-            <div className="text-sm text-gray-600">Adoption Lightning</div>
+            <div className="text-sm text-gray-600">{t('dashboard.adoption_lightning')}</div>
             <div className="text-2xl font-bold text-yellow-600">{formatPercentage(businessMetrics.lightning_connection_rate)}</div>
-            <div className="text-xs text-gray-500">Utilisateurs avec nœud</div>
+            <div className="text-xs text-gray-500">{t('dashboard.utilisateurs_avec_nud')}</div>
           </div>
           
           <div className="bg-white p-4 rounded-lg shadow border">
-            <div className="text-sm text-gray-600">Conversion Premium</div>
+            <div className="text-sm text-gray-600">{t('dashboard.conversion_premium')}</div>
             <div className="text-2xl font-bold text-indigo-600">{formatPercentage(businessMetrics.premium_conversion_rate)}</div>
-            <div className="text-xs text-gray-500">Free → Premium</div>
+            <div className="text-xs text-gray-500">{t('dashboard.free_premium')}</div>
           </div>
         </div>
       )}
 
       {/* Funnel de Conversion */}
       {funnelMetrics && (
-        <Card title="Funnel de Conversion" className="mb-6">
+        <Card title="dashboard.dashboarddashboardfunnel_de_co" className="mb-6">
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
               {/* Visiteurs */}
@@ -313,7 +313,7 @@ export default function DashboardPage(): JSX.Element {
               <div className="text-center">
                 <div className="bg-yellow-100 rounded-lg p-4">
                   <div className="text-2xl font-bold text-yellow-600">{funnelMetrics.verified_users.toLocaleString()}</div>
-                  <div className="text-sm text-yellow-800">Vérifiés</div>
+                  <div className="text-sm text-yellow-800">{t('dashboard.vrifis')}</div>
                 </div>
               </div>
             </div>
@@ -323,7 +323,7 @@ export default function DashboardPage(): JSX.Element {
               <div className="text-center">
                 <div className="bg-purple-100 rounded-lg p-4">
                   <div className="text-2xl font-bold text-purple-600">{funnelMetrics.first_purchase.toLocaleString()}</div>
-                  <div className="text-sm text-purple-800">Premier Achat</div>
+                  <div className="text-sm text-purple-800">{t('dashboard.premier_achat')}</div>
                   <div className="text-xs text-gray-500">{formatPercentage(funnelMetrics.purchase_rate)} des vérifiés</div>
                 </div>
               </div>
@@ -339,7 +339,7 @@ export default function DashboardPage(): JSX.Element {
                 <div className="bg-indigo-100 rounded-lg p-4">
                   <div className="text-2xl font-bold text-indigo-600">{funnelMetrics.premium_users.toLocaleString()}</div>
                   <div className="text-sm text-indigo-800">Premium</div>
-                  <div className="text-xs text-gray-500">Clients fidèles</div>
+                  <div className="text-xs text-gray-500">{t('dashboard.clients_fidles')}</div>
                 </div>
               </div>
             </div>
@@ -350,35 +350,35 @@ export default function DashboardPage(): JSX.Element {
       {/* Revenus et Performance */}
       {businessMetrics && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card title="Performance Revenus" className="col-span-2">
+          <Card title="dashboard.dashboarddashboardperformance_" className="col-span-2">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <div className="text-sm text-gray-600">Revenus Mensuels</div>
+                <div className="text-sm text-gray-600">{t('dashboard.revenus_mensuels')}</div>
                 <div className="text-xl font-bold text-green-600">{formatCurrency(businessMetrics.monthly_revenue)}</div>
               </div>
               <div>
-                <div className="text-sm text-gray-600">Panier Moyen</div>
+                <div className="text-sm text-gray-600">{t('dashboard.panier_moyen')}</div>
                 <div className="text-xl font-bold text-blue-600">{formatCurrency(businessMetrics.avg_order_value)}</div>
               </div>
               <div>
-                <div className="text-sm text-gray-600">Revenu par Utilisateur</div>
+                <div className="text-sm text-gray-600">{t('dashboard.revenu_par_utilisateur')}</div>
                 <div className="text-xl font-bold text-purple-600">{formatCurrency(businessMetrics.revenue_per_user)}</div>
               </div>
               <div>
-                <div className="text-sm text-gray-600">CAC (Coût d'Acquisition)</div>
+                <div className="text-sm text-gray-600">{t('dashboard.cac_cot_dacquisition')}</div>
                 <div className="text-xl font-bold text-orange-600">{formatCurrency(businessMetrics.customer_acquisition_cost)}</div>
               </div>
             </div>
           </Card>
 
-          <Card title="Signups Récents" className="col-span-1">
+          <Card title="dashboard.dashboarddashboardsignups_rcen" className="col-span-1">
             <div className="space-y-2">
               <div>
-                <div className="text-sm text-gray-600">Cette Semaine</div>
+                <div className="text-sm text-gray-600">{t('dashboard.cette_semaine')}</div>
                 <div className="text-xl font-bold text-green-600">+{businessMetrics.weekly_signups}</div>
               </div>
               <div>
-                <div className="text-sm text-gray-600">Ce Mois</div>
+                <div className="text-sm text-gray-600">{t('dashboard.ce_mois')}</div>
                 <div className="text-xl font-bold text-blue-600">+{businessMetrics.monthly_signups}</div>
               </div>
             </div>
@@ -387,7 +387,7 @@ export default function DashboardPage(): JSX.Element {
       )}
 
       {/* Utilisateurs récents */}
-      <Card title="Utilisateurs récents" className="mb-8">
+      <Card title="dashboard.dashboarddashboardutilisateurs" className="mb-8">
         <div className="overflow-x-auto">
           <table className="min-w-full">
             <thead>
@@ -395,7 +395,7 @@ export default function DashboardPage(): JSX.Element {
                 <th className="py-2 px-4 text-left">Nom</th>
                 <th className="py-2 px-4 text-left">Email</th>
                 <th className="py-2 px-4 text-left">Entreprise</th>
-                <th className="py-2 px-4 text-left">Date d'inscription</th>
+                <th className="py-2 px-4 text-left">{t('dashboard.date_dinscription')}</th>
                 <th className="py-2 px-4 text-left">Actions</th>
               </tr>
             </thead>
@@ -445,8 +445,8 @@ export default function DashboardPage(): JSX.Element {
           className="bg-purple-600 text-white p-4 rounded-lg hover:bg-purple-700 transition-colors text-center"
         >
           <div className="text-2xl mb-2">🎯</div>
-          <div className="font-semibold">CRM Legacy</div>
-          <div className="text-sm opacity-90">React Admin</div>
+          <div className="font-semibold">{t('dashboard.crm_legacy')}</div>
+          <div className="text-sm opacity-90">{t('dashboard.react_admin')}</div>
         </Link>
         
         <Link
@@ -454,8 +454,8 @@ export default function DashboardPage(): JSX.Element {
           className="bg-green-600 text-white p-4 rounded-lg hover:bg-green-700 transition-colors text-center"
         >
           <div className="text-2xl mb-2">📧</div>
-          <div className="font-semibold">Email Marketing</div>
-          <div className="text-sm opacity-90">Campagnes & Templates</div>
+          <div className="font-semibold">{t('dashboard.email_marketing')}</div>
+          <div className="text-sm opacity-90">{t('dashboard.campagnes_templates')}</div>
         </Link>
         
         <Link
@@ -464,7 +464,7 @@ export default function DashboardPage(): JSX.Element {
         >
           <div className="text-2xl mb-2">📊</div>
           <div className="font-semibold">Analytics</div>
-          <div className="text-sm opacity-90">Métriques détaillées</div>
+          <div className="text-sm opacity-90">{t('dashboard.mtriques_dtailles')}</div>
         </Link>
         
         <Link
@@ -472,8 +472,8 @@ export default function DashboardPage(): JSX.Element {
           className="bg-indigo-600 text-white p-4 rounded-lg hover:bg-indigo-700 transition-colors text-center"
         >
           <div className="text-2xl mb-2">👥</div>
-          <div className="font-semibold">Gestion Clients</div>
-          <div className="text-sm opacity-90">Base clients & Support</div>
+          <div className="font-semibold">{t('dashboard.gestion_clients')}</div>
+          <div className="text-sm opacity-90">{t('dashboard.base_clients_support')}</div>
         </Link>
       </div>
     </div>

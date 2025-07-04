@@ -46,7 +46,7 @@ const ProfileCompletion: React.FC<ProfileCompletionProps> = ({
       <div className="bg-green-50 border border-green-200 rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
           <span className="text-2xl">✅</span>
-          <h2 className="text-xl font-semibold text-green-800">Profil complet !</h2>
+          <h2 className="text-xl font-semibold text-green-800">{t('user.profil_complet_')}</h2>
         </div>
         <p className="text-green-700">
           Votre profil est maintenant complet. Vous bénéficiez de toutes les fonctionnalités personnalisées.
@@ -71,7 +71,7 @@ const ProfileCompletion: React.FC<ProfileCompletionProps> = ({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <span className="text-2xl">👋</span>
-          <h2 className="text-xl font-semibold text-amber-800">Complétez votre profil</h2>
+          <h2 className="text-xl font-semibold text-amber-800">{t('user.compltez_votre_profil')}</h2>
         </div>
         <div className="text-right">
           <div className="text-2xl font-bold text-amber-800">{completionPercentage}%</div>
@@ -88,7 +88,7 @@ const ProfileCompletion: React.FC<ProfileCompletionProps> = ({
 
       {highPriorityFields.length > 0 && (
         <div className="mb-6">
-          <h3 className="text-lg font-medium text-amber-800 mb-3">Actions prioritaires</h3>
+          <h3 className="text-lg font-medium text-amber-800 mb-3">{t('user.actions_prioritaires')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {highPriorityFields.slice(0, 2).map((field: any) => (
               <Link 
@@ -100,7 +100,7 @@ const ProfileCompletion: React.FC<ProfileCompletionProps> = ({
                   <span className="text-lg">{getPriorityIcon(field.priority)}</span>
                   <div>
                     <div className="font-medium">{field.label}</div>
-                    <div className="text-xs opacity-75">Cliquez pour compléter</div>
+                    <div className="text-xs opacity-75">{t('user.cliquez_pour_complter')}</div>
                   </div>
                 </div>
               </Link>

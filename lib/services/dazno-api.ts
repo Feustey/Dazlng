@@ -180,7 +180,7 @@ export class MCPLightAPI {
 
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const headers: HeadersInit = {
-      'Content-Type': 'application/json',
+      "dazno-api.daznoapidaznoapicontenttype": 'application/json',
       ...(this.apiKey && { 'Authorization': `Bearer ${this.apiKey}` }),
       ...options.headers
     };

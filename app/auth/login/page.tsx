@@ -9,7 +9,7 @@ export default function LoginPage(): JSX.Element {
   const supabase = getSupabaseBrowserClient();
 
   return (
-    <Suspense fallback={<div>Chargement...</div>}>
+    <Suspense fallback={<div>{t('auth.chargement')}</div>}>
       <LoginPageContent supabase={supabase} />
     </Suspense>
   );
@@ -61,7 +61,7 @@ function LoginPageContent({ supabase }: { supabase: any }): JSX.Element {
         <div className="flex justify-center mb-6">
           <Image
             src="/assets/images/logo-daznode.svg"
-            alt="Logo DazNode"
+            alt="auth.authauthlogo_daznode"
             width={120}
             height={48}
             className="h-12 w-auto"
@@ -105,7 +105,7 @@ function LoginPageContent({ supabase }: { supabase: any }): JSX.Element {
                 value={email}
                 onChange={(e: any) => setEmail(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="votre@email.com"
+                placeholder="auth.authauthvotreemailcom"
                 required
                 disabled={pending}
                 autoComplete="email"
@@ -137,7 +137,7 @@ function LoginPageContent({ supabase }: { supabase: any }): JSX.Element {
         {/* Note confidentialité */}
         <p className="text-xs text-gray-500 text-center mt-6">
           Votre email ne sera jamais partagé.<br />
-          <span className="italic">Besoin d'aide ? Contactez-nous.</span>
+          <span className="italic">{t('auth.besoin_daide_contacteznous')}</span>
         </p>
       </div>
     </div>

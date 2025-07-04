@@ -38,7 +38,7 @@ export function createApiResponse<T>(
   return new Response(JSON.stringify(responseWithMeta), {
     status,
     headers: {
-      'Content-Type': 'application/json'
+      "api-response.apiresponseapiresponsecontentt": 'application/json'
     }
   });
 }

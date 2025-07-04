@@ -23,34 +23,34 @@ export default function TermsPage() {
       icon: <Image src="/assets/images/icon-file.svg" alt="Fichier" width={32} height={32} className="text-primary" />, 
       title: "Acceptation des Conditions",
       description:
-        "En accédant et en utilisant les services DazLng, vous acceptez d'être lié par ces Conditions d'Utilisation. Si vous n'êtes pas d'accord, veuillez ne pas utiliser nos services.",
+        "common.commoncommonen_accdant_et_en_u"être lié par ces Conditions d'Utilisation. Si vous n'êtes pas d'accord, veuillez ne pas utiliser nos services.",
     },
     {
       icon: <Image src="/assets/images/icon-shield.svg" alt="Bouclier" width={32} height={32} className="text-secondary" />, 
       title: "Responsabilités de l'Utilisateur",
       description:
-        "Vous êtes responsable de la sécurité de votre compte, de vos clés privées et de toutes les activités qui se produisent sous votre compte.",
+        "common.commoncommonvous_tes_responsab",
     },
     {
       icon: <Image src="/assets/images/icon-alert.svg" alt="Alerte" width={32} height={32} className="text-warning" />, 
       title: "Limitations du Service",
       description:
-        "Nos services sont fournis 'tels quels' sans garanties. Nous ne sommes pas responsables des pertes encourues lors de l'utilisation de notre plateforme.",
+        "common.commoncommonnos_services_sont_"tels quels' sans garanties. Nous ne sommes pas responsables des pertes encourues lors de l'utilisation de notre plateforme.",
     },
   ];
 
   const allowedActivities = [
     {
       icon: <Image src="/assets/images/icon-check.svg" alt="Valide" width={22} height={22} className="text-green-500" />,
-      text: "Utiliser la plateforme pour des transactions légitimes sur le Lightning Network",
+      text: "common.commoncommonutiliser_la_platef",
     },
     {
       icon: <Image src="/assets/images/icon-check.svg" alt="Valide" width={22} height={22} className="text-green-500" />,
-      text: "Gérer votre propre nœud et vos canaux",
+      text: "common.commoncommongrer_votre_propre_",
     },
     {
       icon: <Image src="/assets/images/icon-check.svg" alt="Valide" width={22} height={22} className="text-green-500" />,
-      text: "Participer à la communauté et fournir des retours d'expérience",
+      text: "common.commoncommonparticiper_la_comm"expérience",
     },
   ];
 
@@ -61,11 +61,11 @@ export default function TermsPage() {
     },
     {
       icon: <Image src="/assets/images/icon-x.svg" alt="Interdit" width={22} height={22} className="text-red-500" />,
-      text: "Tenter de compromettre la sécurité du réseau",
+      text: "common.commoncommontenter_de_comprome",
     },
     {
       icon: <Image src="/assets/images/icon-x.svg" alt="Interdit" width={22} height={22} className="text-red-500" />,
-      text: "Utiliser le service pour du spam ou des activités malveillantes",
+      text: "common.commoncommonutiliser_le_servic",
     },
   ];
 
@@ -83,7 +83,7 @@ export default function TermsPage() {
           />
           
           <h1 className="text-4xl md:text-6xl font-bold text-white animate-fade-in">
-            <span className="bg-gradient-to-r from-yellow-300 via-pink-400 to-yellow-400 text-transparent bg-clip-text">Conditions d'Utilisation</span>
+            <span className="bg-gradient-to-r from-yellow-300 via-pink-400 to-yellow-400 text-transparent bg-clip-text">{t('common.conditions_dutilisation')}</span>
           </h1>
           
           <div 
@@ -114,7 +114,7 @@ export default function TermsPage() {
               data-aos-delay="800"
             >
               <div className="overflow-hidden relative h-6">
-                <span className="inline-block transform group-hover:-translate-y-full transition-transform duration-300 ease-in-out">Découvrir</span>
+                <span className="inline-block transform group-hover:-translate-y-full transition-transform duration-300 ease-in-out">{t('common.dcouvrir')}</span>
                 <span className="inline-block transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out absolute left-0 top-0">Explorer</span>
               </div>
               <div className="mt-3 w-12 h-12 rounded-full bg-yellow-300 text-indigo-700 flex items-center justify-center overflow-hidden group-hover:bg-yellow-200 transition-colors">
@@ -157,7 +157,7 @@ export default function TermsPage() {
             <div className="grid md:grid-cols-2 gap-8">
               <div className="bg-gradient-to-br from-green-400 via-cyan-500 to-indigo-500 rounded-2xl shadow-xl overflow-hidden" data-aos="fade-right">
                 <div className="p-8">
-                  <h3 className="text-2xl font-bold text-white mb-6 text-center">Activités Autorisées</h3>
+                  <h3 className="text-2xl font-bold text-white mb-6 text-center">{t('common.activits_autorises')}</h3>
                   <ul className="space-y-4">
                     {allowedActivities.map((item: any, idx: any) => (
                       <li key={idx} className="flex items-start bg-white/10 p-4 rounded-xl">
@@ -175,7 +175,7 @@ export default function TermsPage() {
               
               <div className="bg-gradient-to-br from-red-500 via-pink-500 to-purple-600 rounded-2xl shadow-xl overflow-hidden" data-aos="fade-left">
                 <div className="p-8">
-                  <h3 className="text-2xl font-bold text-white mb-6 text-center">Activités Interdites</h3>
+                  <h3 className="text-2xl font-bold text-white mb-6 text-center">{t('common.activits_interdites')}</h3>
                   <ul className="space-y-4">
                     {prohibitedActivities.map((item: any, idx: any) => (
                       <li key={idx} className="flex items-start bg-white/10 p-4 rounded-xl">
@@ -200,7 +200,7 @@ export default function TermsPage() {
           </div>
           <div className="container mx-auto px-4 py-16 sm:py-20 md:py-24">
             <div className="max-w-4xl mx-auto">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-center" data-aos="fade-up">Modifications du Service</h2>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-center" data-aos="fade-up">{t('common.modifications_du_service')}</h2>
               <p className="text-lg sm:text-xl md:text-2xl mb-8 text-indigo-100 text-center" data-aos="fade-up" data-aos-delay="100">
                 Nous nous réservons le droit de modifier ou d'interrompre toute partie de nos services à tout moment. Nous informerons des changements importants via notre plateforme ou par email.
               </p>

@@ -406,8 +406,8 @@ export class DazNodeRecommendationService {
       <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 8px;">
         <h3 style="color: #1a1a1a; margin-bottom: 10px;">${rec.content.title}</h3>
         <p style="color: #4a4a4a; margin-bottom: 10px;">${rec.content.description}</p>
-        <p><strong>Impact:</strong> ${rec.content.impact}</p>
-        <p><strong>Actions recommandées:</strong></p>
+        <p><strong>{t('daznode-recommendation-service.impact')}</strong> ${rec.content.impact}</p>
+        <p><strong>{t('daznode-recommendation-service.actions_recommandes')}</strong></p>
         <ul>
           ${rec.content.actions.map((action: string) => `<li>${action}</li>`).join('')}
         </ul>
@@ -419,11 +419,11 @@ export class DazNodeRecommendationService {
       cc: 'admin@dazno.de',
       subject: '🚀 Vos recommandations DazNode personnalisées',
       html: `
-        <h2>Vos recommandations DazNode</h2>
+        <h2>{t('daznode-recommendation-service.vos_recommandations_daznode')}</h2>
         <p>Suite à l'analyse approfondie de votre nœud (${subscription.pubkey}), voici vos recommandations personnalisées :</p>
         ${recsHtml}
-        <p>Ces recommandations ont été validées par notre équipe d'experts.</p>
-        <p>N'hésitez pas à nous contacter pour toute question !</p>
+        <p>{t('daznode-recommendation-service.ces_recommandations_ont_t_vali')}</p>
+        <p>{t('daznode-recommendation-service.nhsitez_pas_nous_contacter_pou')}</p>
       `
     });
   }

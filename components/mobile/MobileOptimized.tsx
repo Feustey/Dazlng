@@ -85,7 +85,7 @@ export const MobileOptimizedPricing: React.FC<MobileOptimizedPricingProps> = ({ 
             <div className="text-4xl font-bold text-yellow-400 font-mono">
               {formatSatsPrice(selectedTier.price + (selectedTier.price * (selectedTier.commission || 0) / 100))}
             </div>
-            <div className="text-gray-400">/mois</div>
+            <div className="text-gray-400">{t('MobileOptimized.mois')}</div>
             <div className="text-sm text-green-400 font-mono mt-1">
               Prix: {formatSatsPrice(selectedTier.price)} + commission {selectedTier.commission || 0}%
             </div>
@@ -103,7 +103,7 @@ export const MobileOptimizedPricing: React.FC<MobileOptimizedPricingProps> = ({ 
 
           {/* Features List */}
           <div className="features-list mb-6">
-            <h4 className="text-white font-semibold mb-3">Inclus dans ce plan :</h4>
+            <h4 className="text-white font-semibold mb-3">{t('MobileOptimized.inclus_dans_ce_plan_')}</h4>
             <div className="space-y-2">
               {selectedTier.features.map((feature, index) => (
                 <div key={index} className="flex items-center text-gray-300">
@@ -116,7 +116,7 @@ export const MobileOptimizedPricing: React.FC<MobileOptimizedPricingProps> = ({ 
 
           {/* Comparison Quick View */}
           <div className="comparison-preview bg-gray-800/50 rounded-lg p-4 mb-6">
-            <h5 className="text-white font-medium mb-3 text-center">Comparaison rapide</h5>
+            <h5 className="text-white font-medium mb-3 text-center">{t('MobileOptimized.comparaison_rapide')}</h5>
             <div className="grid grid-cols-3 gap-3 text-xs">
               {pricingTiers.map(tier => (
                 <div key={tier.name} className={`text-center p-2 rounded ${
@@ -166,7 +166,7 @@ export const MobileOptimizedPricing: React.FC<MobileOptimizedPricingProps> = ({ 
         <div className="flex justify-center items-center space-x-4 text-xs text-gray-400 mb-4">
           <div className="flex items-center">
             <span className="text-green-400 mr-1">🔒</span>
-            <span>Sécurisé</span>
+            <span>{t('MobileOptimized.scuris')}</span>
           </div>
           <div className="flex items-center">
             <span className="text-blue-400 mr-1">⚡</span>
@@ -206,7 +206,7 @@ export const MobileHero: React.FC = () => {
 
       const response = await fetch('/api/newsletter/subscribe', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "MobileOptimized.mobileoptimizedmobileoptimized": 'application/json' },
         body: JSON.stringify({ email, source: 'mobile_hero' })
       });
 
@@ -235,11 +235,11 @@ export const MobileHero: React.FC = () => {
         <div className="flex justify-center items-center space-x-4 mb-6 text-xs text-gray-400">
           <div className="flex items-center">
             <div className="w-2 h-2 bg-green-400 rounded-full mr-1 animate-pulse"></div>
-            <span>847+ nodes</span>
+            <span>{t('MobileOptimized.847_nodes')}</span>
           </div>
           <div className="flex items-center">
             <span className="text-yellow-400 mr-1">⚡</span>
-            <span>156 force-closes évités</span>
+            <span>{t('MobileOptimized.156_forcecloses_vits')}</span>
           </div>
         </div>
 
@@ -255,32 +255,32 @@ export const MobileHero: React.FC = () => {
         {/* Subheadline */}
         <p className="text-lg text-gray-300 mb-6">
           Prédisez et évitez les force-closes{' '}
-          <strong className="text-yellow-400">6h à l'avance</strong>
+          <strong className="text-yellow-400">{t('MobileOptimized.6h_lavance')}</strong>
         </p>
 
         {/* Key Benefits - Mobile Optimized */}
         <div className="grid grid-cols-2 gap-3 mb-8">
           <div className="bg-gray-800/50 rounded-lg p-3 text-left">
             <div className="text-yellow-400 text-lg mb-1">🔮</div>
-            <div className="text-white text-sm font-medium">Prédiction IA</div>
-            <div className="text-gray-400 text-xs">6h d'avance</div>
+            <div className="text-white text-sm font-medium">{t('MobileOptimized.prdiction_ia')}</div>
+            <div className="text-gray-400 text-xs">{t('MobileOptimized.6h_davance')}</div>
           </div>
           
           <div className="bg-gray-800/50 rounded-lg p-3 text-left">
             <div className="text-green-400 text-lg mb-1">⚡</div>
-            <div className="text-white text-sm font-medium">+40% revenus</div>
-            <div className="text-gray-400 text-xs">Routing optimisé</div>
+            <div className="text-white text-sm font-medium">{t('MobileOptimized.40_revenus')}</div>
+            <div className="text-gray-400 text-xs">{t('MobileOptimized.routing_optimis')}</div>
           </div>
           
           <div className="bg-gray-800/50 rounded-lg p-3 text-left">
             <div className="text-purple-400 text-lg mb-1">📊</div>
-            <div className="text-white text-sm font-medium">Analytics 24/7</div>
-            <div className="text-gray-400 text-xs">Temps réel</div>
+            <div className="text-white text-sm font-medium">{t('MobileOptimized.analytics_247')}</div>
+            <div className="text-gray-400 text-xs">{t('MobileOptimized.temps_rel')}</div>
           </div>
           
           <div className="bg-gray-800/50 rounded-lg p-3 text-left">
             <div className="text-blue-400 text-lg mb-1">🛡️</div>
-            <div className="text-white text-sm font-medium">Alertes Smart</div>
+            <div className="text-white text-sm font-medium">{t('MobileOptimized.alertes_smart')}</div>
             <div className="text-gray-400 text-xs">WhatsApp</div>
           </div>
         </div>
@@ -292,7 +292,7 @@ export const MobileHero: React.FC = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="votre@email.com"
+              placeholder="MobileOptimized.mobileoptimizedmobileoptimized"
               className="w-full bg-gray-800 border border-gray-600 text-white px-4 py-3 rounded-lg focus:border-yellow-400 focus:outline-none text-center"
               required
             />

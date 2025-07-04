@@ -74,7 +74,7 @@ const MobileBurgerMenu: React.FC<MobileBurgerMenuProps> = ({
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="md:hidden flex items-center justify-center w-10 h-10 rounded-lg hover:bg-gray-100 transition-colors duration-200"
-        aria-label="Menu de navigation"
+        aria-label="user.userusermenu_de_navigation"
       >
         <div className="w-6 h-6 flex flex-col justify-center items-center">
           <span className={`bg-gray-600 block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${
@@ -110,7 +110,7 @@ const MobileBurgerMenu: React.FC<MobileBurgerMenuProps> = ({
               </div>
               <div>
                 <h2 className="text-white font-bold text-lg">DazNode</h2>
-                <p className="text-purple-100 text-xs">Lightning Dashboard</p>
+                <p className="text-purple-100 text-xs">{t('user.lightning_dashboard')}</p>
               </div>
             </div>
             <button
@@ -133,7 +133,7 @@ const MobileBurgerMenu: React.FC<MobileBurgerMenuProps> = ({
                 <p className="text-sm font-medium text-gray-900 truncate">
                   {userEmail}
                 </p>
-                <p className="text-xs text-gray-500">Utilisateur connecté</p>
+                <p className="text-xs text-gray-500">{t('user.utilisateur_connect')}</p>
               </div>
             </div>
           </div>
@@ -212,7 +212,7 @@ const MobileBurgerMenu: React.FC<MobileBurgerMenuProps> = ({
               className="flex items-center space-x-4 w-full px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200 font-medium"
             >
               <span className="text-2xl">🚪</span>
-              <span>Se déconnecter</span>
+              <span>{t('user.se_dconnecter')}</span>
               <svg className="w-5 h-5 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
               </svg>

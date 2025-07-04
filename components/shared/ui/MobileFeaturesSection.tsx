@@ -1,6 +1,7 @@
 import React from 'react';
-import { Brain, Shield, Zap, TrendingUp, AlertTriangle, BarChart3, Settings, Clock } from 'lucide-react';
+
 import MobileAccordion from './MobileAccordion';
+import { Brain, Shield, Zap, TrendingUp, AlertTriangle, BarChart3, Settings, Clock } from '@/components/shared/ui/IconRegistry';
 
 const MobileFeaturesSection: React.FC = () => {
   const featureItems = [
@@ -15,8 +16,8 @@ const MobileFeaturesSection: React.FC = () => {
             avec une précision de 99.9%.
           </p>
           <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-3">
-            <p className="text-red-400 font-semibold text-sm">🛡️ Protection :</p>
-            <p className="text-xs">Évitez de perdre 2,500€ en moyenne par force-close</p>
+            <p className="text-red-400 font-semibold text-sm">{t('MobileFeaturesSection._protection_')}</p>
+            <p className="text-xs">{t('MobileFeaturesSection.vitez_de_perdre_2500_en_moyenn')}</p>
           </div>
         </div>
       )
@@ -32,8 +33,8 @@ const MobileFeaturesSection: React.FC = () => {
             sans intervention manuelle.
           </p>
           <div className="bg-green-900/20 border border-green-500/30 rounded-lg p-3">
-            <p className="text-green-400 font-semibold text-sm">📈 Résultat :</p>
-            <p className="text-xs">+45% de revenus en moyenne vs optimisation manuelle</p>
+            <p className="text-green-400 font-semibold text-sm">{t('MobileFeaturesSection._rsultat_')}</p>
+            <p className="text-xs">{t('MobileFeaturesSection.45_de_revenus_en_moyenne_vs_op')}</p>
           </div>
         </div>
       )
@@ -49,8 +50,8 @@ const MobileFeaturesSection: React.FC = () => {
             Alertes instantanées en cas de problème.
           </p>
           <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-3">
-            <p className="text-blue-400 font-semibold text-sm">⏰ Disponibilité :</p>
-            <p className="text-xs">99.9% de temps de fonctionnement</p>
+            <p className="text-blue-400 font-semibold text-sm">{t('MobileFeaturesSection._disponibilit_')}</p>
+            <p className="text-xs">{t('MobileFeaturesSection.999_de_temps_de_fonctionnement')}</p>
           </div>
         </div>
       )
@@ -66,8 +67,8 @@ const MobileFeaturesSection: React.FC = () => {
             historique des revenus et recommandations personnalisées.
           </p>
           <div className="bg-purple-900/20 border border-purple-500/30 rounded-lg p-3">
-            <p className="text-purple-400 font-semibold text-sm">📊 Insights :</p>
-            <p className="text-xs">47 métriques différentes pour optimiser vos performances</p>
+            <p className="text-purple-400 font-semibold text-sm">{t('MobileFeaturesSection._insights_')}</p>
+            <p className="text-xs">{t('MobileFeaturesSection.47_mtriques_diffrentes_pour_op')}</p>
           </div>
         </div>
       )
@@ -83,8 +84,8 @@ const MobileFeaturesSection: React.FC = () => {
             Seulement les alertes importantes, pas de spam.
           </p>
           <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-3">
-            <p className="text-yellow-400 font-semibold text-sm">🔔 Smart :</p>
-            <p className="text-xs">Filtrage automatique des alertes non critiques</p>
+            <p className="text-yellow-400 font-semibold text-sm">{t('MobileFeaturesSection._smart_')}</p>
+            <p className="text-xs">{t('MobileFeaturesSection.filtrage_automatique_des_alert')}</p>
           </div>
         </div>
       )
@@ -100,8 +101,8 @@ const MobileFeaturesSection: React.FC = () => {
             conformité RGPD et audit de sécurité régulier.
           </p>
           <div className="bg-[#00D4AA]/10 border border-[#00D4AA]/20 rounded-lg p-3">
-            <p className="text-[#00D4AA] font-semibold text-sm">🔒 Sécurisé :</p>
-            <p className="text-xs">Aucun accès à vos fonds, données chiffrées</p>
+            <p className="text-[#00D4AA] font-semibold text-sm">{t('MobileFeaturesSection._scuris_')}</p>
+            <p className="text-xs">{t('MobileFeaturesSection.aucun_accs_vos_fonds_donnes_ch')}</p>
           </div>
         </div>
       )
@@ -113,7 +114,7 @@ const MobileFeaturesSection: React.FC = () => {
       <div className="max-w-6xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Fonctionnalités <span className="text-[#00D4AA]">Avancées</span>
+            Fonctionnalités <span className="text-[#00D4AA]">{t('MobileFeaturesSection.avances')}</span>
           </h2>
           <p className="text-gray-300">
             Découvrez comment notre IA révolutionne la gestion de nœuds Lightning

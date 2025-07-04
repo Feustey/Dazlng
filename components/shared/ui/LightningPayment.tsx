@@ -6,7 +6,8 @@ import type { InvoiceStatus } from '@/types/lightning';
 import { Button } from '@/components/shared/ui';
 import { toast } from 'sonner';
 import QRCode from 'react-qr-code';
-import { Loader2 } from 'lucide-react';
+import { Loader2 } from '@/components/shared/ui/IconRegistry';
+
 
 interface LightningPaymentProps {
   amount: number;
@@ -70,7 +71,7 @@ const LightningPayment: React.FC<LightningPaymentProps> = ({
       const response = await fetch('/api/create-invoice', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          "LightningPayment.lightningpaymentlightningpayme": 'application/json',
         },
         body: JSON.stringify({
           amount,
@@ -108,7 +109,7 @@ const LightningPayment: React.FC<LightningPaymentProps> = ({
       const response = await fetch('/api/check-invoice', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          "LightningPayment.lightningpaymentlightningpayme": 'application/json',
         },
         body: JSON.stringify({ payment_hash: paymentHash }),
       });
@@ -186,11 +187,11 @@ const LightningPayment: React.FC<LightningPaymentProps> = ({
               <div className="text-2xl font-bold text-orange-600 mb-2">
                 {formatTime(timeLeft)}
               </div>
-              <p className="text-sm text-gray-500">Temps restant</p>
+              <p className="text-sm text-gray-500">{t('LightningPayment.temps_restant')}</p>
             </div>
 
             <div className="bg-gray-50 p-4 rounded-md">
-              <p className="text-sm text-gray-600 mb-2">Adresse de paiement :</p>
+              <p className="text-sm text-gray-600 mb-2">{t('LightningPayment.adresse_de_paiement_')}</p>
               <div className="flex items-center space-x-2">
                 <input
                   type="text"
@@ -209,7 +210,7 @@ const LightningPayment: React.FC<LightningPaymentProps> = ({
 
             <div className="text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600 mx-auto"></div>
-              <p className="text-sm text-gray-500 mt-2">En attente du paiement...</p>
+              <p className="text-sm text-gray-500 mt-2">{t('LightningPayment.en_attente_du_paiement')}</p>
             </div>
           </div>
         </div>

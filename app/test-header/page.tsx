@@ -18,21 +18,21 @@ export default function TestHeaderPage() {
           </p>
           <div className="grid md:grid-cols-2 gap-6 text-left bg-white/10 backdrop-blur-sm rounded-lg p-8">
             <div>
-              <h3 className="text-xl font-semibold mb-4">✅ Fonctionnalités</h3>
+              <h3 className="text-xl font-semibold mb-4">{t('common._fonctionnalits')}</h3>
               <ul className="space-y-2 text-sm">
-                <li>🧭 Navigation complète</li>
-                <li>📱 Menu mobile animé</li>
-                <li>🎨 Effets de scroll</li>
-                <li>♿ Accessibilité ARIA</li>
+                <li>{t('common._navigation_complte')}</li>
+                <li>{t('common._menu_mobile_anim')}</li>
+                <li>{t('common._effets_de_scroll')}</li>
+                <li>{t('common._accessibilit_aria')}</li>
               </ul>
             </div>
             <div>
-              <h3 className="text-xl font-semibold mb-4">🛠️ Corrections</h3>
+              <h3 className="text-xl font-semibold mb-4">{t('common.corrections')}</h3>
               <ul className="space-y-2 text-sm">
-                <li>✅ Erreurs d'hydration corrigées</li>
-                <li>✅ Warnings image résolus</li>
-                <li>✅ Performance optimisée</li>
-                <li>✅ Code robuste et maintenable</li>
+                <li>{t('common._erreurs_dhydration_corriges')}</li>
+                <li>{t('common._warnings_image_rsolus')}</li>
+                <li>{t('common._performance_optimise')}</li>
+                <li>{t('common._code_robuste_et_maintenable')}</li>
               </ul>
             </div>
           </div>
@@ -42,7 +42,7 @@ export default function TestHeaderPage() {
       {/* Sections pour tester le scroll */}
       <section className="py-20 bg-white">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">Test du Scroll</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">{t('common.test_du_scroll')}</h2>
           <p className="text-gray-600 text-lg">
             Scrollez pour voir le header changer d'apparence de manière fluide.
           </p>
@@ -60,7 +60,7 @@ export default function TestHeaderPage() {
 
       <section className="py-20 bg-white">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">Accessibilité</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">{t('common.accessibilit')}</h2>
           <p className="text-gray-600 text-lg">
             Le header est maintenant entièrement accessible avec les attributs ARIA appropriés.
           </p>
@@ -70,7 +70,7 @@ export default function TestHeaderPage() {
       {/* Footer simple */}
       <footer className="py-20 bg-gray-900 text-white text-center">
         <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-2xl font-bold mb-4">🎉 Header Parfaitement Fonctionnel</h2>
+          <h2 className="text-2xl font-bold mb-4">{t('common._header_parfaitement_fonctionn')}</h2>
           <p className="text-gray-300 mb-6">
             Toutes les améliorations ont été implémentées avec succès !
           </p>

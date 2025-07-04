@@ -1,7 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
-import { Gauge, TrendingUp, Zap, BarChart3 } from 'lucide-react';
+import { Gauge, TrendingUp, Zap, BarChart3 } from '@/components/shared/ui/IconRegistry';
+
 
 const DazFlowShowcase: React.FC = () => {
   const locale = useLocale();
@@ -32,36 +33,36 @@ const DazFlowShowcase: React.FC = () => {
             <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
               <TrendingUp className="h-6 w-6 text-blue-600" />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-3">Analyse Prédictive</h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-3">{t('DazFlowShowcase.analyse_prdictive')}</h3>
             <p className="text-gray-600 mb-4">
               Notre IA analyse les patterns de trafic pour prédire les opportunités de routing optimales.
             </p>
             <div className="text-2xl font-bold text-blue-600">+45%</div>
-            <div className="text-sm text-gray-500">Amélioration des revenus</div>
+            <div className="text-sm text-gray-500">{t('DazFlowShowcase.amlioration_des_revenus')}</div>
           </div>
 
           <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
             <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
               <Zap className="h-6 w-6 text-purple-600" />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-3">Optimisation Temps Réel</h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-3">{t('DazFlowShowcase.optimisation_temps_rel')}</h3>
             <p className="text-gray-600 mb-4">
               Ajustement automatique des paramètres de frais et de liquidité pour maximiser les profits.
             </p>
             <div className="text-2xl font-bold text-purple-600">99.9%</div>
-            <div className="text-sm text-gray-500">Précision d'analyse</div>
+            <div className="text-sm text-gray-500">{t('DazFlowShowcase.prcision_danalyse')}</div>
           </div>
 
           <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
             <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-6">
               <BarChart3 className="h-6 w-6 text-green-600" />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-3">Métriques Avancées</h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-3">{t('DazFlowShowcase.mtriques_avances')}</h3>
             <p className="text-gray-600 mb-4">
               Tableaux de bord détaillés avec métriques de performance et alertes intelligentes.
             </p>
             <div className="text-2xl font-bold text-green-600">24/7</div>
-            <div className="text-sm text-gray-500">Monitoring continu</div>
+            <div className="text-sm text-gray-500">{t('DazFlowShowcase.monitoring_continu')}</div>
           </div>
         </div>
 

@@ -98,7 +98,7 @@ const ApiStatusWidget: React.FC = ({ className = '' }: ApiStatusWidgetProps) => 
       {apiStatus === 'down' && (
         <div className="mt-3 p-3 bg-yellow-50 rounded-lg">
           <p className="text-sm text-yellow-800">
-            <span className="font-medium">Mode dégradé :</span> Les données affichées sont des exemples. 
+            <span className="font-medium">{t('user.mode_dgrad_')}</span> Les données affichées sont des exemples. 
             Reconnectez votre nœud pour accéder aux vraies recommandations IA.
           </p>
         </div>

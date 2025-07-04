@@ -46,13 +46,13 @@ export default function PerformanceExample(): JSX.Element {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Exemple d'optimisations de performance</h1>
+      <h1 className="text-3xl font-bold mb-6">{t('PerformanceExample.exemple_doptimisations_de_perf')}</h1>
       
       {/* Barre de recherche */}
       <div className="mb-6">
         <input
           type="text"
-          placeholder="Rechercher..."
+          placeholder="PerformanceExample.performanceexampleperformancee"
           value={searchTerm}
           onChange={(e: any) => setSearchTerm(e.target.value)}
           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -61,10 +61,10 @@ export default function PerformanceExample(): JSX.Element {
 
       {/* Image optimisée avec lazy loading */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Image optimisée</h2>
+        <h2 className="text-xl font-semibold mb-4">{t('PerformanceExample.image_optimise')}</h2>
         <OptimizedImage
           src="https://picsum.photos/800/400"
-          alt="Image d'exemple"
+          alt="PerformanceExample.performanceexampleperformancee"exemple"
           width={800}
           height={400}
           className="rounded-lg shadow-lg"
@@ -108,7 +108,7 @@ export default function PerformanceExample(): JSX.Element {
           }
           loadingComponent={
             <div className="flex items-center justify-center p-4">
-              <div className="animate-pulse text-blue-500">Chargement...</div>
+              <div className="animate-pulse text-blue-500">{t('PerformanceExample.chargement')}</div>
             </div>
           }
         />
@@ -120,13 +120,13 @@ export default function PerformanceExample(): JSX.Element {
           Optimisations implémentées
         </h3>
         <ul className="space-y-2 text-blue-800">
-          <li>✅ Images optimisées avec Next.js Image et lazy loading</li>
-          <li>✅ Liste virtualisée avec pagination automatique</li>
-          <li>✅ Cache côté client avec TTL configurable</li>
-          <li>✅ Service Worker pour la mise en cache offline</li>
-          <li>✅ Web Vitals monitoring</li>
-          <li>✅ Préchargement des ressources critiques</li>
-          <li>✅ Compression et minification automatiques</li>
+          <li>{t('PerformanceExample._images_optimises_avec_nextjs_')}</li>
+          <li>{t('PerformanceExample._liste_virtualise_avec_paginat')}</li>
+          <li>{t('PerformanceExample._cache_ct_client_avec_ttl_conf')}</li>
+          <li>{t('PerformanceExample._service_worker_pour_la_mise_e')}</li>
+          <li>{t('PerformanceExample._web_vitals_monitoring')}</li>
+          <li>{t('PerformanceExample._prchargement_des_ressources_c')}</li>
+          <li>{t('PerformanceExample._compression_et_minification_a')}</li>
         </ul>
       </div>
     </div>

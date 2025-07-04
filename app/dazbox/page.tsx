@@ -115,7 +115,7 @@ const dazBoxStructuredData = {
       },
       "author": {
         "@type": "Person",
-        "name": "Bitcoin Expert"
+        "name": "common.bitcoin_expert"
       },
       "reviewBody": "DazBox simplifie vraiment l'accès au Lightning Network. Installation en 5 minutes et revenus dès le premier jour.",
       "datePublished": "2024-12-15"
@@ -129,7 +129,7 @@ const dazBoxStructuredData = {
       },
       "author": {
         "@type": "Person",
-        "name": "Lightning Developer"
+        "name": "common.lightning_developer"
       },
       "reviewBody": "Matériel de qualité, interface intuitive. Parfait pour débuter avec Lightning Network.",
       "datePublished": "2024-12-20"
@@ -185,7 +185,7 @@ const dazBoxStructuredData = {
 
 export const metadata: Metadata = {
   title: 'DazBox | Solution Lightning Network Plug & Play',
-  description: 'DazBox simplifie le réseau Lightning avec une solution plug & play. Déployez votre nœud Lightning en 5 minutes, gagnez des sats et participez à l\'économie Bitcoin.',
+  description: "common.commoncommondazbox_simplifie_l"économie Bitcoin.',
   keywords: [
     'DazBox',
     'Lightning Network',
@@ -207,7 +207,7 @@ export const metadata: Metadata = {
     locale: 'fr_FR',
     url: `${seoConfig.baseUrl}/dazbox`,
     title: 'DazBox | Solution Lightning Network Plug & Play',
-    description: 'DazBox simplifie le réseau Lightning avec une solution plug & play. Déployez votre nœud Lightning en 5 minutes, gagnez des sats et participez à l\'économie Bitcoin.',
+    description: "common.commoncommondazbox_simplifie_l"économie Bitcoin.',
     siteName: 'DazNode',
     images: [
       {
@@ -221,7 +221,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'DazBox | Solution Lightning Network Plug & Play',
-    description: 'DazBox simplifie le réseau Lightning avec une solution plug & play. Déployez votre nœud Lightning en 5 minutes.',
+    description: "common.commoncommondazbox_simplifie_l",
     images: [`${seoConfig.baseUrl}/assets/images/dazbox-og.png`],
     creator: '@daznode'
   },
@@ -276,7 +276,7 @@ const DazBoxPage: React.FC = () => {
             <div className="bg-white p-6 rounded-xl shadow-lg">
               <div className="flex items-center mb-4">
                 <div className="text-yellow-400 text-2xl">★★★★★</div>
-                <span className="ml-2 text-sm text-gray-600">Bitcoin Expert</span>
+                <span className="ml-2 text-sm text-gray-600">{t('common.bitcoin_expert')}</span>
               </div>
               <p className="text-gray-700">
                 "DazBox simplifie vraiment l'accès au Lightning Network. Installation en 5 minutes et revenus dès le premier jour."
@@ -287,7 +287,7 @@ const DazBoxPage: React.FC = () => {
             <div className="bg-white p-6 rounded-xl shadow-lg">
               <div className="flex items-center mb-4">
                 <div className="text-yellow-400 text-2xl">★★★★★</div>
-                <span className="ml-2 text-sm text-gray-600">Lightning Developer</span>
+                <span className="ml-2 text-sm text-gray-600">{t('common.lightning_developer')}</span>
               </div>
               <p className="text-gray-700">
                 "Matériel de qualité, interface intuitive. Parfait pour débuter avec Lightning Network."
@@ -298,7 +298,7 @@ const DazBoxPage: React.FC = () => {
             <div className="bg-white p-6 rounded-xl shadow-lg">
               <div className="flex items-center mb-4">
                 <div className="text-yellow-400 text-2xl">★★★★★</div>
-                <span className="ml-2 text-sm text-gray-600">Crypto Enthusiast</span>
+                <span className="ml-2 text-sm text-gray-600">{t('common.crypto_enthusiast')}</span>
               </div>
               <p className="text-gray-700">
                 "Support client exceptionnel et revenus passifs qui dépassent mes attentes. Je recommande !"
@@ -384,19 +384,19 @@ const DazBoxPage: React.FC = () => {
               <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              <span>Garantie 30 jours</span>
+              <span>{t('common.garantie_30_jours')}</span>
             </div>
             <div className="flex items-center gap-2">
               <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              <span>Livraison gratuite</span>
+              <span>{t('common.livraison_gratuite')}</span>
             </div>
             <div className="flex items-center gap-2">
               <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              <span>Support 24/7</span>
+              <span>{t('common.support_247')}</span>
             </div>
           </div>
         </div>

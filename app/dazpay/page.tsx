@@ -90,7 +90,7 @@ const dazPayStructuredData = {
     "Terminal de paiement Lightning",
     "Interface d'encaissement simple", 
     "Dashboard marchand complet",
-    "Conversion automatique BTC/EUR",
+    "common.conversion_automatique_btceur",
     "API pour intégrations e-commerce",
     "Support multidevice",
     "Paiements instantanés",
@@ -140,7 +140,7 @@ const dazPayStructuredData = {
 
 export const metadata: Metadata = {
   title: 'DazPay | Terminal de Paiement Lightning Network',
-  description: 'Acceptez les paiements Bitcoin Lightning en quelques minutes. Terminal moderne, dashboard marchand et conversion automatique BTC/EUR pour tous les commerces.',
+  description: "common.commoncommonacceptez_les_paiem",
   keywords: [
     'dazpay',
     'paiement lightning',
@@ -158,7 +158,7 @@ export const metadata: Metadata = {
   publisher: 'DazNode',
   openGraph: {
     title: 'DazPay | Terminal de Paiement Lightning Network',
-    description: 'Acceptez les paiements Bitcoin Lightning en quelques minutes. Terminal moderne, dashboard marchand et conversion automatique BTC/EUR.',
+    description: "common.commoncommonacceptez_les_paiem",
     url: `${seoConfig.baseUrl}/dazpay`,
     siteName: 'DazNode',
     type: 'website',
@@ -174,7 +174,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'DazPay | Terminal de Paiement Lightning Network',
-    description: 'Acceptez les paiements Bitcoin Lightning en quelques minutes. Terminal moderne pour tous les commerces.',
+    description: "common.commoncommonacceptez_les_paiem",
     images: [`${seoConfig.baseUrl}/assets/images/dazpay-og.png`]
   },
   robots: {
@@ -184,7 +184,7 @@ export const metadata: Metadata = {
       index: true,
       follow: true,
       'max-video-preview': -1,
-      'max-image-preview': 'large',
+      "common.commoncommonmaximagepreview": 'large',
       'max-snippet': -1,
     },
   },
@@ -226,7 +226,7 @@ const DazPayPage: React.FC = () => {
             {/* Feature 1 */}
             <div className="bg-white p-6 rounded-xl shadow-lg">
               <div className="text-blue-600 text-3xl mb-4">⚡</div>
-              <h3 className="text-xl font-semibold mb-3">Paiements Instantanés</h3>
+              <h3 className="text-xl font-semibold mb-3">{t('common.paiements_instantans')}</h3>
               <p className="text-gray-600">
                 Transactions Lightning Network en quelques secondes, sans confirmation Bitcoin.
               </p>
@@ -235,7 +235,7 @@ const DazPayPage: React.FC = () => {
             {/* Feature 2 */}
             <div className="bg-white p-6 rounded-xl shadow-lg">
               <div className="text-green-600 text-3xl mb-4">💱</div>
-              <h3 className="text-xl font-semibold mb-3">Conversion Automatique</h3>
+              <h3 className="text-xl font-semibold mb-3">{t('common.conversion_automatique')}</h3>
               <p className="text-gray-600">
                 Conversion BTC/EUR automatique pour éviter la volatilité du Bitcoin.
               </p>
@@ -244,7 +244,7 @@ const DazPayPage: React.FC = () => {
             {/* Feature 3 */}
             <div className="bg-white p-6 rounded-xl shadow-lg">
               <div className="text-purple-600 text-3xl mb-4">📊</div>
-              <h3 className="text-xl font-semibold mb-3">Dashboard Complet</h3>
+              <h3 className="text-xl font-semibold mb-3">{t('common.dashboard_complet')}</h3>
               <p className="text-gray-600">
                 Interface marchand avec analytics, rapports et gestion des transactions.
               </p>
@@ -270,9 +270,9 @@ const DazPayPage: React.FC = () => {
             <div className="bg-white rounded-3xl p-8 border-2 border-gray-200 relative">
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Standard</h3>
-                <p className="text-gray-600 mb-6">Parfait pour débuter</p>
-                <div className="text-4xl font-bold text-gray-900">1%<span className="text-lg text-gray-500"> par transaction</span></div>
-                <p className="text-sm text-gray-500 mt-2">0Sats de frais d'installation</p>
+                <p className="text-gray-600 mb-6">{t('common.parfait_pour_dbuter')}</p>
+                <div className="text-4xl font-bold text-gray-900">1%<span className="text-lg text-gray-500">{t('common._par_transaction')}</span></div>
+                <p className="text-sm text-gray-500 mt-2">{t('common.0sats_de_frais_dinstallation')}</p>
               </div>
               
               <ul className="space-y-4 mb-8">
@@ -280,25 +280,25 @@ const DazPayPage: React.FC = () => {
                   <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-gray-700">Terminal Lightning simple</span>
+                  <span className="text-gray-700">{t('common.terminal_lightning_simple')}</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-gray-700">Dashboard basique</span>
+                  <span className="text-gray-700">{t('common.dashboard_basique')}</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-gray-700">Support par email</span>
+                  <span className="text-gray-700">{t('common.support_par_email')}</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-gray-700">Intégration e-commerce</span>
+                  <span className="text-gray-700">{t('common.intgration_ecommerce')}</span>
                 </li>
               </ul>
               
@@ -317,9 +317,9 @@ const DazPayPage: React.FC = () => {
               
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold mb-2">Pro</h3>
-                <p className="text-orange-100 mb-6">Pour les commerces actifs</p>
-                <div className="text-3xl font-bold">15Sats<span className="text-lg text-orange-200">/mois</span></div>
-                <p className="text-sm text-orange-200 mt-1">+ 0.5% par transaction</p>
+                <p className="text-orange-100 mb-6">{t('common.pour_les_commerces_actifs')}</p>
+                <div className="text-3xl font-bold">15Sats<span className="text-lg text-orange-200">{t('common.mois')}</span></div>
+                <p className="text-sm text-orange-200 mt-1">{t('common._05_par_transaction')}</p>
               </div>
               
               <ul className="space-y-4 mb-8">
@@ -327,31 +327,31 @@ const DazPayPage: React.FC = () => {
                   <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  <span>Terminal avancé multidevice</span>
+                  <span>{t('common.terminal_avanc_multidevice')}</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  <span>Dashboard premium + analytics</span>
+                  <span>{t('common.dashboard_premium_analytics')}</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  <span>Support prioritaire 24/7</span>
+                  <span>{t('common.support_prioritaire_247')}</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  <span>API complète + webhooks</span>
+                  <span>{t('common.api_complte_webhooks')}</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  <span>Conversion automatique BTC/EUR</span>
+                  <span>{t('common.conversion_automatique_btceur')}</span>
                 </li>
               </ul>
               
@@ -391,19 +391,19 @@ const DazPayPage: React.FC = () => {
               <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              <span>Installation gratuite</span>
+              <span>{t('common.installation_gratuite')}</span>
             </div>
             <div className="flex items-center gap-2">
               <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              <span>Pas d'engagement</span>
+              <span>{t('common.pas_dengagement')}</span>
             </div>
             <div className="flex items-center gap-2">
               <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              <span>Support 24/7</span>
+              <span>{t('common.support_247')}</span>
             </div>
           </div>
         </div>

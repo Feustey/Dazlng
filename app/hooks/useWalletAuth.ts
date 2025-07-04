@@ -25,7 +25,7 @@ export function useWalletAuth(): WalletAuthState & {
       const response = await fetch('/api/auth/verify-wallet', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          "useWalletAuth.usewalletauthusewalletauthcont": 'application/json',
         },
         body: JSON.stringify({ address }),
       })

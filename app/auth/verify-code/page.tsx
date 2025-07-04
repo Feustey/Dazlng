@@ -59,7 +59,7 @@ function VerifyCodeForm(): JSX.Element {
         <div className="flex justify-center mb-6">
           <Image
             src="/assets/images/logo-daznode.svg"
-            alt="Logo DazNode"
+            alt="auth.authauthlogo_daznode"
             width={120}
             height={48}
             className="h-12 w-auto"
@@ -132,7 +132,7 @@ function VerifyCodeForm(): JSX.Element {
         {/* Note confidentialité */}
         <p className="text-xs text-gray-500 text-center mt-6">
           Le code expire dans 10 minutes.<br />
-          <span className="italic">Besoin d'aide ? Contactez-nous.</span>
+          <span className="italic">{t('auth.besoin_daide_contacteznous')}</span>
         </p>
       </div>
     </div>
@@ -141,7 +141,7 @@ function VerifyCodeForm(): JSX.Element {
 
 export default function VerifyCodePage(): JSX.Element {
   return (
-    <Suspense fallback={<div>Chargement...</div>}>
+    <Suspense fallback={<div>{t('auth.chargement')}</div>}>
       <VerifyCodeForm />
     </Suspense>
   );

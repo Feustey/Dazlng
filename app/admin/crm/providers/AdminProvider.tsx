@@ -214,54 +214,54 @@ const i18nProvider = {
   translate: (key: string) => {
     const translations: Record<string, string> = {
       // Actions générales
-      'ra.action.save': 'Enregistrer',
-      'ra.action.create': 'Créer',
-      'ra.action.edit': 'Modifier',
-      'ra.action.delete': 'Supprimer',
-      'ra.action.show': 'Afficher',
-      'ra.action.list': 'Liste',
-      'ra.action.add': 'Ajouter',
-      'ra.action.cancel': 'Annuler',
-      'ra.action.back': 'Retour',
-      'ra.action.refresh': 'Actualiser',
+      "admin.adminadminraactionsave": 'Enregistrer',
+      "admin.adminadminraactioncreate": 'Créer',
+      "admin.adminadminraactionedit": 'Modifier',
+      "admin.adminadminraactiondelete": 'Supprimer',
+      "admin.adminadminraactionshow": 'Afficher',
+      "admin.adminadminraactionlist": 'Liste',
+      "admin.adminadminraactionadd": 'Ajouter',
+      "admin.adminadminraactioncancel": 'Annuler',
+      "admin.adminadminraactionback": 'Retour',
+      "admin.adminadminraactionrefresh": 'Actualiser',
       
       // Navigation
-      'ra.navigation.no_results': 'Aucun résultat',
-      'ra.navigation.next': 'Suivant',
-      'ra.navigation.prev': 'Précédent',
-      'ra.navigation.page_out_of_boundaries': 'Page %{page} hors limites',
-      'ra.navigation.page_out_from_end': 'Impossible d\'aller au-delà de la dernière page',
-      'ra.navigation.page_out_from_begin': 'Impossible d\'aller avant la page 1',
+      "admin.adminadminranavigationno_resul": 'Aucun résultat',
+      "admin.adminadminranavigationnext": 'Suivant',
+      "admin.adminadminranavigationprev": 'Précédent',
+      "admin.adminadminranavigationpage_out": 'Page %{page} hors limites',
+      "admin.adminadminranavigationpage_out": 'Impossible d\'aller au-delà de la dernière page',
+      "admin.adminadminranavigationpage_out": 'Impossible d\'aller avant la page 1',
       
       // Messages
-      'ra.message.yes': 'Oui',
-      'ra.message.no': 'Non',
-      'ra.message.are_you_sure': 'Êtes-vous sûr ?',
-      'ra.message.bulk_delete_title': 'Supprimer %{name} |||| Supprimer %{smart_count} %{name}',
-      'ra.message.bulk_delete_content': 'Êtes-vous sûr de vouloir supprimer cet élément ? |||| Êtes-vous sûr de vouloir supprimer ces %{smart_count} éléments ?',
+      "admin.adminadminramessageyes": 'Oui',
+      "admin.adminadminramessageno": 'Non',
+      "admin.adminadminramessageare_you_sur": 'Êtes-vous sûr ?',
+      "admin.adminadminramessagebulk_delete": 'Supprimer %{name} |||| Supprimer %{smart_count} %{name}',
+      "admin.adminadminramessagebulk_delete": 'Êtes-vous sûr de vouloir supprimer cet élément ? |||| Êtes-vous sûr de vouloir supprimer ces %{smart_count} éléments ?',
       
       // Ressources CRM avec noms améliorés
-      'resources.profiles.name': 'Client |||| Clients',
-      'resources.crm_customer_segments.name': 'Segment Client |||| Segments Clients',
-      'resources.crm_email_campaigns.name': 'Campagne Email |||| Campagnes Email',
-      'resources.crm_email_templates.name': 'Template Email |||| Templates Email',
+      "admin.adminadminresourcesprofilesnam": 'Client |||| Clients',
+      "admin.adminadminresourcescrm_custome": 'Segment Client |||| Segments Clients',
+      "admin.adminadminresourcescrm_email_c": 'Campagne Email |||| Campagnes Email',
+      "admin.adminadminresourcescrm_email_t": 'Template Email |||| Templates Email',
       
       // Champs spécifiques
-      'resources.profiles.fields.id': 'ID',
-      'resources.profiles.fields.email': 'Email',
-      'resources.profiles.fields.nom': 'Nom',
-      'resources.profiles.fields.prenom': 'Prénom',
-      'resources.profiles.fields.created_at': 'Date création',
-      'resources.profiles.fields.t4g_tokens': 'Tokens T4G',
+      "admin.adminadminresourcesprofilesfie": 'ID',
+      "admin.adminadminresourcesprofilesfie": 'Email',
+      "admin.adminadminresourcesprofilesfie": 'Nom',
+      "admin.adminadminresourcesprofilesfie": 'Prénom',
+      "admin.adminadminresourcesprofilesfie": 'Date création',
+      "admin.adminadminresourcesprofilesfie": 'Tokens T4G',
       
       // Dashboard
-      'ra.page.dashboard': 'Tableau de bord',
+      "admin.adminadminrapagedashboard": 'Tableau de bord',
       
       // Formulaires
-      'ra.validation.required': 'Champ obligatoire',
-      'ra.validation.minLength': 'Doit contenir au moins %{min} caractères',
-      'ra.validation.maxLength': 'Doit contenir au maximum %{max} caractères',
-      'ra.validation.email': 'Doit être un email valide',
+      "admin.adminadminravalidationrequired": 'Champ obligatoire',
+      "admin.adminadminravalidationminlengt": 'Doit contenir au moins %{min} caractères',
+      "admin.adminadminravalidationmaxlengt": 'Doit contenir au maximum %{max} caractères',
+      "admin.adminadminravalidationemail": 'Doit être un email valide',
     };
     return translations[key] || key;
   },
@@ -281,7 +281,7 @@ const CRMAdminProvider: React.FC<CRMAdminProviderProps> = ({ children: _children
       i18nProvider={i18nProvider}
       dashboard={CRMDashboard}
       layout={CRMLayout}
-      title="DazNode CRM"
+      title="admin.adminadmindaznode_crm"
     >
       <Resource name="profiles" {...customerResource} />
       <Resource name="crm_customer_segments" {...segmentResource} />

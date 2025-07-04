@@ -45,14 +45,14 @@ export default async function TestSupabase(): Promise<JSX.Element> {
 
   return (
     <div className="container mx-auto p-8">
-      <h1 className="text-3xl font-bold mb-8">Diagnostic Supabase</h1>
+      <h1 className="text-3xl font-bold mb-8">{t('common.diagnostic_supabase')}</h1>
       
       {/* Test de connexion */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Test de connexion</h2>
+        <h2 className="text-xl font-semibold mb-4">{t('common.test_de_connexion')}</h2>
         <div className={`p-4 rounded ${connection.success ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
           {connection.success ? (
-            <span>✅ Connexion Supabase réussie</span>
+            <span>{t('common._connexion_supabase_russie')}</span>
           ) : (
             <span>❌ Échec de connexion: {connection.error}</span>
           )}
@@ -61,7 +61,7 @@ export default async function TestSupabase(): Promise<JSX.Element> {
 
       {/* Test des tables */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Test des tables</h2>
+        <h2 className="text-xl font-semibold mb-4">{t('common.test_des_tables')}</h2>
         <div className="grid gap-3">
           {tableResults.map((result: any) => (
             <div 
@@ -81,16 +81,16 @@ export default async function TestSupabase(): Promise<JSX.Element> {
 
       {/* Variables d'environnement */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Variables d'environnement</h2>
+        <h2 className="text-xl font-semibold mb-4">{t('common.variables_denvironnement')}</h2>
         <div className="bg-gray-100 p-4 rounded">
           <div className="grid gap-2">
             <div>
-              <strong>NEXT_PUBLIC_SUPABASE_URL:</strong> {
+              <strong>{t('common.next_public_supabase_url')}</strong> {
                 process.env.NEXT_PUBLIC_SUPABASE_URL ?? "" ? '✅ Définie' : '❌ Manquante'
               }
             </div>
             <div>
-              <strong>NEXT_PUBLIC_SUPABASE_ANON_KEY:</strong> {
+              <strong>{t('common.next_public_supabase_anon_key')}</strong> {
                 process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "" ? '✅ Définie' : '❌ Manquante'
               }
             </div>
@@ -100,12 +100,12 @@ export default async function TestSupabase(): Promise<JSX.Element> {
 
       {/* Instructions */}
       <div className="bg-blue-50 p-6 rounded">
-        <h3 className="font-semibold mb-3">Instructions pour tester:</h3>
+        <h3 className="font-semibold mb-3">{t('common.instructions_pour_tester')}</h3>
         <ol className="list-decimal list-inside space-y-2">
-          <li>Assurez-vous que vos variables d'environnement Supabase sont correctement configurées</li>
-          <li>Exécutez la migration SQL pour créer la table instruments</li>
-          <li>Visitez <code className="bg-white px-2 py-1 rounded">/instruments</code> pour tester la lecture des données</li>
-          <li>Vérifiez que toutes les tables existantes sont accessibles</li>
+          <li>{t('common.assurezvous_que_vos_variables_')}</li>
+          <li>{t('common.excutez_la_migration_sql_pour_')}</li>
+          <li>Visitez <code className="bg-white px-2 py-1 rounded">{t('common.instruments')}</code>{t('common._pour_tester_la_lecture_des_do')}</li>
+          <li>{t('common.vrifiez_que_toutes_les_tables_')}</li>
         </ol>
       </div>
     </div>

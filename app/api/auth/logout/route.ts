@@ -30,7 +30,7 @@ export async function POST(_request: NextRequest): Promise<ReturnType<typeof Nex
         status: 200,
         headers: {
           // Supprimer les cookies de session
-          'Set-Cookie': 'sb-access-token=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax'
+          "auth.authauthsetcookie": 'sb-access-token=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax'
         }
       }
     )

@@ -199,7 +199,7 @@ export class CrossDomainSessionService {
   static getCorsHeaders(): Record<string, string> {
     return {
       'Access-Control-Allow-Origin': CROSS_DOMAIN_CONFIG.CORS_CONFIG.origin,
-      'Access-Control-Allow-Credentials': 'true',
+      "cross-domain-session.crossdomainsessioncrossdomains": 'true',
       'Access-Control-Allow-Methods': CROSS_DOMAIN_CONFIG.CORS_CONFIG.methods.join(', '),
       'Access-Control-Allow-Headers': CROSS_DOMAIN_CONFIG.CORS_CONFIG.allowedHeaders.join(', ')
     };

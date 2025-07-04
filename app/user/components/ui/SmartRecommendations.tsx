@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Brain, TrendingUp, DollarSign, Clock, ChevronRight, Lock } from 'lucide-react';
+
 import { CRMData } from '../../types';
+import { Brain, TrendingUp, DollarSign, Clock, ChevronRight, Lock } from '@/components/shared/ui/IconRegistry';
 
 export interface SmartRecommendation {
   id: string;
@@ -35,9 +36,9 @@ export const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
   const categories = [
     { id: 'all', label: 'Toutes', count: recommendations.length },
     { id: 'revenue', label: 'Revenus', count: recommendations.filter(r => r.category === 'revenue').length },
-    { id: 'liquidity', label: 'Liquidité', count: recommendations.filter(r => r.category === 'liquidity').length },
+    { id: 'liquidity', label: "user.useruserliquidit", count: recommendations.filter(r => r.category === 'liquidity').length },
     { id: 'routing', label: 'Routage', count: recommendations.filter(r => r.category === 'routing').length },
-    { id: 'efficiency', label: 'Efficacité', count: recommendations.filter(r => r.category === 'efficiency').length }
+    { id: 'efficiency', label: "user.useruserefficacit", count: recommendations.filter(r => r.category === 'efficiency').length }
   ];
 
   const filteredRecommendations = selectedCategory === 'all' 
@@ -151,13 +152,13 @@ export const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
             <div className="text-lg font-bold text-green-600">
               {Math.round(recommendations.reduce((sum: any, r: any) => sum + r.estimatedGain, 0) / 1000)}k
             </div>
-            <div className="text-xs text-green-800">Sats potentiels</div>
+            <div className="text-xs text-green-800">{t('user.sats_potentiels')}</div>
           </div>
           <div className="bg-orange-50 rounded-lg p-3 border border-orange-100">
             <div className="text-lg font-bold text-orange-600">
               {recommendations.filter(r => r.impact === 'high').length}
             </div>
-            <div className="text-xs text-orange-800">Impact élevé</div>
+            <div className="text-xs text-orange-800">{t('user.impact_lev')}</div>
           </div>
         </div>
       </div>
@@ -273,7 +274,7 @@ export const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
       {sortedRecommendations.length === 0 && (
         <div className="text-center py-8 text-gray-500">
           <div className="text-4xl mb-4">🎯</div>
-          <p>Aucune recommandation disponible dans cette catégorie.</p>
+          <p>{t('user.aucune_recommandation_disponib')}</p>
         </div>
       )}
 

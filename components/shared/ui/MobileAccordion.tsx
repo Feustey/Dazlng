@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp } from '@/components/shared/ui/IconRegistry';
+
 
 interface AccordionItem {
   id: string;

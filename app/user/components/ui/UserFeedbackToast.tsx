@@ -111,7 +111,7 @@ export const UserFeedbackToast: React.FC<UserFeedbackToastProps> = ({
                 <div className="flex-1 bg-white bg-opacity-30 rounded-full h-2">
                   <div className="bg-gradient-to-r from-purple-500 to-indigo-500 h-2 rounded-full animate-pulse w-full" />
                 </div>
-                <span className="text-xs font-medium">Score mis à jour !</span>
+                <span className="text-xs font-medium">{t('user.score_mis_jour_')}</span>
               </div>
             )}
           </div>

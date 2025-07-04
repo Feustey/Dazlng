@@ -36,7 +36,7 @@ export async function GET(req: NextRequest): Promise<Response> {
         error: 'Erreur lors de la récupération des données' 
       }), { 
         status: 500,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { "admin.adminadmincontenttype": 'application/json' }
       });
     }
 
@@ -117,7 +117,7 @@ export async function GET(req: NextRequest): Promise<Response> {
       details: error instanceof Error ? error.message : 'Erreur inconnue'
     }), { 
       status: 500,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { "admin.adminadmincontenttype": 'application/json' }
     });
   }
 }
@@ -132,7 +132,7 @@ export async function POST(req: NextRequest): Promise<Response> {
         error: 'Action et email requis' 
       }), { 
         status: 400,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { "admin.adminadmincontenttype": 'application/json' }
       });
     }
 
@@ -175,7 +175,7 @@ export async function POST(req: NextRequest): Promise<Response> {
           error: 'Action non reconnue' 
         }), { 
           status: 400,
-          headers: { 'Content-Type': 'application/json' }
+          headers: { "admin.adminadmincontenttype": 'application/json' }
         });
     }
 
@@ -193,7 +193,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       details: error instanceof Error ? error.message : 'Erreur inconnue'
     }), { 
       status: 500,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { "admin.adminadmincontenttype": 'application/json' }
     });
   }
 }

@@ -13,7 +13,8 @@ import {
   updatePubkeyAlias 
 } from '@/lib/utils/cookies';
 import DazFlowAnalytics from '@/components/dazno/DazFlowAnalytics';
-import { BarChart3 } from 'lucide-react';
+import { BarChart3 } from '@/components/shared/ui/IconRegistry';
+
 
 // Nouvelles interfaces pour les endpoints avancés
 export interface AmbossNodeInfo {
@@ -124,7 +125,7 @@ const NodeManagement: FC = () => {
       const response = await fetch(`/api/proxy/node/${nodePubkey}/info/amboss`, {
         headers: {
           'Authorization': `Bearer ${session?.access_token}`,
-          'Content-Type': 'application/json'
+          "user.userusercontenttype": 'application/json'
         }
       });
 
@@ -146,7 +147,7 @@ const NodeManagement: FC = () => {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${session?.access_token}`,
-          'Content-Type': 'application/json'
+          "user.userusercontenttype": 'application/json'
         },
         body: JSON.stringify({
           pubkey: nodePubkey,
@@ -173,7 +174,7 @@ const NodeManagement: FC = () => {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${session?.access_token}`,
-          'Content-Type': 'application/json'
+          "user.userusercontenttype": 'application/json'
         },
         body: JSON.stringify({
           pubkey: nodePubkey,
@@ -201,7 +202,7 @@ const NodeManagement: FC = () => {
       const response = await fetch(`/api/dazno/dazflow/${nodePubkey}`, {
         headers: {
           'Authorization': `Bearer ${session?.access_token}`,
-          'Content-Type': 'application/json'
+          "user.userusercontenttype": 'application/json'
         }
       });
 
@@ -222,7 +223,7 @@ const NodeManagement: FC = () => {
       const response = await fetch(`/api/dazno/reliability/${nodePubkey}`, {
         headers: {
           'Authorization': `Bearer ${session?.access_token}`,
-          'Content-Type': 'application/json'
+          "user.userusercontenttype": 'application/json'
         }
       });
 
@@ -243,7 +244,7 @@ const NodeManagement: FC = () => {
       const response = await fetch(`/api/dazno/bottlenecks/${nodePubkey}`, {
         headers: {
           'Authorization': `Bearer ${session?.access_token}`,
-          'Content-Type': 'application/json'
+          "user.userusercontenttype": 'application/json'
         }
       });
 
@@ -264,7 +265,7 @@ const NodeManagement: FC = () => {
       const response = await fetch('/api/dazno/network-health', {
         headers: {
           'Authorization': `Bearer ${session?.access_token}`,
-          'Content-Type': 'application/json'
+          "user.userusercontenttype": 'application/json'
         }
       });
 
@@ -321,7 +322,7 @@ const NodeManagement: FC = () => {
         const response = await fetch('/api/user/profile', {
           headers: {
             'Authorization': `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json'
+            "user.userusercontenttype": 'application/json'
           }
         });
 
@@ -464,7 +465,7 @@ const NodeManagement: FC = () => {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json'
+          "user.userusercontenttype": 'application/json'
         },
         body: JSON.stringify({ pubkey: pubkeyValue })
       });
@@ -505,7 +506,7 @@ const NodeManagement: FC = () => {
           method: 'PUT',
           headers: {
             'Authorization': `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json'
+            "user.userusercontenttype": 'application/json'
           },
           body: JSON.stringify({ pubkey: null })
         });
@@ -593,8 +594,8 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
           })}
         </div>
         <div className="flex justify-between text-sm text-gray-600">
-          <span>7 jours</span>
-          <span>Aujourd'hui</span>
+          <span>{t('user.7_jours')}</span>
+          <span>{t('user.aujourdhui')}</span>
         </div>
       </div>
   );
@@ -604,8 +605,8 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
   if (!session) {
     return (
       <div className="max-w-4xl mx-auto p-8 text-center">
-        <h1 className="text-2xl font-bold mb-4">Connexion requise</h1>
-        <p className="text-gray-600 mb-6">Veuillez vous connecter pour accéder à votre nœud.</p>
+        <h1 className="text-2xl font-bold mb-4">{t('user.connexion_requise')}</h1>
+        <p className="text-gray-600 mb-6">{t('user.veuillez_vous_connecter_pour_a')}</p>
         <button 
           onClick={() => router.push('/auth/login')}
           className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition"
@@ -621,14 +622,14 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
     return (
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold mb-4">⚡ Mon Nœud Lightning</h1>
+          <h1 className="text-3xl font-bold mb-4">{t('user._mon_nud_lightning')}</h1>
           <p className="text-gray-600 mb-8">
             Connectez votre nœud Lightning pour accéder aux analytics et recommandations IA
           </p>
         </div>
 
         <div className="bg-white rounded-xl shadow p-8">
-          <h2 className="text-2xl font-semibold mb-6 text-center">Connectez votre nœud</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-center">{t('user.connectez_votre_nud')}</h2>
           
 
 
@@ -643,7 +644,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
                 id="pubkey"
                 value={pubkeyInput}
                 onChange={(e: any) => setPubkeyInput(e.target.value)}
-                placeholder="03864ef025fde8fb587d989186ce6a4a186895ee44a926bfc370e2c366597a3f8f"
+                placeholder="user.useruser03864ef025fde8fb587d98"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-mono text-sm"
                 maxLength={66}
                 required
@@ -705,7 +706,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold mb-2">⚡ Mon Nœud Lightning</h1>
+          <h1 className="text-3xl font-bold mb-2">{t('user._mon_nud_lightning')}</h1>
           <p className="text-gray-600">
             Analytics et recommandations IA pour optimiser vos performances
           </p>
@@ -722,7 +723,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center">
               <BarChart3 className="h-6 w-6 text-blue-600 mr-3" />
-              <h3 className="text-xl font-bold text-gray-900">DazFlow Index</h3>
+              <h3 className="text-xl font-bold text-gray-900">{t('user.dazflow_index')}</h3>
               <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
                 Nouveau
               </span>
@@ -738,7 +739,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
           {loadingDazFlow ? (
             <div className="text-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-              <p className="text-gray-600 mt-2">Analyse DazFlow en cours...</p>
+              <p className="text-gray-600 mt-2">{t('user.analyse_dazflow_en_cours')}</p>
             </div>
           ) : dazFlowAnalysis ? (
             <div className="space-y-6">
@@ -748,32 +749,32 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
                   <div className="text-2xl font-bold text-blue-600">
                     {dazFlowAnalysis.dazflow_capacity?.toFixed(2) || 'N/A'}
                   </div>
-                  <div className="text-sm text-gray-600">Capacité DazFlow</div>
+                  <div className="text-sm text-gray-600">{t('user.capacit_dazflow')}</div>
                 </div>
                 <div className="bg-white rounded-lg p-4 text-center">
                   <div className="text-2xl font-bold text-green-600">
                     {(dazFlowAnalysis.success_probability * 100)?.toFixed(1) || 'N/A'}%
                   </div>
-                  <div className="text-sm text-gray-600">Probabilité Succès</div>
+                  <div className="text-sm text-gray-600">{t('user.probabilit_succs')}</div>
                 </div>
                 <div className="bg-white rounded-lg p-4 text-center">
                   <div className="text-2xl font-bold text-purple-600">
                     {(dazFlowAnalysis.liquidity_efficiency * 100)?.toFixed(1) || 'N/A'}%
                   </div>
-                  <div className="text-sm text-gray-600">Efficacité Liquidité</div>
+                  <div className="text-sm text-gray-600">{t('user.efficacit_liquidit')}</div>
                 </div>
                 <div className="bg-white rounded-lg p-4 text-center">
                   <div className="text-2xl font-bold text-orange-600">
                     {dazFlowAnalysis.bottlenecks_count || 0}
                   </div>
-                  <div className="text-sm text-gray-600">Goulots Identifiés</div>
+                  <div className="text-sm text-gray-600">{t('user.goulots_identifis')}</div>
                 </div>
               </div>
 
               {/* Goulots d'étranglement */}
               {bottlenecks.length > 0 && (
                 <div className="bg-white rounded-lg p-4">
-                  <h4 className="font-semibold text-gray-900 mb-3">Goulots d'Étranglement</h4>
+                  <h4 className="font-semibold text-gray-900 mb-3">{t('user.goulots_dtranglement')}</h4>
                   <div className="space-y-2">
                     {bottlenecks.slice(0, 3).map((bottleneck, index) => (
                       <div key={index} className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
@@ -798,7 +799,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
               {/* Recommandations DazFlow */}
               {dazFlowAnalysis.recommendations?.length > 0 && (
                 <div className="bg-white rounded-lg p-4">
-                  <h4 className="font-semibold text-gray-900 mb-3">Recommandations DazFlow</h4>
+                  <h4 className="font-semibold text-gray-900 mb-3">{t('user.recommandations_dazflow')}</h4>
                   <div className="space-y-3">
                     {dazFlowAnalysis.recommendations.slice(0, 3).map((rec: any, index: number) => (
                       <div key={index} className="border-l-4 border-blue-500 pl-4">
@@ -825,7 +826,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
             </div>
           ) : (
             <div className="text-center py-8">
-              <p className="text-gray-600 mb-4">Aucune analyse DazFlow disponible</p>
+              <p className="text-gray-600 mb-4">{t('user.aucune_analyse_dazflow_disponi')}</p>
               <button
                 onClick={() => pubkey && loadDazFlowData(pubkey)}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
@@ -850,7 +851,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
             className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 flex items-center justify-center space-x-2"
           >
             <BarChart3 className="h-5 w-5" />
-            <span>Analyser avec DazFlow Index</span>
+            <span>{t('user.analyser_avec_dazflow_index')}</span>
             <span className="px-2 py-1 bg-white/20 rounded-full text-xs">Nouveau</span>
           </button>
         </div>
@@ -879,27 +880,27 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
       {loading && !nodeInfo && (
         <div className="text-center py-12">
           <div className="animate-spin h-12 w-12 mx-auto border-4 border-indigo-500 border-t-transparent rounded-full mb-4" />
-          <p className="text-gray-600">Chargement des données du nœud...</p>
+          <p className="text-gray-600">{t('user.chargement_des_donnes_du_nud')}</p>
         </div>
       )}
 
       {/* Informations générales du nœud avec Amboss */}
       <div className="bg-white rounded-xl shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">📋 Informations générales</h2>
+        <h2 className="text-xl font-semibold mb-4">{t('user._informations_gnrales')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <div className="space-y-3">
               <div>
-                <span className="text-sm font-medium text-gray-500">Alias: </span>
+                <span className="text-sm font-medium text-gray-500">{t('user.alias_')}</span>
                 <span className="text-gray-900">{nodeInfo?.alias || ambossNodeInfo?.alias || 'Non défini'}</span>
               </div>
               <div>
-                <span className="text-sm font-medium text-gray-500">Clé publique: </span>
+                <span className="text-sm font-medium text-gray-500">{t('user.cl_publique_')}</span>
                 <span className="font-mono text-sm text-gray-900 break-all">{pubkey}</span>
               </div>
               {nodeInfo?.total_network_nodes && (
                 <div>
-                  <span className="text-sm font-medium text-gray-500">Réseau Lightning: </span>
+                  <span className="text-sm font-medium text-gray-500">{t('user.rseau_lightning_')}</span>
                   <span className="text-gray-900">{nodeInfo.total_network_nodes.toLocaleString()} nœuds</span>
                 </div>
               )}
@@ -936,35 +937,35 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
         {/* Métriques Amboss enrichies */}
         {ambossNodeInfo && (
           <div className="mt-6 pt-6 border-t border-gray-200">
-            <h3 className="text-lg font-semibold mb-4 text-purple-600">📊 Métriques Amboss</h3>
+            <h3 className="text-lg font-semibold mb-4 text-purple-600">{t('user._mtriques_amboss')}</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="space-y-3">
-                <h4 className="font-medium text-gray-700">Connectivité</h4>
+                <h4 className="font-medium text-gray-700">{t('user.connectivit')}</h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Centralité:</span>
+                    <span className="text-gray-600">{t('user.centralit')}</span>
                     <span className="font-medium">{(ambossNodeInfo.connectivity_metrics.centrality * 100).toFixed(2)}%</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Accessibilité:</span>
+                    <span className="text-gray-600">{t('user.accessibilit')}</span>
                     <span className="font-medium">{(ambossNodeInfo.connectivity_metrics.reachability * 100).toFixed(2)}%</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Stabilité:</span>
+                    <span className="text-gray-600">{t('user.stabilit')}</span>
                     <span className="font-medium">{(ambossNodeInfo.connectivity_metrics.stability * 100).toFixed(2)}%</span>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-3">
-                <h4 className="font-medium text-gray-700">Analyse des frais</h4>
+                <h4 className="font-medium text-gray-700">{t('user.analyse_des_frais')}</h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Taux médian:</span>
+                    <span className="text-gray-600">{t('user.taux_mdian')}</span>
                     <span className="font-medium">{ambossNodeInfo.fee_analysis.median_fee_rate} ppm</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Compétitivité:</span>
+                    <span className="text-gray-600">{t('user.comptitivit')}</span>
                     <span className={`font-medium ${
                       ambossNodeInfo.fee_analysis.fee_competitiveness === 'high' ? 'text-green-600' :
                       ambossNodeInfo.fee_analysis.fee_competitiveness === 'medium' ? 'text-yellow-600' :
@@ -974,25 +975,25 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Score optimisation:</span>
+                    <span className="text-gray-600">{t('user.score_optimisation')}</span>
                     <span className="font-medium">{ambossNodeInfo.fee_analysis.optimization_score}/100</span>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-3">
-                <h4 className="font-medium text-gray-700">Liquidité</h4>
+                <h4 className="font-medium text-gray-700">{t('user.liquidit')}</h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Liquidité totale:</span>
+                    <span className="text-gray-600">{t('user.liquidit_totale')}</span>
                     <span className="font-medium">{formatSats(ambossNodeInfo.liquidity_metrics.total_liquidity)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Balance locale:</span>
+                    <span className="text-gray-600">{t('user.balance_locale')}</span>
                     <span className="font-medium">{formatSats(ambossNodeInfo.liquidity_metrics.local_balance)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Ratio d'équilibre:</span>
+                    <span className="text-gray-600">{t('user.ratio_dquilibre')}</span>
                     <span className="font-medium">{(ambossNodeInfo.liquidity_metrics.balance_ratio * 100).toFixed(1)}%</span>
                   </div>
                 </div>
@@ -1011,7 +1012,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
               <div className="text-2xl font-bold text-indigo-600 mb-1">
                 {formatSats((nodeInfo?.capacity || ambossNodeInfo?.capacity) || 0)}
               </div>
-              <div className="text-sm text-gray-600">Capacité totale</div>
+              <div className="text-sm text-gray-600">{t('user.capacit_totale')}</div>
             </div>
 
             <div className="bg-white rounded-xl shadow p-6 text-center">
@@ -1019,7 +1020,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
               <div className="text-2xl font-bold text-green-600 mb-1">
                 {nodeInfo?.active_channels || nodeInfo?.channels || ambossNodeInfo?.channels || 0}
               </div>
-              <div className="text-sm text-gray-600">Canaux actifs</div>
+              <div className="text-sm text-gray-600">{t('user.canaux_actifs')}</div>
               {nodeInfo?.inactive_channels && (
                 <div className="text-xs text-gray-500 mt-1">
                   {nodeInfo.inactive_channels} inactifs
@@ -1040,33 +1041,33 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
               <div className="text-2xl font-bold text-purple-600 mb-1">
                 {nodeInfo?.forwarding_efficiency ? `${nodeInfo.forwarding_efficiency.toFixed(1)}%` : 'N/A'}
               </div>
-              <div className="text-sm text-gray-600">Efficacité de routage</div>
+              <div className="text-sm text-gray-600">{t('user.efficacit_de_routage')}</div>
             </div>
           </div>
 
           {/* Métriques avancées */}
           <div className="bg-white rounded-xl shadow p-6">
-            <h2 className="text-xl font-semibold mb-6">📊 Métriques</h2>
+            <h2 className="text-xl font-semibold mb-6">{t('user._mtriques')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               
               {/* Centralité */}
               <div className="space-y-4">
-                <h3 className="font-medium text-gray-700 border-b pb-2">Centralité du réseau</h3>
+                <h3 className="font-medium text-gray-700 border-b pb-2">{t('user.centralit_du_rseau')}</h3>
                 {nodeInfo?.betweenness_centrality !== undefined && (
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Betweenness:</span>
+                    <span className="text-sm text-gray-600">{t('user.betweenness')}</span>
                     <span className="font-medium">{(nodeInfo.betweenness_centrality * 100).toFixed(3)}%</span>
                   </div>
                 )}
                 {nodeInfo?.closeness_centrality !== undefined && (
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Closeness:</span>
+                    <span className="text-sm text-gray-600">{t('user.closeness')}</span>
                     <span className="font-medium">{(nodeInfo.closeness_centrality * 100).toFixed(3)}%</span>
                   </div>
                 )}
                 {nodeInfo?.eigenvector_centrality !== undefined && (
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Eigenvector:</span>
+                    <span className="text-sm text-gray-600">{t('user.eigenvector')}</span>
                     <span className="font-medium">{(nodeInfo.eigenvector_centrality * 100).toFixed(3)}%</span>
                   </div>
                 )}
@@ -1074,22 +1075,22 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
 
               {/* Frais et HTLC */}
               <div className="space-y-4">
-                <h3 className="font-medium text-gray-700 border-b pb-2">Configuration des frais</h3>
+                <h3 className="font-medium text-gray-700 border-b pb-2">{t('user.configuration_des_frais')}</h3>
                 {nodeInfo?.base_fee_median !== undefined && (
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Frais de base (médian):</span>
+                    <span className="text-sm text-gray-600">{t('user.frais_de_base_mdian')}</span>
                     <span className="font-medium">{nodeInfo.base_fee_median} sats</span>
                   </div>
                 )}
                 {nodeInfo?.fee_rate_median !== undefined && (
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Taux de frais (médian):</span>
+                    <span className="text-sm text-gray-600">{t('user.taux_de_frais_mdian')}</span>
                     <span className="font-medium">{nodeInfo.fee_rate_median} ppm</span>
                   </div>
                 )}
                 {nodeInfo?.htlc_minimum_msat !== undefined && (
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">HTLC min:</span>
+                    <span className="text-sm text-gray-600">{t('user.htlc_min')}</span>
                     <span className="font-medium">{(nodeInfo.htlc_minimum_msat / 1000).toFixed(0)} sats</span>
                   </div>
                 )}
@@ -1097,22 +1098,22 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
 
               {/* Performance */}
               <div className="space-y-4">
-                <h3 className="font-medium text-gray-700 border-b pb-2">Performance (7 jours)</h3>
+                <h3 className="font-medium text-gray-700 border-b pb-2">{t('user.performance_7_jours')}</h3>
                 {nodeInfo?.routed_payments_7d !== undefined && (
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Paiements routés:</span>
+                    <span className="text-sm text-gray-600">{t('user.paiements_routs')}</span>
                     <span className="font-medium">{nodeInfo.routed_payments_7d.toLocaleString()}</span>
                   </div>
                 )}
                 {nodeInfo?.routing_revenue_7d !== undefined && (
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Revenus de routage:</span>
+                    <span className="text-sm text-gray-600">{t('user.revenus_de_routage')}</span>
                     <span className="font-medium">{formatSats(nodeInfo.routing_revenue_7d)}</span>
                   </div>
                 )}
                 {nodeInfo?.peer_count !== undefined && (
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Nombre de pairs:</span>
+                    <span className="text-sm text-gray-600">{t('user.nombre_de_pairs')}</span>
                     <span className="font-medium">{nodeInfo.peer_count}</span>
                   </div>
                 )}
@@ -1129,24 +1130,24 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
           {nodeInfo.routing_history && nodeInfo.routing_history.length > 0 ? (
             <SimpleChart 
               data={nodeInfo.routing_history}
-              title="📊 Évolution des revenus de routage"
+              title="user.useruser_volution_des_revenus_"
             />
           ) : (
             <SimpleChart 
               data={[12000, 15000, 18000, 14000, 22000, 19000, 25000]}
-              title="📊 Évolution des revenus (données simulées)"
+              title="user.useruser_volution_des_revenus_"
             />
           )}
           
           {nodeInfo.capacity_history && nodeInfo.capacity_history.length > 0 ? (
             <SimpleChart 
               data={nodeInfo.capacity_history}
-              title="⚡ Évolution de la capacité"
+              title="user.useruser_volution_de_la_capaci"
             />
           ) : (
             <SimpleChart 
               data={[45000000, 47000000, 46000000, 50000000, 48000000, 52000000, 50000000]}
-              title="⚡ Évolution de la capacité (données simulées)"
+              title="user.useruser_volution_de_la_capaci"
             />
           )}
         </div>
@@ -1155,7 +1156,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
       {/* Recommandations IA Avancées */}
       <div className="bg-white rounded-xl shadow p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold">🤖 Recommandations IA</h2>
+          <h2 className="text-xl font-semibold">{t('user._recommandations_ia')}</h2>
           <div className="flex gap-2">
             <button
               onClick={() => setRecommendationType('standard')}
@@ -1193,7 +1194,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
         {loadingAdvanced && (
           <div className="text-center py-8">
             <div className="animate-spin h-8 w-8 mx-auto border-4 border-indigo-500 border-t-transparent rounded-full mb-4" />
-            <p className="text-gray-600">Chargement des recommandations avancées...</p>
+            <p className="text-gray-600">{t('user.chargement_des_recommandations')}</p>
           </div>
         )}
 
@@ -1221,16 +1222,16 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
                     </div>
                     <div className="text-center p-2 bg-blue-50 rounded">
                       <div className="font-medium text-blue-600">+{rec.expected_impact.liquidity_improvement}%</div>
-                      <div className="text-gray-600">Liquidité</div>
+                      <div className="text-gray-600">{t('user.liquidit')}</div>
                     </div>
                     <div className="text-center p-2 bg-purple-50 rounded">
                       <div className="font-medium text-purple-600">+{rec.expected_impact.routing_efficiency}%</div>
-                      <div className="text-gray-600">Efficacité</div>
+                      <div className="text-gray-600">{t('user.efficacit')}</div>
                     </div>
                   </div>
 
                   <div className="text-xs text-gray-500">
-                    <div className="font-medium mb-1">Actions suggérées:</div>
+                    <div className="font-medium mb-1">{t('user.actions_suggres')}</div>
                     <ul className="list-disc list-inside space-y-1">
                       {rec.suggested_actions.map((action: any, index: any) => (
                         <li key={index}>{action}</li>
@@ -1240,7 +1241,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
 
                   {rec.target_nodes && rec.target_nodes.length > 0 && (
                     <div className="mt-3 text-xs">
-                      <div className="font-medium text-gray-700 mb-1">Nœuds cibles recommandés:</div>
+                      <div className="font-medium text-gray-700 mb-1">{t('user.nuds_cibles_recommands')}</div>
                       <div className="space-y-1">
                         {rec.target_nodes.slice(0, 3).map((node: any, index: any) => (
                           <div key={index} className="flex justify-between items-center">
@@ -1285,11 +1286,11 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
                   <div className="grid grid-cols-3 gap-4 mb-3 text-xs">
                     <div className="text-center p-2 bg-green-50 rounded">
                       <div className="font-medium text-green-600">+{formatSats(rec.expected_benefits.revenue_gain)}</div>
-                      <div className="text-gray-600">Gain revenus</div>
+                      <div className="text-gray-600">{t('user.gain_revenus')}</div>
                     </div>
                     <div className="text-center p-2 bg-blue-50 rounded">
                       <div className="font-medium text-blue-600">+{rec.expected_benefits.efficiency_boost}%</div>
-                      <div className="text-gray-600">Efficacité</div>
+                      <div className="text-gray-600">{t('user.efficacit')}</div>
                     </div>
                     <div className="text-center p-2 bg-yellow-50 rounded">
                       <div className="font-medium text-yellow-600">-{rec.expected_benefits.risk_reduction}%</div>
@@ -1386,14 +1387,14 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
       {/* Actions prioritaires */}
       {priorityActions.length > 0 && (
         <div className="bg-white rounded-xl shadow p-6">
-          <h2 className="text-xl font-semibold mb-6">🎯 Actions prioritaires</h2>
+          <h2 className="text-xl font-semibold mb-6">{t('user._actions_prioritaires')}</h2>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-200">
                   <th className="text-left py-3 px-4 font-semibold text-gray-700">Action</th>
-                  <th className="text-center py-3 px-4 font-semibold text-gray-700">Priorité</th>
-                  <th className="text-center py-3 px-4 font-semibold text-gray-700">Impact estimé</th>
+                  <th className="text-center py-3 px-4 font-semibold text-gray-700">{t('user.priorit')}</th>
+                  <th className="text-center py-3 px-4 font-semibold text-gray-700">{t('user.impact_estim')}</th>
                   <th className="text-center py-3 px-4 font-semibold text-gray-700">Timeline</th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-700">Justification</th>
                 </tr>
@@ -1488,8 +1489,8 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
           className="p-6 bg-white rounded-xl shadow border-2 border-transparent hover:border-indigo-200 hover:shadow-lg transition group"
         >
           <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">🔗</div>
-          <h3 className="font-semibold mb-2">Gestion des canaux</h3>
-          <p className="text-sm text-gray-600">Ouvrir, fermer et équilibrer vos canaux</p>
+          <h3 className="font-semibold mb-2">{t('user.gestion_des_canaux')}</h3>
+          <p className="text-sm text-gray-600">{t('user.ouvrir_fermer_et_quilibrer_vos')}</p>
         </button>
 
         <button
@@ -1497,8 +1498,8 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
           className="p-6 bg-white rounded-xl shadow border-2 border-transparent hover:border-indigo-200 hover:shadow-lg transition group"
         >
           <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">📊</div>
-          <h3 className="font-semibold mb-2">Statistiques détaillées</h3>
-          <p className="text-sm text-gray-600">Analytics avancées et historiques</p>
+          <h3 className="font-semibold mb-2">{t('user.statistiques_dtailles')}</h3>
+          <p className="text-sm text-gray-600">{t('user.analytics_avances_et_historiqu')}</p>
         </button>
 
         <button
@@ -1508,7 +1509,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
           <div className="absolute inset-0 bg-white/10 transform -skew-y-6 group-hover:skew-y-6 transition-transform duration-500"></div>
           <div className="relative z-10">
             <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">✨</div>
-            <h3 className="font-semibold mb-2">Dazia IA</h3>
+            <h3 className="font-semibold mb-2">{t('user.dazia_ia')}</h3>
             <p className="text-sm opacity-90">
               Recommandations intelligentes activables
             </p>

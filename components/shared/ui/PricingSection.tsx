@@ -1,5 +1,6 @@
 import React from 'react';
-import { CheckCircle, Zap } from 'lucide-react';
+import { CheckCircle, Zap } from '@/components/shared/ui/IconRegistry';
+
 
 const plans = [
   {
@@ -48,7 +49,7 @@ const PricingSection: React.FC = () => (
     <div className="max-w-7xl mx-auto px-4">
       <div className="text-center mb-16">
         <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-          Tarifs <span className="text-[#F7931A]">simples & transparents</span>
+          Tarifs <span className="text-[#F7931A]">{t('PricingSection.simples_transparents')}</span>
         </h2>
         <p className="text-xl text-gray-300 max-w-3xl mx-auto">
           Aucun engagement. Annulable à tout moment.

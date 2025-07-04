@@ -66,7 +66,7 @@ const EnhancedRecommendations: React.FC<EnhancedRecommendationsProps> = ({
       <div className="bg-white rounded-xl shadow p-6">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-xl font-semibold">🧠 Recommandations Dazia</h2>
+            <h2 className="text-xl font-semibold">{t('user._recommandations_dazia')}</h2>
             <p className="text-gray-600 text-sm">
               Optimisez votre nœud avec l'intelligence artificielle
             </p>
@@ -119,7 +119,7 @@ const EnhancedRecommendations: React.FC<EnhancedRecommendationsProps> = ({
           {recommendations.length === 0 && (
             <div className="text-center py-8 text-gray-500">
               <div className="text-4xl mb-4">💡</div>
-              <p>Aucune recommandation disponible pour le moment.</p>
+              <p>{t('user.aucune_recommandation_disponib')}</p>
             </div>
           )}
         </div>

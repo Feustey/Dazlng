@@ -6,60 +6,51 @@ const nextConfig = {
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60 * 60 * 24 * 30, // 30 jours
+    minimumCacheTTL: 60 * 60 * 24 * 30,
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   experimental: {
-    optimizePackageImports: ['@heroicons/react', 'lucide-react'],
+    optimizePackageImports: ['lucide-react'],
     scrollRestoration: true,
     optimizeCss: true,
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+    },
   },
   webpack: (config, { dev, isServer }) => {
-    // Support SVG
+    // Support SVG optimisé
     config.module.rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack'],
     });
 
-    // Exclure les modules Lightning côté client seulement si nécessaire
+    // Tree shaking agressif pour les icônes
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'react-icons/fa': 'lucide-react',
+      };
+    }
+
+    // Exclusions côté client
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
-        fs: false,
-        net: false,
-        tls: false,
-        crypto: false,
-        stream: false,
-        url: false,
-        zlib: false,
-        http: false,
-        https: false,
-        assert: false,
-        os: false,
-        path: false,
-        util: false,
-        buffer: false,
-        events: false,
-        querystring: false,
-        punycode: false,
-        string_decoder: false,
-        timers: false,
-        tty: false,
-        vm: false,
-        worker_threads: false,
-        child_process: false,
-        cluster: false,
-        dgram: false,
-        dns: false,
-        domain: false,
-        module: false,
-        process: false,
-        readline: false,
-        repl: false,
-        string_decoder: false,
-        sys: false,
-        v8: false,
+        fs: false, net: false, tls: false, crypto: false,
+        stream: false, url: false, zlib: false, http: false,
+        https: false, assert: false, os: false, path: false,
+        util: false, buffer: false, events: false, querystring: false,
+        punycode: false, string_decoder: false, timers: false,
+        tty: false, vm: false, worker_threads: false, child_process: false,
+        cluster: false, dgram: false, dns: false, domain: false,
+        module: false, process: false, readline: false, repl: false,
+        sys: false, v8: false,
       };
     }
 

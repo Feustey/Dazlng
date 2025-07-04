@@ -39,7 +39,7 @@ class MCPApiClient {
       headers: {
         ...options.headers,
         'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+        "api-client.apiclientapiclientcontenttype": 'application/json',
       },
     });
     if (!response.ok) {

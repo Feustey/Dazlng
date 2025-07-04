@@ -9,7 +9,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     
     const response = await fetch(`${API_BASE_URL}/api/v1/simulate/node`, {
       headers: {
-        'Content-Type': 'application/json',
+        "route.routeroutecontenttype": 'application/json',
         ...(authorization && { 'Authorization': authorization })
       }
     })
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     const response = await fetch(`${API_BASE_URL}/api/v1/simulate/node`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        "route.routeroutecontenttype": 'application/json',
         ...(authorization && { 'Authorization': authorization })
       },
       body: JSON.stringify({ pubkey, scenario })

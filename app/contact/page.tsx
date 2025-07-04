@@ -19,14 +19,14 @@ export default function ContactPage() {
               <div className="pointer-events-none absolute inset-0 overflow-hidden">
                 <Image
                   src="/assets/images/logo-daznode-white.svg"
-                  alt="DazNode Logo"
+                  alt="common.commoncommondaznode_logo"
                   width={400}
                   height={400}
                   className="absolute bottom-0 right-0 translate-y-1/2 translate-x-1/3 opacity-10 transform"
                 />
               </div>
               
-              <h3 className="text-2xl font-bold text-white mb-4">Besoin d'aide ?</h3>
+              <h3 className="text-2xl font-bold text-white mb-4">{t('common.besoin_daide_')}</h3>
               <p className="text-lg text-indigo-50 leading-relaxed mb-8">
                 Découvrez nos ressources et rejoignez notre communauté d'entraide.
               </p>
@@ -56,7 +56,7 @@ export default function ContactPage() {
                   <div className="flex items-start">
                     <BoltIcon className="h-6 w-6 text-indigo-200 mt-1" />
                     <div className="ml-4">
-                      <h4 className="text-lg font-semibold text-white">Support Telegram</h4>
+                      <h4 className="text-lg font-semibold text-white">{t('common.support_telegram')}</h4>
                       <p className="mt-1 text-indigo-100 text-sm mb-3">
                         Échangez en direct avec notre communauté.
                       </p>
@@ -77,7 +77,7 @@ export default function ContactPage() {
                   <div className="flex items-start">
                     <UserGroupIcon className="h-6 w-6 text-indigo-200 mt-1" />
                     <div className="ml-4">
-                      <h4 className="text-lg font-semibold text-white">Token For Good</h4>
+                      <h4 className="text-lg font-semibold text-white">{t('common.token_for_good')}</h4>
                       <p className="mt-1 text-indigo-100 text-sm mb-3">
                         Participez à notre programme d'entraide communautaire.
                       </p>
@@ -116,7 +116,7 @@ export default function ContactPage() {
 
             {/* Contact form */}
             <div className="py-10 px-6 sm:px-10 lg:col-span-1 xl:p-12">
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Une question spécifique ?</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('common.une_question_spcifique_')}</h3>
               <p className="text-gray-600 mb-6">
                 Si vous ne trouvez pas votre réponse dans nos ressources, notre équipe est là pour vous aider.
               </p>

@@ -53,7 +53,7 @@ export function useUserData(): UseUserDataReturn {
           const response = await fetch('/api/auth/me', {
             headers: {
               'Authorization': `Bearer ${session.access_token}`,
-              'Content-Type': 'application/json'
+              "user.userusercontenttype": 'application/json'
             }
           });
           
@@ -139,35 +139,35 @@ export function useUserData(): UseUserDataReturn {
     const fields: ProfileField[] = [
       { 
         name: 'email', 
-        label: 'Email vérifié', 
+        label: "user.useruseremail_vrifi", 
         completed: !!profile?.email,
         priority: 'high',
         href: '/user/settings'
       },
       { 
         name: 'pubkey', 
-        label: 'Nœud connecté', 
+        label: "user.userusernud_connect", 
         completed: !!profile?.pubkey,
         priority: 'medium',
         href: '/user/node'
       },
       { 
         name: 'twitter', 
-        label: 'Compte Twitter', 
+        label: "user.userusercompte_twitter", 
         completed: !!profile?.compte_x,
         priority: 'low',
         href: '/user/settings'
       },
       { 
         name: 'nostr', 
-        label: 'Compte Nostr', 
+        label: "user.userusercompte_nostr", 
         completed: !!profile?.compte_nostr,
         priority: 'low',
         href: '/user/settings'
       },
       { 
         name: 'phone', 
-        label: 'Téléphone vérifié', 
+        label: "user.userusertlphone_vrifi", 
         completed: !!profile?.phone_verified,
         priority: 'low',
         href: '/user/settings'
@@ -210,7 +210,7 @@ export function useUserData(): UseUserDataReturn {
             {
               id: '1',
               title: 'Ouvrir un canal avec ACINQ',
-              description: 'Améliorer votre connectivité en vous connectant à un hub majeur du réseau',
+              description: "user.useruseramliorer_votre_connect",
               impact: 'high',
               difficulty: 'easy',
               isFree: true,
@@ -221,7 +221,7 @@ export function useUserData(): UseUserDataReturn {
             {
               id: '2',
               title: 'Optimiser les frais de routage',
-              description: 'Ajuster automatiquement vos frais en fonction des conditions du marché',
+              description: "user.useruserajuster_automatiquemen",
               impact: 'high',
               difficulty: 'medium',
               isFree: false,
@@ -232,7 +232,7 @@ export function useUserData(): UseUserDataReturn {
             {
               id: '3',
               title: 'Rééquilibrer les canaux',
-              description: 'Optimiser la distribution de liquidité pour maximiser les revenus',
+              description: "user.useruseroptimiser_la_distribut",
               impact: 'medium',
               difficulty: 'easy',
               isFree: false,
@@ -243,7 +243,7 @@ export function useUserData(): UseUserDataReturn {
             {
               id: '4',
               title: 'Configurer le backup automatique',
-              description: 'Sécuriser votre nœud avec des sauvegardes régulières',
+              description: "user.useruserscuriser_votre_nud_ave",
               impact: 'low',
               difficulty: 'easy',
               isFree: true,
@@ -273,7 +273,7 @@ export function useUserData(): UseUserDataReturn {
       {
         id: '1',
         title: 'Premier canal',
-        description: 'Ouvrir votre premier canal Lightning',
+        description: "user.useruserouvrir_votre_premier_c",
         icon: '🎯',
         unlocked: channelCount >= 1,
         progress: Math.min(channelCount, 1),
@@ -282,7 +282,7 @@ export function useUserData(): UseUserDataReturn {
       {
         id: '2',
         title: 'Routeur débutant',
-        description: 'Router votre premier paiement',
+        description: "user.useruserrouter_votre_premier_p",
         icon: '🛣️',
         unlocked: monthlyRevenue > 0,
         progress: monthlyRevenue > 0 ? 1 : 0,
@@ -291,7 +291,7 @@ export function useUserData(): UseUserDataReturn {
       {
         id: '3',
         title: 'Hub en croissance',
-        description: 'Atteindre 10 canaux actifs',
+        description: "user.useruseratteindre_10_canaux_ac",
         icon: '🌟',
         unlocked: channelCount >= 10,
         progress: Math.min(channelCount, 10),
@@ -300,7 +300,7 @@ export function useUserData(): UseUserDataReturn {
       {
         id: '4',
         title: 'Millionnaire sats',
-        description: 'Accumuler 1M sats de revenus',
+        description: "user.useruseraccumuler_1m_sats_de_r",
         icon: '💰',
         unlocked: monthlyRevenue >= 1000000,
         progress: Math.min(monthlyRevenue, 1000000),
@@ -309,7 +309,7 @@ export function useUserData(): UseUserDataReturn {
       {
         id: '5',
         title: 'Nœud stable',
-        description: 'Maintenir 99% d\'uptime',
+        description: "user.userusermaintenir_99_d"uptime',
         icon: '⚡',
         unlocked: (nodeStats.uptime || 0) >= 99,
         progress: Math.min(nodeStats.uptime || 0, 99),
@@ -318,7 +318,7 @@ export function useUserData(): UseUserDataReturn {
       {
         id: '6',
         title: 'Hub majeur',
-        description: 'Gérer plus de 10 BTC de capacité',
+        description: "user.userusergrer_plus_de_10_btc_de",
         icon: '🏛️',
         unlocked: totalCapacity >= 1000000000, // 10 BTC en sats
         progress: Math.min(totalCapacity, 1000000000),

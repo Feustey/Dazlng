@@ -186,7 +186,7 @@ class ABTestManager {
       // Send to internal analytics API
       fetch('/api/analytics/track', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "ABTestManager.abtestmanagerabtestmanagercont": 'application/json' },
         body: JSON.stringify({
           event,
           properties: enrichedProperties
@@ -318,7 +318,7 @@ export const ABTestDashboard: React.FC = () => {
 
   return (
     <div className="ab-test-dashboard bg-gray-900 rounded-xl p-6">
-      <h3 className="text-xl font-bold text-white mb-6">Tableau de bord A/B Testing</h3>
+      <h3 className="text-xl font-bold text-white mb-6">{t('ABTestManager.tableau_de_bord_ab_testing')}</h3>
       
       <div className="space-y-6">
         {experiments.filter(exp => exp.status === 'active').map(experiment => (

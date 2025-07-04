@@ -22,7 +22,7 @@ export function PaymentForm({ onBack, onSuccess }: PaymentFormProps) {
 
   return (
     <form onSubmit={handlePay} className="space-y-4">
-      <div className="font-bold">Paiement sécurisé</div>
+      <div className="font-bold">{t('checkout.paiement_scuris')}</div>
       <button type="submit" className="btn-primary w-full" disabled={loading}>
         {loading ? "Paiement en cours..." : "Payer 400 000 sats"}
       </button>

@@ -1,11 +1,12 @@
 import React from 'react';
-import { Mail, MessageCircle, Calendar } from 'lucide-react';
+import { Mail, MessageCircle, Calendar } from '@/components/shared/ui/IconRegistry';
+
 
 const ContactDemoSection: React.FC = () => (
   <section id="contact-section" className="py-20 bg-gradient-to-br from-[#1A1A1A] to-[#232323]">
     <div className="max-w-4xl mx-auto px-4 text-center">
       <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-        Une question ? <span className="text-[#F7931A]">Besoin d&apos;une démo ?</span>
+        Une question ? <span className="text-[#F7931A]">{t('ContactDemoSection.besoin_daposune_dmo_')}</span>
       </h2>
       <p className="text-xl text-gray-300 mb-12">
         Notre équipe vous répond sous 24h. Réservez une démo personnalisée ou contactez-nous directement.

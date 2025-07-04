@@ -14,8 +14,9 @@ import { daznoAPI, DaznoRecommendation } from '@/lib/dazno-api';
 import { SparklesIcon } from '@/app/components/icons/SparklesIcon';
 import { EnhancedRecommendation, DailyRecommendation, DaziaData } from '@/types/recommendations';
 import Link from 'next/link';
-import { Gauge, ArrowRight } from 'lucide-react';
+
 import { useLocale } from 'next-intl';
+import { Gauge, ArrowRight } from '@/components/shared/ui/IconRegistry';
 
 export interface RecommendationModal {
   isOpen: boolean;
@@ -62,10 +63,10 @@ const DaziaPage: FC = () => {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${pubkey}`,
-            'Content-Type': 'application/json'
+            "user.userusercontenttype": 'application/json'
           },
           body: JSON.stringify({
-            context: "Optimisation complète avec recommandations Dazia",
+            context: "user.useruseroptimisation_complte_a",
             goals: ["increase_revenue", "improve_centrality", "optimize_channels"],
             depth: 'detailed'
           })
@@ -80,7 +81,7 @@ const DaziaPage: FC = () => {
               reasoning: action.reasoning || `Action recommandée pour améliorer les performances de votre nœud Lightning. Impact estimé: ${action.expected_impact}.`,
               date: new Date(Date.now() - (index * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], // Dates échelonnées
               implementation_details: action.implementation_details || {
-                steps: ['Analyser la situation actuelle', 'Planifier l\'implémentation', 'Exécuter l\'action'],
+                steps: ["user.useruseranalyser_la_situation_", 'Planifier l\'implémentation', 'Exécuter l\'action'],
                 requirements: ['Accès au nœud Lightning', 'Outils de gestion'],
                 estimated_hours: Math.ceil(action.priority / 2)
               },
@@ -141,7 +142,7 @@ const DaziaPage: FC = () => {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${pubkey}`,
-          'Content-Type': 'application/json'
+          "user.userusercontenttype": 'application/json'
         },
         body: JSON.stringify({ pubkey })
       });
@@ -247,17 +248,17 @@ const DaziaPage: FC = () => {
             steps: [
               {
                 order: 1,
-                description: 'Analyser la situation actuelle',
+                description: "user.useruseranalyser_la_situation_",
                 command: 'lncli getinfo'
               },
               {
                 order: 2,
-                description: "Planifier l'implémentation",
+                description: "user.useruserplanifier_l"implémentation",
                 command: 'lncli listchannels'
               },
               {
                 order: 3,
-                description: "Exécuter l'action",
+                description: "user.useruserexcuter_l"action",
                 command: 'lncli updatechanpolicy'
               }
             ],
@@ -342,7 +343,7 @@ const DaziaPage: FC = () => {
     return (
       <div className="text-center py-12">
         <SparklesIcon className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Dazia IA - Assistant Lightning</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-4">{t('user.dazia_ia_assistant_lightning')}</h1>
         <p className="text-gray-600 mb-6">
           Connectez d'abord votre nœud Lightning dans l'onglet "Mon Nœud" pour accéder aux recommandations personnalisées.
         </p>
@@ -376,7 +377,7 @@ const DaziaPage: FC = () => {
     return (
       <div className="text-center py-12">
         <SparklesIcon className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Aucune recommandation disponible</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-4">{t('user.aucune_recommandation_disponib')}</h1>
         <p className="text-gray-600 mb-6">
           Nous n'avons pas pu charger de recommandations pour votre nœud.
         </p>
@@ -568,7 +569,7 @@ const DaziaPage: FC = () => {
 
                 {('implementation_details' in modal.recommendation && modal.recommendation.implementation_details?.steps) && (
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Étapes d'implémentation</h4>
+                    <h4 className="font-semibold text-gray-900 mb-2">{t('user.tapes_dimplmentation')}</h4>
                     <ol className="list-decimal list-inside space-y-1 text-gray-700">
                       {modal.recommendation.implementation_details.steps?.map((step: any, idx: any) => (
                         <li key={idx}>{step}</li>
@@ -579,7 +580,7 @@ const DaziaPage: FC = () => {
 
                 {modal.recommendation.success_criteria && (
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Critères de succès</h4>
+                    <h4 className="font-semibold text-gray-900 mb-2">{t('user.critres_de_succs')}</h4>
                     <ul className="list-disc list-inside space-y-1 text-gray-700">
                       {modal.recommendation.success_criteria.map((criteria: any, idx: any) => (
                         <li key={idx}>{criteria}</li>
@@ -591,7 +592,7 @@ const DaziaPage: FC = () => {
                 <div className="bg-gray-50 rounded-lg p-4">
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <span className="text-gray-500">Impact estimé:</span>
+                      <span className="text-gray-500">{t('user.impact_estim')}</span>
                       <span className="ml-2 font-medium text-green-600">
                         {'expected_impact' in modal.recommendation 
                           ? modal.recommendation.expected_impact 
@@ -599,11 +600,11 @@ const DaziaPage: FC = () => {
                       </span>
                     </div>
                     <div>
-                      <span className="text-gray-500">Difficulté:</span>
+                      <span className="text-gray-500">{t('user.difficult')}</span>
                       <span className="ml-2">{getDifficultyIcon(modal.recommendation.difficulty)} {modal.recommendation.difficulty}</span>
                     </div>
                     <div>
-                      <span className="text-gray-500">Temps estimé:</span>
+                      <span className="text-gray-500">{t('user.temps_estim')}</span>
                       <span className="ml-2">
                         {'implementation_details' in modal.recommendation
                           ? `${modal.recommendation.implementation_details?.estimated_hours || 2}h`
@@ -612,7 +613,7 @@ const DaziaPage: FC = () => {
                     </div>
                     {('urgency' in modal.recommendation) && (
                       <div>
-                        <span className="text-gray-500">Urgence:</span>
+                        <span className="text-gray-500">{t('user.urgence')}</span>
                         <span className="ml-2">{modal.recommendation.urgency}</span>
                       </div>
                     )}

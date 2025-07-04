@@ -47,24 +47,24 @@ export const DaznoInsights: React.FC<DaznoInsightsProps> = ({
     <div className="space-y-6">
       {/* En-tête avec statistiques globales */}
       <div className="bg-white rounded-xl shadow p-6">
-        <h3 className="text-lg font-semibold mb-4">Analyse SparkSeer</h3>
+        <h3 className="text-lg font-semibold mb-4">{t('user.analyse_sparkseer')}</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-purple-50 p-4 rounded-lg">
             <div className="text-sm text-purple-600 font-medium">Recommandations</div>
             <div className="text-2xl font-bold text-purple-700">{recommendations.length}</div>
           </div>
           <div className="bg-blue-50 p-4 rounded-lg">
-            <div className="text-sm text-blue-600 font-medium">Catégories</div>
+            <div className="text-sm text-blue-600 font-medium">{t('user.catgories')}</div>
             <div className="text-2xl font-bold text-blue-700">{Object.keys(groupedRecommendations).length}</div>
           </div>
           <div className="bg-green-50 p-4 rounded-lg">
-            <div className="text-sm text-green-600 font-medium">Gain total estimé</div>
+            <div className="text-sm text-green-600 font-medium">{t('user.gain_total_estim')}</div>
             <div className="text-2xl font-bold text-green-700">
               {formatSats(recommendations.reduce((sum: number, rec: ExtendedRecommendation) => sum + (rec.estimated_gain_sats || 0), 0))} sats
             </div>
           </div>
           <div className="bg-orange-50 p-4 rounded-lg">
-            <div className="text-sm text-orange-600 font-medium">Confiance moyenne</div>
+            <div className="text-sm text-orange-600 font-medium">{t('user.confiance_moyenne')}</div>
             <div className="text-2xl font-bold text-orange-700">
               {Math.round(recommendations.reduce((sum: number, rec: ExtendedRecommendation) => sum + (rec.confidence_score || 0), 0) / recommendations.length * 100)}%
             </div>
@@ -104,14 +104,14 @@ export const DaznoInsights: React.FC<DaznoInsightsProps> = ({
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs text-gray-500">
                       {rec.estimated_gain_sats && (
                         <div>
-                          <span className="block font-medium text-green-600">Gain estimé</span>
+                          <span className="block font-medium text-green-600">{t('user.gain_estim')}</span>
                           <span>{formatSats(rec.estimated_gain_sats)} sats</span>
                         </div>
                       )}
 
                       {rec.estimated_timeframe && (
                         <div>
-                          <span className="block font-medium text-blue-600">Délai</span>
+                          <span className="block font-medium text-blue-600">{t('user.dlai')}</span>
                           <span>{rec.estimated_timeframe}</span>
                         </div>
                       )}
@@ -133,7 +133,7 @@ export const DaznoInsights: React.FC<DaznoInsightsProps> = ({
 
                     {rec.current_value !== undefined && rec.suggested_value !== undefined && (
                       <div className="mt-2 p-2 bg-gray-50 rounded text-xs">
-                        <span className="font-medium">Ajustement suggéré:</span>
+                        <span className="font-medium">{t('user.ajustement_suggr')}</span>
                         <span className="ml-2">
                           {rec.current_value} → <span className="text-green-600 font-medium">{rec.suggested_value}</span>
                         </span>

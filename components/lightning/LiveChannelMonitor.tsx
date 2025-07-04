@@ -185,7 +185,7 @@ export const LiveChannelMonitor: React.FC<LiveChannelMonitorProps> = ({
       {/* Header */}
       <div className="monitor-header flex items-center justify-between mb-6">
         <div className="flex items-center">
-          <h3 className="text-xl font-bold text-white mr-3">🔍 Monitoring IA en Direct</h3>
+          <h3 className="text-xl font-bold text-white mr-3">{t('LiveChannelMonitor._monitoring_ia_en_direct')}</h3>
           <div className={`flex items-center px-3 py-1 rounded-full text-sm ${isConnected ? 'bg-green-400/20 text-green-400' : 'bg-red-400/20 text-red-400'}`}>
             <div className={`w-2 h-2 rounded-full mr-2 ${isConnected ? 'bg-green-400 animate-pulse' : 'bg-red-400'}`}></div>
             {isConnected ? 'Connecté' : 'Déconnecté'}

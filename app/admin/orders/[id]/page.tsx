@@ -142,8 +142,8 @@ export default function OrderDetailPage(): JSX.Element {
     return (
       <div className="p-6">
         <div className="text-center py-12">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Commande introuvable</h2>
-          <p className="text-gray-600 mb-4">La commande demandée n'existe pas ou a été supprimée.</p>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">{t('admin.commande_introuvable')}</h2>
+          <p className="text-gray-600 mb-4">{t('admin.la_commande_demande_nexiste_pa')}</p>
           <Link href="/admin/orders" className="text-blue-600 hover:text-blue-800 underline">
             ← Retour aux commandes
           </Link>
@@ -178,34 +178,34 @@ export default function OrderDetailPage(): JSX.Element {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Informations de commande */}
         <div className="bg-white rounded-lg shadow border p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">📦 Informations de commande</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('admin._informations_de_commande')}</h2>
           <div className="space-y-3">
             <div className="flex justify-between">
-              <span className="text-gray-600">Produit :</span>
+              <span className="text-gray-600">{t('admin.produit_')}</span>
               <span className="font-medium">{order.product_type}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Montant :</span>
+              <span className="text-gray-600">{t('admin.montant_')}</span>
               <span className="font-mono font-medium">{formatAmount(order.amount)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Méthode paiement :</span>
+              <span className="text-gray-600">{t('admin.mthode_paiement_')}</span>
               <span className="font-medium">{order.payment_method || "-"}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Plan :</span>
+              <span className="text-gray-600">{t('admin.plan_')}</span>
               <span className="font-medium">{order.plan || "-"}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Cycle de facturation :</span>
+              <span className="text-gray-600">{t('admin.cycle_de_facturation_')}</span>
               <span className="font-medium">{order.billing_cycle || "-"}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Créée le :</span>
+              <span className="text-gray-600">{t('admin.cre_le_')}</span>
               <span className="font-medium">{formatDate(order.created_at)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Modifiée le :</span>
+              <span className="text-gray-600">{t('admin.modifie_le_')}</span>
               <span className="font-medium">{formatDate(order.updated_at)}</span>
             </div>
           </div>
@@ -213,43 +213,43 @@ export default function OrderDetailPage(): JSX.Element {
 
         {/* Informations utilisateur */}
         <div className="bg-white rounded-lg shadow border p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">👤 Informations client</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('admin._informations_client')}</h2>
           <div className="space-y-3">
             <div className="flex justify-between">
-              <span className="text-gray-600">Nom complet :</span>
+              <span className="text-gray-600">{t('admin.nom_complet_')}</span>
               <span className="font-medium">
                 {order.profiles.prenom} {order.profiles.nom}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Email :</span>
+              <span className="text-gray-600">{t('admin.email_')}</span>
               <span className="font-medium">{order.profiles.email}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Email vérifié :</span>
+              <span className="text-gray-600">{t('admin.email_vrifi_')}</span>
               <span className={`font-medium ${order.profiles.email_verified ? 'text-green-600' : 'text-red-600'}`}>
                 {order.profiles.email_verified ? '✅ Oui' : '❌ Non'}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Client depuis :</span>
+              <span className="text-gray-600">{t('admin.client_depuis_')}</span>
               <span className="font-medium">{formatDate(order.profiles.created_at)}</span>
             </div>
             {order.profiles.pubkey && (
               <div className="flex justify-between">
-                <span className="text-gray-600">Clé publique Lightning :</span>
+                <span className="text-gray-600">{t('admin.cl_publique_lightning_')}</span>
                 <span className="font-mono text-xs break-all">{order.profiles.pubkey}</span>
               </div>
             )}
             {order.profiles.compte_x && (
               <div className="flex justify-between">
-                <span className="text-gray-600">Compte X :</span>
+                <span className="text-gray-600">{t('admin.compte_x_')}</span>
                 <span className="font-medium">@{order.profiles.compte_x}</span>
               </div>
             )}
             {order.profiles.compte_nostr && (
               <div className="flex justify-between">
-                <span className="text-gray-600">Compte Nostr :</span>
+                <span className="text-gray-600">{t('admin.compte_nostr_')}</span>
                 <span className="font-mono text-xs break-all">{order.profiles.compte_nostr}</span>
               </div>
             )}
@@ -267,44 +267,44 @@ export default function OrderDetailPage(): JSX.Element {
         {/* Informations de livraison */}
         {order.delivery ? (
           <div className="bg-white rounded-lg shadow border p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">🚚 Adresse de livraison</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('admin._adresse_de_livraison')}</h2>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-gray-600">Statut :</span>
+                <span className="text-gray-600">{t('admin.statut_')}</span>
                 <StatusBadge status={order.delivery.shipping_status} type="shipping" />
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Adresse :</span>
+                <span className="text-gray-600">{t('admin.adresse_')}</span>
                 <span className="font-medium text-right">{order.delivery.address}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Ville :</span>
+                <span className="text-gray-600">{t('admin.ville_')}</span>
                 <span className="font-medium">{order.delivery.city}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Code postal :</span>
+                <span className="text-gray-600">{t('admin.code_postal_')}</span>
                 <span className="font-medium">{order.delivery.zip_code}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Pays :</span>
+                <span className="text-gray-600">{t('admin.pays_')}</span>
                 <span className="font-medium">{order.delivery.country}</span>
               </div>
               {order.delivery.tracking_number && (
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Suivi :</span>
+                  <span className="text-gray-600">{t('admin.suivi_')}</span>
                   <span className="font-mono font-medium">{order.delivery.tracking_number}</span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span className="text-gray-600">Créée le :</span>
+                <span className="text-gray-600">{t('admin.cre_le_')}</span>
                 <span className="font-medium">{formatDate(order.delivery.created_at)}</span>
               </div>
             </div>
           </div>
         ) : (
           <div className="bg-gray-50 rounded-lg border-2 border-dashed border-gray-300 p-6">
-            <h2 className="text-xl font-semibold text-gray-600 mb-2">🚚 Livraison</h2>
-            <p className="text-gray-500">Aucune adresse de livraison configurée pour cette commande.</p>
+            <h2 className="text-xl font-semibold text-gray-600 mb-2">{t('admin._livraison')}</h2>
+            <p className="text-gray-500">{t('admin.aucune_adresse_de_livraison_co')}</p>
             <p className="text-sm text-gray-400 mt-2">
               Les produits numériques (DazNode, DazPay) ne nécessitent pas de livraison physique.
             </p>
@@ -314,29 +314,29 @@ export default function OrderDetailPage(): JSX.Element {
         {/* Informations de paiement */}
         {order.payment ? (
           <div className="bg-white rounded-lg shadow border p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">💳 Détails du paiement</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('admin._dtails_du_paiement')}</h2>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-gray-600">Statut :</span>
+                <span className="text-gray-600">{t('admin.statut_')}</span>
                 <StatusBadge status={order.payment.status} type="payment" />
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Montant :</span>
+                <span className="text-gray-600">{t('admin.montant_')}</span>
                 <span className="font-mono font-medium">{formatAmount(order.payment.amount)}</span>
               </div>
               {order.payment.payment_hash && (
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Hash de paiement :</span>
+                  <span className="text-gray-600">{t('admin.hash_de_paiement_')}</span>
                   <span className="font-mono text-xs break-all">{order.payment.payment_hash}</span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span className="text-gray-600">Traité le :</span>
+                <span className="text-gray-600">{t('admin.trait_le_')}</span>
                 <span className="font-medium">{formatDate(order.payment.created_at)}</span>
               </div>
               {order.payment.updated_at !== order.payment.created_at && (
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Mis à jour le :</span>
+                  <span className="text-gray-600">{t('admin.mis_jour_le_')}</span>
                   <span className="font-medium">{formatDate(order.payment.updated_at)}</span>
                 </div>
               )}
@@ -344,8 +344,8 @@ export default function OrderDetailPage(): JSX.Element {
           </div>
         ) : (
           <div className="bg-yellow-50 rounded-lg border border-yellow-200 p-6">
-            <h2 className="text-xl font-semibold text-yellow-800 mb-2">💳 Paiement</h2>
-            <p className="text-yellow-700">Aucun paiement associé trouvé pour cette commande.</p>
+            <h2 className="text-xl font-semibold text-yellow-800 mb-2">{t('admin._paiement')}</h2>
+            <p className="text-yellow-700">{t('admin.aucun_paiement_associ_trouv_po')}</p>
             <p className="text-sm text-yellow-600 mt-2">
               Le paiement peut être en cours de traitement ou la commande peut être en attente.
             </p>
@@ -356,7 +356,7 @@ export default function OrderDetailPage(): JSX.Element {
       {/* Métadonnées si disponibles */}
       {order.metadata && Object.keys(order.metadata).length > 0 && (
         <div className="mt-8 bg-white rounded-lg shadow border p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">📋 Métadonnées</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('admin._mtadonnes')}</h2>
           <pre className="bg-gray-50 rounded p-4 text-sm overflow-auto">
             {JSON.stringify(order.metadata, null, 2)}
           </pre>

@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
-import { FaStar, FaQuoteLeft } from 'react-icons/fa';
+import { Star, Quote } from '@/components/shared/ui/IconRegistry';
+
 
 export interface TestimonialProps {
   name: string;
@@ -35,12 +36,12 @@ const Testimonial: React.FC<TestimonialProps> = ({ name, title, content, avatar,
     
     <div className="flex mb-3">
       {[...Array(rating)].map((_: any, i: any) => (
-        <FaStar key={i} className="text-yellow-400 w-4 h-4" />
+        <Star key={i} className="text-yellow-400 w-4 h-4" />
       ))}
     </div>
     
     <div className="relative">
-      <FaQuoteLeft className="absolute -top-2 -left-1 text-indigo-200 w-6 h-6" />
+      <Quote className="absolute -top-2 -left-1 text-indigo-200 w-6 h-6" />
       <p className="text-gray-700 leading-relaxed pl-6 italic">{content}</p>
     </div>
   </div>
@@ -67,10 +68,10 @@ const Metric: React.FC<MetricProps> = ({ number, label, delay }) => (
 );
 export const SocialProof: React.FC = () => {
   const metrics = [
-    { number: "500+", label: "Nœuds déployés" },
-    { number: "99.9%", label: "Disponibilité" },
+    { number: "500+", label: "SocialProof.socialproofsocialproofnuds_dpl" },
+    { number: "99.9%", label: "SocialProof.socialproofsocialproofdisponib" },
     { number: "24/7", label: "Support" },
-    { number: "12.7 BTC", label: "Capacity totale" }
+    { number: "12.7 BTC", label: "SocialProof.socialproofsocialproofcapacity" }
   ];
 
   const testimonials = [
@@ -139,7 +140,7 @@ export const SocialProof: React.FC = () => {
 
         {/* Partenaires/Clients logos */}
         <div className="text-center" data-aos="fade-up">
-          <p className="text-gray-500 font-medium mb-8">Utilisé par :</p>
+          <p className="text-gray-500 font-medium mb-8">{t('SocialProof.utilis_par_')}</p>
           <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
             {/* Placeholder pour logos partenaires */}
             <div className="bg-gray-200 rounded-lg px-6 py-3 text-gray-500 font-bold">

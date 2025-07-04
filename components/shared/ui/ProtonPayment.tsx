@@ -51,8 +51,8 @@ export default function ProtonPayment({ sats: _sats, promoApplied, onSuccess, on
   if (success) {
     return (
       <div className="p-6 bg-white rounded-xl shadow text-center">
-        <h2 className="text-2xl font-bold mb-2 text-green-600">Paiement envoyé !</h2>
-        <p className="mb-2">Votre paiement Proton Wallet a bien été envoyé.</p>
+        <h2 className="text-2xl font-bold mb-2 text-green-600">{t('ProtonPayment.paiement_envoy_')}</h2>
+        <p className="mb-2">{t('ProtonPayment.votre_paiement_proton_wallet_a')}</p>
         <div className="text-xs text-gray-500 break-all mb-2">Transaction ID : {txId}</div>
         <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded" onClick={onCancel}>Fermer</button>
       </div>
@@ -61,13 +61,13 @@ export default function ProtonPayment({ sats: _sats, promoApplied, onSuccess, on
 
   return (
     <div className="p-6 bg-white rounded-xl shadow max-w-md mx-auto">
-      <h2 className="text-xl font-bold mb-4">Payer par Proton Wallet</h2>
+      <h2 className="text-xl font-bold mb-4">{t('ProtonPayment.payer_par_proton_wallet')}</h2>
       <div className="mb-4">
-        <label className="block mb-1 font-medium">Votre email Proton Wallet</label>
+        <label className="block mb-1 font-medium">{t('ProtonPayment.votre_email_proton_wallet')}</label>
         <input
           type="email"
           className="w-full border rounded px-3 py-2"
-          placeholder="votre@email.proton.me"
+          placeholder="ProtonPayment.protonpaymentprotonpaymentvotr"
           value={email}
           onChange={e => setEmail(e.target.value)}
           disabled={isLoading}
@@ -75,11 +75,11 @@ export default function ProtonPayment({ sats: _sats, promoApplied, onSuccess, on
       </div>
       <div className="mb-4">
         <div className="flex justify-between">
-          <span>Montant à envoyer :</span>
+          <span>{t('ProtonPayment.montant_envoyer_')}</span>
           <span className="font-mono">{btcAmount} BTC</span>
         </div>
         <div className="flex justify-between text-xs text-gray-500 mt-1">
-          <span>Adresse BTC destinataire :</span>
+          <span>{t('ProtonPayment.adresse_btc_destinataire_')}</span>
           <span className="font-mono">{BTC_ADDRESS}</span>
         </div>
       </div>

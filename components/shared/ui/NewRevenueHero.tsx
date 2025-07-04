@@ -4,7 +4,8 @@ import { useRouter } from 'next/navigation';
 import { useConversionTracking } from '../../../hooks/useConversionTracking';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
-import { Gauge, ArrowRight } from 'lucide-react';
+import { Gauge, ArrowRight } from '@/components/shared/ui/IconRegistry';
+
 
 const NewRevenueHero: React.FC = () => {
   const router = useRouter();
@@ -61,7 +62,7 @@ const NewRevenueHero: React.FC = () => {
             </h1>
             <p className="text-xl md:text-2xl text-blue-100 mb-8 max-w-4xl mx-auto">
               Devenez opérateur de nœud Lightning et générez des revenus automatiques. 
-              Avec <strong>DazFlow Index</strong>, optimisez vos performances avec une précision inégalée.
+              Avec <strong>{t('NewRevenueHero.dazflow_index')}</strong>, optimisez vos performances avec une précision inégalée.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -87,19 +88,19 @@ const NewRevenueHero: React.FC = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
               <div className="text-center">
                 <div className="text-2xl md:text-3xl font-bold text-white mb-1">+45%</div>
-                <div className="text-blue-100 text-sm">Revenus avec DazFlow</div>
+                <div className="text-blue-100 text-sm">{t('NewRevenueHero.revenus_avec_dazflow')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl md:text-3xl font-bold text-white mb-1">99.9%</div>
-                <div className="text-blue-100 text-sm">Précision analyse</div>
+                <div className="text-blue-100 text-sm">{t('NewRevenueHero.prcision_analyse')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl md:text-3xl font-bold text-white mb-1">24/7</div>
-                <div className="text-blue-100 text-sm">Monitoring continu</div>
+                <div className="text-blue-100 text-sm">{t('NewRevenueHero.monitoring_continu')}</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-white mb-1">2.3x</div>
-                <div className="text-blue-100 text-sm">ROI amélioré</div>
+                <div className="text-2xl md:text-3xl font-bold text-white mb-1">{t('NewRevenueHero.23x')}</div>
+                <div className="text-blue-100 text-sm">{t('NewRevenueHero.roi_amlior')}</div>
               </div>
             </div>
           </div>
@@ -109,15 +110,15 @@ const NewRevenueHero: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-12">
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
             <div className="text-3xl font-bold text-yellow-400">50-200€</div>
-            <div className="text-white text-lg">Revenus mensuels moyens</div>
+            <div className="text-white text-lg">{t('NewRevenueHero.revenus_mensuels_moyens')}</div>
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
             <div className="text-3xl font-bold text-green-400">15-25%</div>
-            <div className="text-white text-lg">ROI annuel typique</div>
+            <div className="text-white text-lg">{t('NewRevenueHero.roi_annuel_typique')}</div>
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-            <div className="text-3xl font-bold text-blue-400">4-8 mois</div>
-            <div className="text-white text-lg">Amortissement DazBox</div>
+            <div className="text-3xl font-bold text-blue-400">{t('NewRevenueHero.48_mois')}</div>
+            <div className="text-white text-lg">{t('NewRevenueHero.amortissement_dazbox')}</div>
           </div>
         </div>
 
@@ -125,15 +126,15 @@ const NewRevenueHero: React.FC = () => {
         <div className="flex flex-wrap justify-center items-center gap-6 text-green-200 text-sm mt-8">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span>+500 node runners actifs</span>
+            <span>{t('NewRevenueHero.500_node_runners_actifs')}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
-            <span>Discord privé 24/7</span>
+            <span>{t('NewRevenueHero.discord_priv_247')}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-            <span>Entraide technique garantie</span>
+            <span>{t('NewRevenueHero.entraide_technique_garantie')}</span>
           </div>
         </div>
 
@@ -157,7 +158,7 @@ const NewRevenueHero: React.FC = () => {
         {/* Garantie et bénéfices */}
         <div className="bg-gradient-to-r from-green-500/20 to-blue-500/20 backdrop-blur-sm rounded-2xl p-8 mt-12 max-w-3xl mx-auto border border-white/30">
           <p className="text-white font-medium text-lg">
-            <span className="text-yellow-300 font-bold text-xl">✅ Garantie 30 jours satisfait ou remboursé</span>
+            <span className="text-yellow-300 font-bold text-xl">{t('NewRevenueHero._garantie_30_jours_satisfait_o')}</span>
             <br className="md:hidden" />
             <span className="block mt-2">
               Si vous ne générez pas au moins 50€ de revenus dans vos 30 premiers jours, nous vous remboursons intégralement.
@@ -169,7 +170,7 @@ const NewRevenueHero: React.FC = () => {
         <div className="mt-16 flex justify-center">
           <div className="group text-yellow-300 hover:text-yellow-200 transition-all duration-300 flex flex-col items-center cursor-pointer"
                onClick={() => document.getElementById('why-become-runner')?.scrollIntoView({ behavior: 'smooth' })}>
-            <span className="text-sm font-medium mb-2">Découvrir pourquoi</span>
+            <span className="text-sm font-medium mb-2">{t('NewRevenueHero.dcouvrir_pourquoi')}</span>
             <div className="w-12 h-12 rounded-full bg-yellow-300 text-green-700 flex items-center justify-center group-hover:bg-yellow-200 transition-colors">
               <svg className="w-6 h-6 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />

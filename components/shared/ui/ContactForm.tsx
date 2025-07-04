@@ -54,7 +54,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          "ContactForm.contactformcontactformcontentt": 'application/json',
         },
         body: JSON.stringify({
           firstName: form.firstName,
@@ -151,9 +151,9 @@ const ContactForm: React.FC<ContactFormProps> = ({
               }}
               required
             >
-              <option value="">Sélectionnez un sujet</option>
-              <option value="question_technique">Question technique</option>
-              <option value="probleme_paiement">Problème de paiement</option>
+              <option value="">{t('ContactForm.slectionnez_un_sujet')}</option>
+              <option value="question_technique">{t('ContactForm.question_technique')}</option>
+              <option value="probleme_paiement">{t('ContactForm.problme_de_paiement')}</option>
               <option value="suggestion">Suggestion</option>
               <option value="partenariat">Partenariat</option>
               <option value="autre">Autre</option>
@@ -172,7 +172,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
                 setForm(prev => ({ ...prev, message: e.target.value }));
                 if (errors.message) setErrors(prev => ({ ...prev, message: '' }));
               }}
-              placeholder="Votre message"
+              placeholder="ContactForm.contactformcontactformvotre_me"
               rows={5}
               required
             />

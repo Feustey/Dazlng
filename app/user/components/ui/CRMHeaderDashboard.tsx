@@ -154,7 +154,7 @@ export const CRMHeaderDashboard: React.FC<CRMHeaderDashboardProps> = ({
           <div className="flex items-center gap-3">
             <div className="text-2xl">🎯</div>
             <div className="flex-1">
-              <div className="font-semibold text-gray-900">Prochaine étape recommandée</div>
+              <div className="font-semibold text-gray-900">{t('user.prochaine_tape_recommande')}</div>
               <div className="text-sm text-gray-600">{segmentInfo.nextAction}</div>
             </div>
             <div className="text-right">

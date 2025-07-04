@@ -27,38 +27,38 @@ export const PremiumConversionModal: React.FC<PremiumConversionModalProps> = ({
     {
       icon: '⚡',
       title: "Recommandations IA Personnalisées",
-      description: "Dazia analyse votre nœud 24/7 et propose des optimisations spécifiques",
+      description: "user.useruserdazia_analyse_votre_nu",
       value: "+15-30% de revenus",
       popular: true
     },
     {
       icon: '📊',
       title: "Analytics Avancées",
-      description: "Métriques détaillées, projections et comparaisons avec le réseau",
+      description: "user.userusermtriques_dtailles_proj",
       value: "Insights exclusifs"
     },
     {
       icon: '🔔',
       title: "Monitoring Proactif",
-      description: "Alertes automatiques pour les problèmes de performance",
+      description: "user.useruseralertes_automatiques_p",
       value: "99.9% uptime"
     },
     {
       icon: '🎧',
       title: "Support Prioritaire",
-      description: "Accès direct aux experts Lightning Network",
+      description: "user.useruseraccs_direct_aux_expert",
       value: "Support 24/7"
     },
     {
       icon: '🎯',
       title: "Optimisations Automatiques",
-      description: "Application automatique des recommandations approuvées",
+      description: "user.useruserapplication_automatiqu",
       value: "Gain de temps"
     },
     {
       icon: '📈',
       title: "Rapports Détaillés",
-      description: "Analyses hebdomadaires et projections de revenus",
+      description: "user.useruseranalyses_hebdomadaires",
       value: "Business intelligence"
     }
   ];
@@ -122,7 +122,7 @@ export const PremiumConversionModal: React.FC<PremiumConversionModalProps> = ({
             <div className="text-4xl">🚀</div>
             <div>
               <h2 className="text-2xl font-bold">Bonjour {userName}, passez à Premium !</h2>
-              <p className="text-purple-100">Débloquez le potentiel complet de votre nœud Lightning</p>
+              <p className="text-purple-100">{t('user.dbloquez_le_potentiel_complet_')}</p>
             </div>
           </div>
           
@@ -131,15 +131,15 @@ export const PremiumConversionModal: React.FC<PremiumConversionModalProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="text-center">
                 <div className="text-2xl font-bold">{userScore}/100</div>
-                <div className="text-sm text-purple-100">Votre score actuel</div>
+                <div className="text-sm text-purple-100">{t('user.votre_score_actuel')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold">+{Math.round(personalizedGain / 1000)}k</div>
-                <div className="text-sm text-purple-100">Sats/mois estimés</div>
+                <div className="text-sm text-purple-100">{t('user.satsmois_estims')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold">{roiCalculation.paybackWeeks}</div>
-                <div className="text-sm text-purple-100">Semaines pour ROI</div>
+                <div className="text-sm text-purple-100">{t('user.semaines_pour_roi')}</div>
               </div>
             </div>
           </div>
@@ -148,9 +148,9 @@ export const PremiumConversionModal: React.FC<PremiumConversionModalProps> = ({
         {/* Tabs */}
         <div className="flex border-b">
           {[
-            { key: 'features', label: 'Fonctionnalités', icon: '⭐' },
-            { key: 'roi', label: 'Rentabilité', icon: '📈' },
-            { key: 'testimonials', label: 'Témoignages', icon: '💬' }
+            { key: 'features', label: "user.useruserfonctionnalits", icon: '⭐' },
+            { key: 'roi', label: "user.useruserrentabilit", icon: '📈' },
+            { key: 'testimonials', label: "user.userusertmoignages", icon: '💬' }
           ].map(tab => (
             <button
               key={tab.key}
@@ -218,27 +218,27 @@ export const PremiumConversionModal: React.FC<PremiumConversionModalProps> = ({
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-6 border border-green-200">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-green-600">29 000 sats</div>
-                    <div className="text-sm text-gray-600">Coût mensuel Premium</div>
+                    <div className="text-3xl font-bold text-green-600">{t('user.29_000_sats')}</div>
+                    <div className="text-sm text-gray-600">{t('user.cot_mensuel_premium')}</div>
                   </div>
                   
                   <div className="text-center">
                     <div className="text-3xl font-bold text-blue-600">
                       +{Math.round(personalizedGain / 1000)}k
                     </div>
-                    <div className="text-sm text-gray-600">Sats gains estimés/mois</div>
+                    <div className="text-sm text-gray-600">{t('user.sats_gains_estimsmois')}</div>
                   </div>
                   
                   <div className="text-center">
                     <div className="text-3xl font-bold text-purple-600">{roiCalculation.paybackWeeks}</div>
-                    <div className="text-sm text-gray-600">Semaines pour rentabilité</div>
+                    <div className="text-sm text-gray-600">{t('user.semaines_pour_rentabilit')}</div>
                   </div>
                 </div>
                 
                 <div className="bg-white rounded-lg p-4">
-                  <h4 className="font-semibold mb-3">Projection 6 mois</h4>
+                  <h4 className="font-semibold mb-3">{t('user.projection_6_mois')}</h4>
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm">Gains cumulés</span>
+                    <span className="text-sm">{t('user.gains_cumuls')}</span>
                     <span className="text-lg font-bold text-green-600">
                       +{Math.round((personalizedGain * 6 - 29000 * 6) / 1000)}k sats
                     </span>
@@ -255,22 +255,22 @@ export const PremiumConversionModal: React.FC<PremiumConversionModalProps> = ({
               {/* Comparaison avec/sans Premium */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="border border-gray-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-gray-900 mb-3">🆓 Sans Premium</h4>
+                  <h4 className="font-semibold text-gray-900 mb-3">{t('user._sans_premium')}</h4>
                   <ul className="space-y-2 text-sm text-gray-600">
-                    <li>• Recommandations basiques limitées</li>
-                    <li>• Pas d'analytics avancées</li>
-                    <li>• Support communautaire uniquement</li>
-                    <li>• Optimisations manuelles</li>
+                    <li>{t('user._recommandations_basiques_limi')}</li>
+                    <li>{t('user._pas_danalytics_avances')}</li>
+                    <li>{t('user._support_communautaire_uniquem')}</li>
+                    <li>{t('user._optimisations_manuelles')}</li>
                   </ul>
                 </div>
                 
                 <div className="border border-purple-200 rounded-lg p-4 bg-purple-50">
-                  <h4 className="font-semibold text-purple-900 mb-3">💎 Avec Premium</h4>
+                  <h4 className="font-semibold text-purple-900 mb-3">{t('user._avec_premium')}</h4>
                   <ul className="space-y-2 text-sm text-purple-700">
-                    <li>• IA avancée 24/7</li>
-                    <li>• Analytics et projections</li>
-                    <li>• Support expert prioritaire</li>
-                    <li>• Optimisations automatiques</li>
+                    <li>{t('user._ia_avance_247')}</li>
+                    <li>{t('user._analytics_et_projections')}</li>
+                    <li>{t('user._support_expert_prioritaire')}</li>
+                    <li>{t('user._optimisations_automatiques')}</li>
                   </ul>
                 </div>
               </div>
@@ -320,7 +320,7 @@ export const PremiumConversionModal: React.FC<PremiumConversionModalProps> = ({
         <div className="border-t bg-gray-50 p-6 rounded-b-2xl">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-lg font-bold text-gray-900">Commencez dès aujourd'hui</div>
+              <div className="text-lg font-bold text-gray-900">{t('user.commencez_ds_aujourdhui')}</div>
               <div className="text-sm text-gray-600">
                 Garantie satisfaction 30 jours • Annulation à tout moment • Support inclus
               </div>

@@ -244,6 +244,46 @@ npm run type-check
 └── public/               # Fichiers statiques
 ```
 
+## 🎨 Gestion des icônes et conventions UI
+
+Toutes les icônes utilisées dans l'interface (UI) sont centralisées dans le fichier :
+
+```
+components/shared/ui/IconRegistry.tsx
+```
+
+### Pourquoi ce registre ?
+- **Optimisation des imports** : évite les imports multiples et incohérents
+- **Facilite la maintenance** : ajoutez ou remplacez une icône à un seul endroit
+- **Compatibilité** : permet d'utiliser à la fois les icônes Lucide et les alias d'anciennes librairies (ex : react-icons)
+
+### Utilisation
+Pour importer une ou plusieurs icônes dans un composant :
+
+```tsx
+import { Zap, TrendingUp, CheckCircle } from '@/components/shared/ui/IconRegistry';
+```
+
+Pour utiliser dynamiquement une icône par son nom :
+
+```tsx
+import { Icon } from '@/components/shared/ui/IconRegistry';
+
+<Icon name="Zap" className="h-6 w-6 text-primary" />
+```
+
+> **Astuce** : Si vous migrez un ancien composant utilisant `FaBolt`, `FaCheckCircle`, etc., utilisez simplement l'alias correspondant du registre (ex : `FaBolt` → `Zap`).
+
+### Ajout d'une nouvelle icône
+- Ajoutez l'icône dans le fichier `IconRegistry.tsx` (import Lucide ou alias)
+- Exportez-la dans l'objet `IconRegistry` et dans l'export global
+- Utilisez-la dans vos composants via l'import centralisé
+
+### Correction automatique
+Pour corriger les imports d'icônes, utilisez le registre centralisé et importez directement depuis `@/components/shared/ui/IconRegistry`.
+
+---
+
 ## 🔒 Sécurité
 
 - **Authentification multi-facteurs** : OTP par email, connexion Lightning

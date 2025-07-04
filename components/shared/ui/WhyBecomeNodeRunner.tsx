@@ -5,7 +5,7 @@ const WhyBecomeNodeRunner: React.FC = () => {
     {
       icon: "💰",
       title: "Revenus Passifs",
-      description: "Générez des revenus automatiquement 24h/24 7j/7",
+      description: "WhyBecomeNodeRunner.whybecomenoderunnerwhybecomeno",
       gradient: "from-green-500 to-emerald-600",
       details: [
         "0.1% à 0.5% de commission sur chaque transaction",
@@ -17,7 +17,7 @@ const WhyBecomeNodeRunner: React.FC = () => {
     {
       icon: "🛡️",
       title: "Contribuer au Réseau",
-      description: "Participez à la décentralisation de Bitcoin",
+      description: "WhyBecomeNodeRunner.whybecomenoderunnerwhybecomeno",
       gradient: "from-blue-500 to-indigo-600",
       details: [
         "Renforcez la résilience du Lightning Network",
@@ -29,7 +29,7 @@ const WhyBecomeNodeRunner: React.FC = () => {
     {
       icon: "🚀",
       title: "Technologie Avancée",
-      description: "Bénéficiez d'une infrastructure de pointe",
+      description: "WhyBecomeNodeRunner.whybecomenoderunnerwhybecomeno"une infrastructure de pointe",
       gradient: "from-purple-500 to-pink-600",
       details: [
         "IA prédictive pour optimiser les performances",
@@ -41,7 +41,7 @@ const WhyBecomeNodeRunner: React.FC = () => {
     {
       icon: "📈",
       title: "Croissance Continue",
-      description: "Profitez de l'expansion du Lightning Network",
+      description: "WhyBecomeNodeRunner.whybecomenoderunnerwhybecomeno"expansion du Lightning Network",
       gradient: "from-orange-500 to-red-600",
       details: [
         "Adoption croissante de Bitcoin et Lightning",
@@ -98,19 +98,19 @@ const WhyBecomeNodeRunner: React.FC = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
               <div className="text-3xl font-bold text-yellow-300">847</div>
-              <div className="text-indigo-200">Node runners actifs</div>
+              <div className="text-indigo-200">{t('WhyBecomeNodeRunner.node_runners_actifs')}</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-green-300">2.4M€</div>
-              <div className="text-indigo-200">Revenus générés</div>
+              <div className="text-3xl font-bold text-green-300">{t('WhyBecomeNodeRunner.24m')}</div>
+              <div className="text-indigo-200">{t('WhyBecomeNodeRunner.revenus_gnrs')}</div>
             </div>
             <div>
               <div className="text-3xl font-bold text-blue-300">99.9%</div>
-              <div className="text-indigo-200">Uptime moyen</div>
+              <div className="text-indigo-200">{t('WhyBecomeNodeRunner.uptime_moyen')}</div>
             </div>
             <div>
               <div className="text-3xl font-bold text-pink-300">24/7</div>
-              <div className="text-indigo-200">Support communauté</div>
+              <div className="text-indigo-200">{t('WhyBecomeNodeRunner.support_communaut')}</div>
             </div>
           </div>
         </div>

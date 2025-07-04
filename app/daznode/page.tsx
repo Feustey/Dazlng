@@ -118,7 +118,7 @@ const dazNodeStructuredData = {
 
 export const metadata: Metadata = {
   title: 'DazNode | Gestion Avancée de Nœuds Lightning Network',
-  description: 'DazNode offre une gestion professionnelle de nœuds Lightning Network avec IA d\'optimisation, analytics avancés et support expert. Maximisez vos revenus Lightning.',
+  description: "common.commoncommondaznode_offre_une_"optimisation, analytics avancés et support expert. Maximisez vos revenus Lightning.',
   keywords: [
     'DazNode',
     'Lightning Network',
@@ -140,7 +140,7 @@ export const metadata: Metadata = {
     locale: 'fr_FR',
     url: `${seoConfig.baseUrl}/daznode`,
     title: 'DazNode | Gestion Avancée de Nœuds Lightning Network',
-    description: 'DazNode offre une gestion professionnelle de nœuds Lightning Network avec IA d\'optimisation, analytics avancés et support expert. Maximisez vos revenus Lightning.',
+    description: "common.commoncommondaznode_offre_une_"optimisation, analytics avancés et support expert. Maximisez vos revenus Lightning.',
     siteName: 'DazNode',
     images: [
       {
@@ -154,7 +154,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'DazNode | Gestion Avancée de Nœuds Lightning Network',
-    description: 'DazNode offre une gestion professionnelle de nœuds Lightning Network avec IA d\'optimisation.',
+    description: "common.commoncommondaznode_offre_une_"optimisation.',
     images: [`${seoConfig.baseUrl}/assets/images/daznode-og.png`],
     creator: '@daznode'
   },

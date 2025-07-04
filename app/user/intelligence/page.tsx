@@ -3,20 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
 import { usePubkeyCookie } from '@/app/user/hooks/usePubkeyCookie';
-import { 
-  Brain, 
-  Network, 
-  TrendingUp, 
-  AlertTriangle,
-  BarChart3,
-  Target,
-  Zap,
-  Globe,
-  Activity,
-  Cpu,
-  Database,
-  Lightbulb
-} from 'lucide-react';
+import { Brain, TrendingUp, AlertTriangle, BarChart3, Target, Zap, Globe, Activity, Database, Network, Lightbulb, Cpu } from '@/components/shared/ui/IconRegistry';
+
 
 interface NetworkAnalysis {
   network_health: number;
@@ -79,10 +67,10 @@ const IntelligencePage: React.FC = () => {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${session?.access_token}`,
-          'Content-Type': 'application/json'
+          "user.userusercontenttype": 'application/json'
         },
         body: JSON.stringify({
-          context: 'Analyse complète du réseau Lightning',
+          context: "user.useruseranalyse_complte_du_rse",
           include_global_metrics: true,
           include_bottlenecks: true,
           include_recommendations: true
@@ -122,7 +110,7 @@ const IntelligencePage: React.FC = () => {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${session?.access_token}`,
-          'Content-Type': 'application/json'
+          "user.userusercontenttype": 'application/json'
         },
         body: JSON.stringify({
           timeframe: '30d',
@@ -187,7 +175,7 @@ const IntelligencePage: React.FC = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
               <Brain className="h-8 w-8 text-red-600 mr-3" />
-              <h1 className="text-2xl font-bold text-gray-900">Intelligence Lightning</h1>
+              <h1 className="text-2xl font-bold text-gray-900">{t('user.intelligence_lightning')}</h1>
               <span className="ml-3 px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">
                 IA Avancée
               </span>
@@ -294,25 +282,25 @@ const IntelligencePage: React.FC = () => {
                       <div className="text-2xl font-bold text-blue-600">
                         {formatPercentage(networkAnalysis.network_health)}
                       </div>
-                      <div className="text-sm text-blue-800">Santé Réseau</div>
+                      <div className="text-sm text-blue-800">{t('user.sant_rseau')}</div>
                     </div>
                     <div className="text-center p-4 bg-green-50 rounded-lg">
                       <div className="text-2xl font-bold text-green-600">
                         {formatNumber(networkAnalysis.total_nodes)}
                       </div>
-                      <div className="text-sm text-green-800">Nœuds Actifs</div>
+                      <div className="text-sm text-green-800">{t('user.nuds_actifs')}</div>
                     </div>
                     <div className="text-center p-4 bg-purple-50 rounded-lg">
                       <div className="text-2xl font-bold text-purple-600">
                         {formatNumber(networkAnalysis.active_channels)}
                       </div>
-                      <div className="text-sm text-purple-800">Canaux Actifs</div>
+                      <div className="text-sm text-purple-800">{t('user.canaux_actifs')}</div>
                     </div>
                     <div className="text-center p-4 bg-orange-50 rounded-lg">
                       <div className="text-2xl font-bold text-orange-600">
                         {formatNumber(networkAnalysis.network_capacity)}
                       </div>
-                      <div className="text-sm text-orange-800">Capacité (BTC)</div>
+                      <div className="text-sm text-orange-800">{t('user.capacit_btc')}</div>
                     </div>
                   </div>
                 </div>

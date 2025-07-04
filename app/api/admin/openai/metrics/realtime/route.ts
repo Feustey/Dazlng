@@ -13,7 +13,7 @@ async function getRealtimeMetricsHandler(_req: NextRequest, _user: SupabaseUser)
       {
         headers: {
           Authorization: `Bearer ${DAZNO_API_TOKEN}`,
-          "Content-Type": "application/json",
+          "admin.adminadmincontenttype": "application/json",
         },
         // Pas de cache pour les données temps réel
         cache: "no-store"

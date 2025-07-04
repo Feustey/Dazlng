@@ -10,7 +10,7 @@ const DetailedTestimonials: React.FC = () => {
       gradient: "from-blue-500 to-indigo-600",
       quote: "J'ai commencé avec 0.5 BTC de capital et je génère maintenant 180€/mois en revenus passifs. Le monitoring IA m'a évité 3 force-closes qui m'auraient coûté 0.15 BTC.",
       metrics: {
-        "Revenus/mois": "180€",
+        "DetailedTestimonials.detailedtestimonialsdetailedte": "180€",
         "ROI": "22%",
         "Canaux": "12",
         "Uptime": "99.8%"
@@ -24,10 +24,10 @@ const DetailedTestimonials: React.FC = () => {
       gradient: "from-purple-500 to-pink-600",
       quote: "Grâce à DazNode, j'ai pu diversifier mes revenus crypto. L'IA anticipe les problèmes et j'ai une visibilité totale sur mes performances Lightning.",
       metrics: {
-        "Revenus/mois": "340€",
+        "DetailedTestimonials.detailedtestimonialsdetailedte": "340€",
         "ROI": "19%",
         "Canaux": "24",
-        "Liquidité": "2.1 BTC"
+        "DetailedTestimonials.detailedtestimonialsdetailedte": "2.1 BTC"
       },
       journey: "A commencé avec 1 BTC, maintenant opératrice pro"
     },
@@ -38,10 +38,10 @@ const DetailedTestimonials: React.FC = () => {
       gradient: "from-green-500 to-emerald-600",
       quote: "Le plus impressionnant c'est la prédiction des force-closes. L'IA m'a fait économiser plus de 0.3 BTC en 6 mois. Je recommande à tous mes amis dans Bitcoin.",
       metrics: {
-        "Revenus/mois": "290€",
+        "DetailedTestimonials.detailedtestimonialsdetailedte": "290€",
         "Économies": "0.3 BTC",
         "Canaux": "18",
-        "Succès": "94%"
+        "DetailedTestimonials.detailedtestimonialsdetailedte": "94%"
       },
       journey: "Premier utilisateur de la beta, membre VIP"
     }
@@ -116,19 +116,19 @@ const DetailedTestimonials: React.FC = () => {
         {/* Statistiques globales */}
         <div className="mt-16 text-center">
           <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl p-8 text-white">
-            <h3 className="text-2xl font-bold mb-4">Résultats moyens de la communauté</h3>
+            <h3 className="text-2xl font-bold mb-4">{t('DetailedTestimonials.rsultats_moyens_de_la_communau')}</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
                 <div className="text-3xl font-bold">127€</div>
-                <div className="text-sm opacity-90">Revenus mensuels moyens après 3 mois</div>
+                <div className="text-sm opacity-90">{t('DetailedTestimonials.revenus_mensuels_moyens_aprs_3')}</div>
               </div>
               <div>
                 <div className="text-3xl font-bold">18.5%</div>
-                <div className="text-sm opacity-90">ROI annuel moyen</div>
+                <div className="text-sm opacity-90">{t('DetailedTestimonials.roi_annuel_moyen')}</div>
               </div>
               <div>
-                <div className="text-3xl font-bold">6 mois</div>
-                <div className="text-sm opacity-90">Temps moyen pour devenir expert</div>
+                <div className="text-3xl font-bold">{t('DetailedTestimonials.6_mois')}</div>
+                <div className="text-sm opacity-90">{t('DetailedTestimonials.temps_moyen_pour_devenir_exper')}</div>
               </div>
             </div>
           </div>

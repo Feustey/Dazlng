@@ -84,7 +84,7 @@ export const SatsPricingCard: React.FC<SatsPricingCardProps> = ({
           <span className="amount text-4xl font-extrabold text-yellow-400 font-mono">
             {formatSatsPrice(totalWithCommission)}
           </span>
-          <span className="period text-gray-400 text-lg ml-2">/mois</span>
+          <span className="period text-gray-400 text-lg ml-2">{t('SatsPricingCard.mois')}</span>
         </div>
         
         <button 
@@ -225,7 +225,7 @@ export const LightningPricingSection: React.FC = () => {
         
         <div className="text-center mt-12">
           <p className="text-gray-400 text-sm">
-            💡 <strong>Garantie satisfaction :</strong> Premier mois remboursé si vous n'évitez pas au moins un force-close
+            💡 <strong>{t('SatsPricingCard.garantie_satisfaction_')}</strong> Premier mois remboursé si vous n'évitez pas au moins un force-close
           </p>
         </div>
       </div>

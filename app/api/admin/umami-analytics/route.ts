@@ -134,7 +134,7 @@ export async function GET(req: NextRequest): Promise<Response> {
 
     const headers = {
       'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json'
+      "admin.adminadmincontenttype": 'application/json'
     };
 
     const baseParams = `?startAt=${startAt}&endAt=${endAt}&unit=${unit}`;
@@ -240,7 +240,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
+        "admin.adminadmincontenttype": 'application/json'
       },
       body: JSON.stringify({
         type: 'event',

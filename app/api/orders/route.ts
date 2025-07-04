@@ -180,12 +180,12 @@ export async function POST(req: NextRequest): Promise<Response> {
           mainContent: `Merci pour votre commande ! Voici le récapitulatif :`,
           detailedContent: `
             <ul>
-              <li><b>Produit :</b> ${product.name}</li>
-              <li><b>Type :</b> ${product_type}</li>
-              <li><b>Quantité :</b> ${product.quantity}</li>
-              <li><b>Prix unitaire :</b> ${product.priceSats} sats</li>
-              <li><b>Total :</b> ${amount} sats</li>
-              <li><b>Méthode de paiement :</b> ${payment_method}</li>
+              <li><b>{t('route.produit_')}</b> ${product.name}</li>
+              <li><b>{t('route.type_')}</b> ${product_type}</li>
+              <li><b>{t('route.quantit_')}</b> ${product.quantity}</li>
+              <li><b>{t('route.prix_unitaire_')}</b> ${product.priceSats} sats</li>
+              <li><b>{t('route.total_')}</b> ${amount} sats</li>
+              <li><b>{t('route.mthode_de_paiement_')}</b> ${payment_method}</li>
             </ul>
           `,
           ctaText: 'Suivre ma commande',
@@ -219,7 +219,7 @@ export async function POST(req: NextRequest): Promise<Response> {
             detailedContent: `
               <p>Numéro de commande : <b>#${data.id}</b></p>
               <p>Montant : <b>${amount} sats</b></p>
-              <p>Vous recevrez un email dès que votre commande sera traitée.</p>
+              <p>{t('route.vous_recevrez_un_email_ds_que_')}</p>
             `,
             ctaText: 'Mon compte',
             ctaLink: 'https://dazno.de/user/dashboard'

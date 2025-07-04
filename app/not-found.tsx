@@ -31,8 +31,8 @@ export default function NotFound() {
         </div>
         
         <div className="mt-8 text-sm text-gray-500">
-          <p>Si vous pensez qu'il s'agit d'une erreur,</p>
-          <p>contactez-nous à support@dazno.de</p>
+          <p>{t('not-found.si_vous_pensez_quil_sagit_dune')}</p>
+          <p>{t('not-found.contacteznous_supportdaznode')}</p>
         </div>
       </div>
     </div>

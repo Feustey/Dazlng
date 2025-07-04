@@ -126,7 +126,7 @@ const SubscriptionsPage: FC = () => {
         fetch('/api/subscriptions/current', {
           headers: { 
             'Authorization': `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json'
+            "user.userusercontenttype": 'application/json'
           }
         }),
         fetch('/api/subscriptions/plans')
@@ -169,7 +169,7 @@ const SubscriptionsPage: FC = () => {
       const response = await fetch(`/api/billing/invoices${statusFilter}`, {
         headers: {
           'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json'
+          "user.userusercontenttype": 'application/json'
         }
       });
 
@@ -237,7 +237,7 @@ const SubscriptionsPage: FC = () => {
       draft: 'Brouillon',
       sent: 'Envoyée',
       paid: 'Payée',
-      overdue: 'En retard',
+      overdue: "user.en_retard",
       cancelled: 'Annulée'
     };
 
@@ -278,7 +278,7 @@ const SubscriptionsPage: FC = () => {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json'
+          "user.userusercontenttype": 'application/json'
         },
         body: JSON.stringify({
           amount,
@@ -348,7 +348,7 @@ const SubscriptionsPage: FC = () => {
             <div class="w-16 h-16 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
               <span class="text-2xl">⚡</span>
             </div>
-            <h3 class="text-xl font-bold mb-2">Facture Lightning</h3>
+            <h3 class="text-xl font-bold mb-2">{t('user.facture_lightning')}</h3>
             <p class="text-gray-600">Plan ${planName} - ${cycleText}</p>
           </div>
           
@@ -358,7 +358,7 @@ const SubscriptionsPage: FC = () => {
               
               <!-- QR Code -->
               <div class="flex justify-center mb-4">
-                <img src="${qrCodeDataUrl}" alt="QR Code Lightning Invoice" class="border-2 border-gray-200 rounded-lg" />
+                <img src="${qrCodeDataUrl}" alt="user.useruserqr_code_lightning_invo" class="border-2 border-gray-200 rounded-lg" />
               </div>
               
               <div class="text-xs text-gray-500 break-all font-mono p-2 bg-white rounded border">${invoice.paymentRequest}</div>
@@ -381,8 +381,8 @@ const SubscriptionsPage: FC = () => {
           </div>
           
           <div class="mt-4 text-xs text-gray-500 text-center">
-            <p>🔒 Paiement sécurisé via Lightning Network</p>
-            <p>Cette facture expire dans 1 heure</p>
+            <p>{t('user._paiement_scuris_via_lightning')}</p>
+            <p>{t('user.cette_facture_expire_dans_1_he')}</p>
           </div>
         </div>
       `;
@@ -401,7 +401,7 @@ const SubscriptionsPage: FC = () => {
             <div class="w-16 h-16 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
               <span class="text-2xl">⚡</span>
             </div>
-            <h3 class="text-xl font-bold mb-2">Facture Lightning</h3>
+            <h3 class="text-xl font-bold mb-2">{t('user.facture_lightning')}</h3>
             <p class="text-gray-600">Plan ${planName} - ${cycleText}</p>
           </div>
           
@@ -444,7 +444,7 @@ const SubscriptionsPage: FC = () => {
         <div className="flex items-center justify-center min-h-96">
           <div className="text-center">
             <div className="animate-spin h-12 w-12 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p className="text-gray-600">Chargement de vos abonnements...</p>
+            <p className="text-gray-600">{t('user.chargement_de_vos_abonnements')}</p>
           </div>
         </div>
       </div>
@@ -475,13 +475,13 @@ const SubscriptionsPage: FC = () => {
     return (
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900">Mon abonnement</h1>
+          <h1 className="text-3xl font-bold text-gray-900">{t('user.mon_abonnement')}</h1>
           <div className="text-sm text-gray-500">
             Connecté en tant que {user.email}
           </div>
         </div>
         <div className="bg-red-50 text-red-700 p-4 rounded-lg border border-red-200">
-          <h3 className="font-semibold mb-2">❌ Erreur</h3>
+          <h3 className="font-semibold mb-2">{t('user._erreur')}</h3>
           <p>{error}</p>
           <button 
             onClick={fetchSubscriptionData}
@@ -497,7 +497,7 @@ const SubscriptionsPage: FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Abonnements & Facturation</h1>
+        <h1 className="text-3xl font-bold text-gray-900">{t('user.abonnements_facturation')}</h1>
         <div className="text-sm text-gray-500">
           Connecté en tant que {user.email}
         </div>
@@ -539,7 +539,7 @@ const SubscriptionsPage: FC = () => {
                 <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-6 border border-purple-200">
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h2 className="text-xl font-semibold mb-2">Abonnement actuel</h2>
+                      <h2 className="text-xl font-semibold mb-2">{t('user.abonnement_actuel')}</h2>
                       <div className="flex items-center gap-3">
                         <span className="text-2xl font-bold">{currentSubscription.planName}</span>
                         {getStatusBadge(currentSubscription.status)}
@@ -547,7 +547,7 @@ const SubscriptionsPage: FC = () => {
                     </div>
                     <div className="text-right">
                       <div className="text-2xl font-bold">
-                        {formatSats(currentSubscription.price)} sats<span className="text-sm font-normal text-gray-500">/mois</span>
+                        {formatSats(currentSubscription.price)} sats<span className="text-sm font-normal text-gray-500">{t('user.mois')}</span>
                       </div>
                     </div>
                   </div>
@@ -565,7 +565,7 @@ const SubscriptionsPage: FC = () => {
                       </div>
                     </div>
                     <div>
-                      <h3 className="font-medium text-gray-700 mb-2">Fonctionnalités incluses</h3>
+                      <h3 className="font-medium text-gray-700 mb-2">{t('user.fonctionnalits_incluses')}</h3>
                       <ul className="space-y-1 text-sm">
                         {currentSubscription.features.map((feature: any, index: any) => (
                           <li key={index} className="flex items-center gap-2">
@@ -579,7 +579,7 @@ const SubscriptionsPage: FC = () => {
 
                   {currentSubscription.status === 'cancelled' && currentSubscription.cancelReason && (
                     <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                      <h4 className="font-medium text-red-800 mb-2">Abonnement annulé</h4>
+                      <h4 className="font-medium text-red-800 mb-2">{t('user.abonnement_annul')}</h4>
                       <p className="text-red-700 text-sm">{currentSubscription.cancelReason}</p>
                       {currentSubscription.cancelledAt && (
                         <p className="text-red-600 text-xs mt-1">
@@ -637,7 +637,7 @@ const SubscriptionsPage: FC = () => {
                         Économisez {formatSats(planPricing.basic.monthly * 12 - planPricing.basic.yearly)} sats/an
                       </div>
                     )}
-                    <p className="text-gray-600 text-sm mt-2">Optimisation et statistiques avancées</p>
+                    <p className="text-gray-600 text-sm mt-2">{t('user.optimisation_et_statistiques_a')}</p>
                   </div>
 
                   <ul className="space-y-2 mb-6">
@@ -708,7 +708,7 @@ const SubscriptionsPage: FC = () => {
                         Économisez {formatSats(planPricing.premium.monthly * 12 - planPricing.premium.yearly)} sats/an
                       </div>
                     )}
-                    <p className="text-gray-600 text-sm mt-2">Toutes les fonctionnalités + IA avancée</p>
+                    <p className="text-gray-600 text-sm mt-2">{t('user.toutes_les_fonctionnalits_ia_a')}</p>
                   </div>
 
                   <ul className="space-y-2 mb-6">
@@ -768,7 +768,7 @@ const SubscriptionsPage: FC = () => {
                 <div className="flex items-start gap-3">
                   <div className="text-blue-600 text-lg">ℹ️</div>
                   <div>
-                    <h3 className="font-semibold text-blue-800 mb-1">Paiement Lightning</h3>
+                    <h3 className="font-semibold text-blue-800 mb-1">{t('user.paiement_lightning')}</h3>
                     <p className="text-blue-700 text-sm">
                       Les factures sont générées en Bitcoin Lightning pour des paiements instantanés et sécurisés. 
                       Votre abonnement sera activé automatiquement après confirmation du paiement.
@@ -780,7 +780,7 @@ const SubscriptionsPage: FC = () => {
               {/* Pas d'abonnement actuel */}
               {!currentSubscription && (
                 <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 text-white text-center">
-                  <h2 className="text-2xl font-bold mb-4">🚀 Prêt à optimiser votre nœud ?</h2>
+                  <h2 className="text-2xl font-bold mb-4">{t('user._prt_optimiser_votre_nud_')}</h2>
                   <p className="mb-6 text-lg">
                     Choisissez le plan qui correspond à vos besoins et commencez à maximiser vos revenus Lightning
                   </p>
@@ -808,23 +808,23 @@ const SubscriptionsPage: FC = () => {
               {/* Statistiques rapides des factures */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="bg-gray-50 rounded-lg p-4">
-                  <div className="text-sm text-gray-500">Total factures</div>
+                  <div className="text-sm text-gray-500">{t('user.total_factures')}</div>
                   <div className="text-2xl font-bold">{invoices.length}</div>
                 </div>
                 <div className="bg-green-50 rounded-lg p-4">
-                  <div className="text-sm text-gray-500">Factures payées</div>
+                  <div className="text-sm text-gray-500">{t('user.factures_payes')}</div>
                   <div className="text-2xl font-bold text-green-600">
                     {invoices.filter(i => i.status === 'paid').length}
                   </div>
                 </div>
                 <div className="bg-blue-50 rounded-lg p-4">
-                  <div className="text-sm text-gray-500">Montant total</div>
+                  <div className="text-sm text-gray-500">{t('user.montant_total')}</div>
                   <div className="text-2xl font-bold">
                     {formatSats(invoices.reduce((sum: any, i: any) => sum + i.total, 0))} sats
                   </div>
                 </div>
                 <div className="bg-red-50 rounded-lg p-4">
-                  <div className="text-sm text-gray-500">En retard</div>
+                  <div className="text-sm text-gray-500">{t('user.en_retard')}</div>
                   <div className="text-2xl font-bold text-red-600">
                     {invoices.filter(i => i.status === 'overdue').length}
                   </div>
@@ -844,7 +844,7 @@ const SubscriptionsPage: FC = () => {
                     }`}
                   >
                     {status === 'all' ? 'Toutes' : status === 'paid' ? 'Payées' : 
-                     status === 'sent' ? 'Envoyées' : 'En retard'}
+                     status === 'sent' ? 'Envoyées' : "user.en_retard"}
                   </button>
                 ))}
               </div>
@@ -854,12 +854,12 @@ const SubscriptionsPage: FC = () => {
                 <div className="flex items-center justify-center py-12">
                   <div className="text-center">
                     <div className="animate-spin h-8 w-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-                    <p className="text-gray-600">Chargement des factures...</p>
+                    <p className="text-gray-600">{t('user.chargement_des_factures')}</p>
                   </div>
                 </div>
               ) : invoicesError ? (
                 <div className="bg-red-50 text-red-700 p-4 rounded-lg border border-red-200">
-                  <h3 className="font-semibold mb-2">❌ Erreur</h3>
+                  <h3 className="font-semibold mb-2">{t('user._erreur')}</h3>
                   <p>{invoicesError}</p>
                   <button 
                     onClick={fetchInvoices}
@@ -871,7 +871,7 @@ const SubscriptionsPage: FC = () => {
               ) : invoices.length === 0 ? (
                 <div className="text-center py-12">
                   <div className="text-gray-400 text-6xl mb-4">📄</div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Aucune facture</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('user.aucune_facture')}</h3>
                   <p className="text-gray-600">
                     {invoiceFilter === 'all' 
                       ? 'Vous n\'avez pas encore de factures.'

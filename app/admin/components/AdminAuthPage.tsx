@@ -50,7 +50,7 @@ const AdminAuthPage: FC<AdminAuthPageProps> = () => {
       const response = await fetch('/api/otp/send-code', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          "admin.adminadmincontenttype": 'application/json',
         },
         body: JSON.stringify({
           email: email,
@@ -82,7 +82,7 @@ const AdminAuthPage: FC<AdminAuthPageProps> = () => {
       const response = await fetch('/api/otp/verify-code', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          "admin.adminadmincontenttype": 'application/json',
         },
         body: JSON.stringify({
           email: email,

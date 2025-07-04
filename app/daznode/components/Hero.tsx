@@ -69,15 +69,15 @@ const DazNodeHero: React.FC = () => {
           <div className="grid sm:grid-cols-3 gap-6 text-center lg:text-left">
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
               <div className="text-3xl font-bold text-cyan-300 mb-2">+40%</div>
-              <div className="text-blue-100 text-sm">Revenus Optimisés</div>
+              <div className="text-blue-100 text-sm">{t('Hero.revenus_optimiss')}</div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
               <div className="text-3xl font-bold text-green-300 mb-2">99.98%</div>
-              <div className="text-blue-100 text-sm">Uptime Garanti</div>
+              <div className="text-blue-100 text-sm">{t('Hero.uptime_garanti')}</div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
               <div className="text-3xl font-bold text-purple-300 mb-2">24/7</div>
-              <div className="text-blue-100 text-sm">IA Monitoring</div>
+              <div className="text-blue-100 text-sm">{t('Hero.ia_monitoring')}</div>
             </div>
           </div>
 
@@ -89,7 +89,7 @@ const DazNodeHero: React.FC = () => {
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               </div>
-              <span className="font-medium">Optimisation IA des routes de paiement</span>
+              <span className="font-medium">{t('Hero.optimisation_ia_des_routes_de_')}</span>
             </div>
             <div className="flex items-center gap-4">
               <div className="w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
@@ -97,7 +97,7 @@ const DazNodeHero: React.FC = () => {
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               </div>
-              <span className="font-medium">Analytics predictives et alertes intelligentes</span>
+              <span className="font-medium">{t('Hero.analytics_predictives_et_alert')}</span>
             </div>
             <div className="flex items-center gap-4">
               <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-blue-400 rounded-full flex items-center justify-center">
@@ -105,7 +105,7 @@ const DazNodeHero: React.FC = () => {
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               </div>
-              <span className="font-medium">Gestion multi-nœuds avec API complète</span>
+              <span className="font-medium">{t('Hero.gestion_multinuds_avec_api_com')}</span>
             </div>
           </div>
 
@@ -136,25 +136,25 @@ const DazNodeHero: React.FC = () => {
                 <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>SLA 99.98% avec compensation</span>
+                <span>{t('Hero.sla_9998_avec_compensation')}</span>
               </div>
               <div className="flex items-center gap-3">
                 <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>Support prioritaire 24/7</span>
+                <span>{t('Hero.support_prioritaire_247')}</span>
               </div>
               <div className="flex items-center gap-3">
                 <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>Audit de sécurité inclus</span>
+                <span>{t('Hero.audit_de_scurit_inclus')}</span>
               </div>
               <div className="flex items-center gap-3">
                 <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>Conformité réglementaire</span>
+                <span>{t('Hero.conformit_rglementaire')}</span>
               </div>
             </div>
           </div>
@@ -170,7 +170,7 @@ const DazNodeHero: React.FC = () => {
             <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
               <Image
                 src="/assets/images/dashboard-daznode.png"
-                alt="DazNode Dashboard - Interface de Gestion Professionnelle"
+                alt="Hero.heroherodaznode_dashboard_inte"
                 width={500}
                 height={400}
                 className="w-full h-auto object-cover rounded-2xl"
@@ -212,7 +212,7 @@ const DazNodeHero: React.FC = () => {
           onClick={handleLearnMore}
           className="group text-cyan-300 hover:text-cyan-200 transition-all duration-300 flex flex-col items-center"
         >
-          <span className="text-sm font-medium mb-2">Découvrir les fonctionnalités</span>
+          <span className="text-sm font-medium mb-2">{t('Hero.dcouvrir_les_fonctionnalits')}</span>
           <div className="w-12 h-12 rounded-full border-2 border-cyan-300 text-cyan-300 flex items-center justify-center group-hover:border-cyan-200 group-hover:text-cyan-200 transition-colors">
             <svg className="w-6 h-6 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />

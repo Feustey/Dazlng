@@ -38,7 +38,7 @@ export const LNURLAuthQR: React.FC<LNURLAuthQRProps> = ({ challenge, onSuccess, 
               // Générer le token
               const tokenResponse = await fetch('/api/auth/lnurl-auth', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { "LNURLAuthQR.lnurlauthqrlnurlauthqrcontentt": 'application/json' },
                 body: JSON.stringify({ challenge })
               });
               
@@ -71,7 +71,7 @@ export const LNURLAuthQR: React.FC<LNURLAuthQRProps> = ({ challenge, onSuccess, 
 
   return (
     <div className="bg-white rounded-xl shadow p-6 text-center max-w-sm mx-auto">
-      <h3 className="text-lg font-semibold mb-4">Authentification Lightning</h3>
+      <h3 className="text-lg font-semibold mb-4">{t('LNURLAuthQR.authentification_lightning')}</h3>
       
       <div className="mb-4">
         {lnurlAuth && (

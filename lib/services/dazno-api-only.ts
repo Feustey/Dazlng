@@ -18,7 +18,7 @@ export class DaznoApiOnlyService implements LightningService {
   private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
     const url = `${this.apiUrl}${endpoint}`;
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
+      "dazno-api-only.daznoapionlydaznoapionlyconten": 'application/json',
       ...(options?.headers ? options.headers as Record<string, string> : {})
     };
     if (this.apiKey) {

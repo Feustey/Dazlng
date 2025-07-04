@@ -1,0 +1,800 @@
+{
+  "page-old": {
+    "page-old_daznode": "Daznode",
+    "page-old_explorer": "Explorer",
+    "page-old_pageoldpageoldillustration_daznode": "page-old.pageoldillustration_daznode",
+    "page-old_dazpay": "DazPay",
+    "page-old_pageoldpageoldillustration_dazpay": "page-old.pageoldillustration_dazpay",
+    "page-old_dazbox": "DazBox",
+    "page-old_pageoldpageoldblockchain_for_good": "page-old.pageoldblockchain_for_good",
+    "page-old_inoval": "Inoval",
+    "page-old_pageoldpageoldnantes_bitcoin_meetup": "page-old.pageoldnantes_bitcoin_meetup"
+  },
+  "metadata": {
+    "metadata_metadatametadatadployez_optimisez_et_m": "metadata.metadatadployez_optimisez_et_m",
+    "metadata_metadatametadatala_solution_toutenun_p": "metadata.metadatala_solution_toutenun_p",
+    "metadata_metadatametadatasolutions_lightning_ne": "metadata.metadatasolutions_lightning_ne",
+    "metadata_metadatametadatamaximagepreview": "metadata.metadatamaximagepreview",
+    "metadata_metadatametadatatoken_for_good_valoris": "metadata.metadatatoken_for_good_valoris",
+    "metadata_metadatametadataconsultez_les_conditio": "metadata.metadataconsultez_les_conditio",
+    "metadata_metadatametadatacentre_d": "metadata.metadatacentre_d",
+    "metadata_metadatametadatadocumentation_complte_": "metadata.metadatadocumentation_complte_",
+    "metadata_metadatametadataacceptez_les_paiements": "metadata.metadataacceptez_les_paiements",
+    "metadata_metadatametadatadaznode_offre_une_gest": "metadata.metadatadaznode_offre_une_gest",
+    "metadata_metadatametadatadcouvrez_dazflow_index": "metadata.metadatadcouvrez_dazflow_index",
+    "metadata_metadatametadataoptimisez_vos_revenus_": "metadata.metadataoptimisez_vos_revenus_",
+    "metadata_metadatametadatadazbox_simplifie_le_rs": "metadata.metadatadazbox_simplifie_le_rs",
+    "metadata_metadatametadatacontactez_l": "metadata.metadatacontactez_l",
+    "metadata_metadatametadatadcouvrez_l": "metadata.metadatadcouvrez_l",
+    "metadata_checkoutcheckoutoptimisez_votre_nud_li": "checkout.checkoutoptimisez_votre_nud_li",
+    "metadata_checkoutcheckoutcommandez_votre_dazbox": "checkout.checkoutcommandez_votre_dazbox"
+  },
+  "layout": {
+    "layout_description": "description",
+    "layout_dashboard": "Dashboard",
+    "layout_userusermon_nud": "user.usermon_nud",
+    "layout_useruserdazia_ia": "user.userdazia_ia",
+    "layout_simulation": "Simulation",
+    "layout_useruserrag_insights": "user.userrag_insights",
+    "layout_optimisation": "Optimisation",
+    "layout_abonnements": "Abonnements",
+    "layout_useruserparamtres": "user.userparamtres",
+    "layout_daznode": "DazNode",
+    "layout_layoutlayoutcentre_d": "layout.layoutcentre_d"
+  },
+  "usePrioritiesEnhanced": {
+    "usePrioritiesEnhanced_useprioritiesenhanceduseprioritiesenhancedcontentt": "usePrioritiesEnhanced.useprioritiesenhancedcontentty"
+  },
+  "useEmail": {
+    "useEmail_useemailuseemailcontenttype": "useEmail.useemailcontenttype"
+  },
+  "useDaznoAPI": {
+    "useDaznoAPI_usedaznoapiusedaznoapicontenttype": "useDaznoAPI.usedaznoapicontenttype"
+  },
+  "Footer": {
+    "Footer_footerfooterdaz3_logo": "Footer.footerdaz3_logo",
+    "Footer_produit": "Produit",
+    "Footer_transparence": "Transparence",
+    "Footer_aide": "Aide",
+    "Footer_footerfooterretour_en_haut": "Footer.footerretour_en_haut"
+  },
+  "seo-config": {
+    "seo-config_seoconfigseoconfigdaznode_simplifie_l": "seo-config.seoconfigdaznode_simplifie_l",
+    "seo-config_seoconfigseoconfigcrez_et_grez_votre_pr": "seo-config.seoconfigcrez_et_grez_votre_pr",
+    "seo-config_seoconfigseoconfigmatriel_spcialis_pour": "seo-config.seoconfigmatriel_spcialis_pour",
+    "seo-config_seoconfigseoconfigacceptez_les_paiement": "seo-config.seoconfigacceptez_les_paiement",
+    "seo-config_seoconfigseoconfigindex_d": "seo-config.seoconfigindex_d",
+    "seo-config_seoconfigseoconfigexplorez_le_rseau_lig": "seo-config.seoconfigexplorez_le_rseau_lig",
+    "seo-config_seoconfigseoconfigdcouvrez_l": "seo-config.seoconfigdcouvrez_l",
+    "seo-config_seoconfigseoconfigcontactez_l": "seo-config.seoconfigcontactez_l",
+    "seo-config_seoconfigseoconfigcentre_d": "seo-config.seoconfigcentre_d",
+    "seo-config_seoconfigseoconfigcrez_votre_compte_daz": "seo-config.seoconfigcrez_votre_compte_daz"
+  },
+  "mcp-client": {
+    "mcp-client_mcpclientmcpclientcontenttype": "mcp-client.mcpclientcontenttype"
+  },
+  "lightning": {
+    "lightning_lightninglightningcontenttype": "lightning.lightningcontenttype",
+    "lightning_accept": "Accept"
+  },
+  "dazno-api": {
+    "dazno-api_daznoapidaznoapicontenttype": "dazno-api.daznoapicontenttype",
+    "dazno-api_daznoapidaznoapianalysez_vos_canaux_po": "dazno-api.daznoapianalysez_vos_canaux_po",
+    "dazno-api_daznoapidaznoapioptimisez_vos_frais_po": "dazno-api.daznoapioptimisez_vos_frais_po",
+    "dazno-api_daznoapidaznoapirquilibrez_vos_canaux_": "dazno-api.daznoapirquilibrez_vos_canaux_"
+  },
+  "api-response": {
+    "api-response_apiresponseapiresponsecontenttype": "api-response.apiresponsecontenttype"
+  },
+  "api-client": {
+    "api-client_apiclientapiclientcontenttype": "api-client.apiclientcontenttype"
+  },
+  "page": {
+    "page_commonhometoken_for_good_logo": "common.hometoken_for_good_logo",
+    "page_entreprises": "Entreprises",
+    "page_commoncommonavatar_jean": "common.commonavatar_jean",
+    "page_commoncommonavatar_marie": "common.commonavatar_marie",
+    "page_portfolio": "Portfolio",
+    "page_commoncommonavatar_leaticia": "common.commonavatar_leaticia",
+    "page_expert": "Expert",
+    "page_niveau": "Niveau",
+    "page_mentor": "Mentor",
+    "page_laeticia": "Laeticia",
+    "page_newsletter": "Newsletter",
+    "page_commoncommonvotre_email": "common.commonvotre_email",
+    "page_navigation": "Navigation",
+    "page_fichier": "Fichier",
+    "page_bouclier": "Bouclier",
+    "page_alerte": "Alerte",
+    "page_valide": "Valide",
+    "page_commoncommonutiliser_la_plateforme_p": "common.commonutiliser_la_plateforme_p",
+    "page_commoncommongrer_votre_propre_nud_et": "common.commongrer_votre_propre_nud_et",
+    "page_commoncommonparticiper_la_communaut_": "common.commonparticiper_la_communaut_",
+    "page_interdit": "Interdit",
+    "page_commoncommontenter_de_compromettre_l": "common.commontenter_de_compromettre_l",
+    "page_commoncommonutiliser_le_service_pour": "common.commonutiliser_le_service_pour",
+    "page_commoncommoncontenttype": "common.commoncontenttype",
+    "page_commoncommonlogo_daznode": "common.commonlogo_daznode",
+    "page_commoncommonvotreemailcom": "common.commonvotreemailcom",
+    "page_000000": "000000",
+    "page_commoncommonvotre_prnom": "common.commonvotre_prnom",
+    "page_commoncommonvotre_nom": "common.commonvotre_nom",
+    "page_uptime": "Uptime",
+    "page_commoncommonapprenez_les_bases_de_da": "common.commonapprenez_les_bases_de_da",
+    "page_commoncommonconfigurez_votre_nud_lig": "common.commonconfigurez_votre_nud_lig",
+    "page_commoncommonquestions_sur_les_prix_e": "common.commonquestions_sur_les_prix_e",
+    "page_commoncommondtails_techniques_de_not": "common.commondtails_techniques_de_not",
+    "page_commonhomeguides_d": "common.homeguides_d",
+    "page_commoncommonconfiguration_et_utilisa": "common.commonconfiguration_et_utilisa",
+    "page_commoncommonsolutions_aux_problmes_c": "common.commonsolutions_aux_problmes_c",
+    "page_performance": "Performance",
+    "page_applicationcategory": "applicationCategory",
+    "page_operatingsystem": "operatingSystem",
+    "page_softwareversion": "softwareVersion",
+    "page_datepublished": "datePublished",
+    "page_datemodified": "dateModified",
+    "page_price": "price",
+    "page_pricecurrency": "priceCurrency",
+    "page_availability": "availability",
+    "page_validfrom": "validFrom",
+    "page_ratingvalue": "ratingValue",
+    "page_reviewcount": "reviewCount",
+    "page_bestrating": "bestRating",
+    "page_worstrating": "worstRating",
+    "page_reviewbody": "reviewBody",
+    "page_caption": "caption",
+    "page_softwarerequirements": "softwareRequirements",
+    "page_permissions": "permissions",
+    "page_servicetype": "serviceType",
+    "page_commoncommonacceptez_les_paiements_b": "common.commonacceptez_les_paiements_b",
+    "page_commoncommonmaximagepreview": "common.commonmaximagepreview",
+    "page_standard": "Standard",
+    "page_pro": "Pro",
+    "page_commoncommondaznode_offre_une_gestio": "common.commondaznode_offre_une_gestio",
+    "page_commoncommonmesurez_votre_capacit_re": "common.commonmesurez_votre_capacit_re",
+    "page_commoncommondtectez_automatiquement_": "common.commondtectez_automatiquement_",
+    "page_commoncommonvisualisez_la_probabilit": "common.commonvisualisez_la_probabilit",
+    "page_commoncommonlaissez_notre_ia_optimis": "common.commonlaissez_notre_ia_optimis",
+    "page_commoncommonaugmentation_moyenne_des": "common.commonaugmentation_moyenne_des",
+    "page_commoncommonvitez_les_forcecloses_co": "common.commonvitez_les_forcecloses_co",
+    "page_commoncommonretour_sur_investissemen": "common.commonretour_sur_investissemen",
+    "page_commoncommonrejoignez_500_node_runne": "common.commonrejoignez_500_node_runne",
+    "page_commoncommonprcision_analyse": "common.commonprcision_analyse",
+    "page_commoncommonprcision_de_nos_prdictio": "common.commonprcision_de_nos_prdictio",
+    "page_commoncommonmonitoring_continu": "common.commonmonitoring_continu",
+    "page_commoncommonsurveillance_en_temps_re": "common.commonsurveillance_en_temps_re",
+    "page_commoncommonrevenus_amliors": "common.commonrevenus_amliors",
+    "page_commoncommonroi_amlior": "common.commonroi_amlior",
+    "page_monitoring": "Monitoring",
+    "page_connexion": "Connexion",
+    "page_analyse": "Analyse",
+    "page_gratuit": "Gratuit",
+    "page_enterprise": "Enterprise",
+    "page_model": "model",
+    "page_category": "category",
+    "page_itemcondition": "itemCondition",
+    "page_currency": "currency",
+    "page_unitcode": "unitCode",
+    "page_warrantyscope": "warrantyScope",
+    "page_commoncommondazbox_simplifie_le_rsea": "common.commondazbox_simplifie_le_rsea",
+    "page_commoncommondaznode_logo": "common.commondaznode_logo",
+    "page_faq": "FAQ",
+    "page_linkedin": "LinkedIn",
+    "page_innovation": "Innovation",
+    "page_userusercontenttype": "user.usercontenttype",
+    "page_useruserqr_code_lightning_invoice": "user.userqr_code_lightning_invoice",
+    "page_informations": "Informations",
+    "page_basic": "Basic",
+    "page_premium": "Premium",
+    "page_t4g": "T4G",
+    "page_settingssettingscontenttype": "settings.settingscontenttype",
+    "page_nom": "Nom",
+    "page_settingssettingsvotre_nom_de_famille": "settings.settingsvotre_nom_de_famille",
+    "page_settingssettingsvotre_prnom": "settings.settingsvotre_prnom",
+    "page_settingssettings02a1b2c3d4e5f6": "settings.settings02a1b2c3d4e5f6",
+    "page_settingssettingsvotre_handle": "settings.settingsvotre_handle",
+    "page_settingssettingsnpub1": "settings.settingsnpub1",
+    "page_settingssettingsvotre_username": "settings.settingsvotre_username",
+    "page_settingssettings33123456789": "settings.settings33123456789",
+    "page_settingssettings123_rue_de_la_paix": "settings.settings123_rue_de_la_paix",
+    "page_ville": "Ville",
+    "page_paris": "Paris",
+    "page_75001": "75001",
+    "page_pays": "Pays",
+    "page_france": "France",
+    "page_belgique": "Belgique",
+    "page_suisse": "Suisse",
+    "page_canada": "Canada",
+    "page_luxembourg": "Luxembourg",
+    "page_allemagne": "Allemagne",
+    "page_espagne": "Espagne",
+    "page_italie": "Italie",
+    "page_autre": "Autre",
+    "page_useruservue_d": "user.uservue_d",
+    "page_documents": "Documents",
+    "page_useruserrequtes": "user.userrequtes",
+    "page_cache": "Cache",
+    "page_intelligence": "Intelligence",
+    "page_useruser03eec7245d6b7d2ccb30380bfb": "user.user03eec7245d6b7d2ccb30380bfb",
+    "page_erreur": "Erreur",
+    "page_useruser03864ef025fde8fb587d989186": "user.user03864ef025fde8fb587d989186",
+    "page_nouveau": "Nouveau",
+    "page_useruser_volution_des_revenus_de_r": "user.user_volution_des_revenus_de_r",
+    "page_useruser_volution_des_revenus_donn": "user.user_volution_des_revenus_donn",
+    "page_useruser_volution_de_la_capacit": "user.user_volution_de_la_capacit",
+    "page_useruser_volution_de_la_capacit_do": "user.user_volution_de_la_capacit_do",
+    "page_risque": "Risque",
+    "page_action": "Action",
+    "page_timeline": "Timeline",
+    "page_justification": "Justification",
+    "page_useruseranalyse_complte_du_rseau_l": "user.useranalyse_complte_du_rseau_l",
+    "page_useruseroptimisation_complte_avec_": "user.useroptimisation_complte_avec_",
+    "page_useruseranalyser_la_situation_actu": "user.useranalyser_la_situation_actu",
+    "page_useruserplanifier_l": "user.userplanifier_l",
+    "page_useruserexcuter_l": "user.userexcuter_l",
+    "page_useruservoir_dtails": "user.uservoir_dtails",
+    "page_optimiser": "Optimiser",
+    "page_useruserrecrer_canal": "user.userrecrer_canal",
+    "page_analyser": "Analyser",
+    "page_useruservoir_recommandation": "user.uservoir_recommandation",
+    "page_push": "Push",
+    "page_alertes": "Alertes",
+    "page_userusermarquer_comme_lu": "user.usermarquer_comme_lu",
+    "page_supprimer": "Supprimer",
+    "page_dashboarddashboarddbloquez_les_optimisa": "dashboard.dashboarddbloquez_les_optimisa",
+    "page_networknetworkentrez_la_cl_publique_6": "network.networkentrez_la_cl_publique_6",
+    "page_sparkseer": "SparkSeer",
+    "page_openai": "OpenAI",
+    "page_networknetworkexplorez_le_rseau_light": "network.networkexplorez_le_rseau_light",
+    "page_commoncommoncran_d": "common.commoncran_d",
+    "page_commoncommondashboard_de_gestion_daz": "common.commondashboard_de_gestion_daz",
+    "page_commoncommoninterface_de_gestion_daz": "common.commoninterface_de_gestion_daz",
+    "page_checkoutcheckoutparfait_pour_dbuter_su": "checkout.checkoutparfait_pour_dbuter_su",
+    "page_checkoutcheckoutsolution_complte_pour_": "checkout.checkoutsolution_complte_pour_",
+    "page_checkoutcheckoutvotre_prnom": "checkout.checkoutvotre_prnom",
+    "page_checkoutcheckoutvotre_nom": "checkout.checkoutvotre_nom",
+    "page_checkoutcheckoutnumro_et_nom_de_rue": "checkout.checkoutnumro_et_nom_de_rue",
+    "page_checkoutcheckoutvotre_ville": "checkout.checkoutvotre_ville",
+    "page_checkoutcheckoutvotre_numro_de_tlphone": "checkout.checkoutvotre_numro_de_tlphone",
+    "page_livraison": "Livraison",
+    "page_gratuite": "Gratuite",
+    "page_authauthlogo_daznode": "auth.authlogo_daznode",
+    "page_authauthvotreemailcom": "auth.authvotreemailcom",
+    "page_adminadminrechercher_par_email_nom_": "admin.adminrechercher_par_email_nom_",
+    "page_prospects": "Prospects",
+    "page_leads": "Leads",
+    "page_clients": "Clients",
+    "page_champions": "Champions",
+    "page_client": "Client",
+    "page_segment": "Segment",
+    "page_commandes": "Commandes",
+    "page_lightning": "Lightning",
+    "page_inscription": "Inscription",
+    "page_actions": "Actions",
+    "page_produits": "Produits",
+    "page_utilisateur": "Utilisateur",
+    "page_statut": "Statut",
+    "page_date": "Date",
+    "page_recommandations": "Recommandations",
+    "page_vues": "Vues",
+    "page_dashboarddashboardutilisateurs_totaux": "dashboard.dashboardutilisateurs_totaux",
+    "page_dashboarddashboardabonnements_actifs": "dashboard.dashboardabonnements_actifs",
+    "page_dashboarddashboardrevenu_total": "dashboard.dashboardrevenu_total",
+    "page_dashboarddashboardcommandes_en_attente": "dashboard.dashboardcommandes_en_attente",
+    "page_dashboarddashboardfunnel_de_conversion": "dashboard.dashboardfunnel_de_conversion",
+    "page_visiteurs": "Visiteurs",
+    "page_inscriptions": "Inscriptions",
+    "page_dashboarddashboardperformance_revenus": "dashboard.dashboardperformance_revenus",
+    "page_dashboarddashboardsignups_rcents": "dashboard.dashboardsignups_rcents",
+    "page_dashboarddashboardutilisateurs_rcents": "dashboard.dashboardutilisateurs_rcents",
+    "page_analytics": "Analytics",
+    "page_campagnes": "Campagnes",
+    "page_templates": "Templates",
+    "page_logs": "Logs",
+    "page_campagne": "Campagne",
+    "page_ouvertures": "Ouvertures",
+    "page_clics": "Clics",
+    "page_destinataire": "Destinataire",
+    "page_sujet": "Sujet",
+    "page_adminadmin_donnes_de_test": "admin.admin_donnes_de_test",
+    "page_adminadmin_umami_live": "admin.admin_umami_live",
+    "page_adminadmin_fallback": "admin.admin_fallback",
+    "page_timelock": "Timelock",
+    "page_statistiques": "Statistiques"
+  },
+  "[plan]": {
+    "[plan]_planplanvotre_nom": "[plan].planvotre_nom",
+    "[plan]_email": "Email",
+    "[plan]_planplanvotreemailcom": "[plan].planvotreemailcom",
+    "[plan]_entreprise": "Entreprise",
+    "[plan]_planplannom_de_votre_entreprise": "[plan].plannom_de_votre_entreprise",
+    "[plan]_planplanvotre_numro_de_tlphone": "[plan].planvotre_numro_de_tlphone"
+  },
+  "useWalletAuth": {
+    "useWalletAuth_usewalletauthusewalletauthcontenttype": "useWalletAuth.usewalletauthcontenttype"
+  },
+  "LightningPayment": {
+    "LightningPayment_lightningpaymentlightningpaymentpaiement_reu_": "LightningPayment.lightningpaymentpaiement_reu_",
+    "LightningPayment_lightningpaymentlightningpaymentla_facture_a_e": "LightningPayment.lightningpaymentla_facture_a_e",
+    "LightningPayment_lightningpaymentlightningpaymentfacture_copie_": "LightningPayment.lightningpaymentfacture_copie_",
+    "LightningPayment_lightningpaymentlightningpaymentpaiement_envoy": "LightningPayment.lightningpaymentpaiement_envoy",
+    "LightningPayment_lightningpaymentlightningpaymenterreur_lors_du": "LightningPayment.lightningpaymenterreur_lors_du",
+    "LightningPayment_lightningpaymentlightningpaymentcontenttype": "LightningPayment.lightningpaymentcontenttype"
+  },
+  "ReferralWidget": {
+    "ReferralWidget_useruserinscristoi_et_on_gagne_tou": "user.userinscristoi_et_on_gagne_tou",
+    "ReferralWidget_userusercopier_le_lien": "user.usercopier_le_lien",
+    "ReferralWidget_partager": "Partager"
+  },
+  "NodeAnalysis": {
+    "NodeAnalysis_nodeanalysisnodeanalysisimpossible_de_rcup": "NodeAnalysis.nodeanalysisimpossible_de_rcup"
+  },
+  "OptimizedHero": {
+    "OptimizedHero_optimizedherooptimizedherocontenttype": "OptimizedHero.optimizedherocontenttype",
+    "OptimizedHero_optimizedherooptimizedherovotreemailcom": "OptimizedHero.optimizedherovotreemailcom"
+  },
+  "ABTestManager": {
+    "ABTestManager_abtestmanagerabtestmanagercontenttype": "ABTestManager.abtestmanagercontenttype"
+  },
+  "MobileOptimized": {
+    "MobileOptimized_instant": "Instant",
+    "MobileOptimized_garanti": "Garanti",
+    "MobileOptimized_mobileoptimizedmobileoptimizedcontenttype": "MobileOptimized.mobileoptimizedcontenttype",
+    "MobileOptimized_whatsapp": "WhatsApp",
+    "MobileOptimized_mobileoptimizedmobileoptimizedvotreemailcom": "MobileOptimized.mobileoptimizedvotreemailcom"
+  },
+  "PerformanceExample": {
+    "PerformanceExample_performanceexampleperformanceexamplerechercher": "PerformanceExample.performanceexamplerechercher",
+    "PerformanceExample_performanceexampleperformanceexampleimage_d": "PerformanceExample.performanceexampleimage_d",
+    "PerformanceExample_blur": "blur"
+  },
+  "PrioritiesEnhancedPanel": {
+    "PrioritiesEnhancedPanel_prioritiesenhancedpanelprioritiesenhancedpanelje_v": "PrioritiesEnhancedPanel.prioritiesenhancedpanelje_veux",
+    "PrioritiesEnhancedPanel_prioritiesenhancedpanelprioritiesenhancedpanelanal": "PrioritiesEnhancedPanel.prioritiesenhancedpanelanalyse"
+  },
+  "NodeAnalysisPanel": {
+    "NodeAnalysisPanel_nodeanalysispanelnodeanalysispanelaugmenter_les": "NodeAnalysisPanel.nodeanalysispanelaugmenter_les",
+    "NodeAnalysisPanel_nodeanalysispanelnodeanalysispanelamliorer_la_c": "NodeAnalysisPanel.nodeanalysispanelamliorer_la_c",
+    "NodeAnalysisPanel_nodeanalysispanelnodeanalysispanelrduire_les_co": "NodeAnalysisPanel.nodeanalysispanelrduire_les_co",
+    "NodeAnalysisPanel_canaux": "Canaux",
+    "NodeAnalysisPanel_btc": "BTC"
+  },
+  "LightningCheckout": {
+    "LightningCheckout_total": "Total"
+  },
+  "DazNodeCheckout": {
+    "DazNodeCheckout_checkoutcheckoutcontenttype": "checkout.checkoutcontenttype",
+    "DazNodeCheckout_checkoutcheckoutvotreemailcom": "checkout.checkoutvotreemailcom",
+    "DazNodeCheckout_checkoutcheckout02abc": "checkout.checkout02abc"
+  },
+  "NetworkRankings": {
+    "NetworkRankings_networkrankingsnetworkrankingscapacit": "NetworkRankings.networkrankingscapacit",
+    "NetworkRankings_revenus": "Revenus",
+    "NetworkRankings_networkrankingsnetworkrankingscentralit": "NetworkRankings.networkrankingscentralit",
+    "NetworkRankings_rang": "Rang",
+    "NetworkRankings_alias": "Alias",
+    "NetworkRankings_score": "Score"
+  },
+  "NetworkExplorer": {
+    "NetworkExplorer_networkexplorernetworkexplorerrechercher_un_n": "NetworkExplorer.networkexplorerrechercher_un_n",
+    "NetworkExplorer_networkexplorernetworkexplorertrier_par": "NetworkExplorer.networkexplorertrier_par"
+  },
+  "LiveMetrics": {
+    "LiveMetrics_publique": "Publique",
+    "LiveMetrics_sla": "SLA",
+    "LiveMetrics_discord": "Discord",
+    "LiveMetrics_rejoindre": "Rejoindre",
+    "LiveMetrics_livemetricslivemetricscode_audit_et_vrifi": "LiveMetrics.livemetricscode_audit_et_vrifi",
+    "LiveMetrics_livemetricslivemetricsconsultez_nos_perfo": "LiveMetrics.livemetricsconsultez_nos_perfo",
+    "LiveMetrics_livemetricslivemetricsaudits_rguliers_par": "LiveMetrics.livemetricsaudits_rguliers_par"
+  },
+  "LightningCalculator": {
+    "LightningCalculator_satoshis": "Satoshis",
+    "LightningCalculator_bitcoin": "Bitcoin",
+    "LightningCalculator_euro": "Euro",
+    "LightningCalculator_lightningcalculatorlightningcalculatordollar_us": "LightningCalculator.lightningcalculatordollar_us",
+    "LightningCalculator_montant": "Montant",
+    "LightningCalculator_lightningcalculatorlightningcalculatorde": "LightningCalculator.lightningcalculatorde",
+    "LightningCalculator_lightningcalculatorlightningcalculatorvers": "LightningCalculator.lightningcalculatorvers"
+  },
+  "monitoring": {
+    "monitoring_monitoringmonitoringcontenttype": "monitoring.monitoringcontenttype"
+  },
+  "useSubscription": {
+    "useSubscription_usesubscriptionusesubscriptioncontenttype": "useSubscription.usesubscriptioncontenttype"
+  },
+  "mcp-light-api": {
+    "mcp-light-api_mcplightapimcplightapicontenttype": "mcp-light-api.mcplightapicontenttype"
+  },
+  "dazno-api-only": {
+    "dazno-api-only_daznoapionlydaznoapionlycontenttype": "dazno-api-only.daznoapionlycontenttype"
+  },
+  "cross-domain-session": {
+    "cross-domain-session_crossdomainsessioncrossdomainsessionaccesscontro": "cross-domain-session.crossdomainsessionaccesscontro"
+  },
+  "EmailConversionService": {
+    "EmailConversionService_synchronisation": "Synchronisation",
+    "EmailConversionService_notifications": "Notifications",
+    "EmailConversionService_emailconversionserviceemailconversionservicedaz_no": "EmailConversionService.emailconversionservicedaz_node"
+  },
+  "useUserData": {
+    "useUserData_useruseremail_vrifi": "user.useremail_vrifi",
+    "useUserData_userusernud_connect": "user.usernud_connect",
+    "useUserData_userusercompte_twitter": "user.usercompte_twitter",
+    "useUserData_userusercompte_nostr": "user.usercompte_nostr",
+    "useUserData_userusertlphone_vrifi": "user.usertlphone_vrifi",
+    "useUserData_useruseramliorer_votre_connectivit": "user.useramliorer_votre_connectivit",
+    "useUserData_useruserajuster_automatiquement_vo": "user.userajuster_automatiquement_vo",
+    "useUserData_useruseroptimiser_la_distribution_": "user.useroptimiser_la_distribution_",
+    "useUserData_useruserscuriser_votre_nud_avec_de": "user.userscuriser_votre_nud_avec_de",
+    "useUserData_useruserouvrir_votre_premier_canal": "user.userouvrir_votre_premier_canal",
+    "useUserData_useruserrouter_votre_premier_paiem": "user.userrouter_votre_premier_paiem",
+    "useUserData_useruseratteindre_10_canaux_actifs": "user.useratteindre_10_canaux_actifs",
+    "useUserData_useruseraccumuler_1m_sats_de_reven": "user.useraccumuler_1m_sats_de_reven",
+    "useUserData_userusermaintenir_99_d": "user.usermaintenir_99_d",
+    "useUserData_userusergrer_plus_de_10_btc_de_cap": "user.usergrer_plus_de_10_btc_de_cap"
+  },
+  "useGamificationSystem": {
+    "useGamificationSystem_useruservrifiez_votre_email_pour_s": "user.uservrifiez_votre_email_pour_s",
+    "useGamificationSystem_userusernom_de_famille": "user.usernom_de_famille",
+    "useGamificationSystem_userusercompltez_votre_identit": "user.usercompltez_votre_identit",
+    "useGamificationSystem_useruserprnom": "user.userprnom",
+    "useGamificationSystem_useruserpersonnalisez_votre_exprie": "user.userpersonnalisez_votre_exprie",
+    "useGamificationSystem_userusercl_publique_lightning": "user.usercl_publique_lightning",
+    "useGamificationSystem_useruserconnectez_votre_portefeuil": "user.userconnectez_votre_portefeuil",
+    "useGamificationSystem_userusernud_lightning_connect": "user.usernud_lightning_connect",
+    "useGamificationSystem_useruserconnectez_votre_nud_pour_l": "user.userconnectez_votre_nud_pour_l",
+    "useGamificationSystem_userusercompte_x_twitter": "user.usercompte_x_twitter",
+    "useGamificationSystem_useruserpartagez_vos_performances": "user.userpartagez_vos_performances",
+    "useGamificationSystem_useruserrejoignez_la_communaut_dce": "user.userrejoignez_la_communaut_dce",
+    "useGamificationSystem_useruservrifiez_votre_tlphone": "user.uservrifiez_votre_tlphone",
+    "useGamificationSystem_useruseremail_vrifi_avec_succs": "user.useremail_vrifi_avec_succs",
+    "useGamificationSystem_useruserpremire_cl_publique_lightn": "user.userpremire_cl_publique_lightn",
+    "useGamificationSystem_userusernud_lightning_network_conn": "user.usernud_lightning_network_conn",
+    "useGamificationSystem_userusercompte_social_connect_x_ou": "user.usercompte_social_connect_x_ou",
+    "useGamificationSystem_useruserprofil_100_complt": "user.userprofil_100_complt"
+  },
+  "useCRMData": {
+    "useCRMData_useruserdbloquez_toutes_les_foncti": "user.userdbloquez_toutes_les_foncti",
+    "useCRMData_useruseraccdez_aux_fonctionnalits_": "user.useraccdez_aux_fonctionnalits_",
+    "useCRMData_useruserobtenez_des_analytics_dtai": "user.userobtenez_des_analytics_dtai",
+    "useCRMData_useruserdbloquez_les_optimisations": "user.userdbloquez_les_optimisations",
+    "useCRMData_userusernud_lightning_cl_en_main_p": "user.usernud_lightning_cl_en_main_p",
+    "useCRMData_userusernud_lightning": "user.usernud_lightning"
+  },
+  "Hero": {
+    "Hero_heroherodazpay_terminal_de_paiemen": "Hero.herodazpay_terminal_de_paiemen",
+    "Hero_commencer": "Commencer",
+    "Hero_heroherodaznode_dashboard_interfac": "Hero.herodaznode_dashboard_interfac",
+    "Hero_heroherodazbox_nud_lightning_netwo": "Hero.herodazbox_nud_lightning_netwo",
+    "Hero_heroherohero_background": "Hero.herohero_background"
+  },
+  "Pricing": {
+    "Pricing_pricingpricingparfait_pour_dbuter_sur": "Pricing.pricingparfait_pour_dbuter_sur",
+    "Pricing_pricingpricingpour_les_utilisateurs_a": "Pricing.pricingpour_les_utilisateurs_a",
+    "Pricing_pricingpricingsolution_complte_pour_e": "Pricing.pricingsolution_complte_pour_e",
+    "Pricing_installation": "Installation"
+  },
+  "Features": {
+    "Features_featuresfeaturesprt_l": "Features.featuresprt_l",
+    "Features_featuresfeatureshardware_optimis_pour_": "Features.featureshardware_optimis_pour_",
+    "Features_featuresfeaturesassistance_technique_2": "Features.featuresassistance_technique_2"
+  },
+  "ClientHero": {
+    "ClientHero_clientheroclientherodazbox_nud_lightning": "ClientHero.clientherodazbox_nud_lightning"
+  },
+  "UserInfo": {
+    "UserInfo_checkoutcheckoutnom_complet": "checkout.checkoutnom_complet",
+    "UserInfo_checkoutcheckoutemail": "checkout.checkoutemail",
+    "UserInfo_checkoutcheckoutadresse": "checkout.checkoutadresse",
+    "UserInfo_checkoutcheckoutville": "checkout.checkoutville",
+    "UserInfo_checkoutcheckoutcode_postal": "checkout.checkoutcode_postal",
+    "UserInfo_checkoutcheckoutpays": "checkout.checkoutpays",
+    "UserInfo_checkoutcheckouttlphone": "checkout.checkouttlphone"
+  },
+  "AdminAuthPage": {
+    "AdminAuthPage_adminadmincontenttype": "admin.admincontenttype"
+  },
+  "send-node-stats": {
+    "send-node-stats_historique": "Historique"
+  },
+  "route": {
+    "route_routerouteaccesscontrolalloworigin": "route.routeaccesscontrolalloworigin",
+    "route_routerouteaccesscontrolallowmethods": "route.routeaccesscontrolallowmethods",
+    "route_routerouteaccesscontrolallowheaders": "route.routeaccesscontrolallowheaders",
+    "route_dazpay": "dazpay",
+    "route_support": "support",
+    "route_conseil": "conseil",
+    "route_partenariat": "partenariat",
+    "route_autre": "autre",
+    "route_routerouteqr_code_lightning_invoice": "route.routeqr_code_lightning_invoice",
+    "route_routeroutecontenttype": "route.routecontenttype",
+    "route_routerouteparfait_pour_commencer": "route.routeparfait_pour_commencer",
+    "route_routerouteoptimisation_et_statistiq": "route.routeoptimisation_et_statistiq",
+    "route_routeroutetoutes_les_fonctionnalits": "route.routetoutes_les_fonctionnalits",
+    "route_routeroutesolution_sur_mesure_pour_": "route.routesolution_sur_mesure_pour_",
+    "route_useruseranalyse_automatique_et_opt": "user.useranalyse_automatique_et_opt",
+    "route_useruserconfigurez_des_alertes_sur": "user.userconfigurez_des_alertes_sur",
+    "route_routeroutecachecontrol": "route.routecachecontrol",
+    "route_authauthsetcookie": "auth.authsetcookie",
+    "route_adminadmincre_un_utilisateur_une_co": "admin.admincre_un_utilisateur_une_co",
+    "route_dashboarddashboardcontenttype": "dashboard.dashboardcontenttype",
+    "route_routeroutemode_fallback": "route.routemode_fallback",
+    "route_networknetworkcontenttype": "network.networkcontenttype"
+  },
+  "WhyBecomeNodeRunner": {
+    "WhyBecomeNodeRunner_whybecomenoderunnerwhybecomenoderunnergnrez_des_r": "WhyBecomeNodeRunner.whybecomenoderunnergnrez_des_r",
+    "WhyBecomeNodeRunner_whybecomenoderunnerwhybecomenoderunnerparticipez_": "WhyBecomeNodeRunner.whybecomenoderunnerparticipez_",
+    "WhyBecomeNodeRunner_whybecomenoderunnerwhybecomenoderunnerbnficiez_d": "WhyBecomeNodeRunner.whybecomenoderunnerbnficiez_d",
+    "WhyBecomeNodeRunner_whybecomenoderunnerwhybecomenoderunnerprofitez_de": "WhyBecomeNodeRunner.whybecomenoderunnerprofitez_de"
+  },
+  "VerifiedTechnicalProofs": {
+    "VerifiedTechnicalProofs_verifiedtechnicalproofsverifiedtechnicalproofsmtri": "VerifiedTechnicalProofs.verifiedtechnicalproofsmtrique",
+    "VerifiedTechnicalProofs_verifiedtechnicalproofsverifiedtechnicalproofscapa": "VerifiedTechnicalProofs.verifiedtechnicalproofscapacit",
+    "VerifiedTechnicalProofs_verifiedtechnicalproofsverifiedtechnicalproofsfrai": "VerifiedTechnicalProofs.verifiedtechnicalproofsfrais_m",
+    "VerifiedTechnicalProofs_verifiedtechnicalproofsverifiedtechnicalproofsvali": "VerifiedTechnicalProofs.verifiedtechnicalproofsvalidat",
+    "VerifiedTechnicalProofs_verifiedtechnicalproofsverifiedtechnicalproofsprci": "VerifiedTechnicalProofs.verifiedtechnicalproofsprcisio",
+    "VerifiedTechnicalProofs_verifiedtechnicalproofsverifiedtechnicalproofsforc": "VerifiedTechnicalProofs.verifiedtechnicalproofsforcecl",
+    "VerifiedTechnicalProofs_verifiedtechnicalproofsverifiedtechnicalproofsfaux": "VerifiedTechnicalProofs.verifiedtechnicalproofsfaux_po",
+    "VerifiedTechnicalProofs_verifiedtechnicalproofsverifiedtechnicalproofstemp": "VerifiedTechnicalProofs.verifiedtechnicalproofstemps_d",
+    "VerifiedTechnicalProofs_verifiedtechnicalproofsverifiedtechnicalproofsaudi": "VerifiedTechnicalProofs.verifiedtechnicalproofsaudits_",
+    "VerifiedTechnicalProofs_verifiedtechnicalproofsverifiedtechnicalproofsvuln": "VerifiedTechnicalProofs.verifiedtechnicalproofsvulnrab",
+    "VerifiedTechnicalProofs_verifiedtechnicalproofsverifiedtechnicalproofsbugs": "VerifiedTechnicalProofs.verifiedtechnicalproofsbugs_co",
+    "VerifiedTechnicalProofs_verifiedtechnicalproofsverifiedtechnicalproofsprix": "VerifiedTechnicalProofs.verifiedtechnicalproofsprix_mo",
+    "VerifiedTechnicalProofs_verifiedtechnicalproofsverifiedtechnicalproofsdern": "VerifiedTechnicalProofs.verifiedtechnicalproofsdernier"
+  },
+  "UXOptimizedNavbar": {
+    "UXOptimizedNavbar_uxoptimizednavbaruxoptimizednavbarproblme": "UXOptimizedNavbar.uxoptimizednavbarproblme",
+    "UXOptimizedNavbar_solution": "Solution",
+    "UXOptimizedNavbar_preuves": "Preuves",
+    "UXOptimizedNavbar_uxoptimizednavbaruxoptimizednavbarcomment_a_mar": "UXOptimizedNavbar.uxoptimizednavbarcomment_a_mar",
+    "UXOptimizedNavbar_tarifs": "Tarifs",
+    "UXOptimizedNavbar_uxoptimizednavbaruxoptimizednavbarcontactdemo": "UXOptimizedNavbar.uxoptimizednavbarcontactdemo"
+  },
+  "UXOptimizedHero": {
+    "UXOptimizedHero_amortissement": "Amortissement"
+  },
+  "UXFooter": {
+    "UXFooter_contact": "Contact"
+  },
+  "TechnicalProofsSection": {
+    "TechnicalProofsSection_amboss": "Amboss",
+    "TechnicalProofsSection_terminal": "Terminal"
+  },
+  "SocialProofSection": {
+    "SocialProofSection_socialproofsectionsocialproofsectiondaznode_a_sa": "SocialProofSection.socialproofsectiondaznode_a_sa",
+    "SocialProofSection_socialproofsectionsocialproofsectionla_seule_sol": "SocialProofSection.socialproofsectionla_seule_sol"
+  },
+  "SocialProof": {
+    "SocialProof_socialproofsocialproofnuds_dploys": "SocialProof.socialproofnuds_dploys",
+    "SocialProof_socialproofsocialproofdisponibilit": "SocialProof.socialproofdisponibilit",
+    "SocialProof_support": "Support",
+    "SocialProof_socialproofsocialproofcapacity_totale": "SocialProof.socialproofcapacity_totale"
+  },
+  "RealTestimonials": {
+    "RealTestimonials_realtestimonialshomejean_d": "RealTestimonials.homejean_d",
+    "RealTestimonials_realtestimonialshomemarie_l": "RealTestimonials.homemarie_l",
+    "RealTestimonials_realtestimonialsrealtestimonialspierre_m": "RealTestimonials.realtestimonialspierre_m"
+  },
+  "RealMetrics": {
+    "RealMetrics_realmetricsrealmetricssur_les_24_derniers": "RealMetrics.realmetricssur_les_24_derniers",
+    "RealMetrics_realmetricsrealmetricsforcecloses": "RealMetrics.realmetricsforcecloses",
+    "RealMetrics_realmetricsrealmetricsdepuis_6_mois": "RealMetrics.realmetricsdepuis_6_mois",
+    "RealMetrics_realmetricsrealmetricsroi_moyen": "RealMetrics.realmetricsroi_moyen",
+    "RealMetrics_realmetricsrealmetricsvs_gestion_manuelle": "RealMetrics.realmetricsvs_gestion_manuelle",
+    "RealMetrics_realmetricsrealmetricstemps_de_raction": "RealMetrics.realmetricstemps_de_raction",
+    "RealMetrics_realmetricsrealmetricsdtection_d": "RealMetrics.realmetricsdtection_d"
+  },
+  "ProtonPayment": {
+    "ProtonPayment_fermer": "Fermer",
+    "ProtonPayment_protonpaymentprotonpaymentvotreemailprotonm": "ProtonPayment.protonpaymentvotreemailprotonm"
+  },
+  "MobileFAQSection": {
+    "MobileFAQSection_documentation": "Documentation"
+  },
+  "LNURLAuthQR": {
+    "LNURLAuthQR_lnurlauthqrlnurlauthqrcontenttype": "LNURLAuthQR.lnurlauthqrcontenttype"
+  },
+  "HowItWorks": {
+    "HowItWorks_howitworkshowitworkschoisissez_votre_pla": "HowItWorks.howitworkschoisissez_votre_pla",
+    "HowItWorks_howitworkshowitworksrecevez_votre_dazbox": "HowItWorks.howitworksrecevez_votre_dazbox",
+    "HowItWorks_howitworkshowitworksnotre_ia_configure_a": "HowItWorks.howitworksnotre_ia_configure_a",
+    "HowItWorks_howitworkshowitworkscommencez_gnrer_des_": "HowItWorks.howitworkscommencez_gnrer_des_"
+  },
+  "FunnelAnalytics": {
+    "FunnelAnalytics_funnelanalyticsfunnelanalyticstotal_vnements": "FunnelAnalytics.funnelanalyticstotal_vnements",
+    "FunnelAnalytics_funnelanalyticsfunnelanalyticssessions_unique": "FunnelAnalytics.funnelanalyticssessions_unique",
+    "FunnelAnalytics_funnelanalyticsfunnelanalyticsvnementssession": "FunnelAnalytics.funnelanalyticsvnementssession",
+    "FunnelAnalytics_funnelanalyticsfunnelanalyticsdure_session_mi": "FunnelAnalytics.funnelanalyticsdure_session_mi"
+  },
+  "FirstStepsGuide": {
+    "FirstStepsGuide_firststepsguidefirststepsguidemise_en_place_d": "FirstStepsGuide.firststepsguidemise_en_place_d",
+    "FirstStepsGuide_firststepsguidefirststepsguidecration_de_vos_": "FirstStepsGuide.firststepsguidecration_de_vos_",
+    "FirstStepsGuide_firststepsguidefirststepsguideaffinement_de_v": "FirstStepsGuide.firststepsguideaffinement_de_v",
+    "FirstStepsGuide_firststepsguidefirststepsguidegnration_de_vos": "FirstStepsGuide.firststepsguidegnration_de_vos"
+  },
+  "DetailedTestimonials": {
+    "DetailedTestimonials_detailedtestimonialsdetailedtestimonialsrevenusmoi": "DetailedTestimonials.detailedtestimonialsrevenusmoi",
+    "DetailedTestimonials_detailedtestimonialsdetailedtestimonialsliquidit": "DetailedTestimonials.detailedtestimonialsliquidit",
+    "DetailedTestimonials_detailedtestimonialsdetailedtestimonialssuccs": "DetailedTestimonials.detailedtestimonialssuccs"
+  },
+  "CustomHeader": {
+    "CustomHeader_accueil": "Accueil",
+    "CustomHeader_customheaderfooterdaz3_logo": "CustomHeader.footerdaz3_logo"
+  },
+  "ContactForm": {
+    "ContactForm_contactformcontactformcontenttype": "ContactForm.contactformcontenttype",
+    "ContactForm_suggestion": "Suggestion",
+    "ContactForm_partenariat": "Partenariat",
+    "ContactForm_contactformcontactformvotre_message": "ContactForm.contactformvotre_message"
+  },
+  "CommunitySection": {
+    "CommunitySection_communitysectioncommunitysectionune_communaut_": "CommunitySection.communitysectionune_communaut_",
+    "CommunitySection_communitysectioncommunitysectionapprenez_les_m": "CommunitySection.communitysectionapprenez_les_m"
+  },
+  "AuthLayout": {
+    "AuthLayout_authlayoutauthlayoutlogo_daznode": "AuthLayout.authlayoutlogo_daznode"
+  },
+  "RecommendationFilters": {
+    "RecommendationFilters_useruserliquidit": "user.userliquidit",
+    "RecommendationFilters_useruserconnectivit": "user.userconnectivit",
+    "RecommendationFilters_frais": "Frais",
+    "RecommendationFilters_useruserscurit": "user.userscurit",
+    "RecommendationFilters_useruserlev": "user.userlev",
+    "RecommendationFilters_moyen": "Moyen",
+    "RecommendationFilters_faible": "Faible",
+    "RecommendationFilters_facile": "Facile",
+    "RecommendationFilters_difficile": "Difficile",
+    "RecommendationFilters_filtres": "Filtres",
+    "RecommendationFilters_useruserrechercher_une_recommandat": "user.userrechercher_une_recommandat",
+    "RecommendationFilters_impact": "Impact"
+  },
+  "PerformanceMetrics": {
+    "PerformanceMetrics_useruserrevenus_sats": "user.userrevenus_sats",
+    "PerformanceMetrics_useruserefficacit_": "user.userefficacit_",
+    "PerformanceMetrics_useruserrevenus_7j": "user.userrevenus_7j",
+    "PerformanceMetrics_useruserefficacit": "user.userefficacit",
+    "PerformanceMetrics_stable": "Stable",
+    "PerformanceMetrics_moyenne": "Moyenne",
+    "PerformanceMetrics_minimum": "Minimum"
+  },
+  "AdvancedStats": {
+    "AdvancedStats_useruserdistribution_des_canaux": "user.userdistribution_des_canaux",
+    "AdvancedStats_useruserrevenus_par_catgorie": "user.userrevenus_par_catgorie",
+    "AdvancedStats_betweenness": "Betweenness",
+    "AdvancedStats_eigenvector": "Eigenvector"
+  },
+  "SmartRecommendations": {
+    "SmartRecommendations_toutes": "Toutes",
+    "SmartRecommendations_routage": "Routage",
+    "SmartRecommendations_gratuites": "Gratuites"
+  },
+  "RecommendationCard": {
+    "RecommendationCard_pubkey": "Pubkey"
+  },
+  "RealTimeStats": {
+    "RealTimeStats_live": "Live",
+    "RealTimeStats_excellent": "Excellent"
+  },
+  "ProfileCompletionEnhanced": {
+    "ProfileCompletionEnhanced_avantages": "Avantages"
+  },
+  "PremiumConversionModal": {
+    "PremiumConversionModal_useruserdazia_analyse_votre_nud_24": "user.userdazia_analyse_votre_nud_24",
+    "PremiumConversionModal_userusermtriques_dtailles_projecti": "user.usermtriques_dtailles_projecti",
+    "PremiumConversionModal_useruseralertes_automatiques_pour_": "user.useralertes_automatiques_pour_",
+    "PremiumConversionModal_useruseraccs_direct_aux_experts_li": "user.useraccs_direct_aux_experts_li",
+    "PremiumConversionModal_useruserapplication_automatique_de": "user.userapplication_automatique_de",
+    "PremiumConversionModal_useruseranalyses_hebdomadaires_et_": "user.useranalyses_hebdomadaires_et_",
+    "PremiumConversionModal_useruserfonctionnalits": "user.userfonctionnalits",
+    "PremiumConversionModal_useruserrentabilit": "user.userrentabilit",
+    "PremiumConversionModal_userusertmoignages": "user.usertmoignages"
+  },
+  "MobileOptimizedDashboard": {
+    "MobileOptimizedDashboard_profil": "Profil",
+    "MobileOptimizedDashboard_connecter": "Connecter",
+    "MobileOptimizedDashboard_guide": "Guide"
+  },
+  "MobileBurgerMenu": {
+    "MobileBurgerMenu_userusermenu_de_navigation": "user.usermenu_de_navigation"
+  },
+  "GamificationCenter": {
+    "GamificationCenter_tous": "Tous",
+    "GamificationCenter_useruserpremiers_pas": "user.userpremiers_pas",
+    "GamificationCenter_croissance": "Croissance",
+    "GamificationCenter_userusercommunaut": "user.usercommunaut",
+    "GamificationCenter_achievements": "Achievements",
+    "GamificationCenter_classement": "Classement",
+    "GamificationCenter_progression": "Progression"
+  },
+  "DaznoInsights": {
+    "DaznoInsights_cible": "Cible"
+  },
+  "DashboardCharts": {
+    "DashboardCharts_useruserrevenus_lightning": "user.userrevenus_lightning",
+    "DashboardCharts_userusercanaux_actifs": "user.usercanaux_actifs"
+  },
+  "CRMHeaderDashboard": {
+    "CRMHeaderDashboard_potentiel": "Potentiel"
+  },
+  "AdminProvider": {
+    "AdminProvider_adminadminraactionsave": "admin.adminraactionsave",
+    "AdminProvider_adminadminraactioncreate": "admin.adminraactioncreate",
+    "AdminProvider_adminadminraactionedit": "admin.adminraactionedit",
+    "AdminProvider_adminadminraactiondelete": "admin.adminraactiondelete",
+    "AdminProvider_adminadminraactionshow": "admin.adminraactionshow",
+    "AdminProvider_adminadminraactionlist": "admin.adminraactionlist",
+    "AdminProvider_adminadminraactionadd": "admin.adminraactionadd",
+    "AdminProvider_adminadminraactioncancel": "admin.adminraactioncancel",
+    "AdminProvider_adminadminraactionback": "admin.adminraactionback",
+    "AdminProvider_adminadminraactionrefresh": "admin.adminraactionrefresh",
+    "AdminProvider_adminadminranavigationno_results": "admin.adminranavigationno_results",
+    "AdminProvider_adminadminranavigationnext": "admin.adminranavigationnext",
+    "AdminProvider_adminadminranavigationprev": "admin.adminranavigationprev",
+    "AdminProvider_adminadminranavigationpage_out_of_b": "admin.adminranavigationpage_out_of_b",
+    "AdminProvider_adminadminranavigationpage_out_from": "admin.adminranavigationpage_out_from",
+    "AdminProvider_adminadminramessageyes": "admin.adminramessageyes",
+    "AdminProvider_adminadminramessageno": "admin.adminramessageno",
+    "AdminProvider_adminadminramessageare_you_sure": "admin.adminramessageare_you_sure",
+    "AdminProvider_adminadminramessagebulk_delete_titl": "admin.adminramessagebulk_delete_titl",
+    "AdminProvider_adminadminramessagebulk_delete_cont": "admin.adminramessagebulk_delete_cont",
+    "AdminProvider_adminadminresourcesprofilesname": "admin.adminresourcesprofilesname",
+    "AdminProvider_adminadminresourcescrm_customer_seg": "admin.adminresourcescrm_customer_seg",
+    "AdminProvider_adminadminresourcescrm_email_campai": "admin.adminresourcescrm_email_campai",
+    "AdminProvider_adminadminresourcescrm_email_templa": "admin.adminresourcescrm_email_templa",
+    "AdminProvider_adminadminresourcesprofilesfieldsid": "admin.adminresourcesprofilesfieldsid",
+    "AdminProvider_adminadminresourcesprofilesfieldsem": "admin.adminresourcesprofilesfieldsem",
+    "AdminProvider_adminadminresourcesprofilesfieldsno": "admin.adminresourcesprofilesfieldsno",
+    "AdminProvider_adminadminresourcesprofilesfieldspr": "admin.adminresourcesprofilesfieldspr",
+    "AdminProvider_adminadminresourcesprofilesfieldscr": "admin.adminresourcesprofilesfieldscr",
+    "AdminProvider_adminadminresourcesprofilesfieldst4": "admin.adminresourcesprofilesfieldst4",
+    "AdminProvider_adminadminrapagedashboard": "admin.adminrapagedashboard",
+    "AdminProvider_adminadminravalidationrequired": "admin.adminravalidationrequired",
+    "AdminProvider_adminadminravalidationminlength": "admin.adminravalidationminlength",
+    "AdminProvider_adminadminravalidationmaxlength": "admin.adminravalidationmaxlength",
+    "AdminProvider_adminadminravalidationemail": "admin.adminravalidationemail",
+    "AdminProvider_adminadmindaznode_crm": "admin.admindaznode_crm"
+  },
+  "Sidebar": {
+    "Sidebar_utilisateurs": "Utilisateurs",
+    "Sidebar_communications": "Communications",
+    "Sidebar_adminadmincrm_legacy": "admin.admincrm_legacy",
+    "Sidebar_paiements": "Paiements",
+    "Sidebar_adminadminparamtres": "admin.adminparamtres"
+  },
+  "templates": {
+    "templates_adminadmintemplates_email": "admin.admintemplates_email",
+    "templates_adminadmindtails_du_template": "admin.admindtails_du_template",
+    "templates_adminadminmodifier_le_template": "admin.adminmodifier_le_template",
+    "templates_adminadmincrer_un_template": "admin.admincrer_un_template",
+    "templates_prenom": "prenom",
+    "templates_subject": "subject",
+    "templates_dashboard_url": "dashboard_url"
+  },
+  "segments": {
+    "segments_adminadminsegments_de_clients": "admin.adminsegments_de_clients",
+    "segments_adminadmindtails_du_segment": "admin.admindtails_du_segment",
+    "segments_adminadminmodifier_le_segment": "admin.adminmodifier_le_segment",
+    "segments_adminadmincrer_un_segment": "admin.admincrer_un_segment",
+    "segments_segments": "Segments"
+  },
+  "customers": {
+    "customers_adminadmindtails_du_client": "admin.admindtails_du_client",
+    "customers_adminadminmodifier_le_client": "admin.adminmodifier_le_client",
+    "customers_adminadmincrer_un_client": "admin.admincrer_un_client"
+  },
+  "campaigns": {
+    "campaigns_adminadmincampagnes_email": "admin.admincampagnes_email",
+    "campaigns_adminadmindtails_de_la_campagne": "admin.admindtails_de_la_campagne",
+    "campaigns_adminadminmodifier_la_campagne": "admin.adminmodifier_la_campagne",
+    "campaigns_adminadmincrer_une_campagne": "admin.admincrer_une_campagne"
+  },
+  "CRMDashboard": {
+    "CRMDashboard_dashboarddashboardclients_actifs": "dashboard.dashboardclients_actifs",
+    "CRMDashboard_dashboarddashboardtaux_d": "dashboard.dashboardtaux_d",
+    "CRMDashboard_dashboarddashboardcampagnes_actives": "dashboard.dashboardcampagnes_actives",
+    "CRMDashboard_dashboarddashboard1247_emails_envoys_av": "dashboard.dashboard1247_emails_envoys_av",
+    "CRMDashboard_dashboarddashboard12_nouveaux_clients_a": "dashboard.dashboard12_nouveaux_clients_a",
+    "CRMDashboard_dashboarddashboardjeandupontexamplecom_": "dashboard.dashboardjeandupontexamplecom_"
+  }
+}

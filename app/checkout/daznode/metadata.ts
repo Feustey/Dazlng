@@ -1,4 +1,4 @@
 export const metadata = {
   title: 'DazNode - Checkout',
-  description: 'Optimisez votre nœud Lightning Network avec DazNode'
+  description: "checkout.checkoutcheckoutoptimisez_votr"
 }; export const dynamic = "force-dynamic";

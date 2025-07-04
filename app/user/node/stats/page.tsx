@@ -26,14 +26,14 @@ const NodeStatsPage: FC = () => {
     }, 1000);
   }, []);
 
-  if (loading) return <div>Chargement...</div>;
+  if (loading) return <div>{t('user.chargement')}</div>;
 
   return (
     <div className="space-y-8">
-      <h1 className="text-3xl font-bold">Statistiques détaillées</h1>
+      <h1 className="text-3xl font-bold">{t('user.statistiques_dtailles')}</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white rounded-xl shadow p-6">
-          <h3 className="text-lg font-semibold mb-2">Capacité totale</h3>
+          <h3 className="text-lg font-semibold mb-2">{t('user.capacit_totale')}</h3>
           <div className="text-3xl font-bold text-blue-600">{stats?.totalCapacity?.toLocaleString()} sats</div>
         </div>
         {/* Plus de widgets stats... */}

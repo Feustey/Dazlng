@@ -35,7 +35,7 @@ export class MCPClient {
       headers: {
         ...options.headers,
         'Authorization': `Bearer ${this.token}`,
-        'Content-Type': 'application/json',
+        "mcp-client.mcpclientmcpclientcontenttype": 'application/json',
       },
       next: { 
         revalidate: 60 // Cache pendant 60 secondes

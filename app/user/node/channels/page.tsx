@@ -84,7 +84,7 @@ const NodeChannelsPage: FC = () => {
       const response = await fetch(`/api/network/node/${pubkey}/channels${statusFilter}`, {
         headers: {
           'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json'
+          "user.userusercontenttype": 'application/json'
         }
       });
 
@@ -122,7 +122,7 @@ const NodeChannelsPage: FC = () => {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json'
+          "user.userusercontenttype": 'application/json'
         }
       });
 
@@ -163,7 +163,7 @@ const NodeChannelsPage: FC = () => {
         <div className="flex items-center justify-center min-h-96">
           <div className="text-center">
             <div className="animate-spin h-12 w-12 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p className="text-gray-600">Chargement de vos canaux...</p>
+            <p className="text-gray-600">{t('user.chargement_de_vos_canaux')}</p>
           </div>
         </div>
       </div>
@@ -194,13 +194,13 @@ const NodeChannelsPage: FC = () => {
     return (
       <div className="space-y-8">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900">Gestion des canaux</h1>
+          <h1 className="text-3xl font-bold text-gray-900">{t('user.gestion_des_canaux')}</h1>
           <div className="text-sm text-gray-500">
             Connecté en tant que {user.email}
           </div>
         </div>
         <div className="bg-red-50 text-red-700 p-4 rounded-lg border border-red-200">
-          <h3 className="font-semibold mb-2">❌ Erreur</h3>
+          <h3 className="font-semibold mb-2">{t('user._erreur')}</h3>
           <p>{error}</p>
           {error.includes('Aucun nœud') && (
             <button
@@ -226,7 +226,7 @@ const NodeChannelsPage: FC = () => {
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Gestion des canaux</h1>
+        <h1 className="text-3xl font-bold text-gray-900">{t('user.gestion_des_canaux')}</h1>
         <div className="flex items-center gap-4">
           <div className="text-sm text-gray-500">
             Connecté en tant que {user.email}
@@ -243,23 +243,23 @@ const NodeChannelsPage: FC = () => {
       {/* Statistiques rapides */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-white rounded-lg shadow p-4">
-          <div className="text-sm text-gray-500">Total des canaux</div>
+          <div className="text-sm text-gray-500">{t('user.total_des_canaux')}</div>
           <div className="text-2xl font-bold">{channels.length}</div>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
-          <div className="text-sm text-gray-500">Canaux actifs</div>
+          <div className="text-sm text-gray-500">{t('user.canaux_actifs')}</div>
           <div className="text-2xl font-bold text-green-600">
             {channels.filter(c => c.status === 'active').length}
           </div>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
-          <div className="text-sm text-gray-500">Capacité totale</div>
+          <div className="text-sm text-gray-500">{t('user.capacit_totale')}</div>
           <div className="text-2xl font-bold">
             {(channels.reduce((sum: any, c: any) => sum + c.capacity, 0) / 100000000).toFixed(2)} BTC
           </div>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
-          <div className="text-sm text-gray-500">Balance locale</div>
+          <div className="text-sm text-gray-500">{t('user.balance_locale')}</div>
           <div className="text-2xl font-bold text-blue-600">
             {(channels.reduce((sum: any, c: any) => sum + c.localBalance, 0) / 100000000).toFixed(2)} BTC
           </div>
@@ -289,7 +289,7 @@ const NodeChannelsPage: FC = () => {
         {channels.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-gray-400 text-6xl mb-4">⚡</div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Aucun canal</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('user.aucun_canal')}</h3>
             <p className="text-gray-600 mb-4">
               {filter === 'all' 
                 ? 'Vous n\'avez pas encore de canaux Lightning.'
@@ -334,7 +334,7 @@ const NodeChannelsPage: FC = () => {
                     <div className="text-lg font-bold">
                       {((channel.localBalance / channel.capacity) * 100).toFixed(1)}%
                     </div>
-                    <div className="text-xs text-gray-500">Balance locale</div>
+                    <div className="text-xs text-gray-500">{t('user.balance_locale')}</div>
                     <button
                       onClick={() => handleCloseChannel(channel.id)}
                       className="text-xs text-red-600 hover:underline"
@@ -356,15 +356,15 @@ const NodeChannelsPage: FC = () => {
                 <div className="mt-4 pt-4 border-t border-gray-100">
                   <div className="text-xs text-gray-500 grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div>
-                      <div className="font-medium">Fee Rate</div>
+                      <div className="font-medium">{t('user.fee_rate')}</div>
                       <div>{channel.feeRate / 1000000} ppm</div>
                     </div>
                     <div>
-                      <div className="font-medium">Base Fee</div>
+                      <div className="font-medium">{t('user.base_fee')}</div>
                       <div>{channel.baseFee} sats</div>
                     </div>
                     <div>
-                      <div className="font-medium">Min HTLC</div>
+                      <div className="font-medium">{t('user.min_htlc')}</div>
                       <div>{channel.minHtlc} sats</div>
                     </div>
                     <div>
@@ -383,7 +383,7 @@ const NodeChannelsPage: FC = () => {
       {showNewChannelModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h3 className="text-lg font-semibold mb-4">Ouvrir un nouveau canal</h3>
+            <h3 className="text-lg font-semibold mb-4">{t('user.ouvrir_un_nouveau_canal')}</h3>
             <p className="text-gray-600 mb-4">
               Fonctionnalité en développement. Utilisez votre interface de nœud habituelle pour le moment.
             </p>

@@ -86,7 +86,7 @@ export const OptimizedHero: React.FC<OptimizedHeroProps> = ({ variant = 'control
     try {
       const response = await fetch('/api/newsletter/subscribe', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "OptimizedHero.optimizedherooptimizedherocont": 'application/json' },
         body: JSON.stringify({ 
           email, 
           source: 'hero_section',
@@ -175,7 +175,7 @@ export const OptimizedHero: React.FC<OptimizedHeroProps> = ({ variant = 'control
 
             {/* Subheadline */}
             <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl">
-              La seule solution qui <strong className="text-yellow-400">prédit et évite les force-closes</strong> 6h à l'avance.
+              La seule solution qui <strong className="text-yellow-400">{t('OptimizedHero.prdit_et_vite_les_forcecloses')}</strong> 6h à l'avance.
               <span className="block mt-2 text-lg text-gray-400">
                 Utilisé par 500+ node runners • {metrics.averageROI} de revenus en moyenne
               </span>
@@ -206,7 +206,7 @@ export const OptimizedHero: React.FC<OptimizedHeroProps> = ({ variant = 'control
               <span className="bg-green-400/10 border border-green-400 text-green-400 px-3 py-1 rounded-full mr-4">
                 🟢 {ctaConfig.urgency}
               </span>
-              <span>Aucune carte bancaire requise</span>
+              <span>{t('OptimizedHero.aucune_carte_bancaire_requise')}</span>
             </div>
 
             {/* Quick Email Capture */}
@@ -216,7 +216,7 @@ export const OptimizedHero: React.FC<OptimizedHeroProps> = ({ variant = 'control
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="votre@email.com"
+                  placeholder="OptimizedHero.optimizedherooptimizedherovotr"
                   className="flex-1 bg-gray-800 border border-gray-600 text-white px-4 py-3 rounded-lg focus:border-yellow-400 focus:outline-none"
                   required
                 />
@@ -239,7 +239,7 @@ export const OptimizedHero: React.FC<OptimizedHeroProps> = ({ variant = 'control
             {/* Live Metrics Dashboard Preview */}
             <div className="bg-gray-800/50 backdrop-blur-lg border border-gray-700 rounded-2xl p-6 mb-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-white font-semibold">Performance Live</h3>
+                <h3 className="text-white font-semibold">{t('OptimizedHero.performance_live')}</h3>
                 <div className="flex items-center text-green-400 text-sm">
                   <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
                   En direct
@@ -251,28 +251,28 @@ export const OptimizedHero: React.FC<OptimizedHeroProps> = ({ variant = 'control
                   <div className="text-2xl font-bold text-yellow-400 font-mono">
                     {metrics.totalRevenue}
                   </div>
-                  <div className="text-sm text-gray-400">Revenus générés</div>
+                  <div className="text-sm text-gray-400">{t('OptimizedHero.revenus_gnrs')}</div>
                 </div>
                 
                 <div className="bg-gray-900/50 rounded-lg p-4">
                   <div className="text-2xl font-bold text-green-400 font-mono">
                     {metrics.averageROI}
                   </div>
-                  <div className="text-sm text-gray-400">ROI moyen</div>
+                  <div className="text-sm text-gray-400">{t('OptimizedHero.roi_moyen')}</div>
                 </div>
                 
                 <div className="bg-gray-900/50 rounded-lg p-4">
                   <div className="text-2xl font-bold text-blue-400 font-mono">
                     {metrics.activeNodes}
                   </div>
-                  <div className="text-sm text-gray-400">Nodes actifs</div>
+                  <div className="text-sm text-gray-400">{t('OptimizedHero.nodes_actifs')}</div>
                 </div>
                 
                 <div className="bg-gray-900/50 rounded-lg p-4">
                   <div className="text-2xl font-bold text-purple-400 font-mono">
                     {metrics.forceClosePrevented}
                   </div>
-                  <div className="text-sm text-gray-400">Force-closes évités</div>
+                  <div className="text-sm text-gray-400">{t('OptimizedHero.forcecloses_vits')}</div>
                 </div>
               </div>
             </div>
@@ -281,26 +281,26 @@ export const OptimizedHero: React.FC<OptimizedHeroProps> = ({ variant = 'control
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="bg-gradient-to-br from-yellow-400/10 to-orange-400/10 border border-yellow-400/20 rounded-xl p-4">
                 <div className="text-yellow-400 text-2xl mb-2">🔮</div>
-                <h4 className="text-white font-semibold mb-1">Prédiction IA</h4>
-                <p className="text-gray-400 text-sm">6h d'avance sur les force-closes</p>
+                <h4 className="text-white font-semibold mb-1">{t('OptimizedHero.prdiction_ia')}</h4>
+                <p className="text-gray-400 text-sm">{t('OptimizedHero.6h_davance_sur_les_forcecloses')}</p>
               </div>
               
               <div className="bg-gradient-to-br from-green-400/10 to-blue-400/10 border border-green-400/20 rounded-xl p-4">
                 <div className="text-green-400 text-2xl mb-2">⚡</div>
-                <h4 className="text-white font-semibold mb-1">Routing Optimisé</h4>
-                <p className="text-gray-400 text-sm">+40% de revenus moyens</p>
+                <h4 className="text-white font-semibold mb-1">{t('OptimizedHero.routing_optimis')}</h4>
+                <p className="text-gray-400 text-sm">{t('OptimizedHero.40_de_revenus_moyens')}</p>
               </div>
               
               <div className="bg-gradient-to-br from-purple-400/10 to-pink-400/10 border border-purple-400/20 rounded-xl p-4">
                 <div className="text-purple-400 text-2xl mb-2">📊</div>
-                <h4 className="text-white font-semibold mb-1">Analytics 24/7</h4>
-                <p className="text-gray-400 text-sm">Dashboard temps réel</p>
+                <h4 className="text-white font-semibold mb-1">{t('OptimizedHero.analytics_247')}</h4>
+                <p className="text-gray-400 text-sm">{t('OptimizedHero.dashboard_temps_rel')}</p>
               </div>
               
               <div className="bg-gradient-to-br from-blue-400/10 to-cyan-400/10 border border-blue-400/20 rounded-xl p-4">
                 <div className="text-blue-400 text-2xl mb-2">🛡️</div>
-                <h4 className="text-white font-semibold mb-1">Alertes Smart</h4>
-                <p className="text-gray-400 text-sm">WhatsApp & Telegram</p>
+                <h4 className="text-white font-semibold mb-1">{t('OptimizedHero.alertes_smart')}</h4>
+                <p className="text-gray-400 text-sm">{t('OptimizedHero.whatsapp_telegram')}</p>
               </div>
             </div>
           </div>

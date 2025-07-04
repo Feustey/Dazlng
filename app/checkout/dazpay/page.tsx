@@ -14,9 +14,9 @@ export default function DazpayCheckoutPage() {
   return (
     <div className="max-w-[600px] mx-auto my-12 p-8 bg-[rgba(20,20,40,0.85)] rounded-[24px] shadow-2xl text-center">
       <div className="mb-6">
-        <span className="inline-block bg-yellow-400 text-black font-bold px-4 py-1 rounded-full text-sm">À venir</span>
+        <span className="inline-block bg-yellow-400 text-black font-bold px-4 py-1 rounded-full text-sm">{t('checkout._venir')}</span>
       </div>
-      <h1 className="text-3xl font-extrabold mb-6 text-white">DazPay - Bientôt disponible</h1>
+      <h1 className="text-3xl font-extrabold mb-6 text-white">{t('checkout.dazpay_bientt_disponible')}</h1>
       <div className="bg-white/10 p-6 rounded-xl mb-8">
         <p className="text-lg text-white/90 mb-6">
           DazPay est actuellement en phase finale de développement et sera bientôt disponible.

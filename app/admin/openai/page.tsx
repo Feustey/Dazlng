@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/shared/ui
 import { Alert, AlertDescription } from "@/components/shared/ui/Alert";
 import { Select, SelectItem } from "../components/ui/Select";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
-import { AlertCircle, DollarSign, Activity, Users, Zap } from "lucide-react";
+import { DollarSign, Activity, Users, Zap, AlertCircle } from '@/components/shared/ui/IconRegistry';
+
 
 export interface OpenAIMetrics {
   timestamp: string;
@@ -201,14 +202,14 @@ export default function OpenAIPage(): JSX.Element | null {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Métriques OpenAI</h1>
-          <p className="text-gray-600 mt-1">Surveillance de l'utilisation d'OpenAI et des performances système</p>
+          <h1 className="text-3xl font-bold">{t('admin.mtriques_openai')}</h1>
+          <p className="text-gray-600 mt-1">{t('admin.surveillance_de_lutilisation_d')}</p>
         </div>
         <Select value={periodDays} onValueChange={setPeriodDays}>
-          <SelectItem value="7">7 derniers jours</SelectItem>
-          <SelectItem value="30">30 derniers jours</SelectItem>
-          <SelectItem value="90">90 derniers jours</SelectItem>
-          <SelectItem value="365">365 derniers jours</SelectItem>
+          <SelectItem value="7">{t('admin.7_derniers_jours')}</SelectItem>
+          <SelectItem value="30">{t('admin.30_derniers_jours')}</SelectItem>
+          <SelectItem value="90">{t('admin.90_derniers_jours')}</SelectItem>
+          <SelectItem value="365">{t('admin.365_derniers_jours')}</SelectItem>
         </Select>
       </div>
 
@@ -231,7 +232,7 @@ export default function OpenAIPage(): JSX.Element | null {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">API Calls (dernière heure)</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('admin.api_calls_dernire_heure')}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{realtimeMetrics.last_hour.api_calls}</div>
@@ -239,7 +240,7 @@ export default function OpenAIPage(): JSX.Element | null {
           </Card>
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">Requêtes OpenAI (dernière heure)</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('admin.requtes_openai_dernire_heure')}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-purple-600">{realtimeMetrics.last_hour.openai_requests}</div>
@@ -247,7 +248,7 @@ export default function OpenAIPage(): JSX.Element | null {
           </Card>
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">Recommandations (dernière heure)</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('admin.recommandations_dernire_heure')}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-green-600">{realtimeMetrics.last_hour.recommendations}</div>
@@ -260,7 +261,7 @@ export default function OpenAIPage(): JSX.Element | null {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Coût Total</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('admin.cot_total')}</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -272,7 +273,7 @@ export default function OpenAIPage(): JSX.Element | null {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Requêtes Totales</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('admin.requtes_totales')}</CardTitle>
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -284,7 +285,7 @@ export default function OpenAIPage(): JSX.Element | null {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Tokens Utilisés</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('admin.tokens_utiliss')}</CardTitle>
             <Zap className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -296,7 +297,7 @@ export default function OpenAIPage(): JSX.Element | null {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Nœuds Actifs</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('admin.nuds_actifs')}</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -311,8 +312,8 @@ export default function OpenAIPage(): JSX.Element | null {
       {/* Graphique d'utilisation par jour */}
       <Card>
         <CardHeader>
-          <CardTitle>Utilisation quotidienne</CardTitle>
-          <p className="text-sm text-gray-600">Évolution des requêtes et des coûts</p>
+          <CardTitle>{t('admin.utilisation_quotidienne')}</CardTitle>
+          <p className="text-sm text-gray-600">{t('admin.volution_des_requtes_et_des_co')}</p>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={300}>
@@ -335,8 +336,8 @@ export default function OpenAIPage(): JSX.Element | null {
         {/* Modèles utilisés */}
         <Card>
           <CardHeader>
-            <CardTitle>Modèles utilisés</CardTitle>
-            <p className="text-sm text-gray-600">Répartition par modèle</p>
+            <CardTitle>{t('admin.modles_utiliss')}</CardTitle>
+            <p className="text-sm text-gray-600">{t('admin.rpartition_par_modle')}</p>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={250}>
@@ -389,7 +390,7 @@ export default function OpenAIPage(): JSX.Element | null {
                 <p className="font-semibold">{metrics.recommendations.viewed_count}</p>
               </div>
               <div>
-                <p className="text-muted-foreground">Implémentées</p>
+                <p className="text-muted-foreground">{t('admin.implmentes')}</p>
                 <p className="font-semibold">{metrics.recommendations.implemented_count}</p>
               </div>
             </div>
@@ -400,8 +401,8 @@ export default function OpenAIPage(): JSX.Element | null {
       {/* Top utilisateurs */}
       <Card>
         <CardHeader>
-          <CardTitle>Top utilisateurs OpenAI</CardTitle>
-          <p className="text-sm text-gray-600">Pubkeys avec le plus de requêtes</p>
+          <CardTitle>{t('admin.top_utilisateurs_openai')}</CardTitle>
+          <p className="text-sm text-gray-600">{t('admin.pubkeys_avec_le_plus_de_requte')}</p>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
@@ -423,8 +424,8 @@ export default function OpenAIPage(): JSX.Element | null {
       {/* Activité récente */}
       <Card>
         <CardHeader>
-          <CardTitle>Activité récente</CardTitle>
-          <p className="text-sm text-gray-600">Dernières requêtes OpenAI</p>
+          <CardTitle>{t('admin.activit_rcente')}</CardTitle>
+          <p className="text-sm text-gray-600">{t('admin.dernires_requtes_openai')}</p>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
@@ -450,7 +451,7 @@ export default function OpenAIPage(): JSX.Element | null {
       {systemHealth && (
         <Card>
           <CardHeader>
-            <CardTitle>État de santé du système</CardTitle>
+            <CardTitle>{t('admin.tat_de_sant_du_systme')}</CardTitle>
             <p className="text-sm text-gray-600">
               Statut global: {" "}
               <span className={`font-semibold ${systemHealth.status === 'healthy' ? 'text-green-600' : 'text-red-600'}`}>
@@ -482,8 +483,8 @@ export default function OpenAIPage(): JSX.Element | null {
       {/* Performances API */}
       <Card>
         <CardHeader>
-          <CardTitle>Performance des endpoints</CardTitle>
-          <p className="text-sm text-gray-600">Temps de réponse moyen et nombre d'appels</p>
+          <CardTitle>{t('admin.performance_des_endpoints')}</CardTitle>
+          <p className="text-sm text-gray-600">{t('admin.temps_de_rponse_moyen_et_nombr')}</p>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
@@ -505,11 +506,11 @@ export default function OpenAIPage(): JSX.Element | null {
               ))}
           </div>
           <div className="mt-4 pt-4 border-t flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Temps de réponse moyen global</span>
+            <span className="text-sm text-muted-foreground">{t('admin.temps_de_rponse_moyen_global')}</span>
             <span className="font-semibold">{metrics.system_metrics.avg_response_time_ms}ms</span>
           </div>
           <div className="flex justify-between items-center mt-2">
-            <span className="text-sm text-muted-foreground">Taux d'erreur</span>
+            <span className="text-sm text-muted-foreground">{t('admin.taux_derreur')}</span>
             <span className={`font-semibold ${metrics.system_metrics.error_rate > 5 ? 'text-red-600' : 'text-green-600'}`}>
               {metrics.system_metrics.error_rate.toFixed(2)}%
             </span>

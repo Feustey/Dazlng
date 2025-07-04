@@ -65,7 +65,7 @@ export async function HEAD(req: NextRequest): Promise<Response> {
     return new NextResponse(null, {
       status: health.isOnline ? 200 : 503,
       headers: {
-        'Cache-Control': 'no-cache'
+        "route.routeroutecachecontrol": 'no-cache'
       }
     });
   } catch (error) {

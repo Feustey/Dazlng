@@ -16,8 +16,8 @@ const NodeCard: FC<NodeCardProps> = ({ nodeData, showUpgradePrompt = false }) =>
     return (
       <div className="bg-white rounded-xl shadow p-6 text-center">
         <div className="text-gray-400 text-6xl mb-4">⚡</div>
-        <h3 className="text-xl font-semibold mb-2">Nœud non connecté</h3>
-        <p className="text-gray-600 mb-4">Connectez votre nœud Lightning pour voir les statistiques</p>
+        <h3 className="text-xl font-semibold mb-2">{t('user.nud_non_connect')}</h3>
+        <p className="text-gray-600 mb-4">{t('user.connectez_votre_nud_lightning_')}</p>
         <button className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition">
           Connecter mon nœud
         </button>
@@ -29,7 +29,7 @@ const NodeCard: FC<NodeCardProps> = ({ nodeData, showUpgradePrompt = false }) =>
     <div className="bg-white rounded-xl shadow p-6">
       <div className="flex justify-between items-start mb-4">
         <div>
-          <h3 className="text-xl font-semibold mb-2">Mon Nœud Lightning</h3>
+          <h3 className="text-xl font-semibold mb-2">{t('user.mon_nud_lightning')}</h3>
           <div className="flex items-center gap-2">
             <span>{nodeData.status === 'online' ? '🟢' : '🔴'}</span>
             <span className={`font-medium ${nodeData.status === 'online' ? 'text-green-600' : 'text-red-600'}`}>
@@ -57,7 +57,7 @@ const NodeCard: FC<NodeCardProps> = ({ nodeData, showUpgradePrompt = false }) =>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="text-sm text-gray-600">Capacité</label>
+            <label className="text-sm text-gray-600">{t('user.capacit')}</label>
             <p className="font-semibold">{nodeData.totalCapacity?.toLocaleString() || 0} sats</p>
           </div>
           <div>

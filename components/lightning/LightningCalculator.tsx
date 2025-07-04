@@ -5,7 +5,8 @@ import { createDaznoApiClient } from '@/lib/services/dazno-api';
 import { Card, CardContent, CardHeader, CardTitle, Input } from '@/components/shared/ui';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/shared/ui/select';
 import toast from 'react-hot-toast';
-import { Loader2 } from 'lucide-react';
+import { Loader2 } from '@/components/shared/ui/IconRegistry';
+
 
 type Currency = 'sats' | 'btc' | 'eur' | 'usd';
 
@@ -13,7 +14,7 @@ const CURRENCIES: { value: Currency; label: string; symbol: string }[] = [
   { value: 'sats', label: 'Satoshis', symbol: '⚡' },
   { value: 'btc', label: 'Bitcoin', symbol: '₿' },
   { value: 'eur', label: 'Euro', symbol: '€' },
-  { value: 'usd', label: 'Dollar US', symbol: '$' },
+  { value: 'usd', label: "LightningCalculator.lightningcalculatorlightningca", symbol: '$' },
 ];
 
 export default function LightningCalculator() {
@@ -75,7 +76,7 @@ export default function LightningCalculator() {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Calculateur Lightning</CardTitle>
+        <CardTitle>{t('LightningCalculator.calculateur_lightning')}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">
@@ -94,7 +95,7 @@ export default function LightningCalculator() {
               if (amount) handleConvert();
             }}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="De..." />
+                <SelectValue placeholder="LightningCalculator.lightningcalculatorlightningca" />
               </SelectTrigger>
               <SelectContent>
                 {CURRENCIES.map((currency) => (
@@ -109,7 +110,7 @@ export default function LightningCalculator() {
               if (amount) handleConvert();
             }}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Vers..." />
+                <SelectValue placeholder="LightningCalculator.lightningcalculatorlightningca" />
               </SelectTrigger>
               <SelectContent>
                 {CURRENCIES.map((currency) => (

@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle2, ChevronRight, Lock } from 'lucide-react';
+
 import { useState } from 'react';
+import { CheckCircle2, ChevronRight, Lock } from '@/components/shared/ui/IconRegistry';
 
 export interface RecommendationCardProps {
   recommendation: {

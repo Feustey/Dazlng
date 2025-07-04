@@ -5,7 +5,8 @@ import { z } from 'zod';
 import { toast } from 'sonner';
 import { LightningPayment } from '@/components/web/LightningPayment';
 import { Button } from '@/components/shared/ui';
-import { CheckCircle, Zap, Shield, TrendingUp, Star } from 'lucide-react';
+import { CheckCircle, Zap, Shield, TrendingUp, Star } from '@/components/shared/ui/IconRegistry';
+
 
 // Schéma de validation
 const checkoutSchema = z.object({
@@ -85,7 +86,7 @@ export const DazNodeCheckout = () => {
 
       const response = await fetch('/api/daznode/subscribe', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "checkout.checkoutcheckoutcontenttype": 'application/json' },
         body: JSON.stringify(formData)
       });
 
@@ -110,7 +111,7 @@ export const DazNodeCheckout = () => {
     try {
       const response = await fetch('/api/daznode/confirm-payment', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "checkout.checkoutcheckoutcontenttype": 'application/json' },
         body: JSON.stringify({ payment_hash: paymentHash })
       });
 
@@ -199,7 +200,7 @@ export const DazNodeCheckout = () => {
                       ? 'border-red-300 focus:border-red-500' 
                       : 'border-gray-200 focus:border-amber-500'
                   }`}
-                  placeholder="votre@email.com"
+                  placeholder="checkout.checkoutcheckoutvotreemailcom"
                 />
                 {errors.email && (
                   <p className="mt-1 text-sm text-red-600">{errors.email}</p>
@@ -219,7 +220,7 @@ export const DazNodeCheckout = () => {
                       ? 'border-red-300 focus:border-red-500' 
                       : 'border-gray-200 focus:border-amber-500'
                   }`}
-                  placeholder="02abc..."
+                  placeholder="checkout.checkoutcheckout02abc"
                 />
                 {errors.pubkey && (
                   <p className="mt-1 text-sm text-red-600">{errors.pubkey}</p>
@@ -282,19 +283,19 @@ export const DazNodeCheckout = () => {
 
             {/* Avantages */}
             <div className="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl shadow-xl p-8 text-white">
-              <h3 className="text-xl font-bold mb-4">Pourquoi choisir DazNode ?</h3>
+              <h3 className="text-xl font-bold mb-4">{t('checkout.pourquoi_choisir_daznode_')}</h3>
               <div className="space-y-4">
                 <div className="flex items-center">
                   <TrendingUp className="w-5 h-5 mr-3" />
-                  <span>Augmentation moyenne de 40% des revenus</span>
+                  <span>{t('checkout.augmentation_moyenne_de_40_des')}</span>
                 </div>
                 <div className="flex items-center">
                   <Shield className="w-5 h-5 mr-3" />
-                  <span>Protection contre les force-close</span>
+                  <span>{t('checkout.protection_contre_les_forceclo')}</span>
                 </div>
                 <div className="flex items-center">
                   <Star className="w-5 h-5 mr-3" />
-                  <span>Recommandations IA personnalisées</span>
+                  <span>{t('checkout.recommandations_ia_personnalis')}</span>
                 </div>
               </div>
             </div>

@@ -19,8 +19,8 @@ export default function AccessDeniedAlert(): JSX.Element | null {
 
   return (
     <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-      <h3 className="font-bold">Accès refusé</h3>
-      <p>Vous n'avez pas les permissions nécessaires pour accéder à l'administration.</p>
+      <h3 className="font-bold">{t('user.accs_refus')}</h3>
+      <p>{t('user.vous_navez_pas_les_permissions')}</p>
     </div>
   );
 }

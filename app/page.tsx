@@ -22,7 +22,7 @@ const NewRevenueHero = nextDynamic(() => import("../components/shared/ui/NewReve
     <div className="min-h-screen bg-gradient-to-br from-green-600 via-blue-700 to-purple-800 flex items-center justify-center">
       <div className="text-center">
         <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-white/80 text-lg">Chargement...</p>
+        <p className="text-white/80 text-lg">{t('common.chargement')}</p>
       </div>
     </div>
   ),
@@ -33,7 +33,7 @@ const NewRevenueHero = nextDynamic(() => import("../components/shared/ui/NewReve
 const WhyBecomeNodeRunner = nextDynamic(() => import("../components/shared/ui/WhyBecomeNodeRunner"), {
   loading: () => (
     <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
-      <div className="text-gray-400">Chargement...</div>
+      <div className="text-gray-400">{t('common.chargement')}</div>
     </div>
   ),
   ssr: false
@@ -42,7 +42,7 @@ const WhyBecomeNodeRunner = nextDynamic(() => import("../components/shared/ui/Wh
 const DetailedTestimonials = nextDynamic(() => import("../components/shared/ui/DetailedTestimonials"), {
   loading: () => (
     <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
-      <div className="text-gray-400">Chargement...</div>
+      <div className="text-gray-400">{t('common.chargement')}</div>
     </div>
   ),
   ssr: false
@@ -51,7 +51,7 @@ const DetailedTestimonials = nextDynamic(() => import("../components/shared/ui/D
 const HowItWorks = nextDynamic(() => import("@/components/shared/ui/HowItWorks").then(mod => ({ default: mod.HowItWorks })), {
   loading: () => (
     <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
-      <div className="text-gray-400">Chargement...</div>
+      <div className="text-gray-400">{t('common.chargement')}</div>
     </div>
   ),
   ssr: false
@@ -60,7 +60,7 @@ const HowItWorks = nextDynamic(() => import("@/components/shared/ui/HowItWorks")
 const CommunitySection = nextDynamic(() => import("../components/shared/ui/CommunitySection"), {
   loading: () => (
     <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
-      <div className="text-gray-400">Chargement...</div>
+      <div className="text-gray-400">{t('common.chargement')}</div>
     </div>
   ),
   ssr: false
@@ -69,7 +69,7 @@ const CommunitySection = nextDynamic(() => import("../components/shared/ui/Commu
 const FirstStepsGuide = nextDynamic(() => import("../components/shared/ui/FirstStepsGuide"), {
   loading: () => (
     <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
-      <div className="text-gray-400">Chargement...</div>
+      <div className="text-gray-400">{t('common.chargement')}</div>
     </div>
   ),
   ssr: false
@@ -78,7 +78,7 @@ const FirstStepsGuide = nextDynamic(() => import("../components/shared/ui/FirstS
 const BeginnersFAQ = nextDynamic(() => import("../components/shared/ui/BeginnersFAQ"), {
   loading: () => (
     <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
-      <div className="text-gray-400">Chargement...</div>
+      <div className="text-gray-400">{t('common.chargement')}</div>
     </div>
   ),
   ssr: false
@@ -87,7 +87,7 @@ const BeginnersFAQ = nextDynamic(() => import("../components/shared/ui/Beginners
 const FinalConversionCTA = nextDynamic(() => import("../components/shared/ui/FinalConversionCTA"), {
   loading: () => (
     <div className="h-64 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
-      <div className="text-gray-400">Chargement...</div>
+      <div className="text-gray-400">{t('common.chargement')}</div>
     </div>
   ),
   ssr: false
@@ -106,7 +106,7 @@ const SignupConfirmation: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">Inscription confirmée !</h2>
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">{t('common.inscription_confirme_')}</h2>
           <p className="text-gray-600 mb-6">
             Votre adresse email a été vérifiée avec succès. Votre compte est maintenant actif et vous pouvez profiter de tous les services de dazno.de.
           </p>

@@ -12,7 +12,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     const response = await fetch(`${API_BASE_URL}/metrics/redis`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        "route.routeroutecontenttype": 'application/json',
         ...(authorization && { 'Authorization': authorization })
       }
     })

@@ -1,0 +1,164 @@
+{
+  "totalKeys": 556,
+  "usedKeys": 21,
+  "unusedKeys": 535,
+  "missingKeys": 408,
+  "coveragePercentage": 3.78,
+  "namespaceBreakdown": {
+    "metadata": {
+      "total": 19,
+      "used": 0,
+      "unused": 19,
+      "missing": 0,
+      "coverage": 0
+    },
+    "common": {
+      "total": 164,
+      "used": 0,
+      "unused": 164,
+      "missing": 0,
+      "coverage": 0
+    },
+    "navigation": {
+      "total": 12,
+      "used": 0,
+      "unused": 12,
+      "missing": 0,
+      "coverage": 0
+    },
+    "home": {
+      "total": 130,
+      "used": 0,
+      "unused": 130,
+      "missing": 0,
+      "coverage": 0
+    },
+    "footer": {
+      "total": 7,
+      "used": 0,
+      "unused": 7,
+      "missing": 0,
+      "coverage": 0
+    },
+    "auth": {
+      "total": 36,
+      "used": 0,
+      "unused": 36,
+      "missing": 3,
+      "coverage": 0
+    },
+    "dashboard": {
+      "total": 21,
+      "used": 0,
+      "unused": 21,
+      "missing": 0,
+      "coverage": 0
+    },
+    "charts": {
+      "total": 16,
+      "used": 0,
+      "unused": 16,
+      "missing": 0,
+      "coverage": 0
+    },
+    "stats": {
+      "total": 17,
+      "used": 0,
+      "unused": 17,
+      "missing": 0,
+      "coverage": 0
+    },
+    "settings": {
+      "total": 29,
+      "used": 0,
+      "unused": 29,
+      "missing": 0,
+      "coverage": 0
+    },
+    "countries": {
+      "total": 9,
+      "used": 0,
+      "unused": 9,
+      "missing": 0,
+      "coverage": 0
+    },
+    "premium": {
+      "total": 33,
+      "used": 0,
+      "unused": 33,
+      "missing": 0,
+      "coverage": 0
+    },
+    "legal": {
+      "total": 9,
+      "used": 0,
+      "unused": 9,
+      "missing": 0,
+      "coverage": 0
+    },
+    "pricing": {
+      "total": 4,
+      "used": 2,
+      "unused": 2,
+      "missing": 0,
+      "coverage": 50
+    },
+    "layout": {
+      "total": 11,
+      "used": 0,
+      "unused": 11,
+      "missing": 0,
+      "coverage": 0
+    },
+    "lightning": {
+      "total": 2,
+      "used": 0,
+      "unused": 2,
+      "missing": 12,
+      "coverage": 0
+    },
+    "checkout": {
+      "total": 3,
+      "used": 0,
+      "unused": 3,
+      "missing": 0,
+      "coverage": 0
+    },
+    "user": {
+      "total": 6,
+      "used": 0,
+      "unused": 6,
+      "missing": 0,
+      "coverage": 0
+    },
+    "components": {
+      "total": 28,
+      "used": 0,
+      "unused": 28,
+      "missing": 0,
+      "coverage": 0
+    }
+  },
+  "recommendations": [
+    "🧹 Nettoyage recommandé: 535 clés non utilisées (96%)",
+    "🔍 Migration recommandée: 408 chaînes en dur détectées",
+    "📉 Namespace \"metadata\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"common\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"navigation\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"home\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"footer\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"auth\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"dashboard\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"charts\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"stats\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"settings\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"countries\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"premium\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"legal\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"layout\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"lightning\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"checkout\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"user\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"components\": faible utilisation (0% de couverture)"
+  ]
+}

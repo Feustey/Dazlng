@@ -79,7 +79,7 @@ const BeginnersFAQ: React.FC = () => {
         {/* Contact support */}
         <div className="mt-12 text-center">
           <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-8 text-white">
-            <h3 className="text-2xl font-bold mb-4">Une autre question ?</h3>
+            <h3 className="text-2xl font-bold mb-4">{t('BeginnersFAQ.une_autre_question_')}</h3>
             <p className="text-lg mb-6 text-indigo-100">
               Notre communauté est là pour vous aider ! Rejoignez notre Discord pour poser vos questions directement aux experts.
             </p>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Trophy, Target, Star, Award, TrendingUp, Users, Zap, Shield } from 'lucide-react';
+import { Trophy, Target, Star, Award, TrendingUp, Users, Zap, Shield } from '@/components/shared/ui/IconRegistry';
+
 
 export interface Achievement {
   id: string;
@@ -37,10 +38,10 @@ export const GamificationCenter: React.FC<GamificationCenterProps> = ({
 
   const categories = [
     { id: 'all', label: 'Tous', icon: <Star className="w-4 h-4" /> },
-    { id: 'startup', label: 'Premiers pas', icon: <Zap className="w-4 h-4" /> },
+    { id: 'startup', label: "user.useruserpremiers_pas", icon: <Zap className="w-4 h-4" /> },
     { id: 'growth', label: 'Croissance', icon: <TrendingUp className="w-4 h-4" /> },
     { id: 'performance', label: 'Performance', icon: <Target className="w-4 h-4" /> },
-    { id: 'community', label: 'Communauté', icon: <Users className="w-4 h-4" /> }
+    { id: 'community', label: "user.userusercommunaut", icon: <Users className="w-4 h-4" /> }
   ];
 
   const filteredAchievements = activeCategory === 'all' 
@@ -59,8 +60,8 @@ export const GamificationCenter: React.FC<GamificationCenterProps> = ({
           <div className="flex items-center gap-3">
             <div className="text-3xl">🏆</div>
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">Centre de Réussites</h2>
-              <p className="text-gray-600 text-sm">Débloquez des achievements et progressez dans le réseau</p>
+              <h2 className="text-xl font-semibold text-gray-900">{t('user.centre_de_russites')}</h2>
+              <p className="text-gray-600 text-sm">{t('user.dbloquez_des_achievements_et_p')}</p>
             </div>
           </div>
           <div className="text-right">
@@ -100,7 +101,7 @@ export const GamificationCenter: React.FC<GamificationCenterProps> = ({
           <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-100">
             <div className="flex items-center gap-2 mb-1">
               <Target className="w-4 h-4 text-green-600" />
-              <span className="text-sm font-medium text-gray-700">Score Global</span>
+              <span className="text-sm font-medium text-gray-700">{t('user.score_global')}</span>
             </div>
             <div className="text-2xl font-bold text-green-600">{userScore}/100</div>
           </div>
@@ -117,7 +118,7 @@ export const GamificationCenter: React.FC<GamificationCenterProps> = ({
           <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-lg p-4 border border-orange-100">
             <div className="flex items-center gap-2 mb-1">
               <Shield className="w-4 h-4 text-orange-600" />
-              <span className="text-sm font-medium text-gray-700">Prochain Objectif</span>
+              <span className="text-sm font-medium text-gray-700">{t('user.prochain_objectif')}</span>
             </div>
             <div className="text-sm font-bold text-orange-600">
               {filteredAchievements.find(a => !a.unlocked)?.title || 'Tous débloqués !'}
@@ -221,7 +222,7 @@ export const GamificationCenter: React.FC<GamificationCenterProps> = ({
       {filteredAchievements.length === 0 && (
         <div className="text-center py-8 text-gray-500">
           <div className="text-4xl mb-4">🎯</div>
-          <p>Aucun achievement dans cette catégorie pour le moment.</p>
+          <p>{t('user.aucun_achievement_dans_cette_c')}</p>
         </div>
       )}
     </div>

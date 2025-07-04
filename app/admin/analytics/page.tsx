@@ -106,9 +106,9 @@ const AnalyticsPage: React.FC = () => {
 
   const getSourceBadge = () => {
     const badges = {
-      'mock': { color: 'bg-yellow-100 text-yellow-800', text: '🧪 Données de test' },
-      'umami': { color: 'bg-green-100 text-green-800', text: '📊 Umami Live' },
-      'mock_fallback': { color: 'bg-orange-100 text-orange-800', text: '⚠️ Fallback' }
+      'mock': { color: 'bg-yellow-100 text-yellow-800', text: "admin.adminadmin_donnes_de_test" },
+      'umami': { color: 'bg-green-100 text-green-800', text: "admin.adminadmin_umami_live" },
+      'mock_fallback': { color: 'bg-orange-100 text-orange-800', text: "admin.adminadmin_fallback" }
     };
     
     const badge = badges[source as keyof typeof badges] || badges.mock;
@@ -140,7 +140,7 @@ const AnalyticsPage: React.FC = () => {
     return (
       <div className="p-6">
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <h2 className="text-lg font-semibold text-red-800 mb-2">Erreur de chargement</h2>
+          <h2 className="text-lg font-semibold text-red-800 mb-2">{t('admin.erreur_de_chargement')}</h2>
           <p className="text-red-600">{error}</p>
           <button 
             onClick={loadAnalytics}
@@ -160,7 +160,7 @@ const AnalyticsPage: React.FC = () => {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Analytics</h1>
           <div className="flex items-center space-x-3 mt-1">
-            <p className="text-gray-600">Statistiques de trafic et d'engagement</p>
+            <p className="text-gray-600">{t('admin.statistiques_de_trafic_et_deng')}</p>
             {getSourceBadge()}
           </div>
         </div>
@@ -172,10 +172,10 @@ const AnalyticsPage: React.FC = () => {
             onChange={(e: any) => setTimeRange(e.target.value)}
             className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="24h">Dernières 24h</option>
-            <option value="7d">7 derniers jours</option>
-            <option value="30d">30 derniers jours</option>
-            <option value="90d">90 derniers jours</option>
+            <option value="24h">{t('admin.dernires_24h')}</option>
+            <option value="7d">{t('admin.7_derniers_jours')}</option>
+            <option value="30d">{t('admin.30_derniers_jours')}</option>
+            <option value="90d">{t('admin.90_derniers_jours')}</option>
           </select>
           
           <button 
@@ -191,19 +191,19 @@ const AnalyticsPage: React.FC = () => {
       {/* Stats en temps réel */}
       {analyticsData && (
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="text-lg font-semibold text-blue-900 mb-3">📡 Temps réel</h3>
+          <h3 className="text-lg font-semibold text-blue-900 mb-3">{t('admin._temps_rel')}</h3>
           <div className="grid grid-cols-3 gap-4">
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">{analyticsData.realtime.active_visitors}</div>
-              <div className="text-sm text-blue-700">Visiteurs actifs</div>
+              <div className="text-sm text-blue-700">{t('admin.visiteurs_actifs')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">{analyticsData.realtime.active_sessions}</div>
-              <div className="text-sm text-blue-700">Sessions actives</div>
+              <div className="text-sm text-blue-700">{t('admin.sessions_actives')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">{analyticsData.realtime.current_pageviews}</div>
-              <div className="text-sm text-blue-700">Pages vues maintenant</div>
+              <div className="text-sm text-blue-700">{t('admin.pages_vues_maintenant')}</div>
             </div>
           </div>
         </div>
@@ -219,7 +219,7 @@ const AnalyticsPage: React.FC = () => {
                 <div className="text-2xl font-bold text-gray-900">
                   {formatNumber(analyticsData.stats.pageviews.value)}
                 </div>
-                <div className="text-sm text-gray-600">Pages vues</div>
+                <div className="text-sm text-gray-600">{t('admin.pages_vues')}</div>
               </div>
             </div>
           </div>
@@ -231,7 +231,7 @@ const AnalyticsPage: React.FC = () => {
                 <div className="text-2xl font-bold text-gray-900">
                   {formatNumber(analyticsData.stats.visitors.value)}
                 </div>
-                <div className="text-sm text-gray-600">Visiteurs uniques</div>
+                <div className="text-sm text-gray-600">{t('admin.visiteurs_uniques')}</div>
               </div>
             </div>
           </div>
@@ -241,7 +241,7 @@ const AnalyticsPage: React.FC = () => {
               <div className="text-3xl">🔄</div>
               <div className="ml-4">
                 <div className="text-2xl font-bold text-gray-900">{calculateBounceRate()}%</div>
-                <div className="text-sm text-gray-600">Taux de rebond</div>
+                <div className="text-sm text-gray-600">{t('admin.taux_de_rebond')}</div>
               </div>
             </div>
           </div>
@@ -251,7 +251,7 @@ const AnalyticsPage: React.FC = () => {
               <div className="text-3xl">⏱️</div>
               <div className="ml-4">
                 <div className="text-2xl font-bold text-gray-900">{calculateAvgSessionDuration()}</div>
-                <div className="text-sm text-gray-600">Durée moyenne</div>
+                <div className="text-sm text-gray-600">{t('admin.dure_moyenne')}</div>
               </div>
             </div>
           </div>
@@ -262,7 +262,7 @@ const AnalyticsPage: React.FC = () => {
       {analyticsData && (
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           <div className="bg-white p-6 rounded-lg shadow border">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">📄 Pages populaires</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('admin._pages_populaires')}</h3>
             <div className="space-y-3">
               {analyticsData.pageviews.pageviews.slice(0, 8).map((page: any, index: any) => (
                 <div key={index} className="flex items-center justify-between">
@@ -276,7 +276,7 @@ const AnalyticsPage: React.FC = () => {
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow border">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">🌍 Pays</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('admin._pays')}</h3>
             <div className="space-y-3">
               {analyticsData.metrics.countries.slice(0, 8).map((country: any, index: any) => (
                 <div key={index} className="flex items-center justify-between">
@@ -295,7 +295,7 @@ const AnalyticsPage: React.FC = () => {
       {analyticsData && (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           <div className="bg-white p-6 rounded-lg shadow border">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">🌐 Navigateurs</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('admin._navigateurs')}</h3>
             <div className="space-y-3">
               {analyticsData.metrics.browsers.slice(0, 5).map((browser: any, index: any) => (
                 <div key={index} className="flex items-center justify-between">
@@ -309,7 +309,7 @@ const AnalyticsPage: React.FC = () => {
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow border">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">💻 Systèmes</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('admin._systmes')}</h3>
             <div className="space-y-3">
               {analyticsData.metrics.os.slice(0, 5).map((os: any, index: any) => (
                 <div key={index} className="flex items-center justify-between">
@@ -323,7 +323,7 @@ const AnalyticsPage: React.FC = () => {
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow border">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">📱 Appareils</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('admin._appareils')}</h3>
             <div className="space-y-3">
               {analyticsData.metrics.devices.map((device: any, index: any) => (
                 <div key={index} className="flex items-center justify-between">
@@ -341,7 +341,7 @@ const AnalyticsPage: React.FC = () => {
       {/* Événements */}
       {analyticsData && analyticsData.events.length > 0 && (
         <div className="bg-white p-6 rounded-lg shadow border">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">🎯 Événements personnalisés</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('admin._vnements_personnaliss')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {analyticsData.events.map((event: any, index: any) => (
               <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">

@@ -21,15 +21,15 @@ const TechnicalCTA: React.FC = () => {
             ⚠️ Votre prochain force-close vous coûtera combien ?
           </h2>
           <p className="text-xl text-red-200 mb-4">
-            Force-close moyen : <strong>45,000 sats</strong> • 
-            Downtime : <strong>6-12h</strong> • 
-            Réputation : <strong>Dégradée</strong>
+            Force-close moyen : <strong>{t('TechnicalCTA.45000_sats')}</strong> • 
+            Downtime : <strong>{t('TechnicalCTA.612h')}</strong> • 
+            Réputation : <strong>{t('TechnicalCTA.dgrade')}</strong>
           </p>
           <div className="bg-black/30 p-4 rounded font-mono text-left text-sm">
-            <div className="text-red-400">💀 [ERROR] Channel force-closed by peer</div>
-            <div className="text-yellow-400">⏰ [WAIT] Timelock: 144 blocks (~24h)</div>
-            <div className="text-red-400">💸 [COST] On-chain fees: 45,000 sats</div>
-            <div className="text-gray-400">😴 [YOU] Sleeping peacefully...</div>
+            <div className="text-red-400">{t('TechnicalCTA._error_channel_forceclosed_by_')}</div>
+            <div className="text-yellow-400">{t('TechnicalCTA._wait_timelock_144_blocks_24h')}</div>
+            <div className="text-red-400">{t('TechnicalCTA._cost_onchain_fees_45000_sats')}</div>
+            <div className="text-gray-400">{t('TechnicalCTA._you_sleeping_peacefully')}</div>
           </div>
         </div>
 
@@ -40,10 +40,10 @@ const TechnicalCTA: React.FC = () => {
           </h3>
           <div className="bg-green-800/50 border border-green-500/50 rounded-xl p-4">
             <div className="bg-black/30 p-4 rounded font-mono text-left text-sm">
-              <div className="text-yellow-400">🤖 [DAZNODE] HTLC timeout pattern detected</div>
-              <div className="text-blue-400">🔄 [AUTO] Initiating circular rebalancing</div>
-              <div className="text-green-400">✅ [SUCCESS] Channel rebalanced, force-close avoided</div>
-              <div className="text-green-400">💰 [SAVED] 45,000 sats + reputation intact</div>
+              <div className="text-yellow-400">{t('TechnicalCTA._daznode_htlc_timeout_pattern_')}</div>
+              <div className="text-blue-400">{t('TechnicalCTA._auto_initiating_circular_reba')}</div>
+              <div className="text-green-400">{t('TechnicalCTA._success_channel_rebalanced_fo')}</div>
+              <div className="text-green-400">{t('TechnicalCTA._saved_45000_sats_reputation_i')}</div>
             </div>
           </div>
         </div>
@@ -78,16 +78,16 @@ const TechnicalCTA: React.FC = () => {
         {/* Garanties techniques */}
         <div className="grid md:grid-cols-3 gap-6 text-sm" data-aos="fade-up" data-aos-delay="800">
           <div className="bg-white/10 p-4 rounded-lg">
-            <div className="text-green-400 font-bold mb-1">🔒 Sécurité</div>
-            <div>Aucun accès à vos clés privées</div>
+            <div className="text-green-400 font-bold mb-1">{t('TechnicalCTA._scurit')}</div>
+            <div>{t('TechnicalCTA.aucun_accs_vos_cls_prives')}</div>
           </div>
           <div className="bg-white/10 p-4 rounded-lg">
-            <div className="text-blue-400 font-bold mb-1">⚡ Performance</div>
-            <div>Latence &lt; 100ms sur toutes les actions</div>
+            <div className="text-blue-400 font-bold mb-1">{t('TechnicalCTA._performance')}</div>
+            <div>{t('TechnicalCTA.latence_lt_100ms_sur_toutes_le')}</div>
           </div>
           <div className="bg-white/10 p-4 rounded-lg">
-            <div className="text-purple-400 font-bold mb-1">🤖 IA</div>
-            <div>Modèle entraîné sur 2 ans de données Lightning</div>
+            <div className="text-purple-400 font-bold mb-1">{t('TechnicalCTA._ia')}</div>
+            <div>{t('TechnicalCTA.modle_entran_sur_2_ans_de_donn')}</div>
           </div>
         </div>
       </div>

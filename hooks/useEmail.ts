@@ -21,7 +21,7 @@ export function useEmail(): UseEmailReturn {
       const response = await fetch('/api/send-email', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          "useEmail.useemailuseemailcontenttype": 'application/json',
         },
         body: JSON.stringify(options),
       });

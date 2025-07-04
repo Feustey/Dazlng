@@ -1,4 +1,5 @@
 import React from 'react';
+import { FileText } from '@/components/shared/ui/IconRegistry';
 import {
   List,
   Datagrid,
@@ -18,7 +19,7 @@ import {
   DeleteButton,
   useRecordContext,
 } from 'react-admin';
-import { FileText } from 'lucide-react';
+
 
 // Actions personnalisées
 const ListActions = () => (
@@ -42,7 +43,7 @@ const RowActions = () => {
 // Liste des templates
 export const TemplateList = () => (
   <List 
-    title="Templates Email"
+    title="admin.adminadmintemplates_email"
     actions={<ListActions />}
     perPage={25}
     sort={{ field: 'created_at', order: 'DESC' }}
@@ -59,7 +60,7 @@ export const TemplateList = () => (
   );
 // Affichage détaillé d'un template
 export const TemplateShow = () => (
-  <Show title="Détails du template">
+  <Show title="admin.adminadmindtails_du_template">
     <SimpleShowLayout>
       <TextField source="id" label="ID" />
       <TextField source="name" label="Nom du template" />
@@ -75,7 +76,7 @@ export const TemplateShow = () => (
   );
 // Édition d'un template
 export const TemplateEdit = () => (
-  <Edit title="Modifier le template">
+  <Edit title="admin.adminadminmodifier_le_template">
     <SimpleForm>
       <TextInput source="name" label="Nom du template" required fullWidth />
       <TextInput source="subject" label="Sujet par défaut" fullWidth />
@@ -88,7 +89,7 @@ export const TemplateEdit = () => (
   );
 // Création d'un nouveau template
 export const TemplateCreate = () => (
-  <Create title="Créer un template">
+  <Create title="admin.adminadmincrer_un_template">
     <SimpleForm>
       <TextInput source="name" label="Nom du template" required fullWidth />
       <TextInput source="subject" label="Sujet par défaut" fullWidth />
@@ -107,13 +108,13 @@ export const TemplateCreate = () => (
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
     <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
         <h1 style="color: #4f46e5;">Bonjour {{prenom}} !</h1>
-        <p>Contenu de votre email...</p>
+        <p>{t('admin.contenu_de_votre_email')}</p>
         <div style="margin: 30px 0;">
             <a href="{{dashboard_url}}" style="background: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;">
                 Accéder au dashboard
             </a>
         </div>
-        <p>L'équipe DazNode</p>
+        <p>{t('admin.lquipe_daznode')}</p>
     </div>
 </body>
 </html>`}

@@ -18,7 +18,7 @@ export function OrderSummary({ data }: OrderSummaryProps) {
   };
   return (
     <div className="bg-white rounded-lg shadow p-6">
-      <h3 className="font-bold mb-2">Récapitulatif</h3>
+      <h3 className="font-bold mb-2">{t('checkout.rcapitulatif')}</h3>
       <div>Produit : {product.name}</div>
       <div>Prix unitaire : ₿{product.priceBTC} ({product.priceSats.toLocaleString('fr-FR')} Sats)</div>
       <div>Quantité : {product.quantity}</div>

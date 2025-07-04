@@ -330,7 +330,7 @@ export class MCPLightAPI {
     const defaultOptions: RequestInit = {
       headers: {
         'Authorization': `Bearer ${this.credentials?.jwt_token}`,
-        'Content-Type': 'application/json',
+        "mcp-light-api.mcplightapimcplightapicontentt": 'application/json',
         ...options.headers
       }
     };
@@ -357,7 +357,7 @@ export class MCPLightAPI {
       const response = await fetch(`${this.baseURL}/health`, {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
+          "mcp-light-api.mcplightapimcplightapicontentt": 'application/json'
         }
       });
 

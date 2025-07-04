@@ -7,7 +7,7 @@ import Image from "next/image";
 export const dynamic = 'force-dynamic';
 export default function RegisterPage() {
   return (
-    <Suspense fallback={<div>Chargement...</div>}>
+    <Suspense fallback={<div>{t('common.chargement')}</div>}>
       <RegisterPageContent />
     </Suspense>
   );
@@ -40,7 +40,7 @@ function RegisterPageContent() {
     try {
       const response = await fetch('/api/otp/send-code', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "common.commoncommoncontenttype": 'application/json' },
         body: JSON.stringify({ 
           email,
           name: `${profile.prenom} ${profile.nom}`.trim() || 'Nouvel utilisateur'
@@ -70,7 +70,7 @@ function RegisterPageContent() {
     try {
       const response = await fetch('/api/otp/verify-code', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "common.commoncommoncontenttype": 'application/json' },
         body: JSON.stringify({ 
           email, 
           code,
@@ -107,7 +107,7 @@ function RegisterPageContent() {
     try {
       const response = await fetch('/api/user/create', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "common.commoncommoncontenttype": 'application/json' },
         body: JSON.stringify({ 
           email,
           prenom: profile.prenom,
@@ -138,7 +138,7 @@ function RegisterPageContent() {
         <div className="flex justify-center mb-6">
           <Image
             src="/assets/images/logo-daznode.svg"
-            alt="Logo DazNode"
+            alt="common.commoncommonlogo_daznode"
             width={120}
             height={48}
             className="h-12 w-auto"
@@ -194,7 +194,7 @@ function RegisterPageContent() {
                 value={email}
                 onChange={(e: any) => setEmail(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="votre@email.com"
+                placeholder="common.commoncommonvotreemailcom"
                 required
                 disabled={pending}
               />
@@ -261,7 +261,7 @@ function RegisterPageContent() {
                   value={profile.prenom}
                   onChange={(e: any) => setProfile({ ...profile, prenom: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                  placeholder="Votre prénom"
+                  placeholder="common.commoncommonvotre_prnom"
                   required
                   disabled={pending}
                 />
@@ -276,7 +276,7 @@ function RegisterPageContent() {
                   value={profile.nom}
                   onChange={(e: any) => setProfile({ ...profile, nom: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                  placeholder="Votre nom"
+                  placeholder="common.commoncommonvotre_nom"
                   required
                   disabled={pending}
                 />

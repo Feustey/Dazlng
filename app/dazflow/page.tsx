@@ -3,32 +3,10 @@
 import React from 'react';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
+import { BarChart3, TrendingUp, Zap, Target, CheckCircle, ArrowRight, Gauge, Activity, Brain, Shield, Star, Users, Award, BarChart, PieChart, LineChart } from '@/components/shared/ui/IconRegistry';
 export const dynamic = 'force-dynamic';
 
-import { 
-  BarChart3, 
-  TrendingUp, 
-  Zap, 
-  Target, 
-  AlertCircle, 
-  CheckCircle, 
-  ArrowRight,
-  Gauge,
-  Activity,
-  Brain,
-  Shield,
-  Rocket,
-  Star,
-  Users,
-  Award,
-  Lightbulb,
-  BarChart,
-  PieChart,
-  LineChart,
-  Target as TargetIcon,
-  Zap as ZapIcon,
-  TrendingUp as TrendingUpIcon
-} from 'lucide-react';
+
 
 const DazFlowPage: React.FC = () => {
   const locale = useLocale();
@@ -37,26 +15,26 @@ const DazFlowPage: React.FC = () => {
     {
       icon: <Gauge className="h-8 w-8 text-blue-600" />,
       title: "Capacité de Routage Précise",
-      description: "Mesurez votre capacité réelle de routage Lightning avec une précision inégalée. DazFlow Index analyse la liquidité disponible et calcule votre potentiel de revenus.",
+      description: "common.commoncommonmesurez_votre_capa",
       metrics: ["Précision 99.9%", "Analyse temps réel", "Prédictions IA"]
     },
     {
       icon: <Activity className="h-8 w-8 text-green-600" />,
       title: "Identification des Goulots",
-      description: "Détectez automatiquement les goulots d'étranglement qui limitent vos revenus. Notre IA identifie les canaux déséquilibrés et propose des solutions.",
+      description: "common.commoncommondtectez_automatiqu"étranglement qui limitent vos revenus. Notre IA identifie les canaux déséquilibrés et propose des solutions.",
       metrics: ["Détection automatique", "Solutions personnalisées", "Optimisation continue"]
     },
     {
       icon: <Brain className="h-8 w-8 text-purple-600" />,
       title: "Courbe de Fiabilité",
-      description: "Visualisez la probabilité de succès de vos paiements selon le montant. Optimisez vos paramètres pour maximiser vos revenus.",
+      description: "common.commoncommonvisualisez_la_prob",
       metrics: ["Probabilités par montant", "Intervalles de confiance", "Recommandations IA"]
     },
     {
       icon: <Target className="h-8 w-8 text-orange-600" />,
       title: "Optimisation Automatique",
-      description: "Laissez notre IA optimiser votre configuration pour maximiser le flux de paiements. Recommandations basées sur des millions de transactions.",
-      metrics: ["Optimisation IA", "ROI amélioré", "Configuration automatique"]
+      description: "common.commoncommonlaissez_notre_ia_o",
+      metrics: ["Optimisation IA", "common.commoncommonroi_amlior", "Configuration automatique"]
     }
   ];
 
@@ -64,22 +42,22 @@ const DazFlowPage: React.FC = () => {
     {
       icon: <TrendingUp className="h-6 w-6 text-green-500" />,
       title: "+45% de Revenus",
-      description: "Augmentation moyenne des revenus grâce à l'optimisation DazFlow Index"
+      description: "common.commoncommonaugmentation_moyen"optimisation DazFlow Index"
     },
     {
       icon: <Shield className="h-6 w-6 text-blue-500" />,
       title: "Réduction des Risques",
-      description: "Évitez les force-closes coûteux avec notre analyse prédictive"
+      description: "common.commoncommonvitez_les_forceclo"
     },
     {
       icon: <Zap className="h-6 w-6 text-yellow-500" />,
       title: "ROI 2.3x Amélioré",
-      description: "Retour sur investissement significativement amélioré"
+      description: "common.commoncommonretour_sur_investi"
     },
     {
       icon: <Users className="h-6 w-6 text-purple-500" />,
       title: "Communauté Active",
-      description: "Rejoignez 500+ node runners qui utilisent DazFlow Index"
+      description: "common.commoncommonrejoignez_500_node"
     }
   ];
 
@@ -87,26 +65,26 @@ const DazFlowPage: React.FC = () => {
     {
       icon: <BarChart className="h-8 w-8 text-blue-500" />,
       value: "99.9%",
-      label: "Précision Analyse",
-      description: "Précision de nos prédictions basée sur l'IA"
+      label: "common.commoncommonprcision_analyse",
+      description: "common.commoncommonprcision_de_nos_pr"IA"
     },
     {
       icon: <PieChart className="h-8 w-8 text-green-500" />,
       value: "24/7",
-      label: "Monitoring Continu",
-      description: "Surveillance en temps réel de votre nœud"
+      label: "common.commoncommonmonitoring_continu",
+      description: "common.commoncommonsurveillance_en_te"
     },
     {
       icon: <LineChart className="h-8 w-8 text-purple-500" />,
       value: "+45%",
-      label: "Revenus Améliorés",
-      description: "Augmentation moyenne des revenus"
+      label: "common.commoncommonrevenus_amliors",
+      description: "common.commoncommonaugmentation_moyen"
     },
     {
-      icon: <TargetIcon className="h-8 w-8 text-orange-500" />,
-      value: "2.3x",
-      label: "ROI Amélioré",
-      description: "Retour sur investissement multiplié"
+      icon: <Target className="h-8 w-8 text-orange-500" />,
+      value: "common.23x",
+      label: "common.commoncommonroi_amlior",
+      description: "common.commoncommonretour_sur_investi"
     }
   ];
 
@@ -174,15 +152,15 @@ const DazFlowPage: React.FC = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
               <div className="text-center">
                 <div className="text-2xl md:text-3xl font-bold text-yellow-400 mb-1">+45%</div>
-                <div className="text-blue-100 text-sm">Revenus moyens</div>
+                <div className="text-blue-100 text-sm">{t('common.revenus_moyens')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl md:text-3xl font-bold text-green-400 mb-1">99.9%</div>
-                <div className="text-blue-100 text-sm">Précision analyse</div>
+                <div className="text-blue-100 text-sm">{t("common.commoncommonprcision_analyse")}</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-purple-400 mb-1">2.3x</div>
-                <div className="text-blue-100 text-sm">ROI amélioré</div>
+                <div className="text-2xl md:text-3xl font-bold text-purple-400 mb-1">{t('common.23x')}</div>
+                <div className="text-blue-100 text-sm">{t("common.commoncommonroi_amlior")}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl md:text-3xl font-bold text-orange-400 mb-1">24/7</div>
@@ -210,36 +188,36 @@ const DazFlowPage: React.FC = () => {
               <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
                 <TrendingUp className="h-6 w-6 text-blue-600" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Analyse Prédictive</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">{t('common.analyse_prdictive')}</h3>
               <p className="text-gray-600 mb-4">
                 Notre IA analyse les patterns de trafic pour prédire les opportunités de routing optimales.
               </p>
               <div className="text-2xl font-bold text-blue-600">+45%</div>
-              <div className="text-sm text-gray-500">Amélioration des revenus</div>
+              <div className="text-sm text-gray-500">{t('common.amlioration_des_revenus')}</div>
             </div>
 
             <div className="bg-gray-50 rounded-2xl p-8 border border-gray-100">
               <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
                 <Zap className="h-6 w-6 text-purple-600" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Optimisation Temps Réel</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">{t('common.optimisation_temps_rel')}</h3>
               <p className="text-gray-600 mb-4">
                 Ajustement automatique des paramètres de frais et de liquidité pour maximiser les profits.
               </p>
               <div className="text-2xl font-bold text-purple-600">99.9%</div>
-              <div className="text-sm text-gray-500">Précision d'analyse</div>
+              <div className="text-sm text-gray-500">{t('common.prcision_danalyse')}</div>
             </div>
 
             <div className="bg-gray-50 rounded-2xl p-8 border border-gray-100">
               <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-6">
                 <BarChart3 className="h-6 w-6 text-green-600" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Métriques Avancées</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">{t('common.mtriques_avances')}</h3>
               <p className="text-gray-600 mb-4">
                 Tableaux de bord détaillés avec métriques de performance et alertes intelligentes.
               </p>
               <div className="text-2xl font-bold text-green-600">24/7</div>
-              <div className="text-sm text-gray-500">Monitoring continu</div>
+              <div className="text-sm text-gray-500">{t("common.commoncommonmonitoring_continu")}</div>
             </div>
           </div>
         </div>
@@ -307,20 +285,20 @@ const DazFlowPage: React.FC = () => {
             <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Gratuit</h3>
               <div className="text-4xl font-bold text-gray-900 mb-6">
-                €0<span className="text-lg text-gray-500">/mois</span>
+                €0<span className="text-lg text-gray-500">{t('common.mois')}</span>
               </div>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center">
                   <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span>Analyse basique</span>
+                  <span>{t('common.analyse_basique')}</span>
                 </li>
                 <li className="flex items-center">
                   <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span>1 nœud</span>
+                  <span>{t('common.1_nud')}</span>
                 </li>
                 <li className="flex items-center">
                   <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span>Métriques essentielles</span>
+                  <span>{t('common.mtriques_essentielles')}</span>
                 </li>
               </ul>
               <Link
@@ -338,24 +316,24 @@ const DazFlowPage: React.FC = () => {
               </div>
               <h3 className="text-2xl font-bold mb-4">Pro</h3>
               <div className="text-4xl font-bold mb-6">
-                €29<span className="text-lg opacity-80">/mois</span>
+                €29<span className="text-lg opacity-80">{t('common.mois')}</span>
               </div>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center">
                   <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
-                  <span>Analyse avancée IA</span>
+                  <span>{t('common.analyse_avance_ia')}</span>
                 </li>
                 <li className="flex items-center">
                   <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
-                  <span>Jusqu'à 5 nœuds</span>
+                  <span>{t('common.jusqu_5_nuds')}</span>
                 </li>
                 <li className="flex items-center">
                   <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
-                  <span>Optimisation temps réel</span>
+                  <span>{t('common.optimisation_temps_rel')}</span>
                 </li>
                 <li className="flex items-center">
                   <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
-                  <span>Support prioritaire</span>
+                  <span>{t('common.support_prioritaire')}</span>
                 </li>
               </ul>
               <Link
@@ -370,24 +348,24 @@ const DazFlowPage: React.FC = () => {
             <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Enterprise</h3>
               <div className="text-4xl font-bold text-gray-900 mb-6">
-                €99<span className="text-lg text-gray-500">/mois</span>
+                €99<span className="text-lg text-gray-500">{t('common.mois')}</span>
               </div>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center">
                   <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span>Tout du plan Pro</span>
+                  <span>{t('common.tout_du_plan_pro')}</span>
                 </li>
                 <li className="flex items-center">
                   <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span>Nœuds illimités</span>
+                  <span>{t('common.nuds_illimits')}</span>
                 </li>
                 <li className="flex items-center">
                   <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span>API personnalisée</span>
+                  <span>{t('common.api_personnalise')}</span>
                 </li>
                 <li className="flex items-center">
                   <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span>Support dédié 24/7</span>
+                  <span>{t('common.support_ddi_247')}</span>
                 </li>
               </ul>
               <Link

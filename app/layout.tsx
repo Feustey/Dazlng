@@ -4,38 +4,24 @@ import { Metadata } from 'next';
 import ClientLayout from './ClientLayout';
 import React from 'react';
 import { SupabaseProvider } from './providers/SupabaseProvider';
-import Script from 'next/script';
 import { seoConfig } from '@/lib/seo-config';
 
-// Optimisation des polices pour Core Web Vitals
+// Optimisation des polices
 const inter = Inter({ 
   subsets: ['latin'],
-  display: 'swap', // Optimise LCP
-  fallback: ['system-ui', 'arial']
+  display: 'swap',
+  fallback: ['system-ui', 'arial'],
+  preload: true // Précharger les polices critiques
 });
 
-// Structured data global pour l'organisation
+// Structured data optimisé
 const globalStructuredData = {
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "DazNode",
   "url": seoConfig.baseUrl,
   "logo": `${seoConfig.baseUrl}/assets/images/logo-daznode.svg`,
-  "description": "Solutions Lightning Network pour particuliers et professionnels",
-  "foundingDate": "2024",
-  "sameAs": [
-    "https://twitter.com/daznode",
-    "https://github.com/daznode"
-  ],
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "contactType": "customer service",
-    "email": "contact@dazno.de"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressCountry": "FR"
-  }
+  "description": "Solutions Lightning Network pour particuliers et professionnels"
 };
 
 export const metadata: Metadata = {
@@ -45,11 +31,7 @@ export const metadata: Metadata = {
     template: '%s | DazNode'
   },
   description: seoConfig.defaultMetadata.description,
-  keywords: seoConfig.defaultMetadata.keywords,
-  authors: seoConfig.defaultMetadata.authors,
-  creator: seoConfig.defaultMetadata.creator,
-  publisher: seoConfig.defaultMetadata.publisher,
-  robots: seoConfig.defaultMetadata.robots,
+  // Supprimer les métadonnées redondantes
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
@@ -57,38 +39,18 @@ export const metadata: Metadata = {
     title: seoConfig.defaultMetadata.title,
     description: seoConfig.defaultMetadata.description,
     siteName: 'DazNode',
-    images: [
-      {
-        url: `${seoConfig.baseUrl}/assets/images/og-image.png`,
-        width: 1200,
-        height: 630,
-        alt: 'DazNode - Solutions Lightning Network'
-      }
-    ]
+    images: [{
+      url: `${seoConfig.baseUrl}/assets/images/og-image.png`,
+      width: 1200,
+      height: 630,
+      alt: 'DazNode - Solutions Lightning Network'
+    }]
   },
   twitter: {
     card: 'summary_large_image',
     title: seoConfig.defaultMetadata.title,
     description: seoConfig.defaultMetadata.description,
-    images: [`${seoConfig.baseUrl}/assets/images/og-image.png`],
-    creator: '@daznode'
-  },
-  alternates: {
-    canonical: seoConfig.baseUrl,
-    languages: {
-      'fr': `${seoConfig.baseUrl}/fr`,
-      'en': `${seoConfig.baseUrl}/en`,
-      'x-default': seoConfig.baseUrl
-    }
-  },
-  verification: {
-    google: 'your-google-site-verification',
-    yandex: 'your-yandex-verification',
-    yahoo: 'your-yahoo-verification'
-  },
-  other: {
-    'msapplication-TileColor': '#3B82F6',
-    'theme-color': '#3B82F6'
+    images: [`${seoConfig.baseUrl}/assets/images/og-image.png`]
   }
 };
 
@@ -100,38 +62,28 @@ export default function RootLayout({
   return (
     <html lang="fr" className={inter.className}>
       <head>
-        {/* DNS prefetch pour les domaines externes */}
+        {/* DNS prefetch optimisé */}
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
         <link rel="dns-prefetch" href="//api.dazno.de" />
         
-        {/* Preconnect pour les connexions critiques */}
+        {/* Preconnect critique */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://api.dazno.de" />
         
-        {/* Structured data global */}
+        {/* Structured data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(globalStructuredData) }}
         />
         
-        {/* Web App Manifest */}
-        <link rel="manifest" href="/manifest.json" />
-        
         {/* Favicon optimisé */}
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         
-        {/* Meta tags pour Core Web Vitals */}
+        {/* Meta tags essentiels */}
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <meta name="theme-color" content="#3B82F6" />
-        <meta name="color-scheme" content="light dark" />
-        
-        {/* Optimisations de performance */}
-        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
       </head>
       <body className="antialiased">
         <SupabaseProvider>

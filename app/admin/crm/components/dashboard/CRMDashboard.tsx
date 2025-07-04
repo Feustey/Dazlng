@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
-import { Users, Mail, Target, Send, TrendingUp, TrendingDown } from 'lucide-react';
+import { Users, Mail, Target, Send, TrendingUp, TrendingDown } from '@/components/shared/ui/IconRegistry';
+
 
 export interface MetricCardProps {
   title: string;
@@ -60,7 +61,7 @@ export const CRMDashboard: React.FC = () => {
       {/* En-tête */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard CRM</h1>
+          <h1 className="text-3xl font-bold text-gray-900">{t('dashboard.dashboard_crm')}</h1>
           <p className="text-gray-600 mt-1">
             Vue d'ensemble de vos clients et campagnes email
           </p>
@@ -73,14 +74,14 @@ export const CRMDashboard: React.FC = () => {
       {/* Métriques principales */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard
-          title="Clients Actifs"
+          title="dashboard.dashboarddashboardclients_acti"
           value={metrics.activeCustomers.toLocaleString('fr-FR')}
           trend={metrics.customerGrowth}
           icon={Users}
           className="border-l-4 border-l-blue-500"
         />
         <MetricCard
-          title="Taux d'Ouverture"
+          title="dashboard.dashboarddashboardtaux_d"Ouverture"
           value={`${metrics.emailOpenRate}%`}
           trend={metrics.openRateChange}
           icon={Mail}
@@ -93,7 +94,7 @@ export const CRMDashboard: React.FC = () => {
           className="border-l-4 border-l-purple-500"
         />
         <MetricCard
-          title="Campagnes Actives"
+          title="dashboard.dashboarddashboardcampagnes_ac"
           value={metrics.activeCampaigns}
           icon={Send}
           className="border-l-4 border-l-orange-500"
@@ -104,7 +105,7 @@ export const CRMDashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="lg:col-span-1">
           <CardHeader>
-            <CardTitle className="text-lg">Revenus Total</CardTitle>
+            <CardTitle className="text-lg">{t('dashboard.revenus_total')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-green-600">
@@ -120,25 +121,25 @@ export const CRMDashboard: React.FC = () => {
         {/* Actions rapides */}
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle className="text-lg">Actions Rapides</CardTitle>
+            <CardTitle className="text-lg">{t('dashboard.actions_rapides')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-4">
               <button className="p-4 bg-blue-50 hover:bg-blue-100 rounded-lg text-left transition-colors">
-                <div className="font-medium text-blue-900">Nouvelle Campagne</div>
-                <div className="text-sm text-blue-600 mt-1">Créer une campagne email</div>
+                <div className="font-medium text-blue-900">{t('dashboard.nouvelle_campagne')}</div>
+                <div className="text-sm text-blue-600 mt-1">{t('dashboard.crer_une_campagne_email')}</div>
               </button>
               <button className="p-4 bg-purple-50 hover:bg-purple-100 rounded-lg text-left transition-colors">
-                <div className="font-medium text-purple-900">Nouveau Segment</div>
-                <div className="text-sm text-purple-600 mt-1">Segmenter vos clients</div>
+                <div className="font-medium text-purple-900">{t('dashboard.nouveau_segment')}</div>
+                <div className="text-sm text-purple-600 mt-1">{t('dashboard.segmenter_vos_clients')}</div>
               </button>
               <button className="p-4 bg-green-50 hover:bg-green-100 rounded-lg text-left transition-colors">
                 <div className="font-medium text-green-900">Analytics</div>
-                <div className="text-sm text-green-600 mt-1">Voir les performances</div>
+                <div className="text-sm text-green-600 mt-1">{t('dashboard.voir_les_performances')}</div>
               </button>
               <button className="p-4 bg-orange-50 hover:bg-orange-100 rounded-lg text-left transition-colors">
-                <div className="font-medium text-orange-900">Export Données</div>
-                <div className="text-sm text-orange-600 mt-1">Exporter la base clients</div>
+                <div className="font-medium text-orange-900">{t('dashboard.export_donnes')}</div>
+                <div className="text-sm text-orange-600 mt-1">{t('dashboard.exporter_la_base_clients')}</div>
               </button>
             </div>
           </CardContent>
@@ -148,7 +149,7 @@ export const CRMDashboard: React.FC = () => {
       {/* Aperçu des segments */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Segments de Clients</CardTitle>
+          <CardTitle className="text-lg">{t('dashboard.segments_de_clients')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -181,7 +182,7 @@ export const CRMDashboard: React.FC = () => {
       {/* Dernières activités */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Activité Récente</CardTitle>
+          <CardTitle className="text-lg">{t('dashboard.activit_rcente')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -189,21 +190,21 @@ export const CRMDashboard: React.FC = () => {
               { 
                 type: 'campaign', 
                 title: 'Newsletter Décembre envoyée',
-                description: '1,247 emails envoyés avec 24.8% de taux d\'ouverture',
+                description: "dashboard.dashboarddashboard1247_emails_"ouverture',
                 time: 'Il y a 2 heures',
                 status: 'success'
               },
               { 
                 type: 'segment', 
                 title: 'Segment "Clients Premium" mis à jour',
-                description: '12 nouveaux clients ajoutés automatiquement',
+                description: "dashboard.dashboarddashboard12_nouveaux_",
                 time: 'Il y a 4 heures',
                 status: 'info'
               },
               { 
                 type: 'customer', 
                 title: 'Nouveau client inscrit',
-                description: 'jean.dupont@example.com - Abonnement Premium',
+                description: "dashboard.dashboarddashboardjeandupontex",
                 time: 'Il y a 6 heures',
                 status: 'success'
               }

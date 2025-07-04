@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSupabase } from '@/app/providers/SupabaseProvider';
+import { Brain, Search, BarChart3, Zap, Target, TrendingUp, AlertTriangle, Lock, Database, Settings, FileText, Activity, Shield, Sparkles, Cpu } from '@/components/shared/ui/IconRegistry';
 import { 
   useRAGStats,
   useRAGCacheStats,
@@ -9,24 +10,7 @@ import {
   useLightningRAGQuery,
   useLightningRAGOptimization
 } from '@/hooks';
-import { 
-  Brain, 
-  Search, 
-  BarChart3, 
-  Zap, 
-  Target, 
-  TrendingUp, 
-  AlertTriangle,
-  Lock,
-  Sparkles,
-  Database,
-  Lightbulb,
-  Settings,
-  FileText,
-  Activity,
-  Shield,
-  Cpu
-} from 'lucide-react';
+
 
 const RAGInsightsPage: React.FC = () => {
   const { user } = useSupabase();
@@ -113,7 +97,7 @@ const RAGInsightsPage: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Vérification de votre abonnement...</p>
+          <p className="mt-4 text-gray-600">{t('user.vrification_de_votre_abonnemen')}</p>
         </div>
       </div>
     );
@@ -134,7 +118,7 @@ const RAGInsightsPage: React.FC = () => {
           </div>
           
           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 mb-6">
-            <h3 className="font-semibold text-gray-900 mb-3">Fonctionnalités Premium</h3>
+            <h3 className="font-semibold text-gray-900 mb-3">{t('user.fonctionnalits_premium')}</h3>
             <ul className="text-sm text-gray-600 space-y-2 text-left">
               <li className="flex items-center">
                 <Sparkles className="h-4 w-4 text-blue-500 mr-2" />
@@ -178,7 +162,7 @@ const RAGInsightsPage: React.FC = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
               <Brain className="h-8 w-8 text-blue-600 mr-3" />
-              <h1 className="text-2xl font-bold text-gray-900">RAG Insights</h1>
+              <h1 className="text-2xl font-bold text-gray-900">{t('user.rag_insights')}</h1>
               <span className="ml-3 px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
                 Premium
               </span>
@@ -195,9 +179,9 @@ const RAGInsightsPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex space-x-8">
             {[
-              { id: 'overview', label: 'Vue d\'ensemble', icon: BarChart3 },
+              { id: 'overview', label: "user.useruservue_d"ensemble', icon: BarChart3 },
               { id: 'documents', label: 'Documents', icon: FileText },
-              { id: 'queries', label: 'Requêtes', icon: Search },
+              { id: 'queries', label: "user.useruserrequtes", icon: Search },
               { id: 'optimization', label: 'Optimisation', icon: Zap },
               { id: 'cache', label: 'Cache', icon: Database },
               { id: 'intelligence', label: 'Intelligence', icon: Cpu }
@@ -231,7 +215,7 @@ const RAGInsightsPage: React.FC = () => {
                     <Database className="h-6 w-6 text-blue-600" />
                   </div>
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Documents Indexés</p>
+                    <p className="text-sm font-medium text-gray-600">{t('user.documents_indexs')}</p>
                     <p className="text-2xl font-bold text-gray-900">
                       {ragStats?.total_documents || 'N/A'}
                     </p>
@@ -245,7 +229,7 @@ const RAGInsightsPage: React.FC = () => {
                     <TrendingUp className="h-6 w-6 text-green-600" />
                   </div>
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Taux de Cache</p>
+                    <p className="text-sm font-medium text-gray-600">{t('user.taux_de_cache')}</p>
                     <p className="text-2xl font-bold text-gray-900">
                       {cacheStats?.hit_rate ? `${(cacheStats.hit_rate * 100).toFixed(1)}%` : 'N/A'}
                     </p>
@@ -259,7 +243,7 @@ const RAGInsightsPage: React.FC = () => {
                     <Zap className="h-6 w-6 text-purple-600" />
                   </div>
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Requêtes Traitées</p>
+                    <p className="text-sm font-medium text-gray-600">{t('user.requtes_traites')}</p>
                     <p className="text-2xl font-bold text-gray-900">
                       {ragStats?.total_queries || 'N/A'}
                     </p>
@@ -273,7 +257,7 @@ const RAGInsightsPage: React.FC = () => {
                     <Activity className="h-6 w-6 text-orange-600" />
                   </div>
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Temps Réponse</p>
+                    <p className="text-sm font-medium text-gray-600">{t('user.temps_rponse')}</p>
                     <p className="text-2xl font-bold text-gray-900">
                       {cacheStats?.average_response_time ? `${cacheStats.average_response_time}ms` : 'N/A'}
                     </p>
@@ -296,7 +280,7 @@ const RAGInsightsPage: React.FC = () => {
                     type="text"
                     value={nodePubkey}
                     onChange={(e) => setNodePubkey(e.target.value)}
-                    placeholder="03eec7245d6b7d2ccb30380bfbe2a3648cd7a942653f5aa340edcea1f283686619"
+                    placeholder="user.useruser03eec7245d6b7d2ccb3038"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -322,11 +306,11 @@ const RAGInsightsPage: React.FC = () => {
             {/* Results Display */}
             {(queryResult || optimizationResult) && (
               <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Résultats</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('user.rsultats')}</h3>
                 <div className="space-y-4">
                   {queryResult && (
                     <div className="bg-blue-50 p-4 rounded-lg">
-                      <h4 className="font-medium text-blue-900 mb-2">Analyse RAG</h4>
+                      <h4 className="font-medium text-blue-900 mb-2">{t('user.analyse_rag')}</h4>
                       <pre className="text-sm text-blue-800 overflow-auto">
                         {JSON.stringify(queryResult, null, 2)}
                       </pre>
@@ -334,7 +318,7 @@ const RAGInsightsPage: React.FC = () => {
                   )}
                   {optimizationResult && (
                     <div className="bg-green-50 p-4 rounded-lg">
-                      <h4 className="font-medium text-green-900 mb-2">Optimisation IA</h4>
+                      <h4 className="font-medium text-green-900 mb-2">{t('user.optimisation_ia')}</h4>
                       <pre className="text-sm text-green-800 overflow-auto">
                         {JSON.stringify(optimizationResult, null, 2)}
                       </pre>
@@ -361,28 +345,28 @@ const RAGInsightsPage: React.FC = () => {
 
         {activeTab === 'documents' && (
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Gestion des Documents RAG</h3>
-            <p className="text-gray-600">Interface pour ingérer et gérer les documents RAG...</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('user.gestion_des_documents_rag')}</h3>
+            <p className="text-gray-600">{t('user.interface_pour_ingrer_et_grer_')}</p>
           </div>
         )}
 
         {activeTab === 'queries' && (
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Requêtes Avancées</h3>
-            <p className="text-gray-600">Interface pour les requêtes RAG avancées...</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('user.requtes_avances')}</h3>
+            <p className="text-gray-600">{t('user.interface_pour_les_requtes_rag')}</p>
           </div>
         )}
 
         {activeTab === 'optimization' && (
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Optimisation Lightning-RAG</h3>
-            <p className="text-gray-600">Interface pour l'optimisation avec insights RAG...</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('user.optimisation_lightningrag')}</h3>
+            <p className="text-gray-600">{t('user.interface_pour_loptimisation_a')}</p>
           </div>
         )}
 
         {activeTab === 'cache' && (
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Statistiques Cache RAG</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('user.statistiques_cache_rag')}</h3>
             {cacheStats && (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center">
@@ -391,17 +375,17 @@ const RAGInsightsPage: React.FC = () => {
                 </div>
                 <div className="text-center">
                   <p className="text-2xl font-bold text-gray-900">{cacheStats.cache_hits}</p>
-                  <p className="text-sm text-gray-600">Cache Hits</p>
+                  <p className="text-sm text-gray-600">{t('user.cache_hits')}</p>
                 </div>
                 <div className="text-center">
                   <p className="text-2xl font-bold text-gray-900">{cacheStats.cache_misses}</p>
-                  <p className="text-sm text-gray-600">Cache Misses</p>
+                  <p className="text-sm text-gray-600">{t('user.cache_misses')}</p>
                 </div>
                 <div className="text-center">
                   <p className="text-2xl font-bold text-gray-900">
                     {(cacheStats.hit_rate * 100).toFixed(1)}%
                   </p>
-                  <p className="text-sm text-gray-600">Hit Rate</p>
+                  <p className="text-sm text-gray-600">{t('user.hit_rate')}</p>
                 </div>
               </div>
             )}
@@ -410,7 +394,7 @@ const RAGInsightsPage: React.FC = () => {
 
         {activeTab === 'intelligence' && (
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Intelligence Artificielle</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('user.intelligence_artificielle')}</h3>
             {lightningInsights && (
               <div className="space-y-4">
                 <pre className="text-sm text-gray-800 overflow-auto bg-gray-50 p-4 rounded-lg">

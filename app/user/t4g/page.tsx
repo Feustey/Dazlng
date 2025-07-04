@@ -95,8 +95,8 @@ export default function T4GPage() {
     points: a.reward // GamificationCenter attend 'points', le hook fournit 'reward'
   })) ?? [];
 
-  if (isLoading || profileLoading) return <div className="p-8 text-center">Chargement...</div>;
-  if (error || !profile || !gamificationData || !crmData) return <div className="p-8 text-center text-red-600">Erreur de chargement du profil</div>;
+  if (isLoading || profileLoading) return <div className="p-8 text-center">{t('user.chargement')}</div>;
+  if (error || !profile || !gamificationData || !crmData) return <div className="p-8 text-center text-red-600">{t('user.erreur_de_chargement_du_profil')}</div>;
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
@@ -115,7 +115,7 @@ export default function T4GPage() {
           <div className="text-4xl font-bold text-white mb-2 flex items-center gap-2">
             <span>🌱</span>
             <span>{profile.t4g_tokens}</span>
-            <span className="text-lg font-semibold ml-2">Tokens T4G</span>
+            <span className="text-lg font-semibold ml-2">{t('user.tokens_t4g')}</span>
           </div>
           <div className="text-white/90 mb-4 max-w-md">
             Les tokens <b>T4G</b> récompensent l'entraide, le mentoring et l'engagement dans la communauté DazNode & TokenForGood. Plus vous aidez, plus vous progressez !
@@ -135,7 +135,7 @@ export default function T4GPage() {
           <div className="w-40 h-40 bg-white/10 rounded-full flex items-center justify-center shadow-inner">
             <span className="text-5xl font-bold text-yellow-300">{profile.t4g_tokens}</span>
           </div>
-          <div className="mt-4 text-white/80 text-sm">Participez à un mentoring ou aidez un membre pour gagner +1 T4G</div>
+          <div className="mt-4 text-white/80 text-sm">{t('user.participez_un_mentoring_ou_aid')}</div>
         </div>
       </section>
 
@@ -163,25 +163,25 @@ export default function T4GPage() {
 
       {/* Storytelling/valeurs */}
       <section className="mt-12 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl p-8 text-center shadow">
-        <h2 className="text-2xl font-bold mb-4 text-indigo-900">Pourquoi les Tokens T4G ?</h2>
+        <h2 className="text-2xl font-bold mb-4 text-indigo-900">{t('user.pourquoi_les_tokens_t4g_')}</h2>
         <p className="text-lg text-gray-700 max-w-2xl mx-auto mb-4">
           Les tokens T4G sont le moteur de l'entraide et du partage dans la communauté. Chaque action positive (mentoring, aide, partage d'astuce) vous rapproche de nouveaux badges et d'un statut reconnu. Rejoignez le mouvement et faites grandir l'écosystème Bitcoin Lightning !
         </p>
         <div className="flex flex-col md:flex-row gap-4 justify-center mt-6">
           <div className="bg-white rounded-xl shadow p-6 flex-1">
             <div className="text-3xl mb-2">🤝</div>
-            <div className="font-bold text-indigo-800 mb-1">Mentorat & Entraide</div>
-            <div className="text-gray-600 text-sm">Aidez un membre, partagez votre expérience et gagnez des tokens T4G.</div>
+            <div className="font-bold text-indigo-800 mb-1">{t('user.mentorat_entraide')}</div>
+            <div className="text-gray-600 text-sm">{t('user.aidez_un_membre_partagez_votre')}</div>
           </div>
           <div className="bg-white rounded-xl shadow p-6 flex-1">
             <div className="text-3xl mb-2">🏅</div>
-            <div className="font-bold text-indigo-800 mb-1">Badges & Progression</div>
-            <div className="text-gray-600 text-sm">Débloquez des badges exclusifs et grimpez dans le classement de la communauté.</div>
+            <div className="font-bold text-indigo-800 mb-1">{t('user.badges_progression')}</div>
+            <div className="text-gray-600 text-sm">{t('user.dbloquez_des_badges_exclusifs_')}</div>
           </div>
           <div className="bg-white rounded-xl shadow p-6 flex-1">
             <div className="text-3xl mb-2">🌍</div>
-            <div className="font-bold text-indigo-800 mb-1">Impact Communautaire</div>
-            <div className="text-gray-600 text-sm">Chaque action compte pour faire grandir l'écosystème Bitcoin Lightning francophone.</div>
+            <div className="font-bold text-indigo-800 mb-1">{t('user.impact_communautaire')}</div>
+            <div className="text-gray-600 text-sm">{t('user.chaque_action_compte_pour_fair')}</div>
           </div>
         </div>
       </section>

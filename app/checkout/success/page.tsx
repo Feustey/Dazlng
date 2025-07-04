@@ -26,7 +26,7 @@ export default function CheckoutSuccess() {
         
         // Préparer les en-têtes avec le token d'authentification si disponible
         const headers: HeadersInit = { 
-          'Content-Type': 'application/json' 
+          "checkout.checkoutcheckoutcontenttype": 'application/json' 
         };
         
         if (orderData.token) {
@@ -77,7 +77,7 @@ export default function CheckoutSuccess() {
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-white mt-4">Finalisation de votre commande...</h1>
+            <h1 className="text-2xl font-bold text-white mt-4">{t('checkout.finalisation_de_votre_commande')}</h1>
           </div>
         </div>
       </div>
@@ -94,9 +94,9 @@ export default function CheckoutSuccess() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-white mb-2">Erreur lors de l'enregistrement</h1>
+            <h1 className="text-2xl font-bold text-white mb-2">{t('checkout.erreur_lors_de_lenregistrement')}</h1>
             <p className="text-red-300 mb-6">{error}</p>
-            <p className="text-white mb-6">Votre paiement a bien été reçu. Notre équipe prendra contact avec vous prochainement.</p>
+            <p className="text-white mb-6">{t('checkout.votre_paiement_a_bien_t_reu_no')}</p>
             <button
               onClick={() => router.push('/')}
               className="px-6 py-3 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-colors duration-300"
@@ -118,8 +118,8 @@ export default function CheckoutSuccess() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"></path>
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-white mb-2">Paiement réussi!</h1>
-          <p className="text-green-300 mb-6">Votre commande a été confirmée. Merci pour votre achat!</p>
+          <h1 className="text-2xl font-bold text-white mb-2">{t('checkout.paiement_russi')}</h1>
+          <p className="text-green-300 mb-6">{t('checkout.votre_commande_a_t_confirme_me')}</p>
           <button
             onClick={() => router.push('/')}
             className="px-6 py-3 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-colors duration-300"

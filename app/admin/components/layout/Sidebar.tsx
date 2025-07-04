@@ -9,12 +9,12 @@ const links = [
   { href: "/admin/openai", label: "OpenAI", icon: "🤖", section: "main" },
   { href: "/admin/users", label: "Utilisateurs", icon: "👥", section: "crm" },
   { href: "/admin/communications", label: "Communications", icon: "💬", section: "crm" },
-  { href: "/admin/crm", label: "CRM (Legacy)", icon: "📧", section: "crm" },
+  { href: "/admin/crm", label: "admin.adminadmincrm_legacy", icon: "📧", section: "crm" },
   { href: "/admin/orders", label: "Commandes", icon: "🛒", section: "commerce" },
   { href: "/admin/subscriptions", label: "Abonnements", icon: "⚡", section: "commerce" },
   { href: "/admin/payments", label: "Paiements", icon: "💳", section: "commerce" },
   { href: "/admin/products", label: "Produits", icon: "📦", section: "commerce" },
-  { href: "/admin/settings", label: "Paramètres", icon: "⚙️", section: "config" },
+  { href: "/admin/settings", label: "admin.adminadminparamtres", icon: "⚙️", section: "config" },
 ];
 
 const sections = {
@@ -37,8 +37,8 @@ const Sidebar: React.FC = () => {
       <div className="text-xl font-bold mb-8 flex items-center gap-2">
         <span className="text-2xl">⚡</span>
         <div>
-          <div>DazNode Admin</div>
-          <div className="text-xs text-gray-400 font-normal">Version 2.0</div>
+          <div>{t('admin.daznode_admin')}</div>
+          <div className="text-xs text-gray-400 font-normal">{t('admin.version_20')}</div>
         </div>
       </div>
       

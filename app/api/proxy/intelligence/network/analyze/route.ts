@@ -15,7 +15,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     const response = await fetch(`${API_BASE_URL}/api/v1/intelligence/network/analyze`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        "network.networknetworkcontenttype": 'application/json',
         ...(authorization && { 'Authorization': authorization })
       },
       body: JSON.stringify(body)

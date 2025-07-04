@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Documentation Technique | DazNode - Transparence et Open Source',
-  description: 'Documentation complète et transparente de notre infrastructure, API et processus techniques. Code open source et audits de sécurité publics.',
+  description: "metadata.metadatametadatadocumentation_",
   keywords: [
     'documentation technique',
     'API DazNode',
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'Documentation Technique | DazNode',
-    description: 'Documentation complète et transparente de notre infrastructure',
+    description: "metadata.metadatametadatadocumentation_",
     url: 'https://dazno.de/docs',
     siteName: 'DazNode',
     images: [

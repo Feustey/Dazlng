@@ -29,7 +29,7 @@ function generateEmailContent(data: DazNodeData, username: string): string {
     title: 'Rapport Hebdomadaire de votre Nœud Lightning',
     username,
     mainContent: 'Voici les statistiques de votre nœud pour cette semaine :',
-    detailedContent: `<h3>Résumé du Réseau</h3><pre>${JSON.stringify(data.summary, null, 2)}</pre><h3>Centralités</h3><pre>${JSON.stringify(data.centralities, null, 2)}</pre><h3>Statistiques de votre Nœud</h3><pre>${JSON.stringify(data.stats, null, 2)}</pre><h3>Historique</h3><pre>${JSON.stringify(data.history, null, 2)}</pre>`,
+    detailedContent: `<h3>{t('send-node-stats.rsum_du_rseau')}</h3><pre>${JSON.stringify(data.summary, null, 2)}</pre><h3>{t('send-node-stats.centralits')}</h3><pre>${JSON.stringify(data.centralities, null, 2)}</pre><h3>{t('send-node-stats.statistiques_de_votre_nud')}</h3><pre>${JSON.stringify(data.stats, null, 2)}</pre><h3>Historique</h3><pre>${JSON.stringify(data.history, null, 2)}</pre>`,
     ctaText: 'Optimiser mon nœud',
     ctaLink: 'https://dazno.de/network/node'
   });

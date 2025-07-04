@@ -34,8 +34,8 @@ export default function Header(): JSX.Element {
     <header className="bg-white shadow border-b border-gray-200 px-6 py-4">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-xl font-semibold text-gray-800">DazNode Admin</h1>
-          <p className="text-sm text-gray-600">Panneau d'administration</p>
+          <h1 className="text-xl font-semibold text-gray-800">{t('admin.daznode_admin')}</h1>
+          <p className="text-sm text-gray-600">{t('admin.panneau_dadministration')}</p>
         </div>
         
         <div className="flex items-center space-x-4">

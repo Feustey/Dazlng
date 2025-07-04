@@ -12,7 +12,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     const response = await fetch(`${API_BASE_URL}/metrics/dashboard`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        "dashboard.dashboarddashboardcontenttype": 'application/json',
         ...(authorization && { 'Authorization': authorization })
       }
     })

@@ -97,7 +97,7 @@ export function useGamificationSystem() {
         const response = await fetch('/api/auth/me', {
           headers: {
             'Authorization': `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json'
+            "user.userusercontenttype": 'application/json'
           }
         });
         
@@ -141,75 +141,75 @@ export function useGamificationSystem() {
     const profileFields: ProfileField[] = [
       {
         name: 'email_verified',
-        label: 'Email vérifié',
+        label: "user.useruseremail_vrifi",
         completed: isEmailVerified,
         priority: 'high',
         href: '/user/settings',
         points: 20,
-        description: 'Vérifiez votre email pour sécuriser votre compte'
+        description: "user.useruservrifiez_votre_email_po"
       },
       {
         name: 'nom',
-        label: 'Nom de famille',
+        label: "user.userusernom_de_famille",
         completed: !!(profile.nom?.trim()),
         priority: 'medium',
         href: '/user/settings',
         points: 10,
-        description: 'Complétez votre identité'
+        description: "user.userusercompltez_votre_identit"
       },
       {
         name: 'prenom',
-        label: 'Prénom',
+        label: "user.useruserprnom",
         completed: !!(profile.prenom?.trim()),
         priority: 'medium',
         href: '/user/settings',
         points: 10,
-        description: 'Personnalisez votre expérience'
+        description: "user.useruserpersonnalisez_votre_ex"
       },
       {
         name: 'pubkey',
-        label: 'Clé publique Lightning',
+        label: "user.userusercl_publique_lightning",
         completed: hasValidPubkey,
         priority: 'high',
         href: '/user/settings',
         points: 25,
-        description: 'Connectez votre portefeuille Lightning'
+        description: "user.useruserconnectez_votre_portef"
       },
       {
         name: 'node_connection',
-        label: 'Nœud Lightning connecté',
+        label: "user.userusernud_lightning_connect",
         completed: hasNode,
         priority: 'high',
         href: '/user/node',
         points: 30,
-        description: 'Connectez votre nœud pour les analytics avancées'
+        description: "user.useruserconnectez_votre_nud_po"
       },
       {
         name: 'compte_x',
-        label: 'Compte X (Twitter)',
+        label: "user.userusercompte_x_twitter",
         completed: !!(profile.compte_x?.trim()),
         priority: 'low',
         href: '/user/settings',
         points: 5,
-        description: 'Partagez vos performances'
+        description: "user.useruserpartagez_vos_performan"
       },
       {
         name: 'compte_nostr',
-        label: 'Compte Nostr',
+        label: "user.userusercompte_nostr",
         completed: !!(profile.compte_nostr?.trim()),
         priority: 'low',
         href: '/user/settings',
         points: 5,
-        description: 'Rejoignez la communauté décentralisée'
+        description: "user.useruserrejoignez_la_communaut"
       },
       {
         name: 'phone_verified',
-        label: 'Téléphone vérifié',
+        label: "user.userusertlphone_vrifi",
         completed: !!(profile.phone_verified),
         priority: 'low',
         href: '/user/settings',
         points: 5,
-        description: 'Vérifiez votre téléphone'
+        description: "user.useruservrifiez_votre_tlphone"
       }
     ];
 
@@ -236,7 +236,7 @@ export function useGamificationSystem() {
       {
         id: 'email_verified',
         title: 'Première Connexion',
-        description: 'Email vérifié avec succès',
+        description: "user.useruseremail_vrifi_avec_succs",
         category: 'startup',
         unlocked: isEmailVerified,
         progress: isEmailVerified ? 1 : 0,
@@ -248,7 +248,7 @@ export function useGamificationSystem() {
       {
         id: 'lightning_connected',
         title: 'Lightning Adopter',
-        description: 'Première clé publique Lightning ajoutée',
+        description: "user.useruserpremire_cl_publique_li",
         category: 'growth',
         unlocked: hasValidPubkey,
         progress: hasValidPubkey ? 1 : 0,
@@ -260,7 +260,7 @@ export function useGamificationSystem() {
       {
         id: 'node_operator',
         title: 'Opérateur de Nœud',
-        description: 'Nœud Lightning Network connecté',
+        description: "user.userusernud_lightning_network_",
         category: 'performance',
         unlocked: hasNode,
         progress: hasNode ? 1 : 0,
@@ -272,7 +272,7 @@ export function useGamificationSystem() {
       {
         id: 'social_connector',
         title: 'Connecteur Social',
-        description: 'Compte social connecté (X ou Nostr)',
+        description: "user.userusercompte_social_connect_",
         category: 'community',
         unlocked: !!(profile.compte_x || profile.compte_nostr),
         progress: [profile.compte_x, profile.compte_nostr].filter(Boolean).length,
@@ -284,7 +284,7 @@ export function useGamificationSystem() {
       {
         id: 'profile_master',
         title: 'Profil Master',
-        description: 'Profil 100% complété',
+        description: "user.useruserprofil_100_complt",
         category: 'growth',
         unlocked: profileCompletion >= 100,
         progress: profileCompletion,
@@ -341,7 +341,7 @@ export function useGamificationSystem() {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json'
+          "user.userusercontenttype": 'application/json'
         },
         body: JSON.stringify(updates)
       });

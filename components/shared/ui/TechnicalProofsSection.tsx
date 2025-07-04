@@ -32,11 +32,11 @@ const NodeProofCard: React.FC<PublicNode> = ({
       
       <div className="space-y-3 mb-6">
         <div>
-          <span className="text-sm font-medium text-gray-500">Capacité:</span>
+          <span className="text-sm font-medium text-gray-500">{t('TechnicalProofsSection.capacit')}</span>
           <span className="ml-2 font-mono text-gray-900">{capacity}</span>
         </div>
         <div>
-          <span className="text-sm font-medium text-gray-500">Node ID:</span>
+          <span className="text-sm font-medium text-gray-500">{t('TechnicalProofsSection.node_id')}</span>
           <div className="font-mono text-xs text-gray-600 break-all mt-1">
             {nodeId}
           </div>
@@ -44,7 +44,7 @@ const NodeProofCard: React.FC<PublicNode> = ({
       </div>
       
       <div className="space-y-2">
-        <p className="text-sm text-gray-600 mb-3">Vérifier sur:</p>
+        <p className="text-sm text-gray-600 mb-3">{t('TechnicalProofsSection.vrifier_sur')}</p>
         <div className="flex flex-wrap gap-2">
           {Object.entries(verifyLinks).map(([platform, url]) => (
             <a
@@ -127,19 +127,19 @@ export const TechnicalProofsSection: React.FC = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div className="text-center">
                 <div className="text-3xl font-bold text-blue-600">99.9%</div>
-                <div className="text-sm text-gray-600">Uptime moyen</div>
+                <div className="text-sm text-gray-600">{t('TechnicalProofsSection.uptime_moyen')}</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-green-600">85%</div>
-                <div className="text-sm text-gray-600">Force-closes évités</div>
+                <div className="text-sm text-gray-600">{t('TechnicalProofsSection.forcecloses_vits')}</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-purple-600">+40%</div>
-                <div className="text-sm text-gray-600">Revenus optimisés</div>
+                <div className="text-sm text-gray-600">{t('TechnicalProofsSection.revenus_optimiss')}</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-orange-600">17 BTC</div>
-                <div className="text-sm text-gray-600">Capacité totale</div>
+                <div className="text-3xl font-bold text-orange-600">{t('TechnicalProofsSection.17_btc')}</div>
+                <div className="text-sm text-gray-600">{t('TechnicalProofsSection.capacit_totale')}</div>
               </div>
             </div>
           </div>

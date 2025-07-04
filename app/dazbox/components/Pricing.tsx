@@ -38,7 +38,7 @@ const DazBoxPricing: React.FC = () => {
     {
       id: 'starter',
       name: 'DazBox Starter',
-      description: 'Parfait pour débuter sur Lightning Network',
+      description: "Pricing.pricingpricingparfait_pour_dbu",
       price: 400000,
       originalPrice: 450000,
       discount: '-11%',
@@ -58,7 +58,7 @@ const DazBoxPricing: React.FC = () => {
     {
       id: 'pro',
       name: 'DazBox Pro',
-      description: 'Pour les utilisateurs avancés',
+      description: "Pricing.pricingpricingpour_les_utilisa",
       price: 600000,
       features: [
         'Tout de DazBox Starter',
@@ -74,7 +74,7 @@ const DazBoxPricing: React.FC = () => {
     {
       id: 'enterprise',
       name: 'DazBox Enterprise',
-      description: 'Solution complète pour entreprises',
+      description: "Pricing.pricingpricingsolution_complte",
       price: 1000000,
       features: [
         'Tout de DazBox Pro',
@@ -243,18 +243,18 @@ const DazBoxPricing: React.FC = () => {
           <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-8 opacity-60">
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">500+</div>
-              <div className="text-sm text-gray-600">DazBox Déployées</div>
+              <div className="text-sm text-gray-600">{t('Pricing.dazbox_dployes')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600">99.9%</div>
-              <div className="text-sm text-gray-600">Uptime Garanti</div>
+              <div className="text-sm text-gray-600">{t('Pricing.uptime_garanti')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-purple-600">24/7</div>
-              <div className="text-sm text-gray-600">Support Expert</div>
+              <div className="text-sm text-gray-600">{t('Pricing.support_expert')}</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-orange-600">5min</div>
+              <div className="text-2xl font-bold text-orange-600">{t('Pricing.5min')}</div>
               <div className="text-sm text-gray-600">Installation</div>
             </div>
           </div>

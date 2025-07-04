@@ -46,30 +46,30 @@ export class EmailService {
         to: params.to,
         subject: `🎉 Confirmation de votre commande DazBox #${params.orderRef}`,
         html: `
-          <h1>Merci pour votre commande DazBox !</h1>
+          <h1>{t('email-service.merci_pour_votre_commande_dazb')}</h1>
           <p>Bonjour ${params.customerName},</p>
-          <p>Nous avons bien reçu votre commande et votre paiement a été confirmé.</p>
+          <p>{t('email-service.nous_avons_bien_reu_votre_comm')}</p>
           
-          <h2>Détails de votre commande :</h2>
+          <h2>{t('email-service.dtails_de_votre_commande_')}</h2>
           <ul>
-            <li><strong>Référence :</strong> #${params.orderRef}</li>
-            <li><strong>Produit :</strong> ${params.product.name}</li>
-            <li><strong>Plan :</strong> ${params.product.plan}</li>
-            <li><strong>Prix :</strong> ${params.product.price} sats</li>
+            <li><strong>{t('email-service.rfrence_')}</strong> #${params.orderRef}</li>
+            <li><strong>{t('email-service.produit_')}</strong> ${params.product.name}</li>
+            <li><strong>{t('email-service.plan_')}</strong> ${params.product.plan}</li>
+            <li><strong>{t('email-service.prix_')}</strong> ${params.product.price} sats</li>
           </ul>
 
-          <h2>Adresse de livraison :</h2>
+          <h2>{t('email-service.adresse_de_livraison_')}</h2>
           <p>${params.deliveryAddress}</p>
 
-          <h2>Délai de livraison estimé :</h2>
+          <h2>{t('email-service.dlai_de_livraison_estim_')}</h2>
           <p>${params.estimatedDelivery}</p>
 
-          <p>Nous vous enverrons un email avec le numéro de suivi dès que votre colis sera expédié.</p>
+          <p>{t('email-service.nous_vous_enverrons_un_email_a')}</p>
 
           <p>Si vous avez des questions, n'hésitez pas à nous contacter à ${this.FROM_EMAIL}</p>
 
-          <p>Merci de votre confiance !</p>
-          <p>L'équipe DazNode</p>
+          <p>{t('email-service.merci_de_votre_confiance_')}</p>
+          <p>{t('email-service.lquipe_daznode')}</p>
         `
       });
     } catch (error) {
@@ -88,26 +88,26 @@ export class EmailService {
         to: this.INTERNAL_EMAIL,
         subject: `🚨 Nouvelle commande DazBox #${params.orderRef}`,
         html: `
-          <h1>Nouvelle commande DazBox à traiter</h1>
+          <h1>{t('email-service.nouvelle_commande_dazbox_trait')}</h1>
           
-          <h2>Détails de la commande :</h2>
+          <h2>{t('email-service.dtails_de_la_commande_')}</h2>
           <ul>
-            <li><strong>Référence :</strong> #${params.orderRef}</li>
-            <li><strong>Produit :</strong> ${params.product.name}</li>
-            <li><strong>Plan :</strong> ${params.product.plan}</li>
+            <li><strong>{t('email-service.rfrence_')}</strong> #${params.orderRef}</li>
+            <li><strong>{t('email-service.produit_')}</strong> ${params.product.name}</li>
+            <li><strong>{t('email-service.plan_')}</strong> ${params.product.plan}</li>
           </ul>
 
-          <h2>Client :</h2>
+          <h2>{t('email-service.client_')}</h2>
           <ul>
-            <li><strong>Nom :</strong> ${params.customerDetails.name}</li>
-            <li><strong>Email :</strong> ${params.customerDetails.email}</li>
-            ${params.customerDetails.phone ? `<li><strong>Téléphone :</strong> ${params.customerDetails.phone}</li>` : ''}
+            <li><strong>{t('email-service.nom_')}</strong> ${params.customerDetails.name}</li>
+            <li><strong>{t('email-service.email_')}</strong> ${params.customerDetails.email}</li>
+            ${params.customerDetails.phone ? `<li><strong>{t('email-service.tlphone_')}</strong> ${params.customerDetails.phone}</li>` : ''}
           </ul>
 
-          <h2>Adresse de livraison :</h2>
+          <h2>{t('email-service.adresse_de_livraison_')}</h2>
           <p>${params.deliveryAddress}</p>
 
-          <p>⚡ Cette commande doit être traitée dans les 24h.</p>
+          <p>{t('email-service._cette_commande_doit_tre_trait')}</p>
         `
       });
     } catch (error) {

@@ -17,7 +17,7 @@ export async function generateInvoice({ amount, memo }: InvoiceParams): Promise<
     const response = await fetch(`${baseUrl}/api/create-invoice`, {
       method: 'POST',
       headers: { 
-        'Content-Type': 'application/json',
+        "lightning.lightninglightningcontenttype": 'application/json',
         'Accept': 'application/json'
       },
       body: JSON.stringify({ amount, description: memo }),

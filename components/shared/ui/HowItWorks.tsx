@@ -1,7 +1,8 @@
 import React from 'react';
-import { FaDownload, FaPlug, FaCog, FaChartLine } from 'react-icons/fa';
+
 import { useRouter } from 'next/navigation';
 import { useConversionTracking } from '../../../hooks/useConversionTracking';
+import { Download, Zap, Settings, TrendingUp, Plug, Cog } from '@/components/shared/ui/IconRegistry';
 
 export interface StepProps {
   number: number;
@@ -38,27 +39,27 @@ export const HowItWorks: React.FC = () => {
   const steps = [
     {
       number: 1,
-      icon: <FaDownload />,
+      icon: <Download />,
       title: "Commandez",
-      description: "Choisissez votre plan et passez commande en quelques clics"
+      description: "HowItWorks.howitworkshowitworkschoisissez"
     },
     {
       number: 2,
-      icon: <FaPlug />,
+      icon: <Plug />,
       title: "Branchez",
-      description: "Recevez votre DazBox et connectez-la simplement"
+      description: "HowItWorks.howitworkshowitworksrecevez_vo"
     },
     {
       number: 3,
-      icon: <FaCog />,
+      icon: <Cog />,
       title: "Configurez",
-      description: "Notre IA configure automatiquement votre nœud"
+      description: "HowItWorks.howitworkshowitworksnotre_ia_c"
     },
     {
       number: 4,
-      icon: <FaChartLine />,
+      icon: <TrendingUp />,
       title: "Gagnez",
-      description: "Commencez à générer des revenus Lightning dès le premier jour"
+      description: "HowItWorks.howitworkshowitworkscommencez_"
     }
   ];
 
@@ -82,7 +83,7 @@ export const HowItWorks: React.FC = () => {
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             De la commande aux premiers revenus Lightning en moins d'une semaine. 
-            <strong className="text-indigo-600"> Aucune compétence technique requise.</strong>
+            <strong className="text-indigo-600">{t('HowItWorks._aucune_comptence_technique_re')}</strong>
           </p>
         </div>
 

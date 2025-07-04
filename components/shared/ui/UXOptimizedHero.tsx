@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useConversionTracking } from '../../../hooks/useConversionTracking';
-import { Shield, Zap, TrendingUp, Clock, Users, CheckCircle } from 'lucide-react';
+import { Shield, Zap, TrendingUp, Clock, Users, CheckCircle } from '@/components/shared/ui/IconRegistry';
+
 
 const UXOptimizedHero: React.FC = () => {
   const router = useRouter();
@@ -67,21 +68,21 @@ const UXOptimizedHero: React.FC = () => {
           <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-4xl mx-auto leading-relaxed">
             Évitez les force-closes et maximisez vos revenus automatiquement. 
             <br className="hidden md:block" />
-            <strong className="text-[#00D4AA]">Seule IA qui prédit les force-closes 6h en avance.</strong>
+            <strong className="text-[#00D4AA]">{t('UXOptimizedHero.seule_ia_qui_prdit_les_forcecl')}</strong>
           </p>
 
           <div className="flex flex-wrap justify-center items-center gap-6 text-gray-400 text-sm mb-8">
             <div className="flex items-center gap-2">
               <CheckCircle className="h-4 w-4 text-[#00D4AA]" />
-              <span>2 ans d&apos;expérience en production</span>
+              <span>{t('UXOptimizedHero.2_ans_daposexprience_en_produc')}</span>
             </div>
             <div className="flex items-center gap-2">
               <Users className="h-4 w-4 text-[#F7931A]" />
-              <span>+500 node runners actifs</span>
+              <span>{t('UXOptimizedHero.500_node_runners_actifs')}</span>
             </div>
             <div className="flex items-center gap-2">
               <Shield className="h-4 w-4 text-[#00D4AA]" />
-              <span>99.9% de précision</span>
+              <span>{t('UXOptimizedHero.999_de_prcision')}</span>
             </div>
           </div>
         </div>
@@ -109,29 +110,29 @@ const UXOptimizedHero: React.FC = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mb-12">
           <div className="text-center p-6 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10">
             <div className="text-3xl font-bold text-[#F7931A] mb-2">50-200€</div>
-            <div className="text-gray-300 text-sm">Revenus mensuels</div>
+            <div className="text-gray-300 text-sm">{t('UXOptimizedHero.revenus_mensuels')}</div>
           </div>
           <div className="text-center p-6 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10">
             <div className="text-3xl font-bold text-[#00D4AA] mb-2">15-25%</div>
-            <div className="text-gray-300 text-sm">ROI annuel</div>
+            <div className="text-gray-300 text-sm">{t('UXOptimizedHero.roi_annuel')}</div>
           </div>
           <div className="text-center p-6 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10">
-            <div className="text-3xl font-bold text-[#FFE500] mb-2">4-8 mois</div>
+            <div className="text-3xl font-bold text-[#FFE500] mb-2">{t('UXOptimizedHero.48_mois')}</div>
             <div className="text-gray-300 text-sm">Amortissement</div>
           </div>
           <div className="text-center p-6 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10">
             <div className="text-3xl font-bold text-[#00D4AA] mb-2">6h</div>
-            <div className="text-gray-300 text-sm">Prédiction avance</div>
+            <div className="text-gray-300 text-sm">{t('UXOptimizedHero.prdiction_avance')}</div>
           </div>
         </div>
 
         <div className="bg-gradient-to-r from-[#00D4AA]/20 to-[#F7931A]/20 backdrop-blur-sm rounded-2xl p-8 max-w-3xl mx-auto border border-white/20">
           <div className="flex items-center justify-center mb-4">
             <Shield className="h-8 w-8 text-[#00D4AA] mr-3" />
-            <h3 className="text-xl font-bold text-white">Garantie 30 jours satisfait ou remboursé</h3>
+            <h3 className="text-xl font-bold text-white">{t('UXOptimizedHero.garantie_30_jours_satisfait_ou')}</h3>
           </div>
           <p className="text-gray-300 text-lg">
-            Si vous ne générez pas au moins <strong className="text-[#F7931A]">50€ de revenus</strong> dans vos 30 premiers jours, 
+            Si vous ne générez pas au moins <strong className="text-[#F7931A]">{t('UXOptimizedHero.50_de_revenus')}</strong> dans vos 30 premiers jours, 
             nous vous remboursons intégralement.
           </p>
         </div>
@@ -139,7 +140,7 @@ const UXOptimizedHero: React.FC = () => {
         <div className="mt-16 flex justify-center">
           <div className="group text-[#F7931A] hover:text-[#FFE500] transition-all duration-300 flex flex-col items-center cursor-pointer"
                onClick={() => document.getElementById('problem-section')?.scrollIntoView({ behavior: 'smooth' })}>
-            <span className="text-sm font-medium mb-2">Découvrir le problème</span>
+            <span className="text-sm font-medium mb-2">{t('UXOptimizedHero.dcouvrir_le_problme')}</span>
             <div className="w-12 h-12 rounded-full bg-[#F7931A] text-black flex items-center justify-center group-hover:bg-[#FFE500] transition-colors">
               <svg className="w-6 h-6 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />

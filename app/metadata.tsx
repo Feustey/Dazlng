@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'dazno.de | Gérez vos Nœuds Lightning en un Clic - Solution Tout-en-Un',
-  description: 'Déployez, optimisez et monitorez vos nœuds Lightning Network sans compétences techniques. DazBox, DazNode et DazPay : solutions complètes pour particuliers et entreprises. Essai gratuit IA de 7 jours.',
+  description: "metadata.metadatametadatadployez_optimi",
   keywords: [
     'nœud lightning network', 
     'bitcoin node management', 
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'dazno.de | Gérez vos Nœuds Lightning en un Clic',
-    description: 'La solution tout-en-un pour déployer, optimiser et monitorer vos nœuds Lightning Network sans compétences techniques. Installation en 5 minutes, support 24/7.',
+    description: "metadata.metadatametadatala_solution_to",
     url: 'https://dazno.de',
     siteName: 'dazno.de',
     images: [
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'dazno.de | Gérez vos Nœuds Lightning en un Clic',
-    description: 'Solutions Lightning Network clés en main. Installation 5 min, support 24/7, essai gratuit 7 jours.',
+    description: "metadata.metadatametadatasolutions_ligh",
     images: ['https://dazno.de/assets/images/home-og.png']
   },
   robots: {
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
       index: true,
       follow: true,
       'max-video-preview': -1,
-      'max-image-preview': 'large',
+      "metadata.metadatametadatamaximageprevie": 'large',
       'max-snippet': -1,
     },
   },

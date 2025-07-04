@@ -1,6 +1,7 @@
-import { FaBolt, FaCheckCircle } from "react-icons/fa";
+
 import Link from "next/link";
 import type { FC, ReactNode } from "react";
+import { Zap, CheckCircle } from '@/components/shared/ui/IconRegistry';
 
 export interface PricingCardProps {
   title: string;
@@ -46,7 +47,7 @@ const PricingCard: FC<PricingCardProps> = ({
       <ul className="mb-6 space-y-1 text-sm text-left w-full max-w-xs">
         {features.map((f: any, i: any) => (
           <li key={i} className="flex items-center gap-2">
-            <FaCheckCircle className="text-green-300" /> {f}
+            <CheckCircle className="text-green-300" /> {f}
           </li>
         ))}
       </ul>
@@ -55,12 +56,12 @@ const PricingCard: FC<PricingCardProps> = ({
           className="flex items-center justify-center gap-2 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white text-base font-bold rounded-xl shadow-lg transition w-full md:w-auto"
           onClick={onPress}
         >
-          <FaBolt className="w-4 h-4" />
+          <Zap className="w-4 h-4" />
           {buttonText || cta}
         </button>
       ) : (
         <Link href={ctaHref} className="flex items-center justify-center gap-2 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white text-base font-bold rounded-xl shadow-lg transition w-full md:w-auto">
-          <FaBolt className="w-4 h-4" />
+          <Zap className="w-4 h-4" />
           {cta}
         </Link>
       )}

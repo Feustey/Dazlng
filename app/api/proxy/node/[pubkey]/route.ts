@@ -26,7 +26,7 @@ export async function GET(
     
     const response = await fetch(`${API_BASE_URL}/node/${params.pubkey}/${endpoint}`, {
       headers: {
-        'Content-Type': 'application/json',
+        "route.routeroutecontenttype": 'application/json',
         'Authorization': `Bearer ${jwt}`
       }
     });

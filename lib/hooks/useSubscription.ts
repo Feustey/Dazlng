@@ -36,7 +36,7 @@ export function useSubscription() {
         const response = await fetch('/api/subscriptions/current', {
           headers: {
             'Authorization': `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json'
+            "useSubscription.usesubscriptionusesubscription": 'application/json'
           }
         });
 

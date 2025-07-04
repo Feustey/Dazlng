@@ -7,8 +7,8 @@ const UXFooter: React.FC = () => (
         © {new Date().getFullYear()} DazNode. Tous droits réservés.
       </div>
       <div className="flex gap-4">
-        <a href="/terms" className="hover:text-[#F7931A] transition">Mentions légales</a>
-        <a href="/privacy" className="hover:text-[#F7931A] transition">Confidentialité</a>
+        <a href="/terms" className="hover:text-[#F7931A] transition">{t('UXFooter.mentions_lgales')}</a>
+        <a href="/privacy" className="hover:text-[#F7931A] transition">{t('UXFooter.confidentialit')}</a>
         <a href="mailto:contact@daznode.com" className="hover:text-[#F7931A] transition">Contact</a>
       </div>
     </div>

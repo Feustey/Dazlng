@@ -5,7 +5,7 @@ const CommunitySection: React.FC = () => {
     {
       icon: "🤝",
       title: "Entraide & Support",
-      description: "Une communauté active pour vous accompagner à chaque étape",
+      description: "CommunitySection.communitysectioncommunitysecti",
       features: [
         "Support technique 24/7",
         "Tutoriels vidéo exclusifs",
@@ -16,7 +16,7 @@ const CommunitySection: React.FC = () => {
     {
       icon: "📚",
       title: "Formation Continue",
-      description: "Apprenez les meilleures pratiques du Lightning Network",
+      description: "CommunitySection.communitysectioncommunitysecti",
       features: [
         "Webinaires hebdomadaires",
         "Cours avancés gratuits",
@@ -78,19 +78,19 @@ const CommunitySection: React.FC = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
               <div className="text-3xl font-bold text-yellow-400">500+</div>
-              <div className="text-yellow-200 text-sm">Membres actifs</div>
+              <div className="text-yellow-200 text-sm">{t('CommunitySection.membres_actifs')}</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-orange-400">15min</div>
-              <div className="text-orange-200 text-sm">Temps de réponse moyen</div>
+              <div className="text-3xl font-bold text-orange-400">{t('home.15min')}</div>
+              <div className="text-orange-200 text-sm">{t('CommunitySection.temps_de_rponse_moyen')}</div>
             </div>
             <div>
               <div className="text-3xl font-bold text-pink-400">24/7</div>
-              <div className="text-pink-200 text-sm">Support disponible</div>
+              <div className="text-pink-200 text-sm">{t('CommunitySection.support_disponible')}</div>
             </div>
             <div>
               <div className="text-3xl font-bold text-green-400">97%</div>
-              <div className="text-green-200 text-sm">Satisfaction membres</div>
+              <div className="text-green-200 text-sm">{t('CommunitySection.satisfaction_membres')}</div>
             </div>
           </div>
         </div>

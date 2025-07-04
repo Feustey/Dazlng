@@ -1,12 +1,13 @@
 import React from 'react';
 import Image from 'next/image';
-import { Star, Users, MessageCircle, CheckCircle } from 'lucide-react';
+import { Star, Users, MessageCircle, CheckCircle } from '@/components/shared/ui/IconRegistry';
+
 
 const testimonials = [
   {
     name: "Alice B.",
     company: "Opératrice de nœud",
-    text: "DazNode a sauvé mon capital deux fois en prédisant un force-close. Je dors enfin tranquille.",
+    text: "SocialProofSection.socialproofsectionsocialproofs",
     avatar: "/assets/images/testimonials/alice.jpg"
   },
   {
@@ -18,7 +19,7 @@ const testimonials = [
   {
     name: "Sophie T.",
     company: "Bitcoiner",
-    text: "La seule solution qui m'a permis de comprendre et d'optimiser mes canaux sans prise de tête.",
+    text: "SocialProofSection.socialproofsectionsocialproofs"a permis de comprendre et d'optimiser mes canaux sans prise de tête.",
     avatar: "/assets/images/testimonials/sophie.jpg"
   }
 ];
@@ -28,7 +29,7 @@ const SocialProofSection: React.FC = () => (
     <div className="max-w-7xl mx-auto px-4">
       <div className="text-center mb-16">
         <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-          Ils <span className="text-[#F7931A]">ont choisi DazNode</span>
+          Ils <span className="text-[#F7931A]">{t('SocialProofSection.ont_choisi_daznode')}</span>
         </h2>
         <p className="text-xl text-gray-300 max-w-3xl mx-auto">
           Plus de 500 opérateurs de nœud font confiance à notre IA pour sécuriser et maximiser leurs revenus.
@@ -39,22 +40,22 @@ const SocialProofSection: React.FC = () => (
         <div className="flex flex-col items-center">
           <Users className="h-10 w-10 text-[#00D4AA] mb-2" />
           <div className="text-2xl font-bold text-white">+500</div>
-          <div className="text-gray-400 text-sm">Node runners actifs</div>
+          <div className="text-gray-400 text-sm">{t('SocialProofSection.node_runners_actifs')}</div>
         </div>
         <div className="flex flex-col items-center">
           <Star className="h-10 w-10 text-[#F7931A] mb-2" />
           <div className="text-2xl font-bold text-white">4.9/5</div>
-          <div className="text-gray-400 text-sm">Note moyenne</div>
+          <div className="text-gray-400 text-sm">{t('SocialProofSection.note_moyenne')}</div>
         </div>
         <div className="flex flex-col items-center">
           <CheckCircle className="h-10 w-10 text-[#00D4AA] mb-2" />
           <div className="text-2xl font-bold text-white">99.9%</div>
-          <div className="text-gray-400 text-sm">Précision IA</div>
+          <div className="text-gray-400 text-sm">{t('SocialProofSection.prcision_ia')}</div>
         </div>
         <div className="flex flex-col items-center">
           <MessageCircle className="h-10 w-10 text-[#F7931A] mb-2" />
           <div className="text-2xl font-bold text-white">24/7</div>
-          <div className="text-gray-400 text-sm">Support & communauté</div>
+          <div className="text-gray-400 text-sm">{t('SocialProofSection.support_communaut')}</div>
         </div>
       </div>
       {/* Témoignages */}

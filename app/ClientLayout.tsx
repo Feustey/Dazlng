@@ -5,20 +5,20 @@ import ModernLayout from "@/components/shared/layout/ModernLayout";
 import PerformanceProvider from './PerformanceProvider';
 import { Toaster } from 'react-hot-toast';
 import dynamic from 'next/dynamic';
-import React, { ReactNode, useEffect } from 'react';
+import React, { ReactNode, useEffect, useMemo } from 'react';
 import { initSupabaseCookiesFix } from '@/lib/supabase-cookies-fix';
 
-// Footer chargé dynamiquement avec skeleton optimisé
+// Footer optimisé avec lazy loading intelligent
 const Footer = dynamic(() => import('@/components/Footer'), { 
   loading: () => (
-    <div className="h-40 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="h-8 bg-gray-200 rounded mb-4"></div>
-        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+    <div className="h-32 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse">
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        <div className="h-6 bg-gray-200 rounded mb-3"></div>
+        <div className="h-4 bg-gray-200 rounded w-2/3"></div>
       </div>
     </div>
   ),
-  ssr: false // Désactiver SSR pour éviter les problèmes d'hydratation
+  ssr: false
 });
 
 export interface ClientLayoutProps {
@@ -28,45 +28,42 @@ export interface ClientLayoutProps {
 const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
   const pathname = usePathname();
 
-  // Initialiser le fix des cookies Supabase au montage
   useEffect(() => {
     initSupabaseCookiesFix();
   }, []);
 
-  // Pages qui masquent le header
-  const hideHeader = pathname?.startsWith("/checkout") || 
-                    pathname?.startsWith("/auth/login") || 
-                    pathname?.startsWith("/user") ||
-                    pathname?.startsWith("/admin");
-  
-  // Pages qui utilisent le layout full-width (largeur complète)
-  const isFullWidth = pathname === "/" || 
-                     pathname?.startsWith("/token-for-good") ||
-                     pathname?.startsWith("/dazbox") ||
-                     pathname?.startsWith("/daznode") ||
-                     pathname?.startsWith("/dazpay") ||
-                     pathname?.startsWith("/dazflow");
+  // Optimisation avec useMemo pour éviter les recalculs
+  const layoutConfig = useMemo(() => {
+    const hideHeader = pathname?.startsWith("/checkout") || 
+                      pathname?.startsWith("/auth/login") || 
+                      pathname?.startsWith("/user") ||
+                      pathname?.startsWith("/admin");
+    
+    const isFullWidth = pathname === "/" || 
+                       pathname?.startsWith("/token-for-good") ||
+                       pathname?.startsWith("/dazbox") ||
+                       pathname?.startsWith("/daznode") ||
+                       pathname?.startsWith("/dazpay") ||
+                       pathname?.startsWith("/dazflow");
 
-  // Pages qui utilisent le nouveau design moderne
-  const useModernLayout = [
-    "/",
-    "/token-for-good",
-    "/about",
-    "/contact",
-    "/dazbox",
-    "/daznode", 
-    "/dazpay",
-    "/dazflow"
-  ].includes(pathname || "");
+    const useModernLayout = [
+      "/", "/token-for-good", "/about", "/contact",
+      "/dazbox", "/daznode", "/dazpay", "/dazflow"
+    ].includes(pathname || "");
 
-  // Configuration du contenu principal avec largeur optimisée
+    return { hideHeader, isFullWidth, useModernLayout };
+  }, [pathname]);
+
+  const { hideHeader, isFullWidth, useModernLayout } = layoutConfig;
+
+  // Configuration du contenu optimisée
   const content = (
     <div className="flex flex-col min-h-screen w-full">
       {!hideHeader && <CustomHeader />}
       <main className={`flex-1 w-full ${
         isFullWidth 
-          ? 'max-w-none px-0' // Largeur complète sans contraintes
-          : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8' // Largeur contrainte avec padding
+          ? 'max-w-none px-0' 
+          : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8' 
       } ${
         !hideHeader && !isFullWidth && !pathname?.startsWith('/user') 
           ? 'pt-20' 
@@ -78,7 +75,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
     </div>
   );
 
-  // Configuration du Toaster optimisée
+  // Toaster optimisé
   const toasterConfig = {
     position: "top-right" as const,
     toastOptions: {
@@ -91,20 +88,8 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
         padding: '16px',
         maxWidth: '400px',
       },
-      success: {
-        duration: 3000,
-        iconTheme: {
-          primary: '#4ade80',
-          secondary: '#fff',
-        },
-      },
-      error: {
-        duration: 5000,
-        iconTheme: {
-          primary: '#ef4444',
-          secondary: '#fff',
-        },
-      },
+      success: { duration: 3000 },
+      error: { duration: 5000 }
     },
   };
 
