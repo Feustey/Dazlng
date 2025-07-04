@@ -11,7 +11,6 @@ import { seoConfig } from '@/lib/seo-config';
 const inter = Inter({ 
   subsets: ['latin'],
   display: 'swap', // Optimise LCP
-  preload: true,
   fallback: ['system-ui', 'arial']
 });
 
