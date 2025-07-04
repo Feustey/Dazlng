@@ -77,4 +77,42 @@ module.exports = {
     },
   },
   plugins: [],
+  safelist: [
+    // Couleurs principales dynamiques
+    {
+      pattern: /^(bg|text|border|from|to|hover:bg|hover:text)-(indigo|blue|purple|yellow|orange|green|red|gray|emerald|pink|black|white)-(50|100|200|300|400|500|600|700|800|900)$/,
+    },
+    // Opacités fractionnaires
+    {
+      pattern: /^(bg|text|border)-(white|black|yellow|green|blue|purple|orange|red|gray)\/(5|10|20|30|40|50|60|70|80|90|100)$/,
+    },
+    // Gradients et directions
+    'bg-gradient-to-r',
+    'bg-gradient-to-br',
+    // Animations utilitaires
+    'animate-pulse',
+    'animate-float',
+    'animate-fade-in',
+    'animate-fade-in-delayed',
+    'animate-fade-in-delayed-2',
+    'animate-fade-in-delayed-3',
+    'animate-fade-in-down',
+    'animate-slide-up',
+    'animate-zoom-in',
+    // Arrondis
+    'rounded-full',
+    'rounded-lg',
+    'rounded-xl',
+    'rounded-2xl',
+    'rounded-3xl',
+    'rounded-bl-xl',
+    'rounded-tr-3xl',
+    // Divers
+    'bg-white',
+    'bg-black',
+    'text-white',
+    'text-black',
+    'border-white',
+    'border-black',
+  ],
 }
