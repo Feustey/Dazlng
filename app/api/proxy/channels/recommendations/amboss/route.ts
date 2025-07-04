@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { ApiResponse } from '@/types/database'
+import { NextRequest, NextResponse } from "next/server"
+import { ApiResponse } from "@/types/database"
 
-const API_BASE_URL = (process.env.NEXT_PUBLIC_DAZNO_API_URL ?? "") || 'https://api.dazno.de'
+const API_BASE_URL = (process.env.NEXT_PUBLIC_DAZNO_API_URL ?? "") || "https://api.dazno.de"
 
 export async function POST(req: NextRequest): Promise<Response> {
   try {
@@ -9,14 +9,14 @@ export async function POST(req: NextRequest): Promise<Response> {
     const body = await req.json()
     
     // Récupérer les headers d'autorisation
-    const authorization = req.headers.get('authorization')
+    const authorization = req.headers.get("authorization")
     
     // Faire l'appel à l'API externe
     const response = await fetch(`${API_BASE_URL}/api/v1/channels/recommendations/amboss`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        "route.routeroutecontenttype": 'application/json',
-        ...(authorization && { 'Authorization': authorization })
+        "Content-Type": "application/json",
+        ...(authorization && { "Authorization": authorization })
       },
       body: JSON.stringify(body)
     })
@@ -27,23 +27,22 @@ export async function POST(req: NextRequest): Promise<Response> {
 
     const data = await response.json()
 
-    return NextResponse.json<ApiResponse<unknown>>({
+    return NextResponse.json<ApiResponse<any>>({
       success: true,
       data,
       meta: {
         timestamp: new Date().toISOString(),
-        version: '1.0'
+        version: "1.0"
       }
     })
 
   } catch (error) {
-    console.error('Erreur proxy Amboss recommendations:', error)
-    
-    return NextResponse.json<ApiResponse<null>>({
+    console.error("Erreur proxy Amboss recommendations:", error)
+    return NextResponse.json<ApiResponse<any>>({
       success: false,
       error: {
-        code: 'PROXY_ERROR',
-        message: error instanceof Error ? error.message : 'Erreur lors de la récupération des recommandations Amboss'
+        code: "PROXY_ERROR",
+        message: error instanceof Error ? error.message : "Erreur lors de la récupération des recommandations Amboss"
       }
     }, { status: 500 })
   }

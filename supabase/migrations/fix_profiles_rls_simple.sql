@@ -11,7 +11,7 @@ DROP POLICY IF EXISTS "Service role full access" ON public.profiles;
 DROP POLICY IF EXISTS "Service role full access profiles" ON public.profiles;
 DROP POLICY IF EXISTS "Allow basic connection test" ON public.profiles;
 
--- S'assurer que RLS est activé
+-- S'assurer que RLS est activé'
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
 -- ==========================================
@@ -19,27 +19,27 @@ ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 -- ==========================================
 
 -- 1. Service role a accès complet (pour les opérations admin et API)
-CREATE POLICY "Service role full access profiles" ON public.profiles
+CREATE POLICY "Service role full access profiles" ON public.profiles;
     FOR ALL 
     TO service_role
     USING (true)
     WITH CHECK (true);
 
 -- 2. Utilisateurs authentifiés peuvent voir leur propre profil
-CREATE POLICY "Users can view own profile" ON public.profiles
+CREATE POLICY "Users can view own profile" ON public.profiles;
     FOR SELECT 
     TO authenticated
     USING (auth.uid() = id);
 
 -- 3. Utilisateurs authentifiés peuvent mettre à jour leur propre profil
-CREATE POLICY "Users can update own profile" ON public.profiles
+CREATE POLICY "Users can update own profile" ON public.profiles;
     FOR UPDATE 
     TO authenticated
     USING (auth.uid() = id)
     WITH CHECK (auth.uid() = id);
 
 -- 4. Utilisateurs authentifiés peuvent créer leur propre profil
-CREATE POLICY "Users can insert own profile" ON public.profiles
+CREATE POLICY "Users can insert own profile" ON public.profiles;
     FOR INSERT 
     TO authenticated
     WITH CHECK (auth.uid() = id);
@@ -49,7 +49,7 @@ CREATE POLICY "Users can insert own profile" ON public.profiles
 -- ==========================================
 
 -- Afficher les politiques créées
-SELECT 
+SELECT;
     schemaname, 
     tablename, 
     policyname, 
@@ -60,7 +60,7 @@ WHERE tablename = 'profiles'
 ORDER BY policyname;
 
 -- Vérifier que RLS est activé
-SELECT 
+SELECT;
     schemaname,
     tablename,
     rowsecurity as rls_enabled

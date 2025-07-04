@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useToast } from '@/hooks/useToast';
-import { usePaymentService } from '@/hooks/usePaymentService';
-import { Button } from '@/components/shared/ui';
-import QRCode from 'qrcode.react';
+import React, { useState, useEffect } from "react";
+import { useToast } from "@/hooks/useToast";
+import { usePaymentService } from "@/hooks/usePaymentService";
+import { Button } from "@/components/shared/ui/Button";
+import QRCode from "qrcode.react";
 
 declare global {
   interface Window {
@@ -28,11 +28,11 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
   description,
   onSuccess,
   onError,
-  className = '',
+  className = ''
 }) => {
   const [paymentRequest, setPaymentRequest] = useState<string>('');
   const [paymentHash, setPaymentHash] = useState<string>('');
-  const [status, setStatus] = useState<'pending' | 'loading' | 'paid' | 'error'>('loading');
+  const [status, setStatus] = useState<"pending" | "loading" | "paid" | "error">("loading");
   const [timeLeft, setTimeLeft] = useState<number>(300); // 5 minutes
   const { toast } = useToast();
   const { createInvoice, checkPayment, isLoading, error: paymentError } = usePaymentService();
@@ -43,10 +43,10 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
         const invoice = await createInvoice(amount, description);
         setPaymentRequest(invoice.paymentRequest);
         setPaymentHash(invoice.paymentHash);
-        setStatus('pending');
+        setStatus("pending");
       } catch (error) {
-        console.error('Failed to create invoice:', error);
-        setStatus('error');
+        console.error("Failed to create invoice:", error);
+        setStatus("error");
         onError?.(error as Error);
       }
     };
@@ -55,32 +55,32 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
   }, [amount, description, createInvoice, onError]);
 
   useEffect(() => {
-    if (!paymentHash || status !== 'pending') return;
+    if (!paymentHash || status !== "pending") return;
 
     const checkInterval = setInterval(async () => {
       try {
         const invoiceStatus = await checkPayment(paymentHash);
         
-        if ((invoiceStatus as unknown as string) === 'settled' || (invoiceStatus as unknown as string) === 'paid') {
-          setStatus('paid');
+        if ((invoiceStatus as unknown as string) === "settled" || (invoiceStatus as unknown as string) === "paid") {
+          setStatus("paid");
           toast({
-            title: 'Succès',
-            description: "LightningPayment.lightningpaymentlightningpayme",
-            variant: 'success',
+            title: "Succès",
+            description: "Paiement confirmé !",
+            variant: "success"
           });
           onSuccess?.();
           clearInterval(checkInterval);
-        } else if ((invoiceStatus as unknown as string) === 'expired') {
-          setStatus('error');
+        } else if ((invoiceStatus as unknown as string) === "expired") {
+          setStatus("error");
           toast({
-            title: 'Erreur',
-            description: "LightningPayment.lightningpaymentlightningpayme",
-            variant: 'error',
+            title: "Erreur",
+            description: "La facture a expiré",
+            variant: "error"
           });
           clearInterval(checkInterval);
         }
       } catch (error) {
-        console.error('Failed to check payment:', error);
+        console.error("Failed to check payment:", error);
       }
     }, 2000);
 
@@ -88,16 +88,16 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
   }, [paymentHash, status, checkPayment, onSuccess, toast]);
 
   useEffect(() => {
-    if (status !== 'pending') return;
+    if (status !== "pending") return;
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
-          setStatus('error');
+          setStatus("error");
           toast({
-            title: 'Erreur',
-            description: "LightningPayment.lightningpaymentlightningpayme",
-            variant: 'error',
+            title: "Erreur",
+            description: "La facture a expiré",
+            variant: "error"
           });
           clearInterval(timer);
           return 0;
@@ -109,18 +109,21 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
     return () => clearInterval(timer);
   }, [status, toast]);
 
-  if (isLoading || status === 'loading') {
+  if (isLoading || status === "loading") {
     return (
-      <div className={`flex justify-center items-center p-4 ${className}`}>
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      <div className={`flex items-center justify-center p-8 ${className}`}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Création de la facture...</p>
+        </div>
       </div>
     );
   }
 
-  if (paymentError || status === 'error') {
+  if (paymentError || status === "error") {
     return (
-      <div className={`text-center p-4 ${className}`}>
-        <p className="text-red-500 mb-4">{paymentError || 'Une erreur est survenue'}</p>
+      <div className={`text-center p-8 ${className}`}>
+        <p className="text-red-500 mb-4">{paymentError || "Une erreur est survenue"}</p>
         <Button
           onClick={() => window.location.reload()}
           variant="outline"
@@ -131,43 +134,37 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
     );
   }
 
-  if (status === 'paid') {
+  if (status === "paid") {
     return (
-      <div className={`text-center p-4 ${className}`}>
-        <p className="text-green-500 mb-2">{t("LightningPayment.lightningpaymentlightningpayme")}</p>
-        <p className="text-sm text-gray-600">{t('LightningPayment.merci_pour_votre_paiement')}</p>
+      <div className={`text-center p-8 ${className}`}>
+        <p className="text-green-500 mb-2">Paiement confirmé !</p>
+        <p className="text-sm text-gray-600">Merci pour votre paiement</p>
       </div>
     );
   }
 
   return (
-    <div className={`text-center p-4 ${className}`}>
-      <div className="mb-4">
-        <QRCode
-          value={paymentRequest}
-          size={256}
-          level="L"
-          includeMargin={true}
-          className="mx-auto"
-        />
+    <div className={`text-center p-8 ${className}`}>
+      <div className="mb-6">
+        <QRCode value={paymentRequest} size={200} />
       </div>
       
-      <p className="mb-2 font-medium">
+      <p className="text-2xl font-bold text-gray-900 mb-2">
         {amount.toLocaleString()} sats
       </p>
       
-      <p className="text-sm text-gray-600 mb-4">
-        Expire dans {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
+      <p className="text-sm text-gray-600 mb-6">
+        Expire dans {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, "0")}
       </p>
 
-      <div className="flex flex-col gap-2">
+      <div className="space-y-3">
         <Button
           onClick={() => {
             navigator.clipboard.writeText(paymentRequest);
             toast({
-              title: 'Succès',
-              description: "LightningPayment.lightningpaymentlightningpayme",
-              variant: 'success',
+              title: "Succès",
+              description: "Facture copiée dans le presse-papiers",
+              variant: "success"
             });
           }}
           variant="outline"
@@ -183,16 +180,16 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
                 await window.webln?.enable();
                 await window.webln?.sendPayment(paymentRequest);
                 toast({
-                  title: 'Succès',
-                  description: "LightningPayment.lightningpaymentlightningpayme",
-                  variant: 'success',
+                  title: "Succès",
+                  description: "Paiement envoyé via WebLN",
+                  variant: "success"
                 });
               } catch (error) {
-                console.error('WebLN payment failed:', error);
+                console.error("WebLN payment failed:", error);
                 toast({
-                  title: 'Erreur',
-                  description: "LightningPayment.lightningpaymentlightningpayme",
-                  variant: 'error',
+                  title: "Erreur",
+                  description: "Erreur lors du paiement WebLN",
+                  variant: "error"
                 });
               }
             }}
@@ -207,4 +204,4 @@ export const LightningPayment: React.FC<LightningPaymentProps> = ({
   );
 };
 
-export default LightningPayment; 
+export default LightningPayment;

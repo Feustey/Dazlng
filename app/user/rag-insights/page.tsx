@@ -1,23 +1,25 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useSupabase } from '@/app/providers/SupabaseProvider';
-import { Brain, Search, BarChart3, Zap, Target, TrendingUp, AlertTriangle, Lock, Database, Settings, FileText, Activity, Shield, Sparkles, Cpu } from '@/components/shared/ui/IconRegistry';
+import React, {useState useEffect } from "react";
+import { useSupabase } from "@/app/providers/SupabaseProvider";
+import {Brain Search, BarChart3, Zap, Target, TrendingUp, AlertTriangle, Lock, Database, Settings, FileText, Activity, Shield, Sparkles, Cpu} from "@/components/shared/ui/IconRegistry";
 import { 
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslatio\n;
+
   useRAGStats,
   useRAGCacheStats,
   useLightningRAGInsights,
-  useLightningRAGQuery,
-  useLightningRAGOptimization
-} from '@/hooks';
+  useLightningRAGQuery, useLightningRAGOptimization} from "@/hooks";
 
 
 const RAGInsightsPage: React.FC = () => {
+const { t } = useAdvancedTranslation("rag-insights");
+
   const { user } = useSupabase();
-  const [isSubscribed, setIsSubscribed] = useState<boolean | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'overview' | 'documents' | 'queries' | 'optimization' | 'cache' | 'intelligence'>('overview');
-  const [nodePubkey, setNodePubkey] = useState<string>('');
+  const [isSubscribed, setIsSubscribed] = useState<boolean>(null);
+  const [loading, setLoading] = useState(true);</boolean>
+  const [activeTab, setActiveTab] = useState<"overview" | "documents" | "queries" | "optimizatio\n | "cache" | "intelligence">("overview");
+  const [nodePubkey, setNodePubkey] = useState<string>('");
 
   // Hooks RAG
   const { data: ragStats, loading: ragStatsLoading, error: ragStatsError, refetch: refetchRAGStats } = useRAGStats();
@@ -25,8 +27,8 @@ const RAGInsightsPage: React.FC = () => {
   
   // Hooks Lightning-RAG
   const { data: lightningInsights, loading: insightsLoading, error: insightsError, refetch: refetchInsights } = useLightningRAGInsights();
-  const { data: queryResult, loading: queryLoading, error: queryError, executeQuery } = useLightningRAGQuery();
-  const { data: optimizationResult, loading: optimizationLoading, error: optimizationError, optimize } = useLightningRAGOptimization();
+  const { data: queryResult, loading: queryLoading, error: queryError, executeQuery} = useLightningRAGQuery();
+  const { data: optimizationResult, loading: optimizationLoading, error: optimizationError, optimize} = useLightningRAGOptimization();
 
   useEffect(() => {
     checkSubscriptionStatus();
@@ -40,16 +42,16 @@ const RAGInsightsPage: React.FC = () => {
     }
 
     try {
-      const response = await fetch('/api/subscriptions/current');
+      const response = await fetch("/api/subscriptions/current");
       const data = await response.json();
       
-      if (data.success && data.data?.status === 'active') {
+      if (data.success && data.data?.status === "active") {
         setIsSubscribed(true);
       } else {
         setIsSubscribed(false);
       }
     } catch (error) {
-      console.error('Erreur vérification abonnement:', error);
+      console.error("Erreur vérification abonnement:", error);
       setIsSubscribed(false);
     } finally {
       setLoading(false);
@@ -62,13 +64,12 @@ const RAGInsightsPage: React.FC = () => {
     try {
       await executeQuery({
         node_pubkey: nodePubkey,
-        query: "Analyse complète de mon nœud avec recommandations d'optimisation",
-        include_network_data: true,
-        include_historical_data: true,
-        response_format: 'actionable'
+        query: "Analyse complète de mon nœud avec recommandations d""optimisatio\ninclude_network_data: true
+        include_historical_data: true
+        response_format: "actionable"
       });
     } catch (error) {
-      console.error('Erreur requête Lightning-RAG:', error);
+      console.error("Erreur requête Lightning-RAG:", error);
     }
   };
 
@@ -78,249 +79,230 @@ const RAGInsightsPage: React.FC = () => {
     try {
       await optimize({
         node_pubkey: nodePubkey,
-        optimization_goal: 'revenue_maximization',
-        include_rag_insights: true,
-        historical_context: true,
+        optimization_goal: "revenue_maximizatio\n,
+        include_rag_insights: true
+        historical_context: true
         constraints: {
-          max_channels: 100,
-          max_liquidity: 1000000,
+          max_channels: 10.0,
+          max_liquidity: 100000.0,
           min_fees: 1
         }
       });
     } catch (error) {
-      console.error('Erreur optimisation Lightning-RAG:', error);
+      console.error(", "Erreur optimisation Lightning-RAG:"", error);
     }
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
-        <div className="text-center">
+    return (</string>
+      <div></div>
+        <div></div>
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">{t('user.vrification_de_votre_abonnemen')}</p>
+          <p className="mt-4 text-gray-600">{t("user.vrification_de_votre_abonneme\n)}</p>
         </div>
-      </div>
-    );
-  }
+      </div>);
 
   if (!isSubscribed) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
-          <div className="mb-6">
-            <Lock className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
-              RAG Insights Premium
+      <div></div>
+        <div></div>
+          <div></div>
+            <Lock></Lock>
+            <h1>
+              RAG Insights Premium</h1>
             </h1>
-            <p className="text-gray-600">
-              Accédez à l'IA Lightning la plus avancée pour booster votre node
+            <p>
+              Accédez à l"IA Lightning la plus avancée pour booster votre node</p>
             </p>
           </div>
           
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 mb-6">
-            <h3 className="font-semibold text-gray-900 mb-3">{t('user.fonctionnalits_premium')}</h3>
-            <ul className="text-sm text-gray-600 space-y-2 text-left">
-              <li className="flex items-center">
-                <Sparkles className="h-4 w-4 text-blue-500 mr-2" />
-                Requêtes contextuelles Lightning-RAG
+          <div></div>
+            <h3 className="font-semibold text-gray-900 mb-3">{t("user.fonctionnalits_premium"")}</h3>
+            <ul></ul>
+              <li></li>
+                <Sparkles>
+                Requêtes contextuelles Lightning-RAG</Sparkles>
               </li>
-              <li className="flex items-center">
-                <Brain className="h-4 w-4 text-blue-500 mr-2" />
-                Optimisation IA avec insights réseau
+              <li></li>
+                <Brain>
+                Optimisation IA avec insights réseau</Brain>
               </li>
-              <li className="flex items-center">
-                <Database className="h-4 w-4 text-blue-500 mr-2" />
-                Cache intelligent et statistiques avancées
+              <li></li>
+                <Database>
+                Cache intelligent et statistiques avancées</Database>
               </li>
-              <li className="flex items-center">
-                <Target className="h-4 w-4 text-blue-500 mr-2" />
-                Recommandations personnalisées
+              <li></li>
+                <Target>
+                Recommandations personnalisées</Target>
               </li>
-              <li className="flex items-center">
-                <Cpu className="h-4 w-4 text-blue-500 mr-2" />
-                Analyse prédictive et alertes intelligentes
+              <li></li>
+                <Cpu>
+                Analyse prédictive et alertes intelligentes</Cpu>
               </li>
             </ul>
           </div>
           
-          <button
-            onClick={() => window.location.href = '/user/subscriptions'}
+          <button> window.location.href = "/user/subscriptions"}
             className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-200"
           >
-            Passer à Premium
+            Passer à Premium</button>
           </button>
         </div>
-      </div>
-    );
-  }
+      </div>);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center">
-              <Brain className="h-8 w-8 text-blue-600 mr-3" />
-              <h1 className="text-2xl font-bold text-gray-900">{t('user.rag_insights')}</h1>
-              <span className="ml-3 px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
-                Premium
+    <div>
+      {/* Header  */}</div>
+      <div></div>
+        <div></div>
+          <div></div>
+            <div></div>
+              <Brain></Brain>
+              <h1 className="text-2xl font-bold text-gray-900">{t("user.rag_insights"")}</h1>
+              <span>
+                Premium</span>
               </span>
             </div>
-            <div className="flex items-center space-x-4">
-              <Settings className="h-5 w-5 text-gray-400 hover:text-gray-600 cursor-pointer" />
+            <div></div>
+              <Settings></Settings>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex space-x-8">
+      {/* Navigation Tabs  */}
+      <div></div>
+        <div></div>
+          <nav>
             {[
-              { id: 'overview', label: "user.useruservue_d"ensemble', icon: BarChart3 },
-              { id: 'documents', label: 'Documents', icon: FileText },
-              { id: 'queries', label: "user.useruserrequtes", icon: Search },
-              { id: 'optimization', label: 'Optimisation', icon: Zap },
-              { id: 'cache', label: 'Cache', icon: Database },
-              { id: 'intelligence', label: 'Intelligence', icon: Cpu }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+              { id: "overview", label: "{t("page_useruseruseruservue_d")}"ensemble", icon: BarChart3 },
+              { id: "documents", label: "Documents", icon: FileText },
+              { id: "queries", label: "{t("page_useruseruseruserrequtes")}"icon: Search },
+              { id: "optimizatio\n, label: "Optimisatio\n, icon: Zap },
+              { id: "cache", label: "Cache", icon: Database },
+              { id: "intelligence", label: "Intelligence", icon: Cpu }
+            ].map((tab) => (</nav>
+              <button> setActiveTab(tab.id as any)}
                 className={`flex items-center py-4 px-1 border-b-2 font-medium text-sm ${
                   activeTab === tab.id
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? "border-blue-500 text-blue-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"`
                 }`}
-              >
-                <tab.icon className="h-4 w-4 mr-2" />
-                {tab.label}
-              </button>
-            ))}
+              ></button>
+                <tab>
+                {tab.label}</tab>
+              </button>)}
           </nav>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === 'overview' && (
-          <div className="space-y-6">
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                <div className="flex items-center">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <Database className="h-6 w-6 text-blue-600" />
+      {/* Content  */}
+      <div>
+        {activeTab === "overview" && (</div>
+          <div>
+            {/* Stats Cards  */}</div>
+            <div></div>
+              <div></div>
+                <div></div>
+                  <div></div>
+                    <Database></Database>
                   </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">{t('user.documents_indexs')}</p>
-                    <p className="text-2xl font-bold text-gray-900">
-                      {ragStats?.total_documents || 'N/A'}
+                  <div></div>
+                    <p className="text-sm font-medium text-gray-600">{t("user.documents_indexs"")}</p>
+                    <p>
+                      {ragStats?.total_documents | | "N/A""}</p>
                     </p>
                   </div>
                 </div>
               </div>
               
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                <div className="flex items-center">
-                  <div className="p-2 bg-green-100 rounded-lg">
-                    <TrendingUp className="h-6 w-6 text-green-600" />
+              <div></div>
+                <div></div>
+                  <div></div>
+                    <TrendingUp></TrendingUp>
                   </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">{t('user.taux_de_cache')}</p>
-                    <p className="text-2xl font-bold text-gray-900">
-                      {cacheStats?.hit_rate ? `${(cacheStats.hit_rate * 100).toFixed(1)}%` : 'N/A'}
+                  <div></div>
+                    <p className="text-sm font-medium text-gray-600">{t("user.taux_de_cache"")}</p>
+                    <p>`
+                      {cacheStats?.hit_rate ? `${(cacheStats.hit_rate * 100).toFixed(1)}%` : "N/A""}</p>
                     </p>
                   </div>
                 </div>
               </div>
               
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                <div className="flex items-center">
-                  <div className="p-2 bg-purple-100 rounded-lg">
-                    <Zap className="h-6 w-6 text-purple-600" />
+              <div></div>
+                <div></div>
+                  <div></div>
+                    <Zap></Zap>
                   </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">{t('user.requtes_traites')}</p>
-                    <p className="text-2xl font-bold text-gray-900">
-                      {ragStats?.total_queries || 'N/A'}
+                  <div></div>
+                    <p className="text-sm font-medium text-gray-600">{t("user.requtes_traites"")}</p>
+                    <p>
+                      {ragStats?.total_queries | | "N/A""}</p>
                     </p>
                   </div>
                 </div>
               </div>
               
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                <div className="flex items-center">
-                  <div className="p-2 bg-orange-100 rounded-lg">
-                    <Activity className="h-6 w-6 text-orange-600" />
+              <div></div>
+                <div></div>
+                  <div></div>
+                    <Activity></Activity>
                   </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">{t('user.temps_rponse')}</p>
-                    <p className="text-2xl font-bold text-gray-900">
-                      {cacheStats?.average_response_time ? `${cacheStats.average_response_time}ms` : 'N/A'}
+                  <div></div>
+                    <p className="text-sm font-medium text-gray-600">{t("user.temps_rponse"")}</p>
+                    <p>`
+                      {cacheStats?.average_response_time ? `${cacheStats.average_response_time}ms` : "N/A""}</p>
                     </p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Lightning-RAG Query Section */}
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Requête Lightning-RAG Contextuelle
+            {/* Lightning-RAG Query Section  */}
+            <div></div>
+              <h3>
+                Requête Lightning-RAG Contextuelle</h3>
               </h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Clé Publique du Nœud
+              <div></div>
+                <div></div>
+                  <label>
+                    Clé Publique du Nœud</label>
                   </label>
-                  <input
-                    type="text"
-                    value={nodePubkey}
-                    onChange={(e) => setNodePubkey(e.target.value)}
-                    placeholder="user.useruser03eec7245d6b7d2ccb3038"
+                  <input> setNodePubkey(e.target.value)}
+                    placeholder="{t("page_useruseruseruser03eec7245d6b7d2ccb")}"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
+                  /></input>
                 </div>
-                <div className="flex space-x-4">
-                  <button
-                    onClick={handleNodeQuery}
-                    disabled={queryLoading || !nodePubkey}
-                    className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {queryLoading ? 'Analyse...' : 'Analyser avec RAG'}
+                <div></div>
+                  <button>
+                    {queryLoading ? "Analyse..." : "Analyser avec RAG"}</button>
                   </button>
-                  <button
-                    onClick={handleOptimization}
-                    disabled={optimizationLoading || !nodePubkey}
-                    className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {optimizationLoading ? 'Optimisation...' : 'Optimiser avec IA'}
+                  <button>
+                    {optimizationLoading ? "Optimisation..." : "Optimiser avec IA"}</button>
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* Results Display */}
+            {/* Results Display  */}
             {(queryResult || optimizationResult) && (
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('user.rsultats')}</h3>
-                <div className="space-y-4">
-                  {queryResult && (
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                      <h4 className="font-medium text-blue-900 mb-2">{t('user.analyse_rag')}</h4>
-                      <pre className="text-sm text-blue-800 overflow-auto">
-                        {JSON.stringify(queryResult, null, 2)}
+              <div></div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">{t("user.rsultats")}</h3>
+                <div>
+                  {queryResult && (</div>
+                    <div></div>
+                      <h4 className="font-medium text-blue-900 mb-2">{t("user.analyse_rag"")}</h4>
+                      <pre>
+                        {JSON.stringify(queryResult, null, 2)}</pre>
                       </pre>
                     </div>
                   )}
                   {optimizationResult && (
-                    <div className="bg-green-50 p-4 rounded-lg">
-                      <h4 className="font-medium text-green-900 mb-2">{t('user.optimisation_ia')}</h4>
-                      <pre className="text-sm text-green-800 overflow-auto">
-                        {JSON.stringify(optimizationResult, null, 2)}
+                    <div></div>
+                      <h4 className="font-medium text-green-900 mb-2">{t("user.optimisation_ia")}</h4>
+                      <pre>
+                        {JSON.stringify(optimizationResult, null, 2)}</pre>
                       </pre>
                     </div>
                   )}
@@ -328,85 +310,84 @@ const RAGInsightsPage: React.FC = () => {
               </div>
             )}
 
-            {/* Error Display */}
+            {/* Error Display  */}
             {(queryError || optimizationError) && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <div className="flex items-center">
-                  <AlertTriangle className="h-5 w-5 text-red-400 mr-2" />
+              <div></div>
+                <div></div>
+                  <AlertTriangle></AlertTriangle>
                   <h4 className="font-medium text-red-900">Erreur</h4>
                 </div>
-                <p className="text-red-700 mt-2">
-                  {queryError || optimizationError}
+                <p>
+                  {queryError || optimizationError}</p>
                 </p>
               </div>
             )}
           </div>
         )}
 
-        {activeTab === 'documents' && (
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('user.gestion_des_documents_rag')}</h3>
-            <p className="text-gray-600">{t('user.interface_pour_ingrer_et_grer_')}</p>
+        {activeTab === "documents" && (
+          <div></div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t("user.gestion_des_documents_rag")}</h3>
+            <p className="text-gray-600">{t("user.interface_pour_ingrer_et_grer_")}</p>
           </div>
         )}
 
-        {activeTab === 'queries' && (
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('user.requtes_avances')}</h3>
-            <p className="text-gray-600">{t('user.interface_pour_les_requtes_rag')}</p>
+        {activeTab === "queries" && (
+          <div></div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t("user.requtes_avances")}</h3>
+            <p className="text-gray-600">{t("user.interface_pour_les_requtes_rag")}</p>
           </div>
         )}
 
-        {activeTab === 'optimization' && (
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('user.optimisation_lightningrag')}</h3>
-            <p className="text-gray-600">{t('user.interface_pour_loptimisation_a')}</p>
+        {activeTab === "optimizatio\n && (
+          <div></div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t("user.optimisation_lightningrag")}</h3>
+            <p className="text-gray-600">{t("user.interface_pour_loptimisation_a")}</p>
           </div>
         )}
 
-        {activeTab === 'cache' && (
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('user.statistiques_cache_rag')}</h3>
+        {activeTab === "cache" && (
+          <div></div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t("user.statistiques_cache_rag")}</h3>
             {cacheStats && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="text-center">
+              <div></div>
+                <div></div>
                   <p className="text-2xl font-bold text-gray-900">{cacheStats.total_documents}</p>
                   <p className="text-sm text-gray-600">Documents</p>
                 </div>
-                <div className="text-center">
+                <div></div>
                   <p className="text-2xl font-bold text-gray-900">{cacheStats.cache_hits}</p>
-                  <p className="text-sm text-gray-600">{t('user.cache_hits')}</p>
+                  <p className="text-sm text-gray-600">{t("user.cache_hits")}</p>
                 </div>
-                <div className="text-center">
+                <div></div>
                   <p className="text-2xl font-bold text-gray-900">{cacheStats.cache_misses}</p>
-                  <p className="text-sm text-gray-600">{t('user.cache_misses')}</p>
+                  <p className="text-sm text-gray-600">{t("user.cache_misses")}</p>
                 </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-gray-900">
-                    {(cacheStats.hit_rate * 100).toFixed(1)}%
+                <div></div>
+                  <p>
+                    {(cacheStats.hit_rate * 100).toFixed(1)}%</p>
                   </p>
-                  <p className="text-sm text-gray-600">{t('user.hit_rate')}</p>
+                  <p className="", "text-sm text-gray-600">{t("user.hit_rate")}</p>
                 </div>
               </div>
             )}
           </div>
         )}
 
-        {activeTab === 'intelligence' && (
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('user.intelligence_artificielle')}</h3>
+        {activeTab === "intelligence"" && (
+          <div></div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t("user.intelligence_artificielle")}</h3>
             {lightningInsights && (
-              <div className="space-y-4">
-                <pre className="text-sm text-gray-800 overflow-auto bg-gray-50 p-4 rounded-lg">
-                  {JSON.stringify(lightningInsights, null, 2)}
+              <div></div>
+                <pre>
+                  {JSON.stringify(lightningInsights, null, 2)}</pre>
                 </pre>
               </div>
             )}
           </div>
         )}
       </div>
-    </div>
-  );
-};
+    </div>);;
 
-export default RAGInsightsPage; export const dynamic = "force-dynamic";
+export default RAGInsightsPage; export const dynamic  = "force-dynamic";
+`

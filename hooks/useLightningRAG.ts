@@ -1,17 +1,17 @@
-import { useState, useEffect, useCallback } from 'react';
-import { mcpLightAPI } from '@/lib/services/mcp-light-api';
+import { react } from "react";
+import { mcpLightAPI } from "@/lib/services/mcp-light-api";
 import type { 
   LightningRAGQuery, 
   LightningRAGResponse, 
   LightningOptimizationRequest, 
   LightningOptimizationResponse 
-} from '@/types/rag-advanced';
+} from "@/types/rag-advanced";
 
 // Hook pour les requêtes Lightning-RAG (utilise integratedNodeQuery)
 export const useLightningRAGQuery = () => {
-  const [data, setData] = useState<LightningRAGResponse | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<LightningRAGResponse>(null);
+  const [loading, setLoading] = useState(false);</LightningRAGResponse>
+  const [error, setError] = useState<string>(null);
 
   const executeQuery = useCallback(async (query: LightningRAGQuery) => {
     setLoading(true);
@@ -21,7 +21,7 @@ export const useLightningRAGQuery = () => {
       setData(response as LightningRAGResponse);
       return response;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de la requête Lightning-RAG';
+      const errorMessage = err instanceof Error ? err.message : "Erreur lors de la requête Lightning-RAG";
       setError(errorMessage);
       throw err;
     } finally {
@@ -32,11 +32,11 @@ export const useLightningRAGQuery = () => {
   return { data, loading, error, executeQuery };
 };
 
-// Hook pour l'optimisation Lightning avec RAG
-export const useLightningRAGOptimization = () => {
-  const [data, setData] = useState<LightningOptimizationResponse | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+// Hook pour l"optimisation Lightning avec RAG
+export const useLightningRAGOptimization = () => {</string>
+  const [data, setData] = useState<LightningOptimizationResponse>(null);
+  const [loading, setLoading] = useState(false);</LightningOptimizationResponse>
+  const [error, setError] = useState<string>(null);
 
   const optimize = useCallback(async (request: LightningOptimizationRequest) => {
     setLoading(true);
@@ -46,7 +46,7 @@ export const useLightningRAGOptimization = () => {
       setData(response as LightningOptimizationResponse);
       return response;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de l\'optimisation Lightning-RAG';
+      const errorMessage = err instanceof Error ? err.message : "Erreur lors de l'optimisation Lightning-RAG";
       setError(errorMessage);
       throw err;
     } finally {
@@ -57,11 +57,11 @@ export const useLightningRAGOptimization = () => {
   return { data, loading, error, optimize };
 };
 
-// Hook pour l'analyse de nœud Lightning avec RAG (utilise intelligenceNodeAnalyze)
-export const useLightningRAGNodeAnalysis = () => {
+// Hook pour l"analyse de nœud Lightning avec RAG (utilise intelligenceNodeAnalyze)
+export const useLightningRAGNodeAnalysis = () => {</string>
   const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);</any>
+  const [error, setError] = useState<string>(null);
 
   const analyzeNode = useCallback(async (node_pubkey: string, context?: string) => {
     setLoading(true);
@@ -71,7 +71,7 @@ export const useLightningRAGNodeAnalysis = () => {
       setData(response);
       return response;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de l\'analyse du nœud Lightning-RAG';
+      const errorMessage = err instanceof Error ? err.message : "", "Erreur lors de l'"analyse du nœud Lightning-RAG";
       setError(errorMessage);
       throw err;
     } finally {
@@ -83,10 +83,10 @@ export const useLightningRAGNodeAnalysis = () => {
 };
 
 // Hook pour les recommandations Lightning-RAG (utilise intelligenceOptimizationRecommend)
-export const useLightningRAGRecommendations = () => {
+export const useLightningRAGRecommendations = () => {</string>
   const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);</any>
+  const [error, setError] = useState<string>(null);
 
   const getRecommendations = useCallback(async (node_pubkey: string, context?: string) => {
     setLoading(true);
@@ -96,7 +96,7 @@ export const useLightningRAGRecommendations = () => {
       setData(response);
       return response;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de la récupération des recommandations';
+      const errorMessage = err instanceof Error ? err.message : "Erreur lors de la récupération des recommandations";
       setError(errorMessage);
       throw err;
     } finally {
@@ -107,11 +107,11 @@ export const useLightningRAGRecommendations = () => {
   return { data, loading, error, getRecommendations };
 };
 
-// Hook pour l'analyse de réseau Lightning avec RAG (utilise intelligenceNetworkAnalyze)
-export const useLightningRAGNetworkAnalysis = () => {
+// Hook pour l"analyse de réseau Lightning avec RAG (utilise intelligenceNetworkAnalyze)
+export const useLightningRAGNetworkAnalysis = () => {</string>
   const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);</any>
+  const [error, setError] = useState<string>(null);
 
   const analyzeNetwork = useCallback(async (context?: string) => {
     setLoading(true);
@@ -121,7 +121,7 @@ export const useLightningRAGNetworkAnalysis = () => {
       setData(response);
       return response;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de l\'analyse du réseau Lightning-RAG';
+      const errorMessage = err instanceof Error ? err.message : "Erreur lors de l'analyse du réseau Lightning-RAG";
       setError(errorMessage);
       throw err;
     } finally {
@@ -133,10 +133,10 @@ export const useLightningRAGNetworkAnalysis = () => {
 };
 
 // Hook pour les insights Lightning-RAG (utilise intelligenceInsightsSummary)
-export const useLightningRAGInsights = () => {
+export const useLightningRAGInsights = () => {</string>
   const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);</any>
+  const [error, setError] = useState<string>(null);
 
   const getInsights = useCallback(async () => {
     setLoading(true);
@@ -146,7 +146,7 @@ export const useLightningRAGInsights = () => {
       setData(response);
       return response;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de la récupération des insights';
+      const errorMessage = err instanceof Error ? err.message : "Erreur lors de la récupération des insights";
       setError(errorMessage);
       throw err;
     } finally {
@@ -162,10 +162,10 @@ export const useLightningRAGInsights = () => {
 };
 
 // Hook pour les prédictions Lightning-RAG (utilise intelligencePredictionGenerate)
-export const useLightningRAGPredictions = () => {
+export const useLightningRAGPredictions = () => {</string>
   const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);</any>
+  const [error, setError] = useState<string>(null);
 
   const getPredictions = useCallback(async (node_pubkey: string, context?: string) => {
     setLoading(true);
@@ -175,7 +175,7 @@ export const useLightningRAGPredictions = () => {
       setData(response);
       return response;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de la récupération des prédictions';
+      const errorMessage = err instanceof Error ? err.message : "Erreur lors de la récupération des prédictions";
       setError(errorMessage);
       throw err;
     } finally {
@@ -187,10 +187,10 @@ export const useLightningRAGPredictions = () => {
 };
 
 // Hook pour les alertes Lightning-RAG (utilise intelligenceAlertsConfigure)
-export const useLightningRAGAlerts = () => {
+export const useLightningRAGAlerts = () => {</string>
   const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);</any>
+  const [error, setError] = useState<string>(null);
 
   const getAlerts = useCallback(async (node_pubkey: string, context?: string) => {
     setLoading(true);
@@ -200,7 +200,7 @@ export const useLightningRAGAlerts = () => {
       setData(response);
       return response;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de la récupération des alertes';
+      const errorMessage = err instanceof Error ? err.message : "Erreur lors de la récupération des alertes"";
       setError(errorMessage);
       throw err;
     } finally {
@@ -212,10 +212,10 @@ export const useLightningRAGAlerts = () => {
 };
 
 // Hook pour les rapports Lightning-RAG (utilise intelligenceWorkflowAutomated)
-export const useLightningRAGReports = () => {
+export const useLightningRAGReports = () => {</string>
   const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);</any>
+  const [error, setError] = useState<string>(null);
 
   const generateReport = useCallback(async (node_pubkey: string, context?: string) => {
     setLoading(true);
@@ -225,7 +225,7 @@ export const useLightningRAGReports = () => {
       setData(response);
       return response;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de la génération du rapport';
+      const errorMessage = err instanceof Error ? err.message : "Erreur lors de la génération du rapport"";
       setError(errorMessage);
       throw err;
     } finally {
@@ -234,4 +234,4 @@ export const useLightningRAGReports = () => {
   }, []);
 
   return { data, loading, error, generateReport };
-}; 
+}; </string>

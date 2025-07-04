@@ -2,9 +2,8 @@
 
 /**
  * Test simple du système de fallback en JavaScript pur
- */
-
-console.log('🚀 Test simple du système de fallback des factures\n');
+ *
+console.log('🚀 Test simple du système de fallback des factures\\n);
 
 async function testFallbackSystem() {
   try {
@@ -44,7 +43,7 @@ async function testFallbackSystem() {
       { name: 'Service Mock', pattern: 'class MockLightningService' },
       { name: 'Health monitoring', pattern: 'checkServiceHealth' },
       { name: 'Retry mechanism', pattern: 'retryWithDelay' },
-      { name: 'Factory function', pattern: 'createInvoiceFallbackService' }
+      { name: 'Factory functio\n, pattern: 'createInvoiceFallbackService' }
     ];
     
     checks.forEach(check => {

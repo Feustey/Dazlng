@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseAdminClient } from '@/lib/supabase';
+import { NextRequest, NextResponse } from "next/server";
+import { getSupabaseAdminClient } from "@/lib/supabase";
 
 export interface BusinessMetrics {
   // Acquisition
@@ -48,58 +48,58 @@ export interface CohortData {
   month_6: number;
 }
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const { searchParams } = new URL(request.url);
-    const period = searchParams.get('period') || '30'; // 7, 30, 90 jours
-    const type = searchParams.get('type') || 'business'; // business, funnel, cohort
+    const period = searchParams.get("period") || "30"; // 7, 30, 90 jours
+    const type = searchParams.get("type") || "business"; // business, funnel, cohort
 
     const periodDays = parseInt(period);
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - periodDays);
 
     switch (type) {
-      case 'business':
+      case "business":
         const businessMetrics = await getBusinessMetrics(startDate);
         return NextResponse.json({ 
           success: true, 
           data: businessMetrics,
-          meta: { period: periodDays, type: 'business' }
+          meta: { period: periodDays, type: "business" }
         });
 
-      case 'funnel':
+      case "funnel":
         const funnelMetrics = await getFunnelMetrics(startDate);
         return NextResponse.json({ 
           success: true, 
           data: funnelMetrics,
-          meta: { period: periodDays, type: 'funnel' }
+          meta: { period: periodDays, type: "funnel" }
         });
 
-      case 'cohort':
+      case "cohort":
         const cohortData = await getCohortAnalysis();
         return NextResponse.json({ 
           success: true, 
           data: cohortData,
-          meta: { type: 'cohort' }
+          meta: { type: "cohort" }
         });
 
       default:
         return NextResponse.json({ 
           success: false, 
-          error: { code: 'INVALID_TYPE', message: 'Type d\'analyse non supporté' }
+          error: { code: "INVALID_TYPE", message: "Type d'analyse non supporté" }
         }, { status: 400 });
     }
 
   } catch (error) {
-    console.error('Erreur analytics avancées:', error);
+    console.error("Erreur analytics avancées:", error);
     return NextResponse.json({
       success: false,
       error: {
-        code: 'ANALYTICS_ERROR',
-        message: 'Erreur lors du calcul des métriques',
-        details: error instanceof Error ? error.message : 'Erreur inconnue'
+        code: "ANALYTICS_ERROR",
+        message: "Erreur lors du calcul des métriques",
+        details: error instanceof Error ? error.message : "Erreur inconnue"
       }
     }, { status: 500 });
   }
@@ -113,24 +113,24 @@ async function getBusinessMetrics(_startDate: Date): Promise<BusinessMetrics> {
 
   // Signups
   const { count: totalSignups } = await getSupabaseAdminClient()
-    .from('profiles')
-    .select('*', { count: 'exact', head: true });
+    .from("profiles")
+    .select("*", { count: "exact", head: true });
 
   const { count: monthlySignups } = await getSupabaseAdminClient()
-    .from('profiles')
-    .select('*', { count: 'exact', head: true })
-    .gte('created_at', monthStart.toISOString());
+    .from("profiles")
+    .select("*", { count: "exact", head: true })
+    .gte("created_at", monthStart.toISOString());
 
   const { count: weeklySignups } = await getSupabaseAdminClient()
-    .from('profiles')
-    .select('*', { count: 'exact', head: true })
-    .gte('created_at', weekStart.toISOString());
+    .from("profiles")
+    .select("*", { count: "exact", head: true })
+    .gte("created_at", weekStart.toISOString());
 
   // Revenue data
   const { data: ordersData } = await getSupabaseAdminClient()
-    .from('orders')
-    .select('amount, payment_status, created_at, user_id')
-    .eq('payment_status', 'paid');
+    .from("orders")
+    .select("amount, payment_status, created_at, user_id")
+    .eq("payment_status", "paid");
 
   const totalRevenue = ordersData?.reduce((sum: any, order: any) => sum + (order.amount || 0), 0) || 0;
   
@@ -142,22 +142,22 @@ async function getBusinessMetrics(_startDate: Date): Promise<BusinessMetrics> {
 
   // Subscriptions
   const { count: premiumCount } = await getSupabaseAdminClient()
-    .from('subscriptions')
-    .select('*', { count: 'exact', head: true })
-    .eq('plan_id', 'premium')
-    .eq('status', 'active');
+    .from("subscriptions")
+    .select("*", { count: "exact", head: true })
+    .eq("plan_id", "premium")
+    .eq("status", "active");
 
   // Lightning adoption
   const { count: lightningUsers } = await getSupabaseAdminClient()
-    .from('profiles')
-    .select('*', { count: 'exact', head: true })
-    .not('pubkey', 'is', null);
+    .from("profiles")
+    .select("*", { count: "exact", head: true })
+    .not("pubkey", "is", null);
 
   // Verified users
   const { count: _verifiedUsers } = await getSupabaseAdminClient()
-    .from('profiles')
-    .select('*', { count: 'exact', head: true })
-    .eq('email_verified', true);
+    .from("profiles")
+    .select("*", { count: "exact", head: true })
+    .eq("email_verified", true);
 
   // Customers (users with orders)
   const uniqueCustomers = new Set(ordersData?.map(order => order.user_id) || []).size;
@@ -194,33 +194,33 @@ async function getBusinessMetrics(_startDate: Date): Promise<BusinessMetrics> {
 async function getFunnelMetrics(startDate: Date): Promise<FunnelMetrics> {
   // Étape 1: Visiteurs (approximation basée sur les signups)
   const { count: totalSignups } = await getSupabaseAdminClient()
-    .from('profiles')
-    .select('*', { count: 'exact', head: true })
-    .gte('created_at', startDate.toISOString());
+    .from("profiles")
+    .select("*", { count: "exact", head: true })
+    .gte("created_at", startDate.toISOString());
 
   // Étape 2: Utilisateurs vérifiés
   const { count: verifiedUsers } = await getSupabaseAdminClient()
-    .from('profiles')
-    .select('*', { count: 'exact', head: true })
-    .eq('email_verified', true)
-    .gte('created_at', startDate.toISOString());
+    .from("profiles")
+    .select("*", { count: "exact", head: true })
+    .eq("email_verified", true)
+    .gte("created_at", startDate.toISOString());
 
   // Étape 3: Premier achat
   const { data: firstPurchases } = await getSupabaseAdminClient()
-    .from('orders')
-    .select('user_id, created_at')
-    .eq('payment_status', 'paid')
-    .gte('created_at', startDate.toISOString());
+    .from("orders")
+    .select("user_id, created_at")
+    .eq("payment_status", "paid")
+    .gte("created_at", startDate.toISOString());
 
   const uniqueBuyers = new Set(firstPurchases?.map(order => order.user_id) || []).size;
 
   // Étape 4: Premium
   const { count: premiumUsers } = await getSupabaseAdminClient()
-    .from('subscriptions')
-    .select('*', { count: 'exact', head: true })
-    .eq('plan_id', 'premium')
-    .eq('status', 'active')
-    .gte('created_at', startDate.toISOString());
+    .from("subscriptions")
+    .select("*", { count: "exact", head: true })
+    .eq("plan_id", "premium")
+    .eq("status", "active")
+    .gte("created_at", startDate.toISOString());
 
   // Estimation des visiteurs (x3 factor des signups)
   const estimatedVisitors = (totalSignups || 0) * 3;
@@ -244,17 +244,17 @@ async function getFunnelMetrics(startDate: Date): Promise<FunnelMetrics> {
   };
 }
 
-async function getCohortAnalysis(): Promise<CohortData[]> {
+async function getCohortAnalysis(): Promise<CohortData> {
   // Analyse de cohorte simplifiée - utilisateurs par mois d'inscription
   const { data: cohorts } = await getSupabaseAdminClient()
-    .from('profiles')
-    .select('created_at, id')
-    .order('created_at', { ascending: true });
+    .from("profiles")
+    .select("created_at, id")
+    .order("created_at", { ascending: true });
 
   if (!cohorts) return [];
 
   // Grouper par mois d'inscription
-  const cohortMap = new Map<string, string[]>();
+  const cohortMap = new Map<string>();
   
   cohorts.forEach(user => {
     const month = new Date(user.created_at).toISOString().substring(0, 7);
@@ -276,11 +276,11 @@ async function getCohortAnalysis(): Promise<CohortData[]> {
     
     // Pour cette démo, nous utilisons des métriques proxy (commandes, abonnements)
     const { count: activeMonth1 } = await getSupabaseAdminClient()
-      .from('orders')
-      .select('*', { count: 'exact', head: true })
-      .in('user_id', userIds)
-      .gte('created_at', new Date(month + '-01').toISOString())
-      .lt('created_at', new Date(new Date(month + '-01').setMonth(new Date(month + '-01').getMonth() + 1)).toISOString());
+      .from("orders")
+      .select("*", { count: "exact", head: true })
+      .in("user_id", userIds)
+      .gte("created_at", new Date(month + "-01").toISOString())
+      .lt("created_at", new Date(new Date(month + "-01").setMonth(new Date(month + '-01').getMonth() + 1)).toISOString());
 
     cohortAnalysis.push({
       month,

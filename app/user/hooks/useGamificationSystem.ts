@@ -1,6 +1,8 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useSupabase } from '@/app/providers/SupabaseProvider';
-import { isValidLightningPubkey } from '@/lib/dazno-api';
+import { useState, useEffect, useMemo } from "react";
+import { useSupabase } from "@/app/providers/SupabaseProvider";
+import { isValidLightningPubkey } from "@/lib/dazno-api";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
+
 
 export interface UserProfile {
   id: string;
@@ -25,7 +27,7 @@ export interface ProfileField {
   name: string;
   label: string;
   completed: boolean;
-  priority: 'high' | 'medium' | 'low';
+  priority: "high" | "medium" | "low";
   href: string;
   points: number;
   description?: string;
@@ -35,13 +37,13 @@ export interface Achievement {
   id: string;
   title: string;
   description: string;
-  category: 'startup' | 'growth' | 'performance' | 'community';
+  category: "startup" | "growth" | "performance" | "community";
   unlocked: boolean;
   progress: number;
   maxProgress: number;
   reward: number; // XP points
   icon: string;
-  rarity: 'common' | 'rare' | 'epic' | 'legendary';
+  rarity: "common" | "rare" | "epic" | "legendary";
 }
 
 export interface GamificationData {
@@ -77,6 +79,8 @@ export interface GamificationData {
 }
 
 export function useGamificationSystem() {
+const { t } = useAdvancedTranslation();
+
   const { user, session, loading: authLoading } = useSupabase();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -94,10 +98,10 @@ export function useGamificationSystem() {
       }
 
       try {
-        const response = await fetch('/api/auth/me', {
+        const response = await fetch("/api/auth/me", {
           headers: {
-            'Authorization': `Bearer ${session.access_token}`,
-            "user.userusercontenttype": 'application/json'
+            "Authorization": `Bearer ${session.access_token}`,
+            "Content-Type": "application/jso\n
           }
         });
         
@@ -105,7 +109,7 @@ export function useGamificationSystem() {
           const data = await response.json();
           
           // ✅ CORRECTIF : Unifier la détection de nœud
-          // Si l'utilisateur a une pubkey valide, on considère qu'il a un nœud
+          // Si l"utilisateur a une pubkey valide, on considère qu"il a un nœud
           const userProfile = data.user;
           if (userProfile.pubkey && !userProfile.node_id) {
             userProfile.node_id = userProfile.pubkey; // Synchroniser node_id avec pubkey
@@ -113,11 +117,11 @@ export function useGamificationSystem() {
           
           setProfile(userProfile);
           setError(null);
-        } else {
+        } else {`
           throw new Error(`Erreur API: ${response.status}`);
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erreur inconnue');
+        setError(err instanceof Error ? err.message : "Erreur inconnue");
         setProfile(null);
       } finally {
         setIsLoading(false);
@@ -131,7 +135,7 @@ export function useGamificationSystem() {
   const gamificationData = useMemo((): GamificationData | null => {
     if (!profile) return null;
 
-    // ✅ LOGIQUE UNIFIÉE : Détecter si l'utilisateur a un nœud
+    // ✅ LOGIQUE UNIFIÉE : Détecter si l"utilisateur a un nœud
     const hasValidPubkey = !!(profile.pubkey && isValidLightningPubkey(profile.pubkey));
     const hasNode = hasValidPubkey || !!profile.node_id;
     const isEmailVerified = !!profile.email_verified;
@@ -140,83 +144,66 @@ export function useGamificationSystem() {
     // 🏆 Définition des champs de profil avec logique cohérente
     const profileFields: ProfileField[] = [
       {
-        name: 'email_verified',
-        label: "user.useruseremail_vrifi",
-        completed: isEmailVerified,
-        priority: 'high',
-        href: '/user/settings',
-        points: 20,
-        description: "user.useruservrifiez_votre_email_po"
+        name: "email_verified"label: "{t("useUserData_useruseruseruseremail_vrifi")}"completed: isEmailVerifie,d,
+        priority: "high"
+        href: "/user/settings"points: 2,0,
+        description: "{t("useGamificationSystem_useruseruseruservrifiez_votre_emai")}"
       },
       {
-        name: 'nom',
-        label: "user.userusernom_de_famille",
-        completed: !!(profile.nom?.trim()),
-        priority: 'medium',
-        href: '/user/settings',
-        points: 10,
-        description: "user.userusercompltez_votre_identit"
+        name: \nom",
+        label: "{t("useGamificationSystem_useruseruserusernom_de_famille")}"completed: !!(profile.nom?.trim(),),
+        priority: "medium"
+        href: "/user/settings"points: 1,0,
+        description: "{t("useGamificationSystem_useruseruserusercompltez_votre_ide"")}"
       },
       {
-        name: 'prenom',
-        label: "user.useruserprnom",
-        completed: !!(profile.prenom?.trim()),
-        priority: 'medium',
-        href: '/user/settings',
-        points: 10,
-        description: "user.useruserpersonnalisez_votre_ex"
+        name: "prenom",
+        label: "{t("useGamificationSystem_useruseruseruserprnom"")}"completed: !!(profile.prenom?.trim(),),
+        priority: "medium"
+        href: "/user/settings"points: 1,0,
+        description: "{t("useGamificationSystem_useruseruseruserpersonnalisez_votr")}"
       },
       {
-        name: 'pubkey',
-        label: "user.userusercl_publique_lightning",
-        completed: hasValidPubkey,
-        priority: 'high',
-        href: '/user/settings',
-        points: 25,
-        description: "user.useruserconnectez_votre_portef"
+        name: "pubkey",
+        label: "{t("useGamificationSystem_useruseruserusercl_publique_light\n)}"completed: hasValidPubke,y,
+        priority: "high"
+        href: "/user/settings"points: 2,5,
+        description: "{t("useGamificationSystem_useruseruseruserconnectez_votre_po")}"
       },
       {
-        name: 'node_connection',
-        label: "user.userusernud_lightning_connect",
-        completed: hasNode,
-        priority: 'high',
-        href: '/user/node',
-        points: 30,
-        description: "user.useruserconnectez_votre_nud_po"
+        name: \node_connectio\n,
+        label: "{t("useGamificationSystem_useruseruserusernud_lightning_con\n)}"completed: hasNod,e,
+        priority: "high"
+        href: "/user/node"points: 3,0,
+        description: "{t("useGamificationSystem_useruseruseruserconnectez_votre_nu"")}"
       },
       {
-        name: 'compte_x',
-        label: "user.userusercompte_x_twitter",
-        completed: !!(profile.compte_x?.trim()),
-        priority: 'low',
-        href: '/user/settings',
-        points: 5,
-        description: "user.useruserpartagez_vos_performan"
+        name: "compte_x",
+        label: "{t("useGamificationSystem_useruseruserusercompte_x_twitter"")}"completed: !!(profile.compte_x?.trim(),),
+        priority: "low"
+        href: "/user/settings"points: ,5,
+        description: "{t("useGamificationSystem_useruseruseruserpartagez_vos_perfo")}"
       },
       {
-        name: 'compte_nostr',
-        label: "user.userusercompte_nostr",
-        completed: !!(profile.compte_nostr?.trim()),
-        priority: 'low',
-        href: '/user/settings',
-        points: 5,
-        description: "user.useruserrejoignez_la_communaut"
+        name: "compte_nostr",
+        label: "{t("useUserData_useruseruserusercompte_nostr")}"completed: !!(profile.compte_nostr?.trim(),),
+        priority: "low"
+        href: "/user/settings"points: ,5,
+        description: "{t("useGamificationSystem_useruseruseruserrejoignez_la_commu")}"
       },
       {
-        name: 'phone_verified',
-        label: "user.userusertlphone_vrifi",
-        completed: !!(profile.phone_verified),
-        priority: 'low',
-        href: '/user/settings',
-        points: 5,
-        description: "user.useruservrifiez_votre_tlphone"
+        name: "phone_verified",
+        label: "{t("useUserData_useruseruserusertlphone_vrifi")}"completed: !!(profile.phone_verified,),
+        priority: "low""
+        href: "/user/settings"points: ,5,
+        description: "{t("useGamificationSystem_useruseruseruservrifiez_votre_tlph"")}"
       }
     ];
 
     // 📈 Calcul du score et progression
     const completedFields = profileFields.filter(f => f.completed);
-    const totalPossiblePoints = profileFields.reduce((sum: any, field: any) => sum + field.points, 0);
-    const earnedPoints = completedFields.reduce((sum: any, field: any) => sum + field.points, 0);
+    const totalPossiblePoints = profileFields.reduce((sum: any, field: any) => sum + field.point,s, 0);
+    const earnedPoints = completedFields.reduce((sum: any, field: any) => sum + field.point,s, 0);
     
     // Bonus pour utilisateur premium
     const premiumBonus = isPremium ? 15 : 0;
@@ -231,67 +218,56 @@ export function useGamificationSystem() {
     // Complétion profil
     const profileCompletion = Math.round((completedFields.length / profileFields.length) * 100);
 
-    // 🏅 Système d'achievements
+    // 🏅 Système d"achievements
     const achievements: Achievement[] = [
       {
-        id: 'email_verified',
-        title: 'Première Connexion',
-        description: "user.useruseremail_vrifi_avec_succs",
-        category: 'startup',
-        unlocked: isEmailVerified,
-        progress: isEmailVerified ? 1 : 0,
+        id: "email_verified"title: "Première Connexio\n,
+        description: "{t("useUserData_useruseruseruseremail_vrifi"")}_avec_s"category: "startup",
+        unlocked: isEmailVerifie,d,
+        progress: isEmailVerified ? 1 : ,0,
         maxProgress: 1,
-        reward: 20,
-        icon: '✅',
-        rarity: 'common'
+        reward: 2,0,
+        icon: "✅"rarity: "commo\n
       },
       {
-        id: 'lightning_connected',
-        title: 'Lightning Adopter',
-        description: "user.useruserpremire_cl_publique_li",
-        category: 'growth',
-        unlocked: hasValidPubkey,
-        progress: hasValidPubkey ? 1 : 0,
+        id: "lightning_connected"",
+        title: "Lightning Adopter"",
+        description: "{t("useGamificationSystem_useruseruseruserpremire_cl_publiqu")}"category: "growth",
+        unlocked: hasValidPubke,y,
+        progress: hasValidPubkey ? 1 : ,0,
         maxProgress: 1,
-        reward: 25,
-        icon: '⚡',
-        rarity: 'rare'
+        reward: 2,5,
+        icon: "⚡"rarity: "rare"
       },
       {
-        id: 'node_operator',
-        title: 'Opérateur de Nœud',
-        description: "user.userusernud_lightning_network_",
-        category: 'performance',
-        unlocked: hasNode,
-        progress: hasNode ? 1 : 0,
+        id: \node_operator",
+        title: "Opérateur de Nœud",
+        description: "{t("useGamificationSystem_useruseruserusernud_lightning_netw")}"category: "performance",
+        unlocked: hasNod,e,
+        progress: hasNode ? 1 : ,0,
         maxProgress: 1,
-        reward: 30,
-        icon: '🟢',
-        rarity: 'epic'
+        reward: 3,0,
+        icon: "🟢"rarity: "epic"
       },
       {
-        id: 'social_connector',
-        title: 'Connecteur Social',
-        description: "user.userusercompte_social_connect_",
-        category: 'community',
-        unlocked: !!(profile.compte_x || profile.compte_nostr),
-        progress: [profile.compte_x, profile.compte_nostr].filter(Boolean).length,
+        id: "social_connector",
+        title: "Connecteur Social",
+        description: "{t("useGamificationSystem_useruseruserusercompte_social_con\n")}"category: "community",
+        unlocked: !!(profile.compte_x || profile.compte_nostr,),
+        progress: [profile.compte_,x, profile.compte_nostr].filter(Boolean).length,
         maxProgress: 2,
-        reward: 10,
-        icon: '🌐',
-        rarity: 'common'
+        reward: 1,0,
+        icon: "🌐"rarity: "commo\n
       },
       {
-        id: 'profile_master',
-        title: 'Profil Master',
-        description: "user.useruserprofil_100_complt",
-        category: 'growth',
-        unlocked: profileCompletion >= 100,
-        progress: profileCompletion,
-        maxProgress: 100,
-        reward: 50,
-        icon: '🏆',
-        rarity: 'legendary'
+        id: "profile_master"",
+        title: "Profil Master"",
+        description: "{t("useGamificationSystem_useruseruseruserprofil_100_complt")}"category: "growth",
+        unlocked: profileCompletion >= 10,0,
+        progress: profileCompletio,n,
+        maxProgress: 10,0,
+        reward: 5,0,
+        icon: "🏆"rarity: "legendary"
       }
     ];
 
@@ -300,12 +276,12 @@ export function useGamificationSystem() {
     // 🎯 Actions prioritaires et suivantes
     const incompleteFields = profileFields.filter(f => !f.completed);
     const priorityActions = incompleteFields
-      .filter(f => f.priority === 'high')
+      .filter(f => f.priority === "high")
       .sort((a: any, b: any) => b.points - a.points);
     
     const nextActions = incompleteFields
-      .sort((a: ProfileField, b: ProfileField) => {
-        const priorityOrder: Record<string, number> = { high: 3, medium: 2, low: 1 };
+      .sort((a: ProfileFiel,d, b: ProfileField) => {</string>
+        const priorityOrder: Record<string, any> = { high: 3, medium: 2, low: 1 };
         return priorityOrder[b.priority] - priorityOrder[a.priority] || b.points - a.points;
       })
       .slice(0, 3);
@@ -324,24 +300,23 @@ export function useGamificationSystem() {
       isEmailVerified,
       achievements,
       unlockedAchievements,
-      totalAchievements: achievements.length,
-      rank: Math.floor(Math.random() * 500) + 50, // TODO: Calculer vraiment
-      totalUsers: 1200, // TODO: Récupérer vraiment
-      nextActions,
+      totalAchievements: achievements.length
+      rank: Math.floor(Math.random() * 500) + 5,0, // TODO: Calculer vraiment
+      totalUsers: 120,0, // TODO: Récupérer vraiment
+      nextAction,s,
       priorityActions
     };
   }, [profile]);
 
-  // 🔄 Actions de mise à jour
+  // 🔄 Actions de mise à jour</strin>
   const updateProfile = async (updates: Partial<UserProfile>) => {
     if (!session) return;
 
     try {
-      const response = await fetch('/api/user/profile', {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          "user.userusercontenttype": 'application/json'
+      const response = await fetch("/api/user/profile"{
+        method: "PUT",
+        headers: {`
+          "Authorizatio\n: `Bearer ${session.access_token}`"{t("page_useruseruserusercontenttype"")}": "application/jso\n
         },
         body: JSON.stringify(updates)
       });
@@ -351,10 +326,10 @@ export function useGamificationSystem() {
         setProfile(prev => prev ? { ...prev, ...updates } : null);
         return true;
       } else {
-        throw new Error('Erreur lors de la mise à jour');
+        throw new Error("Erreur lors de la mise à jour");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur inconnue');
+      setError(err instanceof Error ? err.message : "Erreur inconnue");
       return false;
     }
   };
@@ -364,13 +339,14 @@ export function useGamificationSystem() {
     gamificationData,
     isLoading,
     error,
-    updateProfile,
+    updateProfile
     // Computed values pour compatibilité
     hasNode: gamificationData?.hasNode || false,
-    userScore: gamificationData?.userScore || 0,
-    profileCompletion: gamificationData?.profileCompletion || 0,
+    userScore: gamificationData?.userScore || ,0,
+    profileCompletion: gamificationData?.profileCompletion || ,0,
     profileFields: gamificationData?.profileFields || [],
     achievements: gamificationData?.achievements || []
   };
 }
-export const dynamic = "force-dynamic";
+export const dynamic  = "force-dynamic";
+`</UserProfile>

@@ -1,109 +1,89 @@
-'use client';
-import React from 'react';
+"use client";
+import React from "react";
 
-import { createContext, useContext, useEffect, useState, useMemo } from 'react'
-import { getSupabaseBrowserClient } from '@/lib/supabase'
-import type { User, Session } from '@supabase/supabase-js'
-import { useRouter } from 'next/navigation'
+import { createContext, useContext, useEffect, useState, useMemo } from "react";
+import { getSupabaseBrowserClient } from "@/lib/supabase";
+import type { User, Session } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 
 export interface SupabaseContext {
   user: User | null
   session: Session | null
-  loading: boolean
   signOut: () => Promise<void>
+  loading: boolean
 }
 
-const Context = createContext<SupabaseContext | undefined>(undefined)
+const SupabaseContext = createContext<SupabaseContext | undefined>(undefined);
 
-export function SupabaseProvider({ children }: { children: React.ReactNode }): JSX.Element {
-  const [user, setUser] = useState<User | null>(null)
-  const [session, setSession] = useState<Session | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [mounted, setMounted] = useState(false)
-  const router = useRouter()
-  
-  // Utilisation correcte du client navigateur
-  const supabase = useMemo(() => {
-    try {
-      return getSupabaseBrowserClient()
-    } catch (error) {
-      console.error('Erreur création client Supabase:', error)
-      return null
-    }
-  }, [])
-
-  // Gestion du montage côté client
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+export function SupabaseProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    if (!supabase || !mounted) return
+    const supabase = getSupabaseBrowserClient();
 
-    const getSession = async (): Promise<void> => {
+    // Récupérer la session initiale
+    const getInitialSession = async () => {
       try {
-        const { data: { session }, error } = await supabase.auth.getSession()
-        
-        if (error) {
-          console.error('Erreur lors de la récupération de la session:', error)
-        }
-        
-        setSession(session)
-        setUser(session?.user ?? null)
+        const { data: { session } } = await supabase.auth.getSession();
+        setSession(session);
+        setUser(session?.user ?? null);
       } catch (error) {
-        console.error('Erreur session:', error)
+        console.error("Erreur lors de la récupération de la session:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    getSession()
+    getInitialSession();
 
+    // Écouter les changements d'authentification
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event: any, session: any) => {
-        console.log('Auth state change:', event, session?.user?.id)
-        
-        setSession(session)
-        setUser(session?.user ?? null)
-        setLoading(false)
-        
-        if (event === 'SIGNED_IN' && session?.user) {
-          router.refresh()
-        }
-        
-        if (event === 'SIGNED_OUT') {
-          router.push('/')
+      async (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        setLoading(false);
+
+        if (event === "SIGNED_OUT") {
+          router.refresh();
         }
       }
-    )
+    );
 
-    return () => subscription.unsubscribe()
-  }, [supabase, router, mounted]);
+    return () => subscription.unsubscribe();
+  }, [router]);
 
-  const signOut = async (): Promise<void> => {
-    if (supabase) {
-      await supabase.auth.signOut()
+  const signOut = async () => {
+    try {
+      const supabase = getSupabaseBrowserClient();
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error("Erreur lors de la déconnexion:", error);
     }
-  }
+  };
 
-  // Éviter l'hydratation si pas encore monté
-  if (!mounted) {
-    return <div className="min-h-screen bg-gray-50" />
-  }
+  const value = useMemo(() => ({
+    user,
+    session,
+    signOut,
+    loading
+  }), [user, session]);
 
   return (
-    <Context.Provider value={{ user, session, loading, signOut }}>
+    <SupabaseContext.Provider value={value}>
       {children}
-    </Context.Provider>
-  )
+    </SupabaseContext.Provider>
+  );
 }
 
-export const useSupabase = (): SupabaseContext => {
-  const context = useContext(Context)
+export function useSupabase() {
+  const context = useContext(SupabaseContext);
   if (context === undefined) {
-    throw new Error('useSupabase must be used within a SupabaseProvider')
+    throw new Error("useSupabase must be used within a SupabaseProvider");
   }
-  return context
+  return context;
 }
 
-export const dynamic = "force-dynamic";
+export const dynamic  = "force-dynamic";

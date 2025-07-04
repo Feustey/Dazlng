@@ -1,6 +1,6 @@
 -- Migration pour utiliser la table profiles existante au lieu de créer une nouvelle table users
 
--- S'assurer que la table profiles a tous les champs nécessaires
+-- S'assurer que la table profiles a tous les champs nécessaires'
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS t4g_tokens INTEGER DEFAULT 1;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS node_id TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS lightning_pubkey TEXT;
@@ -11,12 +11,12 @@ ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS last_node_sync TIMESTAMP WI
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS node_stats JSONB DEFAULT '{}';
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS auth_method TEXT DEFAULT 'password';
 
--- S'assurer que la table profiles a un champ created_at et updated_at
+-- S'assurer que la table profiles a un champ created_at et updated_at'
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW();
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW();
 
 -- Créer les tables secondaires qui référencent profiles
-CREATE TABLE IF NOT EXISTS public.orders (
+CREATE TABLE IF NOT EXISTS public.orders (;
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id UUID REFERENCES public.profiles(id),
     customer JSONB,
@@ -31,11 +31,11 @@ CREATE TABLE IF NOT EXISTS public.orders (
     payment_hash TEXT,
     metadata JSONB DEFAULT '{}',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW();
 );
 
 -- Table prospects
-CREATE TABLE IF NOT EXISTS public.prospects (
+CREATE TABLE IF NOT EXISTS public.prospects (;
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     email TEXT NOT NULL,
     pubkey TEXT,
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS public.prospects (
 );
 
 -- Table otp_codes
-CREATE TABLE IF NOT EXISTS public.otp_codes (
+CREATE TABLE IF NOT EXISTS public.otp_codes (;
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     email TEXT NOT NULL,
     code TEXT NOT NULL,
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS public.otp_codes (
 );
 
 -- Table subscriptions
-CREATE TABLE IF NOT EXISTS public.subscriptions (
+CREATE TABLE IF NOT EXISTS public.subscriptions (;
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id UUID REFERENCES public.profiles(id),
     plan_id TEXT NOT NULL,
@@ -65,33 +65,33 @@ CREATE TABLE IF NOT EXISTS public.subscriptions (
     start_date TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     end_date TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW();
 );
 
 -- Table payments - structure conforme au schéma existant
-CREATE TABLE IF NOT EXISTS public.payments (
+CREATE TABLE IF NOT EXISTS public.payments (;
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     order_id UUID REFERENCES public.orders(id),
     payment_hash TEXT,
     amount INTEGER NOT NULL,
     status TEXT DEFAULT 'pending',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW();
 );
 
 -- Table user_email_tracking pour analytics
-CREATE TABLE IF NOT EXISTS public.user_email_tracking (
+CREATE TABLE IF NOT EXISTS public.user_email_tracking (;
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     email TEXT UNIQUE NOT NULL,
     first_seen_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     last_seen_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     total_logins INTEGER DEFAULT 0,
-    conversion_status TEXT DEFAULT 'new',
+    conversion_status TEXT DEFAULT 'NEW',
     marketing_consent BOOLEAN DEFAULT FALSE,
     source TEXT,
     notes TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW();
 );
 
 -- Index pour les performances
@@ -126,73 +126,73 @@ ALTER TABLE public.payments ENABLE ROW LEVEL SECURITY;
 
 -- Politiques pour profiles
 DROP POLICY IF EXISTS "Users can view own profile" ON public.profiles;
-CREATE POLICY "Users can view own profile" ON public.profiles
-    FOR SELECT USING (auth.uid()::text = id::text);
+CREATE POLICY "Users can view own profile" ON public.profiles;
+    FOR SELECT USING (auth.uid()::TEXT = id::TEXT);
 
 DROP POLICY IF EXISTS "Users can update own profile" ON public.profiles;
-CREATE POLICY "Users can update own profile" ON public.profiles
-    FOR UPDATE USING (auth.uid()::text = id::text);
+CREATE POLICY "Users can update own profile" ON public.profiles;
+    FOR UPDATE USING (auth.uid()::TEXT = id::TEXT);
 
 DROP POLICY IF EXISTS "Enable insert for authenticated users only" ON public.profiles;
-CREATE POLICY "Enable insert for authenticated users only" ON public.profiles
-    FOR INSERT WITH CHECK (auth.uid()::text = id::text);
+CREATE POLICY "Enable insert for authenticated users only" ON public.profiles;
+    FOR INSERT WITH CHECK (auth.uid()::TEXT = id::TEXT);
 
 -- Politiques pour orders
 DROP POLICY IF EXISTS "Users can view own orders" ON public.orders;
-CREATE POLICY "Users can view own orders" ON public.orders
-    FOR SELECT USING (auth.uid()::text = user_id::text OR user_id IS NULL);
+CREATE POLICY "Users can view own orders" ON public.orders;
+    FOR SELECT USING (auth.uid()::TEXT = user_id::TEXT OR user_id IS NULL);
 
 DROP POLICY IF EXISTS "Users can insert own orders" ON public.orders;
-CREATE POLICY "Users can insert own orders" ON public.orders
-    FOR INSERT WITH CHECK (auth.uid()::text = user_id::text OR user_id IS NULL);
+CREATE POLICY "Users can insert own orders" ON public.orders;
+    FOR INSERT WITH CHECK (auth.uid()::TEXT = user_id::TEXT OR user_id IS NULL);
 
 -- Politiques pour prospects (accès public)
 DROP POLICY IF EXISTS "Anyone can insert prospects" ON public.prospects;
-CREATE POLICY "Anyone can insert prospects" ON public.prospects
+CREATE POLICY "Anyone can insert prospects" ON public.prospects;
     FOR INSERT WITH CHECK (true);
 
 -- Politiques pour otp_codes (accès public pour authentification)
 DROP POLICY IF EXISTS "Anyone can insert OTP codes" ON public.otp_codes;
-CREATE POLICY "Anyone can insert OTP codes" ON public.otp_codes
+CREATE POLICY "Anyone can insert OTP codes" ON public.otp_codes;
     FOR INSERT WITH CHECK (true);
 
 DROP POLICY IF EXISTS "Anyone can read OTP codes" ON public.otp_codes;
-CREATE POLICY "Anyone can read OTP codes" ON public.otp_codes
+CREATE POLICY "Anyone can read OTP codes" ON public.otp_codes;
     FOR SELECT USING (true);
 
 DROP POLICY IF EXISTS "Anyone can update OTP codes" ON public.otp_codes;
-CREATE POLICY "Anyone can update OTP codes" ON public.otp_codes
+CREATE POLICY "Anyone can update OTP codes" ON public.otp_codes;
     FOR UPDATE USING (true);
 
 DROP POLICY IF EXISTS "Anyone can delete expired OTP codes" ON public.otp_codes;
-CREATE POLICY "Anyone can delete expired OTP codes" ON public.otp_codes
+CREATE POLICY "Anyone can delete expired OTP codes" ON public.otp_codes;
     FOR DELETE USING (true);
 
 -- Politiques pour user_email_tracking (accès système uniquement)
 DROP POLICY IF EXISTS "System can manage email tracking" ON public.user_email_tracking;
-CREATE POLICY "System can manage email tracking" ON public.user_email_tracking
+CREATE POLICY "System can manage email tracking" ON public.user_email_tracking;
     FOR ALL USING (true);
 
 -- Politiques pour subscriptions
 DROP POLICY IF EXISTS "Users can view own subscriptions" ON public.subscriptions;
-CREATE POLICY "Users can view own subscriptions" ON public.subscriptions
-    FOR SELECT USING (auth.uid()::text = user_id::text);
+CREATE POLICY "Users can view own subscriptions" ON public.subscriptions;
+    FOR SELECT USING (auth.uid()::TEXT = user_id::TEXT);
 
 -- Politiques pour payments (accès via orders)
 DROP POLICY IF EXISTS "Users can view payments for own orders" ON public.payments;
-CREATE POLICY "Users can view payments for own orders" ON public.payments
+CREATE POLICY "Users can view payments for own orders" ON public.payments;
     FOR SELECT USING (
         EXISTS (
-            SELECT 1 FROM public.orders 
+            SELECT 1 FROM public.orders;
             WHERE orders.id = payments.order_id 
-            AND auth.uid()::text = orders.user_id::text
+            AND auth.uid()::TEXT = orders.user_id::TEXT
         )
     );
 
 -- Fonction pour mettre à jour updated_at automatiquement
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
-BEGIN
+BEGIN;
     NEW.updated_at = NOW();
     RETURN NEW;
 END;
@@ -200,31 +200,31 @@ $$ LANGUAGE plpgsql;
 
 -- Triggers pour updated_at
 DROP TRIGGER IF EXISTS update_profiles_updated_at ON public.profiles;
-CREATE TRIGGER update_profiles_updated_at
+CREATE TRIGGER update_profiles_updated_at;
     BEFORE UPDATE ON public.profiles
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
 DROP TRIGGER IF EXISTS update_orders_updated_at ON public.orders;
-CREATE TRIGGER update_orders_updated_at
+CREATE TRIGGER update_orders_updated_at;
     BEFORE UPDATE ON public.orders
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
 DROP TRIGGER IF EXISTS update_subscriptions_updated_at ON public.subscriptions;
-CREATE TRIGGER update_subscriptions_updated_at
+CREATE TRIGGER update_subscriptions_updated_at;
     BEFORE UPDATE ON public.subscriptions
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
 DROP TRIGGER IF EXISTS update_payments_updated_at ON public.payments;
-CREATE TRIGGER update_payments_updated_at
+CREATE TRIGGER update_payments_updated_at;
     BEFORE UPDATE ON public.payments
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
 DROP TRIGGER IF EXISTS update_user_email_tracking_updated_at ON public.user_email_tracking;
-CREATE TRIGGER update_user_email_tracking_updated_at
+CREATE TRIGGER update_user_email_tracking_updated_at;
     BEFORE UPDATE ON public.user_email_tracking
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
@@ -232,7 +232,7 @@ CREATE TRIGGER update_user_email_tracking_updated_at
 -- Fonction pour nettoyer les codes OTP expirés
 CREATE OR REPLACE FUNCTION cleanup_expired_otp_codes()
 RETURNS INTEGER AS $$
-DECLARE
+DECLARE;
     deleted_count INTEGER;
 BEGIN
     DELETE FROM public.otp_codes 

@@ -44,13 +44,13 @@ function addDynamicExport(filePath) {
   }
 
   // Ajouter l'export dynamic au début du fichier
-  const lines = content.split('\n');
+  const lines = content.split('\\n);
   let insertIndex = 0;
 
   // Trouver la première ligne non-vide après les imports
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
-    if (line && !line.startsWith('import') && !line.startsWith('"use client"') && !line.startsWith("'use client'")) {
+    if (line && !line.startsWith('import') && !line.startsWith('"use client') && !line.startsWith("'use client'")) {
       insertIndex = i;
       break;
     }
@@ -59,7 +59,7 @@ function addDynamicExport(filePath) {
   // Insérer l'export dynamic
   lines.splice(insertIndex, 0, "export const dynamic = 'force-dynamic';");
   
-  const newContent = lines.join('\n');
+  const newContent = lines.join('\\n);
   fs.writeFileSync(filePath, newContent);
   
   console.log(`✅ Corrigé: ${filePath}`);
@@ -67,7 +67,7 @@ function addDynamicExport(filePath) {
 }
 
 function main() {
-  console.log('🔧 Correction des erreurs de build...\n');
+  console.log('🔧 Correction des erreurs de build...\\n);
   
   let successCount = 0;
   let totalCount = 0;

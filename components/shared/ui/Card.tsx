@@ -1,8 +1,9 @@
-import React from 'react';
+import React from "react";
 import { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 export interface CardProps {
-  children: ReactNode;
+  children: React.ReactNode;
   className?: string;
 }
 
@@ -26,45 +27,42 @@ export interface CardDescriptionProps {
   className?: string;
 }
 
-export default function Card({ children, className = "" }: CardProps) {
+export function Card({ children, className = '' }: CardProps) {
   return (
-    <div className={`bg-white rounded-2xl shadow p-8 ${className}`}>
+    <div className={cn("rounded-lg border bg-card text-card-foreground shadow-sm", className)}>
       {children}
     </div>
   );
 }
 
-export function CardHeader({ children, className = "" }: CardHeaderProps) {
+export function CardHeader({ children, className = '' }: CardHeaderProps) {
   return (
-    <div className={`pb-4 border-b border-gray-100 ${className}`}>
+    <div className={cn("flex flex-col space-y-1.5 p-6", className)}>
       {children}
     </div>
   );
 }
 
-export function CardTitle({ children, className = "" }: CardTitleProps) {
+export function CardContent({ children, className = '' }: CardContentProps) {
   return (
-    <h3 className={`text-lg font-semibold text-gray-900 ${className}`}>
+    <div className={cn("p-6 pt-0", className)}>
+      {children}
+    </div>
+  );
+}
+
+export function CardTitle({ children, className = '' }: CardTitleProps) {
+  return (
+    <h3 className={cn("text-2xl font-semibold leading-none tracking-tight", className)}>
       {children}
     </h3>
   );
 }
 
-export function CardContent({ children, className = "" }: CardContentProps) {
-  return (
-    <div className={`pt-4 ${className}`}>
-      {children}
-    </div>
-  );
-}
-
 export function CardDescription({ children, className = "" }: CardDescriptionProps) {
   return (
-    <p className={`text-sm text-gray-600 ${className}`}>
+    <p className={cn("text-sm text-muted-foreground", className)}>
       {children}
     </p>
   );
 }
-
-// Export named pour compatibilité
-export { Card };

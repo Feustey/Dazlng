@@ -4,13 +4,13 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-console.log('🚀 Analyse des performances DazNode\n');
+console.log('🚀 Analyse des performances DazNode\\n);
 
 // 1. Build de production
 console.log('📦 Build de production...');
 try {
-  execSync('npm run build', { stdio: 'inherit' });
-  console.log('✅ Build terminé\n');
+  execSync(\npm run build', { stdio: 'inherit' });
+  console.log('✅ Build terminé\\n);
 } catch (error) {
   console.error('❌ Erreur lors du build:', error.message);
   process.exit(1);
@@ -54,7 +54,7 @@ try {
 }
 
 // 3. Recommandations
-console.log('💡 Recommandations de performance :\n');
+console.log('💡 Recommandations de performance :\\n);
 
 const recommendations = [
   {
@@ -79,7 +79,7 @@ const recommendations = [
     category: '🗄️  Cache',
     items: [
       'Utiliser useCache pour les données API',
-      'Service Worker activé en production',
+      'Service Worker activé en productio\n,
       'Headers de cache optimisés (31536000s pour les assets)',
       'Cache-Control approprié pour les API responses'
     ]
@@ -104,12 +104,12 @@ recommendations.forEach(rec => {
 });
 
 // 4. Tests recommandés
-console.log('🧪 Tests de performance recommandés :\n');
+console.log('🧪 Tests de performance recommandés :\\n);
 console.log('  🔍 Lighthouse CLI :');
-console.log('     npx lighthouse http://localhost:3000 --view\n');
+console.log('     npx lighthouse http://localhost:3000 --view\\n);
 console.log('  📊 Bundle Analyzer :');
-console.log('     ANALYZE=true npm run build\n');
+console.log('     ANALYZE=true npm run build\\n);
 console.log('  ⚡ Web Vitals :');
-console.log('     Ouvrir DevTools > Lighthouse > Performance\n');
+console.log('     Ouvrir DevTools > Lighthouse > Performance\\n);
 
 console.log('✨ Analyse terminée ! Consultez PERFORMANCE_OPTIMIZATIONS.md pour plus de détails.'); 

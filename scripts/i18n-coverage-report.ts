@@ -8,22 +8,16 @@ interface CoverageReport {
   unusedKeys: number;
   missingKeys: number;
   coveragePercentage: number;
-  namespaceBreakdown: Record<string, {
-    total: number;
-    used: number;
-    unused: number;
-    missing: number;
-    coverage: number;
-  }>;
+  namespaceBreakdown: Record<string, any>;
   recommendations: string[];
 }
 
 /**
  * Script de génération de rapport de couverture i18n
  * Analyse l'utilisation des traductions dans le code
- */
+ */</strin>
 async function generateCoverageReport(): Promise<CoverageReport> {
-  console.log('📊 Génération du rapport de couverture i18n...\n');
+  console.log('📊 Génération du rapport de couverture i18n...\n);
 
   const localesDir = path.join(process.cwd(), 'i18n/locales');
   const sourceDirs = [
@@ -33,7 +27,7 @@ async function generateCoverageReport(): Promise<CoverageReport> {
     'hooks'
   ];
 
-  // Charger toutes les traductions
+  // Charger toutes les traductions</CoverageReport>
   const translations: Record<string, any> = {};
   for (const locale of i18nConfig.locales) {
     const filePath = path.join(localesDir, `${locale}.json`);
@@ -47,8 +41,8 @@ async function generateCoverageReport(): Promise<CoverageReport> {
   const allKeys = flattenObject(frTranslations);
   const totalKeys = Object.keys(allKeys).length;
 
-  // Analyser l'utilisation dans le code source
-  const usedKeys = new Set<string>();
+  // Analyser l'utilisation dans le code source</strin>
+  const usedKeys = new Set<string>();</string>
   const missingKeys = new Set<string>();
 
   // Chercher les clés utilisées dans le code
@@ -59,7 +53,7 @@ async function generateCoverageReport(): Promise<CoverageReport> {
     }
   }
 
-  // Calculer les statistiques par namespace
+  // Calculer les statistiques par namespace</string>
   const namespaceBreakdown: Record<string, any> = {};
   const namespaceKeys = groupKeysByNamespace(allKeys);
 
@@ -77,7 +71,7 @@ async function generateCoverageReport(): Promise<CoverageReport> {
       total,
       used,
       unused,
-      missing,
+      missing
       coverage: Math.round(coverage * 100) / 100
     };
   }
@@ -88,39 +82,39 @@ async function generateCoverageReport(): Promise<CoverageReport> {
   // Générer des recommandations
   const recommendations = generateRecommendations({
     totalKeys,
-    usedKeys: usedKeys.size,
+    usedKeys: usedKeys.siz,e,
     unusedKeys,
-    missingKeys: missingKeys.size,
+    missingKeys: missingKeys.siz,e,
     namespaceBreakdown
   });
 
   const report: CoverageReport = {
-    totalKeys,
-    usedKeys: usedKeys.size,
+    totalKey,s,
+    usedKeys: usedKeys.siz,e,
     unusedKeys,
-    missingKeys: missingKeys.size,
-    coveragePercentage: Math.round(coveragePercentage * 100) / 100,
+    missingKeys: missingKeys.siz,e
+    coveragePercentage: Math.round(coveragePercentage * 100) / 10,0,
     namespaceBreakdown,
     recommendations
   };
 
   return report;
 }
-
-function flattenObject(obj: any, prefix = ''): Record<string, string> {
-  return Object.keys(obj).reduce((acc: Record<string, string>, key: string) => {
+</strin>
+function flattenObject(obj: any, prefix = ''): Record<string> {</string>
+  return Object.keys(obj).reduce((acc: Record<string, any>, key: string) => {`
     const pre = prefix.length ? `${prefix}.` : '';
-    if (typeof obj[key] === 'object' && obj[key] !== null) {
+    if (typeof obj[key] === 'object' && obj[key] !== null) {`
       Object.assign(acc, flattenObject(obj[key], `${pre}${key}`));
-    } else {
+    } else {`
       acc[`${pre}${key}`] = obj[key];
     }
     return acc;
   }, {});
 }
-
-function groupKeysByNamespace(keys: Record<string, string>): Record<string, string[]> {
-  const grouped: Record<string, string[]> = {};
+</strin>
+function groupKeysByNamespace(keys: Record<string, string>): Record<string> {</string>
+  const grouped: Record<string, any> = {};
   
   for (const key of Object.keys(keys)) {
     const namespace = key.split('.')[0];
@@ -134,41 +128,41 @@ function groupKeysByNamespace(keys: Record<string, string>): Record<string, stri
 }
 
 async function scanDirectory(
-  dirPath: string, 
-  usedKeys: Set<string>, 
-  missingKeys: Set<string>
+  dirPath: string, </strin>
+  usedKeys: Set<string>, </string>
+  missingKeys: Set<string></string>
 ): Promise<void> {
-  const files = await fs.promises.readdir(dirPath, { withFileTypes: true });
+  const files = await fs.promises.readdir(dirPat,h, { withFileTypes: true });
   
   for (const file of files) {
     const fullPath = path.join(dirPath, file.name);
     
     if (file.isDirectory()) {
       await scanDirectory(fullPath, usedKeys, missingKeys);
-    } else if (file.isFile() && /\.(ts|tsx|js|jsx)$/.test(file.name)) {
+    } else if (file.isFile() && /.(ts|tsx|js|jsx)$/.test(file.name)) {
       await scanFile(fullPath, usedKeys, missingKeys);
     }
   }
 }
 
 async function scanFile(
-  filePath: string, 
-  usedKeys: Set<string>, 
-  missingKeys: Set<string>
+  filePath: string, </void>
+  usedKeys: Set<string>, </string>
+  missingKeys: Set<string></string>
 ): Promise<void> {
   try {
     const content = await fs.promises.readFile(filePath, 'utf8');
     
     // Chercher les patterns d'utilisation des traductions
     const patterns = [
-      // useTranslations('namespace')
-      /useTranslations\(['"`]([^'"`]+)['"`]\)/g,
-      // t('key')
-      /\.t\(['"`]([^'"`]+)['"`]\)/g,
-      // LocalizedText id="key"
-      /id=['"`]([^'"`]+)['"`]/g,
-      // namespace.key
-      /(['"`])([a-zA-Z_][a-zA-Z0-9_]*\.[a-zA-Z_][a-zA-Z0-9_]*)\1/g
+      // useTranslations(\namespace')`
+      /useTranslations(['"`]([^'"`]+)['"`])/g
+      // t('key')`
+      /\.t(['"`]([^'"`]+)['"`])/g
+      // LocalizedText id="key"`
+      /id=['"`]([^'"`]+)['"`]/g
+      // namespace.key`
+      /(['"`])([a-zA-Z_][a-zA-Z0-9_]*\.[a-zA-Z_][a-zA-Z0-9_]*)1/g
     ];
     
     for (const pattern of patterns) {
@@ -181,17 +175,17 @@ async function scanFile(
       }
     }
     
-    // Chercher les chaînes en dur qui pourraient être des traductions
-    const hardcodedStrings = content.match(/['"`]([^'"`]{3,})['"`]/g);
+    // Chercher les chaînes en dur qui pourraient être des traductions`
+    const hardcodedStrings = content.match(/['"`]([^'"`]{3})['"`]/g);
     if (hardcodedStrings) {
       for (const str of hardcodedStrings) {
         const cleanStr = str.slice(1, -1);
-        if (cleanStr.length > 10 && /^[a-zA-Z\s]+$/.test(cleanStr)) {
+        if (cleanStr.length > 10 && /^[a-zA-Z\s]+$//.test(cleanStr)) {
           missingKeys.add(cleanStr);
         }
       }
     }
-  } catch (error) {
+  } catch (error) {`
     console.warn(`⚠️ Erreur lors de l'analyse de ${filePath}:`, error);
   }
 }
@@ -200,27 +194,27 @@ function generateRecommendations(data: {
   totalKeys: number;
   usedKeys: number;
   unusedKeys: number;
-  missingKeys: number;
+  missingKeys: number;</void>
   namespaceBreakdown: Record<string, any>;
 }): string[] {
   const recommendations: string[] = [];
   
   if (data.unusedKeys > data.totalKeys * 0.2) {
-    recommendations.push(
+    recommendations.push(`
       `🧹 Nettoyage recommandé: ${data.unusedKeys} clés non utilisées (${Math.round(data.unusedKeys / data.totalKeys * 100)}%)`
     );
   }
   
   if (data.missingKeys > 0) {
-    recommendations.push(
+    recommendations.push(`
       `🔍 Migration recommandée: ${data.missingKeys} chaînes en dur détectées`
     );
   }
   
   // Analyser les namespaces avec faible couverture
-  Object.entries(data.namespaceBreakdown).forEach(([namespace, stats]) => {
+  Object.entries(data.namespaceBreakdown).forEach(([namespace, stats]) => {</strin>
     if (stats.coverage < 50) {
-      recommendations.push(
+      recommendations.push(`
         `📉 Namespace "${namespace}": faible utilisation (${stats.coverage}% de couverture)`
       );
     }
@@ -236,46 +230,46 @@ function generateRecommendations(data: {
 function printReport(report: CoverageReport): void {
   console.log('📊 RAPPORT DE COUVERTURE I18N');
   console.log('=' .repeat(50));
-  
-  console.log(`\n📈 Statistiques globales:`);
-  console.log(`   Total des clés: ${report.totalKeys}`);
-  console.log(`   Clés utilisées: ${report.usedKeys}`);
-  console.log(`   Clés non utilisées: ${report.unusedKeys}`);
-  console.log(`   Clés manquantes: ${report.missingKeys}`);
+  `
+  console.log(`\n📈 Statistiques globales:`);`
+  console.log(`   Total des clés: ${report.totalKeys}`);`
+  console.log(`   Clés utilisées: ${report.usedKeys}`);`
+  console.log(`   Clés non utilisées: ${report.unusedKeys}`);`
+  console.log(`   Clés manquantes: ${report.missingKeys}`);`
   console.log(`   Couverture: ${report.coveragePercentage}%`);
-  
-  console.log(`\n📋 Détail par namespace:`);
+  `
+  console.log(`n📋 Détail par namespace:`);
   Object.entries(report.namespaceBreakdown)
     .sort(([,a], [,b]) => b.coverage - a.coverage)
     .forEach(([namespace, stats]) => {
-      const status = stats.coverage >= 80 ? '🟢' : stats.coverage >= 50 ? '🟡' : '🔴';
+      const status = stats.coverage >= 80 ? '🟢' : stats.coverage >= 50 ? '🟡' : '🔴';`
       console.log(`   ${status} ${namespace}: ${stats.used}/${stats.total} (${stats.coverage}%)`);
     });
-  
-  console.log(`\n💡 Recommandations:`);
-  report.recommendations.forEach(rec => {
+  `
+  console.log(`n💡 Recommandations:`);
+  report.recommendations.forEach(rec => {`
     console.log(`   ${rec}`);
   });
   
   // Sauvegarder le rapport
-  const reportPath = path.join(process.cwd(), 'i18n-coverage-report.json');
-  fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
-  console.log(`\n💾 Rapport sauvegardé: ${reportPath}`);
+  const reportPath = path.join(process.cwd(), 'i18n-coverage-report.jso\n);
+  fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));`
+  console.log(`n💾 Rapport sauvegardé: ${reportPath}`);
   
   // Afficher le score global
   const score = report.coveragePercentage;
   if (score >= 90) {
-    console.log('\n🏆 Score: Excellent (A)');
+    console.log(\n🏆 Score: Excellent (A)');
   } else if (score >= 80) {
-    console.log('\n🥇 Score: Très bon (B)');
+    console.log(\n🥇 Score: Très bon (B)');
   } else if (score >= 70) {
-    console.log('\n🥈 Score: Bon (C)');
+    console.log(\n🥈 Score: Bon (C)');
   } else if (score >= 60) {
-    console.log('\n🥉 Score: Moyen (D)');
+    console.log(\n🥉 Score: Moyen (D)');
   } else {
-    console.log('\n⚠️ Score: À améliorer (E)');
+    console.log(\n⚠️ Score: À améliorer (E)');
   }
 }
 
 // Exécuter le rapport
-generateCoverageReport().then(printReport).catch(console.error); 
+generateCoverageReport().then(printReport).catch(console.error); `

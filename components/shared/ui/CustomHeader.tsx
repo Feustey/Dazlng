@@ -1,101 +1,100 @@
 "use client";
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useSupabase } from '@/app/providers/SupabaseProvider';
-import { useRouter } from 'next/navigation';
-import { useLocale } from 'next-intl';
-import { IconRegistry } from '@/components/shared/ui/IconRegistry';
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useSupabase } from "@/app/providers/SupabaseProvider";
+import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
 
 const CustomHeader: React.FC = () => {
-  const { user, session } = useSupabase();
+  const { user, signOut } = useSupabase();
   const router = useRouter();
   const locale = useLocale();
+  const { t } = useAdvancedTranslation("header");
 
-  const handleLogout = async (): Promise<void> => {
-    try {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-      });
-
-      if (response.ok) {
-        router.push(`/${locale}`);
-        router.refresh();
-      } else {
-        console.error('Erreur lors de la déconnexion');
-      }
-    } catch (error) {
-      console.error('Erreur réseau lors de la déconnexion:', error);
-    }
+  const handleSignOut = async () => {
+    await signOut();
+    router.push(`/${locale}`);
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm shadow-sm z-50">
+    <header className="bg-white shadow-sm border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href="/" locale={locale} aria-label="Accueil">
-              <Image 
+            <Link href={`/${locale}`} className="flex items-center">
+              <Image
                 src="/assets/images/logo-daznode.svg"
-                alt="CustomHeader.customheaderfooterdaz3_logo" 
-                width={150} 
-                height={40} 
-                className="h-10 w-auto"
-                style={{ height: "auto" }}
-                priority 
+                alt="DazNode"
+                width={120}
+                height={40}
+                className="h-8 w-auto"
               />
             </Link>
           </div>
 
-          {/* Navigation simple */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/daznode" locale={locale} className="text-gray-700 hover:text-indigo-600 font-medium">
-              DazNode
+          {/* Navigation principale */}
+          <nav className="hidden md:flex space-x-8">
+            <Link
+              href={`/${locale}/daznode`}
+              className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
+            >
+              {t("daznode")}
             </Link>
-            <Link href="/dazbox" locale={locale} className="text-gray-700 hover:text-indigo-600 font-medium">
-              DazBox
+            <Link
+              href={`/${locale}/dazbox`}
+              className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
+            >
+              {t("dazbox")}
             </Link>
-            <Link href="/dazpay" locale={locale} className="text-gray-700 hover:text-indigo-600 font-medium">
-              DazPay
+            <Link
+              href={`/${locale}/dazpay`}
+              className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
+            >
+              {t("dazpay")}
             </Link>
-            <Link href="/dazflow" locale={locale} className="text-gray-700 hover:text-indigo-600 font-medium flex items-center">
-              <IconRegistry.Gauge className="h-4 w-4 mr-1" />
-              DazFlow Index
-            </Link>
-            <Link href="/contact" locale={locale} className="text-gray-700 hover:text-indigo-600 font-medium">
-              Contact
+            <Link
+              href={`/${locale}/network`}
+              className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
+            >
+              {t("network")}
             </Link>
           </nav>
 
-          {/* Boutons d'authentification adaptatifs */}
+          {/* Actions utilisateur */}
           <div className="flex items-center space-x-4">
-            {user && session ? (
-              // Utilisateur connecté
-              <div className="flex items-center space-x-4">
-                <Link 
-                  href="/user/dashboard" 
-                  locale={locale}
-                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium"
+            {user ? (
+              <>
+                <Link
+                  href={`/${locale}/user`}
+                  className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
                 >
-                  Mon Compte
+                  {t("dashboard")}
                 </Link>
                 <button
-                  onClick={handleLogout}
-                  className="hidden md:inline-block px-4 py-2 text-gray-600 hover:text-gray-700 font-medium"
+                  onClick={handleSignOut}
+                  className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
                 >
-                  Déconnexion
+                  {t("sign_out")}
                 </button>
-              </div>
+              </>
             ) : (
-              // Utilisateur non connecté
-              <Link 
-                href="/auth/login" 
-                locale={locale}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium"
-              >
-                Connexion
-              </Link>
+              <>
+                <Link
+                  href={`/${locale}/auth/login`}
+                  className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
+                >
+                  {t("sign_in")}
+                </Link>
+                <Link
+                  href={`/${locale}/register`}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
+                >
+                  {t("get_started")}
+                </Link>
+              </>
             )}
           </div>
         </div>
@@ -104,4 +103,4 @@ const CustomHeader: React.FC = () => {
   );
 };
 
-export default CustomHeader; 
+export default CustomHeader;

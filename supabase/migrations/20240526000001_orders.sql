@@ -1,39 +1,39 @@
 -- Table des commandes
-create table if not exists orders (
-  id uuid default uuid_generate_v4() primary key,
-  product text not null,
-  amount bigint not null,
-  customer_name text not null,
-  customer_email text not null,
-  customer_address text,
-  plan text,
-  status text not null check (status in ('pending', 'paid', 'failed')),
-  payment_hash text unique,
-  payment_request text,
-  order_ref text unique,
-  paid_at timestamp with time zone,
-  metadata jsonb,
-  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
-  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
+CREATE TABLE IF NOT EXISTS orders (;
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  product TEXT NOT NULL,
+  amount BIGINT NOT NULL,
+  customer_name TEXT NOT NULL,
+  customer_email TEXT NOT NULL,
+  customer_address TEXT,
+  plan TEXT,
+  status TEXT NOT NULL CHECK (status IN ('pending', 'paid', 'failed')),
+  payment_hash TEXT UNIQUE,
+  payment_request TEXT,
+  order_ref TEXT UNIQUE,
+  paid_at TIMESTAMP WITH TIME ZONE,
+  metadata JSONB,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::TEXT, now()) NOT NULL,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::TEXT, now()) NOT NULL;
 );
 
 -- Index pour les recherches fréquentes
-create index if not exists orders_customer_email_idx on orders(customer_email);
-create index if not exists orders_status_idx on orders(status);
-create index if not exists orders_payment_hash_idx on orders(payment_hash);
-create index if not exists orders_order_ref_idx on orders(order_ref);
-create index if not exists orders_created_at_idx on orders(created_at);
+CREATE INDEX IF NOT EXISTS orders_customer_email_idx ON orders(customer_email);
+CREATE INDEX IF NOT EXISTS orders_status_idx ON orders(status);
+CREATE INDEX IF NOT EXISTS orders_payment_hash_idx ON orders(payment_hash);
+CREATE INDEX IF NOT EXISTS orders_order_ref_idx ON orders(order_ref);
+CREATE INDEX IF NOT EXISTS orders_created_at_idx ON orders(created_at);
 
 -- Trigger pour la mise à jour automatique de updated_at
-create or replace function update_orders_updated_at()
-returns trigger as $$
-begin
-  new.updated_at = timezone('utc'::text, now());
-  return new;
-end;
-$$ language plpgsql;
+CREATE OR REPLACE FUNCTION update_orders_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN;
+  NEW.updated_at = timezone('utc'::TEXT, now());
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
-create trigger orders_updated_at
-  before update on orders
-  for each row
-  execute function update_orders_updated_at(); 
+CREATE TRIGGER orders_updated_at;
+  BEFORE UPDATE ON orders
+  FOR EACH ROW
+  EXECUTE FUNCTION update_orders_updated_at(); 

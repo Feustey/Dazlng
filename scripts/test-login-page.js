@@ -3,19 +3,18 @@
 /**
  * Script de test de la nouvelle page de connexion
  * Vérifie que la nouvelle interface est bien déployée
- */
-
+ *
 const https = require('https');
 
 const DOMAIN = 'https://www.dazno.de';
 const VERCEL_DOMAIN = 'https://nextjs-boilerplate-rbfib1m5m-feusteys-projects.vercel.app';
 
-console.log('🔍 Test de la nouvelle page de connexion...\n');
+console.log('🔍 Test de la nouvelle page de connexion...\\n);
 
 // Textes caractéristiques de la nouvelle page
 const expectedTexts = [
   'Connexion à Daz3',
-  'Choisissez votre méthode de connexion',
+  'Choisissez votre méthode de connexio\n,
   'Email OTP',
   'Lightning Network',
   'Wallet / Node'
@@ -87,10 +86,10 @@ async function main() {
     console.log('🎉 La nouvelle page de connexion est déployée !');
     console.log('');
     console.log('✨ Nouvelles fonctionnalités :');
-    console.log('• Interface de sélection de méthode de connexion');
+    console.log('• Interface de sélection de méthode de connexio\n);
     console.log('• Composant OTP Login dédié');
     console.log('• Composant Lightning Login avec Alby');
-    console.log('• Composant Wallet/Node Login');
+    console.log('• Composant Wallet/Node Logi\n);
     console.log('• UX améliorée avec navigation entre méthodes');
     console.log('');
     
@@ -98,11 +97,11 @@ async function main() {
       console.log('✅ Toutes les URLs affichent la nouvelle page');
     } else {
       console.log('⚠️ Propagation en cours - le cache CDN se met à jour progressivement');
-      console.log('💡 Utilisez Ctrl+F5 ou navigation privée pour voir la nouvelle version');
+      console.log('💡 Utilisez Ctrl+F5 ou navigation privée pour voir la nouvelle versio\n);
     }
     
     console.log('');
-    console.log('🔗 Testez sur : https://www.dazno.de/auth/login');
+    console.log('🔗 Testez sur : https://www.dazno.de/auth/logi\n);
     
   } else {
     console.log('❌ La nouvelle page n\'est pas encore accessible');

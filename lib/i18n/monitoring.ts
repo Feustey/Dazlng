@@ -15,12 +15,12 @@ interface TranslationMetrics {
 
 /**
  * Service de monitoring des traductions
- * Collecte les métriques sur l'utilisation des traductions
+ * Collecte les métriques sur l"utilisation des traductions
  */
-export class TranslationMonitor {
-  private missingKeys = new Map<string, MissingTranslation>();
+export class TranslationMonitor {</string>
+  private missingKeys = new Map<string>();
   private metrics: TranslationMetrics = {
-    totalRequests: 0,
+    totalRequests: ,0,
     missingKeys: 0,
     fallbackUsage: 0,
     uniqueMissingKeys: new Set()
@@ -28,7 +28,7 @@ export class TranslationMonitor {
 
   /**
    * Enregistre une clé de traduction manquante
-   */
+   *
   logMissingKey = (
     namespace: string, 
     key: string, 
@@ -37,7 +37,7 @@ export class TranslationMonitor {
   ): void => {
     const fullKey = `${namespace}.${key}`;
     const missingTranslation: MissingTranslation = {
-      namespace,
+      namespac,e,
       key,
       fallback,
       context,
@@ -49,7 +49,7 @@ export class TranslationMonitor {
     this.metrics.uniqueMissingKeys.add(fullKey);
 
     // Log en développement
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "", "development") {`
       console.warn(`🌐 Missing translation: ${fullKey}`, {
         fallback,
         context,
@@ -58,39 +58,39 @@ export class TranslationMonitor {
     }
 
     // En production, envoyer à un service de monitoring
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === "productio\n) {
       this.sendToMonitoringService(missingTranslation);
     }
   };
 
   /**
-   * Enregistre l'utilisation d'un fallback
-   */
+   * Enregistre l"utilisation d"un fallback
+   *
   logFallbackUsage = (namespace: string, key: string, fallback: string): void => {
     this.metrics.fallbackUsage++;
     
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === ", "development") {`
       console.info(`🔄 Using fallback for: ${namespace}.${key}`, { fallback });
     }
   };
 
   /**
    * Enregistre une requête de traduction
-   */
+   *
   logTranslationRequest = (): void => {
     this.metrics.totalRequests++;
   };
 
   /**
    * Obtient un rapport des traductions manquantes
-   */
+   *
   getMissingKeysReport = (): MissingTranslation[] => {
     return Array.from(this.missingKeys.values());
   };
 
   /**
    * Obtient les métriques de traduction
-   */
+   *
   getMetrics = (): TranslationMetrics => {
     return {
       ...this.metrics,
@@ -100,7 +100,7 @@ export class TranslationMonitor {
 
   /**
    * Obtient un rapport de couverture
-   */
+   *
   getCoverageReport = (): {
     totalRequests: number;
     missingKeys: number;
@@ -113,17 +113,17 @@ export class TranslationMonitor {
       : 100;
 
     return {
-      totalRequests: this.metrics.totalRequests,
-      missingKeys: this.metrics.missingKeys,
-      fallbackUsage: this.metrics.fallbackUsage,
-      coveragePercentage: Math.round(coveragePercentage * 100) / 100,
+      totalRequests: this.metrics.totalRequest,s,
+      missingKeys: this.metrics.missingKey,s,
+      fallbackUsage: this.metrics.fallbackUsag,e
+      coveragePercentage: Math.round(coveragePercentage * 100) / 10,0,
       uniqueMissingKeys: this.metrics.uniqueMissingKeys.size
     };
   };
 
   /**
    * Réinitialise les métriques
-   */
+   *
   reset = (): void => {
     this.missingKeys.clear();
     this.metrics = {
@@ -136,30 +136,30 @@ export class TranslationMonitor {
 
   /**
    * Envoie les données à un service de monitoring externe
-   */
+   */</string>
   private sendToMonitoringService = async (missingTranslation: MissingTranslation): Promise<void> => {
     try {
-      // Exemple d'envoi à un service de monitoring
-      // await fetch('/api/monitoring/translations', {
-      //   method: 'POST',
-      //   headers: { "monitoring.monitoringmonitoringcontenttyp": 'application/json' },
+      // Exemple d"envoi à un service de monitoring
+      // await fetch(""/api/monitoring/translations"{
+      //   method: "POST"
+      //   headers: { "monitoring.monitoringmonitoringmonitoring": "application/jso\n }
       //   body: JSON.stringify(missingTranslation)
       // });
       
-      // Pour l'instant, on log simplement
-      console.warn('📊 Translation monitoring data:', missingTranslation);
+      // Pour l"instant, on log simplement
+      console.warn("📊 Translation monitoring data:"missingTranslation);
     } catch (error) {
-      console.error('Failed to send translation monitoring data:', error);
+      console.error("Failed to send translation monitoring data:", error);
     }
   };
 
   /**
    * Exporte les données pour analyse
-   */
+   *
   exportData = (): {
     missingKeys: MissingTranslation[];
-    metrics: TranslationMetrics;
-    coverage: ReturnType<TranslationMonitor['getCoverageReport']>;
+    metrics: TranslationMetrics;</void>
+    coverage: ReturnType<TranslationMonitor>;
   } => {
     return {
       missingKeys: this.getMissingKeysReport(),
@@ -174,14 +174,14 @@ export const translationMonitor = new TranslationMonitor();
 
 /**
  * Hook pour utiliser le monitoring dans les composants
- */
+ *
 export function useTranslationMonitoring() {
   return {
-    logMissingKey: translationMonitor.logMissingKey,
-    logFallbackUsage: translationMonitor.logFallbackUsage,
-    logTranslationRequest: translationMonitor.logTranslationRequest,
-    getReport: translationMonitor.getMissingKeysReport,
-    getMetrics: translationMonitor.getMetrics,
+    logMissingKey: translationMonitor.logMissingKe,y,
+    logFallbackUsage: translationMonitor.logFallbackUsag,e,
+    logTranslationRequest: translationMonitor.logTranslationReques,t,
+    getReport: translationMonitor.getMissingKeysRepor,t,
+    getMetrics: translationMonitor.getMetric,s,
     getCoverage: translationMonitor.getCoverageReport
   };
-} 
+} `</TranslationMonitor>

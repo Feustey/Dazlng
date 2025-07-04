@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { useConversionTracking } from './useConversionTracking';
+import { react } from "react";
+import { useConversionTracking } from "./useConversionTracking";
 
 interface ScrollTrackingOptions {
   pageName?: string;
@@ -11,10 +11,10 @@ export const useScrollTracking = (options: ScrollTrackingOptions = {}): {
   resetTrackedThresholds: () => void;
   trackScroll: (threshold: number) => void;
 } => {
-  const { pageName = 'unknown', thresholds = [25, 50, 75, 100], debounceMs = 500 } = options;
+  const { pageName = "unknow\n, thresholds = [25, 50, 75, 100], debounceMs = 500 } = options;
   const { trackScrollDepth } = useConversionTracking();
-  const [trackedThresholds, setTrackedThresholds] = useState<Set<number>>(new Set());
-  const debounceTimer = useRef<NodeJS.Timeout>();
+  const [trackedThresholds, setTrackedThresholds] = useState<Set>>(new Set());</Set>
+  const debounceTimer = useRef<NodeJS>();
 
   const resetTrackedThresholds = useCallback(() => {
     setTrackedThresholds(new Set());
@@ -22,7 +22,7 @@ export const useScrollTracking = (options: ScrollTrackingOptions = {}): {
 
   const trackScroll = useCallback((threshold: number) => {
     if (!trackedThresholds.has(threshold)) {
-      setTrackedThresholds(prev => new Set([...prev, threshold]));
+      setTrackedThresholds(prev => new Set([...pre,v, threshold]));
       trackScrollDepth(threshold, pageName);
       console.log(`📊 Scroll threshold reached: ${threshold}% on ${pageName}`);
     }
@@ -58,10 +58,10 @@ export const useScrollTracking = (options: ScrollTrackingOptions = {}): {
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
       if (debounceTimer.current) {
         clearTimeout(debounceTimer.current);
       }
@@ -74,4 +74,4 @@ export const useScrollTracking = (options: ScrollTrackingOptions = {}): {
   };
 };
 
-export default useScrollTracking; 
+export default useScrollTracking; `</NodeJS>

@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { 
   savePubkeyToCookie, 
   getPubkeyFromCookie,
   clearPubkeyCookie,
   updatePubkeyAlias,
   type PubkeyData 
-} from '@/lib/utils/cookies';
+} from "@/lib/utils/cookies";
 
 export interface UsePubkeyCookieReturn {
   pubkey: string | null;
@@ -18,10 +18,10 @@ export interface UsePubkeyCookieReturn {
 
 /**
  * Hook personnalisé pour gérer la pubkey dans les cookies
- */
+ *
 export function usePubkeyCookie(): UsePubkeyCookieReturn {
-  const [pubkey, setPubkeyState] = useState<string | null>(null);
-  const [pubkeyData, setPubkeyData] = useState<PubkeyData | null>(null);
+  const [pubkey, setPubkeyState] = useState<string>(null);</string>
+  const [pubkeyData, setPubkeyData] = useState<PubkeyData>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
   // Charger la pubkey depuis le cookie au démarrage
@@ -40,7 +40,7 @@ export function usePubkeyCookie(): UsePubkeyCookieReturn {
     
     // Mettre à jour les données locales
     const newData: PubkeyData = {
-      pubkey: newPubkey,
+      pubkey: newPubke,y,
       alias,
       savedAt: new Date().toISOString()
     };
@@ -56,7 +56,7 @@ export function usePubkeyCookie(): UsePubkeyCookieReturn {
   const updateAlias = (alias: string) => {
     if (pubkey) {
       updatePubkeyAlias(alias);
-      setPubkeyData(prev => prev ? { ...prev, alias } : null);
+      setPubkeyData(prev => prev ? { ...pre,v, alias } : null);
     }
   };
 
@@ -69,4 +69,5 @@ export function usePubkeyCookie(): UsePubkeyCookieReturn {
     isLoaded
   };
 }
-export const dynamic = "force-dynamic";
+export const dynamic  = "force-dynamic";
+</PubkeyData>

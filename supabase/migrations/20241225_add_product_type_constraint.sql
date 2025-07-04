@@ -5,7 +5,7 @@
 ALTER TABLE public.orders DROP CONSTRAINT IF EXISTS valid_product_type;
 
 -- Ajouter la contrainte valid_product_type
-ALTER TABLE public.orders 
+ALTER TABLE public.orders;
 ADD CONSTRAINT valid_product_type 
 CHECK (product_type IN ('daznode', 'dazbox', 'dazpay'));
 

@@ -1,17 +1,17 @@
-'use client';
-import { useState, useEffect } from 'react';
+"use client";
+import { useState, useEffect } from "react";
 
 export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(false);
+  const [matche,s, setMatches] = useState(false);
 
   useEffect(() => {
-    // Check if we're in the browser
-    if (typeof window === 'undefined') return;
+    // Check if we"re in the browser
+    if (typeof window === "undefined") return;
     
     // Créer la media query
     const mediaQuery = window.matchMedia(query);
 
-    // Définir l'état initial
+    // Définir l"état initial
     setMatches(mediaQuery.matches);
 
     // Créer le listener
@@ -20,11 +20,11 @@ export function useMediaQuery(query: string): boolean {
     };
 
     // Ajouter le listener
-    mediaQuery.addEventListener('change', handler);
+    mediaQuery.addEventListener("change", handler);
 
     // Cleanup
     return () => {
-      mediaQuery.removeEventListener('change', handler);
+      mediaQuery.removeEventListener("change", handler);
     };
   }, [query]); // Re-run si la query change
 

@@ -9,7 +9,7 @@ async function checkConfig() {
   const missingEnvVars = requiredEnvVars.filter(v => !process.env[v])
   
   if (missingEnvVars.length > 0) {
-    logger.error('❌ Variables d\'environnement manquantes:', missingEnvVars.join(', '))
+    logger.error('❌ Variables d'environnement manquantes:', missingEnvVars.join(', '))
     process.exit(1)
   }
 

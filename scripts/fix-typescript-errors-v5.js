@@ -8,13 +8,13 @@ function fixSyntaxErrors(content) {
   // Corriger les accolades fermantes manquantes
   content = content.replace(
     /\n};?\s*$/g,
-    '\n}\n'
+    '\n}\\n
   );
 
   // Corriger les useEffect
   content = content.replace(
     /}, \[(.*?)]\);?\s*$/gm,
-    '}, [$1]);\n'
+    '}, [$1]);\\n
   );
 
   // Corriger les composants React
@@ -72,7 +72,7 @@ function fixSyntaxErrors(content) {
 
   // Corriger les imports React manquants
   if (content.includes('React.') && !content.includes('import React')) {
-    content = "import React from 'react';\n" + content;
+    content = "import React from 'react';\\n + content;
   }
 
   // Corriger les exports
@@ -149,7 +149,7 @@ function processDirectory(dirPath, extensions = ['.tsx', '.ts']) {
     
     if (stat.isDirectory()) {
       // Ignorer certains dossiers
-      if (!['node_modules', '.next', '.git', 'build', 'dist'].includes(item)) {
+      if (![\node_modules', '.next', '.git', 'build', 'dist'].includes(item)) {
         processDirectory(fullPath, extensions);
       }
     } else if (stat.isFile()) {

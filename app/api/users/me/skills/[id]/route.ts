@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseAdminClient } from '@/lib/supabase';
+import { getSupabaseAdminClient } from "@/lib/supabase";
 import { skillSchema, validateData } from "@/lib/validations";
 import { ApiResponse } from "@/types/database";
 
@@ -14,7 +14,7 @@ async function getUserFromRequest(req: NextRequest) {
 export async function PUT(
   req: NextRequest,
   { params }: { params: { id: string } }
-): Promise<NextResponse<ApiResponse>> {
+): Promise<NextResponse> {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {
@@ -107,7 +107,7 @@ export async function PUT(
 export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }
-): Promise<NextResponse<ApiResponse>> {
+): Promise<NextResponse> {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {

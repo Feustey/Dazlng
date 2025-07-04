@@ -1,20 +1,20 @@
-import { NextRequest } from 'next/server';
+import { NextRequest } from "next/server";
 import { 
   AdminResponseBuilder, 
   getAdminNotifications, 
   createAdminNotification,
   withEnhancedAdminAuth 
-} from '@/lib/admin-utils';
-import { ErrorCodes } from '@/types/database';
-import { z } from 'zod';
+} from "@/lib/admin-utils";
+import { ErrorCodes } from "@/types/database";
+import { z } from "zod";
 
 const createNotificationSchema = z.object({
-  type: z.enum(['info', 'warning', 'error', 'success']),
+  type: z.enum(["info", "warning", "error", "success"]),
   title: z.string().min(1).max(100),
   message: z.string().min(1).max(500),
-  priority: z.enum(['low', 'medium', 'high']).optional(),
+  priority: z.enum(["low", "medium", "high"]).optional(),
   action: z.object({
-    type: z.enum(['link', 'button']),
+    type: z.enum(["link", "button"]),
     label: z.string(),
     url: z.string().optional()
   }).optional()
@@ -26,7 +26,7 @@ const createNotificationSchema = z.object({
 async function getNotificationsHandler(req: NextRequest, adminId: string): Promise<Response> {
   try {
     const { searchParams } = new URL(req.url);
-    const unreadOnly = searchParams.get('unread') === 'true';
+    const unreadOnly = searchParams.get("unread") === "true";
     
     const notifications = await getAdminNotifications(adminId, unreadOnly);
     
@@ -39,10 +39,10 @@ async function getNotificationsHandler(req: NextRequest, adminId: string): Promi
     });
     
   } catch (error) {
-    console.error('Erreur lors de la récupération des notifications:', error);
+    console.error("Erreur lors de la récupération des notifications:", error);
     return AdminResponseBuilder.error(
-      ErrorCodes.INTERNAL_ERROR,
-      'Erreur lors de la récupération des notifications',
+      ErrorCodes.INTERNAL_ERROR, 
+      "Erreur lors de la récupération des notifications",
       null,
       500
     );
@@ -59,23 +59,23 @@ async function createNotificationHandler(req: NextRequest, adminId: string): Pro
     
     if (!validation.success) {
       return AdminResponseBuilder.error(
-        ErrorCodes.VALIDATION_ERROR,
-        'Données de notification invalides',
+        ErrorCodes.VALIDATION_ERROR, 
+        "Données de notification invalides",
         validation.error.errors
       );
     }
     
-    const { type, title, message, priority = 'medium', action } = validation.data;
+    const { type, title, message, priority = "medium", action } = validation.data;
     
     await createAdminNotification(adminId, type, title, message, action, priority);
     
-    return AdminResponseBuilder.success({ message: 'Notification créée avec succès' });
+    return AdminResponseBuilder.success({ message: "Notification créée avec succès" });
     
   } catch (error) {
-    console.error('Erreur lors de la création de la notification:', error);
+    console.error("Erreur lors de la création de la notification:", error);
     return AdminResponseBuilder.error(
-      ErrorCodes.INTERNAL_ERROR,
-      'Erreur lors de la création de la notification',
+      ErrorCodes.INTERNAL_ERROR, 
+      "Erreur lors de la création de la notification",
       null,
       500
     );
@@ -87,11 +87,11 @@ async function createNotificationHandler(req: NextRequest, adminId: string): Pro
  */
 export const GET = withEnhancedAdminAuth(
   getNotificationsHandler,
-  { resource: 'notifications', action: 'read' }
+  { resource: "notifications", action: "read" }
 );
 export const POST = withEnhancedAdminAuth(
   createNotificationHandler,
-  { resource: 'notifications', action: 'write' }
+  { resource: "notifications", action: "write" }
 );
 
 export const dynamic = "force-dynamic";

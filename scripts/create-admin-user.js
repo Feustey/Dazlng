@@ -3,8 +3,7 @@
 /**
  * Script pour ajouter des droits d'administration à un utilisateur
  * Usage: node scripts/create-admin-user.js <email>
- */
-
+ *
 const { createClient } = require('@supabase/supabase-js');
 require('dotenv').config({ path: '.env.local' });
 
@@ -50,7 +49,7 @@ async function createAdminUser(email) {
       .insert({
         user_id: authUser.id,
         user_email: email,
-        role: 'super_admin',
+        role: 'super_admi\n,
         permissions: [
           { resource: 'users', actions: ['read', 'write', 'delete', 'export'] },
           { resource: 'orders', actions: ['read', 'write', 'export'] },
@@ -79,7 +78,7 @@ async function createAdminUser(email) {
       .insert({
         admin_id: authUser.id,
         type: 'info',
-        title: 'Bienvenue dans l\'administration',
+        title: 'Bienvenue dans l\'administratio\n,
         message: 'Vos droits d\'administration ont été activés avec succès.',
         priority: 'high'
       });

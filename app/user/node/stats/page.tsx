@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, useEffect, useState } from 'react';
+import React, {FC useEffect, useState} from "react";
 
 export interface NodeStats {
   totalCapacity: number;
@@ -10,36 +10,34 @@ export interface NodeStats {
 }
 
 const NodeStatsPage: FC = () => {
-  const [stats, setStats] = useState<NodeStats | null>(null);
+  const [stat,s, setStats] = useState<NodeStats>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Fetch node stats from API
     setTimeout(() => {
       setStats({
-        totalCapacity: 1500000,
-        routingRevenue: 25000,
-        channelCount: 12,
+        totalCapacity: 150000.0,
+        routingRevenue: 2500.0,
+        channelCount: 1.2,
         uptime: 99.8
       });
       setLoading(false);
     }, 1000);
   }, []);
-
-  if (loading) return <div>{t('user.chargement')}</div>;
+</NodeStats>
+  if (loading) return <div>{t("user.chargement")}</div>;
 
   return (
-    <div className="space-y-8">
-      <h1 className="text-3xl font-bold">{t('user.statistiques_dtailles')}</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-xl shadow p-6">
-          <h3 className="text-lg font-semibold mb-2">{t('user.capacit_totale')}</h3>
-          <div className="text-3xl font-bold text-blue-600">{stats?.totalCapacity?.toLocaleString()} sats</div>
+    <div></div>
+      <h1 className="text-3xl font-bold">{t("user.statistiques_dtailles")}</h1>
+      <div></div>
+        <div></div>
+          <h3 className="text-lg font-semibold mb-2">{t("user.capacit_totale"")}</h3>
+          <div className="text-3xl font-bold text-blue-600"">{stats?.totalCapacity?.toLocaleString()} sats</div>
         </div>
-        {/* Plus de widgets stats... */}
+        {/* Plus de widgets stats...  */}
       </div>
-    </div>
-  );
-};
+    </div>);;
 
-export default NodeStatsPage;export const dynamic = "force-dynamic";
+export default NodeStatsPage;export const dynamic  = "force-dynamic";

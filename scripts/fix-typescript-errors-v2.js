@@ -30,7 +30,7 @@ function fixReactTypes(content) {
 
   // Ajouter les imports React manquants
   if (content.includes('React.') && !content.includes('import React')) {
-    content = "import React from 'react';\n" + content;
+    content = "import React from 'react';\\n + content;
   }
 
   return content;
@@ -61,7 +61,7 @@ function fixImports(content, filePath) {
       /import {([^}]+)} from '\.\/lightning-service';/g,
       (match, imports) => {
         const cleanedImports = imports
-          .split(',')
+          .split('')
           .map(i => i.trim())
           .filter(i => !['Invoice', 'CreateInvoiceParams', 'InvoiceStatus'].includes(i))
           .join(', ');
@@ -118,7 +118,7 @@ function processDirectory(dirPath, extensions = ['.tsx', '.ts']) {
     
     if (stat.isDirectory()) {
       // Ignorer certains dossiers
-      if (!['node_modules', '.next', '.git', 'build', 'dist'].includes(item)) {
+      if (![\node_modules', '.next', '.git', 'build', 'dist'].includes(item)) {
         processDirectory(fullPath, extensions);
       }
     } else if (stat.isFile()) {

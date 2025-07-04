@@ -127,7 +127,7 @@ export function formatPubkey(pubkey: string, length: number = 16): string {
  * Formatage du statut avec emoji
  */
 export function formatStatus(status: string): string {
-  const statusMap: Record<string, string> = {
+  const statusMap: Record<string, any> = {
     'active': '🟢 Actif',
     'inactive': '🔴 Inactif',
     'pending': '🟡 En attente',

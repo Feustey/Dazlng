@@ -12,4 +12,4 @@ export { getStaticParams, isValidLocale };
 // Avertissement en développement
 if (process.env.NODE_ENV === 'development') {
   console.warn('⚠️ i18n/settings.ts est déprécié. Utilisez i18n/config.ts à la place.');
-} 
+}

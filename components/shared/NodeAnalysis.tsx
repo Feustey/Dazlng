@@ -1,24 +1,23 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { daznoApi } from '@/lib/services/dazno-api';
-import { useToast } from '@/hooks/useToast';
-import { Button } from '@/components/shared/ui';
-import { NodeStatus } from '@/lib/services/dazno-api';
+import React, { useEffect, useState } from "react";
+import { daznoApi } from "@/lib/services/dazno-api";
+import { useToast } from "@/hooks/useToast";
+import { Button } from "@/components/shared/ui";
+import { NodeStatus } from "@/lib/services/dazno-api";
+import { useTranslations } from "next-intl";
 
 interface NodeAnalysisProps {
   pubkey: string;
   className?: string;
 }
 
-const NodeAnalysis: React.FC<NodeAnalysisProps> = ({
-  pubkey,
-  className = '',
-}) => {
+const NodeAnalysis: React.FC<NodeAnalysisProps> = ({ pubkey, className = "" }) => {
   const [nodeInfo, setNodeInfo] = useState<NodeStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+  const t = useTranslations("NodeAnalysis");
 
   useEffect(() => {
     const fetchNodeInfo = async () => {
@@ -29,12 +28,12 @@ const NodeAnalysis: React.FC<NodeAnalysisProps> = ({
         const info = await daznoApi.getNodeStatus(pubkey);
         setNodeInfo(info);
       } catch (err) {
-        console.error('Failed to fetch node info:', err);
-        setError('Erreur lors de la récupération des informations du nœud');
+        console.error("Failed to fetch node info:", err);
+        setError("Erreur lors de la récupération des informations du nœud");
         toast({
-          title: 'Erreur',
-          description: "NodeAnalysis.nodeanalysisnodeanalysisimposs",
-          variant: 'error',
+          title: "Erreur",
+          description: t("nodeanalysis_error"),
+          variant: "error"
         });
       } finally {
         setLoading(false);
@@ -42,21 +41,21 @@ const NodeAnalysis: React.FC<NodeAnalysisProps> = ({
     };
 
     fetchNodeInfo();
-  }, [pubkey, toast]);
+  }, [pubkey, toast, t]);
 
   if (loading) {
     return (
-      <div className={`flex justify-center items-center p-4 ${className}`}>
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      <div className={className}>
+        <div>Chargement...</div>
       </div>
     );
   }
 
   if (error || !nodeInfo) {
     return (
-      <div className={`text-center p-4 ${className}`}>
-        <p className="text-red-500 mb-4">{error || 'Erreur inattendue'}</p>
-        <Button
+      <div className={className}>
+        <p className="text-red-500 mb-4">{error || "Erreur inattendue"}</p>
+        <Button 
           onClick={() => window.location.reload()}
           variant="outline"
         >
@@ -67,39 +66,39 @@ const NodeAnalysis: React.FC<NodeAnalysisProps> = ({
   }
 
   return (
-    <div className={`p-4 ${className}`}>
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-2xl font-bold mb-4">
+    <div className={className}>
+      <div>
+        <h2>
           {nodeInfo.alias}
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <p className="text-gray-600">
-              Status: <span className={`font-medium ${nodeInfo.status === 'online' ? 'text-green-500' : 'text-red-500'}`}>
-                {nodeInfo.status === 'online' ? 'En ligne' : 'Hors ligne'}
+        <div>
+          <div>
+            <p>
+              Status: <span>
+                {nodeInfo.status === "online" ? "En ligne" : "Hors ligne"}
               </span>
             </p>
             
             {nodeInfo.lastSeen && (
-              <p className="text-gray-600">
-                Dernière activité: <span className="font-medium">
+              <p>
+                Dernière activité: <span>
                   {new Date(nodeInfo.lastSeen).toLocaleString()}
                 </span>
               </p>
             )}
           </div>
 
-          <div className="space-y-2">
+          <div>
             {nodeInfo.channels !== undefined && (
-              <p className="text-gray-600">
+              <p>
                 Canaux: <span className="font-medium">{nodeInfo.channels}</span>
               </p>
             )}
             
             {nodeInfo.capacity !== undefined && (
-              <p className="text-gray-600">
-                Capacité: <span className="font-medium">
+              <p>
+                Capacité: <span>
                   {nodeInfo.capacity.toLocaleString()} sats
                 </span>
               </p>
@@ -108,35 +107,31 @@ const NodeAnalysis: React.FC<NodeAnalysisProps> = ({
         </div>
 
         {nodeInfo.metrics && (
-          <div className="mt-6 border-t pt-4">
-            <h3 className="text-lg font-semibold mb-3">{t('NodeAnalysis.mtriques')}</h3>
+          <div>
+            <h3 className="text-lg font-semibold mb-3">{t("metriques")}</h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
               <div>
-                <p className="text-gray-600">{t('NodeAnalysis.disponibilit')}</p>
-                <div className="flex items-center mt-1">
-                  <div className="flex-1 bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-green-500 h-2 rounded-full"
-                      style={{ width: `${nodeInfo.metrics.availability * 100}%` }}
-                    />
+                <p className="text-gray-600">{t("disponibilite")}</p>
+                <div>
+                  <div>
+                    <div>
+                    </div>
                   </div>
-                  <span className="ml-2 text-sm font-medium">
+                  <span>
                     {Math.round(nodeInfo.metrics.availability * 100)}%
                   </span>
                 </div>
               </div>
 
               <div>
-                <p className="text-gray-600">{t('NodeAnalysis.fiabilit')}</p>
-                <div className="flex items-center mt-1">
-                  <div className="flex-1 bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-blue-500 h-2 rounded-full"
-                      style={{ width: `${nodeInfo.metrics.reliability * 100}%` }}
-                    />
+                <p className="text-gray-600">{t("fiabilite")}</p>
+                <div>
+                  <div>
+                    <div>
+                    </div>
                   </div>
-                  <span className="ml-2 text-sm font-medium">
+                  <span>
                     {Math.round(nodeInfo.metrics.reliability * 100)}%
                   </span>
                 </div>
@@ -144,14 +139,12 @@ const NodeAnalysis: React.FC<NodeAnalysisProps> = ({
 
               <div>
                 <p className="text-gray-600">Performance</p>
-                <div className="flex items-center mt-1">
-                  <div className="flex-1 bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-yellow-500 h-2 rounded-full"
-                      style={{ width: `${nodeInfo.metrics.performance * 100}%` }}
-                    />
+                <div>
+                  <div>
+                    <div>
+                    </div>
                   </div>
-                  <span className="ml-2 text-sm font-medium">
+                  <span>
                     {Math.round(nodeInfo.metrics.performance * 100)}%
                   </span>
                 </div>
@@ -164,4 +157,4 @@ const NodeAnalysis: React.FC<NodeAnalysisProps> = ({
   );
 };
 
-export default NodeAnalysis; 
+export default NodeAnalysis;

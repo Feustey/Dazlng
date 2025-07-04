@@ -1,9 +1,10 @@
-import React from 'react';
-import { Metadata } from 'next';
-import DazBoxClientHero from './components/ClientHero';
-import DazBoxFeatures from './components/Features';
-import DazBoxPricing from './components/Pricing';
-import { seoConfig } from '@/lib/seo-config';
+import React from "react";
+import { Metadata } from "next";
+import DazBoxClientHero from "./components/ClientHero";
+import DazBoxFeatures from "./components/Features";
+import DazBoxPricing from "./components/Pricing";
+import { seoConfig } from "@/lib/seo-config";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
 
 // Structured data avancé pour DazBox
 const dazBoxStructuredData = {
@@ -173,7 +174,7 @@ const dazBoxStructuredData = {
       "name": "France"
     },
     {
-      "@type": "Country", 
+      "@type": "Country",
       "name": "Belgique"
     },
     {
@@ -184,67 +185,62 @@ const dazBoxStructuredData = {
 };
 
 export const metadata: Metadata = {
-  title: 'DazBox | Solution Lightning Network Plug & Play',
-  description: "common.commoncommondazbox_simplifie_l"économie Bitcoin.',
+  title: "DazBox | Solution Lightning Network Plug & Play",
+  description: "DazBox simplifie l'économie Bitcoin avec une solution Lightning Network plug & play.",
   keywords: [
-    'DazBox',
-    'Lightning Network',
-    'Bitcoin',
-    'nœud Lightning',
-    'plug and play',
-    'solution Bitcoin',
-    'paiement crypto',
-    'finance décentralisée',
-    'earning sats',
-    'routing fees'
+    "DazBox", "Lightning Network", "Bitcoin", "nœud Lightning", "plug and play", "solution Bitcoin", "paiement crypto", "finance décentralisée", "earning sats", "routing fees"
   ],
-  authors: [{ name: 'DazNode' }],
-  creator: 'DazNode',
-  publisher: 'DazNode',
-  robots: 'index, follow',
+  authors: [{ name: "DazNode" }],
+  creator: "DazNode",
+  publisher: "DazNode",
+  robots: "index, follow",
   openGraph: {
-    type: 'website',
-    locale: 'fr_FR',
+    type: "website",
+    locale: "fr_FR",
     url: `${seoConfig.baseUrl}/dazbox`,
-    title: 'DazBox | Solution Lightning Network Plug & Play',
-    description: "common.commoncommondazbox_simplifie_l"économie Bitcoin.',
-    siteName: 'DazNode',
+    title: "DazBox | Solution Lightning Network Plug & Play",
+    description: "DazBox simplifie l'économie Bitcoin avec une solution Lightning Network plug & play.",
+    siteName: "DazNode",
     images: [
       {
         url: `${seoConfig.baseUrl}/assets/images/dazbox-og.png`,
         width: 1200,
         height: 630,
-        alt: 'DazBox - Solution Lightning Network Plug & Play'
+        alt: "DazBox - Solution Lightning Network Plug & Play"
       }
     ]
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'DazBox | Solution Lightning Network Plug & Play',
-    description: "common.commoncommondazbox_simplifie_l",
+    card: "summary_large_image",
+    title: "DazBox | Solution Lightning Network Plug & Play",
+    description: "DazBox simplifie l'économie Bitcoin",
     images: [`${seoConfig.baseUrl}/assets/images/dazbox-og.png`],
-    creator: '@daznode'
+    creator: "@daznode"
   },
   alternates: {
     canonical: `${seoConfig.baseUrl}/dazbox`,
     languages: {
-      'fr': `${seoConfig.baseUrl}/fr/dazbox`,
-      'en': `${seoConfig.baseUrl}/en/dazbox`,
-      'x-default': `${seoConfig.baseUrl}/dazbox`
+      "fr": `${seoConfig.baseUrl}/fr/dazbox`,
+      "en": `${seoConfig.baseUrl}/en/dazbox`,
+      "x-default": `${seoConfig.baseUrl}/dazbox`
     }
   },
   verification: {
-    google: 'your-google-site-verification'
+    google: "your-google-site-verification"
   }
 };
 
 const DazBoxPage: React.FC = () => {
+  const { t } = useAdvancedTranslation("dazbox");
+  
   return (
     <>
       {/* Structured data avancé */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(dazBoxStructuredData) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(dazBoxStructuredData)
+        }}
       />
       
       {/* Hero Section */}
@@ -257,26 +253,24 @@ const DazBoxPage: React.FC = () => {
       <DazBoxPricing />
       
       {/* Testimonials Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Ce Que Disent Nos{' '}
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">
-                Utilisateurs
-              </span>
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Ce Que Disent Nos{" "}
+              <span className="text-indigo-600">Utilisateurs</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg text-gray-600">
               Plus de 500 utilisateurs nous font confiance pour leurs nœuds Lightning
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Testimonial 1 */}
-            <div className="bg-white p-6 rounded-xl shadow-lg">
+            <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="flex items-center mb-4">
                 <div className="text-yellow-400 text-2xl">★★★★★</div>
-                <span className="ml-2 text-sm text-gray-600">{t('common.bitcoin_expert')}</span>
+                <span className="ml-2 text-sm text-gray-600">{t("common.expert_bitcoin")}</span>
               </div>
               <p className="text-gray-700">
                 "DazBox simplifie vraiment l'accès au Lightning Network. Installation en 5 minutes et revenus dès le premier jour."
@@ -284,10 +278,10 @@ const DazBoxPage: React.FC = () => {
             </div>
             
             {/* Testimonial 2 */}
-            <div className="bg-white p-6 rounded-xl shadow-lg">
+            <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="flex items-center mb-4">
                 <div className="text-yellow-400 text-2xl">★★★★★</div>
-                <span className="ml-2 text-sm text-gray-600">{t('common.lightning_developer')}</span>
+                <span className="ml-2 text-sm text-gray-600">{t("common.developpeur_lightning")}</span>
               </div>
               <p className="text-gray-700">
                 "Matériel de qualité, interface intuitive. Parfait pour débuter avec Lightning Network."
@@ -295,10 +289,10 @@ const DazBoxPage: React.FC = () => {
             </div>
             
             {/* Testimonial 3 */}
-            <div className="bg-white p-6 rounded-xl shadow-lg">
+            <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="flex items-center mb-4">
                 <div className="text-yellow-400 text-2xl">★★★★★</div>
-                <span className="ml-2 text-sm text-gray-600">{t('common.crypto_enthusiast')}</span>
+                <span className="ml-2 text-sm text-gray-600">{t("common.passionne_crypto")}</span>
               </div>
               <p className="text-gray-700">
                 "Support client exceptionnel et revenus passifs qui dépassent mes attentes. Je recommande !"
@@ -307,102 +301,9 @@ const DazBoxPage: React.FC = () => {
           </div>
         </div>
       </section>
-      
-      {/* FAQ Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Questions{' '}
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">
-                Fréquentes
-              </span>
-            </h2>
-          </div>
-          
-          <div className="space-y-8">
-            {[
-              {
-                q: "Combien puis-je gagner avec ma DazBox ?",
-                a: "Les revenus dépendent de plusieurs facteurs : votre investissement initial, l'activité du réseau Lightning et votre configuration. En moyenne, nos utilisateurs gagnent entre 50 Sats et 200Sats par mois, soit un ROI de 8% à 15% annuel."
-              },
-              {
-                q: "L'installation est-elle vraiment si simple ?",
-                a: "Oui ! Branchez votre DazBox à internet et à l'électricité, elle se configure automatiquement. Aucune compétence technique requise. 95% de nos utilisateurs sont opérationnels en moins de 10 minutes."
-              },
-              {
-                q: "Que se passe-t-il si j'ai un problème ?",
-                a: "Notre équipe de support expert est disponible 24/7 par chat, email ou téléphone. Temps de réponse moyen : 5 minutes. De plus, votre DazBox se répare automatiquement dans 99% des cas."
-              },
-              {
-                q: "Y a-t-il des frais cachés ?",
-                a: "Aucun frais caché. Le prix d'achat inclut tout : livraison, installation, support et mises à jour à vie. Les seuls coûts additionnels sont l'électricité (≈2Sats/mois) et votre connexion internet."
-              },
-              {
-                q: "Puis-je essayer avant d'acheter ?",
-                a: "Absolument ! Nous offrons une garantie satisfait ou remboursé de 30 jours. Si vous n'êtes pas entièrement satisfait, nous reprenons votre DazBox et vous remboursons intégralement."
-              }
-            ].map((faq: any, index: any) => (
-              <div key={index} className="bg-gray-50 rounded-2xl p-8">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  {faq.q}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {faq.a}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      
-      {/* Final CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Prêt à Générer Vos Premiers{' '}
-            <span className="bg-gradient-to-r from-yellow-300 to-orange-400 text-transparent bg-clip-text">
-              Revenus Passifs ?
-            </span>
-          </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Rejoignez les centaines d'utilisateurs qui gagnent déjà avec DazBox. 
-            Installation en 5 minutes, revenus dès le premier jour.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <button className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold px-8 py-4 text-lg rounded-xl shadow-2xl transform hover:scale-105 transition-all duration-300">
-              Commander Ma DazBox
-            </button>
-            <button className="border-2 border-white text-white hover:bg-white hover:text-indigo-600 px-8 py-4 text-lg bg-transparent rounded-xl font-bold transition-all duration-300">
-              Parler à un Expert
-            </button>
-          </div>
-          
-          <div className="flex items-center justify-center gap-8 text-blue-100 text-sm">
-            <div className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              <span>{t('common.garantie_30_jours')}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              <span>{t('common.livraison_gratuite')}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              <span>{t('common.support_247')}</span>
-            </div>
-          </div>
-        </div>
-      </section>
     </>
   );
-};
+}
 
-export default DazBoxPage;export const dynamic = "force-dynamic";
+export default DazBoxPage;
+export const dynamic = "force-dynamic";

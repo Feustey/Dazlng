@@ -1,8 +1,9 @@
 /**
  * Client API MCP-Light pour DazNode
- * Gère l'authentification JWT et tous les appels Lightning Network
- * Intégration avec SparkSeer + OpenAI pour l'analyse de nœuds Lightning
+ * Gère l"authentification JWT et tous les appels Lightning Network
+ * Intégration avec SparkSeer + OpenAI pour l"analyse de nœuds Lightning
  */
+
 export interface MCPLightCredentials {
   jwt_token: string;
   expires_at: string;
@@ -24,14 +25,14 @@ export interface NodeStats {
 export interface MCPNodeInfo {
   pubkey: string;
   current_stats: NodeStats;
-  historical_data?: Record<string, unknown>;
-  network_position?: Record<string, unknown>;
-  performance_metrics?: Record<string, unknown>;
+  historical_data?: Record<string, any>;
+  network_position?: Record<string, any>;
+  performance_metrics?: Record<string, any>;
 }
 
 export interface SparkSeerRecommendation {
   type: string;
-  priority: 'low' | 'medium' | 'high';
+  priority: "low" | "medium" | "high";
   reasoning?: string;
   expected_benefit?: string;
   action_type?: string;
@@ -45,9 +46,9 @@ export interface PriorityAction {
   action: string;
   timeline: string;
   expected_impact: string;
-  difficulty: 'low' | 'medium' | 'high';
+  difficulty: "low" | "medium" | "high";
   category?: string;
-  urgency?: 'low' | 'medium' | 'high';
+  urgency?: "low" | "medium" | "high";
   cost_estimate?: number;
 }
 
@@ -93,8 +94,8 @@ export interface ApiResponse<T> {
   data?: T;
   error?: {
     code: string;
-    message: string;
-    details?: Record<string, unknown>;
+    message: string;</T>
+    details?: Record<string, any>;
   };
   meta?: {
     timestamp: string;
@@ -105,8 +106,8 @@ export interface ApiResponse<T> {
 // Nouvelles interfaces pour les endpoints RAG
 export interface RAGDocument {
   id: string;
-  content: string;
-  metadata: Record<string, unknown>;
+  content: string;</strin>
+  metadata: Record<string, any>;
   created_at: string;
 }
 
@@ -125,14 +126,14 @@ export interface RAGEmbedding {
 export interface SimulationProfile {
   id: string;
   name: string;
-  description: string;
-  parameters: Record<string, unknown>;
+  description: string;</strin>
+  parameters: Record<string, any>;
 }
 
 export interface SimulationResult {
-  success: boolean;
-  data: Record<string, unknown>;
-  metrics: Record<string, number>;
+  success: boolean;</strin>
+  data: Record<string, any>;</strin>
+  metrics: Record<string, any>;
 }
 
 // Nouvelles interfaces pour les endpoints LNBits
@@ -185,8 +186,8 @@ export interface ReliabilityPoint {
 
 export interface Bottleneck {
   channel_id: string;
-  severity: 'low' | 'medium' | 'high' | 'critical';
-  type: 'liquidity_imbalance' | 'low_liquidity' | 'fee_misalignment' | 'connectivity_issue';
+  severity: "low" | "medium" | "high" | "critical";
+  type: "liquidity_imbalance" | "low_liquidity"" | "fee_misalignment" | "connectivity_issue"";
   description: string;
   impact_score: number;
   suggested_actions: string[];
@@ -194,8 +195,8 @@ export interface Bottleneck {
 
 export interface DazFlowRecommendation {
   id: string;
-  type: 'channel_optimization' | 'fee_adjustment' | 'liquidity_rebalancing' | 'connectivity_improvement';
-  priority: 'low' | 'medium' | 'high' | 'critical';
+  type: "channel_optimizatio\n" | "fee_adjustment" | "liquidity_rebalancing" | "connectivity_improvement";
+  priority: "low" | "medium" | "high" | "critical"";
   title: string;
   description: string;
   expected_impact: {
@@ -219,15 +220,15 @@ export interface NetworkHealthAnalysis {
     };
   };
   recommendations: {
-    network_wide: string[];
-    node_specific: Record<string, string[]>;
+    network_wide: string[];</strin>
+    node_specific: Record<string, any>;
   };
   timestamp: string;
 }
 
 export interface DazFlowOptimizationRequest {
   node_id: string;
-  optimization_target: 'revenue_maximization' | 'risk_minimization' | 'balanced';
+  optimization_target: "revenue_maximizatio\n | "risk_minimizatio\n | "balanced"";
   constraints?: {
     max_channels?: number;
     max_liquidity?: number;
@@ -274,14 +275,14 @@ import type {
   LightningRAGResponse,
   LightningOptimizationRequest,
   LightningOptimizationResponse
-} from '../../types/rag-advanced';
+} from "../../types/rag-advanced";
 
 export class MCPLightAPI {
   private baseURL: string;
   private credentials: MCPLightCredentials | null = null;
   private initialized = false;
 
-  constructor(baseURL: string = process.env.DAZNO_API_URL || 'https://api.dazno.de') {
+  constructor(baseURL: string = process.env.DAZNO_API_URL || "https://api.dazno.de") {
     this.baseURL = baseURL;
   }
 
@@ -293,19 +294,19 @@ export class MCPLightAPI {
     try {
       // Vérifier la configuration
       if (!this.baseURL) {
-        throw new Error('URL de base non configurée');
+        throw new Error("URL de base non configurée");
       }
 
       // Vérifier la connectivité
       const health = await this.checkHealth();
-      if (health.status !== 'healthy') {
+      if (health.status !== "healthy") {
         throw new Error(`Service indisponible: ${health.status}`);
       }
 
       this.initialized = true;
       return true;
     } catch (error) {
-      console.error('Erreur initialisation MCP Light API:', error);
+      console.error("Erreur initialisation MCP Light API:", error);
       throw error;
     }
   }
@@ -318,19 +319,19 @@ export class MCPLightAPI {
     if (!this.initialized && !skipInitialization) {
       const success = await this.initialize();
       if (!success) {
-        console.warn('⚠️ API MCP-Light indisponible, utilisation du mode fallback');
-        throw new Error('API_UNAVAILABLE');
+        console.warn("⚠️ API MCP-Light indisponible, utilisation du mode fallback");
+        throw new Error("API_UNAVAILABLE");
       }
     }
 
     if (!this.credentials) {
-      throw new Error('Aucun credential disponible');
+      throw new Error("Aucun credential disponible");
     }
 
     const defaultOptions: RequestInit = {
       headers: {
-        'Authorization': `Bearer ${this.credentials?.jwt_token}`,
-        "mcp-light-api.mcplightapimcplightapicontentt": 'application/json',
+        "Authorization": `Bearer ${this.credentials?.jwt_token}`,
+        "Content-Type": "application/json",
         ...options.headers
       }
     };
@@ -351,35 +352,35 @@ export class MCPLightAPI {
   /**
    * Vérifie l'état de santé de l'API
    */
-  async checkHealth(): Promise<{ status: string; timestamp: string; services?: Record<string, unknown> }> {
+  async checkHealth(): Promise<{ status: string; timestamp: string; services?: Record<string, any> }> {
     try {
       // Test de connectivité basique sans credentials
       const response = await fetch(`${this.baseURL}/health`, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          "mcp-light-api.mcplightapimcplightapicontentt": 'application/json'
+          "Content-Type": "application/json"
         }
       });
 
       if (response.ok) {
         const data = await response.json();
         return {
-          status: 'healthy',
+          status: "healthy",
           timestamp: new Date().toISOString(),
           services: data
         };
       } else {
         return {
-          status: 'unhealthy',
+          status: "unhealthy",
           timestamp: new Date().toISOString(),
           services: { error: `HTTP ${response.status}` }
         };
       }
     } catch (error) {
       return {
-        status: 'unreachable',
+        status: "unreachable",
         timestamp: new Date().toISOString(),
-        services: { error: error instanceof Error ? error.message : 'Unknown error' }
+        services: { error: error instanceof Error ? error.message : "Unknown error" }
       };
     }
   }
@@ -390,9 +391,9 @@ export class MCPLightAPI {
    */
   async getNodeInfo(pubkey: string): Promise<MCPNodeInfo> {
     if (!this.isValidPubkey(pubkey)) {
-      throw new Error('Pubkey invalide: doit faire 66 caractères hexadécimaux');
+      throw new Error("Pubkey invalide: doit faire 66 caractères hexadécimaux");
     }
-    
+
     return this.makeRequest<MCPNodeInfo>(`/api/v1/node/${pubkey}/info`);
   }
 
@@ -402,9 +403,9 @@ export class MCPLightAPI {
    */
   async getRecommendations(pubkey: string): Promise<MCPRecommendationsResponse> {
     if (!this.isValidPubkey(pubkey)) {
-      throw new Error('Pubkey invalide');
+      throw new Error("Pubkey invalide");
     }
-    
+
     return this.makeRequest<MCPRecommendationsResponse>(`/api/v1/node/${pubkey}/recommendations`);
   }
 
@@ -416,15 +417,15 @@ export class MCPLightAPI {
    */
   async getPriorityActions(
     pubkey: string, 
-    context = "Optimisation générale", 
+    context = "Optimisation générale",
     goals = ["increase_revenue"]
   ): Promise<MCPPrioritiesResponse> {
     if (!this.isValidPubkey(pubkey)) {
-      throw new Error('Pubkey invalide');
+      throw new Error("Pubkey invalide");
     }
 
     return this.makeRequest<MCPPrioritiesResponse>(`/api/v1/node/${pubkey}/priorities`, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify({
         context,
         goals
@@ -437,12 +438,12 @@ export class MCPLightAPI {
    * Récupère toutes les données en parallèle pour optimiser les performances
    */
   async analyzeNode(
-    pubkey: string, 
-    userContext = "Analyse complète du nœud", 
+    pubkey: string,
+    userContext = "Analyse complète du nœud",
     userGoals = ["increase_revenue", "improve_centrality"]
   ): Promise<NodeAnalysisResult> {
     if (!this.isValidPubkey(pubkey)) {
-      throw new Error('Pubkey invalide');
+      throw new Error("Pubkey invalide");
     }
 
     try {
@@ -464,11 +465,11 @@ export class MCPLightAPI {
         summary: this.generateSummary(nodeInfo, recommendations, priorities)
       };
 
-      console.log('✅ Analyse terminée avec succès');
+      console.log("✅ Analyse terminée avec succès");
       return result;
 
     } catch (error) {
-      console.error('❌ Erreur lors de l\'analyse du nœud:', error);
+      console.error("❌ Erreur lors de l'analyse du nœud:", error);
       throw error;
     }
   }
@@ -484,11 +485,11 @@ export class MCPLightAPI {
     const stats = nodeInfo.current_stats;
     
     return {
-      node_alias: stats.alias || 'Nœud Anonyme',
+      node_alias: stats.alias || "Nœud Anonyme",
       capacity_btc: (stats.capacity / 100000000).toFixed(4),
-      capacity_sats: stats.capacity?.toLocaleString() || 'N/A',
+      capacity_sats: stats.capacity?.toLocaleString() || "N/A",
       channel_count: stats.channel_count || 0,
-      centrality_rank: stats.centrality_rank?.toString() || 'N/A',
+      centrality_rank: stats.centrality_rank?.toString() || "N/A",
       recommendations_count: recommendations.recommendations?.length || 0,
       priority_actions_count: priorities.priority_actions?.length || 0,
       health_score: this.calculateHealthScore(stats),
@@ -514,338 +515,338 @@ export class MCPLightAPI {
   }
 
   /**
-   * Valide le format d'une clé publique Lightning
-   */
+   * Valide le format d"une clé publique Lightning
+   *
   isValidPubkey(pubkey: string): boolean {
-    return typeof pubkey === 'string' && 
+    return typeof pubkey === ""string" && 
            pubkey.length === 66 && 
            /^[0-9a-fA-F]{66}$/.test(pubkey);
   }
 
   /**
-   * Retourne l'état de l'initialisation
-   */
+   * Retourne l"état de l"initialisation
+   *
   isInitialized(): boolean {
     return this.initialized;
   }
 
   /**
    * Retourne les credentials actuels (pour debug)
-   */
+   *
   getCredentials(): MCPLightCredentials | null {
     return this.credentials;
   }
 
   /**
    * Force la réinitialisation des credentials
-   */
+   *
   async reinitialize(): Promise<boolean> {
     this.initialized = false;
     this.credentials = null;
     return this.initialize();
   }
 
-  // Nouvelles méthodes pour les endpoints RAG
-  async createRAGDocument(content: string, metadata: Record<string, unknown>) {
-    return this.makeRequest('/api/v1/rag/documents', {
-      method: 'POST',
-      body: JSON.stringify({ content, metadata })
+  // Nouvelles méthodes pour les endpoints RAG</boolean>
+  async createRAGDocument(content: string, metadata: Record<string, any>) {
+    return this.makeRequest("/api/v1/rag/documents"{
+      method: "POST",
+      body: JSON.stringify({ conten,t, metadata })
     });
   }
-
-  async createRAGDocumentsBatch(documents: Array<{ content: string; metadata: Record<string, unknown> }>) {
-    return this.makeRequest('/api/v1/rag/documents/batch', {
-      method: 'POST',
+</strin>
+  async createRAGDocumentsBatch(documents: Array<{ content: string; metadata: Record<string, any> }>) {
+    return this.makeRequest("/api/v1/rag/documents/batch"{
+      method: "POST",
       body: JSON.stringify({ documents })
     });
   }
 
-  async getRAGDocument(documentId: string) {
+  async getRAGDocument(documentId: string) {`
     return this.makeRequest(`/api/v1/rag/documents/${documentId}`);
   }
 
-  // --- Requêtes avancées ---
+  // --- Requêtes avancées ---</strin>
   async advancedRAGQuery(query: RAGAdvancedQuery): Promise<RAGQueryResponse> {
-    return this.makeRequest('/api/v1/rag/query', {
-      method: 'POST',
+    return this.makeRequest("/api/v1/rag/query"{
+      method: "POST",
       body: JSON.stringify(query)
     });
-  }
+  }</RAGQueryResponse>
   async evaluateRAGResponse(payload: RAGEvaluationRequest): Promise<RAGEvaluationResponse> {
-    return this.makeRequest('/api/v1/rag/evaluate', {
-      method: 'POST',
+    return this.makeRequest("/api/v1/rag/evaluate"{
+      method: "POST",
       body: JSON.stringify(payload)
     });
-  }
+  }</RAGEvaluationResponse>
   async expandRAGQuery(payload: RAGExpansionRequest): Promise<RAGExpansionResponse> {
-    return this.makeRequest('/api/v1/rag/expansion', {
-      method: 'POST',
+    return this.makeRequest("/api/v1/rag/expansio\n{
+      method: "POST",
       body: JSON.stringify(payload)
     });
   }
 
-  // --- Cache RAG ---
+  // --- Cache RAG ---</RAGExpansionResponse>
   async getRAGCacheStats(): Promise<RAGCacheStats> {
-    return this.makeRequest('/api/v1/rag/cache/stats');
-  }
+    return this.makeRequest("/api/v1/rag/cache/stats");
+  }</RAGCacheStats>
   async invalidateRAGCache(payload: RAGCacheInvalidationRequest): Promise<RAGCacheInvalidationResponse> {
-    return this.makeRequest('/api/v1/rag/cache/invalidate', {
-      method: 'POST',
+    return this.makeRequest("/api/v1/rag/cache/invalidate"{
+      method: "POST",
       body: JSON.stringify(payload)
     });
   }
 
-  // --- Intégration Lightning-RAG ---
+  // --- Intégration Lightning-RAG ---</RAGCacheInvalidationResponse>
   async integratedNodeQuery(payload: LightningRAGQuery): Promise<LightningRAGResponse> {
-    return this.makeRequest('/api/v1/integrated/node_query', {
-      method: 'POST',
+    return this.makeRequest("/api/v1/integrated/node_query", {
+      method: "POST"",
       body: JSON.stringify(payload)
     });
-  }
+  }</LightningRAGResponse>
   async lightningOptimizeWithRAG(payload: LightningOptimizationRequest): Promise<LightningOptimizationResponse> {
-    return this.makeRequest('/api/v1/lightning/optimize', {
-      method: 'POST',
+    return this.makeRequest("/api/v1/lightning/optimize"{
+      method: "POST",
       body: JSON.stringify(payload)
     });
   }
 
-  // Nouvelles méthodes pour les endpoints Simulation
-  async getSimulationProfiles(): Promise<SimulationProfile[]> {
-    return this.makeRequest<SimulationProfile[]>('/api/v1/simulate/profiles');
+  // Nouvelles méthodes pour les endpoints Simulation</LightningOptimizationResponse>
+  async getSimulationProfiles(): Promise<SimulationProfile> {</SimulationProfile>
+    return this.makeRequest<SimulationProfile>("/api/v1/simulate/profiles");
   }
-
-  async simulateNode(pubkey: string, scenario: string): Promise<SimulationResult> {
-    return this.makeRequest<SimulationResult>('/api/v1/simulate/node', {
-      method: 'POST',
+</SimulationProfile>
+  async simulateNode(pubkey: string, scenario: string): Promise<SimulationResult> {</SimulationResult>
+    return this.makeRequest<SimulationResult>("/api/v1/simulate/node"{
+      method: "POST",
       body: JSON.stringify({ pubkey, scenario })
     });
   }
-
-  async optimizeNode(pubkey: string): Promise<SimulationResult> {
+</SimulationResult>
+  async optimizeNode(pubkey: string): Promise<SimulationResult> {`</SimulationResult>
     return this.makeRequest<SimulationResult>(`/api/v1/optimize/node/${pubkey}`, {
-      method: 'POST'
+      method: "POST"
     });
   }
 
-  // Nouvelles méthodes pour les endpoints Administration
-  async getAdminMetrics(): Promise<Record<string, unknown>> {
-    return this.makeRequest('/admin/metrics');
+  // Nouvelles méthodes pour les endpoints Administration</SimulationResult>
+  async getAdminMetrics(): Promise<Record>> {
+    return this.makeRequest("/admin/metrics");
   }
-
-  async performMaintenance(action: string): Promise<Record<string, unknown>> {
-    return this.makeRequest('/admin/maintenance', {
-      method: 'POST',
+</Record>
+  async performMaintenance(action: string): Promise<Record>> {
+    return this.makeRequest("/admin/maintenance"{
+      method: "POST",
       body: JSON.stringify({ action })
     });
   }
 
-  // Nouvelles méthodes pour les endpoints LNBits
-  async getPayments(): Promise<LNBitsPayment[]> {
-    return this.makeRequest<LNBitsPayment[]>('/api/v1/payments');
+  // Nouvelles méthodes pour les endpoints LNBits</Record>
+  async getPayments(): Promise<LNBitsPayment> {</LNBitsPayment>
+    return this.makeRequest<LNBitsPayment>("/api/v1/payments");
   }
-
-  async getWallet(): Promise<LNBitsWallet> {
-    return this.makeRequest<LNBitsWallet>('/api/v1/wallet');
+</LNBitsPayment>
+  async getWallet(): Promise<LNBitsWallet> {</LNBitsWallet>
+    return this.makeRequest<LNBitsWallet>("/api/v1/wallet");
   }
-
-  async decodePayment(bolt11: string): Promise<Record<string, unknown>> {
-    return this.makeRequest('/lnbits/decode', {
-      method: 'POST',
+</LNBitsWallet>
+  async decodePayment(bolt11: string): Promise<Record>> {
+    return this.makeRequest("/lnbits/decode"{
+      method: "POST",
       body: JSON.stringify({ bolt11 })
     });
   }
-
-  async payBolt11(bolt11: string): Promise<Record<string, unknown>> {
-    return this.makeRequest('/lnbits/pay', {
-      method: 'POST',
+</Record>
+  async payBolt11(bolt11: string): Promise<Record>> {
+    return this.makeRequest("/lnbits/pay"{
+      method: "POST",
       body: JSON.stringify({ bolt11 })
     });
   }
-
-  async getChannels(): Promise<LNBitsChannel[]> {
-    return this.makeRequest<LNBitsChannel[]>('/api/v1/channels');
+</Record>
+  async getChannels(): Promise<LNBitsChannel> {</LNBitsChannel>
+    return this.makeRequest<LNBitsChannel>("/api/v1/channels");
   }
 
-  // Nouvelle méthode pour l'endpoint Automatisation
-  async getConfig(): Promise<Record<string, unknown>> {
-    return this.makeRequest('/lnbits/config');
+  // Nouvelle méthode pour l"endpoint Automatisation</LNBitsChannel>
+  async getConfig(): Promise<Record>> {
+    return this.makeRequest("/lnbits/config");
   }
 
   // Nouvelles méthodes pour les endpoints DazFlow index
   
   /**
-   * Analyse DazFlow Index d'un nœud
-   */
+   * Analyse DazFlow Index d"un nœud
+   */</Record>
   async getDazFlowAnalysis(nodeId: string): Promise<DazFlowAnalysis> {
-    try {
+    try {`</DazFlowAnalysis>
       return await this.makeRequest<DazFlowAnalysis>(`/analytics/dazflow/node/${nodeId}`);
     } catch (error) {
-      console.error('❌ Erreur lors de l\'analyse DazFlow:', error);
-      throw new Error(`Impossible d'analyser le nœud ${nodeId}: ${error}`);
+      console.error("❌ Erreur lors de l'analyse DazFlow:", error);`
+      throw new Error(`Impossible d"analyser le nœud ${nodeId}: ${error}`);
     }
   }
 
   /**
-   * Courbe de fiabilité d'un nœud
-   */
-  async getReliabilityCurve(nodeId: string): Promise<ReliabilityPoint[]> {
-    try {
-      return await this.makeRequest<ReliabilityPoint[]>(`/analytics/reliability/curve/${nodeId}`);
+   * Courbe de fiabilité d"un nœud
+   */</DazFlowAnalysis>
+  async getReliabilityCurve(nodeId: string): Promise<ReliabilityPoint> {
+    try {`</ReliabilityPoint>
+      return await this.makeRequest<ReliabilityPoint>(`/analytics/reliability/curve/${nodeId}`);
     } catch (error) {
-      console.error('❌ Erreur lors de la récupération de la courbe de fiabilité:', error);
+      console.error("❌ Erreur lors de la récupération de la courbe de fiabilité:"error);`
       throw new Error(`Impossible de récupérer la courbe de fiabilité pour ${nodeId}: ${error}`);
     }
   }
 
   /**
-   * Identification des goulots d'étranglement
-   */
-  async getBottlenecks(nodeId: string): Promise<Bottleneck[]> {
-    try {
-      return await this.makeRequest<Bottleneck[]>(`/analytics/bottlenecks/${nodeId}`);
+   * Identification des goulots d"étranglement
+   */</ReliabilityPoint>
+  async getBottlenecks(nodeId: string): Promise<Bottleneck> {
+    try {`</Bottleneck>
+      return await this.makeRequest<Bottleneck>(`/analytics/bottlenecks/${nodeId}`);
     } catch (error) {
-      console.error('❌ Erreur lors de l\'identification des goulots:', error);
-      throw new Error(`Impossible d'identifier les goulots pour ${nodeId}: ${error}`);
+      console.error("❌ Erreur lors de l'identification des goulots:", error);`
+      throw new Error(`Impossible d"identifier les goulots pour ${nodeId}: ${error}`);
     }
   }
 
   /**
    * Évaluation de la santé du réseau
-   */
+   */</Bottleneck>
   async getNetworkHealth(): Promise<NetworkHealthAnalysis> {
-    try {
-      return await this.makeRequest<NetworkHealthAnalysis>('/analytics/network-health');
+    try {</NetworkHealthAnalysis>
+      return await this.makeRequest<NetworkHealthAnalysis>("/analytics/network-health");
     } catch (error) {
-      console.error('❌ Erreur lors de l\'évaluation de la santé réseau:', error);
-      throw new Error(`Impossible d'évaluer la santé du réseau: ${error}`);
+      console.error("❌ Erreur lors de l'évaluation de la santé réseau:"error);`
+      throw new Error(`Impossible d"évaluer la santé du réseau: ${error}`);
     }
   }
 
   /**
    * Optimisation DazFlow Index
-   */
+   */</NetworkHealthAnalysis>
   async optimizeDazFlow(request: DazFlowOptimizationRequest): Promise<DazFlowOptimizationResponse> {
-    try {
-      return await this.makeRequest<DazFlowOptimizationResponse>('/analytics/optimization/dazflow', {
-        method: 'POST',
+    try {</DazFlowOptimizationResponse>
+      return await this.makeRequest<DazFlowOptimizationResponse>("/analytics/optimization/dazflow"{
+        method: "POST",
         body: JSON.stringify(request)
       });
     } catch (error) {
-      console.error('❌ Erreur lors de l\'optimisation DazFlow:', error);
-      throw new Error(`Impossible d'optimiser le nœud ${request.node_id}: ${error}`);
+      console.error("❌ Erreur lors de l'optimisation DazFlow:", error);`
+      throw new Error(`Impossible d"optimiser le nœud ${request.node_id}: ${error}`);
     }
   }
 
   // --- ENDPOINTS RAG ---
   async ragQuery(query: RAGAdvancedQuery) {
-    return this.makeRequest('/api/v1/rag/query', {
-      method: 'POST',
+    return this.makeRequest("/api/v1/rag/query"{
+      method: "POST",
       body: JSON.stringify(query)
     });
   }
   async ragStats() {
-    return this.makeRequest('/api/v1/rag/stats', { method: 'GET' });
-  }
-  async ragIngest(document: { content: string; metadata?: Record<string, unknown> }) {
-    return this.makeRequest('/api/v1/rag/ingest', {
-      method: 'POST',
+    return this.makeRequest("/api/v1/rag/stats"{ method: "GET" });
+  }</DazFlowOptimizationResponse>
+  async ragIngest(document: { content: string; metadata?: Record<string, any> }) {
+    return this.makeRequest("/api/v1/rag/ingest"{
+      method: "POST",
       body: JSON.stringify(document)
     });
   }
-  async ragHistory(params?: { page?: number; limit?: number }) {
-    const url = '/api/v1/rag/history' + (params ? `?page=${params.page ?? 1}&limit=${params.limit ?? 20}` : '');
-    return this.makeRequest(url, { method: 'GET' });
+  async ragHistory(params?: { page?: number; limit?: number }) {`
+    const url = "/api/v1/rag/history" + (params ? `?page=${params.page ?? 1}&limit=${params.limit ?? 20}` : '");
+    return this.makeRequest(url, { method: "GET" });
   }
   async ragHealth() {
-    return this.makeRequest('/api/v1/rag/health', { method: 'GET' });
+    return this.makeRequest("/api/v1/rag/health"{ method: "GET" });
   }
   async ragAnalyzeNode(payload: { node_pubkey: string; context?: string }) {
-    return this.makeRequest('/api/v1/rag/analyze/node', {
-      method: 'POST',
+    return this.makeRequest(""/api/v1/rag/analyze/node"{
+      method: "POST",
       body: JSON.stringify(payload)
     });
-  }
-  async ragWorkflowExecute(payload: Record<string, unknown>) {
-    return this.makeRequest('/api/v1/rag/workflow/execute', {
-      method: 'POST',
+  }</strin>
+  async ragWorkflowExecute(payload: Record<string, any>) {
+    return this.makeRequest("/api/v1/rag/workflow/execute"{
+      method: "POST",
       body: JSON.stringify(payload)
     });
-  }
-  async ragValidate(payload: Record<string, unknown>) {
-    return this.makeRequest('/api/v1/rag/validate', {
-      method: 'POST',
+  }</strin>
+  async ragValidate(payload: Record<string, any>) {
+    return this.makeRequest("/api/v1/rag/validate"{
+      method: "POST",
       body: JSON.stringify(payload)
     });
-  }
-  async ragBenchmark(payload: Record<string, unknown>) {
-    return this.makeRequest('/api/v1/rag/benchmark', {
-      method: 'POST',
+  }</strin>
+  async ragBenchmark(payload: Record<string, any>) {
+    return this.makeRequest("/api/v1/rag/benchmark"{
+      method: "POST",
       body: JSON.stringify(payload)
     });
   }
   async ragAssetsList() {
-    return this.makeRequest('/api/v1/rag/assets/list', { method: 'GET' });
+    return this.makeRequest("/api/v1/rag/assets/list"{ method: "GET" });
   }
-  async ragAsset(asset_id: string) {
-    return this.makeRequest(`/api/v1/rag/assets/${asset_id}`, { method: 'GET' });
+  async ragAsset(asset_id: string) {`
+    return this.makeRequest(`/api/v1/rag/assets/${asset_id}`, { method: "GET" });
   }
   async ragCacheClear() {
-    return this.makeRequest('/api/v1/rag/cache/clear', { method: 'POST' });
+    return this.makeRequest("/api/v1/rag/cache/clear"{ method: "POST" });
   }
   async ragCacheStats() {
-    return this.makeRequest('/api/v1/rag/cache/stats', { method: 'GET' });
+    return this.makeRequest("/api/v1/rag/cache/stats"{ method: "GET" });
   }
 
   // --- ENDPOINTS INTELLIGENCE ---
   async intelligenceNodeAnalyze(payload: { node_pubkey: string; context?: string }) {
-    return this.makeRequest('/api/v1/intelligence/node/analyze', {
-      method: 'POST',
+    return this.makeRequest(""/api/v1/intelligence/node/analyze"{
+      method: "POST",
       body: JSON.stringify(payload)
     });
-  }
-  async intelligenceNetworkAnalyze(payload: Record<string, unknown>) {
-    return this.makeRequest('/api/v1/intelligence/network/analyze', {
-      method: 'POST',
+  }</strin>
+  async intelligenceNetworkAnalyze(payload: Record<string, any>) {
+    return this.makeRequest("/api/v1/intelligence/network/analyze"{
+      method: "POST",
       body: JSON.stringify(payload)
     });
-  }
-  async intelligenceOptimizationRecommend(payload: Record<string, unknown>) {
-    return this.makeRequest('/api/v1/intelligence/optimization/recommend', {
-      method: 'POST',
+  }</strin>
+  async intelligenceOptimizationRecommend(payload: Record<string, any>) {
+    return this.makeRequest("/api/v1/intelligence/optimization/recommend"{
+      method: "POST",
       body: JSON.stringify(payload)
     });
-  }
-  async intelligencePredictionGenerate(payload: Record<string, unknown>) {
-    return this.makeRequest('/api/v1/intelligence/prediction/generate', {
-      method: 'POST',
+  }</strin>
+  async intelligencePredictionGenerate(payload: Record<string, any>) {
+    return this.makeRequest("/api/v1/intelligence/prediction/generate"{
+      method: "POST",
       body: JSON.stringify(payload)
     });
-  }
-  async intelligenceComparativeAnalyze(payload: Record<string, unknown>) {
-    return this.makeRequest('/api/v1/intelligence/comparative/analyze', {
-      method: 'POST',
+  }</strin>
+  async intelligenceComparativeAnalyze(payload: Record<string, any>) {
+    return this.makeRequest("/api/v1/intelligence/comparative/analyze"{
+      method: "POST",
       body: JSON.stringify(payload)
     });
-  }
-  async intelligenceAlertsConfigure(payload: Record<string, unknown>) {
-    return this.makeRequest('/api/v1/intelligence/alerts/configure', {
-      method: 'POST',
+  }</strin>
+  async intelligenceAlertsConfigure(payload: Record<string, any>) {
+    return this.makeRequest("/api/v1/intelligence/alerts/configure"{
+      method: "POST",
       body: JSON.stringify(payload)
     });
   }
   async intelligenceInsightsSummary() {
-    return this.makeRequest('/api/v1/intelligence/insights/summary', { method: 'GET' });
-  }
-  async intelligenceWorkflowAutomated(payload: Record<string, unknown>) {
-    return this.makeRequest('/api/v1/intelligence/workflow/automated', {
-      method: 'POST',
+    return this.makeRequest("/api/v1/intelligence/insights/summary"{ method: "GET" });
+  }</strin>
+  async intelligenceWorkflowAutomated(payload: Record<string, any>) {
+    return this.makeRequest("/api/v1/intelligence/workflow/automated"{
+      method: "POST",
       body: JSON.stringify(payload)
     });
   }
   async intelligenceHealth() {
-    return this.makeRequest('/api/v1/intelligence/health/intelligence', { method: 'GET' });
+    return this.makeRequest("/api/v1/intelligence/health/intelligence"{ method: "GET" });
   }
 }
 
 // Exporter une instance unique
-export const mcpLightAPI = new MCPLightAPI(); 
+export const mcpLightAPI = new MCPLightAPI(); `</strin>

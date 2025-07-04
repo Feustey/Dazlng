@@ -13,8 +13,7 @@ if (typeof window !== 'undefined') {
   Object.defineProperty(window, 'IntersectionObserver', {
     writable: true,
     configurable: true,
-    value: IntersectionObserver,
-  });
+    value: IntersectionObserver});
 
   // Mock matchMedia
   Object.defineProperty(window, 'matchMedia', {
@@ -27,7 +26,5 @@ if (typeof window !== 'undefined') {
       removeListener: jest.fn(),
       addEventListener: jest.fn(),
       removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
+      dispatchEvent: jest.fn()}))});
 } 

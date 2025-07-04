@@ -1,40 +1,37 @@
-import React from 'react';
-import { Mail, MessageCircle, Calendar } from '@/components/shared/ui/IconRegistry';
-
+import React from "react";
+import { Mail, MessageCircle, Calendar } from "@/components/shared/ui/IconRegistry";
 
 const ContactDemoSection: React.FC = () => (
-  <section id="contact-section" className="py-20 bg-gradient-to-br from-[#1A1A1A] to-[#232323]">
+  <section className="py-16 bg-gray-50">
     <div className="max-w-4xl mx-auto px-4 text-center">
-      <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-        Une question ? <span className="text-[#F7931A]">{t('ContactDemoSection.besoin_daposune_dmo_')}</span>
+      <h2 className="text-3xl font-bold mb-4">
+        Une question ? <span className="text-[#F7931A]">Besoin d'une démo ?</span>
       </h2>
-      <p className="text-xl text-gray-300 mb-12">
+      <p className="text-lg text-gray-600 mb-8">
         Notre équipe vous répond sous 24h. Réservez une démo personnalisée ou contactez-nous directement.
       </p>
-      <div className="flex flex-col md:flex-row gap-8 justify-center">
-        <a
+      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <a 
           href="mailto:contact@daznode.com"
-          className="flex-1 bg-gradient-to-r from-[#F7931A] to-[#FFE500] text-black font-bold py-6 rounded-xl flex flex-col items-center hover:scale-105 transition-all"
+          className="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
         >
-          <Mail className="h-8 w-8 mb-2" />
+          <Mail className="w-5 h-5" />
           contact@daznode.com
         </a>
-        <a
-          href="https://cal.com/daznode/demo"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex-1 border-2 border-[#00D4AA] text-[#00D4AA] font-bold py-6 rounded-xl flex flex-col items-center hover:bg-[#00D4AA] hover:text-black transition-all"
+        <a 
+          href="/contact"
+          className="flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors"
         >
-          <Calendar className="h-8 w-8 mb-2" />
+          <Calendar className="w-5 h-5" />
           Réserver une démo
         </a>
-        <a
-          href="https://t.me/tokenforgood"
+        <a 
+          href="https://t.me/daznode"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 border-2 border-[#F7931A] text-[#F7931A] font-bold py-6 rounded-xl flex flex-col items-center hover:bg-[#F7931A] hover:text-black transition-all"
+          className="flex items-center justify-center gap-2 bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors"
         >
-          <MessageCircle className="h-8 w-8 mb-2" />
+          <MessageCircle className="w-5 h-5" />
           Rejoindre le Telegram
         </a>
       </div>

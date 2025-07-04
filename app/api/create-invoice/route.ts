@@ -1,24 +1,23 @@
-import { NextResponse, NextRequest } from 'next/server';
-import { createDaznoApiOnlyService } from '@/lib/services/dazno-api-only';
-import { validateData, createInvoiceSchema } from '@/lib/validations/lightning';
-import { handleApiError } from '@/lib/api-response';
+import { NextResponse, NextRequest } from "next/server";
+import { createDaznoApiOnlyService } from "@/lib/services/dazno-api-only";
+import { validateData, createInvoiceSchema } from "@/lib/validations/lightning";
 
 export const dynamic = "force-dynamic";
-export const runtime = 'nodejs';
+export const runtime = "nodejs";
 
-const PROVIDER = 'api.dazno.de';
+const PROVIDER = "api.dazno.de";
 
 // Headers CORS
 const corsHeaders = {
-  "route.routerouteaccesscontrolallowor": '*',
-  "route.routerouteaccesscontrolallowme": 'POST, OPTIONS',
-  "route.routerouteaccesscontrolallowhe": 'Content-Type, Authorization',
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization"
 };
 
 export async function OPTIONS(): Promise<Response> {
   return new NextResponse(null, {
     status: 204,
-    headers: corsHeaders,
+    headers: corsHeaders
   });
 }
 
@@ -32,8 +31,8 @@ export async function POST(req: NextRequest): Promise<Response> {
       return NextResponse.json({
         success: false,
         error: {
-          code: 'VALIDATION_ERROR',
-          message: 'Données de requête invalides',
+          code: "VALIDATION_ERROR",
+          message: "Données de requête invalides",
           details: validation.error.format()
         }
       }, { status: 400 });
@@ -61,6 +60,12 @@ export async function POST(req: NextRequest): Promise<Response> {
     });
 
   } catch (error) {
-    return handleApiError(error);
+    return NextResponse.json({
+      success: false,
+      error: {
+        code: "INTERNAL_ERROR",
+        message: error instanceof Error ? error.message : "Erreur interne du serveur"
+      }
+    }, { status: 500 });
   }
 }

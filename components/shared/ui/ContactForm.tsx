@@ -1,12 +1,13 @@
 "use client";
 
-import React from 'react';
-import { useState } from 'react';
-import FormInput from './FormInput';
-import Button from './Button';
-import Link from 'next/link';
-import SuccessModal from './SuccessModal';
-import { toast } from 'react-hot-toast';
+import React from "react";
+import { useState } from "react";
+import FormInput from "./FormInput";
+import Button from "./Button";
+import Link from "next/link";
+import SuccessModal from "./SuccessModal";
+import { toast } from "react-hot-toast";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
 
 export interface ContactFormProps {
   onSubmitSuccess?: () => void;
@@ -17,8 +18,9 @@ export interface ContactFormProps {
 const ContactForm: React.FC<ContactFormProps> = ({
   onSubmitSuccess,
   onSubmitError,
-  buttonText = 'Envoyer votre message',
+  buttonText = "Envoyer votre message"
 }) => {
+  const { t } = useAdvancedTranslation("contact");
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -33,12 +35,12 @@ const ContactForm: React.FC<ContactFormProps> = ({
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
     
-    if (!form.firstName.trim()) newErrors.firstName = 'Le prénom est requis';
-    if (!form.lastName.trim()) newErrors.lastName = 'Le nom est requis';
-    if (!form.email.trim()) newErrors.email = 'L\'email est requis';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) newErrors.email = 'Email invalide';
-    if (!form.interest.trim()) newErrors.interest = 'Le sujet est requis';
-    if (!form.message.trim()) newErrors.message = 'Le message est requis';
+    if (!form.firstName.trim()) newErrors.firstName = "Le prénom est requis";
+    if (!form.lastName.trim()) newErrors.lastName = "Le nom est requis";
+    if (!form.email.trim()) newErrors.email = "L'email est requis";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) newErrors.email = "Email invalide";
+    if (!form.interest.trim()) newErrors.interest = "Le sujet est requis";
+    if (!form.message.trim()) newErrors.message = "Le message est requis";
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -51,10 +53,10 @@ const ContactForm: React.FC<ContactFormProps> = ({
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
+      const response = await fetch("/api/contact", {
+        method: "POST",
         headers: {
-          "ContactForm.contactformcontactformcontentt": 'application/json',
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           firstName: form.firstName,
@@ -72,18 +74,18 @@ const ContactForm: React.FC<ContactFormProps> = ({
       }
       
       if (result.success) {
-        toast.success('Message envoyé avec succès !');
+        toast.success("Message envoyé avec succès !");
         setShowSuccessModal(true);
         onSubmitSuccess?.();
         setForm({ firstName: '', lastName: '', email: '', interest: '', message: '' });
         setErrors({});
       } else {
-        throw new Error(result.error?.message || 'Erreur lors de l\'envoi');
+        throw new Error(result.error?.message || "Erreur lors de l'envoi");
       }
       
     } catch (error) {
-      console.error('Erreur lors de l\'envoi:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
+      console.error("Erreur lors de l'envoi:", error);
+      const errorMessage = error instanceof Error ? error.message : "Erreur inconnue";
       toast.error(errorMessage);
       onSubmitError?.(errorMessage);
     } finally {
@@ -93,31 +95,32 @@ const ContactForm: React.FC<ContactFormProps> = ({
 
   return (
     <>
-      <div className="bg-white rounded-xl shadow-lg p-6 max-w-md mx-auto">
-        <div className="mb-6 p-4 bg-indigo-50 rounded-lg border border-indigo-100">
-          <p className="text-sm text-indigo-700">
+      <div className="space-y-6">
+        <div className="bg-blue-50 p-4 rounded-lg">
+          <p className="text-blue-800 text-sm">
             👋 Avez-vous consulté notre <Link href="/help" className="font-medium underline hover:text-indigo-900">FAQ</Link> ? 
             Vous y trouverez peut-être déjà la réponse à votre question !
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormInput
-              label="Prénom"
+              label="Prénom *"
+              name="firstName"
               value={form.firstName}
-              onChange={(e: any) => {
+              onChange={(e) => {
                 setForm(prev => ({ ...prev, firstName: e.target.value }));
                 if (errors.firstName) setErrors(prev => ({ ...prev, firstName: '' }));
               }}
               error={errors.firstName}
               required
             />
-            
             <FormInput
-              label="Nom"
+              label="Nom *"
+              name="lastName"
               value={form.lastName}
-              onChange={(e: any) => {
+              onChange={(e) => {
                 setForm(prev => ({ ...prev, lastName: e.target.value }));
                 if (errors.lastName) setErrors(prev => ({ ...prev, lastName: '' }));
               }}
@@ -127,10 +130,11 @@ const ContactForm: React.FC<ContactFormProps> = ({
           </div>
           
           <FormInput
-            label="Email"
+            label="Email *"
+            name="email"
             type="email"
             value={form.email}
-            onChange={(e: any) => {
+            onChange={(e) => {
               setForm(prev => ({ ...prev, email: e.target.value }));
               if (errors.email) setErrors(prev => ({ ...prev, email: '' }));
             }}
@@ -138,22 +142,22 @@ const ContactForm: React.FC<ContactFormProps> = ({
             required
           />
           
-          <div className="mb-4">
-            <label className="block text-base font-semibold mb-1">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Sujet *
             </label>
             <select
-              className={`w-full bg-gray-100 border-2 border-gray-300 rounded-lg px-4 py-2 text-base focus:outline-none focus:border-blue-500 ${errors.interest ? 'border-red-500' : ''}`}
               value={form.interest}
-              onChange={(e: any) => {
+              onChange={(e) => {
                 setForm(prev => ({ ...prev, interest: e.target.value }));
                 if (errors.interest) setErrors(prev => ({ ...prev, interest: '' }));
               }}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             >
-              <option value="">{t('ContactForm.slectionnez_un_sujet')}</option>
-              <option value="question_technique">{t('ContactForm.question_technique')}</option>
-              <option value="probleme_paiement">{t('ContactForm.problme_de_paiement')}</option>
+              <option value="">{t("ContactForm.selectionnez_un_sujet")}</option>
+              <option value="question_technique">{t("ContactForm.question_technique")}</option>
+              <option value="probleme_paiement">{t("ContactForm.probleme_de_paiement")}</option>
               <option value="suggestion">Suggestion</option>
               <option value="partenariat">Partenariat</option>
               <option value="autre">Autre</option>
@@ -161,31 +165,31 @@ const ContactForm: React.FC<ContactFormProps> = ({
             {errors.interest && <div className="text-red-500 text-sm mt-1 font-medium">{errors.interest}</div>}
           </div>
           
-          <div className="mb-4">
-            <label className="block text-base font-semibold mb-1">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Message *
             </label>
             <textarea
-              className={`w-full bg-gray-100 border-2 border-gray-300 rounded-lg px-4 py-2 text-base focus:outline-none focus:border-blue-500 min-h-[120px] ${errors.message ? 'border-red-500' : ''}`}
               value={form.message}
-              onChange={(e: any) => {
+              onChange={(e) => {
                 setForm(prev => ({ ...prev, message: e.target.value }));
                 if (errors.message) setErrors(prev => ({ ...prev, message: '' }));
               }}
-              placeholder="ContactForm.contactformcontactformvotre_me"
+              placeholder={t("ContactForm.votre_message")}
               rows={5}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             />
             {errors.message && <div className="text-red-500 text-sm mt-1 font-medium">{errors.message}</div>}
           </div>
           
-          <div className="w-full">
+          <div>
             <Button
               type="submit"
               disabled={isSubmitting}
-              loading={isSubmitting}
+              className="w-full"
             >
-              {isSubmitting ? 'Envoi en cours...' : buttonText}
+              {isSubmitting ? "Envoi en cours..." : buttonText}
             </Button>
           </div>
         </form>
@@ -199,4 +203,4 @@ const ContactForm: React.FC<ContactFormProps> = ({
   );
 };
 
-export default ContactForm; 
+export default ContactForm;

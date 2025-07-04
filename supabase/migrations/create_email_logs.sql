@@ -1,5 +1,5 @@
 -- Table pour tracker les emails envoyés
-CREATE TABLE IF NOT EXISTS email_logs (
+CREATE TABLE IF NOT EXISTS email_logs (;
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     type TEXT NOT NULL, -- 'order_confirmation', 'contact_form', 'status_update', etc.
     recipient TEXT NOT NULL,
@@ -28,19 +28,19 @@ CREATE INDEX idx_email_logs_sent_at ON email_logs(sent_at DESC);
 ALTER TABLE email_logs ENABLE ROW LEVEL SECURITY;
 
 -- Seuls les admins peuvent lire les logs
-CREATE POLICY "Admins can read email logs" ON email_logs
+CREATE POLICY "Admins can read email logs" ON email_logs;
     FOR SELECT 
     TO authenticated
     USING (
         EXISTS (
-            SELECT 1 FROM profiles p
+            SELECT 1 FROM profiles p;
             WHERE p.id = auth.uid() 
             AND p.email LIKE '%@dazno.de'
         )
     );
 
 -- Service role accès complet
-CREATE POLICY "Service role full access email logs" ON email_logs
+CREATE POLICY "Service role full access email logs" ON email_logs;
     FOR ALL 
     TO service_role
     USING (true)

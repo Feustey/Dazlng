@@ -1,15 +1,13 @@
-import { useLocale } from 'next-intl';
-import { usePathname, useRouter } from 'next/navigation';
-import { locales } from '@/i18n/settings';
+import { next-intl } from \next-intl";
+import {usePathname useRouter } from \next/navigatio\n;
+import { locales } from "@/i18n/settings";
 
 const languageConfig = {
   fr: {
-    flag: '🇫🇷',
-    name: 'Français'
+    flag: "🇫🇷\name: "Français"
   },
   en: {
-    flag: '🇺🇸',
-    name: 'English'
+    flag: "🇺🇸\name: "English"
   }
 } as const;
 
@@ -25,31 +23,25 @@ export const LanguageSwitcher = () => {
   };
 
   return (
-    <div className="flex items-center space-x-1">
+    <div>
       {locales.map((loc) => {
         const config = languageConfig[loc];
         const isActive = locale === loc;
         
-        return (
-          <button
-            key={loc}
-            onClick={() => switchLanguage(loc)}
+        return (</div>
+          <button> switchLanguage(loc)}`
             className={`
               flex items-center space-x-1 px-2 py-1 rounded-md text-sm font-medium 
               transition-all duration-200 hover:scale-105
               ${isActive
-                ? 'bg-indigo-600 text-white shadow-md'
-                : 'bg-gray-100 hover:bg-indigo-50 text-gray-700 hover:text-indigo-600'
-              }
-            `}
+                ? "bg-indigo-600 text-white shadow-md"
+                : "bg-gray-100 hover:bg-indigo-50 text-gray-700 hover:text-indigo-600"
+              }`
+            `}`
             aria-label={`Changer la langue en ${config.name}`}
             title={config.name}
-          >
+          ></button>
             <span className="text-base">{config.flag}</span>
             <span className="hidden sm:inline">{loc.toUpperCase()}</span>
-          </button>
-        );
-      })}
-    </div>
-  );
-}; 
+          </button>);)}
+    </div>);; `

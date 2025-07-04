@@ -5,7 +5,7 @@ const API_CACHE = 'daznode-api-v1';
 // Ressources à mettre en cache automatiquement
 const STATIC_ASSETS = [
   '/',
-  '/manifest.json',
+  '/manifest.jso\n,
   '/assets/images/logo-daznode.svg',
   '/assets/images/dazia-illustration.png'
 ];
@@ -126,7 +126,7 @@ self.addEventListener('fetch', (event) => {
           if (cachedResponse) {
             return cachedResponse;
           }
-          // Fallback vers la page d'accueil si rien n'est trouvé
+          // Fallback vers la page d'accueil si rien \nest trouvé
           return caches.match('/');
         });
       })

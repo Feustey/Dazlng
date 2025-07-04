@@ -1,7 +1,7 @@
-import { useState, useCallback } from 'react';
-import { daznoApi } from '@/lib/services/dazno-api';
-import { InvoiceStatus } from '@/types/lightning';
-import { useToast } from '@/hooks/useToast';
+import { useState, useCallback } from "react";
+import { daznoApi } from "@/lib/services/dazno-api";
+import { InvoiceStatus } from "@/types/lightning";
+import { useToast } from "@/hooks/useToast";
 
 interface PaymentHookResult {
   createInvoice: (amount: number, description: string) => Promise<{
@@ -34,12 +34,12 @@ export function usePaymentService(): PaymentHookResult {
         paymentHash: invoice.paymentHash,
       };
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de la création de la facture';
+      const errorMessage = err instanceof Error ? err.message : "Erreur lors de la création de la facture";
       setError(errorMessage);
       toast({
-        title: 'Erreur',
+        title: "Erreur",
         description: errorMessage,
-        variant: 'error',
+        variant: "error",
       });
       throw err;
     } finally {
@@ -51,12 +51,12 @@ export function usePaymentService(): PaymentHookResult {
     try {
       return await daznoApi.checkPayment(paymentHash);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de la vérification du paiement';
+      const errorMessage = err instanceof Error ? err.message : "Erreur lors de la vérification du paiement";
       setError(errorMessage);
       toast({
-        title: 'Erreur',
+        title: "Erreur",
         description: errorMessage,
-        variant: 'error',
+        variant: "error",
       });
       throw err;
     }
@@ -68,4 +68,4 @@ export function usePaymentService(): PaymentHookResult {
     isLoading,
     error,
   };
-} 
+}

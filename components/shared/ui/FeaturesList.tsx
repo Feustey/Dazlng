@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export interface FeaturesListProps {
   title?: string;
@@ -6,15 +6,9 @@ export interface FeaturesListProps {
 }
 
 export default function FeaturesList({
-  title = 'Fonctionnalités incluses :',
-  features,
-}: FeaturesListProps): React.ReactElement {
+  title = "Fonctionnalités incluses :", features}: FeaturesListProps): React.ReactElement {
   return (
-    <div className="p-7 rounded-2xl shadow-lg mb-8 bg-white">
+    <div></div>
       <h3 className="text-xl font-extrabold mb-4 text-[#C026D3] text-center tracking-wide">{title}</h3>
-      {features.map((feature: any, index: any) => (
-        <div key={index} className="text-base mb-2 text-gray-700 text-center">• {feature}</div>
-      ))}
-    </div>
-  );
-}
+      {features.map((feature: any index: any) => (<div key={index} className="text-base mb-2 text-gray-700 text-center">• {feature}</div>)}
+    </div>);

@@ -1,35 +1,36 @@
-import React from 'react';
-import { Users } from '@/components/shared/ui/IconRegistry';
+import React from "react";
+import { Users } from "@/components/shared/ui/IconRegistry";
 import {
   List,
   Datagrid,
   TextField,
-  EmailField,
-  BooleanField,
   DateField,
-  NumberField,
   Edit,
   Create,
   Show,
   SimpleForm,
   TextInput,
-  BooleanInput,
-  NumberInput,
   SimpleShowLayout,
   TopToolbar,
   EditButton,
   ShowButton,
   DeleteButton,
   useRecordContext,
-} from 'react-admin';
-
+  ChipField
+} from "react-admin";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
 
 // Actions personnalisées
-const ListActions = () => (
-  <TopToolbar>
-    {/* Ajout d'actions personnalisées si nécessaire */}
-  </TopToolbar>
+const ListActions = () => {
+  const { t } = useAdvancedTranslation("common");
+
+  return (
+    <TopToolbar>
+      {/* Actions pour les clients */}
+    </TopToolbar>
   );
+};
+
 const RowActions = () => {
   const record = useRecordContext();
   if (!record) return null;
@@ -45,75 +46,76 @@ const RowActions = () => {
 
 // Liste des clients
 export const CustomerList = () => (
-  <List 
-    title="Clients"
-    actions={<ListActions />}
+  <List
     perPage={25}
-    sort={{ field: 'created_at', order: 'DESC' }}
+    sort={{ field: "created_at", order: "DESC" }}
   >
-    <Datagrid rowClick="show">
-      <TextField source="email" label="Email" />
-      <TextField source="prenom" label="Prénom" />
-      <TextField source="nom" label="Nom" />
-      <BooleanField source="email_verified" label="Email vérifié" />
-      <NumberField source="t4g_tokens" label="Tokens T4G" />
-      <DateField source="created_at" label="Inscription" />
+    <Datagrid>
+      <TextField source="id" />
+      <TextField source="email" />
+      <TextField source="nom" />
+      <TextField source="prenom" />
+      <TextField source="pubkey" />
+      <DateField source="created_at" />
+      <DateField source="updated_at" />
       <RowActions />
     </Datagrid>
   </List>
-  );
+);
+
 // Affichage détaillé d'un client
 export const CustomerShow = () => (
-  <Show title="admin.adminadmindtails_du_client">
+  <Show>
     <SimpleShowLayout>
-      <TextField source="id" label="ID" />
-      <EmailField source="email" label="Email" />
-      <TextField source="prenom" label="Prénom" />
-      <TextField source="nom" label="Nom" />
-      <BooleanField source="email_verified" label="Email vérifié" />
-      <TextField source="pubkey" label="Clé publique Lightning" />
-      <TextField source="compte_x" label="Compte X/Twitter" />
-      <TextField source="compte_nostr" label="Compte Nostr" />
-      <NumberField source="t4g_tokens" label="Tokens T4G" />
-      <TextField source="node_id" label="ID du nœud" />
-      <DateField source="created_at" label="Date d'inscription" />
-      <DateField source="updated_at" label="Dernière mise à jour" />
-      <DateField source="verified_at" label="Date de vérification" />
+      <TextField source="id" />
+      <TextField source="email" />
+      <TextField source="nom" />
+      <TextField source="prenom" />
+      <TextField source="pubkey" />
+      <TextField source="compte_x" />
+      <TextField source="compte_nostr" />
+      <TextField source="t4g_tokens" />
+      <TextField source="node_id" />
+      <TextField source="email_verified" />
+      <TextField source="verified_at" />
+      <DateField source="created_at" />
+      <DateField source="updated_at" />
     </SimpleShowLayout>
   </Show>
-  );
+);
+
 // Édition d'un client
 export const CustomerEdit = () => (
-  <Edit title="admin.adminadminmodifier_le_client">
+  <Edit>
     <SimpleForm>
-      <TextInput source="email" label="Email" type="email" fullWidth />
-      <TextInput source="prenom" label="Prénom" fullWidth />
-      <TextInput source="nom" label="Nom" fullWidth />
-      <BooleanInput source="email_verified" label="Email vérifié" />
-      <TextInput source="pubkey" label="Clé publique Lightning" fullWidth />
-      <TextInput source="compte_x" label="Compte X/Twitter" fullWidth />
-      <TextInput source="compte_nostr" label="Compte Nostr" fullWidth />
-      <NumberInput source="t4g_tokens" label="Tokens T4G" />
-      <TextInput source="node_id" label="ID du nœud" fullWidth />
+      <TextInput source="email" />
+      <TextInput source="nom" />
+      <TextInput source="prenom" />
+      <TextInput source="pubkey" />
+      <TextInput source="compte_x" />
+      <TextInput source="compte_nostr" />
+      <TextInput source="node_id" />
+      <TextInput source="t4g_tokens" />
     </SimpleForm>
   </Edit>
-  );
+);
+
 // Création d'un nouveau client
 export const CustomerCreate = () => (
-  <Create title="admin.adminadmincrer_un_client">
+  <Create>
     <SimpleForm>
-      <TextInput source="email" label="Email" type="email" required fullWidth />
-      <TextInput source="prenom" label="Prénom" fullWidth />
-      <TextInput source="nom" label="Nom" fullWidth />
-      <BooleanInput source="email_verified" label="Email vérifié" defaultValue={false} />
-      <TextInput source="pubkey" label="Clé publique Lightning" fullWidth />
-      <TextInput source="compte_x" label="Compte X/Twitter" fullWidth />
-      <TextInput source="compte_nostr" label="Compte Nostr" fullWidth />
-      <NumberInput source="t4g_tokens" label="Tokens T4G" defaultValue={1} />
-      <TextInput source="node_id" label="ID du nœud" fullWidth />
+      <TextInput source="email" />
+      <TextInput source="nom" />
+      <TextInput source="prenom" />
+      <TextInput source="pubkey" />
+      <TextInput source="compte_x" />
+      <TextInput source="compte_nostr" />
+      <TextInput source="node_id" />
+      <TextInput source="t4g_tokens" />
     </SimpleForm>
   </Create>
-  );
+);
+
 // Configuration de la ressource
 export const customerResource = {
   list: CustomerList,
@@ -121,6 +123,5 @@ export const customerResource = {
   edit: CustomerEdit,
   create: CustomerCreate,
   icon: Users,
-  options: { label: 'Clients' }
-}
-export const dynamic = "force-dynamic";
+  options: { label: "Clients" }
+};

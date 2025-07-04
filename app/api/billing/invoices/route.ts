@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseAdminClient } from '@/lib/supabase';
+import { NextRequest, NextResponse } from "next/server";
+import { getSupabaseAdminClient } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
-export const runtime = 'nodejs';
+export const runtime = "nodejs";
 
 export interface Invoice {
   id: string;
@@ -13,7 +13,7 @@ export interface Invoice {
   dueDate: string;
   amount: number;
   currency: string;
-  status: 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled';
+  status: "draft" | "sent" | "paid" | "overdue" | "cancelled";
   description: string;
   product_type: string;
   plan?: string;
@@ -49,21 +49,21 @@ async function getUserFromRequest(req: NextRequest): Promise<{ id: string } | nu
   return user ? { id: user.id } : null;
 }
 
-function getInvoiceStatus(paymentStatus: string, createdAt: string): Invoice['status'] {
+function getInvoiceStatus(paymentStatus: string, createdAt: string): Invoice["status"] {
   const now = Date.now();
   const created = new Date(createdAt).getTime();
   const daysSinceCreated = (now - created) / (1000 * 60 * 60 * 24);
 
   switch (paymentStatus) {
-    case 'paid':
-      return 'paid';
-    case 'failed':
-      return 'cancelled';
-    case 'pending':
+    case "paid":
+      return "paid";
+    case "failed":
+      return "cancelled";
+    case "pending":
       // Si la commande date de plus de 30 jours et n'est pas payée, elle est en retard
-      return daysSinceCreated > 30 ? 'overdue' : 'sent';
+      return daysSinceCreated > 30 ? "overdue" : "sent";
     default:
-      return 'draft';
+      return "draft";
   }
 }
 
@@ -71,23 +71,23 @@ export async function GET(req: NextRequest): Promise<Response> {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {
-      return NextResponse.json<ApiResponse<null>>({
+      return NextResponse.json<ApiResponse<Invoice[]>>({
         success: false,
         error: {
-          code: 'UNAUTHORIZED',
-          message: 'Non autorisé'
+          code: "UNAUTHORIZED",
+          message: "Non autorisé"
         }
       }, { status: 401 });
     }
 
     const { searchParams } = new URL(req.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '20');
-    const status = searchParams.get('status');
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "20");
+    const status = searchParams.get("status");
 
     // Construction de la requête Supabase
     let query = getSupabaseAdminClient()
-      .from('orders')
+      .from("orders")
       .select(`
         id,
         user_id,
@@ -101,20 +101,20 @@ export async function GET(req: NextRequest): Promise<Response> {
         metadata,
         created_at,
         updated_at
-      `, { count: 'exact' })
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false });
+      `, { count: "exact" })
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
 
     // Filtrage par statut si spécifié
-    if (status && status !== 'all') {
+    if (status && status !== "all") {
       // Pour le filtrage par statut, on utilise le payment_status de la table orders
-      const dbStatus = status === 'paid' ? 'paid' : 
-                     status === 'sent' ? 'pending' : 
-                     status === 'overdue' ? 'pending' : // On filtrera après
-                     status === 'cancelled' ? 'failed' : null;
+      const dbStatus = status === "paid" ? "paid" : 
+                     status === "sent" ? "pending" : 
+                     status === "overdue" ? "pending" : // On filtrera après
+                     status === "cancelled" ? "failed" : null;
       
       if (dbStatus) {
-        query = query.eq('payment_status', dbStatus);
+        query = query.eq("payment_status", dbStatus);
       }
     }
 
@@ -122,16 +122,16 @@ export async function GET(req: NextRequest): Promise<Response> {
       .range((page - 1) * limit, page * limit - 1);
 
     if (ordersError) {
-      console.error('Erreur Supabase orders:', ordersError);
-      throw new Error('Erreur lors de la récupération des commandes');
+      console.error("Erreur Supabase orders:", ordersError);
+      throw new Error("Erreur lors de la récupération des commandes");
     }
 
     // Transformation des données en format Invoice
     const invoices: Invoice[] = Array.isArray(ordersData) ? ordersData.map((order: any) => {
-      if (!order || typeof order !== 'object') return null;
+      if (!order || typeof order !== "object") return null;
       const invoiceStatus = getInvoiceStatus(order.payment_status, order.created_at);
-      // Si on filtre par 'overdue', ne garder que ceux qui sont vraiment en retard
-      if (status === 'overdue' && invoiceStatus !== 'overdue') {
+      // Si on filtre par "overdue", ne garder que ceux qui sont vraiment en retard
+      if (status === "overdue" && invoiceStatus !== "overdue") {
         return null;
       }
       // Générer un numéro de facture
@@ -143,7 +143,7 @@ export async function GET(req: NextRequest): Promise<Response> {
         description += ` - Plan ${order.plan}`;
       }
       if (order.billing_cycle) {
-        description += ` (${order.billing_cycle === 'monthly' ? 'Mensuel' : 'Annuel'})`;
+        description += ` (${order.billing_cycle === "monthly" ? "Mensuel" : "Annuel"})`;
       }
       // Date d'échéance (30 jours après création)
       const dueDate = new Date(orderDate.getTime() + 30 * 24 * 60 * 60 * 1000);
@@ -152,10 +152,10 @@ export async function GET(req: NextRequest): Promise<Response> {
         order_id: order.id,
         userId: order.user_id,
         number: orderNumber,
-        date: order.created_at.split('T')[0],
-        dueDate: dueDate.toISOString().split('T')[0],
+        date: order.created_at.split("T")[0],
+        dueDate: dueDate.toISOString().split("T")[0],
         amount: order.amount,
-        currency: 'sats',
+        currency: "sats",
         status: invoiceStatus,
         description,
         product_type: order.product_type,
@@ -163,7 +163,7 @@ export async function GET(req: NextRequest): Promise<Response> {
         billing_cycle: order.billing_cycle,
         payment_method: order.payment_method,
         payment_hash: order.payment_hash,
-        paymentDate: order.payment_status === 'paid' ? order.updated_at?.split('T')[0] : undefined,
+        paymentDate: order.payment_status === "paid" ? order.updated_at?.split("T")[0] : undefined,
         total: order.amount,
         downloadUrl: `/api/billing/invoices/${order.id}/pdf`
       };
@@ -173,7 +173,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     let totalCount = count || 0;
     
     // Si on filtre par overdue, recalculer le total
-    if (status === 'overdue') {
+    if (status === "overdue") {
       totalCount = invoices.length;
     }
 
@@ -190,12 +190,12 @@ export async function GET(req: NextRequest): Promise<Response> {
     });
 
   } catch (error) {
-    console.error('Erreur lors de la récupération des factures:', error);
-    return NextResponse.json<ApiResponse<null>>({
+    console.error("Erreur lors de la récupération des factures:", error);
+    return NextResponse.json<ApiResponse<Invoice[]>>({
       success: false,
       error: {
-        code: 'INTERNAL_ERROR',
-        message: 'Erreur interne du serveur'
+        code: "INTERNAL_ERROR",
+        message: "Erreur interne du serveur"
       }
     }, { status: 500 });
   }

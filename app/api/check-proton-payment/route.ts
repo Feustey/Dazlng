@@ -1,6 +1,6 @@
 // app/api/check-proton-payment/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-import axios from 'axios';
+import { NextRequest, NextResponse } from "next/server";
+import axios from "axios";
 
 export interface ProtonAction {
   account: string;
@@ -13,13 +13,13 @@ export interface ProtonAction {
 
 export async function GET(req: NextRequest): Promise<Response> {
   const { searchParams } = new URL(req.url);
-  const txId = searchParams.get('txId');
-  const receiver = searchParams.get('receiver');
-  const expectedAmount = searchParams.get('amount');
+  const txId = searchParams.get("txId");
+  const receiver = searchParams.get("receiver");
+  const expectedAmount = searchParams.get("amount");
 
   if (!txId || !receiver || !expectedAmount) {
     return NextResponse.json({ 
-      error: 'Paramètres manquants: txId, receiver et amount sont requis' 
+      error: "Paramètres manquants: txId, receiver et amount sont requis" 
     }, { status: 400 });
   }
 
@@ -32,21 +32,21 @@ export async function GET(req: NextRequest): Promise<Response> {
     const transaction = response.data;
     
     // Vérifier que la transaction a été confirmée
-    if (transaction.trx.receipt.status !== 'executed') {
+    if (transaction.trx.receipt.status !== "executed") {
       return NextResponse.json({ 
         verified: false, 
-        reason: 'Transaction non exécutée' 
+        reason: "Transaction non exécutée" 
       });
     }
 
     // Vérifier les actions de la transaction
     const transferActions = (transaction.trx.trx.actions as ProtonAction[]).filter(
-      (action: ProtonAction) => action.account === 'eosio.token' && action.name === 'transfer'
+      (action: ProtonAction) => action.account === "eosio.token" && action.name === "transfer"
     );
     if (transferActions.length === 0) {
       return NextResponse.json({ 
         verified: false, 
-        reason: 'Aucune action de transfert trouvée' 
+        reason: "Aucune action de transfert trouvée" 
       });
     }
 
@@ -60,7 +60,7 @@ export async function GET(req: NextRequest): Promise<Response> {
       }
       
       // Extraire le montant de la chaîne "100.0000 XPR"
-      const [amount] = quantity.split(' ');
+      const [amount] = quantity.split(" ");
       const parsedAmount = parseFloat(amount);
       
       // Vérifier le montant
@@ -70,7 +70,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     if (!validTransfer) {
       return NextResponse.json({ 
         verified: false, 
-        reason: 'Destinataire ou montant invalide' 
+        reason: "Destinataire ou montant invalide" 
       });
     }
 
@@ -81,7 +81,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     
   } catch (error) {
     return NextResponse.json({ 
-      error: 'Erreur lors de la vérification du paiement' 
+      error: "Erreur lors de la vérification du paiement" 
     }, { status: 500 });
   }
 }

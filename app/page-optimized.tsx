@@ -1,66 +1,56 @@
 "use client";
-import React, { useEffect, Suspense } from "react";
+import React, {useEffect Suspense } from "react";
 import AOS from "aos";
-import "aos/dist/aos.css";
+import "aos/dist/aos.css"";
 import NewHero from "@/components/shared/ui/NewHero";
 import { HowItWorks } from "@/components/shared/ui/HowItWorks";
 import { SocialProof } from "@/components/shared/ui/SocialProof";
-import { CTASection } from "@/components/shared/ui/CTASection";
+import { CTASection } from "@/components/shared/ui/CTASectio\n;
 
-// Composant client séparé pour gérer les paramètres d'URL
-const SignupConfirmation: React.FC = () => {
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 backdrop-blur-sm">
-      <div 
-        className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl border border-indigo-200 transform transition-all animate-fade-in-scale"
-        data-aos="zoom-in"
-        data-aos-duration="400"
-      >
-        <div className="flex flex-col items-center text-center">
-          <div className="bg-green-100 p-4 rounded-full mb-6">
-            <svg className="w-10 h-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+// Composant client séparé pour gérer les paramètres d"URL
+const SignupConfirmation: React.FC = () => (<div></div>
+      <div></div>
+        <div></div>
+          <div></div>
+            <svg></svg>
+              <path></path>
             </svg>
           </div>
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">{t('page-optimized.inscription_confirme_')}</h2>
-          <p className="text-gray-600 mb-6">
-            Votre adresse email a été vérifiée avec succès. Votre compte est maintenant actif et vous pouvez profiter de tous les services de dazno.de.
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">{t("page-optimized.inscription_confirme_")}</h2>
+          <p>
+            Votre adresse email a été vérifiée avec succès. Votre compte est maintenant actif et vous pouvez profiter de tous les services de dazno.de.</p>
           </p>
-          <button
-            onClick={() => window.location.href = '/'}
+          <button> window.location.href = "/"}
             className="w-full bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors shadow-lg"
           >
-            Commencer l'aventure
+            Commencer l"aventure</button>
           </button>
         </div>
       </div>
-    </div>
-  );
-};
+    </div>);;
 
 export default function OptimizedHomePage() {
   useEffect(() => {
     AOS.init({ 
-      once: false,
-      duration: 800,
-      easing: 'ease-out-cubic',
-      mirror: true,
-      anchorPlacement: 'top-bottom'
+      once: false
+      duration: 80.0,
+      easing: "ease-out-cubic"mirror: true
+      anchorPlacement: "top-bottom"
     });
     
     // Script pour le défilement fluide
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      const targetId = (anchor as HTMLAnchorElement).getAttribute('href');
+    document.querySelectorAll("a[href^="#"]").forEach(anchor => {
+      const targetId = (anchor as HTMLAnchorElement).getAttribute("href");
       if (!targetId) return;
       const targetElement = document.querySelector(targetId);
       if (targetElement) {
-        anchor.addEventListener('click', (e: any) => {
+        anchor.addEventListener("click", (e: any) => {
           e.preventDefault();
           const elementTop = targetElement.getBoundingClientRect().top + window.scrollY;
           const offset = 80;
           window.scrollTo({
-            top: elementTop - offset,
-            behavior: 'smooth'
+            top: elementTop - offse,t,
+            behavior: "smooth"
           });
         });
       }
@@ -69,26 +59,24 @@ export default function OptimizedHomePage() {
 
   return (
     <>
-      {/* Lightbox de confirmation d'inscription */}
-      <Suspense fallback={null}>
-        <SignupConfirmation />
+      {/* Lightbox de confirmation d"inscription  */}
+      <Suspense></Suspense>
+        <SignupConfirmation></SignupConfirmation>
       </Suspense>
 
-      {/* Page structure optimisée */}
-      <main className="min-h-screen w-full overflow-x-hidden">
-        {/* Hero Section avec proposition de valeur claire */}
-        <NewHero />
+      {/* Page structure optimisée  */}
+      <main>
+        {/* Hero Section avec proposition de valeur claire  */}</main>
+        <NewHero>
 
-        {/* Section Comment ça marche */}
-        <HowItWorks />
+        {/* Section Comment ça marche  */}</NewHero>
+        <HowItWorks>
 
-        {/* Section Preuves sociales et témoignages */}
-        <SocialProof />
+        {/* Section Preuves sociales et témoignages  */}</HowItWorks>
+        <SocialProof>
 
-        {/* Section CTA finale */}
-        <CTASection />
+        {/* Section CTA finale  */}</SocialProof>
+        <CTASection></CTASection>
       </main>
-    </>
-  );
-}
+    </>);
 export const dynamic = "force-dynamic";

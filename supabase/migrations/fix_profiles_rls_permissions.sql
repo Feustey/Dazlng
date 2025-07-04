@@ -10,7 +10,7 @@ DROP POLICY IF EXISTS "Enable insert for authenticated users only" ON public.pro
 DROP POLICY IF EXISTS "Service role full access" ON public.profiles;
 DROP POLICY IF EXISTS "Service role full access profiles" ON public.profiles;
 
--- S'assurer que RLS est activé
+-- S'assurer que RLS est activé'
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
 -- ==========================================
@@ -18,27 +18,27 @@ ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 -- ==========================================
 
 -- 1. Service role a accès complet (pour les opérations admin et API)
-CREATE POLICY "Service role full access profiles" ON public.profiles
+CREATE POLICY "Service role full access profiles" ON public.profiles;
     FOR ALL 
     TO service_role
     USING (true)
     WITH CHECK (true);
 
 -- 2. Utilisateurs authentifiés peuvent voir leur propre profil
-CREATE POLICY "Users can view own profile" ON public.profiles
+CREATE POLICY "Users can view own profile" ON public.profiles;
     FOR SELECT 
     TO authenticated
     USING (auth.uid() = id);
 
 -- 3. Utilisateurs authentifiés peuvent mettre à jour leur propre profil
-CREATE POLICY "Users can update own profile" ON public.profiles
+CREATE POLICY "Users can update own profile" ON public.profiles;
     FOR UPDATE 
     TO authenticated
     USING (auth.uid() = id)
     WITH CHECK (auth.uid() = id);
 
 -- 4. Utilisateurs authentifiés peuvent créer leur propre profil
-CREATE POLICY "Users can insert own profile" ON public.profiles
+CREATE POLICY "Users can insert own profile" ON public.profiles;
     FOR INSERT 
     TO authenticated
     WITH CHECK (auth.uid() = id);
@@ -49,7 +49,7 @@ CREATE POLICY "Users can insert own profile" ON public.profiles
 
 -- Permettre la lecture basique pour les tests de connexion
 -- Cette politique sera utilisée uniquement pour vérifier la connectivité
-CREATE POLICY "Allow basic connection test" ON public.profiles
+CREATE POLICY "Allow basic connection test" ON public.profiles;
     FOR SELECT 
     TO anon, authenticated
     USING (false);  -- Cette politique ne retournera jamais de données
@@ -59,7 +59,7 @@ CREATE POLICY "Allow basic connection test" ON public.profiles
 -- ==========================================
 
 -- Vérifier que les politiques sont bien créées
-SELECT schemaname, tablename, policyname, roles, cmd, qual 
+SELECT schemaname, tablename, policyname, roles, cmd, qual;
 FROM pg_policies 
 WHERE tablename = 'profiles';
 
@@ -78,7 +78,7 @@ BEGIN
     RETURN QUERY
     SELECT 
         'table_exists'::TEXT,
-        EXISTS(SELECT 1 FROM information_schema.tables WHERE table_name = 'profiles')::BOOLEAN,
+        EXISTS(SELECT 1 FROM information_schema.tables WHERE table_name = 'profiles')::BOOLEAN,;
         'Table profiles exists'::TEXT;
     
     -- Test 2: Vérifier que RLS est activé

@@ -1,24 +1,39 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from './supabase-auth';
-import { getSupabaseAdminClient } from './supabase';
-import { ApiResponse, ErrorCodes } from '@/types/database';
-import type { User as SupabaseUser } from '@supabase/supabase-js';
+import { NextRequest, NextResponse } from "next/server";
+import { createSupabaseServerClient } from "./supabase-auth";
+import { getSupabaseAdminClient } from "./supabase";
+import { ErrorCodes } from "@/types/database";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
+
+// Types pour les réponses API
+export interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: {
+    code: string;
+    message: string;
+    details?: any;
+  };
+  meta?: {
+    timestamp: string;
+    version: string;
+  };
+}
 
 /**
  * Gestionnaire d'erreur standardisé pour les routes API
  */
 export function handleApiError(error: any): ApiResponse<null> {
-  console.error('❌ Erreur API:', error);
+  console.error("❌ Erreur API:", error);
   
-  const isSupabaseError = error?.code && typeof error.code === 'string';
-  const message = error?.message || 'Erreur interne du serveur';
+  const isSupabaseError = error?.code && typeof error.code === "string";
+  const message = error?.message || "Erreur interne du serveur";
   
   return {
     success: false,
     error: {
       code: isSupabaseError ? error.code : ErrorCodes.INTERNAL_ERROR,
       message,
-      details: (process.env.NODE_ENV || '') === 'development' ? error : undefined
+      details: (process.env.NODE_ENV || "") === "development" ? error : undefined
     }
   };
 }
@@ -30,7 +45,7 @@ export function handleApiError(error: any): ApiResponse<null> {
 export async function getAuthenticatedUser(req: NextRequest): Promise<SupabaseUser | null> {
   try {
     const supabase = await createSupabaseServerClient();
-    const token = req.headers.get('Authorization')?.replace('Bearer ', '');
+    const token = req.headers.get("authorization")?.replace("Bearer ", "");
     
     if (token) {
       const { data: { user }, error } = await supabase.auth.getUser(token);
@@ -42,7 +57,7 @@ export async function getAuthenticatedUser(req: NextRequest): Promise<SupabaseUs
     const { data: { user } } = await supabase.auth.getUser();
     return user;
   } catch (error) {
-    console.error('❌ Erreur authentification:', error);
+    console.error("❌ Erreur authentification:", error);
     return null;
   }
 }
@@ -54,7 +69,7 @@ export async function getAuthenticatedUser(req: NextRequest): Promise<SupabaseUs
 export async function getAuthenticatedAdminUser(req: NextRequest): Promise<SupabaseUser | null> {
   try {
     const supabase = getSupabaseAdminClient();
-    const token = req.headers.get('Authorization')?.replace('Bearer ', '');
+    const token = req.headers.get("authorization")?.replace("Bearer ", "");
     
     if (!token) return null;
     
@@ -63,14 +78,14 @@ export async function getAuthenticatedAdminUser(req: NextRequest): Promise<Supab
     
     // Vérifier si l'utilisateur est admin
     const { data: adminRole } = await supabase
-      .from('admin_roles')
-      .select('role')
-      .eq('user_id', user?.id || '')
+      .from("admin_roles")
+      .select("role")
+      .eq("user_id", user?.id || "")
       .single();
       
     return adminRole ? user : null;
   } catch (error) {
-    console.error('❌ Erreur authentification admin:', error);
+    console.error("❌ Erreur authentification admin:", error);
     return null;
   }
 }
@@ -90,7 +105,7 @@ export async function withAuth(
         success: false,
         error: {
           code: ErrorCodes.UNAUTHORIZED,
-          message: 'Non authentifié'
+          message: "Non authentifié"
         }
       },
       { status: 401 }
@@ -119,7 +134,7 @@ export async function withAdminAuth(
         success: false,
         error: {
           code: ErrorCodes.FORBIDDEN,
-          message: 'Accès non autorisé'
+          message: "Accès non autorisé"
         }
       },
       { status: 403 }

@@ -1,20 +1,18 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-
-import { useState } from 'react';
-import { CheckCircle2, ChevronRight, Lock } from '@/components/shared/ui/IconRegistry';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import {CheckCircle2, ChevronRight, Lock} from "@/components/shared/ui/IconRegistry";
 
 export interface RecommendationCardProps {
   recommendation: {
     id: string;
     title: string;
     description: string;
-    impact: 'high' | 'medium' | 'low';
-    difficulty: 'easy' | 'medium' | 'hard';
+    impact: "high" | "medium" | "low";
+    difficulty: "easy" | "medium" | "hard";
     priority: number;
     estimated_gain: number;
-    category: 'liquidity' | 'connectivity' | 'fees' | 'security';
-    action_type: 'open_channel' | 'close_channel' | 'adjust_fees' | 'rebalance' | 'other';
+    category: "liquidity" | "connectivity" | "fees" | "security";
+    action_type: "open_channel" | "close_channel" | "adjust_fees" | "rebalance" | "other";
     target_node?: {
       pubkey: string;
       alias: string;
@@ -31,124 +29,126 @@ export interface RecommendationCardProps {
   onComplete?: (id: string) => void;
 }
 
-export const RecommendationCard = ({ 
+export const RecommendationCard = ({
   recommendation, 
-  isPremium = false,
-  onComplete 
+  isPremium = false, 
+  onComplete
 }: RecommendationCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
   const impactColors = {
-    high: 'text-red-500',
-    medium: 'text-yellow-500',
-    low: 'text-green-500'
+    high: "text-red-500",
+    medium: "text-yellow-500",
+    low: "text-green-500"
   };
 
   const difficultyColors = {
-    easy: 'bg-green-100 text-green-800',
-    medium: 'bg-yellow-100 text-yellow-800',
-    hard: 'bg-red-100 text-red-800'
+    easy: "bg-green-100 text-green-800",
+    medium: "bg-yellow-100 text-yellow-800",
+    hard: "bg-red-100 text-red-800"
   };
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ scale: 1.02 }}
-      className="relative overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all"
+      className={`bg-white rounded-lg border-2 p-4 transition-all duration-200 ${
+        isHovered ? "border-blue-300 shadow-lg" : "border-gray-200"
+      }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      layout
     >
-      {/* Badge de priorité */}
-      <div className="absolute -right-12 top-6 rotate-45 bg-yellow-500 px-12 py-1 text-xs font-semibold text-white">
-        Priorité {recommendation.priority}
+      {/* En-tête de la carte */}
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-sm font-medium text-gray-500">
+              Priorité {recommendation.priority}
+            </span>
+            <span className={`px-2 py-1 rounded-full text-xs font-medium ${difficultyColors[recommendation.difficulty]}`}>
+              {recommendation.difficulty}
+            </span>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-800 mb-2">
+            {recommendation.title}
+          </h3>
+          <p className="text-gray-600 text-sm">
+            {recommendation.description}
+          </p>
+        </div>
+        
+        {!recommendation.free && !isPremium && (
+          <Lock className="w-5 h-5 text-amber-500 ml-2" />
+        )}
       </div>
 
-      <div className="p-6">
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900">
-              {recommendation.title}
-            </h3>
-            <p className="mt-1 text-sm text-gray-600">
-              {recommendation.description}
-            </p>
-          </div>
-          {!recommendation.free && !isPremium && (
-            <Lock className="h-5 w-5 text-gray-400" />
-          )}
+      {/* Métriques */}
+      <div className="flex items-center gap-4 mb-3 text-sm">
+        <div className={`flex items-center gap-1 ${impactColors[recommendation.impact]}`}>
+          <span className="font-medium">Impact: {recommendation.impact}</span>
         </div>
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          <span className={`rounded-full px-3 py-1 text-xs font-medium ${impactColors[recommendation.impact]}`}>
-            Impact {recommendation.impact}
-          </span>
-          <span className={`rounded-full px-3 py-1 text-xs font-medium ${difficultyColors[recommendation.difficulty]}`}>
-            {recommendation.difficulty}
-          </span>
-          <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
-            +{recommendation.estimated_gain} sats
-          </span>
+        <div className="text-green-600">
+          <span className="font-medium">+{recommendation.estimated_gain} sats/mois</span>
         </div>
+      </div>
 
+      {/* Étapes de mise en œuvre */}
+      {isExpanded && (
         <motion.div
-          initial={false}
-          animate={{ height: isExpanded ? 'auto' : 0 }}
-          className="mt-4 overflow-hidden"
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          className="border-t border-gray-200 pt-3 mt-3"
         >
-          <div className="space-y-4">
-            {recommendation.steps.map((step: any) => (
-              <div key={step.order} className="flex items-start gap-3">
-                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-100">
+          <h4 className="font-medium text-gray-800 mb-2">Étapes de mise en œuvre:</h4>
+          <ol className="space-y-2">
+            {recommendation.steps.map((step, index) => (
+              <li key={index} className="flex items-start gap-2 text-sm">
+                <span className="flex-shrink-0 w-5 h-5 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-medium">
                   {step.order}
-                </div>
+                </span>
                 <div>
-                  <p className="text-sm text-gray-700">{step.description}</p>
+                  <p className="text-gray-700">{step.description}</p>
                   {step.command && (
-                    <div className="mt-1 rounded bg-gray-50 p-2 font-mono text-xs">
+                    <code className="block mt-1 bg-gray-100 px-2 py-1 rounded text-xs font-mono">
                       {step.command}
-                    </div>
+                    </code>
                   )}
                 </div>
-              </div>
+              </li>
             ))}
-          </div>
+          </ol>
         </motion.div>
+      )}
 
-        <div className="mt-4 flex items-center justify-between">
+      {/* Actions */}
+      <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-200">
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="text-blue-500 hover:text-blue-600 text-sm font-medium flex items-center gap-1"
+        >
+          {isExpanded ? "Réduire" : "Voir les détails"}
+          <ChevronRight className={`w-4 h-4 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
+        </button>
+
+        {recommendation.free || isPremium ? (
           <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center text-sm font-medium text-gray-600 hover:text-gray-900"
+            onClick={() => onComplete?.(recommendation.id)}
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2"
           >
-            {isExpanded ? 'Voir moins' : 'Voir les étapes'}
-            <ChevronRight
-              className={`ml-1 h-4 w-4 transition-transform ${
-                isExpanded ? 'rotate-90' : ''
-              }`}
-            />
+            <CheckCircle2 className="w-4 h-4" />
+            Appliquer
           </button>
-
-          {onComplete && (
-            <button
-              onClick={() => onComplete(recommendation.id)}
-              className="flex items-center gap-2 rounded-full bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600"
-            >
-              <CheckCircle2 className="h-4 w-4" />
-              Marquer comme terminé
-            </button>
-          )}
-        </div>
+        ) : (
+          <button
+            disabled
+            className="bg-gray-300 text-gray-500 px-4 py-2 rounded-lg cursor-not-allowed flex items-center gap-2"
+          >
+            <Lock className="w-4 h-4" />
+            Premium requis
+          </button>
+        )}
       </div>
-
-      {/* Effet de hover */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-r from-yellow-500/10 to-orange-500/10"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isHovered ? 1 : 0 }}
-        transition={{ duration: 0.2 }}
-      />
     </motion.div>
   );
-}
-export const dynamic = "force-dynamic";
+};

@@ -1,125 +1,128 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import GradientLayout from '../../../components/shared/layout/GradientLayout';
+import React from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
+import GradientLayout from "../../../components/shared/layout/GradientLayout";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
+
 export default function DemoPage() {
   const router = useRouter();
+  const { t } = useAdvancedTranslation("demo");
 
   const handleBackToHome = (): void => {
-    router.push('/');
+    router.push("/");
   };
 
   const handleStartFree = (): void => {
-    router.push('/register');
+    router.push("/register");
   };
 
   return (
     <GradientLayout>
-      <div className="max-w-6xl mx-auto py-20 px-4">
+      <div className="min-h-screen">
         {/* Logo avec retour accueil */}
-        <div className="flex justify-center mb-8 cursor-pointer" onClick={handleBackToHome}>
+        <div className="absolute top-8 left-8">
           <Image
-            src="/assets/images/logo-daznode.svg"
-            alt="Daznode"
-            width={200}
-            height={80}
-            className="h-16 w-auto hover:scale-105 transition-transform"
-            priority
+            src="/assets/images/logo-daznode-white.svg"
+            alt="DazNode"
+            width={120}
+            height={40}
+            className="cursor-pointer"
+            onClick={handleBackToHome}
           />
         </div>
         
-        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-2xl">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 text-center">
-            Découvrez{' '}
-            <span className="bg-gradient-to-r from-yellow-300 to-pink-400 text-transparent bg-clip-text">
-              Daznode en action
-            </span>
-          </h1>
-          
-          <p className="text-xl text-indigo-200 text-center mb-12 max-w-3xl mx-auto">
-            Voyez comme il est simple de déployer et gérer vos nœuds Lightning Network
-          </p>
+        <div className="container mx-auto px-4 py-20">
+          <div className="text-center mb-16">
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
+              Découvrez{" "}
+              <span className="text-yellow-400">Daznode en action</span>
+            </h1>
+            
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Voyez comme il est simple de déployer et gérer vos nœuds Lightning Network
+            </p>
+          </div>
           
           {/* Contenu de la démo */}
-          <div className="space-y-12">
+          <div className="space-y-20">
             {/* Étape 1 */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-yellow-400 to-pink-500 rounded-full flex items-center justify-center text-black font-bold">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-gray-900 font-bold text-xl mr-4">
                     1
                   </div>
-                  <h3 className="text-2xl font-bold text-white">{t('common.inscription_en_30_secondes')}</h3>
+                  <h3 className="text-2xl font-bold text-white">{t("common.inscription_en_30_secondes")}</h3>
                 </div>
-                <p className="text-indigo-200 text-lg">
+                <p className="text-gray-300 mb-6">
                   Créez votre compte et accédez immédiatement à votre tableau de bord personnalisé.
                 </p>
-                <ul className="space-y-2 text-indigo-200">
-                  <li className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                <ul className="space-y-3">
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
                     Aucune configuration technique
                   </li>
-                  <li className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
                     Interface intuitive
                   </li>
-                  <li className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
                     Support en français
                   </li>
                 </ul>
               </div>
-              <div className="bg-white/5 rounded-xl p-6 border border-white/20">
-                <div className="h-48 rounded-lg overflow-hidden">
+              <div className="flex justify-center">
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
                   <Image
-                    src="/assets/images/onboarding-daznode.png"
-                    alt="common.commoncommoncran_d"inscription Daznode"
+                    src="/assets/images/demo-step1.png"
+                    alt="Inscription"
                     width={400}
-                    height={192}
-                    className="w-full h-full object-cover"
+                    height={300}
+                    className="rounded-lg"
                   />
                 </div>
               </div>
             </div>
 
             {/* Étape 2 */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-              <div className="bg-white/5 rounded-xl p-6 border border-white/20 order-2 lg:order-1">
-                <div className="h-48 rounded-lg overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div className="flex justify-center lg:order-2">
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
                   <Image
-                    src="/assets/images/dashboard-daznode.png"
-                    alt="common.commoncommondashboard_de_gesti"
+                    src="/assets/images/demo-step2.png"
+                    alt="Déploiement"
                     width={400}
-                    height={192}
-                    className="w-full h-full object-cover"
+                    height={300}
+                    className="rounded-lg"
                   />
                 </div>
               </div>
-              <div className="space-y-4 order-1 lg:order-2">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-yellow-400 to-pink-500 rounded-full flex items-center justify-center text-black font-bold">
+              <div className="lg:order-1">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-gray-900 font-bold text-xl mr-4">
                     2
                   </div>
-                  <h3 className="text-2xl font-bold text-white">{t('common.dploiement_automatique')}</h3>
+                  <h3 className="text-2xl font-bold text-white">{t("common.deploiement_automatique")}</h3>
                 </div>
-                <p className="text-indigo-200 text-lg">
+                <p className="text-gray-300 mb-6">
                   Votre nœud Lightning est déployé automatiquement sur notre infrastructure haute performance.
                 </p>
-                <ul className="space-y-2 text-indigo-200">
-                  <li className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                <ul className="space-y-3">
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
                     Déploiement en 5 minutes
                   </li>
-                  <li className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
                     Configuration optimisée
                   </li>
-                  <li className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
                     Monitoring temps réel
                   </li>
                 </ul>
@@ -127,79 +130,79 @@ export default function DemoPage() {
             </div>
 
             {/* Étape 3 */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-yellow-400 to-pink-500 rounded-full flex items-center justify-center text-black font-bold">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-gray-900 font-bold text-xl mr-4">
                     3
                   </div>
-                  <h3 className="text-2xl font-bold text-white">{t('common.gestion_simplifie')}</h3>
+                  <h3 className="text-2xl font-bold text-white">{t("common.gestion_simplifiee")}</h3>
                 </div>
-                <p className="text-indigo-200 text-lg">
+                <p className="text-gray-300 mb-6">
                   Gérez vos canaux, surveillez vos transactions et optimisez vos revenus depuis une interface unifiée.
                 </p>
-                <ul className="space-y-2 text-indigo-200">
-                  <li className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                <ul className="space-y-3">
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
                     Gestion des canaux
                   </li>
-                  <li className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
                     Analyse des performances
                   </li>
-                  <li className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
                     Optimisation automatique
                   </li>
                 </ul>
               </div>
-              <div className="bg-white/5 rounded-xl p-6 border border-white/20">
-                <div className="h-48 rounded-lg overflow-hidden">
+              <div className="flex justify-center">
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
                   <Image
-                    src="/assets/images/gestion-daznode.png"
-                    alt="common.commoncommoninterface_de_gesti"
+                    src="/assets/images/demo-step3.png"
+                    alt="Gestion"
                     width={400}
-                    height={192}
-                    className="w-full h-full object-cover"
+                    height={300}
+                    className="rounded-lg"
                   />
                 </div>
               </div>
             </div>
 
             {/* Stats impressionnantes */}
-            <div className="bg-gradient-to-r from-yellow-400/10 to-pink-500/10 rounded-2xl p-8 border border-yellow-300/20">
-              <h3 className="text-2xl font-bold text-white text-center mb-8">
+            <div className="text-center">
+              <h3 className="text-3xl font-bold text-white mb-12">
                 Résultats de nos utilisateurs
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="text-center">
+                <div>
                   <div className="text-4xl font-bold text-yellow-300 mb-2">500+</div>
-                  <div className="text-indigo-200">{t('common.nuds_dploys')}</div>
+                  <div className="text-indigo-200">{t("common.noeuds_deployes")}</div>
                 </div>
-                <div className="text-center">
+                <div>
                   <div className="text-4xl font-bold text-yellow-300 mb-2">99.9%</div>
-                  <div className="text-indigo-200">{t('common.disponibilit')}</div>
+                  <div className="text-indigo-200">{t("common.disponibilite")}</div>
                 </div>
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-yellow-300 mb-2">{t('common.5min')}</div>
-                  <div className="text-indigo-200">{t('common.temps_de_dploiement')}</div>
+                <div>
+                  <div className="text-4xl font-bold text-yellow-300 mb-2">5min</div>
+                  <div className="text-indigo-200">{t("common.temps_de_deploiement")}</div>
                 </div>
               </div>
             </div>
 
             {/* CTA Final */}
-            <div className="text-center space-y-6">
-              <h3 className="text-2xl font-bold text-white">
+            <div className="text-center">
+              <h3 className="text-3xl font-bold text-white mb-8">
                 Prêt à commencer votre aventure Lightning ?
               </h3>
               <button
                 onClick={handleStartFree}
-                className="bg-gradient-to-r from-yellow-400 to-pink-500 hover:from-yellow-500 hover:to-pink-600 text-black font-bold px-8 py-4 text-lg shadow-2xl transform hover:scale-105 transition-all rounded-xl"
+                className="bg-yellow-400 text-gray-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-yellow-300 transition-colors"
               >
                 Démarrer Gratuitement
               </button>
-              <p className="text-indigo-200 text-sm">
-                <span className="text-yellow-300 font-bold">{t('common.essai_gratuit_ia_de_7_jours')}</span> • 
+              <p className="text-gray-300 mt-4">
+                <span className="text-yellow-300 font-bold">{t("common.essai_gratuit_de_7_jours")}</span> • 
                 Pas de carte bancaire requise
               </p>
             </div>

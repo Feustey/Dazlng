@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseAdminClient } from '@/lib/supabase';
+import { getSupabaseAdminClient } from "@/lib/supabase";
 import { validateAdminAccess } from "@/utils/adminHelpers";
 
 export async function GET(req: NextRequest): Promise<Response> {
@@ -8,7 +8,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     return NextResponse.json({ error: "Accès non autorisé" }, { status: 403 });
   }
   const { searchParams } = new URL(req.url);
-  const limit = parseInt(searchParams.get("limit") || "20", 10);
+  const limit = parseInt(searchParams.get("limit") || "20");
   const sort = searchParams.get("sort") || "created_at:desc";
   const [sortField, sortOrder] = sort.split(":");
   const status = searchParams.get("status");
@@ -23,7 +23,7 @@ export async function GET(req: NextRequest): Promise<Response> {
 }
 
 export async function POST(_request: NextRequest): Promise<NextResponse> {
-  return NextResponse.json({ message: 'Admin payments endpoint placeholder' });
+  return NextResponse.json({ message: "Admin payments endpoint placeholder" });
 }
 
 export const dynamic = "force-dynamic";

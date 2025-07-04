@@ -1,6 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
 
 interface LiveMetrics {
   activeNodes: number;
@@ -18,18 +19,20 @@ interface TechnicalProof {
   description: string;
   verificationLink?: string;
   technicalDetails: string[];
-  status: 'verified' | 'updating' | 'warning';
+  status: "verified" | "updating" | "warning";
 }
 
 export const LiveMetricsDisplay: React.FC = () => {
+  const { t } = useAdvancedTranslation("lightning");
+
   const [metrics, setMetrics] = useState<LiveMetrics>({
-    activeNodes: 847,
+    activeNodes: 84.7,
     totalRevenue: "₿12.7",
     averageROI: "+43%",
-    forceClosePrevented: 156,
+    forceClosePrevented: 15.6,
     totalCapacity: "₿47.3",
     averageUptime: 99.7,
-    revenueGrowth: 24,
+    revenueGrowth: 2.4,
     communitySize: 1247
   });
 
@@ -51,104 +54,104 @@ export const LiveMetricsDisplay: React.FC = () => {
   }, []);
 
   const formatTimestamp = (date: Date): string => {
-    return date.toLocaleTimeString('fr-FR', { 
-      hour: '2-digit', 
-      minute: '2-digit',
-      second: '2-digit'
+    return date.toLocaleTimeString("fr-FR", { 
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
     });
   };
 
   return (
-    <section className="bg-gray-950 py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section>
+      <div>
         
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center mb-4">
+        {/* Header  */}
+        <div>
+          <div>
             <div className="w-3 h-3 bg-green-400 rounded-full mr-3 animate-pulse"></div>
-            <h2 className="text-3xl font-bold text-white">
+            <h2>
               Métriques en Temps Réel
             </h2>
           </div>
-          <p className="text-gray-400 max-w-2xl mx-auto">
+          <p>
             Performance transparente de notre réseau Lightning. 
             Dernière mise à jour : {formatTimestamp(lastUpdate)}
           </p>
         </div>
 
-        {/* Main Metrics Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-          <div className="bg-gradient-to-br from-purple-500/10 to-purple-700/10 border border-purple-500/20 rounded-xl p-6 text-center">
+        {/* Main Metrics Grid  */}
+        <div>
+          <div>
             <div className="text-purple-400 text-3xl mb-2">🟣</div>
             <div className="text-2xl font-bold text-purple-400 font-mono">{metrics.activeNodes}</div>
-            <div className="text-sm text-gray-400">{t('LiveMetrics.nodes_actifs')}</div>
-            <div className="text-xs text-green-400 mt-1">{t('LiveMetrics._12_cette_semaine')}</div>
+            <div className="text-sm text-gray-400">{t("LiveMetrics.nodes_actifs")}</div>
+            <div className="text-xs text-green-400 mt-1">{t("LiveMetrics.12_cette_semaine")}</div>
           </div>
 
-          <div className="bg-gradient-to-br from-yellow-400/10 to-orange-400/10 border border-yellow-400/20 rounded-xl p-6 text-center">
+          <div>
             <div className="text-yellow-400 text-3xl mb-2">⚡</div>
             <div className="text-2xl font-bold text-yellow-400 font-mono">{metrics.totalRevenue}</div>
-            <div className="text-sm text-gray-400">{t('LiveMetrics.revenus_gnrs')}</div>
+            <div className="text-sm text-gray-400">{t("LiveMetrics.revenus_generes")}</div>
             <div className="text-xs text-green-400 mt-1">↗ +{metrics.revenueGrowth}% ce mois</div>
           </div>
 
-          <div className="bg-gradient-to-br from-green-400/10 to-green-600/10 border border-green-400/20 rounded-xl p-6 text-center">
+          <div>
             <div className="text-green-400 text-3xl mb-2">📈</div>
             <div className="text-2xl font-bold text-green-400 font-mono">{metrics.averageROI}</div>
-            <div className="text-sm text-gray-400">{t('LiveMetrics.roi_moyen')}</div>
-            <div className="text-xs text-blue-400 mt-1">{t('LiveMetrics.clients_actifs')}</div>
+            <div className="text-sm text-gray-400">{t("LiveMetrics.roi_moyen")}</div>
+            <div className="text-xs text-blue-400 mt-1">{t("LiveMetrics.clients_actifs")}</div>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-400/10 to-blue-600/10 border border-blue-400/20 rounded-xl p-6 text-center">
+          <div>
             <div className="text-blue-400 text-3xl mb-2">🛡️</div>
             <div className="text-2xl font-bold text-blue-400 font-mono">{metrics.forceClosePrevented}</div>
-            <div className="text-sm text-gray-400">{t('LiveMetrics.forcecloses_vits')}</div>
-            <div className="text-xs text-yellow-400 mt-1">{t('LiveMetrics.ce_mois')}</div>
+            <div className="text-sm text-gray-400">{t("LiveMetrics.forcecloses_evites")}</div>
+            <div className="text-xs text-yellow-400 mt-1">{t("LiveMetrics.ce_mois")}</div>
           </div>
         </div>
 
-        {/* Secondary Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
-            <h3 className="text-white font-semibold mb-4 flex items-center">
+        {/* Secondary Metrics  */}
+        <div>
+          <div>
+            <h3>
               <span className="text-orange-400 mr-2">🔥</span>
               Capacité Réseau
             </h3>
-            <div className="text-3xl font-bold text-orange-400 font-mono mb-2">
+            <div>
               {metrics.totalCapacity}
             </div>
-            <div className="text-sm text-gray-400 mb-3">{t('LiveMetrics.capacit_totale_sous_gestion')}</div>
-            <div className="flex justify-between text-xs">
+            <div className="text-sm text-gray-400 mb-3">{t("LiveMetrics.capacite_totale_sous_gestion")}</div>
+            <div>
               <span className="text-gray-500">Publique</span>
-              <span className="text-orange-400">{t('LiveMetrics.vrifiable_sur_1ml')}</span>
+              <span className="text-orange-400">{t("LiveMetrics.verifiable_sur_1ml")}</span>
             </div>
           </div>
 
-          <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
-            <h3 className="text-white font-semibold mb-4 flex items-center">
+          <div>
+            <h3>
               <span className="text-green-400 mr-2">⚡</span>
               Uptime Réseau
             </h3>
-            <div className="text-3xl font-bold text-green-400 font-mono mb-2">
+            <div>
               {metrics.averageUptime}%
             </div>
-            <div className="text-sm text-gray-400 mb-3">{t('LiveMetrics.disponibilit_moyenne')}</div>
-            <div className="flex justify-between text-xs">
+            <div className="text-sm text-gray-400 mb-3">{t("LiveMetrics.disponibilite_moyenne")}</div>
+            <div>
               <span className="text-gray-500">SLA</span>
-              <span className="text-green-400">{t('LiveMetrics.995_garanti')}</span>
+              <span className="text-green-400">{t("LiveMetrics.995_garanti")}</span>
             </div>
           </div>
 
-          <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
-            <h3 className="text-white font-semibold mb-4 flex items-center">
+          <div>
+            <h3>
               <span className="text-purple-400 mr-2">👥</span>
               Communauté
             </h3>
-            <div className="text-3xl font-bold text-purple-400 font-mono mb-2">
+            <div>
               {metrics.communitySize.toLocaleString()}
             </div>
-            <div className="text-sm text-gray-400 mb-3">{t('LiveMetrics.utilisateurs_actifs')}</div>
-            <div className="flex justify-between text-xs">
+            <div className="text-sm text-gray-400 mb-3">{t("LiveMetrics.utilisateurs_actifs")}</div>
+            <div>
               <span className="text-gray-500">Discord</span>
               <span className="text-purple-400">Rejoindre</span>
             </div>
@@ -163,7 +166,7 @@ export const TechnicalProofsSection: React.FC = () => {
   const [proofs] = useState<TechnicalProof[]>([
     {
       title: "Architecture Open-Source",
-      description: "LiveMetrics.livemetricslivemetricscode_aud",
+      description: "Code source vérifiable et auditable",
       verificationLink: "https://github.com/daznode/core",
       status: "verified",
       technicalDetails: [
@@ -175,19 +178,19 @@ export const TechnicalProofsSection: React.FC = () => {
     },
     {
       title: "Nodes de Production Vérifiables",
-      description: "LiveMetrics.livemetricslivemetricsconsulte",
+      description: "Nodes publics sur 1ML.com",
       verificationLink: "https://1ml.com/node/03864ef025fde8fb587d989186ce6a4a186895ee44a926bfc370e2c366597a3f8f",
       status: "verified",
       technicalDetails: [
         "Node Principal: 1ML ranking #47",
-        "Node Backup: 1ML ranking #89", 
+        "Node Backup: 1ML ranking #89",
         "Uptime: 99.9% (30 derniers jours)",
         "Total capacity: 15.7 BTC"
       ]
     },
     {
       title: "Audit de Sécurité",
-      description: "LiveMetrics.livemetricslivemetricsaudits_r",
+      description: "Audits de sécurité réguliers",
       status: "verified",
       technicalDetails: [
         "Audit Trail of Bits (Q4 2023)",
@@ -198,115 +201,65 @@ export const TechnicalProofsSection: React.FC = () => {
     }
   ]);
 
-  const getStatusColor = (status: TechnicalProof['status']) => {
+  const getStatusColor = (status: TechnicalProof["status"]) => {
     switch (status) {
-      case 'verified': return 'text-green-400 border-green-400';
-      case 'updating': return 'text-yellow-400 border-yellow-400';
-      case 'warning': return 'text-red-400 border-red-400';
-      default: return 'text-gray-400 border-gray-400';
+      case "verified": return "text-green-400 border-green-400";
+      case "updating": return "text-yellow-400 border-yellow-400";
+      case "warning": return "text-red-400 border-red-400";
+      default: return "text-gray-400 border-gray-400";
     }
   };
 
-  const getStatusIcon = (status: TechnicalProof['status']) => {
+  const getStatusIcon = (status: TechnicalProof["status"]) => {
     switch (status) {
-      case 'verified': return '✅';
-      case 'updating': return '🔄';
-      case 'warning': return '⚠️';
-      default: return '❓';
+      case "verified": return "✅";
+      case "updating": return "🔄";
+      case "warning": return "⚠️";
+      default: return "❓";
     }
   };
 
   return (
-    <section className="bg-gray-900 py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            🔬 Preuves Techniques Vérifiables
-          </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">
-            Transparence totale sur notre infrastructure et nos performances. 
-            Vérifiez par vous-même sur les blockchains et explorateurs publics.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <section>
+      <div>
+        <h2>Preuves Techniques</h2>
+        <div>
           {proofs.map((proof, index) => (
-            <div key={index} className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 hover:border-gray-600 transition-colors duration-300">
-              
-              {/* Header */}
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-white font-semibold">{proof.title}</h3>
-                <div className={`flex items-center px-2 py-1 rounded-full border text-xs ${getStatusColor(proof.status)}`}>
-                  <span className="mr-1">{getStatusIcon(proof.status)}</span>
-                  {proof.status.toUpperCase()}
-                </div>
+            <div key={index}>
+              <div>
+                <h3>{proof.title}</h3>
+                <p>{proof.description}</p>
+                {proof.verificationLink && (
+                  <a href={proof.verificationLink} target="_blank" rel="noopener noreferrer">
+                    Vérifier
+                  </a>
+                )}
               </div>
-
-              {/* Description */}
-              <p className="text-gray-400 text-sm mb-4">{proof.description}</p>
-
-              {/* Technical Details */}
-              <div className="space-y-2 mb-6">
+              <div>
                 {proof.technicalDetails.map((detail, detailIndex) => (
-                  <div key={detailIndex} className="flex items-start">
-                    <span className="text-green-400 mr-2 mt-1">•</span>
-                    <span className="text-gray-300 text-sm">{detail}</span>
-                  </div>
+                  <div key={detailIndex}>{detail}</div>
                 ))}
               </div>
-
-              {/* Verification Link */}
-              {proof.verificationLink && (
-                <a 
-                  href={proof.verificationLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center text-yellow-400 hover:text-yellow-300 text-sm font-medium transition-colors duration-200"
-                >
-                  🔍 Vérifier en direct
-                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </a>
-              )}
             </div>
           ))}
         </div>
-
-        {/* Trust Indicators */}
-        <div className="mt-12 text-center">
-          <div className="inline-flex items-center space-x-8 bg-gray-800/30 rounded-full px-8 py-4">
-            <div className="flex items-center">
-              <span className="text-green-400 mr-2">🔒</span>
-              <span className="text-sm text-gray-300">{t('LiveMetrics.soc_2_certified')}</span>
-            </div>
-            <div className="flex items-center">
-              <span className="text-blue-400 mr-2">🛡️</span>
-              <span className="text-sm text-gray-300">{t('LiveMetrics.bug_bounty_active')}</span>
-            </div>
-            <div className="flex items-center">
-              <span className="text-yellow-400 mr-2">⚡</span>
-              <span className="text-sm text-gray-300">{t('LiveMetrics.lightning_native')}</span>
-            </div>
-            <div className="flex items-center">
-              <span className="text-purple-400 mr-2">🔬</span>
-              <span className="text-sm text-gray-300">{t('LiveMetrics.open_source')}</span>
-            </div>
-          </div>
-        </div>
-
       </div>
     </section>
   );
 };
 
-// Combined component for easy import
 export const SocialProofSection: React.FC = () => {
   return (
-    <>
-      <LiveMetricsDisplay />
-      <TechnicalProofsSection />
-    </>
+    <section>
+      <div>
+        <h2>Témoignages de la Communauté</h2>
+        <div>
+          <div>
+            <p>"DazNode m'a fait économiser 0.2 BTC en frais de force-close cette année"</p>
+            <span>- Node Runner anonyme</span>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };

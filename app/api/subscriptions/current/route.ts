@@ -1,15 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getUserFromRequest } from '@/utils/auth';
+import { NextRequest, NextResponse } from "next/server";
+import { getUserFromRequest } from "@/utils/auth";
 
 export const dynamic = "force-dynamic";
-export const runtime = 'nodejs';
+export const runtime = "nodejs";
 
 export interface Subscription {
   id: string;
   userId: string;
   planId: string;
   planName: string;
-  status: 'active' | 'cancelled' | 'expired' | 'trial';
+  status: "active" | "cancelled" | "expired" | "trial";
   startDate: string;
   endDate: string;
   price: number;
@@ -38,8 +38,8 @@ export async function GET(req: NextRequest): Promise<Response> {
       return NextResponse.json<ApiResponse<null>>({
         success: false,
         error: {
-          code: 'UNAUTHORIZED',
-          message: 'Non autorisé'
+          code: "UNAUTHORIZED",
+          message: "Non autorisé"
         }
       }, { status: 401 });
     }
@@ -49,20 +49,18 @@ export async function GET(req: NextRequest): Promise<Response> {
     const realSubscription = null;
 
     // Si pas d'abonnement réel, utiliser le mock
-    const subscription = realSubscription || {
+    const subscription: Subscription = realSubscription || {
       id: `sub_${user.id}`,
       userId: user.id,
-      planId: 'free',
-      planName: 'Gratuit',
-      status: 'active' as const,
+      planId: "free",
+      planName: "Gratuit",
+      status: "active",
       startDate: new Date(Date.now() - 30 * 86400000).toISOString(),
       endDate: new Date(Date.now() + 30 * 86400000).toISOString(),
       price: 0,
-      currency: 'EUR',
+      currency: "EUR",
       features: [
-        'Statistiques de base',
-        'Connexion de nœud',
-        'Support communautaire'
+        "Statistiques de base", "Connexion de nœud", "Support communautaire"
       ],
       autoRenew: true
     };
@@ -73,12 +71,12 @@ export async function GET(req: NextRequest): Promise<Response> {
     });
 
   } catch (error) {
-    console.error('Erreur lors de la récupération de l\'abonnement:', error);
+    console.error("Erreur lors de la récupération de l'abonnement:", error);
     return NextResponse.json<ApiResponse<null>>({
       success: false,
       error: {
-        code: 'INTERNAL_ERROR',
-        message: 'Erreur interne du serveur'
+        code: "INTERNAL_ERROR",
+        message: "Erreur interne du serveur"
       }
     }, { status: 500 });
   }

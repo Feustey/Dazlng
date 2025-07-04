@@ -6,8 +6,9 @@ export async function verifyLnurlAuth(pubkey: string, k1: string, sig: string): 
     const pub = pubkey.startsWith("0x") ? pubkey.slice(2) : pubkey;
     const signature = sig.startsWith("0x") ? sig.slice(2) : sig;
     const message = k1.startsWith("0x") ? k1.slice(2) : k1;
-    return secp.verify(signature, message, pub);
+    return secp.verify(signatur,e, message, pub);
   } catch (e) {
     return false;
   }
 }
+</boolean>

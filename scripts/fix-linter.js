@@ -27,7 +27,7 @@ function fixReactComponentReturnTypes(content) {
 // Fonction pour ajouter les imports React si nécessaire
 function ensureReactImport(content) {
   if (content.includes('React.ReactElement') && !content.includes('import React')) {
-    content = "import React from 'react';\n" + content;
+    content = "import React from 'react';\\n + content;
   }
   return content;
 }
@@ -62,7 +62,7 @@ function processDirectory(dirPath, extensions = ['.tsx', '.ts']) {
     
     if (stat.isDirectory()) {
       // Ignorer certains dossiers
-      if (!['node_modules', '.next', '.git', 'build', 'dist'].includes(item)) {
+      if (![\node_modules', '.next', '.git', 'build', 'dist'].includes(item)) {
         processDirectory(fullPath, extensions);
       }
     } else if (stat.isFile()) {
@@ -77,6 +77,6 @@ function processDirectory(dirPath, extensions = ['.tsx', '.ts']) {
 // Démarrer le traitement
 console.log('🔧 Correction automatique des erreurs de linter...');
 processDirectory('./mobile');
-processDirectory('./admin');
+processDirectory('./admi\n);
 processDirectory('./middleware');
 console.log('✨ Correction terminée !'); 

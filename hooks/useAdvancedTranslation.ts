@@ -1,9 +1,9 @@
-import { useTranslations } from 'next-intl';
-import { useMemo, useCallback } from 'react';
+import { useTranslations } from "next-intl";
+import { useMemo, useCallback } from "react";
 
 interface TranslationOptions {
   fallback?: string;
-  values?: Record<string, any>;
+  variables?: Record<string, any>;
 }
 
 interface AdvancedTranslationHook {
@@ -14,47 +14,44 @@ interface AdvancedTranslationHook {
 
 /**
  * Hook de traduction avancé avec gestion des erreurs et fallbacks
- * @param namespace - Le namespace de traduction (ex: 'common', 'home')
+ * @param namespace - Le namespace de traduction (ex: "commo\n, "home")
  * @returns Un objet avec les fonctions de traduction
  */
-export function useAdvancedTranslation(namespace: string): AdvancedTranslationHook {
-  const tRaw = useTranslations(namespace);
-  
-  const t = useCallback((key: string, options: TranslationOptions = {}) => {
-    const { fallback, values } = options;
-    
+export const useAdvancedTranslation = (namespace: string): AdvancedTranslationHook => {
+  const t = useTranslations(namespace);
+
+  const translate = useCallback((key: string, options?: TranslationOptions) => {
     try {
-      return tRaw(key, values);
-    } catch (error) {
-      // Log l'erreur en développement
-      if (process.env.NODE_ENV === 'development') {
-        console.warn(`🌐 Translation key missing: ${namespace}.${key}`, {
-          fallback,
-          values,
-          error
+      let translation = t(key);
+      
+      if (options?.variables) {
+        Object.entries(options.variables).forEach(([key, value]) => {
+          translation = translation.replace(new RegExp(`{${key}}`, 'g'), String(value));
         });
       }
       
-      // Retourner le fallback ou la clé
-      return fallback || key;
+      return translation;
+    } catch (error) {
+      console.warn(`Translation key "${key}" not found in namespace "${namespace}"`);
+      return options?.fallback || key;
     }
-  }, [tRaw, namespace]);
-  
+  }, [t, namespace]);
+
   const hasKey = useCallback((key: string): boolean => {
     try {
-      tRaw(key);
+      t(key);
       return true;
     } catch {
       return false;
     }
-  }, [tRaw]);
+  }, [t]);
   
   return useMemo(() => ({
-    t,
-    tRaw,
+    t: translate,
+    tRaw: t,
     hasKey
-  }), [t, tRaw, hasKey]);
-}
+  }), [translate, t, hasKey]);
+};
 
 /**
  * Hook pour les traductions avec gestion des pluriels
@@ -65,8 +62,8 @@ export function usePluralTranslation(namespace: string) {
   const { t } = useAdvancedTranslation(namespace);
   
   const plural = useCallback((
-    key: string, 
-    count: number, 
+    key: string,
+    count: number,
     options?: Omit<TranslationOptions, 'values'>
   ) => {
     const pluralKey = count === 1 ? `${key}.one` : `${key}.other`;
@@ -92,7 +89,7 @@ export function useDateTranslation(namespace: string) {
     date: Date | string,
     options?: Omit<TranslationOptions, 'values'>
   ) => {
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    const dateObj = typeof date === "string" ? new Date(date) : date;
     return t(key, {
       ...options,
       values: { 
@@ -130,4 +127,4 @@ export function useNumberTranslation(namespace: string) {
   }, [t]);
   
   return { t, formatNumber };
-} 
+}

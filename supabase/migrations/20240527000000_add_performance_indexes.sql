@@ -36,22 +36,22 @@ CREATE INDEX IF NOT EXISTS idx_prospects_source ON prospects (source);
 CREATE INDEX IF NOT EXISTS idx_network_stats_timestamp ON network_stats (timestamp DESC);
 
 -- Ajout des contraintes de clés étrangères manquantes
-ALTER TABLE orders
+ALTER TABLE orders;
 ADD CONSTRAINT fk_orders_user
 FOREIGN KEY (user_id) REFERENCES users(id)
 ON DELETE CASCADE;
 
-ALTER TABLE payments
+ALTER TABLE payments;
 ADD CONSTRAINT fk_payments_order
 FOREIGN KEY (order_id) REFERENCES orders(id)
 ON DELETE CASCADE;
 
-ALTER TABLE subscriptions
+ALTER TABLE subscriptions;
 ADD CONSTRAINT fk_subscriptions_user
 FOREIGN KEY (user_id) REFERENCES users(id)
 ON DELETE CASCADE;
 
-ALTER TABLE deliveries
+ALTER TABLE deliveries;
 ADD CONSTRAINT fk_deliveries_order
 FOREIGN KEY (order_id) REFERENCES orders(id)
 ON DELETE CASCADE; 

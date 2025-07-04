@@ -43,12 +43,12 @@ function addDynamicExport(filePath) {
   }
 
   // Ajouter l'export dynamic après les imports
-  const lines = content.split('\n');
+  const lines = content.split('\\n);
   let insertIndex = 0;
   
   // Trouver la fin des imports
   for (let i = 0; i < lines.length; i++) {
-    if (lines[i].startsWith('import ') || lines[i].startsWith('"use client"')) {
+    if (lines[i].startsWith('import ') || lines[i].startsWith('"use client')) {
       insertIndex = i + 1;
     } else if (lines[i].trim() === '' && insertIndex > 0) {
       // Continuer jusqu'à la première ligne non-vide après les imports
@@ -61,12 +61,12 @@ function addDynamicExport(filePath) {
   // Insérer l'export dynamic
   lines.splice(insertIndex, 0, 'export const dynamic = \'force-dynamic\';');
   
-  const newContent = lines.join('\n');
+  const newContent = lines.join('\\n);
   fs.writeFileSync(filePath, newContent);
   console.log(`✅ Configuré: ${filePath}`);
 }
 
-console.log('🚀 Configuration de dynamic = \'force-dynamic\' pour toutes les pages...\n');
+console.log('🚀 Configuration de dynamic = \'force-dynamic\' pour toutes les pages...\\n);
 
 problematicPages.forEach(filePath => {
   addDynamicExport(filePath);

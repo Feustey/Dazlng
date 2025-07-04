@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseAdminClient } from '@/lib/supabase';
+import { getSupabaseAdminClient } from "@/lib/supabase";
 
 export async function POST(req: NextRequest): Promise<Response> {
   try {
@@ -14,8 +14,8 @@ export async function POST(req: NextRequest): Promise<Response> {
         choix,
         source: source || "dazia-preview",
         prospect: true,
-        date: new Date().toISOString(),
-      },
+        date: new Date().toISOString()
+      }
     ]);
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });

@@ -23,7 +23,7 @@ class Logger {
 
   error(_message: string, _error?: Error | unknown): void {
     if (isDevelopment) {
-      // console.error(`[ERROR] ${_message}`, _error);
+      console.error(`[ERROR] ${_message}`, _error);
     }
     // Ici, vous pourriez ajouter une intégration avec un service de monitoring
     // comme Sentry, LogRocket, etc.
@@ -31,7 +31,7 @@ class Logger {
 
   warn(_message: string, ..._args: LogArgs[]): void {
     if (isDevelopment) {
-      // console.warn(`[WARN] ${_message}`, ..._args);
+      console.warn(`[WARN] ${_message}`, ..._args);
     }
   }
 
@@ -42,4 +42,4 @@ class Logger {
   }
 }
 
-export const logger = Logger.getInstance(); 
+export const logger = Logger.getInstance();

@@ -1,23 +1,26 @@
 "use client";
 
-import React from 'react';
-import Link from 'next/link';
+import React from "react";
+import Link from "next/link";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
 
 const DocsPage: React.FC = () => {
+  const { t } = useAdvancedTranslation("docs");
+
   const documentationSections = [
     {
       title: "Architecture Technique",
-      description: "common.commoncommondtails_techniques_",
+      description: t("page.details_tech"),
       items: [
         { title: "Architecture des nœuds", link: "/docs/architecture/nodes" },
         { title: "API Documentation", link: "/docs/api" },
-        { title: "common.scurit", link: "/docs/security" },
+        { title: "Sécurité", link: "/docs/security" },
         { title: "Performance", link: "/docs/performance" }
       ]
     },
     {
       title: "Intégration",
-      description: "common.commonhomeguides_d"intégration et exemples de code",
+      description: t("page.guides_d"),
       items: [
         { title: "Guide de démarrage", link: "/docs/integration/getting-started" },
         { title: "SDK JavaScript", link: "/docs/integration/sdk" },
@@ -27,7 +30,7 @@ const DocsPage: React.FC = () => {
     },
     {
       title: "Monitoring",
-      description: "common.commoncommonconfiguration_et_u",
+      description: t("page.configuration"),
       items: [
         { title: "Configuration des alertes", link: "/docs/monitoring/alerts" },
         { title: "Métriques disponibles", link: "/docs/monitoring/metrics" },
@@ -37,7 +40,7 @@ const DocsPage: React.FC = () => {
     },
     {
       title: "Troubleshooting",
-      description: "common.commoncommonsolutions_aux_prob",
+      description: t("page.solutions_au"),
       items: [
         { title: "Problèmes de connexion", link: "/docs/troubleshooting/connection" },
         { title: "Erreurs de paiement", link: "/docs/troubleshooting/payments" },
@@ -48,37 +51,37 @@ const DocsPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         
         {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-gray-900 mb-6">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Documentation Technique
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Documentation complète et transparente de notre infrastructure, 
+            Documentation complète et transparente de notre infrastructure
             API et processus techniques.
           </p>
         </div>
 
         {/* Sections */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
           {documentationSections.map((section, index) => (
-            <div key={index} className="bg-white rounded-xl shadow-lg p-6">
+            <div key={index} className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-3">{section.title}</h2>
               <p className="text-gray-600 mb-6">{section.description}</p>
               
-              <ul className="space-y-3">
+              <ul className="space-y-2">
                 {section.items.map((item, itemIndex) => (
                   <li key={itemIndex}>
                     <Link 
                       href={item.link}
-                      className="text-blue-600 hover:text-blue-800 font-medium flex items-center group"
+                      className="flex items-center text-blue-600 hover:text-blue-800 transition-colors"
                     >
                       <span className="mr-2">📄</span>
                       {item.title}
-                      <svg className="w-4 h-4 ml-2 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
                     </Link>
@@ -90,43 +93,28 @@ const DocsPage: React.FC = () => {
         </div>
 
         {/* GitHub et Open Source */}
-        <div className="bg-white rounded-xl shadow-lg p-8 mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
+        <div className="mt-16 bg-white rounded-lg shadow-md p-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
             🔓 Open Source et Transparence
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">{t('common.code_source')}</h3>
-              <p className="text-gray-600 mb-4">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">{t("common.code_source")}</h3>
+              <p className="text-gray-600 mb-6">
                 Une grande partie de notre code est open source et disponible 
                 sur GitHub pour audit et contribution.
               </p>
               <div className="space-y-3">
-                <a 
-                  href="https://github.com/daznode/core"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center text-blue-600 hover:text-blue-800 font-medium"
-                >
+                <a href="#" className="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
                   <span className="mr-2">📦</span>
                   DazNode Core
                 </a>
-                <a 
-                  href="https://github.com/daznode/api"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center text-blue-600 hover:text-blue-800 font-medium"
-                >
+                <a href="#" className="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
                   <span className="mr-2">🔌</span>
                   API Documentation
                 </a>
-                <a 
-                  href="https://github.com/daznode/sdk"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center text-blue-600 hover:text-blue-800 font-medium"
-                >
+                <a href="#" className="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
                   <span className="mr-2">⚙️</span>
                   SDK JavaScript
                 </a>
@@ -134,32 +122,21 @@ const DocsPage: React.FC = () => {
             </div>
             
             <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">{t('common.audits_et_scurit')}</h3>
-              <p className="text-gray-600 mb-4">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">{t("common.audits_et_securite")}</h3>
+              <p className="text-gray-600 mb-6">
                 Nos audits de sécurité et rapports de vulnérabilités 
                 sont publics et accessibles.
               </p>
               <div className="space-y-3">
-                <a 
-                  href="/docs/security/audit-2024"
-                  className="flex items-center text-blue-600 hover:text-blue-800 font-medium"
-                >
+                <a href="#" className="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
                   <span className="mr-2">🔍</span>
                   Audit de Sécurité 2024
                 </a>
-                <a 
-                  href="https://hackerone.com/daznode"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center text-blue-600 hover:text-blue-800 font-medium"
-                >
+                <a href="#" className="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
                   <span className="mr-2">🐛</span>
                   Programme Bug Bounty
                 </a>
-                <a 
-                  href="/docs/security/vulnerabilities"
-                  className="flex items-center text-blue-600 hover:text-blue-800 font-medium"
-                >
+                <a href="#" className="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
                   <span className="mr-2">⚠️</span>
                   Vulnérabilités connues
                 </a>
@@ -169,41 +146,41 @@ const DocsPage: React.FC = () => {
         </div>
 
         {/* Métriques Publiques */}
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
+        <div className="mt-16 bg-white rounded-lg shadow-md p-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
             📊 Métriques Publiques
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
+          <div className="grid md:grid-cols-3 gap-8">
+            <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Performance</h3>
-              <div className="space-y-2 text-sm text-gray-600">
-                <div>{t('home.uptime_999')}</div>
-                <div>{t('common.latence_moyenne_45ms')}</div>
-                <div>{t('common.throughput_12m_txjour')}</div>
+              <div className="space-y-2 text-gray-600">
+                <div>{t("home.uptime_999")}</div>
+                <div>{t("common.latence_moyenne_45ms")}</div>
+                <div>{t("common.throughput_12m_txjour")}</div>
               </div>
             </div>
             
-            <div className="text-center">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('common.scurit')}</h3>
-              <div className="space-y-2 text-sm text-gray-600">
-                <div>{t('common.vulnrabilits_critiques_0')}</div>
-                <div>{t('common.bugs_corrigs_23')}</div>
-                <div>{t('common.dernier_audit_jan_2024')}</div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">{t("common.securite")}</h3>
+              <div className="space-y-2 text-gray-600">
+                <div>{t("common.vulnerabilites_critiques_0")}</div>
+                <div>{t("common.bugs_corriges_23")}</div>
+                <div>{t("common.dernier_audit_jan_2024")}</div>
               </div>
             </div>
             
-            <div className="text-center">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('common.communaut')}</h3>
-              <div className="space-y-2 text-sm text-gray-600">
-                <div>{t('common.contributeurs_47')}</div>
-                <div>{t('common.stars_github_12k')}</div>
-                <div>{t('home.forks_234')}</div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">{t("common.communaute")}</h3>
+              <div className="space-y-2 text-gray-600">
+                <div>{t("common.contributeurs_47")}</div>
+                <div>{t("common.stars_github_12k")}</div>
+                <div>{t("home.forks_234")}</div>
               </div>
             </div>
           </div>
           
-          <div className="text-center mt-8">
+          <div className="mt-8 text-center">
             <p className="text-sm text-gray-500">
               * Données mises à jour en temps réel. Vérifiables sur nos repositories GitHub.
             </p>

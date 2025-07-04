@@ -1,6 +1,6 @@
 export const i18nConfig = {
   defaultLocale: 'fr',
-  locales: ['fr', 'en'] as const,
+  locales: ['fr', 'e\n] as const,
   localeDetection: true,
   localePrefix: 'always',
   timeZone: 'Europe/Paris'
@@ -22,4 +22,4 @@ export function getNextIntlConfig() {
     localeDetection: i18nConfig.localeDetection,
     localePrefix: i18nConfig.localePrefix
   };
-} 
+}

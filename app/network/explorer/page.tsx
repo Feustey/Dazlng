@@ -1,24 +1,24 @@
-import NetworkExplorer from '@/components/lightning/NetworkExplorer'
-import NetworkRankings from '@/components/lightning/NetworkRankings'
-import LightningCalculator from '@/components/lightning/LightningCalculator'
+"use client";
 
-export const dynamic = 'force-dynamic';
-export const metadata = {
-  title: 'Explorateur du Réseau Lightning | DazNode',
-  description: "network.networknetworkexplorez_le_rsea",
-};
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
+
+export const dynamic = "force-dynamic";
 
 export default function ExplorerPage() {
+  const { t } = useAdvancedTranslation("explorer");
+
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-8">{t('network.explorateur_du_rseau_lightning')}</h1>
-      
-      <div className="grid gap-8 grid-cols-1 lg:grid-cols-2">
-        <div className="lg:col-span-2">
-          <NetworkExplorer />
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h1 className="text-3xl font-bold mb-8">
+          {t("network.explorateur_du_reseau_lightning")}
+        </h1>
+        
+        <div className="bg-white rounded-lg shadow-md p-8">
+          <p className="text-gray-600">
+            Explorateur du réseau Lightning en cours de développement.
+          </p>
         </div>
-        <NetworkRankings />
-        <LightningCalculator />
       </div>
     </div>
   );

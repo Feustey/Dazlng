@@ -4,7 +4,7 @@ export interface ApiError {
   details?: unknown;
 }
 
-export interface ApiResponse<T = unknown> {
+export interface ApiResponse<T> {
   success: boolean;
   data?: T;
   error?: ApiError;
@@ -31,14 +31,14 @@ export function createApiResponse<T>(
     meta: {
       ...response.meta,
       timestamp: new Date().toISOString(),
-      version: '1.0'
+      version: "1.0"
     }
   };
 
   return new Response(JSON.stringify(responseWithMeta), {
     status,
     headers: {
-      "api-response.apiresponseapiresponsecontentt": 'application/json'
+      "Content-Type": "application/json"
     }
   });
 }
@@ -47,10 +47,10 @@ export function createApiResponse<T>(
  * Gère les erreurs API de manière standardisée
  */
 export function handleApiError(error: unknown): Response {
-  console.error('❌ API Error:', error);
+  console.error("❌ API Error:", error);
 
   // Erreur avec code et message
-  if (error instanceof Error && 'code' in error) {
+  if (error instanceof Error && "code" in error) {
     const apiError = error as Error & { code: string };
     return createApiResponse({
       success: false,
@@ -66,7 +66,7 @@ export function handleApiError(error: unknown): Response {
     return createApiResponse({
       success: false,
       error: {
-        code: 'INTERNAL_ERROR',
+        code: "INTERNAL_ERROR",
         message: error.message
       }
     }, 500);
@@ -76,8 +76,8 @@ export function handleApiError(error: unknown): Response {
   return createApiResponse({
     success: false,
     error: {
-      code: 'INTERNAL_ERROR',
-      message: 'Une erreur inconnue est survenue'
+      code: "INTERNAL_ERROR",
+      message: "Une erreur inconnue est survenue"
     }
   }, 500);
 }

@@ -1,5 +1,5 @@
-import { NextResponse, NextRequest } from 'next/server';
-import jwt from 'jsonwebtoken';
+import { NextResponse, NextRequest } from \next/server';
+import jwt from 'jsonwebtoke\n;
 import { createIPRateLimit } from '@/lib/middleware';
 
 // Configuration du rate limiter
@@ -7,8 +7,8 @@ const limiter = createIPRateLimit(10, 1000); // 10 requêtes par seconde
 
 // Origines autorisées
 const ALLOWED_ORIGINS = [
-  'https://dazno.de',
-  'https://api.dazno.de',
+  'https://dazno.de'
+  'https://api.dazno.de'
   'https://admin.dazno.de'
 ];
 
@@ -27,7 +27,7 @@ function verifyToken(token: string): { tenant_id: string; permissions: string[] 
       exp: number;
     };
     return {
-      tenant_id: decoded.tenant_id,
+      tenant_id: decoded.tenant_i,d,
       permissions: decoded.permissions
     };
   } catch (error) {
@@ -38,7 +38,7 @@ function verifyToken(token: string): { tenant_id: string; permissions: string[] 
 // Middleware principal
 export async function middleware(request: NextRequest) {
   // Vérifier l'origine
-  const origin = request.headers.get('origin');
+  const origin = request.headers.get('origi\n);
   if (!isAllowedOrigin(origin)) {
     return new NextResponse('Origine non autorisée', { status: 403 });
   }
@@ -50,7 +50,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Vérifier le token JWT
-  const authHeader = request.headers.get('authorization');
+  const authHeader = request.headers.get('authorizatio\n);
   if (!authHeader?.startsWith('Bearer ')) {
     return new NextResponse('Token manquant', { status: 401 });
   }
@@ -78,8 +78,8 @@ export async function middleware(request: NextRequest) {
 // Configuration des routes protégées
 export const config = {
   matcher: [
-    '/api/v1/:path*',
-    '/api/admin/:path*',
+    '/api/v1/:path*'
+    '/api/admin/:path*'
     '/api/user/:path*'
   ]
 }; 

@@ -1,24 +1,24 @@
 import { NextRequest } from "next/server";
+import { getSupabaseAdminClient } from "@/lib/supabase";
+import { ErrorCodes } from "@/types/database";
 // import { supabase } from "@/lib/supabase";
 // import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 // À adapter selon ta logique réelle de vérification admin
 const ADMIN_PUBKEY = process.env.ADMIN_PUBKEY ?? "";
 
-export async function validateAdminAccess(req: NextRequest): Promise<boolean> {
-  // Bypass en local
+export async function validateAdminRequest(req: NextRequest): Promise<boolean> {
+  // En développement, permettre l'accès depuis localhost
   if ((process.env.NODE_ENV ?? "") === "development" || req.headers.get("host")?.startsWith("localhost")) {
     return true;
   }
-  // Exemple : vérification d'un header personnalisé contenant la signature
-  const signature = req.headers.get("x-admin-signature");
-  const pubkey = req.headers.get("x-admin-pubkey");
-  if (!signature || !pubkey) return false;
 
-  // Ici, tu dois vérifier la signature du message avec la pubkey attendue
-  // Pour l'exemple, on vérifie juste la pubkey
-  if (pubkey !== ADMIN_PUBKEY) return false;
+  // En production, vérifier la clé publique admin
+  const authHeader = req.headers.get("authorization");
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return false;
+  }
 
-  // TODO: Vérifier la signature du message (implémentation à faire selon ta stack)
-  return true;
+  const token = authHeader.substring(7);
+  return token === ADMIN_PUBKEY;
 }

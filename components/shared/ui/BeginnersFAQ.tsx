@@ -1,96 +1,91 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
 
 const BeginnersFAQ: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  const toggleFAQ = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
+  const { t } = useAdvancedTranslation("faq");
 
   const faqs = [
     {
-      category: "Débutant",
       question: "Qu'est-ce qu'un nœud Lightning ?",
-      answer: "Un nœud Lightning est un programme qui participe au réseau Lightning Network, permettant des transactions Bitcoin instantanées et à faible coût."
+      answer: "Un nœud Lightning est un serveur qui permet de traiter les paiements instantanés sur le réseau Bitcoin Lightning Network. Il agit comme un intermédiaire pour faciliter les transactions rapides et peu coûteuses."
     },
     {
-      category: "Technique",
-      question: "Comment démarrer mon premier nœud ?",
-      answer: "Vous pouvez commencer avec notre guide étape par étape qui vous accompagne dans la configuration de votre premier nœud Lightning."
+      question: "Combien puis-je gagner avec un nœud Lightning ?",
+      answer: "Les revenus varient selon la taille du nœud, le volume de transactions et l'optimisation. Avec DazNode, nos utilisateurs gagnent en moyenne 40% de plus grâce à notre IA d'optimisation."
     },
     {
-      category: "Économie",
-      question: "Combien peut-on gagner avec un nœud Lightning ?",
-      answer: "Les revenus dépendent de nombreux facteurs comme la liquidité, les frais de routage et la connectivité de votre nœud. En moyenne, les opérateurs expérimentés génèrent entre 1-5% de rendement annuel."
+      question: "Ai-je besoin de connaissances techniques ?",
+      answer: "Non ! DazNode automatise tout le processus. Notre plateforme gère la configuration, l'optimisation et le monitoring de votre nœud. Vous n'avez qu'à vous concentrer sur vos revenus."
+    },
+    {
+      question: "Combien coûte l'installation d'un nœud ?",
+      answer: "L'installation d'un nœud Lightning coûte entre 100€ et 500€ selon la configuration. DazNode propose des packages tout-en-un avec support technique inclus."
+    },
+    {
+      question: "Y a-t-il des risques financiers ?",
+      answer: "Comme tout investissement, il y a des risques. Cependant, DazNode minimise ces risques grâce à notre IA qui surveille en permanence votre nœud et prédit les problèmes potentiels."
+    },
+    {
+      question: "Combien de temps faut-il pour commencer ?",
+      answer: "Avec DazNode, vous pouvez commencer à gagner des revenus en moins de 24h. Notre processus d'installation automatisé vous guide à chaque étape."
     }
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Questions fréquentes des débutants
+    <section className="py-16 bg-gray-50">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            Questions fréquentes
           </h2>
-          <p className="text-xl text-gray-600">
-            Toutes les réponses aux questions que vous vous posez avant de commencer votre aventure Lightning
+          <p className="text-lg text-gray-600">
+            Tout ce que vous devez savoir pour commencer avec les nœuds Lightning
           </p>
         </div>
 
         <div className="space-y-4">
-          {faqs.map((faq: any, index: any) => (
-            <div 
-              key={index}
-              className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300"
-            >
+          {faqs.map((faq, index) => (
+            <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200">
               <button
-                onClick={() => toggleFAQ(index)}
-                className="w-full px-8 py-6 text-left flex justify-between items-center hover:bg-gray-50 transition-colors"
+                className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors"
+                onClick={() => setOpenIndex(openIndex === index ? null : index)}
               >
-                <div className="flex items-center">
-                  <span className="bg-indigo-100 text-indigo-600 px-3 py-1 rounded-full text-sm font-medium mr-4">
-                    {faq.category}
-                  </span>
-                  <h3 className="text-lg font-semibold text-gray-900">{faq.question}</h3>
-                </div>
-                <svg 
-                  className={`w-6 h-6 text-gray-500 transform transition-transform ${
+                <span className="font-semibold text-gray-900">{faq.question}</span>
+                <svg
+                  className={`w-5 h-5 text-gray-500 transform transition-transform ${
                     openIndex === index ? 'rotate-180' : ''
                   }`}
-                  fill="none" 
-                  viewBox="0 0 24 24" 
+                  fill="none"
                   stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              
               {openIndex === index && (
-                <div className="px-8 pb-6">
-                  <div className="border-t pt-4">
-                    <p className="text-gray-700 leading-relaxed text-lg">{faq.answer}</p>
-                  </div>
+                <div className="px-6 pb-4">
+                  <p className="text-gray-600">{faq.answer}</p>
                 </div>
               )}
             </div>
           ))}
         </div>
 
-        {/* Contact support */}
-        <div className="mt-12 text-center">
-          <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-8 text-white">
-            <h3 className="text-2xl font-bold mb-4">{t('BeginnersFAQ.une_autre_question_')}</h3>
-            <p className="text-lg mb-6 text-indigo-100">
-              Notre communauté est là pour vous aider ! Rejoignez notre Discord pour poser vos questions directement aux experts.
-            </p>
-            <button className="bg-white text-indigo-600 font-bold px-8 py-3 rounded-xl hover:bg-gray-100 transition-colors">
-              Poser ma question sur Discord
-            </button>
-          </div>
+        <div className="text-center mt-12">
+          <p className="text-gray-600 mb-4">
+            Vous avez d'autres questions ?
+          </p>
+          <a
+            href="/contact"
+            className="inline-block bg-amber-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors"
+          >
+            Nous contacter
+          </a>
         </div>
       </div>
     </section>
   );
 };
 
-export default BeginnersFAQ; 
+export default BeginnersFAQ;

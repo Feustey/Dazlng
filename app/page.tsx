@@ -1,93 +1,87 @@
 "use client";
 import React, { useEffect, useState, Suspense } from "react";
-import nextDynamic from "next/dynamic";
-import DazFlowShowcase from '../components/shared/ui/DazFlowShowcase';
+import dynamic from "next/dynamic";
+import DazFlowShowcase from "../components/shared/ui/DazFlowShowcase";
 import { useSearchParams, useRouter } from "next/navigation";
-import UXOptimizedNavbar from '../components/shared/ui/UXOptimizedNavbar';
-import UXOptimizedHero from '../components/shared/ui/UXOptimizedHero';
-import ProblemAgitationSection from '../components/shared/ui/ProblemAgitationSection';
-import SolutionDifferentiationSection from '../components/shared/ui/SolutionDifferentiationSection';
-import MobileFAQSection from '../components/shared/ui/MobileFAQSection';
-import MobileFeaturesSection from '../components/shared/ui/MobileFeaturesSection';
-import MobileTestimonialsSection from '../components/shared/ui/MobileTestimonialsSection';
-import SocialProofSection from '../components/shared/ui/SocialProofSection';
-import PricingSection from '../components/shared/ui/PricingSection';
-import ContactDemoSection from '../components/shared/ui/ContactDemoSection';
-import UXFooter from '../components/shared/ui/UXFooter';
+import UXOptimizedNavbar from "../components/shared/ui/UXOptimizedNavbar";
+import UXOptimizedHero from "../components/shared/ui/UXOptimizedHero";
+import ProblemAgitationSection from "../components/shared/ui/ProblemAgitationSection";
+import SolutionDifferentiationSection from "../components/shared/ui/SolutionDifferentiationSection";
+import MobileFAQSection from "../components/shared/ui/MobileFAQSection";
+import MobileFeaturesSection from "../components/shared/ui/MobileFeaturesSection";
+import MobileTestimonialsSection from "../components/shared/ui/MobileTestimonialsSection";
+import SocialProofSection from "../components/shared/ui/SocialProofSection";
+import PricingSection from "../components/shared/ui/PricingSection";
+import ContactDemoSection from "../components/shared/ui/ContactDemoSection";
+import UXFooter from "../components/shared/ui/UXFooter";
 
-export const dynamic = 'force-dynamic';
+export const dynamicConfig = "force-dynamic";
+
 // Lazy loading optimisé avec skeleton amélioré
-const NewRevenueHero = nextDynamic(() => import("../components/shared/ui/NewRevenueHero"), {
-  loading: () => (
-    <div className="min-h-screen bg-gradient-to-br from-green-600 via-blue-700 to-purple-800 flex items-center justify-center">
-      <div className="text-center">
-        <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-white/80 text-lg">{t('common.chargement')}</p>
-      </div>
-    </div>
-  ),
-  ssr: true // Activer SSR pour le hero
+const NewRevenueHero = dynamic(() => import("../components/shared/ui/NewRevenueHero"), {
+  loading: () => <div>Loading...</div>,
+  ssr: false
 });
 
 // Autres composants avec lazy loading optimisé
-const WhyBecomeNodeRunner = nextDynamic(() => import("../components/shared/ui/WhyBecomeNodeRunner"), {
+const WhyBecomeNodeRunner = dynamic(() => import("../components/shared/ui/WhyBecomeNodeRunner"), {
   loading: () => (
-    <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
-      <div className="text-gray-400">{t('common.chargement')}</div>
+    <div className="p-8 text-center">
+      <div className="text-gray-400">Chargement...</div>
     </div>
   ),
   ssr: false
 });
 
-const DetailedTestimonials = nextDynamic(() => import("../components/shared/ui/DetailedTestimonials"), {
+const DetailedTestimonials = dynamic(() => import("../components/shared/ui/DetailedTestimonials"), {
   loading: () => (
-    <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
-      <div className="text-gray-400">{t('common.chargement')}</div>
+    <div className="p-8 text-center">
+      <div className="text-gray-400">Chargement...</div>
     </div>
   ),
   ssr: false
 });
 
-const HowItWorks = nextDynamic(() => import("@/components/shared/ui/HowItWorks").then(mod => ({ default: mod.HowItWorks })), {
+const HowItWorks = dynamic(() => import("@/components/shared/ui/HowItWorks").then(mod => ({ default: mod.HowItWorks })), {
   loading: () => (
-    <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
-      <div className="text-gray-400">{t('common.chargement')}</div>
+    <div className="p-8 text-center">
+      <div className="text-gray-400">Chargement...</div>
     </div>
   ),
   ssr: false
 });
 
-const CommunitySection = nextDynamic(() => import("../components/shared/ui/CommunitySection"), {
+const CommunitySection = dynamic(() => import("../components/shared/ui/CommunitySection"), {
   loading: () => (
-    <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
-      <div className="text-gray-400">{t('common.chargement')}</div>
+    <div className="p-8 text-center">
+      <div className="text-gray-400">Chargement...</div>
     </div>
   ),
   ssr: false
 });
 
-const FirstStepsGuide = nextDynamic(() => import("../components/shared/ui/FirstStepsGuide"), {
+const FirstStepsGuide = dynamic(() => import("../components/shared/ui/FirstStepsGuide"), {
   loading: () => (
-    <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
-      <div className="text-gray-400">{t('common.chargement')}</div>
+    <div className="p-8 text-center">
+      <div className="text-gray-400">Chargement...</div>
     </div>
   ),
   ssr: false
 });
 
-const BeginnersFAQ = nextDynamic(() => import("../components/shared/ui/BeginnersFAQ"), {
+const BeginnersFAQ = dynamic(() => import("../components/shared/ui/BeginnersFAQ"), {
   loading: () => (
-    <div className="h-96 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
-      <div className="text-gray-400">{t('common.chargement')}</div>
+    <div className="p-8 text-center">
+      <div className="text-gray-400">Chargement...</div>
     </div>
   ),
   ssr: false
 });
 
-const FinalConversionCTA = nextDynamic(() => import("../components/shared/ui/FinalConversionCTA"), {
+const FinalConversionCTA = dynamic(() => import("../components/shared/ui/FinalConversionCTA"), {
   loading: () => (
-    <div className="h-64 bg-gradient-to-br from-gray-50 to-gray-100 animate-pulse rounded-xl flex items-center justify-center">
-      <div className="text-gray-400">{t('common.chargement')}</div>
+    <div className="p-8 text-center">
+      <div className="text-gray-400">Chargement...</div>
     </div>
   ),
   ssr: false
@@ -96,23 +90,21 @@ const FinalConversionCTA = nextDynamic(() => import("../components/shared/ui/Fin
 // Composant client séparé pour gérer les paramètres d'URL
 const SignupConfirmation: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm">
-      <div 
-        className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl border border-indigo-200 transform transition-all animate-zoom-in"
-      >
-        <div className="flex flex-col items-center text-center">
-          <div className="bg-green-100 p-4 rounded-full mb-6">
-            <svg className="w-10 h-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-8 max-w-md mx-4">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">{t('common.inscription_confirme_')}</h2>
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">Inscription confirmée !</h2>
           <p className="text-gray-600 mb-6">
             Votre adresse email a été vérifiée avec succès. Votre compte est maintenant actif et vous pouvez profiter de tous les services de dazno.de.
           </p>
           <button
             onClick={onClose}
-            className="w-full bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors shadow-lg hover-lift"
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
           >
             Commencer l'aventure
           </button>
@@ -149,7 +141,7 @@ export interface AnimatedSectionProps {
   delay?: number;
 }
 
-const AnimatedSection: React.FC<AnimatedSectionProps> = ({ 
+const AnimatedSection: React.FC<AnimatedSectionProps> = ({
   children, 
   className = "", 
   delay = 0 
@@ -167,7 +159,7 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
       },
       {
         threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+        rootMargin: "0px 0px -50px 0px"
       }
     );
 
@@ -180,10 +172,12 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
   }, [className, hasAnimated]);
   
   return (
-    <section 
+    <section
       data-section={className}
-      className={`${className} ${inView ? 'animate-fade-in' : 'opacity-0'}`}
-      style={{ animationDelay: `${delay}ms` }}
+      className={`transition-all duration-1000 ease-out ${
+        inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+      }`}
+      style={{ transitionDelay: `${delay}ms` }}
     >
       {children}
     </section>
@@ -200,9 +194,9 @@ export default function OptimizedHomePage() {
     // Défilement fluide pour les ancres optimisé
     const handleAnchorClicks = (e: Event) => {
       const target = e.target as HTMLAnchorElement;
-      if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#')) {
+      if (target.tagName === "A" && target.getAttribute("href")?.startsWith("#")) {
         e.preventDefault();
-        const targetId = target.getAttribute('href');
+        const targetId = target.getAttribute("href");
         if (targetId) {
           const targetElement = document.querySelector(targetId);
           if (targetElement) {
@@ -210,31 +204,96 @@ export default function OptimizedHomePage() {
             const offset = 80;
             window.scrollTo({
               top: elementTop - offset,
-              behavior: 'smooth'
+              behavior: "smooth"
             });
           }
         }
       }
     };
-    document.addEventListener('click', handleAnchorClicks);
-    return () => document.removeEventListener('click', handleAnchorClicks);
+
+    document.addEventListener("click", handleAnchorClicks);
+    return () => document.removeEventListener("click", handleAnchorClicks);
   }, []);
 
   return (
-    <>
+    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-black to-purple-900">
+      <Suspense fallback={<div className="text-white text-center p-8">Chargement...</div>}>
+        <SignupConfirmationGate />
+      </Suspense>
+
       <UXOptimizedNavbar />
-      <main className="min-h-screen w-full overflow-x-hidden scroll-smooth layout-full-width">
-        <UXOptimizedHero />
-        <ProblemAgitationSection />
-        <SolutionDifferentiationSection />
-        <MobileFeaturesSection />
-        <MobileTestimonialsSection />
-        <SocialProofSection />
-        <PricingSection />
-        <MobileFAQSection />
-        <ContactDemoSection />
+      
+      <main>
+        <AnimatedSection delay={0}>
+          <UXOptimizedHero />
+        </AnimatedSection>
+
+        <AnimatedSection delay={200}>
+          <ProblemAgitationSection />
+        </AnimatedSection>
+
+        <AnimatedSection delay={400}>
+          <SolutionDifferentiationSection />
+        </AnimatedSection>
+
+        <AnimatedSection delay={600}>
+          <DazFlowShowcase />
+        </AnimatedSection>
+
+        <AnimatedSection delay={800}>
+          <WhyBecomeNodeRunner />
+        </AnimatedSection>
+
+        <AnimatedSection delay={1000}>
+          <DetailedTestimonials />
+        </AnimatedSection>
+
+        <AnimatedSection delay={1200}>
+          <HowItWorks />
+        </AnimatedSection>
+
+        <AnimatedSection delay={1400}>
+          <CommunitySection />
+        </AnimatedSection>
+
+        <AnimatedSection delay={1600}>
+          <FirstStepsGuide />
+        </AnimatedSection>
+
+        <AnimatedSection delay={1800}>
+          <BeginnersFAQ />
+        </AnimatedSection>
+
+        <AnimatedSection delay={2000}>
+          <SocialProofSection />
+        </AnimatedSection>
+
+        <AnimatedSection delay={2200}>
+          <PricingSection />
+        </AnimatedSection>
+
+        <AnimatedSection delay={2400}>
+          <ContactDemoSection />
+        </AnimatedSection>
+
+        <AnimatedSection delay={2600}>
+          <FinalConversionCTA />
+        </AnimatedSection>
+
+        <AnimatedSection delay={2800}>
+          <MobileFAQSection />
+        </AnimatedSection>
+
+        <AnimatedSection delay={3000}>
+          <MobileFeaturesSection />
+        </AnimatedSection>
+
+        <AnimatedSection delay={3200}>
+          <MobileTestimonialsSection />
+        </AnimatedSection>
       </main>
+
       <UXFooter />
-    </>
+    </div>
   );
 }

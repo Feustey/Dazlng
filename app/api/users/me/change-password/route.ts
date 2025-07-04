@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseAdminClient } from '@/lib/supabase';
+import { getSupabaseAdminClient } from "@/lib/supabase";
 import { changePasswordSchema, validateData } from "@/lib/validations";
 import { ApiResponse } from "@/types/database";
 
@@ -11,7 +11,7 @@ async function getUserFromRequest(req: NextRequest) {
 }
 
 // POST /api/users/me/change-password - Changement de mot de passe sécurisé
-export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>> {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
 
     // Vérifie le mot de passe actuel
     const { error: signInError } = await getSupabaseAdminClient().auth.signInWithPassword({
-      email: user.email || '',
+      email: user.email || "",
       password: validation.data.currentPassword
     });
 

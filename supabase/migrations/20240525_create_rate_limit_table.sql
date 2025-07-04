@@ -1,5 +1,5 @@
 -- Création de la table pour le rate limiting
-CREATE TABLE IF NOT EXISTS rate_limit_attempts (
+CREATE TABLE IF NOT EXISTS rate_limit_attempts (;
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     identifier TEXT NOT NULL,
     created_at BIGINT NOT NULL,
@@ -13,18 +13,18 @@ CREATE INDEX IF NOT EXISTS rate_limit_attempts_created_at_idx ON rate_limit_atte
 -- Index composé pour les requêtes de rate limiting
 CREATE INDEX IF NOT EXISTS rate_limit_attempts_identifier_created_at_idx ON rate_limit_attempts(identifier, created_at);
 
--- Politique de sécurité pour permettre aux utilisateurs d'interagir avec leurs propres tentatives
+-- Politique de sécurité pour permettre aux utilisateurs d'interagir avec leurs propres tentatives'
 -- (optionnel selon votre configuration RLS)
 -- ALTER TABLE rate_limit_attempts ENABLE ROW LEVEL SECURITY;
 
 -- Tables pour le rate limiting
-CREATE TABLE IF NOT EXISTS rate_limits (
+CREATE TABLE IF NOT EXISTS rate_limits (;
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     key TEXT NOT NULL,
-    timestamp TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+    timestamp TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::TEXT, now()) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS rate_limit_blocks (
+CREATE TABLE IF NOT EXISTS rate_limit_blocks (;
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     key TEXT NOT NULL UNIQUE,
     expires_at TIMESTAMP WITH TIME ZONE NOT NULL
@@ -42,9 +42,9 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     RETURN QUERY
-    SELECT count(*)::bigint
+    SELECT count(*)::BIGINT
     FROM rate_limits
-    WHERE key = p_key
+    WHERE key = p_key;
     AND timestamp >= p_start;
 END;
 $$; 

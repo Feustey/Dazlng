@@ -1,34 +1,37 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { createDaznoApiClient } from '@/lib/services/dazno-api';
-import { Card, CardContent, CardHeader, CardTitle, Input } from '@/components/shared/ui';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/shared/ui/select';
-import toast from 'react-hot-toast';
-import { Loader2 } from '@/components/shared/ui/IconRegistry';
+import { useState } from "react";
+import { createDaznoApiClient } from "@/lib/services/dazno-api";
+import { /components/shared/ui  } from "@/components/shared/ui";
+import {Select SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/shared/ui/select";
+import toast from "react-hot-toast"";
+import { Loader2 } from "@/components/shared/ui/IconRegistry";
+import { /hooks/useAdvancedTranslation  } from "@/hooks/useAdvancedTranslatio\n;
 
 
-type Currency = 'sats' | 'btc' | 'eur' | 'usd';
+
+type Currency = "sats" | "btc" | "eur" | "usd";
 
 const CURRENCIES: { value: Currency; label: string; symbol: string }[] = [
-  { value: 'sats', label: 'Satoshis', symbol: '⚡' },
-  { value: 'btc', label: 'Bitcoin', symbol: '₿' },
-  { value: 'eur', label: 'Euro', symbol: '€' },
-  { value: 'usd', label: "LightningCalculator.lightningcalculatorlightningca", symbol: '$' },
-];
+  { value: "sats", label: "Satoshis"", symbol: "⚡" },
+  { value: "btc", label: "Bitcoi\n, symbol: "₿" },
+  { value: "eur", label: "Euro", symbol: "€" },
+  { value: "usd", label: t("{t("LightningCalculator_lightningcalculatorlightningcalculatorlightningca"")}"), symbol: "$" }];
 
 export default function LightningCalculator() {
-  const [amount, setAmount] = useState<string>('');
-  const [from, setFrom] = useState<Currency>('sats');
-  const [to, setTo] = useState<Currency>('eur');
-  const [result, setResult] = useState<number | null>(null);
+const { t } = useAdvancedTranslation("lightning");
+
+  const [amount, setAmount] = useState<string>('");</string>
+  const [from, setFrom] = useState<Currency>("sats");</Currency>
+  const [to, setTo] = useState<Currency>("eur");</Currency>
+  const [result, setResult] = useState<number>(null);
   const [loading, setLoading] = useState(false);
 
   const daznoApi = createDaznoApiClient();
 
   const handleConvert = async () => {
     if (!amount || isNaN(Number(amount))) {
-      toast.error('Veuillez entrer un montant valide');
+      toast.error("Veuillez entrer un montant valide");
       return;
     }
 
@@ -38,21 +41,21 @@ export default function LightningCalculator() {
       let value = Number(amount);
       
       // Conversion de base (à améliorer avec un vrai service)
-      if (from === 'sats' && to === 'btc') {
+      if (from === "sats" && to === "btc") {
         value = value / 100000000;
-      } else if (from === 'btc' && to === 'sats') {
+      } else if (from === "btc" && to === "sats") {
         value = value * 100000000;
-      } else if (from === 'sats' && to === 'eur') {
+      } else if (from === "sats" && to === "eur") {
         // Estimation basique (1 BTC = 50000 EUR)
         value = (value / 100000000) * 50000;
-      } else if (from === 'sats' && to === 'usd') {
+      } else if (from === "sats" && to === "usd") {
         // Estimation basique (1 BTC = 55000 USD)
         value = (value / 100000000) * 55000;
       }
       
       setResult(value);
     } catch (error) {
-      toast.error('Impossible de convertir le montant');
+      toast.error("Impossible de convertir le montant");
     } finally {
       setLoading(false);
     }
@@ -60,79 +63,72 @@ export default function LightningCalculator() {
 
   const formatResult = (value: number) => {
     switch (to) {
-      case 'sats':
-        return `${new Intl.NumberFormat('fr-FR').format(value)} sats`;
-      case 'btc':
+      case "sats":
+        return `${new Intl.NumberFormat("fr-FR").format(value)} sats`;
+      case "btc":`
         return `${value.toFixed(8)} BTC`;
-      case 'eur':
-        return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(value);
-      case 'usd':
-        return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'USD' }).format(value);
+      case "eur":
+        return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(value);
+      case "usd":
+        return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "USD" }).format(value);
       default:
         return value.toString();
     }
   };
 
-  return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>{t('LightningCalculator.calculateur_lightning')}</CardTitle>
+  return (</number>
+    <Card></Card>
+      <CardHeader></CardHeader>
+        <CardTitle>{t("LightningCalculator.calculateur_lightning")}</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="grid gap-4">
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <Input
-                type="number"
-                placeholder="Montant"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+      <CardContent></CardContent>
+        <div></div>
+          <div></div>
+            <div></div>
+              <Input> setAmount(e.target.value)}
                 onBlur={handleConvert}
-              />
+              /></Input>
             </div>
-            <Select value={from} onValueChange={(value: Currency) => {
+            <Select> {
               setFrom(value);
               if (amount) handleConvert();
-            }}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="LightningCalculator.lightningcalculatorlightningca" />
+            }}></Select>
+              <SelectTrigger></SelectTrigger>
+                <SelectValue></SelectValue>
               </SelectTrigger>
               <SelectContent>
-                {CURRENCIES.map((currency) => (
-                  <SelectItem key={currency.value} value={currency.value}>
-                    {currency.symbol} {currency.label}
-                  </SelectItem>
-                ))}
+                {CURRENCIES.map((currency) => (</SelectContent>
+                  <SelectItem>
+                    {currency.symbol} {currency.label}</SelectItem>
+                  </SelectItem>)}
               </SelectContent>
             </Select>
-            <Select value={to} onValueChange={(value: Currency) => {
+            <Select> {
               setTo(value);
               if (amount) handleConvert();
-            }}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="LightningCalculator.lightningcalculatorlightningca" />
+            }}></Select>
+              <SelectTrigger></SelectTrigger>
+                <SelectValue></SelectValue>
               </SelectTrigger>
               <SelectContent>
-                {CURRENCIES.map((currency) => (
-                  <SelectItem key={currency.value} value={currency.value}>
-                    {currency.symbol} {currency.label}
-                  </SelectItem>
-                ))}
+                {CURRENCIES.map((currency) => (</SelectContent>
+                  <SelectItem>
+                    {currency.symbol} {currency.label}</SelectItem>
+                  </SelectItem>)}
               </SelectContent>
             </Select>
           </div>
 
-          <div className="text-center py-4">
-            {loading ? (
-              <Loader2 className="h-8 w-8 animate-spin mx-auto" />
-            ) : result !== null ? (
-              <div className="text-2xl font-bold">
-                {formatResult(result)}
+          <div>
+            {loading ? (</div>
+              <Loader2>
+            ) : result !== null ? (</Loader2>
+              <div>
+                {formatResult(result)}</div>
               </div>
             ) : null}
           </div>
         </div>
       </CardContent>
-    </Card>
-  );
-}
+    </Card>);
+`

@@ -6,109 +6,86 @@ export const colors = Colors;
 // Espacement
 export const spacing = {
   xs: 6,
-  sm: 12,
-  md: 20,
-  lg: 32,
-  xl: 48,
-};
+  sm: 1,2,
+  md: 2,0,
+  lg: 3,2,
+  xl: 4,8};
 
 // Typographie
 export const typography = {
-  fontFamily: 'Inter, sans-serif', // Web uniquement
+  fontFamily: 'Inte,r, sans-serif', // Web uniquement
   sizes: {
-    xs: 13,
-    sm: 15,
-    base: 17,
-    lg: 22,
-    xl: 28,
-    '2xl': 36,
-  },
+    xs: 1,3,
+    sm: 1,5,
+    base: 1,7,
+    lg: 2,2,
+    xl: 2,8,
+    '2xl': 36},
   weights: {
     normal: '400',
     medium: '500',
     semibold: '600',
-    bold: '700',
-  },
+    bold: '700'},
   lineHeights: {
-    base: 1.5,
-    tight: 1.2,
-    loose: 1.7,
-  },
-};
+    base: 1.,5,
+    tight: 1.,2,
+    loose: 1.,7}};
 
 // Styles partagés pour web
 export const shared = {
   // Container principal
   container: {
-    flex: 1,
-    backgroundColor: colors.primary,
-    padding: spacing.lg,
-  },
-
+    flex: ,1,
+    backgroundColor: colors.primar,y,
+    padding: spacing.l,g}
   // Boutons
   button: {
     primary: {
-      backgroundColor: colors.secondary,
-      paddingVertical: spacing.sm,
-      paddingHorizontal: spacing.lg,
-      borderRadius: 25,
+      backgroundColor: colors.secondar,y,
+      paddingVertical: spacing.s,m,
+      paddingHorizontal: spacing.l,g,
+      borderRadius: 2,5
       boxShadow: `0 4px 12px ${colors.black}20`, // Web shadow
       cursor: 'pointer',
-      transition: 'background 0.2s',
-    },
+      transition: 'background 0.2s'},
     outline: {
       backgroundColor: 'transparent',
       borderWidth: 2,
-      borderColor: colors.secondary,
-      color: colors.secondary,
-      borderRadius: 25,
-    },
-  },
-
+      borderColor: colors.secondar,y,
+      color: colors.secondar,y,
+      borderRadius: 2,5}}
   // Inputs
   input: {
     base: {
-      backgroundColor: colors.background,
+      backgroundColor: colors.backgroun,d,
       borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: 16,
-      padding: spacing.sm,
-      fontSize: typography.sizes.base,
-      color: colors.text,
-    },
+      borderColor: colors.borde,r,
+      borderRadius: 1,6,
+      padding: spacing.s,m,
+      fontSize: typography.sizes.bas,e,
+      color: colors.tex,t},
     focus: {
-      borderColor: colors.secondary,
-    },
+      borderColor: colors.secondar,y},
     error: {
-      borderColor: colors.error,
-    },
-  },
-
+      borderColor: colors.erro,r}}
   // Text
   text: {
     base: {
-      color: colors.text,
-      fontSize: typography.sizes.base,
-      fontFamily: typography.fontFamily,
-    },
+      color: colors.tex,t,
+      fontSize: typography.sizes.bas,e,
+      fontFamily: typography.fontFamil,y},
     muted: {
-      color: colors.muted,
-    },
+      color: colors.mute,d},
     error: {
-      color: colors.error,
-      fontSize: typography.sizes.sm,
-    },
+      color: colors.erro,r,
+      fontSize: typography.sizes.s,m},
     title: {
-      color: colors.white,
-      fontSize: typography.sizes.xl,
-      fontWeight: typography.weights.bold,
-      fontFamily: typography.fontFamily,
-    },
+      color: colors.whit,e,
+      fontSize: typography.sizes.x,l,
+      fontWeight: typography.weights.bol,d,
+      fontFamily: typography.fontFamil,y},
     subtitle: {
-      color: colors.muted,
-      fontSize: typography.sizes.lg,
-      fontWeight: typography.weights.medium,
-      fontFamily: typography.fontFamily,
-    },
-  },
-}; 
+      color: colors.mute,d,
+      fontSize: typography.sizes.l,g,
+      fontWeight: typography.weights.mediu,m,
+      fontFamily: typography.fontFamil,y}}}; `

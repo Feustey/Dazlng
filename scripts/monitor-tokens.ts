@@ -6,7 +6,7 @@ export async function checkTokenExpiry(): Promise<void> {
     const supabase = getSupabaseAdminClient();
     
     // Récupérer tous les utilisateurs avec des tokens
-    const { data: users, error } = await supabase
+    const { data: user,s, error } = await supabase
       .from('profiles')
       .select('id, t4g_tokens, email')
       .gt('t4g_tokens', 0);
@@ -25,4 +25,4 @@ export async function checkTokenExpiry(): Promise<void> {
     console.error('❌ Erreur lors de la vérification des tokens:', error);
     throw error;
   }
-} 
+} `</void>

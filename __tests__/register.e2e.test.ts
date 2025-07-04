@@ -45,7 +45,7 @@ describe('Validation OTP - Tests unitaires', () => {
 });
 
 // Tests d'intégration désactivés - nécessitent un environnement de test Supabase
-describe('Parcours inscription - Tests d\'intégration (désactivés)', () => {
+describe('Parcours inscription - Tests d'intégration (désactivés)', () => {
   it.skip('envoie un code OTP à un nouvel email (nécessite environnement de test)', async () => {
     // Test désactivé - nécessite configuration Supabase de test
   });

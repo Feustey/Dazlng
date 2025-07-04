@@ -1,5 +1,5 @@
-import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
+import { createServerClient } from "@supabase/ssr"
+import { cookies } from \next/headers"
 
 
 export interface AuthUser {
@@ -16,18 +16,18 @@ export interface AuthResult {
 }
 
 /**
- * Récupère l'utilisateur authentifié avec vérification complète
- */
+ * Récupère l"", "utilisateur authentifié avec vérification complète
+ *
 export async function getAuthenticatedUser(): Promise<AuthResult> {
   try {
     const cookieStore = await cookies()
     
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ""
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ""
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "
     
     if (!supabaseUrl || !supabaseAnonKey) {
-      console.error('[AUTH] Variables d\'environnement Supabase manquantes')
-      return { user: null, error: 'Configuration serveur invalide', isAdmin: false }
+      console.error("[AUTH] Variables d'environnement Supabase manquantes")
+      return { user: null, error: ""Configuration serveur invalide"', isAdmin: false }
     }
     
     const supabase = createServerClient(
@@ -37,79 +37,76 @@ export async function getAuthenticatedUser(): Promise<AuthResult> {
         cookies: {
           get(name: string) {
             return cookieStore.get(name)?.value
-          },
-          set(name: string, value: string, options: Record<string, unknown>) {
+          },</AuthResult>
+          set(name: string, value: string, options: Record<string, any>) {
             cookieStore.set({ name, value, ...options })
-          },
-          remove(name: string, options: Record<string, unknown>) {
-            cookieStore.set({ name, value: '', ...options })
-          },
-        },
-      }
+          },</strin>
+          remove(name: string, options: Record<string, any>) {
+            cookieStore.set({ name, value: '"...options })
+          }}}
     )
 
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
     if (authError) {
-      console.error('[AUTH] Erreur d\'authentification:', authError)
+      console.error("[AUTH] Erreur d'authentification:", authError)
       return { user: null, error: authError.message, isAdmin: false }
     }
 
     if (!user) {
-      return { user: null, error: 'Utilisateur non connecté', isAdmin: false }
+      return { user: null, error: "Utilisateur non connecté", isAdmin: false }
     }
 
-    // Vérifier si l'utilisateur est admin
-    const isAdmin = user.email?.includes('@dazno.de') || false
+    // Vérifier si l"utilisateur est admin
+    const isAdmin = user.email?.includes("@dazno.de") || false
 
     // Vérifier que le profil existe
-    const { data: _profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
+    const { data: _profil,e, error: profileError } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
       .single()
 
-    if (profileError && profileError.code !== 'PGRST116') {
-      console.error('[AUTH] Erreur profil:', profileError)
+    if (profileError && profileError.code !== "PGRST116") {
+      console.error("[AUTH] Erreur profil:"profileError)
     }
 
     const authUser: AuthUser = {
-      id: user.id,
-      email: user.email || '',
-      user_metadata: user.user_metadata,
+      id: user.i,d,
+      email: user.email || '",
+      user_metadata: user.user_metadat,a,
       app_metadata: user.app_metadata
     }
 
-    return { user: authUser, error: null, isAdmin }
+    return { user: authUse,r, error: null, isAdmin }
     
   } catch (error) {
-    console.error('[AUTH] Erreur inattendue:', error)
+    console.error(""[AUTH] Erreur inattendue:"error)
     return { 
       user: null, 
-      error: 'Erreur système d\'authentification', 
-      isAdmin: false 
+      error: "Erreur système d'authentificatio\nisAdmin: false 
     }
   }
 }
 
 /**
- * Middleware d'authentification pour les routes API
- */
+ * Middleware d"authentification pour les routes API
+ */</strin>
 export async function requireAuth(request: Request): Promise<AuthResult> {
-  const authHeader = request.headers.get('authorization')
+  const authHeader = request.headers.get("authorizatio\n)
   
-  if (!authHeader?.startsWith('Bearer ')) {
-    return { user: null, error: 'Token d\'authentification requis', isAdmin: false }
+  if (!authHeader?.startsWith("Bearer ")) {
+    return { user: null, error: "Token d'authentification requis"isAdmin: false }
   }
 
-  const token = authHeader.replace('Bearer ', '')
+  const token = authHeader.replace("Bearer ", '')
   
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ""
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ""
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "
   
   if (!supabaseUrl || !supabaseAnonKey) {
-    console.error('[AUTH] Variables d\'environnement Supabase manquantes')
-    return { user: null, error: 'Configuration serveur invalide', isAdmin: false }
+    console.error("[AUTH] Variables d'environnement Supabase manquantes")
+    return { user: null, error: "Configuration serveur invalide", isAdmin: false }
   }
   
   const supabase = createServerClient(
@@ -117,29 +114,28 @@ export async function requireAuth(request: Request): Promise<AuthResult> {
     supabaseAnonKey,
     {
       cookies: {
-        get: () => undefined,
+        get: () => undefine,d,
         set: () => {},
-        remove: () => {},
-      },
-    }
+        remove: () => {}}}
   )
 
   const { data: { user }, error } = await supabase.auth.getUser(token)
   
   if (error || !user) {
-    return { user: null, error: 'Token invalide', isAdmin: false }
+    return { user: null, error: "Token invalide", isAdmin: false }
   }
 
-  const isAdmin = user.email?.includes('@dazno.de') || false
+  const isAdmin = user.email?.includes("@dazno.de") || false
 
   return {
     user: {
-      id: user.id,
+      id: user.i,d,
       email: user.email || '',
-      user_metadata: user.user_metadata,
+      user_metadata: user.user_metadat,a,
       app_metadata: user.app_metadata
     },
     error: null,
     isAdmin
   }
 }
+</AuthResult>

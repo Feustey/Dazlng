@@ -1,8 +1,9 @@
-'use client'
+"use client"
 
-import React, { useState, useEffect, useCallback } from 'react'
-import { getSupabaseBrowserClient } from '@/lib/supabase'
-import Link from 'next/link'
+import React, { useState, useEffect, useCallback } from "react"
+import { getSupabaseBrowserClient } from "@/lib/supabase"
+import Link from "next/link"
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
 
 export interface EmailLog {
   id: string
@@ -31,7 +32,7 @@ export interface EmailTemplate {
   content: string
   category: string
   is_active: boolean
-  variables: Record<string, string>
+  variables: Record<string, any>
   created_at: string
 }
 
@@ -40,7 +41,7 @@ export interface EmailCampaign {
   name: string
   subject: string
   content: string
-  status: 'draft' | 'scheduled' | 'sending' | 'sent' | 'cancelled'
+  status: "draft" | "scheduled" | "sending" | "sent" | "cancelled"
   segment_ids: string[]
   scheduled_at?: string
   sent_at?: string
@@ -64,10 +65,11 @@ export interface EmailStats {
   bounce_rate: number
 }
 
-type TabType = 'dashboard' | 'logs' | 'contacts' | 'campaigns' | 'templates'
+type TabType = "dashboard" | "logs" | "contacts" | "campaigns" | "templates"
 
 export default function CommunicationsPage(): JSX.Element {
-  const [activeTab, setActiveTab] = useState<TabType>('dashboard')
+  const { t } = useAdvancedTranslation("communications");
+  const [activeTab, setActiveTab] = useState<TabType>("dashboard")
   const [emailLogs, setEmailLogs] = useState<EmailLog[]>([])
   const [contacts, setContacts] = useState<Contact[]>([])
   const [campaigns, setCampaigns] = useState<EmailCampaign[]>([])
@@ -99,13 +101,13 @@ export default function CommunicationsPage(): JSX.Element {
         bounce_rate: bounceRate
       })
     } catch (error) {
-      console.error('Erreur chargement stats:', error)
+      console.error("Erreur chargement stats:", error)
       // Stats par défaut pour la démo
       setEmailStats({
-        total_sent: 150,
-        total_delivered: 148,
-        total_opened: 89,
-        total_clicked: 23,
+        total_sent: 15.0,
+        total_delivered: 14.8,
+        total_opened: 8.9,
+        total_clicked: 2.3,
         open_rate: 59.3,
         click_rate: 25.8,
         bounce_rate: 1.3
@@ -116,19 +118,19 @@ export default function CommunicationsPage(): JSX.Element {
   const loadData = useCallback(async () => {
     setLoading(true)
     try {
-      if (activeTab === 'logs') {
+      if (activeTab === "logs") {
         await loadEmailLogs()
-      } else if (activeTab === 'contacts') {
+      } else if (activeTab === "contacts") {
         await loadContacts()
-      } else if (activeTab === 'campaigns') {
+      } else if (activeTab === "campaigns") {
         await loadCampaigns()
         await loadEmailStats()
-      } else if (activeTab === 'templates') {
+      } else if (activeTab === "templates") {
         await loadTemplates()
       }
       
     } catch (error: unknown) {
-      console.error('Erreur chargement données:', error)
+      console.error("Erreur chargement données:", error)
     } finally {
       setLoading(false)
     }
@@ -141,540 +143,484 @@ export default function CommunicationsPage(): JSX.Element {
   const loadEmailLogs = async () => {
     try {
       // Pour le moment, utiliser la table existante ou créer une simulation
-      const { data, error } = await getSupabaseBrowserClient()
-        .from('email_logs')
-        .select('*')
-        .order('created_at', { ascending: false })
+      const {data, error} = await getSupabaseBrowserClient()
+        .from("email_logs")
+        .select("*")
+        .order("created_at", { ascending: false })
         .limit(50)
       
       if (error) {
-        console.log('Table email_logs non trouvée, utilisation de données simulées')
+        console.log("Table email_logs non trouvée, utilisation de données simulées")
         // Données simulées pour la démo
         setEmailLogs([
           {
-            id: '1',
-            type: 'welcome',
-            recipient: 'user@example.com',
-            status: 'sent',
-            sent_at: new Date().toISOString(),
+            id: "1",
+            type: "welcome",
+            recipient: "user@example.com",
+            status: "sent",
+            sent_at: new Date().toISOString()
           },
           {
-            id: '2',
-            type: 'newsletter',
-            recipient: 'user2@example.com',
-            status: 'delivered',
-            sent_at: new Date(Date.now() - 3600000).toISOString(),
+            id: "2",
+            type: "newsletter",
+            recipient: "user2@example.com",
+            status: "delivered",
+            sent_at: new Date(Date.now() - 3600000).toISOString()
           }
         ])
       } else {
         setEmailLogs(data || [])
       }
     } catch (error) {
-      console.error('Erreur chargement logs:', error)
+      console.error("Erreur chargement logs:", error)
       setEmailLogs([])
     }
   }
 
   const loadContacts = async () => {
     try {
-      const { data, error } = await getSupabaseBrowserClient()
-        .from('contacts')
-        .select('*')
-        .order('created_at', { ascending: false })
+      const {data, error} = await getSupabaseBrowserClient()
+        .from("contacts")
+        .select("*")
+        .order("created_at", { ascending: false })
         .limit(50)
       
       if (error) {
-        console.log('Table contacts non trouvée')
+        console.log("Table contacts non trouvée")
         setContacts([])
       } else {
         setContacts(data || [])
       }
     } catch (error) {
-      console.error('Erreur chargement contacts:', error)
+      console.error("Erreur chargement contacts:", error)
       setContacts([])
     }
   }
 
   const loadCampaigns = async () => {
     try {
-      const { data, error } = await getSupabaseBrowserClient()
-        .from('crm_email_campaigns')
-        .select('*')
-        .order('created_at', { ascending: false })
+      const {data, error} = await getSupabaseBrowserClient()
+        .from("email_campaigns")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(50)
       
       if (error) {
-        console.log('Table crm_email_campaigns non trouvée, utilisation de données simulées')
+        console.log("Table email_campaigns non trouvée, utilisation de données simulées")
+        // Données simulées pour la démo
         setCampaigns([
           {
-            id: '1',
-            name: 'Onboarding Lightning Network',
-            subject: 'Bienvenue dans l\'écosystème Lightning !',
-            content: '<p>{t('admin.dcouvrez_comment_connecter_vot')}</p>',
-            status: 'sent',
-            segment_ids: ['new-users'],
+            id: "1",
+            name: "Newsletter mensuelle",
+            subject: "Votre newsletter DazNode - Janvier 2024",
+            content: "Contenu de la newsletter...",
+            status: "sent",
+            segment_ids: ["all"],
             sent_at: new Date().toISOString(),
             stats: {
               sent_count: 150,
               delivered_count: 148,
               opened_count: 89,
-              clicked_count: 23
+              clicked_count: 23,
+              bounced_count: 2
             },
-            created_at: new Date(Date.now() - 86400000).toISOString()
+            created_at: new Date().toISOString()
           }
         ])
       } else {
         setCampaigns(data || [])
       }
     } catch (error) {
-      console.error('Erreur chargement campagnes:', error)
+      console.error("Erreur chargement campagnes:", error)
       setCampaigns([])
     }
   }
 
   const loadTemplates = async () => {
     try {
-      const { data, error } = await getSupabaseBrowserClient()
-        .from('crm_email_templates')
-        .select('*')
-        .order('created_at', { ascending: false })
+      const {data, error} = await getSupabaseBrowserClient()
+        .from("email_templates")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(50)
       
       if (error) {
-        console.log('Table crm_email_templates non trouvée, utilisation de données simulées')
+        console.log("Table email_templates non trouvée, utilisation de données simulées")
+        // Données simulées pour la démo
         setTemplates([
           {
-            id: '1',
-            name: 'Welcome Email',
-            subject: 'Bienvenue sur DazNode !',
-            content: '<html><body><h1>Bonjour {{prenom}},</h1><p>{t('admin.bienvenue_sur_daznode')}</p></body></html>',
-            category: 'onboarding',
+            id: "1",
+            name: "Bienvenue",
+            subject: "Bienvenue sur DazNode !",
+            content: "Bonjour {{first_name}}, bienvenue sur DazNode...",
+            category: "onboarding",
             is_active: true,
-            variables: { prenom: 'Prénom du client', nom: 'Nom du client' },
+            variables: { first_name: "string" },
             created_at: new Date().toISOString()
-          },
-          {
-            id: '2',
-            name: 'Newsletter Monthly',
-            subject: 'Actualités Lightning - {{mois}}',
-            content: '<html><body><h1>Newsletter {{mois}}</h1><p>{t('admin.dcouvrez_les_nouveauts')}</p></body></html>',
-            category: 'newsletter',
-            is_active: true,
-            variables: { mois: 'Mois courant' },
-            created_at: new Date(Date.now() - 86400000).toISOString()
           }
         ])
       } else {
         setTemplates(data || [])
       }
     } catch (error) {
-      console.error('Erreur chargement templates:', error)
+      console.error("Erreur chargement templates:", error)
       setTemplates([])
     }
   }
 
   const getStatusColor = (status: string) => {
-    const colors = {
-      sent: 'bg-green-100 text-green-800',
-      delivered: 'bg-blue-100 text-blue-800',
-      opened: 'bg-purple-100 text-purple-800',
-      failed: 'bg-red-100 text-red-800',
-      bounced: 'bg-yellow-100 text-yellow-800',
-      draft: 'bg-gray-100 text-gray-800',
-      scheduled: 'bg-orange-100 text-orange-800',
-      sending: 'bg-blue-100 text-blue-800'
+    switch (status) {
+      case "sent": return "bg-green-100 text-green-800"
+      case "delivered": return "bg-blue-100 text-blue-800"
+      case "opened": return "bg-purple-100 text-purple-800"
+      case "clicked": return "bg-indigo-100 text-indigo-800"
+      case "bounced": return "bg-red-100 text-red-800"
+      case "failed": return "bg-red-100 text-red-800"
+      default: return "bg-gray-100 text-gray-800"
     }
-    return colors[status as keyof typeof colors] || 'bg-gray-100 text-gray-800'
   }
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString('fr-FR')
+    return new Date(dateString).toLocaleString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
   }
 
-  if (loading) {
-    return (
-      <div className="p-6">
-        <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-gray-200 rounded w-1/4"></div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {[...Array(4)].map((_: any, i: any) => (
-              <div key={i} className="h-24 bg-gray-200 rounded"></div>
-            ))}
+  const renderDashboard = () => (
+    <div className="space-y-6">
+      {/* Stats principales */}
+      {emailStats && (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex items-center">
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Emails envoyés</p>
+                <p className="text-2xl font-semibold text-gray-900">{emailStats.total_sent}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex items-center">
+              <div className="p-2 bg-green-100 rounded-lg">
+                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Taux d'ouverture</p>
+                <p className="text-2xl font-semibold text-gray-900">{emailStats.open_rate.toFixed(1)}%</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex items-center">
+              <div className="p-2 bg-purple-100 rounded-lg">
+                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Taux de clic</p>
+                <p className="text-2xl font-semibold text-gray-900">{emailStats.click_rate.toFixed(1)}%</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex items-center">
+              <div className="p-2 bg-red-100 rounded-lg">
+                <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Taux de rebond</p>
+                <p className="text-2xl font-semibold text-gray-900">{emailStats.bounce_rate.toFixed(1)}%</p>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    )
-  }
+      )}
 
-  return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t('admin.email_marketing')}</h1>
-          <p className="text-gray-600">{t('admin.gestion_des_campagnes_email_et')}</p>
-        </div>
-        <div className="flex space-x-2">
-          <Link
-            href="/admin/crm"
-            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+      {/* Actions rapides */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Actions rapides</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <button
+            onClick={() => setShowNewCampaign(true)}
+            className="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
           >
-            🎯 CRM Avancé
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Nouvelle campagne
+          </button>
+          
+          <button
+            onClick={() => setShowNewTemplate(true)}
+            className="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+          >
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Nouveau template
+          </button>
+          
+          <Link
+            href="/admin/communications?tab=contacts"
+            className="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+          >
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            Gérer les contacts
           </Link>
         </div>
       </div>
 
-      {/* Navigation */}
-      <div className="border-b border-gray-200">
+      {/* Derniers logs */}
+      <div className="bg-white rounded-lg shadow">
+        <div className="px-6 py-4 border-b border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-900">Derniers emails envoyés</h3>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Destinataire</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {emailLogs.slice(0, 5).map((log) => (
+                <tr key={log.id}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{log.type}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{log.recipient}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(log.status)}`}>
+                      {log.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(log.sent_at)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  )
+
+  const renderLogs = () => (
+    <div className="bg-white rounded-lg shadow">
+      <div className="px-6 py-4 border-b border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-900">Logs d'emails</h3>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Destinataire</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {emailLogs.map((log) => (
+              <tr key={log.id}>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{log.type}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{log.recipient}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(log.status)}`}>
+                    {log.status}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(log.sent_at)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+
+  const renderContacts = () => (
+    <div className="bg-white rounded-lg shadow">
+      <div className="px-6 py-4 border-b border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-900">Contacts</h3>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sujet</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {contacts.map((contact) => (
+              <tr key={contact.id}>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {contact.first_name} {contact.last_name}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{contact.email}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{contact.subject}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(contact.status)}`}>
+                    {contact.status}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(contact.created_at)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+
+  const renderCampaigns = () => (
+    <div className="bg-white rounded-lg shadow">
+      <div className="px-6 py-4 border-b border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-900">Campagnes</h3>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sujet</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Envoyés</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {campaigns.map((campaign) => (
+              <tr key={campaign.id}>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{campaign.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{campaign.subject}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(campaign.status)}`}>
+                    {campaign.status}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{campaign.stats.sent_count || 0}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(campaign.created_at)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+
+  const renderTemplates = () => (
+    <div className="bg-white rounded-lg shadow">
+      <div className="px-6 py-4 border-b border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-900">Templates</h3>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sujet</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catégorie</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {templates.map((template) => (
+              <tr key={template.id}>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{template.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{template.subject}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{template.category}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${template.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                    {template.is_active ? 'Actif' : 'Inactif'}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(template.created_at)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+
+  return (
+    <div className="p-6">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">Communications</h1>
+        <p className="text-gray-600">Gestion des emails et communications</p>
+      </div>
+
+      {/* Onglets */}
+      <div className="border-b border-gray-200 mb-6">
         <nav className="-mb-px flex space-x-8">
           {[
-            { id: 'dashboard', label: 'Dashboard', icon: '📊' },
-            { id: 'campaigns', label: 'Campagnes', icon: '📧' },
-            { id: 'templates', label: 'Templates', icon: '📝' },
-            { id: 'logs', label: 'Logs', icon: '📋' }
-          ].map((tab: any) => (
+            { id: "dashboard", label: "Tableau de bord" },
+            { id: "logs", label: "Logs" },
+            { id: "contacts", label: "Contacts" },
+            { id: "campaigns", label: "Campagnes" },
+            { id: "templates", label: "Templates" }
+          ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as TabType)}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === tab.id
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? "border-blue-500 text-blue-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
               }`}
             >
-              {tab.icon} {tab.label}
+              {tab.label}
             </button>
           ))}
         </nav>
       </div>
 
-      {/* Dashboard Tab */}
-      {activeTab === 'dashboard' && emailStats && (
-        <div className="space-y-6">
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-white p-4 rounded-lg shadow border">
-              <div className="text-sm text-gray-600">{t('admin.emails_envoys')}</div>
-              <div className="text-2xl font-bold text-blue-600">{emailStats.total_sent.toLocaleString()}</div>
-            </div>
-            <div className="bg-white p-4 rounded-lg shadow border">
-              <div className="text-sm text-gray-600">{t('admin.taux_douverture')}</div>
-              <div className="text-2xl font-bold text-green-600">{emailStats.open_rate.toFixed(1)}%</div>
-            </div>
-            <div className="bg-white p-4 rounded-lg shadow border">
-              <div className="text-sm text-gray-600">{t('admin.taux_de_clic')}</div>
-              <div className="text-2xl font-bold text-purple-600">{emailStats.click_rate.toFixed(1)}%</div>
-            </div>
-            <div className="bg-white p-4 rounded-lg shadow border">
-              <div className="text-sm text-gray-600">{t('admin.taux_de_rebond')}</div>
-              <div className="text-2xl font-bold text-red-600">{emailStats.bounce_rate.toFixed(1)}%</div>
-            </div>
-          </div>
-
-          {/* Actions Rapides */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <button
-              onClick={() => {
-                setActiveTab('campaigns')
-                setShowNewCampaign(true)
-              }}
-              className="bg-blue-600 text-white p-6 rounded-lg hover:bg-blue-700 transition-colors text-center"
-            >
-              <div className="text-3xl mb-2">🚀</div>
-              <div className="font-semibold">{t('admin.nouvelle_campagne')}</div>
-              <div className="text-sm opacity-90">{t('admin.crer_une_campagne_email')}</div>
-            </button>
-            
-            <button
-              onClick={() => {
-                setActiveTab('templates')
-                setShowNewTemplate(true)
-              }}
-              className="bg-green-600 text-white p-6 rounded-lg hover:bg-green-700 transition-colors text-center"
-            >
-              <div className="text-3xl mb-2">📝</div>
-              <div className="font-semibold">{t('admin.nouveau_template')}</div>
-              <div className="text-sm opacity-90">{t('admin.crer_un_template_email')}</div>
-            </button>
-            
-            <Link
-              href="/admin/users"
-              className="bg-purple-600 text-white p-6 rounded-lg hover:bg-purple-700 transition-colors text-center block"
-            >
-              <div className="text-3xl mb-2">👥</div>
-              <div className="font-semibold">{t('admin.grer_contacts')}</div>
-              <div className="text-sm opacity-90">{t('admin.voir_la_base_clients')}</div>
-            </Link>
-          </div>
-        </div>
-      )}
-
-      {/* Campaigns Tab */}
-      {activeTab === 'campaigns' && (
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold">{t('admin.campagnes_email')}</h2>
-            <button
-              onClick={() => setShowNewCampaign(true)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              + Nouvelle Campagne
-            </button>
-          </div>
-
-          <div className="bg-white rounded-lg shadow border overflow-hidden">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Campagne</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('admin.envoys')}</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ouvertures</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clics</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {campaigns.map((campaign: any) => (
-                  <tr key={campaign.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div>
-                        <div className="text-sm font-medium text-gray-900">{campaign.name}</div>
-                        <div className="text-sm text-gray-500">{campaign.subject}</div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(campaign.status)}`}>
-                        {campaign.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {campaign.stats.sent_count || 0}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {campaign.stats.opened_count || 0}
-                      {campaign.stats.sent_count && campaign.stats.opened_count && (
-                        <span className="text-gray-500 ml-1">
-                          ({((campaign.stats.opened_count / campaign.stats.sent_count) * 100).toFixed(1)}%)
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {campaign.stats.clicked_count || 0}
-                      {campaign.stats.opened_count && campaign.stats.clicked_count && (
-                        <span className="text-gray-500 ml-1">
-                          ({((campaign.stats.clicked_count / campaign.stats.opened_count) * 100).toFixed(1)}%)
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(campaign.sent_at || campaign.created_at)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <button className="text-blue-600 hover:text-blue-900 mr-2">
-                        Voir
-                      </button>
-                      {campaign.status === 'draft' && (
-                        <button className="text-green-600 hover:text-green-900">
-                          Envoyer
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* Templates Tab */}
-      {activeTab === 'templates' && (
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold">{t('admin.templates_email')}</h2>
-            <button
-              onClick={() => setShowNewTemplate(true)}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-            >
-              + Nouveau Template
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {templates.map((template: any) => (
-              <div key={template.id} className="bg-white rounded-lg shadow border p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-900">{template.name}</h3>
-                    <p className="text-sm text-gray-500">{template.category}</p>
-                  </div>
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                    template.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                  }`}>
-                    {template.is_active ? 'Actif' : 'Inactif'}
-                  </span>
-                </div>
-                
-                <div className="mb-4">
-                  <p className="text-sm font-medium text-gray-900 mb-1">{t('admin.sujet')}</p>
-                  <p className="text-sm text-gray-600">{template.subject}</p>
-                </div>
-                
-                <div className="mb-4">
-                  <p className="text-sm font-medium text-gray-900 mb-1">{t('admin.variables')}</p>
-                  <div className="flex flex-wrap gap-1">
-                    {Object.keys(template.variables).map((variable: any) => (
-                      <span key={variable} className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800">
-                        {variable}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                
-                <div className="flex space-x-2">
-                  <button className="flex-1 px-3 py-2 border border-gray-300 rounded text-sm text-gray-700 hover:bg-gray-50">
-                    Modifier
-                  </button>
-                  <button className="flex-1 px-3 py-2 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">
-                    Utiliser
-                  </button>
-                </div>
-              </div>
+      {/* Contenu */}
+      {loading ? (
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-24 bg-gray-200 rounded"></div>
             ))}
           </div>
+          <div className="h-96 bg-gray-200 rounded"></div>
         </div>
-      )}
-
-      {/* Logs Tab */}
-      {activeTab === 'logs' && (
-        <div className="space-y-6">
-          {/* Logs des emails */}
-          <div className="bg-white rounded-lg shadow border">
-            <div className="p-4 border-b">
-              <h2 className="text-lg font-semibold">{t('admin.logs_des_emails')}</h2>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-2 text-left">Type</th>
-                    <th className="px-4 py-2 text-left">Destinataire</th>
-                    <th className="px-4 py-2 text-left">Statut</th>
-                    <th className="px-4 py-2 text-left">{t('admin.envoy_le')}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {emailLogs.map((log: any) => (
-                    <tr key={log.id} className="border-t">
-                      <td className="px-4 py-2">{log.type}</td>
-                      <td className="px-4 py-2">{log.recipient}</td>
-                      <td className="px-4 py-2">
-                        <span className={`px-2 py-1 rounded text-xs ${getStatusColor(log.status)}`}>
-                          {log.status}
-                        </span>
-                      </td>
-                      <td className="px-4 py-2">
-                        {log.sent_at ? formatDate(log.sent_at) : '-'}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Messages de contact */}
-          <div className="bg-white rounded-lg shadow border">
-            <div className="p-4 border-b">
-              <h2 className="text-lg font-semibold">{t('admin.messages_de_contact')}</h2>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-2 text-left">Nom</th>
-                    <th className="px-4 py-2 text-left">Email</th>
-                    <th className="px-4 py-2 text-left">Sujet</th>
-                    <th className="px-4 py-2 text-left">Statut</th>
-                    <th className="px-4 py-2 text-left">{t('admin.reu_le')}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {contacts.map((contact: any) => (
-                    <tr key={contact.id} className="border-t">
-                      <td className="px-4 py-2">
-                        {contact.first_name} {contact.last_name}
-                      </td>
-                      <td className="px-4 py-2">{contact.email}</td>
-                      <td className="px-4 py-2">{contact.subject}</td>
-                      <td className="px-4 py-2">
-                        <span className={`px-2 py-1 rounded text-xs ${getStatusColor(contact.status)}`}>
-                          {contact.status}
-                        </span>
-                      </td>
-                      <td className="px-4 py-2">
-                        {formatDate(contact.created_at)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modals (simplifiés pour la démo) */}
-      {showNewCampaign && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-lg font-semibold mb-4">{t('admin.nouvelle_campagne')}</h3>
-            <p className="text-gray-600 mb-4">
-              Fonctionnalité en développement. Utilisez le CRM avancé pour créer des campagnes complètes.
-            </p>
-            <div className="flex space-x-2">
-              <button
-                onClick={() => setShowNewCampaign(false)}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
-              >
-                Fermer
-              </button>
-              <Link
-                href="/admin/crm"
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-center"
-              >
-                Aller au CRM
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showNewTemplate && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-lg font-semibold mb-4">{t('admin.nouveau_template')}</h3>
-            <p className="text-gray-600 mb-4">
-              Fonctionnalité en développement. Utilisez le CRM avancé pour créer des templates complets.
-            </p>
-            <div className="flex space-x-2">
-              <button
-                onClick={() => setShowNewTemplate(false)}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
-              >
-                Fermer
-              </button>
-              <Link
-                href="/admin/crm"
-                className="flex-1 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-center"
-              >
-                Aller au CRM
-              </Link>
-            </div>
-          </div>
-        </div>
+      ) : (
+        <>
+          {activeTab === "dashboard" && renderDashboard()}
+          {activeTab === "logs" && renderLogs()}
+          {activeTab === "contacts" && renderContacts()}
+          {activeTab === "campaigns" && renderCampaigns()}
+          {activeTab === "templates" && renderTemplates()}
+        </>
       )}
     </div>
   )
 }
-export const dynamic = "force-dynamic";
+export const dynamic  = "force-dynamic";

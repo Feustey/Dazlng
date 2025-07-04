@@ -1,12 +1,12 @@
-import { NextRequest } from 'next/server'
-import { getSupabaseAdminClient } from '@/lib/supabase'
-import { createApiResponse, handleApiError } from '@/lib/api-response'
+import { NextRequest } from "next/server"
+import { getSupabaseAdminClient } from "@/lib/supabase"
+import { createApiResponse, handleApiError } from "@/lib/api-response"
 import { 
   createDeliverySchema, 
   validateData,
   paginationSchema
-} from '@/lib/validations'
-import { ErrorCodes } from '@/types/database'
+} from "@/lib/validations"
+import { ErrorCodes } from "@/types/database"
 
 /**
  * GET /api/deliveries - Liste toutes les livraisons avec pagination
@@ -21,31 +21,31 @@ export async function GET(req: NextRequest): Promise<Response> {
         success: false, 
         error: { 
           code: ErrorCodes.VALIDATION_ERROR, 
-          message: 'Données invalides', 
+          message: "Données invalides", 
           details: validationResult.error?.details 
         } 
       }, 400)
     }
 
     const { page = 1, limit = 20, sort } = validationResult.data
-    const status = searchParams.get('status')
+    const status = searchParams.get("status")
 
     // Construction de la requête
     let query = getSupabaseAdminClient()
-      .from('deliveries')
-      .select('*, orders(id, user_id, product_type)', { count: 'exact' })
+      .from("deliveries")
+      .select("*, orders(id, user_id, product_type)", { count: "exact" })
 
     // Filtrage par statut si spécifié
     if (status) {
-      query = query.eq('shipping_status', status)
+      query = query.eq("shipping_status", status)
     }
 
     // Tri
     if (sort) {
-      const [sortField, sortOrder] = sort.split(':')
-      query = query.order(sortField, { ascending: sortOrder === 'asc' })
+      const [sortField, sortOrder] = sort.split(":")
+      query = query.order(sortField, { ascending: sortOrder === "asc" })
     } else {
-      query = query.order('created_at', { ascending: false })
+      query = query.order("created_at", { ascending: false })
     }
 
     // Pagination
@@ -55,12 +55,12 @@ export async function GET(req: NextRequest): Promise<Response> {
     const { data, error, count } = await query
 
     if (error) {
-      console.error('Erreur lors de la récupération des livraisons:', error)
+      console.error("Erreur lors de la récupération des livraisons:", error)
       return createApiResponse({
         success: false,
         error: {
           code: ErrorCodes.DATABASE_ERROR,
-          message: 'Erreur lors de la récupération des livraisons'
+          message: "Erreur lors de la récupération des livraisons"
         }
       }, 500)
     }
@@ -95,7 +95,7 @@ export async function POST(req: NextRequest): Promise<Response> {
         success: false, 
         error: { 
           code: ErrorCodes.VALIDATION_ERROR, 
-          message: 'Erreur de validation', 
+          message: "Erreur de validation", 
           details: validationResult.error?.details 
         } 
       }, 400)
@@ -105,9 +105,9 @@ export async function POST(req: NextRequest): Promise<Response> {
 
     // Vérifier que la commande existe
     const { data: orderExists } = await getSupabaseAdminClient()
-      .from('orders')
-      .select('id')
-      .eq('id', deliveryData.order_id)
+      .from("orders")
+      .select("id")
+      .eq("id", deliveryData.order_id)
       .single()
 
     if (!orderExists) {
@@ -115,16 +115,16 @@ export async function POST(req: NextRequest): Promise<Response> {
         success: false,
         error: {
           code: ErrorCodes.NOT_FOUND,
-          message: 'Commande non trouvée'
+          message: "Commande non trouvée"
         }
       }, 404)
     }
 
     // Vérifier qu'il n'y a pas déjà une livraison pour cette commande
     const { data: existingDelivery } = await getSupabaseAdminClient()
-      .from('deliveries')
-      .select('id')
-      .eq('order_id', deliveryData.order_id)
+      .from("deliveries")
+      .select("id")
+      .eq("order_id", deliveryData.order_id)
       .single()
 
     if (existingDelivery) {
@@ -132,25 +132,25 @@ export async function POST(req: NextRequest): Promise<Response> {
         success: false,
         error: {
           code: ErrorCodes.VALIDATION_ERROR,
-          message: 'Une livraison existe déjà pour cette commande'
+          message: "Une livraison existe déjà pour cette commande"
         }
       }, 400)
     }
 
     // Créer la livraison
     const { data, error } = await getSupabaseAdminClient()
-      .from('deliveries')
+      .from("deliveries")
       .insert([deliveryData])
       .select()
       .single()
 
     if (error) {
-      console.error('Erreur lors de la création de la livraison:', error)
+      console.error("Erreur lors de la création de la livraison:", error)
       return createApiResponse({
         success: false,
         error: {
           code: ErrorCodes.DATABASE_ERROR,
-          message: 'Erreur lors de la création de la livraison'
+          message: "Erreur lors de la création de la livraison"
         }
       }, 500)
     }

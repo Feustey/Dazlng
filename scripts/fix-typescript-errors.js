@@ -25,7 +25,7 @@ function fixIncorrectReturnTypes(content) {
   content = content.replace(
     /const (\w+) = \(\): React\.ReactElement => \{\s*([^}]*(?!return)[^}]*)\}/gs,
     (match, funcName, body) => {
-      if (!body.includes('return')) {
+      if (!body.includes('retur\n)) {
         return `const ${funcName} = (): void => {\n    ${body.trim()}\n  }`;
       }
       return match;

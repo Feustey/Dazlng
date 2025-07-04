@@ -5,8 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/shared/ui
 import { Alert, AlertDescription } from "@/components/shared/ui/Alert";
 import { Select, SelectItem } from "../components/ui/Select";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
-import { DollarSign, Activity, Users, Zap, AlertCircle } from '@/components/shared/ui/IconRegistry';
-
+import { DollarSign, Activity, Users, Zap, AlertCircle } from "@/components/shared/ui/IconRegistry";
 
 export interface OpenAIMetrics {
   timestamp: string;
@@ -19,7 +18,7 @@ export interface OpenAIMetrics {
     total_completion_tokens: number;
     total_cost: number;
     avg_tokens_per_request: number;
-    models_used: Record<string, number>;
+    models_used: Record<string, any>;
     requests_by_day: Array<{
       date: string;
       requests: number;
@@ -34,8 +33,8 @@ export interface OpenAIMetrics {
   };
   recommendations: {
     total_recommendations: number;
-    recommendations_by_type: Record<string, number>;
-    recommendations_by_priority: Record<string, number>;
+    recommendations_by_type: Record<string, any>;
+    recommendations_by_priority: Record<string, any>;
     viewed_count: number;
     implemented_count: number;
     top_recommended_nodes: Array<{
@@ -52,10 +51,7 @@ export interface OpenAIMetrics {
   };
   system_metrics: {
     total_api_calls: number;
-    api_calls_by_endpoint: Record<string, {
-      count: number;
-      avg_response_time_ms: number;
-    }>;
+    api_calls_by_endpoint: Record<string, any>;
     avg_response_time_ms: number;
     error_rate: number;
     cache_hit_rate: number;
@@ -119,7 +115,7 @@ export interface SystemHealth {
   };
 }
 
-const COLORS = ['#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899'];
+const COLORS = ["#8b5cf6", "#10b981", "#f59e0b", "#ef4444", "#3b82f6", "#ec4899"];
 
 export default function OpenAIPage(): JSX.Element | null {
   const [metrics, setMetrics] = useState<OpenAIMetrics | null>(null);
@@ -128,6 +124,7 @@ export default function OpenAIPage(): JSX.Element | null {
   const [periodDays, setPeriodDays] = useState<string>("30");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [response, setResponse] = useState("");
 
   const fetchMetrics = useCallback(async () => {
     try {
@@ -165,6 +162,19 @@ export default function OpenAIPage(): JSX.Element | null {
     }
   }, []);
 
+  const testOpenAI = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/openai/test");
+      const data = await res.json();
+      setResponse(data.message || "Test terminé");
+    } catch (error) {
+      setResponse("Erreur lors du test OpenAI");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     fetchMetrics();
     fetchRealtimeMetrics();
@@ -180,7 +190,7 @@ export default function OpenAIPage(): JSX.Element | null {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96">
+      <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
       </div>
     );
@@ -188,336 +198,152 @@ export default function OpenAIPage(): JSX.Element | null {
 
   if (error) {
     return (
-      <Alert type="error">
+      <Alert>
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>{error}</AlertDescription>
       </Alert>
-  );
+    );
   }
-
-  if (!metrics) return null;
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold">{t('admin.mtriques_openai')}</h1>
-          <p className="text-gray-600 mt-1">{t('admin.surveillance_de_lutilisation_d')}</p>
+        <h1 className="text-3xl font-bold text-gray-900">OpenAI Analytics</h1>
+        <div className="flex gap-4">
+          <Select value={periodDays} onValueChange={setPeriodDays}>
+            <SelectItem value="7">7 jours</SelectItem>
+            <SelectItem value="30">30 jours</SelectItem>
+            <SelectItem value="90">90 jours</SelectItem>
+          </Select>
+          <button
+            onClick={testOpenAI}
+            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+          >
+            Test OpenAI
+          </button>
         </div>
-        <Select value={periodDays} onValueChange={setPeriodDays}>
-          <SelectItem value="7">{t('admin.7_derniers_jours')}</SelectItem>
-          <SelectItem value="30">{t('admin.30_derniers_jours')}</SelectItem>
-          <SelectItem value="90">{t('admin.90_derniers_jours')}</SelectItem>
-          <SelectItem value="365">{t('admin.365_derniers_jours')}</SelectItem>
-        </Select>
       </div>
 
-      {/* Alertes */}
-      {metrics.alerts.length > 0 && (
-        <div className="space-y-2">
-          {metrics.alerts.map((alert: any, index: any) => (
-            <Alert key={index} type={alert.level === "warning" ? "warning" : "error"}>
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                <strong>{alert.type}:</strong> {alert.message}
-              </AlertDescription>
-            </Alert>
-          ))}
-        </div>
+      {response && (
+        <Alert>
+          <AlertDescription>{response}</AlertDescription>
+        </Alert>
       )}
 
-      {/* Métriques temps réel */}
-      {realtimeMetrics && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">{t('admin.api_calls_dernire_heure')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{realtimeMetrics.last_hour.api_calls}</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">{t('admin.requtes_openai_dernire_heure')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-purple-600">{realtimeMetrics.last_hour.openai_requests}</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">{t('admin.recommandations_dernire_heure')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-green-600">{realtimeMetrics.last_hour.recommendations}</div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
-      {/* Statistiques principales */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Métriques principales */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('admin.cot_total')}</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${metrics.openai_usage.total_cost.toFixed(2)}</div>
-            <p className="text-xs text-muted-foreground">
-              Projection mensuelle: ${metrics.cost_projection.monthly_projection.toFixed(2)}
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('admin.requtes_totales')}</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{metrics.openai_usage.total_requests}</div>
-            <p className="text-xs text-muted-foreground">
-              Moy. {metrics.openai_usage.avg_tokens_per_request} tokens/requête
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('admin.tokens_utiliss')}</CardTitle>
+            <CardTitle className="text-sm font-medium">Requêtes OpenAI</CardTitle>
             <Zap className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{metrics.openai_usage.total_tokens.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              Prompt: {metrics.openai_usage.total_prompt_tokens.toLocaleString()}
-            </p>
+            <div className="text-2xl font-bold">
+              {metrics?.openai_usage.total_requests.toLocaleString() || "0"}
+            </div>
           </CardContent>
         </Card>
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('admin.nuds_actifs')}</CardTitle>
+            <CardTitle className="text-sm font-medium">Tokens utilisés</CardTitle>
+            <Activity className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {metrics?.openai_usage.total_tokens.toLocaleString() || "0"}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Coût total</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              ${metrics?.openai_usage.total_cost.toFixed(2) || "0.00"}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Recommandations</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{metrics.system_metrics.active_nodes_tracked}</div>
-            <p className="text-xs text-muted-foreground">
-              Cache hit: {(metrics.system_metrics.cache_hit_rate * 100).toFixed(0)}%
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Graphique d'utilisation par jour */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('admin.utilisation_quotidienne')}</CardTitle>
-          <p className="text-sm text-gray-600">{t('admin.volution_des_requtes_et_des_co')}</p>
-        </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={metrics.openai_usage.requests_by_day}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis yAxisId="left" />
-              <YAxis yAxisId="right" orientation="right" />
-              <Tooltip />
-              <Legend />
-              <Line yAxisId="left" type="monotone" dataKey="requests" stroke="#8b5cf6" name="Requêtes" />
-              <Line yAxisId="right" type="monotone" dataKey="cost" stroke="#10b981" name="Coût ($)" />
-            </LineChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
-
-      {/* Modèles utilisés et Recommandations */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Modèles utilisés */}
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('admin.modles_utiliss')}</CardTitle>
-            <p className="text-sm text-gray-600">{t('admin.rpartition_par_modle')}</p>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={250}>
-              <PieChart>
-                <Pie
-                  data={Object.entries(metrics.openai_usage.models_used).map(([model, count]) => ({
-                    name: model,
-                    value: count
-                  }))}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({name, percent}: {name: string, percent: number}) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {Object.entries(metrics.openai_usage.models_used).map((_: any, index: any) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        {/* Types de recommandations */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Recommandations</CardTitle>
-            <p className="text-sm text-gray-600">Total: {metrics.recommendations.total_recommendations}</p>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={Object.entries(metrics.recommendations.recommendations_by_type).map(([type, count]) => ({
-                type,
-                count
-              }))}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="type" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="count" fill="#8b5cf6" />
-              </BarChart>
-            </ResponsiveContainer>
-            <div className="mt-4 flex justify-around text-sm">
-              <div>
-                <p className="text-muted-foreground">Vues</p>
-                <p className="font-semibold">{metrics.recommendations.viewed_count}</p>
-              </div>
-              <div>
-                <p className="text-muted-foreground">{t('admin.implmentes')}</p>
-                <p className="font-semibold">{metrics.recommendations.implemented_count}</p>
-              </div>
+            <div className="text-2xl font-bold">
+              {metrics?.recommendations.total_recommendations.toLocaleString() || "0"}
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Top utilisateurs */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('admin.top_utilisateurs_openai')}</CardTitle>
-          <p className="text-sm text-gray-600">{t('admin.pubkeys_avec_le_plus_de_requte')}</p>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            {metrics.openai_usage.top_pubkeys.slice(0, 5).map((node: {pubkey: string; requests: number; tokens: number}, index: number) => (
-              <div key={index} className="flex items-center justify-between p-2 rounded hover:bg-gray-50">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-mono">{node.pubkey.substring(0, 16)}...</span>
-                </div>
-                <div className="flex gap-4 text-sm">
-                  <span className="text-muted-foreground">{node.requests} requêtes</span>
-                  <span className="font-semibold">{node.tokens.toLocaleString()} tokens</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      {/* Graphiques */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Requêtes par jour</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={metrics?.openai_usage.requests_by_day || []}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="requests" stroke="#8b5cf6" />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
 
-      {/* Activité récente */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('admin.activit_rcente')}</CardTitle>
-          <p className="text-sm text-gray-600">{t('admin.dernires_requtes_openai')}</p>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            {metrics.recent_activity.filter((a: typeof metrics.recent_activity[0]) => a.type === "openai").slice(0, 10).map((activity: typeof metrics.recent_activity[0], index: number) => (
-              <div key={index} className="flex items-center justify-between p-2 rounded hover:bg-gray-50">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground">
-                    {new Date(activity.timestamp).toLocaleTimeString()}
-                  </span>
-                  <span className="text-sm font-medium">{activity.endpoint}</span>
-                  <span className="text-xs font-mono">{activity.pubkey.substring(0, 8)}...</span>
-                </div>
-                {activity.tokens && (
-                  <span className="text-sm text-purple-600">{activity.tokens} tokens</span>
-                )}
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Coût par jour</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={metrics?.openai_usage.requests_by_day || []}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="cost" fill="#10b981" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
 
-      {/* État de santé du système */}
+      {/* Santé système */}
       {systemHealth && (
         <Card>
           <CardHeader>
-            <CardTitle>{t('admin.tat_de_sant_du_systme')}</CardTitle>
-            <p className="text-sm text-gray-600">
-              Statut global: {" "}
-              <span className={`font-semibold ${systemHealth.status === 'healthy' ? 'text-green-600' : 'text-red-600'}`}>
-                {systemHealth.status === 'healthy' ? '✅ Opérationnel' : '⚠️ Dégradé'}
-              </span>
-            </p>
+            <CardTitle>Santé du système</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {Object.entries(systemHealth.components).map(([component, status]) => (
-                <div key={component} className="p-3 border rounded-lg">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-medium capitalize">{component}</span>
-                    <span className={(status as any).status === 'healthy' ? 'text-green-600' : 'text-red-600'}>
-                      {(status as any).status === 'healthy' ? '✅' : '❌'}
-                    </span>
+                <div key={component} className="text-center">
+                  <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                    status.status === 'healthy' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                  }`}>
+                    {component}
                   </div>
-                  <p className="text-xs text-gray-600">{(status as any).message}</p>
+                  <p className="text-sm text-gray-600 mt-1">{status.message}</p>
                 </div>
               ))}
-            </div>
-            <div className="mt-4 text-xs text-gray-500">
-              Dernière vérification: {new Date(systemHealth.timestamp).toLocaleTimeString()}
             </div>
           </CardContent>
         </Card>
       )}
-
-      {/* Performances API */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('admin.performance_des_endpoints')}</CardTitle>
-          <p className="text-sm text-gray-600">{t('admin.temps_de_rponse_moyen_et_nombr')}</p>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            {Object.entries(metrics.system_metrics.api_calls_by_endpoint)
-              .sort(([, a], [, b]) => (b as any).count - (a as any).count)
-              .slice(0, 10)
-              .map(([endpoint, stats]) => (
-                <div key={endpoint} className="flex items-center justify-between p-2 rounded hover:bg-gray-50">
-                  <div className="flex-1">
-                    <p className="text-sm font-mono">{endpoint}</p>
-                  </div>
-                  <div className="flex gap-4 text-sm">
-                    <span className="text-muted-foreground">{(stats as any).count} appels</span>
-                    <span className={`font-semibold ${(stats as any).avg_response_time_ms > 1000 ? 'text-orange-600' : 'text-green-600'}`}>
-                      {(stats as any).avg_response_time_ms}ms
-                    </span>
-                  </div>
-                </div>
-              ))}
-          </div>
-          <div className="mt-4 pt-4 border-t flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">{t('admin.temps_de_rponse_moyen_global')}</span>
-            <span className="font-semibold">{metrics.system_metrics.avg_response_time_ms}ms</span>
-          </div>
-          <div className="flex justify-between items-center mt-2">
-            <span className="text-sm text-muted-foreground">{t('admin.taux_derreur')}</span>
-            <span className={`font-semibold ${metrics.system_metrics.error_rate > 5 ? 'text-red-600' : 'text-green-600'}`}>
-              {metrics.system_metrics.error_rate.toFixed(2)}%
-            </span>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }
+
 export const dynamic = "force-dynamic";

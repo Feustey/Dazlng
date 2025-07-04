@@ -1,14 +1,10 @@
-import React, { FC } from 'react';
+import React, { FC } from "react";
 
-const OptimizePage: FC = () => {
-  return (
-    <div className="space-y-8">
-      <h1 className="text-3xl font-bold">{t('user.centre_doptimisation')}</h1>
-      <div className="bg-white rounded-xl shadow p-6">
-        <p>{t('user.outils_doptimisation_automatiq')}</p>
+const OptimizePage: FC = () => (<div></div>
+      <h1 className="text-3xl font-bold">{t("user.centre_doptimisatio\n")}</h1>
+      <div></div>
+        <p>{t("user.outils_doptimisation_automatiq"")}</p>
       </div>
-    </div>
-  );
-};
+    </div>);;
 
-export default OptimizePage;export const dynamic = "force-dynamic";
+export default OptimizePage;export const dynamic  = "force-dynamic";

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 export interface Channel {
   id: string;
@@ -7,7 +7,7 @@ export interface Channel {
   capacity: number;
   localBalance: number;
   remoteBalance: number;
-  status: 'active' | 'inactive' | 'pending' | 'closing';
+  status: "active" | "inactive" | "pending" | "closing";
   isPrivate: boolean;
   channelPoint: string;
   feeRatePerKw: number;
@@ -42,34 +42,34 @@ export async function GET(
 ): Promise<Response> {
   try {
     const { searchParams } = new URL(req.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '20');
-    const status = searchParams.get('status');
-    const sort = searchParams.get('sort') || 'capacity:desc';
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "20");
+    const status = searchParams.get("status");
+    const sort = searchParams.get("sort") || "capacity:desc";
     
     const resolvedParams = await params;
     const nodeId = resolvedParams.nodeId;
     
     // Validation de la pubkey
     if (!/^[0-9a-fA-F]{66}$/.test(nodeId)) {
-      return NextResponse.json<ApiResponse<null>>({
+      return NextResponse.json<ApiResponse<Channel[]>>({
         success: false,
         error: {
-          code: 'INVALID_NODE_ID',
-          message: 'ID de nœud invalide'
+          code: "INVALID_NODE_ID",
+          message: "ID de nœud invalide"
         }
       }, { status: 400 });
     }
 
     // Simulation des données - à remplacer par l'API Lightning réelle
-    const mockChannels: Channel[] = Array.from({ length: 15 }, (_: any, i: any) => ({
+    const mockChannels: Channel[] = Array.from({ length: 15 }, (_, i) => ({
       id: `channel_${i + 1}`,
-      remotePubkey: `03${Math.random().toString(16).substring(2, 66).padEnd(64, '0')}`,
+      remotePubkey: `03${Math.random().toString(16).substring(2, 66).padEnd(64, "0")}`,
       remoteAlias: `Node-${i + 1}`,
       capacity: Math.floor(Math.random() * 10000000) + 1000000,
       localBalance: Math.floor(Math.random() * 5000000),
       remoteBalance: Math.floor(Math.random() * 5000000),
-      status: ['active', 'inactive', 'pending'][Math.floor(Math.random() * 3)] as Channel['status'],
+      status: ["active", "inactive", "pending"][Math.floor(Math.random() * 3)] as Channel["status"],
       isPrivate: Math.random() > 0.7,
       channelPoint: `${Math.random().toString(16).substring(2, 66)}:${i}`,
       feeRatePerKw: Math.floor(Math.random() * 1000) + 100,
@@ -89,8 +89,8 @@ export async function GET(
     }
 
     // Tri
-    const [sortField, sortOrder] = sort.split(':');
-    filteredChannels.sort((a: any, b: any) => {
+    const [sortField, sortOrder] = sort.split(":");
+    filteredChannels.sort((a, b) => {
       const aVal = a[sortField as keyof Channel];
       const bVal = b[sortField as keyof Channel];
       
@@ -99,10 +99,10 @@ export async function GET(
       let compareA = aVal;
       let compareB = bVal;
       
-      if (typeof compareA === 'string') compareA = compareA.toLowerCase();
-      if (typeof compareB === 'string') compareB = compareB.toLowerCase();
+      if (typeof compareA === "string") compareA = compareA.toLowerCase();
+      if (typeof compareB === "string") compareB = compareB.toLowerCase();
       
-      if (sortOrder === 'desc') {
+      if (sortOrder === "desc") {
         return compareA > compareB ? -1 : 1;
       }
       return compareA < compareB ? -1 : 1;
@@ -126,12 +126,12 @@ export async function GET(
     });
 
   } catch (error) {
-    console.error('Erreur lors de la récupération des canaux:', error);
-    return NextResponse.json<ApiResponse<null>>({
+    console.error("Erreur lors de la récupération des canaux:", error);
+    return NextResponse.json<ApiResponse<Channel[]>>({
       success: false,
       error: {
-        code: 'INTERNAL_ERROR',
-        message: 'Erreur interne du serveur'
+        code: "INTERNAL_ERROR",
+        message: "Erreur interne du serveur"
       }
     }, { status: 500 });
   }
@@ -139,7 +139,7 @@ export async function GET(
 
 export async function POST(
   req: NextRequest,
-  { params: _params }: { params: Promise<{ nodeId: string }> }
+  { params }: { params: Promise<{ nodeId: string }> }
 ): Promise<Response> {
   try {
     const body = await req.json();
@@ -147,31 +147,31 @@ export async function POST(
 
     // Validation des paramètres
     if (!remotePubkey || !amount) {
-      return NextResponse.json<ApiResponse<null>>({
+      return NextResponse.json<ApiResponse<Channel>>({
         success: false,
         error: {
-          code: 'MISSING_PARAMETERS',
-          message: 'Paramètres manquants: remotePubkey et amount sont requis'
+          code: "MISSING_PARAMETERS",
+          message: "Paramètres manquants: remotePubkey et amount sont requis"
         }
       }, { status: 400 });
     }
 
     if (!/^[0-9a-fA-F]{66}$/.test(remotePubkey)) {
-      return NextResponse.json<ApiResponse<null>>({
+      return NextResponse.json<ApiResponse<Channel>>({
         success: false,
         error: {
-          code: 'INVALID_PUBKEY',
-          message: 'Clé publique distante invalide'
+          code: "INVALID_PUBKEY",
+          message: "Clé publique distante invalide"
         }
       }, { status: 400 });
     }
 
     if (amount < 20000 || amount > 16777215) {
-      return NextResponse.json<ApiResponse<null>>({
+      return NextResponse.json<ApiResponse<Channel>>({
         success: false,
         error: {
-          code: 'INVALID_AMOUNT',
-          message: 'Montant invalide (min: 20,000 sats, max: 16,777,215 sats)'
+          code: "INVALID_AMOUNT",
+          message: "Montant invalide (min: 20,000 sats, max: 16,777,215 sats)"
         }
       }, { status: 400 });
     }
@@ -183,23 +183,23 @@ export async function POST(
       capacity: amount,
       localBalance: amount - pushAmount,
       remoteBalance: pushAmount,
-      status: 'pending',
+      status: "pending",
       isPrivate,
       lastUpdate: new Date().toISOString()
     };
 
-    return NextResponse.json<ApiResponse<Partial<Channel>>>({
+    return NextResponse.json<ApiResponse<Channel>>({
       success: true,
-      data: newChannel
+      data: newChannel as Channel
     });
 
   } catch (error) {
-    console.error('Erreur lors de l\'ouverture du canal:', error);
-    return NextResponse.json<ApiResponse<null>>({
+    console.error("Erreur lors de l'ouverture du canal:", error);
+    return NextResponse.json<ApiResponse<Channel>>({
       success: false,
       error: {
-        code: 'INTERNAL_ERROR',
-        message: 'Erreur interne du serveur'
+        code: "INTERNAL_ERROR",
+        message: "Erreur interne du serveur"
       }
     }, { status: 500 });
   }

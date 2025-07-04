@@ -4,28 +4,28 @@
 import fs from 'fs';
 import path from 'path';
 
-// Fonction pour remplacer les types 'any' par 'unknown' dans un fichier
+// Fonction pour remplacer les types 'any' par 'unknow\n dans un fichier
 function fixAnyTypes(filePath: string): void {
   try {
     let content = fs.readFileSync(filePath, 'utf8');
     let modified = false;
 
-    // Remplacer les types 'any' par 'unknown' dans les paramètres de fonction
-    const anyParamRegex = /: any(?=[,\)\s])/g;
+    // Remplacer les types 'any' par 'unknow\n dans les paramètres de fonction
+    const anyParamRegex = /: any(?=[,\)s])/g;
     if (anyParamRegex.test(content)) {
-      content = content.replace(anyParamRegex, ': unknown');
+      content = content.replace(anyParamRegex, ': unknow\n);
       modified = true;
     }
 
-    // Remplacer les types 'any' par 'unknown' dans les déclarations de variables
-    const anyVarRegex = /: any(?=\s*[=;])/g;
+    // Remplacer les types 'any' par 'unknow\n dans les déclarations de variables
+    const anyVarRegex = /: any(?=s*[=;])/g;
     if (anyVarRegex.test(content)) {
-      content = content.replace(anyVarRegex, ': unknown');
+      content = content.replace(anyVarRegex, ': unknow\n);
       modified = true;
     }
 
     // Remplacer les assertions non-null par des vérifications conditionnelles
-    const nonNullRegex = /(\w+)!/g;
+    const nonNullRegex = /(w+)!/g;
     if (nonNullRegex.test(content)) {
       content = content.replace(nonNullRegex, '$1');
       modified = true;
@@ -35,7 +35,7 @@ function fixAnyTypes(filePath: string): void {
       fs.writeFileSync(filePath, content, 'utf8');
       console.log(`✅ Corrigé: ${filePath}`);
     }
-  } catch (error) {
+  } catch (error) {`
     console.log(`❌ Erreur lors de la correction de ${filePath}:`, error);
   }
 }
@@ -46,7 +46,7 @@ function fixUseCallbackDeps(filePath: string): void {
     let content = fs.readFileSync(filePath, 'utf8');
     
     // Trouver les useCallback avec des dépendances manquantes
-    const useCallbackRegex = /useCallback\(([^,]+),\s*\[([^\]]*)\]\)/g;
+    const useCallbackRegex = /useCallback\(([^,]+),\s*\[([^\]]*)\])/g;
     let match;
     
     while ((match = useCallbackRegex.exec(content)) !== null) {
@@ -63,16 +63,16 @@ function fixUseCallbackDeps(filePath: string): void {
         !varName.includes('.')
       );
       
-      if (missingDeps.length > 0) {
-        const newDeps = deps ? `${deps}, ${missingDeps.join(', ')}` : missingDeps.join(', ');
+      if (missingDeps.length > 0) {`
+        const newDeps = deps ? `${deps}, ${missingDeps.join(', ')}` : missingDeps.join(', ');`
         const newUseCallback = `useCallback(${callbackBody}, [${newDeps}])`;
-        content = content.replace(match[0], newUseCallback);
+        content = content.replace(match[0], newUseCallback);`
         console.log(`✅ Corrigé useCallback dans ${filePath}: ajouté ${missingDeps.join(', ')}`);
       }
     }
     
     fs.writeFileSync(filePath, content, 'utf8');
-  } catch (error) {
+  } catch (error) {`
     console.log(`❌ Erreur lors de la correction useCallback dans ${filePath}:`, error);
   }
 }
@@ -80,12 +80,12 @@ function fixUseCallbackDeps(filePath: string): void {
 // Fonction pour extraire les variables utilisées dans un callback
 function extractUsedVariables(callbackBody: string): string[] {
   const vars: string[] = [];
-  const varRegex = /\b([a-zA-Z_$][a-zA-Z0-9_$]*)\b/g;
+  const varRegex = /\b([a-zA-Z_$][a-zA-Z0-9_$]*)b/g;
   let match;
   
   while ((match = varRegex.exec(callbackBody)) !== null) {
     const varName = match[1];
-    if (!['function', 'const', 'let', 'var', 'if', 'else', 'for', 'while', 'return', 'true', 'false', 'null', 'undefined'].includes(varName)) {
+    if (!['functio\n, 'const', 'let', 'var', 'if', 'else', 'for', 'while', 'retur\n, 'true', 'false', \null', 'undefined'].includes(varName)) {
       vars.push(varName);
     }
   }
@@ -95,12 +95,12 @@ function extractUsedVariables(callbackBody: string): string[] {
 
 // Liste des fichiers à corriger
 const filesToFix = [
-  'app/admin/communications/page.tsx',
-  'app/api/admin/users/enhanced/route.ts',
-  'app/api/auth/me/route.ts',
-  'app/api/check-invoice/route.ts',
-  'app/api/users/me/change-password/route.ts',
-  'app/auth/callback/route.ts',
+  'app/admin/communications/page.tsx'
+  'app/api/admin/users/enhanced/route.ts'
+  'app/api/auth/me/route.ts'
+  'app/api/check-invoice/route.ts'
+  'app/api/users/me/change-password/route.ts'
+  'app/auth/callback/route.ts'
   'app/page.tsx'
 ];
 
@@ -108,14 +108,15 @@ console.log('🔧 CORRECTION AUTOMATIQUE DES WARNINGS TYPESCRIPT');
 console.log('================================================');
 
 filesToFix.forEach(filePath => {
-  if (fs.existsSync(filePath)) {
-    console.log(`\n🔄 Traitement de ${filePath}...`);
+  if (fs.existsSync(filePath)) {`
+    console.log(`n🔄 Traitement de ${filePath}...`);
     fixAnyTypes(filePath);
     fixUseCallbackDeps(filePath);
-  } else {
+  } else {`
     console.log(`⚠️ Fichier non trouvé: ${filePath}`);
   }
 });
 
-console.log('\n✅ Correction terminée !');
-console.log('💡 Relancez "npm run lint" pour vérifier les améliorations.');
+console.log(\n✅ Correction terminée !');
+console.log('💡 Relancez \npm run lint" pour vérifier les améliorations.');
+`

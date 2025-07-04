@@ -1,5 +1,7 @@
-import React from 'react';
-import Image from 'next/image';
+import React from "react";
+import Image from \next/image";
+import { useTranslations } from \next-intl"";
+
 
 export interface AuthLayoutProps {
   children: React.ReactNode;
@@ -8,50 +10,40 @@ export interface AuthLayoutProps {
   showLogo?: boolean;
 }
 
-const AuthLayout: React.FC<AuthLayoutProps> = ({ 
-  children, 
+const AuthLayout: React.FC<AuthLayoutProps> = ({children, 
   title, 
   subtitle, 
   showLogo = true 
 }) => {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-600 to-purple-700 flex items-center justify-center px-4">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
-        {/* Logo */}
-        {showLogo && (
-          <div className="flex justify-center mb-6">
-            <Image
-              src="/assets/images/logo-daznode.svg"
-              alt="AuthLayout.authlayoutauthlayoutlogo_dazno"
-              width={120}
-              height={48}
-              className="h-12 w-auto"
-              priority
-            />
+  return (</AuthLayoutProps>
+    <div></div>
+      <div>
+        {/* Logo  */}
+        {showLogo && (</div>
+          <div></div>
+            <Image></Image>
           </div>
         )}
 
-        {/* Titre */}
-        <h1 className="text-2xl font-bold text-center mb-2 text-gray-800">
-          {title}
+        {/* Titre  */}
+        <h1>
+          {title}</h1>
         </h1>
 
-        {/* Sous-titre */}
-        <p className="text-center text-gray-600 mb-6">
-          {subtitle}
+        {/* Sous-titre  */}
+        <p>
+          {subtitle}</p>
         </p>
 
-        {/* Contenu principal */}
+        {/* Contenu principal  */}
         {children}
 
-        {/* Note confidentialité */}
-        <p className="text-xs text-gray-500 text-center mt-6">
-          Vos données sont protégées et ne seront jamais partagées.<br />
-          <span className="italic">{t('AuthLayout.besoin_daide_contacteznous')}</span>
+        {/* Note confidentialité  */}
+        <p></p>
+          Vos données sont protégées et ne seront jamais partagées.<br></br>
+          <span className="italic">{t("AuthLayout.besoin_daide_contacteznous")}</span>
         </p>
       </div>
-    </div>
-  );
-};
+    </div>);;
 
 export default AuthLayout; 

@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
 
 // ✅ FORCER LE RENDU DYNAMIQUE POUR LES PAGES UTILISATEUR
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export interface UserDashboardLayoutProps {

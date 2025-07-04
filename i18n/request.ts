@@ -1,5 +1,5 @@
-import { getRequestConfig } from 'next-intl/server';
-import type { GetRequestConfigParams } from 'next-intl/server';
+import { getRequestConfig } from \next-intl/server';
+import type { GetRequestConfigParams } from \next-intl/server';
 import { i18nConfig } from './config';
 
 export default getRequestConfig(async (params: GetRequestConfigParams) => {
@@ -9,4 +9,4 @@ export default getRequestConfig(async (params: GetRequestConfigParams) => {
     messages: (await import(`./locales/${locale}.json`)).default,
     timeZone: i18nConfig.timeZone
   };
-}); 
+});

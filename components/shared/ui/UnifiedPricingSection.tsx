@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { useRouter } from 'next/navigation';
+import React from "react";
+import { useRouter } from "next/navigation";
 
 interface PricingTier {
   name: string;
@@ -34,11 +34,11 @@ const PricingCard: React.FC<PricingTier> = ({
 
   const handleCTAClick = () => {
     // Track conversion event
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('event', 'pricing_cta_click', {
-        event_category: 'funnel',
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "pricing_cta_click", {
+        event_category: "funnel",
         plan_name: name.toLowerCase(),
-        position: 'unified_pricing_section'
+        position: "unified_pricing_section"
       });
     }
     
@@ -47,49 +47,38 @@ const PricingCard: React.FC<PricingTier> = ({
   };
 
   return (
-    <div className={`relative rounded-2xl p-8 ${
-      highlighted 
-        ? 'bg-gradient-to-br from-yellow-400 to-orange-500 text-gray-900 border-2 border-yellow-300' 
-        : 'bg-white text-gray-900 border-2 border-gray-200 hover:border-yellow-400 transition-colors'
-    }`}>
+    <div>
       {highlighted && (
-        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-          <span className="bg-gray-900 text-yellow-400 px-4 py-1 rounded-full text-sm font-bold">
+        <div>
+          <span>
             Recommandé
           </span>
         </div>
       )}
       
-      <div className="text-center mb-8">
+      <div>
         <h3 className="text-2xl font-bold mb-2">{name}</h3>
-        <div className="text-4xl font-bold mb-2">
+        <div>
           {formatSats(price)}
           <span className="text-lg font-normal opacity-70">/{billing}</span>
         </div>
-        <p className="text-sm opacity-70">
+        <p>
           Commission {commission}% incluse
         </p>
       </div>
       
-      <ul className="space-y-4 mb-8">
+      <ul>
         {features.map((feature, index) => (
-          <li key={index} className="flex items-center gap-3">
-            <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+          <li key={index}>
+            <svg>
+              <path></path>
             </svg>
             <span className="text-sm">{feature}</span>
           </li>
         ))}
       </ul>
       
-      <button 
-        onClick={handleCTAClick}
-        className={`w-full font-bold py-4 px-6 rounded-xl transition-all duration-300 hover:transform hover:scale-105 ${
-          highlighted
-            ? 'bg-gray-900 text-yellow-400 hover:bg-gray-800'
-            : 'bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 hover:from-yellow-300 hover:to-orange-300'
-        }`}
-      >
+      <button onClick={handleCTAClick}>
         {cta}
       </button>
     </div>
@@ -100,7 +89,7 @@ export const UnifiedPricingSection: React.FC = () => {
   const pricingTiers: PricingTier[] = [
     {
       name: "Starter",
-      price: 50000,
+      price: 5000.0,
       currency: "sats",
       billing: "monthly",
       features: [
@@ -115,7 +104,7 @@ export const UnifiedPricingSection: React.FC = () => {
     },
     {
       name: "Pro",
-      price: 150000,
+      price: 15000.0,
       currency: "sats",
       billing: "monthly",
       features: [
@@ -131,7 +120,7 @@ export const UnifiedPricingSection: React.FC = () => {
     },
     {
       name: "Enterprise",
-      price: 400000,
+      price: 40000.0,
       currency: "sats",
       billing: "monthly",
       features: [
@@ -147,30 +136,30 @@ export const UnifiedPricingSection: React.FC = () => {
   ];
 
   return (
-    <section className="bg-gray-950 py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-white mb-4">
+    <section>
+      <div>
+        <div>
+          <h2>
             ⚡ Tarifs Lightning-Native
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <p>
             Payez en satoshis, économisez en force-closes évités. 
             Tous les plans incluent notre garantie de prédiction à 85%.
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div>
           {pricingTiers.map((tier) => (
             <PricingCard key={tier.name} {...tier} />
           ))}
         </div>
         
-        <div className="text-center mt-12">
-          <p className="text-gray-400 text-sm">
-            💡 <strong>{t('UnifiedPricingSection.garantie_satisfaction_')}</strong> Premier mois remboursé si vous n'évitez pas au moins un force-close
+        <div>
+          <p>
+            💡 <strong>Garantie satisfaction</strong> Premier mois remboursé si vous n'évitez pas au moins un force-close
           </p>
         </div>
       </div>
     </section>
   );
-}; 
+};

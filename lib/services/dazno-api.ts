@@ -11,10 +11,10 @@ import {
   DaznoRecommendationsResponse,
   DaznoAuthCredentials,
   isDaznoValidContext,
-  isDaznoValidGoal,
-} from '@/types/dazno-api'
-import { logger } from '@/lib/logger';
-import { InvoiceStatus } from '@/types/lightning';
+  isDaznoValidGoal
+} from "@/types/dazno-api"
+import { logger } from "@/lib/logger";
+import { InvoiceStatus } from "@/types/lightning";
 
 export interface DaznoApiError {
   code: string;
@@ -64,7 +64,7 @@ export interface NodeMetrics {
 export interface NodeStatus {
   pubkey: string;
   alias: string;
-  status: 'online' | 'offline';
+  status: "online" | "offline";
   lastSeen?: string;
   channels?: number;
   capacity?: number;
@@ -134,7 +134,7 @@ export interface CheckPaymentResponse {
 
 export interface DaznoServiceStatus {
   name: string;
-  status: 'up' | 'down' | 'degraded';
+  status: "up" | "down" | "degraded";
   latency?: number;
   lastCheck?: string;
 }
@@ -174,14 +174,14 @@ export class MCPLightAPI {
   private apiKey?: string;
 
   constructor(config?: { baseUrl?: string; apiKey?: string }) {
-    this.baseUrl = config?.baseUrl || 'https://api.dazno.de';
+    this.baseUrl = config?.baseUrl || "https://api.dazno.de";
     this.apiKey = config?.apiKey;
   }
 
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const headers: HeadersInit = {
-      "dazno-api.daznoapidaznoapicontenttype": 'application/json',
-      ...(this.apiKey && { 'Authorization': `Bearer ${this.apiKey}` }),
+      "Content-Type": "application/json",
+      ...(this.apiKey && { "Authorization": `Bearer ${this.apiKey}` }),
       ...options.headers
     };
 
@@ -191,8 +191,8 @@ export class MCPLightAPI {
     });
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: 'Unknown error' }));
-      logger.error('MCPLightAPI Error:', error);
+      const error = await response.json().catch(() => ({ message: "Unknown error" }));
+      logger.error("MCPLightAPI Error:", error);
       throw new Error(error.message || `HTTP error! status: ${response.status}`);
     }
 
@@ -209,12 +209,12 @@ export class MCPLightAPI {
   }
 
   async createInvoice(params: { amount: number; description: string; expiresIn?: number }) {
-    return this.request<CreateInvoiceResponse>('/api/v1/lightning/invoice', {
-      method: 'POST',
+    return this.request<CreateInvoiceResponse>("/api/v1/lightning/invoice", {
+      method: "POST",
       body: JSON.stringify({
         amount: params.amount,
         description: params.description,
-        expires_in: params.expiresIn || 300,
+        expires_in: params.expiresIn || 300
       })
     });
   }
@@ -226,10 +226,10 @@ export class MCPLightAPI {
 
   async getExplorerNodes(params: { search?: string; sortBy?: string; limit?: number; offset?: number }): Promise<{ nodes: ExplorerNode[]; total: number }> {
     const queryParams = new URLSearchParams();
-    if (params.search) queryParams.set('search', params.search);
-    if (params.sortBy) queryParams.set('sortBy', params.sortBy);
-    if (params.limit) queryParams.set('limit', params.limit.toString());
-    if (params.offset) queryParams.set('offset', params.offset.toString());
+    if (params.search) queryParams.set("search", params.search);
+    if (params.sortBy) queryParams.set("sortBy", params.sortBy);
+    if (params.limit) queryParams.set("limit", params.limit.toString());
+    if (params.offset) queryParams.set("offset", params.offset.toString());
 
     return this.request<{ nodes: ExplorerNode[]; total: number }>(`/api/v1/explorer/nodes?${queryParams}`);
   }
@@ -240,14 +240,14 @@ export class MCPLightAPI {
 
   async getRecommendations(pubkey: string): Promise<DaznoRecommendationsResponse> {
     if (!isValidLightningPubkey(pubkey)) {
-      throw new Error('Invalid Lightning pubkey format');
+      throw new Error("Invalid Lightning pubkey format");
     }
     return this.request<DaznoRecommendationsResponse>(`/v1/node/${pubkey}/recommendations`);
   }
 
   async getUnifiedRecommendations(params: { pubkey: string }): Promise<unknown> {
-    return this.request('/api/v1/channels/recommendations/unified', {
-      method: 'POST',
+    return this.request("/api/v1/channels/recommendations/unified", {
+      method: "POST",
       body: JSON.stringify(params)
     });
   }
@@ -259,4 +259,4 @@ export const daznoApi = new MCPLightAPI();
 // Export une fonction factory pour créer de nouvelles instances
 export const createDaznoApiClient = (config?: { baseUrl?: string; apiKey?: string }) => {
   return new MCPLightAPI(config);
-}; 
+};

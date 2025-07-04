@@ -2,45 +2,44 @@
 
 /**
  * Script de test pour vérifier le header amélioré
- * Vérifie que la compilation se passe bien et qu'il n'y a pas d'erreurs critiques
- */
-
+ * Vérifie que la compilation se passe bien et qu'il \ny a pas d'erreurs critiques
+ *
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-console.log('🧪 Test du Header Amélioré - Script de Vérification\n');
+console.log('🧪 Test du Header Amélioré - Script de Vérification\\n);
 
 // Vérification 1: Fichier CustomHeader existe
 console.log('1️⃣ Vérification de l\'existence du fichier...');
 const headerPath = path.join(__dirname, '..', 'components', 'shared', 'ui', 'CustomHeader.tsx');
 if (fs.existsSync(headerPath)) {
-  console.log('✅ CustomHeader.tsx trouvé\n');
+  console.log('✅ CustomHeader.tsx trouvé\\n);
 } else {
-  console.log('❌ CustomHeader.tsx introuvable\n');
+  console.log('❌ CustomHeader.tsx introuvable\\n);
   process.exit(1);
 }
 
 // Vérification 2: Compilation TypeScript
 console.log('2️⃣ Vérification de la compilation TypeScript...');
 try {
-  execSync('npx tsc --noEmit --skipLibCheck', { 
+  execSync(\npx tsc --noEmit --skipLibCheck', { 
     stdio: 'pipe',
     cwd: path.join(__dirname, '..')
   });
-  console.log('✅ Compilation TypeScript réussie\n');
+  console.log('✅ Compilation TypeScript réussie\\n);
 } catch (error) {
-  console.log('⚠️ Erreurs TypeScript détectées (non critiques)\n');
+  console.log('⚠️ Erreurs TypeScript détectées (non critiques)\\n);
 }
 
 // Vérification 3: Build Next.js
 console.log('3️⃣ Test de build Next.js...');
 try {
-  execSync('npm run build', { 
+  execSync(\npm run build', { 
     stdio: 'pipe',
     cwd: path.join(__dirname, '..')
   });
-  console.log('✅ Build Next.js réussi\n');
+  console.log('✅ Build Next.js réussi\\n);
 } catch (error) {
   console.log('❌ Erreur durant le build Next.js');
   console.log(error.toString());
@@ -55,12 +54,12 @@ const checks = [
   {
     name: 'useState pour mounted',
     check: headerContent.includes('useState(false)') && headerContent.includes('mounted'),
-    desc: 'Vérification du pattern mounted pour l\'hydration'
+    desc: 'Vérification du pattern mounted pour l\'hydratio\n
   },
   {
     name: 'Navigation items',
-    check: headerContent.includes('navigationItems') && headerContent.includes('DazNode'),
-    desc: 'Vérification de la navigation'
+    check: headerContent.includes(\navigationItems') && headerContent.includes('DazNode'),
+    desc: 'Vérification de la navigatio\n
   },
   {
     name: 'Scroll handling',
@@ -69,12 +68,12 @@ const checks = [
   },
   {
     name: 'Mobile menu',
-    check: headerContent.includes('mobileMenuOpen') && headerContent.includes('aria-controls'),
+    check: headerContent.includes('mobileMenuOpe\n) && headerContent.includes('aria-controls'),
     desc: 'Vérification du menu mobile et accessibilité'
   },
   {
     name: 'Image component',
-    check: headerContent.includes('className="h-10 w-auto"') && !headerContent.includes('style={{'),
+    check: headerContent.includes('className="h-10 w-auto') && !headerContent.includes('style={{'),
     desc: 'Vérification de l\'image sans style inline'
   }
 ];

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseAdminClient } from '@/lib/supabase';
+import { getSupabaseAdminClient } from "@/lib/supabase";
 import { privacySettingsSchema, validateData } from "@/lib/validations";
 import { ApiResponse } from "@/types/database";
 
@@ -11,7 +11,7 @@ async function getUserFromRequest(req: NextRequest) {
 }
 
 // GET /api/users/me/privacy-settings - Récupération des paramètres de confidentialité
-export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {
@@ -75,7 +75,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> 
 }
 
 // PUT /api/users/me/privacy-settings - Mise à jour des paramètres de confidentialité
-export async function PUT(req: NextRequest): Promise<NextResponse<ApiResponse>> {
+export async function PUT(req: NextRequest): Promise<NextResponse> {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {

@@ -1,14 +1,14 @@
-import { Inter } from 'next/font/google';
-import '../globals.css';
-import { Metadata } from 'next';
-import ClientLayout from '../ClientLayout';
-import { SupabaseProvider } from '../providers/SupabaseProvider';
-import { NextIntlClientProvider } from 'next-intl';
-import { notFound } from 'next/navigation';
-import { locales } from '@/i18n/settings';
-import { seoConfig } from '@/lib/seo-config';
+import { Inter } from "next/font/google";
+import "../globals.css";
+import { Metadata } from "next";
+import ClientLayout from "../ClientLayout";
+import { SupabaseProvider } from "../providers/SupabaseProvider";
+import { NextIntlClientProvider } from "next-intl";
+import { notFound } from "next/navigation";
+import { locales } from "@/i18n/settings";
+import { seoConfig } from "@/lib/seo-config";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
 type Props = {
   children: React.ReactNode;
@@ -36,27 +36,27 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     alternates: {
       canonical: `${seoConfig.baseUrl}/${locale}`,
       languages: {
-        'fr': `${seoConfig.baseUrl}/fr`,
-        'en': `${seoConfig.baseUrl}/en`,
-        'x-default': seoConfig.baseUrl
+        "fr": `${seoConfig.baseUrl}/fr`,
+        "en": `${seoConfig.baseUrl}/en`,
+        "x-default": seoConfig.baseUrl
       }
     },
     openGraph: {
-      type: 'website',
-      locale: locale === 'fr' ? 'fr_FR' : 'en_US',
+      type: "website",
+      locale: locale === "fr" ? "fr_FR" : "en_US",
       title: messages.metadata.title,
       description: messages.metadata.description,
-      siteName: 'DazNode',
+      siteName: "DazNode",
       url: `${seoConfig.baseUrl}/${locale}`
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: messages.metadata.title,
       description: messages.metadata.description,
-      creator: '@daznode'
+      creator: "@daznode"
     },
     verification: {
-      google: 'your-google-site-verification'
+      google: "your-google-site-verification"
     }
   };
 }
@@ -65,10 +65,7 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-export default async function RootLayout({
-  children,
-  params: { locale }
-}: Props) {
+export default async function RootLayout({ children, params: { locale } }: Props) {
   // Validate locale
   if (!locales.includes(locale as any)) notFound();
 
@@ -83,7 +80,7 @@ export default async function RootLayout({
         <link rel="alternate" hrefLang="x-default" href={seoConfig.baseUrl} />
       </head>
       <body className={inter.className}>
-        <NextIntlClientProvider locale={locale} messages={messages}>
+        <NextIntlClientProvider messages={messages}>
           <SupabaseProvider>
             <ClientLayout>
               {children}

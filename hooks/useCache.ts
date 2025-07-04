@@ -1,9 +1,9 @@
-'use client';
-import { useState, useEffect, useCallback } from 'react';
+"use client";
+import { useState, useEffect, useCallback } from "react";
 
 interface CacheOptions {
   ttl?: number; // Time to live in milliseconds
-  storage?: 'memory' | 'local' | 'session';
+  storage?: "memory" | "local" | "session";
   revalidate?: boolean;
 }
 
@@ -20,7 +20,7 @@ export function useCache<T>(
 ) {
   const {
     ttl = 5 * 60 * 1000, // 5 minutes par défaut
-    storage = 'memory',
+    storage = "memory",
     revalidate = false
   } = options;
 
@@ -38,64 +38,64 @@ export function useCache<T>(
 
   // Sauvegarder dans le storage
   const saveToStorage = useCallback((key: string, entry: CacheEntry<T>) => {
-    if (typeof window === 'undefined') {
+    if (typeof window === "undefined") {
       memoryCache.set(key, entry);
       return;
     }
     
     try {
-      if (storage === 'local') {
+      if (storage === "local") {
         localStorage.setItem(key, JSON.stringify(entry));
-      } else if (storage === 'session') {
+      } else if (storage === "session") {
         sessionStorage.setItem(key, JSON.stringify(entry));
       } else {
         memoryCache.set(key, entry);
       }
     } catch (error) {
-      console.warn('Storage error, falling back to memory cache:', error);
+      console.warn("Storage error, falling back to memory cache:", error);
       memoryCache.set(key, entry);
     }
   }, [storage]);
 
   // Récupérer du storage
   const getFromStorage = useCallback((key: string): CacheEntry<T> | null => {
-    if (typeof window === 'undefined') {
+    if (typeof window === "undefined") {
       return memoryCache.get(key) || null;
     }
     
     try {
-      if (storage === 'local') {
+      if (storage === "local") {
         const item = localStorage.getItem(key);
         return item ? JSON.parse(item) : null;
-      } else if (storage === 'session') {
+      } else if (storage === "session") {
         const item = sessionStorage.getItem(key);
         return item ? JSON.parse(item) : null;
       } else {
         return memoryCache.get(key) || null;
       }
     } catch (error) {
-      console.warn('Storage read error, falling back to memory cache:', error);
+      console.warn("Storage read error, falling back to memory cache:", error);
       return memoryCache.get(key) || null;
     }
   }, [storage]);
 
   // Supprimer du storage
   const removeFromStorage = useCallback((key: string) => {
-    if (typeof window === 'undefined') {
+    if (typeof window === "undefined") {
       memoryCache.delete(key);
       return;
     }
     
     try {
-      if (storage === 'local') {
+      if (storage === "local") {
         localStorage.removeItem(key);
-      } else if (storage === 'session') {
+      } else if (storage === "session") {
         sessionStorage.removeItem(key);
       } else {
         memoryCache.delete(key);
       }
     } catch (error) {
-      console.warn('Storage remove error:', error);
+      console.warn("Storage remove error:", error);
       memoryCache.delete(key);
     }
   }, [storage]);
@@ -169,4 +169,4 @@ export function useCache<T>(
   }, [fetchData, revalidate, ttl]);
 
   return { data, loading, error, refetch, invalidate };
-} 
+}

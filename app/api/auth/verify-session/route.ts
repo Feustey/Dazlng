@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { CrossDomainSessionService } from '../../../../lib/services/cross-domain-session';
+import { NextRequest, NextResponse } from "next/server";
+import { CrossDomainSessionService } from "../../../../lib/services/cross-domain-session";
 
 export async function GET(req: NextRequest) {
   const corsHeaders = CrossDomainSessionService.getCorsHeaders();
@@ -12,12 +12,12 @@ export async function GET(req: NextRequest) {
     }, { status: 200, headers: corsHeaders });
   }
   // Redirection si non authentifié
-  return NextResponse.redirect('https://app.token-for-good.com/login', { status: 302, headers: corsHeaders });
+  return NextResponse.redirect("https://app.token-for-good.com/login", { status: 302, headers: corsHeaders });
 }
 
 export async function POST(req: NextRequest) {
   const corsHeaders = CrossDomainSessionService.getCorsHeaders();
-  const authHeader = req.headers.get('authorization') || '';
+  const authHeader = req.headers.get("authorization") || '';
   const sessionResult = await CrossDomainSessionService.verifyBearerToken(authHeader);
   if (sessionResult.authenticated && sessionResult.user) {
     return NextResponse.json({
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     }, { status: 200, headers: corsHeaders });
   }
   // Redirection si non authentifié
-  return NextResponse.redirect('https://app.token-for-good.com/login', { status: 302, headers: corsHeaders });
+  return NextResponse.redirect("https://app.token-for-good.com/login", { status: 302, headers: corsHeaders });
 }
 
 export async function OPTIONS() {

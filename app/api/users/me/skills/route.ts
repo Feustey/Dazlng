@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseAdminClient } from '@/lib/supabase';
+import { getSupabaseAdminClient } from "@/lib/supabase";
 import { skillSchema } from "@/lib/validations";
-import { withAuth, handleApiError } from '@/lib/api-utils';
+import { withAuth, handleApiError } from "@/lib/api-utils";
 import { ErrorCodes } from "@/types/database";
 
 // GET /api/users/me/skills - Liste des compétences

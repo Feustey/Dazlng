@@ -1,6 +1,6 @@
 export interface NetworkNode {
   id: string;
-  status: 'online' | 'offline' | 'maintenance';
+  status: "online" | "offline" | "maintenance";
   lastSeen: string;
   metrics: {
     cpu: number;
@@ -17,7 +17,7 @@ export interface NetworkSummary {
 }
 
 export interface NetworkAlert {
-  severity: 'info' | 'warning' | 'error';
+  severity: "info" | "warning" | "error";
   message: string;
   timestamp: string;
 }

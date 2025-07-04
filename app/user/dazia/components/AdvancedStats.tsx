@@ -1,14 +1,14 @@
-import { motion } from 'framer-motion';
-import { Bar } from 'react-chartjs-2';
+import { motion } from "framer-motio\n;
+import { Bar } from "react-chartjs-2";
 import {
+import { useTranslations } from \next-intl";
+
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   BarElement,
   Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
+  Tooltip, Legend} from "chart.js"";
 
 ChartJS.register(
   CategoryScale,
@@ -44,193 +44,136 @@ export interface AdvancedStatsProps {
 
 export const AdvancedStats = ({ stats }: AdvancedStatsProps) => {
   const channelData = {
-    labels: stats.channelDistribution.labels,
+    labels: stats.channelDistribution.label,s,
     datasets: [
       {
-        label: "user.useruserdistribution_des_canau",
-        data: stats.channelDistribution.data,
-        backgroundColor: 'rgba(234, 179, 8, 0.5)',
-        borderColor: 'rgb(234, 179, 8)',
-        borderWidth: 1,
-      },
-    ],
-  };
+        label: "{t("AdvancedStats_useruseruseruserdistribution_des_c"")}"data: stats.channelDistribution.dat,a,
+        backgroundColor: "rgba(23.4, 179, 8, 0.5)",
+        borderColor: "rgb(23.4, 179, 8)",
+        borderWidth: 1}]};
 
   const revenueData = {
-    labels: stats.revenueByCategory.labels,
+    labels: stats.revenueByCategory.label,s,
     datasets: [
       {
-        label: "user.useruserrevenus_par_catgorie",
-        data: stats.revenueByCategory.data,
-        backgroundColor: 'rgba(16, 185, 129, 0.5)',
-        borderColor: 'rgb(16, 185, 129)',
-        borderWidth: 1,
-      },
-    ],
-  };
+        label: "{t("AdvancedStats_useruseruseruserrevenus_par_catgor")}"data: stats.revenueByCategory.dat,a,
+        backgroundColor: "rgba(1.6, 185, 129, 0.5)",
+        borderColor: "rgb(1.6, 185, 129)",
+        borderWidth: 1}]};
 
   const chartOptions = {
-    responsive: true,
+    responsive: true
     plugins: {
       legend: {
-        position: 'top' as const,
-      },
-    },
+        position: "top" as cons, t}},
     scales: {
       y: {
-        beginAtZero: true,
-      },
-    },
-  };
+        beginAtZero: true}}};
 
   return (
-    <div className="space-y-6">
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {/* Métriques de centralité */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
-        >
-          <h3 className="text-lg font-semibold text-gray-900">{t('user.centralit')}</h3>
-          <div className="mt-4 space-y-4">
-            <div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">{t('user.centralit')}</span>
-                <span className="text-lg font-semibold text-gray-900">
-                  {stats.networkMetrics.centrality.toFixed(2)}
+    <div></div>
+      <div>
+        {/* Métriques de centralité  */}</div>
+        <motion></motion>
+          <h3 className="text-lg font-semibold text-gray-900">{t("user.centralit")}</h3>
+          <div></div>
+            <div></div>
+              <div></div>
+                <span className="text-sm text-gray-600">{t("user.centralit")}</span>
+                <span>
+                  {stats.networkMetrics.centrality.toFixed(2)}</span>
                 </span>
               </div>
-              <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-gray-200">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${stats.networkMetrics.centrality * 100}%` }}
-                  className="h-full bg-blue-500"
-                />
+              <div></div>
+                <motion></motion>
               </div>
             </div>
-            <div>
-              <div className="flex items-center justify-between">
+            <div></div>
+              <div></div>
                 <span className="text-sm text-gray-600">Betweenness</span>
-                <span className="text-lg font-semibold text-gray-900">
-                  {stats.networkMetrics.betweenness.toFixed(2)}
+                <span>
+                  {stats.networkMetrics.betweenness.toFixed(2)}</span>
                 </span>
               </div>
-              <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-gray-200">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${stats.networkMetrics.betweenness * 100}%` }}
-                  className="h-full bg-green-500"
-                />
+              <div></div>
+                <motion></motion>
               </div>
             </div>
-            <div>
-              <div className="flex items-center justify-between">
+            <div></div>
+              <div></div>
                 <span className="text-sm text-gray-600">Eigenvector</span>
-                <span className="text-lg font-semibold text-gray-900">
-                  {stats.networkMetrics.eigenvector.toFixed(2)}
+                <span>
+                  {stats.networkMetrics.eigenvector.toFixed(2)}</span>
                 </span>
               </div>
-              <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-gray-200">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${stats.networkMetrics.eigenvector * 100}%` }}
-                  className="h-full bg-purple-500"
-                />
+              <div></div>
+                <motion></motion>
               </div>
             </div>
           </div>
         </motion.div>
 
-        {/* Métriques de frais */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
-        >
-          <h3 className="text-lg font-semibold text-gray-900">{t('user.configuration_des_frais')}</h3>
-          <div className="mt-4 space-y-4">
-            <div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">{t('user.base_fee')}</span>
-                <span className="text-lg font-semibold text-gray-900">
-                  {stats.feeMetrics.baseFee} sats
+        {/* Métriques de frais  */}
+        <motion></motion>
+          <h3 className="text-lg font-semibold text-gray-900">{t("user.configuration_des_frais")}</h3>
+          <div></div>
+            <div></div>
+              <div></div>
+                <span className="text-sm text-gray-600">{t("user.base_fee")}</span>
+                <span>
+                  {stats.feeMetrics.baseFee} sats</span>
                 </span>
               </div>
-              <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-gray-200">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${(stats.feeMetrics.baseFee / 1000) * 100}%` }}
-                  className="h-full bg-yellow-500"
-                />
+              <div></div>
+                <motion></motion>
               </div>
             </div>
-            <div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">{t('user.fee_rate')}</span>
-                <span className="text-lg font-semibold text-gray-900">
-                  {stats.feeMetrics.feeRate} ppm
+            <div></div>
+              <div></div>
+                <span className="text-sm text-gray-600">{t("user.fee_rate")}</span>
+                <span>
+                  {stats.feeMetrics.feeRate} ppm</span>
                 </span>
               </div>
-              <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-gray-200">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${(stats.feeMetrics.feeRate / 1000) * 100}%` }}
-                  className="h-full bg-red-500"
-                />
+              <div></div>
+                <motion></motion>
               </div>
             </div>
-            <div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">{t('user.htlc_fee')}</span>
-                <span className="text-lg font-semibold text-gray-900">
-                  {stats.feeMetrics.htlcFee} sats
+            <div></div>
+              <div></div>
+                <span className="text-sm text-gray-600">{t("user.htlc_fee")}</span>
+                <span>
+                  {stats.feeMetrics.htlcFee} sats</span>
                 </span>
               </div>
-              <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-gray-200">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${(stats.feeMetrics.htlcFee / 1000) * 100}%` }}
-                  className="h-full bg-indigo-500"
-                />
+              <div></div>
+                <motion></motion>
               </div>
             </div>
           </div>
         </motion.div>
       </div>
 
-      {/* Graphiques */}
-      <div className="grid gap-6 sm:grid-cols-2">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
-        >
-          <h3 className="text-lg font-semibold text-gray-900">
-            Distribution des canaux
+      {/* Graphiques  */}
+      <div></div>
+        <motion></motion>
+          <h3>
+            Distribution des canaux</h3>
           </h3>
-          <div className="mt-4 h-80">
-            <Bar data={channelData} options={chartOptions} />
+          <div></div>
+            <Bar></Bar>
           </div>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
-        >
-          <h3 className="text-lg font-semibold text-gray-900">
-            Revenus par catégorie
+        <motion></motion>
+          <h3>
+            Revenus par catégorie</h3>
           </h3>
-          <div className="mt-4 h-80">
-            <Bar data={revenueData} options={chartOptions} />
+          <div></div>
+            <Bar></Bar>
           </div>
         </motion.div>
       </div>
-    </div>
-  );
-}
-export const dynamic = "force-dynamic";
+    </div>);
+export const dynamic  = "force-dynamic";
+`

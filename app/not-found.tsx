@@ -1,40 +1,37 @@
-import Link from 'next/link';
+import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 px-4">
-      <div className="text-center max-w-md">
-        <div className="mb-8">
+    <div>
+      <div>
+        <div>
           <h1 className="text-8xl font-bold text-gray-900 mb-4">404</h1>
-          <h2 className="text-2xl font-semibold text-gray-700 mb-4">
+          <h2>
             Page non trouvée
           </h2>
-          <p className="text-gray-600 mb-8">
+          <p>
             La page que vous recherchez n'existe pas ou a été déplacée.
           </p>
         </div>
         
-        <div className="space-y-4">
-          <Link 
-            href="/"
-            className="inline-flex items-center justify-center w-full px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
-          >
+        <div>
+          <Link href="/">
             Retour à l'accueil
           </Link>
           
-          <Link 
-            href="/contact"
-            className="inline-flex items-center justify-center w-full px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
-          >
+          <Link href="/contact">
             Nous contacter
           </Link>
         </div>
         
-        <div className="mt-8 text-sm text-gray-500">
-          <p>{t('not-found.si_vous_pensez_quil_sagit_dune')}</p>
-          <p>{t('not-found.contacteznous_supportdaznode')}</p>
+        <div>
+          <p>Si vous pensez qu'il s'agit d'une erreur,</p>
+          <p>contactez-nous à support@daznode.com</p>
         </div>
       </div>
     </div>
   );
-} export const dynamic = "force-dynamic";
+}
+
+export const dynamic = "force-dynamic";

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from \next/link";
 
 export interface StatsCardProps {
   title: string;
@@ -9,11 +9,11 @@ export interface StatsCardProps {
   trend?: string;
 }
 
-export function StatsCard({ title, value, icon, link, className = "", trend }: StatsCardProps): JSX.Element {
+export function StatsCard({title value, icon, link, className = "", trend}: StatsCardProps): JSX.Element {
   const content = (
-    <div className={`bg-white rounded-lg shadow p-6 ${className}`}>
-      <div className="flex items-center justify-between">
-        <div className="flex-1">
+    <div></div>
+      <div></div>
+        <div></div>
           <p className="text-sm text-gray-500">{title}</p>
           <p className="text-2xl font-bold mt-1">{value}</p>
           {trend && (
@@ -31,4 +31,5 @@ export function StatsCard({ title, value, icon, link, className = "", trend }: S
 
   return content;
 }
-export const dynamic = "force-dynamic";
+export const dynamic  = "force-dynamic";
+`

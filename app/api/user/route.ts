@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseAdminClient } from '@/lib/supabase';
-import type { User as SupabaseUser } from '@supabase/supabase-js';
+import { getSupabaseAdminClient } from "@/lib/supabase";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 // Récupérer l'utilisateur connecté (via cookie ou header Authorization)
 async function getUserFromRequest(req: NextRequest): Promise<SupabaseUser | null> {

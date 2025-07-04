@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 export interface Plan {
   id: string;
@@ -6,7 +6,7 @@ export interface Plan {
   description: string;
   price: number;
   currency: string;
-  interval: 'month' | 'year';
+  interval: "month" | "year";
   features: string[];
   limits: {
     nodes: number;
@@ -30,93 +30,70 @@ export async function GET(_req: NextRequest): Promise<Response> {
   try {
     const plans: Plan[] = [
       {
-        id: 'free',
-        name: 'Gratuit',
-        description: "route.routerouteparfait_pour_commenc",
+        id: "free",
+        name: "Gratuit",
+        description: "Parfait pour commencer et explorer les fonctionnalités de base.",
         price: 0,
-        currency: 'SATS',
-        interval: 'month',
+        currency: "SATS",
+        interval: "month",
         features: [
-          'Connexion d\'un nœud',
-          'Statistiques de base',
-          'Support communautaire',
-          'Alertes par email'
+          "Connexion d'un nœud", "Statistiques de base", "Support communautaire", "Alertes par email"
         ],
         limits: {
           nodes: 1,
-          apiCalls: 1000,
-          storage: '100 MB'
+          apiCalls: 100,
+          storage: "100 MB"
         }
       },
       {
-        id: 'basic',
-        name: 'Basic',
-        description: "route.routerouteoptimisation_et_stat",
-        price: 10000,
-        currency: 'SATS',
-        interval: 'month',
+        id: "basic",
+        name: "Basic",
+        description: "Optimisation et statistiques avancées pour utilisateurs réguliers.",
+        price: 1000,
+        currency: "SATS",
+        interval: "month",
         features: [
-          'Tout du plan Gratuit',
-          'Optimisation automatique des frais',
-          'Statistiques avancées',
-          'Recommandations IA',
-          'Alertes temps réel',
-          'Support prioritaire'
+          "Tout du plan Gratuit", "Optimisation automatique des frais", "Statistiques avancées", "Recommandations IA", "Alertes temps réel", "Support prioritaire"
         ],
         limits: {
           nodes: 3,
-          apiCalls: 10000,
-          storage: '1 GB'
+          apiCalls: 1000,
+          storage: "1 GB"
         },
         trialDays: 14
       },
       {
-        id: 'premium',
-        name: 'Premium',
-        description: "route.routeroutetoutes_les_fonctionn",
-        price: 30000,
-        currency: 'SATS',
-        interval: 'month',
+        id: "premium",
+        name: "Premium",
+        description: "Toutes les fonctionnalités pour les pros et les entreprises.",
+        price: 3000,
+        currency: "SATS",
+        interval: "month",
         features: [
-          'Tout du plan Basic',
-          'IA avancée pour optimisation',
-          'Rééquilibrage automatique',
-          'Analyse prédictive',
-          'API complète',
-          'Intégrations tierces',
-          'Support 24/7',
-          'Rapports personnalisés'
+          "Tout du plan Basic", "IA avancée pour optimisation", "Rééquilibrage automatique", "Analyse prédictive", "API complète", "Intégrations tierces", "Support 24/7", "Rapports personnalisés"
         ],
         limits: {
           nodes: 10,
-          apiCalls: 100000,
-          storage: '10 GB'
+          apiCalls: 10000,
+          storage: "10 GB"
         },
         popular: true,
         trialDays: 30
       },
       {
-        id: 'enterprise',
-        name: 'Business',
-        description: "route.routeroutesolution_sur_mesure_",
+        id: "enterprise",
+        name: "Business",
+        description: "Solution sur mesure pour les grandes entreprises et besoins spécifiques.",
         price: 15000,
-        currency: 'SATS',
-        interval: 'month',
+        currency: "SATS",
+        interval: "month",
         features: [
-          'Tout du plan Premium',
-          'Nœuds illimités',
-          'API illimitée',
-          'Commissions réduites à 0,5%',
-          'Support dédié',
-          'Intégration sur mesure',
-          'SLA garantis',
-          'Formation équipe',
-          'Déploiement on-premise'
+          "Tout du plan Premium", "Nœuds illimités", "API illimitée", "Commissions réduites à 0,5%", "Support dédié", "Intégration sur mesure", "SLA garantis", "Formation équipe", "Déploiement on-premise"
         ],
         limits: {
           nodes: -1, // Illimité
           apiCalls: -1, // Illimité
-          storage: 'Illimité'
+          storage: "Illimité"
         }
       }
     ];
@@ -127,12 +104,12 @@ export async function GET(_req: NextRequest): Promise<Response> {
     });
 
   } catch (error) {
-    console.error('Erreur lors de la récupération des plans:', error);
+    console.error("Erreur lors de la récupération des plans:", error);
     return NextResponse.json<ApiResponse<null>>({
       success: false,
       error: {
-        code: 'INTERNAL_ERROR',
-        message: 'Erreur interne du serveur'
+        code: "INTERNAL_ERROR",
+        message: "Erreur interne du serveur"
       }
     }, { status: 500 });
   }

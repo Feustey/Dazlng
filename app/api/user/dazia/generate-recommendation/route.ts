@@ -1,20 +1,20 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { createDaznoApiClient } from '@/lib/services/dazno-api'
-import { getSupabaseServerPublicClient } from '@/lib/supabase'
-import { z } from 'zod'
+import { NextRequest, NextResponse } from "next/server"
+import { createDaznoApiClient } from "@/lib/services/dazno-api"
+import { getSupabaseServerPublicClient } from "@/lib/supabase"
+import { z } from "zod"
 
 export interface DailyRecommendation {
   id: string
   title: string
   description: string
-  impact: 'low' | 'medium' | 'high'
-  difficulty: 'easy' | 'medium' | 'hard'
+  impact: "low" | "medium" | "high"
+  difficulty: "easy" | "medium" | "hard"
   timeEstimate: string
   implementationSteps: string[]
   successCriteria: string[]
   category: string
   priority: number
-  status: 'pending' | 'completed' | 'skipped'
+  status: "pending" | "completed" | "skipped"
   createdAt: string
   updatedAt: string
 }
@@ -25,8 +25,8 @@ export interface GeneratedRecommendation {
   description: string
   category: string
   priority: number
-  impact: 'low' | 'medium' | 'high'
-  difficulty: 'easy' | 'medium' | 'hard'
+  impact: "low" | "medium" | "high"
+  difficulty: "easy" | "medium" | "hard"
   estimated_time: string
   implementation_steps: string[]
   success_criteria: string[]
@@ -75,10 +75,10 @@ export interface FallbackData {
 
 // Validation schema
 const _recommendationSchema = z.object({
-  pubkey: z.string().min(66).max(66),
-  category: z.enum(['channels', 'fees', 'liquidity', 'routing', 'security']).optional(),
+  pubkey: z.string().min(66).max(66,),
+  category: z.enum(["channels", "fees", "liquidity", "routing", "security"]).optional(),
   priority: z.number().min(1).max(5).optional(),
-  status: z.enum(['pending', 'completed', 'skipped']).optional()
+  status: z.enum(["pending", "completed", "skipped"]).optional()
 })
 
 export async function POST(_request: NextRequest): Promise<Response> {
@@ -87,12 +87,12 @@ export async function POST(_request: NextRequest): Promise<Response> {
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
     if (sessionError || !session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+      return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     }
 
     const pubkey = session.user?.user_metadata?.pubkey || null;
     if (!pubkey) {
-      return NextResponse.json({ error: 'Aucun nœud associé' }, { status: 400 });
+      return NextResponse.json({ error: "Aucun nœud associé" }, { status: 400 });
     }
 
     const daznoApi = createDaznoApiClient();
@@ -102,9 +102,9 @@ export async function POST(_request: NextRequest): Promise<Response> {
     return NextResponse.json({ success: true, data: recommendations });
 
   } catch (error) {
-    console.error('Erreur génération recommandation:', error);
+    console.error("Erreur génération recommandation:", error);
     return NextResponse.json(
-      { error: 'Erreur lors de la génération des recommandations' },
+      { error: "Erreur lors de la génération des recommandations" },
       { status: 500 }
 );
   }
@@ -120,8 +120,8 @@ function _generateFallbackDaziaData(pubkey: string): FallbackData {
   return {
     nodeInfo: {
       pubkey,
-      alias: 'Node Offline',
-      color: '#000000',
+      alias: "Node Offline",
+      color: "#000000",
       addresses: [],
       capacity: 0,
       channels: [],
@@ -139,60 +139,57 @@ function _generateFallbackDaziaData(pubkey: string): FallbackData {
 }
 
 function _generateSmartDescription(action: ActionData, nodeInfo: NodeInfoBasic): string {
-  const baseDescription = action.action || 'Optimiser votre nœud Lightning'
-  const nodeContext = nodeInfo.alias ? ` pour ${nodeInfo.alias}` : ''
-  const impact = action.expected_impact ? ` pour ${action.expected_impact}` : ''
-  
-  return `${baseDescription}${nodeContext}${impact}`
+  const baseDescription = action.action || "Optimiser votre nœud Lightning";
+  const nodeContext = nodeInfo.alias ? ` pour ${nodeInfo.alias}` : '';
+  const impact = action.expected_impact ? ` pour ${action.expected_impact}` : '';
+  return `${baseDescription}${nodeContext}${impact}`;
 }
 
-function _mapImpact(impact: string | undefined): 'low' | 'medium' | 'high' {
-  if (!impact) return 'medium'
+function _mapImpact(impact: string | undefined): "low" | "medium" | "high" {
+  if (!impact) return "medium"
   const normalized = impact.toLowerCase()
-  if (normalized.includes('high') || normalized.includes('fort')) return 'high'
-  if (normalized.includes('low') || normalized.includes('faible')) return 'low'
-  return 'medium'
+  if (normalized.includes("high") || normalized.includes("fort")) return "high"
+  if (normalized.includes("low") || normalized.includes("faible")) return "low"
+  return "medium"
 }
 
-function _mapDifficulty(difficulty: string | undefined): 'easy' | 'medium' | 'hard' {
-  if (!difficulty) return 'medium'
+function _mapDifficulty(difficulty: string | undefined): "easy" | "medium" | "hard" {
+  if (!difficulty) return "medium"
   const normalized = difficulty.toLowerCase()
-  if (normalized.includes('easy') || normalized.includes('facile')) return 'easy'
-  if (normalized.includes('hard') || normalized.includes('difficile')) return 'hard'
-  return 'medium'
+  if (normalized.includes("easy") || normalized.includes("facile")) return "easy"
+  if (normalized.includes("hard") || normalized.includes("difficile")) return "hard"
+  return "medium"
 }
 
 function _generateTimeEstimate(difficulty: string | undefined): string {
   switch(_mapDifficulty(difficulty)) {
-    case 'easy': return '15-30 minutes'
-    case 'hard': return '2-4 heures'
-    default: return '1-2 heures'
+    case "easy": return "15-30 minutes";
+    case "hard": return "2-4 heures";
+    default: return "1-2 heures";
   }
 }
 
 function _generateImplementationSteps(action: ActionData): string[] {
   if (action.steps && action.steps.length > 0) {
-    return action.steps
+    return action.steps;
   }
-
   return [
-    'Analyser la situation actuelle',
-    'Préparer les changements nécessaires',
-    'Appliquer les modifications',
-    'Vérifier les résultats'
-  ]
+    "Analyser la situation actuelle",
+    "Préparer les changements nécessaires",
+    "Appliquer les modifications",
+    "Vérifier les résultats"
+  ];
 }
 
 function _generateSuccessCriteria(action: ActionData): string[] {
   if (action.success_metrics && action.success_metrics.length > 0) {
-    return action.success_metrics
+    return action.success_metrics;
   }
-
   return [
-    'Amélioration mesurable des performances',
-    'Aucun impact négatif sur la stabilité',
-    'Retour positif des pairs connectés'
-  ]
+    "Amélioration mesurable des performances",
+    "Aucun impact négatif sur la stabilité",
+    "Retour positif des pairs connectés"
+  ];
 }
 
 export const dynamic = "force-dynamic";

@@ -1,26 +1,22 @@
 "use client";
 
-import React from 'react';
+import React from "react";
 
 export interface NotificationBadgeProps {
   count?: number;
   show: boolean;
 }
 
-export const NotificationBadge: React.FC<NotificationBadgeProps> = ({ count = 0, show }) => {
+export const NotificationBadge: React.FC<NotificationBadgeProps> = ({ count = ,0, show}) => {
   if (!show || count === 0) return null;
 
-  return (
-    <span
-      className="absolute -top-2 -right-2 min-w-[18px] h-[18px] rounded-full bg-[#F7931A] flex items-center justify-center px-1.5 animate-scale-in"
-    >
+  return (</NotificationBadgeProps>
+    <span></span>
       <span className="text-white text-xs font-semibold">{count}</span>
-    </span>
-  );
-}
+    </span>);
 
 export default NotificationBadge;
 
 // Ajoute dans ton CSS global ou tailwind.config.js :
 // @keyframes scale-in { from { transform: scale(0); } to { transform: scale(1); } }
-// .animate-scale-in { animation: scale-in 0.3s cubic-bezier(0.4,0,0.2,1); } 
+// .animate-scale-in { animation: scale-in 0.3s cubic-bezier(0.,4.0,0.2.1); } 

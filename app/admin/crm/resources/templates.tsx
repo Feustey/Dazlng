@@ -1,5 +1,5 @@
-import React from 'react';
-import { FileText } from '@/components/shared/ui/IconRegistry';
+import React from "react";
+import { FileText } from "@/components/shared/ui/IconRegistry";
 import {
   List,
   Datagrid,
@@ -17,16 +17,21 @@ import {
   EditButton,
   ShowButton,
   DeleteButton,
-  useRecordContext,
-} from 'react-admin';
-
+  useRecordContext
+} from "react-admin";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
 
 // Actions personnalisées
-const ListActions = () => (
-  <TopToolbar>
-    {/* Actions pour les templates */}
-  </TopToolbar>
+const ListActions = () => {
+  const { t } = useAdvancedTranslation("common");
+
+  return (
+    <TopToolbar>
+      {/* Actions pour les templates */}
+    </TopToolbar>
   );
+};
+
 const RowActions = () => {
   const record = useRecordContext();
   if (!record) return null;
@@ -42,96 +47,90 @@ const RowActions = () => {
 
 // Liste des templates
 export const TemplateList = () => (
-  <List 
-    title="admin.adminadmintemplates_email"
-    actions={<ListActions />}
+  <List
     perPage={25}
-    sort={{ field: 'created_at', order: 'DESC' }}
+    sort={{ field: "created_at", order: "DESC" }}
   >
-    <Datagrid rowClick="show">
-      <TextField source="name" label="Nom du template" />
-      <TextField source="subject" label="Sujet par défaut" />
-      <TextField source="category" label="Catégorie" />
-      <BooleanField source="is_active" label="Actif" />
-      <DateField source="created_at" label="Créé le" />
+    <Datagrid>
+      <TextField source="id" />
+      <TextField source="name" />
+      <TextField source="subject" />
+      <BooleanField source="is_active" />
+      <DateField source="created_at" />
       <RowActions />
     </Datagrid>
   </List>
-  );
+);
+
 // Affichage détaillé d'un template
 export const TemplateShow = () => (
-  <Show title="admin.adminadmindtails_du_template">
+  <Show>
     <SimpleShowLayout>
-      <TextField source="id" label="ID" />
-      <TextField source="name" label="Nom du template" />
-      <TextField source="subject" label="Sujet par défaut" />
-      <TextField source="content" label="Contenu HTML" />
-      <TextField source="variables" label="Variables disponibles (JSON)" />
-      <TextField source="category" label="Catégorie" />
-      <BooleanField source="is_active" label="Actif" />
-      <DateField source="created_at" label="Date de création" />
-      <DateField source="updated_at" label="Dernière mise à jour" />
+      <TextField source="id" />
+      <TextField source="name" />
+      <TextField source="subject" />
+      <TextField source="content" />
+      <TextField source="variables" />
+      <TextField source="category" />
+      <BooleanField source="is_active" />
+      <DateField source="created_at" />
+      <DateField source="updated_at" />
     </SimpleShowLayout>
   </Show>
-  );
+);
+
 // Édition d'un template
 export const TemplateEdit = () => (
-  <Edit title="admin.adminadminmodifier_le_template">
+  <Edit>
     <SimpleForm>
-      <TextInput source="name" label="Nom du template" required fullWidth />
-      <TextInput source="subject" label="Sujet par défaut" fullWidth />
-      <TextInput source="content" label="Contenu HTML" multiline rows={15} fullWidth />
-      <TextInput source="variables" label="Variables (JSON)" multiline rows={5} fullWidth />
-      <TextInput source="category" label="Catégorie" fullWidth />
-      <BooleanInput source="is_active" label="Template actif" />
+      <TextInput source="name" />
+      <TextInput source="subject" />
+      <TextInput source="content" multiline rows={10} />
+      <TextInput source="variables" />
+      <TextInput source="category" />
+      <BooleanInput source="is_active" />
     </SimpleForm>
   </Edit>
-  );
+);
+
 // Création d'un nouveau template
-export const TemplateCreate = () => (
-  <Create title="admin.adminadmincrer_un_template">
-    <SimpleForm>
-      <TextInput source="name" label="Nom du template" required fullWidth />
-      <TextInput source="subject" label="Sujet par défaut" fullWidth />
-      <TextInput 
-        source="content" 
-        label="Contenu HTML" 
-        multiline 
-        rows={15} 
-        fullWidth 
-        defaultValue={`<!DOCTYPE html>
+export const TemplateCreate = () => {
+  const defaultTemplate = `<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <title>{{subject}}</title>
 </head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-    <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+<body>
+    <div>
         <h1 style="color: #4f46e5;">Bonjour {{prenom}} !</h1>
-        <p>{t('admin.contenu_de_votre_email')}</p>
-        <div style="margin: 30px 0;">
-            <a href="{{dashboard_url}}" style="background: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;">
+        <p>Contenu de votre email</p>
+        <div>
+            <a href="{{dashboard_url}}">
                 Accéder au dashboard
             </a>
         </div>
-        <p>{t('admin.lquipe_daznode')}</p>
+        <p>L'équipe DazNode</p>
     </div>
 </body>
-</html>`}
-      />
-      <TextInput 
-        source="variables" 
-        label="Variables (JSON)" 
-        multiline 
-        rows={5} 
-        fullWidth 
-        defaultValue='{"prenom": "Prénom du client", "subject": "Sujet de email", "dashboard_url": "URL du dashboard"}'
-      />
-      <TextInput source="category" label="Catégorie" fullWidth defaultValue="general" />
-      <BooleanInput source="is_active" label="Template actif" defaultValue={true} />
-    </SimpleForm>
-  </Create>
+</html>`;
+
+  const defaultVariables = '{"prenom": "Prénom du client", "subject": "Sujet de \'email", "dashboard_url": "URL du dashboard"}';
+
+  return (
+    <Create>
+      <SimpleForm>
+        <TextInput source="name" />
+        <TextInput source="subject" />
+        <TextInput source="content" multiline rows={10} defaultValue={defaultTemplate} />
+        <TextInput source="variables" defaultValue={defaultVariables} />
+        <TextInput source="category" />
+        <BooleanInput source="is_active" defaultValue={true} />
+      </SimpleForm>
+    </Create>
   );
+};
+
 // Configuration de la ressource
 export const templateResource = {
   list: TemplateList,
@@ -139,6 +138,5 @@ export const templateResource = {
   edit: TemplateEdit,
   create: TemplateCreate,
   icon: FileText,
-  options: { label: 'Templates' }
-}
-export const dynamic = "force-dynamic";
+  options: { label: "Templates" }
+};

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseAdminClient } from '@/lib/supabase';
+import { getSupabaseAdminClient } from "@/lib/supabase";
 import { profileUpdateSchema, validateData } from "@/lib/validations";
 import { ApiResponse } from "@/types/database";
 
@@ -12,7 +12,7 @@ async function getUserFromRequest(req: NextRequest) {
 }
 
 // GET /api/users/me/profile - Récupération du profil complet
-export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {
@@ -77,7 +77,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> 
 }
 
 // PATCH /api/users/me/profile - Mise à jour partielle du profil
-export async function PATCH(req: NextRequest): Promise<NextResponse<ApiResponse>> {
+export async function PATCH(req: NextRequest): Promise<NextResponse> {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {
@@ -107,18 +107,16 @@ export async function PATCH(req: NextRequest): Promise<NextResponse<ApiResponse>
     const updateData: any = {};
     
     // Mise à jour des champs de base
-    if (validation.data.firstname) updateData.prenom = validation.data.firstname;
-    if (validation.data.lastname) updateData.nom = validation.data.lastname;
-    if (validation.data.phone) updateData.phone = validation.data.phone;
+    if (validation.data.prenom) updateData.prenom = validation.data.prenom;
+    if (validation.data.nom) updateData.nom = validation.data.nom;
+    if (validation.data.pubkey) updateData.pubkey = validation.data.pubkey;
+    if (validation.data.compte_x) updateData.compte_x = validation.data.compte_x;
+    if (validation.data.compte_nostr) updateData.compte_nostr = validation.data.compte_nostr;
+    if (validation.data.node_id) updateData.node_id = validation.data.node_id;
     
-    // Mise à jour des préférences
-    if (validation.data.preferences) {
-      updateData.preferences = validation.data.preferences;
-    }
-    
-    // Mise à jour des liens sociaux
-    if (validation.data.socialLinks) {
-      updateData.social_links = validation.data.socialLinks;
+    // Mise à jour des paramètres
+    if (validation.data.settings) {
+      updateData.settings = validation.data.settings;
     }
 
     updateData.updated_at = new Date().toISOString();
@@ -164,14 +162,13 @@ export async function PATCH(req: NextRequest): Promise<NextResponse<ApiResponse>
 // Fonction utilitaire pour calculer le pourcentage de complétion du profil
 function calculateProfileCompletion(profile: any): number {
   const fields = [
-    'nom', 'prenom', 'email', 'phone', 'pubkey',
-    'preferences', 'social_links', 'privacy_settings'
+    "nom", "prenom", "email", "phone", "pubkey", "preferences", "social_links", "privacy_settings"
   ];
   
   const completedFields = fields.filter(field => {
     const value = profile[field];
-    if (typeof value === 'string') return value && value.trim().length > 0;
-    if (typeof value === 'object') return value && Object.keys(value).length > 0;
+    if (typeof value === "string") return value && value.trim().length > 0;
+    if (typeof value === "object") return value && Object.keys(value).length > 0;
     return !!value;
   });
 

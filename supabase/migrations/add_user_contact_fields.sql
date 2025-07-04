@@ -3,29 +3,29 @@
 -- Description: Ajout des champs adresse et Telegram pour enrichir les profils utilisateur
 
 -- 1. Ajouter le champ adresse complète
-ALTER TABLE public.profiles 
+ALTER TABLE public.profiles;
 ADD COLUMN IF NOT EXISTS address TEXT;
 
--- 2. Ajouter les champs d'adresse détaillés
-ALTER TABLE public.profiles 
+-- 2. Ajouter les champs d'adresse détaillés'
+ALTER TABLE public.profiles;
 ADD COLUMN IF NOT EXISTS ville TEXT;
 
-ALTER TABLE public.profiles 
+ALTER TABLE public.profiles;
 ADD COLUMN IF NOT EXISTS code_postal TEXT;
 
-ALTER TABLE public.profiles 
+ALTER TABLE public.profiles;
 ADD COLUMN IF NOT EXISTS pays TEXT DEFAULT 'France';
 
 -- 3. Ajouter le champ compte Telegram
-ALTER TABLE public.profiles 
+ALTER TABLE public.profiles;
 ADD COLUMN IF NOT EXISTS compte_telegram TEXT;
 
 -- 4. Ajouter des contraintes de validation
-ALTER TABLE public.profiles 
+ALTER TABLE public.profiles;
 ADD CONSTRAINT valid_telegram_format 
 CHECK (compte_telegram IS NULL OR compte_telegram ~ '^@[a-zA-Z0-9_]{5,32}$');
 
-ALTER TABLE public.profiles 
+ALTER TABLE public.profiles;
 ADD CONSTRAINT valid_postal_code_format 
 CHECK (code_postal IS NULL OR code_postal ~ '^[0-9]{5}$');
 
@@ -37,7 +37,7 @@ CREATE INDEX IF NOT EXISTS idx_profiles_telegram ON public.profiles(compte_teleg
 -- 6. Mettre à jour la fonction de calcul du score de profil
 CREATE OR REPLACE FUNCTION calculate_profile_score(profile_record public.profiles)
 RETURNS INTEGER AS $$
-DECLARE
+DECLARE;
   score INTEGER := 0;
 BEGIN
   -- Email vérifié (15 points)
@@ -82,12 +82,12 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- 7. Mettre à jour les scores existants
-UPDATE public.profiles 
+UPDATE public.profiles;
 SET profile_score = calculate_profile_score(profiles.*);
 
 -- 8. Mettre à jour la vue des statistiques
-CREATE OR REPLACE VIEW profile_completion_stats AS
-SELECT 
+CREATE OR REPLACE VIEW profile_completion_stats AS;
+SELECT;
   COUNT(*) as total_profiles,
   COUNT(CASE WHEN email_verified THEN 1 END) as verified_emails,
   COUNT(CASE WHEN pubkey IS NOT NULL AND pubkey != '' THEN 1 END) as with_pubkey,
@@ -104,7 +104,7 @@ FROM public.profiles;
 -- 9. Mettre à jour la fonction des champs manquants
 CREATE OR REPLACE FUNCTION get_missing_profile_fields(user_id UUID)
 RETURNS JSON AS $$
-DECLARE
+DECLARE;
   profile_record public.profiles;
   missing_fields JSON;
 BEGIN

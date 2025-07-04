@@ -1,4 +1,4 @@
-import { getSupabaseAdminClient } from '@/lib/supabase';
+import { getSupabaseAdminClient } from "@/lib/supabase";
 
 export interface RateLimitConfig {
   maxAttempts: number;
@@ -13,9 +13,9 @@ export class RateLimitService {
 
   /**
    * Vérifie si une action est autorisée selon les limites de taux
-   */
+   *
   async checkRateLimit(
-    identifier: string, 
+    identifier: string,
     config: Partial<RateLimitConfig> = {}
   ): Promise<{ allowed: boolean; remaining: number; resetTime: Date }> {
     const finalConfig = { ...this.defaultConfig, ...config };
@@ -23,17 +23,17 @@ export class RateLimitService {
     const windowStart = now - finalConfig.windowMs;
 
     // Nettoyer les anciennes tentatives
-    await (this ?? Promise.reject(new Error("this is null"))).cleanupOldAttempts(identifier, windowStart);
+    await this.cleanupOldAttempts(identifier, windowStart);
 
     // Compter les tentatives récentes
     const { data: attempts, error } = await getSupabaseAdminClient()
-      .from('rate_limit_attempts')
-      .select('created_at')
-      .eq('identifier', identifier)
-      .gte('created_at', windowStart);
+      .from("rate_limit_attempts")
+      .select("created_at")
+      .eq("identifier", identifier)
+      .gte("created_at", windowStart);
 
     if (error) {
-      console.error('[RATE-LIMIT] Erreur lecture tentatives:', error);
+      console.error("[RATE-LIMIT] Erreur lecture tentatives:", error);
       // En cas d'erreur, on autorise par défaut
       return {
         allowed: true,
@@ -49,7 +49,7 @@ export class RateLimitService {
     if (allowed) {
       // Enregistrer cette tentative
       await getSupabaseAdminClient()
-        .from('rate_limit_attempts')
+        .from("rate_limit_attempts")
         .insert({
           identifier,
           created_at: now
@@ -65,23 +65,23 @@ export class RateLimitService {
 
   /**
    * Nettoie les anciennes tentatives
-   */
+   *
   private async cleanupOldAttempts(identifier: string, windowStart: number): Promise<void> {
     await getSupabaseAdminClient()
-      .from('rate_limit_attempts')
+      .from("rate_limit_attempts")
       .delete()
-      .eq('identifier', identifier)
-      .lt('created_at', windowStart);
+      .eq("identifier", identifier)
+      .lt("created_at", windowStart);
   }
 
   /**
    * Nettoie toutes les tentatives expirées
-   */
+   *
   async cleanupExpiredAttempts(): Promise<void> {
     const cutoff = Date.now() - (24 * 60 * 60 * 1000); // 24 heures
     await getSupabaseAdminClient()
-      .from('rate_limit_attempts')
+      .from("rate_limit_attempts")
       .delete()
-      .lt('created_at', cutoff);
+      .lt("created_at", cutoff);
   }
 }

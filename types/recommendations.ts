@@ -45,23 +45,29 @@ export interface EnhancedRecommendation {
   metadata?: Record<string, any>;
 }
 
-export interface DailyRecommendation extends BaseRecommendation {
-  implementation_steps?: string[];
-  success_criteria?: string[];
-  action?: string;
-  expected_impact?: string;
-  timeline?: string;
-  urgency?: string;
-  estimated_time?: string;
-  implementation_details?: {
-    steps?: string[];
-    requirements?: string[];
-    estimated_hours?: number;
-  };
+export interface DailyRecommendation {
+  id: string;
+  type: 'channel_optimization' | 'fee_adjustment' | 'liquidity_management' | 'network_growth';
+  title: string;
+  description: string;
+  impact: 'low' | 'medium' | 'high';
+  implementation_difficulty: 'easy' | 'medium' | 'hard';
+  estimated_revenue_impact: number;
+  estimated_risk: number;
+  steps: string[];
+  prerequisites: string[];
+  created_at: string;
+  expires_at?: string;
+  metadata: Record<string, any>;
+}
+
+export interface RecommendationContext {
+  dailyRecommendation: DailyRecommendation | null;
+  userPreferences: Record<string, any>;
 }
 
 export interface DaziaData {
   recommendations: EnhancedRecommendation[];
   dailyRecommendation: DailyRecommendation | null;
   completedActions: Set<string>;
-} 
+}

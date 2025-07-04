@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { withAdminAuth, handleApiError } from '@/lib/api-utils';
-import { getSupabaseAdminClient } from '@/lib/supabase';
+import { NextRequest, NextResponse } from "next/server";
+import { withAdminAuth, handleApiError } from "@/lib/api-utils";
+import { getSupabaseAdminClient } from "@/lib/supabase";
 
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 /**
  * GET /api/admin/stats - Statistiques basiques pour l'interface admin
@@ -22,7 +22,7 @@ export async function GET(req: NextRequest): Promise<Response> {
         .select("id", { count: "exact", head: true })
         .eq("status", "active");
       
-      // Revenu total (somme des paiements status 'paid')
+      // Revenu total (somme des paiements status "paid")
       const { data: payments, error: paymentsError } = await getSupabaseAdminClient()
         .from("payments")
         .select("amount, status");
@@ -52,7 +52,7 @@ export async function GET(req: NextRequest): Promise<Response> {
           version: "1.0",
           stats: {
             total: 4,
-            period: 'current'
+            period: "current"
           }
         }
       });

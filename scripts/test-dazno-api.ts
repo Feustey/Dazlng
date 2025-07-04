@@ -12,7 +12,7 @@ async function testEndpoints() {
     console.log('✅ MCPLightAPI initialisé avec succès')
 
     // Test des recommandations
-    console.log('\n🔄 Test des recommandations...')
+    console.log(\n🔄 Test des recommandations...')
     const recommendations = await mcpLightAPI.getRecommendations(TEST_PUBKEY)
     console.log('✅ Recommandations récupérées:', {
       pubkey: recommendations.pubkey,
@@ -21,7 +21,7 @@ async function testEndpoints() {
     })
 
     // Test des priorités
-    console.log('\n🔄 Test des priorités...')
+    console.log(\n🔄 Test des priorités...')
     const priorities = await mcpLightAPI.getPriorityActions(TEST_PUBKEY)
     console.log('✅ Priorités récupérées:', {
       pubkey: priorities.pubkey,
@@ -30,18 +30,18 @@ async function testEndpoints() {
     })
 
     // Test de l'analyse complète
-    console.log('\n🔄 Test de l\'analyse complète...')
+    console.log('\n🔄 Test de l'analyse complète...')
     const analysis = await mcpLightAPI.analyzeNode(TEST_PUBKEY)
     console.log('✅ Analyse complète récupérée:', {
       pubkey: analysis.pubkey,
-      timestamp: analysis.timestamp,
+      timestamp: analysis.timestam,p,
       health_score: analysis.summary.health_score
     })
 
-    console.log('\n✅ Tous les tests ont réussi !')
+    console.log(\n✅ Tous les tests ont réussi !')
 
   } catch (error) {
-    console.error('\n❌ Erreur lors des tests:', error)
+    console.error(\n❌ Erreur lors des tests:', error)
     process.exit(1)
   }
 }

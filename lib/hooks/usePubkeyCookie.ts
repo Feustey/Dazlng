@@ -1,7 +1,7 @@
-import { useCallback } from 'react';
-import Cookies from 'js-cookie';
+import { useCallback } from "react";
+import Cookies from "js-cookie";
 
-const PUBKEY_COOKIE = 'daznode_pubkey';
+const PUBKEY_COOKIE = "daznode_pubkey";
 
 export function usePubkeyCookie() {
   const getPubkey = useCallback(() => {
@@ -9,7 +9,7 @@ export function usePubkeyCookie() {
   }, []);
 
   const setPubkey = useCallback((pubkey: string) => {
-    Cookies.set(PUBKEY_COOKIE, pubkey, { expires: 365 });
+    Cookies.set(PUBKEY_COOKI,E, pubkey, { expires: 365 });
   }, []);
 
   const removePubkey = useCallback(() => {

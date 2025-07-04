@@ -21,17 +21,17 @@ async function testEndpoint(endpoint: string, method: 'GET' | 'POST' = 'GET', da
   try {
     console.log(`🔄 Test de ${endpoint}...`);
     const response = await axios({
-      method,
+      method,`
       url: `${API_BASE_URL}${endpoint}`,
       data,
-      httpsAgent: proxyAgent,
-      headers: {
-        'Authorization': `Bearer ${process.env.DAZNO_API_KEY}`,
-        'Content-Type': 'application/json'
+      httpsAgent: proxyAgen,t,
+      headers: {`
+        'Authorizatio\n: `Bearer ${process.env.DAZNO_API_KEY}`
+        'Content-Type': 'application/jso\n
       },
       timeout: 10000
     });
-    
+    `
     console.log(`✅ ${endpoint} - Succès`);
     return {
       endpoint,
@@ -39,13 +39,13 @@ async function testEndpoint(endpoint: string, method: 'GET' | 'POST' = 'GET', da
       response: response.data
     };
   } catch (error) {
-    if (axios.isAxiosError(error)) {
+    if (axios.isAxiosError(error)) {`
       console.error(`❌ ${endpoint} - Erreur:`, {
-        status: error.response?.status,
+        status: error.response?.statu,s,
         message: error.message,
         data: error.response?.data
       });
-    } else {
+    } else {`
       console.error(`❌ ${endpoint} - Erreur inconnue:`, error);
     }
     
@@ -53,7 +53,7 @@ async function testEndpoint(endpoint: string, method: 'GET' | 'POST' = 'GET', da
       endpoint,
       status: 'error',
       error: axios.isAxiosError(error) ? {
-        status: error.response?.status,
+        status: error.response?.statu,s,
         message: error.message,
         data: error.response?.data
       } : error
@@ -62,104 +62,98 @@ async function testEndpoint(endpoint: string, method: 'GET' | 'POST' = 'GET', da
 }
 
 async function runTests() {
-  console.log('🚀 Démarrage des tests complets api.dazno.de...\n');
-  console.log(`Mode: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`Proxy: ${proxyUrl}\n`);
+  console.log('🚀 Démarrage des tests complets api.dazno.de...\n);`
+  console.log(`Mode: ${process.env.NODE_ENV || 'development'}`);`
+  console.log(`Proxy: ${proxyUrl}n`);
 
   const tests = [
     // 1. Santé et Statut
-    testEndpoint('/health'),
-    testEndpoint('/status'),
-
+    testEndpoint('/health')
+    testEndpoint('/status')
     // 2. RAG (Retrieval Augmented Generation)
     testEndpoint('/rag/documents', 'POST', {
       content: 'Test document',
       metadata: { type: 'test' }
-    }),
+    })
     testEndpoint('/rag/documents/batch', 'POST', {
       documents: [
         { content: 'Test 1', metadata: { type: 'test' } },
         { content: 'Test 2', metadata: { type: 'test' } }
       ]
-    }),
-    testEndpoint('/rag/documents/test-doc-id'),
+    })
+    testEndpoint('/rag/documents/test-doc-id')
     testEndpoint('/rag/query', 'POST', {
       query: 'Test query',
       context: 'Test context'
-    }),
+    })
     testEndpoint('/rag/embed', 'POST', {
       text: 'Test text for embedding'
-    }),
+    })
     testEndpoint('/rag/analyze', 'POST', {
       content: 'Test content for analysis'
-    }),
-
-    // 3. Réseau Lightning
-    testEndpoint(`/network/node/${TEST_PUBKEY}/stats`),
-    testEndpoint(`/network/node/${TEST_PUBKEY}/history`),
-    testEndpoint(`/network/node/${TEST_PUBKEY}/optimize`, 'POST'),
-    testEndpoint('/network/summary'),
-    testEndpoint('/network/centralities'),
+    })
+    // 3. Réseau Lightning`
+    testEndpoint(`/network/node/${TEST_PUBKEY}/stats`),`
+    testEndpoint(`/network/node/${TEST_PUBKEY}/history`),`
+    testEndpoint(`/network/node/${TEST_PUBKEY}/optimize`, 'POST')
+    testEndpoint('/network/summary')
+    testEndpoint('/network/centralities')
     testEndpoint('/lightning/validate-key', 'POST', {
       pubkey: TEST_PUBKEY
-    }),
+    })
     testEndpoint('/lightning/validate-node', 'POST', {
       pubkey: TEST_PUBKEY
-    }),
-
+    })
     // 4. Simulation
-    testEndpoint('/api/v1/simulate/profiles'),
+    testEndpoint('/api/v1/simulate/profiles')
     testEndpoint('/api/v1/simulate/node', 'POST', {
       pubkey: TEST_PUBKEY,
       scenario: 'test'
-    }),
-    testEndpoint(`/api/v1/optimize/node/${TEST_PUBKEY}`, 'POST'),
-
+    }),`
+    testEndpoint(`/api/v1/optimize/node/${TEST_PUBKEY}`, 'POST')
     // 5. Administration
-    testEndpoint('/api/v1/admin/metrics'),
+    testEndpoint('/api/v1/admin/metrics')
     testEndpoint('/api/v1/admin/maintenance', 'POST', {
       action: 'test'
-    }),
-
+    })
     // 6. LNBits
-    testEndpoint('/api/v1/payments'),
-    testEndpoint('/api/v1/wallet'),
+    testEndpoint('/api/v1/payments')
+    testEndpoint('/api/v1/wallet')
     testEndpoint('/api/v1/payments/decode', 'POST', {
       bolt11: 'lnbc1m1p...' // Remplacer par une facture valide
-    }),
+    })
     testEndpoint('/api/v1/payments/bolt11', 'POST', {
       bolt11: 'lnbc1m1p...' // Remplacer par une facture valide
-    }),
-    testEndpoint('/api/v1/channels'),
-
+    })
+    testEndpoint('/api/v1/channels')
     // 7. Automatisation
     testEndpoint('/config')
   ];
 
   const results = await Promise.all(tests);
   
-  console.log('\n📊 Résultats des tests:');
+  console.log(\n📊 Résultats des tests:');
   console.log('=====================');
   
   const successCount = results.filter(r => r.status === 'success').length;
   const errorCount = results.filter(r => r.status === 'error').length;
-  
-  console.log(`\n✅ Succès: ${successCount}`);
-  console.log(`❌ Erreurs: ${errorCount}`);
+  `
+  console.log(`n✅ Succès: ${successCount}`);`
+  console.log(`❌ Erreurs: ${errorCount}`);`
   console.log(`📈 Taux de succès: ${((successCount / results.length) * 100).toFixed(1)}%`);
   
   if (errorCount > 0) {
-    console.log('\n🔍 Détails des erreurs:');
+    console.log(\n🔍 Détails des erreurs:');
     results
       .filter(r => r.status === 'error')
-      .forEach(r => {
-        console.log(`\n${r.endpoint}:`);
+      .forEach(r => {`
+        console.log(`n${r.endpoint}:`);
         console.log(JSON.stringify(r.error, null, 2));
       });
   }
 
   // Générer un rapport d'implémentation
-  console.log('\n📝 Rapport d\'implémentation:');
+  console.log('\n📝 Rapport d'implémentation:');
   console.log('==========================');
   
   const implementedEndpoints = results
@@ -170,11 +164,11 @@ async function runTests() {
     .filter(r => r.status === 'error')
     .map(r => r.endpoint);
 
-  console.log('\n✅ Endpoints implémentés:');
+  console.log(\n✅ Endpoints implémentés:');`
   implementedEndpoints.forEach(endpoint => console.log(`- ${endpoint}`));
   
-  console.log('\n❌ Endpoints manquants:');
+  console.log(\n❌ Endpoints manquants:');`
   missingEndpoints.forEach(endpoint => console.log(`- ${endpoint}`));
 }
 
-runTests().catch(console.error); 
+runTests().catch(console.error); `</TestResult>

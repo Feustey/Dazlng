@@ -1,66 +1,67 @@
 "use client";
 import React, { useEffect, useState, Suspense } from "react";
 import nextDynamic from "next/dynamic";
-import DazFlowShowcase from '@/components/shared/ui/DazFlowShowcase';
+import DazFlowShowcase from "@/components/shared/ui/DazFlowShowcase";
 import { useSearchParams } from "next/navigation";
-import { useAdvancedTranslation } from '@/hooks/useAdvancedTranslation';
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
+
 // Lazy loading des composants pour optimiser le First Load
 const NewRevenueHero = nextDynamic(() => import("@/components/shared/ui/NewRevenueHero"), {
-  loading: () => <div className="h-screen bg-gradient-to-br from-green-600 via-blue-700 to-purple-800 animate-pulse" />
+  loading: () => <div>Loading...</div>
 });
 
 const WhyBecomeNodeRunner = nextDynamic(() => import("@/components/shared/ui/WhyBecomeNodeRunner"), {
-  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
+  loading: () => <div>Loading...</div>
 });
 
 const DetailedTestimonials = nextDynamic(() => import("@/components/shared/ui/DetailedTestimonials"), {
-  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
+  loading: () => <div>Loading...</div>
 });
 
 const HowItWorks = nextDynamic(() => import("@/components/shared/ui/HowItWorks").then(mod => ({ default: mod.HowItWorks })), {
-  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
+  loading: () => <div>Loading...</div>
 });
 
 const CommunitySection = nextDynamic(() => import("@/components/shared/ui/CommunitySection"), {
-  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
+  loading: () => <div>Loading...</div>
 });
 
 const FirstStepsGuide = nextDynamic(() => import("@/components/shared/ui/FirstStepsGuide"), {
-  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
+  loading: () => <div>Loading...</div>
 });
 
 const BeginnersFAQ = nextDynamic(() => import("@/components/shared/ui/BeginnersFAQ"), {
-  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-xl" />
+  loading: () => <div>Loading...</div>
 });
 
 const FinalConversionCTA = nextDynamic(() => import("@/components/shared/ui/FinalConversionCTA"), {
-  loading: () => <div className="h-64 bg-gray-100 animate-pulse rounded-xl" />
+  loading: () => <div>Loading...</div>
 });
 
 // Composant client séparé pour gérer les paramètres d'URL
 const SignupConfirmation: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { t } = useAdvancedTranslation('common');
+  const { t } = useAdvancedTranslation("common");
   
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl border border-indigo-200 transform transition-all animate-zoom-in">
-        <div className="flex flex-col items-center text-center">
-          <div className="bg-green-100 p-4 rounded-full mb-6">
-            <svg className="w-10 h-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-8 max-w-md mx-4">
+        <div className="text-center">
+          <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+            <svg className="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">{t('success')}</h2>
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">{t("success")}</h2>
           <p className="text-gray-600 mb-6">
-            {t('signupSuccess')}
+            {t("signupSuccess")}
           </p>
           <button
             onClick={onClose}
-            className="w-full bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors shadow-lg hover-lift"
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
           >
-            {t('getStarted')}
+            {t("getStarted")}
           </button>
         </div>
       </div>
@@ -103,9 +104,8 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
   const [inView, setInView] = useState(false);
 
   return (
-    <section
-      className={`${className} ${inView ? 'animate-fade-in' : 'opacity-0'}`}
-      style={{ animationDelay: `${delay}ms` }}
+    <section 
+      className={`transition-all duration-1000 ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} ${className}`}
       onMouseEnter={() => setInView(true)}
     >
       {children}
@@ -114,15 +114,15 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
 };
 
 export default function HomePage() {
-  const { t } = useAdvancedTranslation('home');
+  const { t } = useAdvancedTranslation("home");
 
   useEffect(() => {
     // Défilement fluide pour les ancres
     const handleAnchorClicks = (e: Event) => {
       const target = e.target as HTMLAnchorElement;
-      if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#')) {
+      if (target.tagName === "A" && target.getAttribute("href")?.startsWith("#")) {
         e.preventDefault();
-        const targetId = target.getAttribute('href');
+        const targetId = target.getAttribute("href");
         if (targetId) {
           const targetElement = document.querySelector(targetId);
           if (targetElement) {
@@ -130,68 +130,68 @@ export default function HomePage() {
             const offset = 80;
             window.scrollTo({
               top: elementTop - offset,
-              behavior: 'smooth'
+              behavior: "smooth"
             });
           }
         }
       }
     };
-    document.addEventListener('click', handleAnchorClicks);
-    return () => document.removeEventListener('click', handleAnchorClicks);
+    document.addEventListener("click", handleAnchorClicks);
+    return () => document.removeEventListener("click", handleAnchorClicks);
   }, []);
 
   return (
     <>
-      <Suspense fallback={null}>
+      <Suspense fallback={<div>Loading...</div>}>
         <SignupConfirmationGate />
       </Suspense>
 
-      <main className="min-h-screen w-full overflow-x-hidden scroll-smooth">
+      <main>
         {/* Hero Section */}
         <AnimatedSection>
           <NewRevenueHero />
         </AnimatedSection>
 
         {/* Section Pourquoi devenir opérateur de nœud */}
-        <AnimatedSection delay={100}>
+        <AnimatedSection>
           <WhyBecomeNodeRunner />
         </AnimatedSection>
 
         {/* Section DazFlow Index */}
-        <AnimatedSection delay={250}>
+        <AnimatedSection>
           <DazFlowShowcase />
         </AnimatedSection>
 
         {/* Section Comment ça marche */}
-        <AnimatedSection delay={300}>
+        <AnimatedSection>
           <HowItWorks />
         </AnimatedSection>
 
         {/* Section Témoignages */}
-        <AnimatedSection delay={300}>
+        <AnimatedSection>
           <DetailedTestimonials />
         </AnimatedSection>
 
         {/* Section Guide des premiers pas */}
-        <AnimatedSection delay={400}>
+        <AnimatedSection>
           <FirstStepsGuide />
         </AnimatedSection>
 
         {/* Section FAQ */}
-        <AnimatedSection delay={500}>
+        <AnimatedSection>
           <BeginnersFAQ />
         </AnimatedSection>
 
         {/* Section Communauté */}
-        <AnimatedSection delay={600}>
+        <AnimatedSection>
           <CommunitySection />
         </AnimatedSection>
 
         {/* CTA Final */}
-        <AnimatedSection delay={700}>
+        <AnimatedSection>
           <FinalConversionCTA />
         </AnimatedSection>
       </main>
     </>
   );
-} 
+}

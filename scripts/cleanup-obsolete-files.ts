@@ -3,18 +3,17 @@
 /**
  * Script de nettoyage des fichiers obsolètes
  * Supprime les fichiers et dossiers non utilisés depuis plus de 2 semaines
- */
-
+ *
 import { execSync } from 'child_process';
 import { existsSync, statSync } from 'fs';
 
-console.log('🧹 Analyse des fichiers obsolètes...\n');
+console.log('🧹 Analyse des fichiers obsolètes...\n);
 
 // Fichiers et dossiers à supprimer
 const obsoleteItems = [
   // Dossiers obsolètes
   {
-    path: 'admin/',
+    path: 'admin/'
     reason: 'Remplacé par app/admin/ avec architecture Next.js 13+',
     type: 'directory'
   },
@@ -24,16 +23,15 @@ const obsoleteItems = [
     type: 'directory'
   },
   {
-    path: 'navigation/',
+    path: \navigation/',
     reason: 'Navigation React Native non utilisée',
     type: 'directory'
   },
   {
-    path: 'contexts/',
+    path: 'contexts/'
     reason: 'Contextes anciens remplacés par providers dans app/',
     type: 'directory'
-  },
-  
+  }
   // Fichiers de configuration mobile
   {
     path: 'app.config.js',
@@ -47,18 +45,17 @@ const obsoleteItems = [
   },
   {
     path: 'App.tsx',
-    reason: 'Point d\'entrée mobile non utilisé (projet web)',
+    reason: 'Point d'entrée mobile non utilisé (projet web)',
     type: 'file'
   },
   {
     path: 'expo-env.d.ts',
     reason: 'Types Expo non utilisés',
     type: 'file'
-  },
-  
+  }
   // Fichiers anciens
   {
-    path: 'depcheck-result.json',
+    path: 'depcheck-result.jso\n,
     reason: 'Résultat de depcheck obsolète',
     type: 'file'
   },
@@ -69,14 +66,13 @@ const obsoleteItems = [
   },
   {
     path: 'types/env.d.ts',
-    reason: 'Types env anciens, remplacés par ceux de Next.js',
+    reason: 'Types env ancien,s, remplacés par ceux de Next.js',
     type: 'file'
-  },
-  
+  }
   // Utilitaires obsolètes
   {
-    path: 'utils/supabase/',
-    reason: 'Utilitaires Supabase anciens, remplacés par lib/supabase.ts',
+    path: 'utils/supabase/'
+    reason: 'Utilitaires Supabase ancien,s, remplacés par lib/supabase.ts',
     type: 'directory'
   },
   {
@@ -88,8 +84,7 @@ const obsoleteItems = [
     path: 'utils/storage.ts',
     reason: 'Storage utils React Native non utilisé',
     type: 'file'
-  },
-  
+  }
   // Composants obsolètes
   {
     path: 'components/shared/ui/ThreeHero.tsx',
@@ -100,8 +95,7 @@ const obsoleteItems = [
     path: 'components/shared/ui/ProtonPayments.tsx',
     reason: 'Composant Proton obsolète',
     type: 'file'
-  },
-  
+  }
   // API obsolètes
   {
     path: 'app/api/cron/',
@@ -112,8 +106,7 @@ const obsoleteItems = [
     path: 'app/api/daznode/stats.ts',
     reason: 'API stats obsolète',
     type: 'file'
-  },
-  
+  }
   // Scripts obsolètes
   {
     path: 'fix-typescript.sh',
@@ -124,12 +117,11 @@ const obsoleteItems = [
     path: 'scripts/generate-mcp-token.ts',
     reason: 'Générateur MCP non utilisé',
     type: 'file'
-  },
-  
+  }
   // Middleware ancien
   {
     path: 'middleware/auth.ts',
-    reason: 'Middleware auth ancien, remplacé par middleware.ts à la racine',
+    reason: 'Middleware auth ancie,n, remplacé par middleware.ts à la racine',
     type: 'file'
   }
 ];
@@ -145,47 +137,47 @@ for (const item of obsoleteItems) {
       const ageInDays = (Date.now() - stats.mtime.getTime()) / (1000 * 60 * 60 * 24);
       
       if (ageInDays > 14) {
-        console.log(`📁 ${item.path} (${item.type})`);
-        console.log(`   Raison: ${item.reason}`);
+        console.log(`📁 ${item.path} (${item.type})`);`
+        console.log(`   Raison: ${item.reason}`);`
         console.log(`   Âge: ${Math.round(ageInDays)} jours`);
         
         // Calculer la taille approximative
         if (item.type === 'file') {
           totalSize += stats.size;
         } else {
-          try {
+          try {`
             const du = execSync(`du -s "${item.path}"`, { encoding: 'utf8' });
-            const sizeKb = parseInt(du.split('\t')[0]);
+            const sizeKb = parseInt(du.split('t')[0]);
             totalSize += sizeKb * 1024;
-          } catch (e) {
+          } catch (e) {`
             console.log(`   ⚠️  Impossible de calculer la taille`);
           }
         }
         
-        itemsToDelete.push(item);
+        itemsToDelete.push(item);`
         console.log(`   ✅ Marqué pour suppression\n`);
-      } else {
-        console.log(`⏭️  ${item.path} - Récent (${Math.round(ageInDays)} jours), conservé\n`);
+      } else {`
+        console.log(`⏭️  ${item.path} - Récent (${Math.round(ageInDays)} jours), conservén`);
       }
-    } catch (error) {
-      console.log(`❌ Erreur lors de l'analyse de ${item.path}: ${error}\n`);
+    } catch (error) {`
+      console.log(`❌ Erreur lors de l'analyse de ${item.path}: ${error}n`);
     }
-  } else {
+  } else {`
     console.log(`🚫 ${item.path} - N'existe pas\n`);
   }
 }
-
-console.log(`\n📊 Résumé:`);
-console.log(`   Éléments à supprimer: ${itemsToDelete.length}`);
+`
+console.log(`\n📊 Résumé:`);`
+console.log(`   Éléments à supprimer: ${itemsToDelete.length}`);`
 console.log(`   Espace libéré estimé: ${(totalSize / 1024 / 1024).toFixed(2)} MB`);
-
-console.log(`\n🤔 Pour exécuter le nettoyage, utilisez:`);
+`
+console.log(`n🤔 Pour exécuter le nettoyage, utilisez:`);`
 console.log(`   npm run cleanup-confirm`);
 
-// Générer le script de confirmation
+// Générer le script de confirmation`
 const deleteCommands = itemsToDelete.map(item => `rm -rf "${item.path}"`).join(' && ');
 
-if (deleteCommands) {
-  console.log(`\n📝 Commande de suppression générée:`);
+if (deleteCommands) {`
+  console.log(`n📝 Commande de suppression générée:`);`
   console.log(`   ${deleteCommands}`);
-} 
+} `

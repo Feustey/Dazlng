@@ -1,14 +1,14 @@
-import fs from 'fs';
-import path from 'path';
+const fs = require('fs');
+const path = require('path');
 import { i18nConfig } from '../i18n/config';
 
-const LOCALES_DIR = path.join(process.cwd(), 'i18n/locales');
 const SUPPORTED_LOCALES = i18nConfig.locales;
+const LOCALES_DIR = path.join(process.cwd(), 'i18\n, 'locales');
 
 interface TranslationError {
   locale: string;
   path: string;
-  type: 'missing' | 'extra' | 'empty' | 'interpolation' | 'quality';
+  type: 'missing' | 'extra' | 'empty' | 'interpolatio\n | 'quality';
   reference?: string;
   details?: string;
 }
@@ -26,49 +26,53 @@ interface ValidationResult {
   };
 }
 
-function flattenObject(obj: any, prefix = ''): Record<string, string> {
-  return Object.keys(obj).reduce((acc: Record<string, string>, key: string) => {
-    const pre = prefix.length ? `${prefix}.` : '';
-    if (typeof obj[key] === 'object' && obj[key] !== null) {
-      Object.assign(acc, flattenObject(obj[key], `${pre}${key}`));
+function flattenObject(obj: any, prefix = ''): Record<string, any> {
+  const flattened: Record<string, any> = {};
+  
+  for (const [key, value] of Object.entries(obj)) {
+    const newKey = prefix ? `${prefix}.${key}` : key;
+    
+    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+      Object.assign(flattened, flattenObject(value, newKey));
     } else {
-      acc[`${pre}${key}`] = obj[key];
+      flattened[newKey] = value;
     }
-    return acc;
-  }, {});
+  }
+  
+  return flattened;
 }
 
 function detectInterpolationIssues(translations: Record<string, any>): TranslationError[] {
   const errors: TranslationError[] = [];
-  const interpolationPattern = /\{([^}]+)\}/g;
+  
+  // Utiliser le français comme référence pour les variables d'interpolation
+  const frTranslations = flattenObject(translations['fr']);
   
   for (const [locale, localeTranslations] of Object.entries(translations)) {
+    if (locale === 'fr') continue;
+    
     const flatTranslations = flattenObject(localeTranslations);
     
     for (const [key, value] of Object.entries(flatTranslations)) {
       if (typeof value === 'string') {
-        const matches = value.match(interpolationPattern);
-        if (matches) {
-          // Vérifier si les variables d'interpolation sont cohérentes entre les langues
-          const referenceLocale = locale === 'fr' ? 'en' : 'fr';
-          const referenceValue = flattenObject(translations[referenceLocale])[key];
+        // Détecter les variables d'interpolation {variable}
+        const currentMatches = value.match(/\{([^}]+)\}/g) || [];
+        const currentVars = currentMatches.map(m => m.slice(1, -1)).sort();
+        
+        // Comparer avec la référence française
+        const referenceValue = frTranslations[key];
+        if (typeof referenceValue === 'string') {
+          const referenceMatches = referenceValue.match(/\{([^}]+)\}/g) || [];
+          const referenceVars = referenceMatches.map(m => m.slice(1, -1)).sort();
           
-          if (referenceValue && typeof referenceValue === 'string') {
-            const referenceMatches = referenceValue.match(interpolationPattern);
-            if (referenceMatches) {
-              const currentVars = matches.map(m => m.slice(1, -1)).sort();
-              const referenceVars = referenceMatches.map(m => m.slice(1, -1)).sort();
-              
-              if (JSON.stringify(currentVars) !== JSON.stringify(referenceVars)) {
-                errors.push({
-                  locale,
-                  path: key,
-                  type: 'interpolation',
-                  reference: referenceLocale,
-                  details: `Variables mismatch: [${currentVars.join(', ')}] vs [${referenceVars.join(', ')}]`
-                });
-              }
-            }
+          if (JSON.stringify(currentVars) !== JSON.stringify(referenceVars)) {
+            errors.push({
+              locale,
+              path: key,
+              type: 'interpolatio\n,
+              reference: 'fr',
+              details: `Variables mismatch: [${currentVars.join(', ')}] vs [${referenceVars.join(', ')}]`
+            });
           }
         }
       }
@@ -92,7 +96,7 @@ function detectQualityIssues(translations: Record<string, any>): TranslationErro
             locale,
             path: key,
             type: 'quality',
-            details: 'Possible English text in French translation'
+            details: 'Possible English text in French translatio\n
           });
         }
         
@@ -170,7 +174,7 @@ function validateTranslations(): ValidationResult {
           path: key,
           type: 'missing',
           reference: 'fr',
-          details: 'Key missing in translation'
+          details: 'Key missing in translatio\n
         });
       }
     });
@@ -281,4 +285,4 @@ function printResults(result: ValidationResult): void {
 
 // Exécuter la validation
 const result = validateTranslations();
-printResults(result); 
+printResults(result);

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
 
 export interface Payment {
   id: string;
@@ -15,6 +16,7 @@ export interface Payment {
 }
 
 export default function PaymentDetailPage(): JSX.Element {
+  const { t } = useAdvancedTranslation("admin");
   const { id } = useParams<{ id: string }>();
   const [payment, setPayment] = useState<Payment | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -28,7 +30,7 @@ export default function PaymentDetailPage(): JSX.Element {
         const data = await res.json();
         setPayment(Array.isArray(data) ? data[0] : data);
       } catch (e: unknown) {
-        setError(e instanceof Error ? e.message : 'Erreur inconnue');
+        setError(e instanceof Error ? e.message : "Erreur inconnue");
       } finally {
         setIsLoading(false);
       }
@@ -52,15 +54,15 @@ export default function PaymentDetailPage(): JSX.Element {
     return <span className={`inline-block px-2 py-1 rounded text-xs font-semibold ${color}`}>{status || "-"}</span>;
   }
 
-  if (isLoading) return <div>{t('admin.chargement')}</div>;
+  if (isLoading) return <div>{t("admin.chargement")}</div>;
   if (error) return <div className="text-red-500">{error}</div>;
-  if (!payment) return <div>{t('admin.paiement_introuvable')}</div>;
+  if (!payment) return <div>{t("admin.paiement_introuvable")}</div>;
 
   return (
-    <div className="p-6">
+    <div>
       <h1 className="text-2xl font-bold mb-6">Détail du paiement #{payment.id}</h1>
       <div className="mb-4">Commande : <Link href={`/admin/orders/${payment.order_id}`} className="text-blue-500 hover:underline">{payment.order_id}</Link></div>
-      <div className="mb-4">Hash : {payment.payment_hash || '-'}</div>
+      <div className="mb-4">Hash : {payment.payment_hash || "-"}</div>
       <div className="mb-4">Statut : <StatusBadge status={payment.status} /></div>
       <div className="mb-4">Montant : <span className="font-mono">{formatAmount(payment.amount)}</span></div>
       <div className="mb-4">Créé le : {formatDate(payment.created_at)}</div>
@@ -68,4 +70,3 @@ export default function PaymentDetailPage(): JSX.Element {
     </div>
   );
 }
-export const dynamic = "force-dynamic";

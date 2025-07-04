@@ -1,7 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import { UserIcon } from "@heroicons/react/24/outline";
-import { useLocale } from 'next-intl';
+import { useLocale } from "next-intl";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
 
 const links = [
   { href: "/admin/dashboard", label: "Dashboard", icon: "📊", section: "main" },
@@ -9,12 +10,12 @@ const links = [
   { href: "/admin/openai", label: "OpenAI", icon: "🤖", section: "main" },
   { href: "/admin/users", label: "Utilisateurs", icon: "👥", section: "crm" },
   { href: "/admin/communications", label: "Communications", icon: "💬", section: "crm" },
-  { href: "/admin/crm", label: "admin.adminadmincrm_legacy", icon: "📧", section: "crm" },
+  { href: "/admin/crm", label: "CRM Legacy", icon: "📧", section: "crm" },
   { href: "/admin/orders", label: "Commandes", icon: "🛒", section: "commerce" },
   { href: "/admin/subscriptions", label: "Abonnements", icon: "⚡", section: "commerce" },
   { href: "/admin/payments", label: "Paiements", icon: "💳", section: "commerce" },
   { href: "/admin/products", label: "Produits", icon: "📦", section: "commerce" },
-  { href: "/admin/settings", label: "admin.adminadminparamtres", icon: "⚙️", section: "config" },
+  { href: "/admin/settings", label: "Paramètres", icon: "⚙️", section: "config" }
 ];
 
 const sections = {
@@ -25,6 +26,8 @@ const sections = {
 };
 
 const Sidebar: React.FC = () => {
+  const { t } = useAdvancedTranslation("common");
+
   const locale = useLocale();
 
   const groupedLinks = Object.entries(sections).map(([sectionKey, sectionName]) => ({
@@ -33,28 +36,25 @@ const Sidebar: React.FC = () => {
   }));
 
   return (
-    <aside className="w-64 h-full bg-gray-900 text-white flex flex-col p-4">
-      <div className="text-xl font-bold mb-8 flex items-center gap-2">
+    <aside>
+      <div>
         <span className="text-2xl">⚡</span>
         <div>
-          <div>{t('admin.daznode_admin')}</div>
-          <div className="text-xs text-gray-400 font-normal">{t('admin.version_20')}</div>
+          <div>{t("admin.daznode_admin")}</div>
+          <div className="text-xs text-gray-400 font-normal">{t("admin.version_20")}</div>
         </div>
       </div>
       
-      <nav className="flex-1 space-y-6">
+      <nav>
         {groupedLinks.map((section: any) => (
           <div key={section.name}>
-            <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+            <h3>
               {section.name}
             </h3>
-            <ul className="space-y-1">
+            <ul>
               {section.links.map((link: any) => (
                 <li key={link.href}>
-                  <Link 
-                    href={link.href} 
-                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition-colors group"
-                  >
+                  <Link href={link.href}>
                     <span className="text-lg group-hover:scale-110 transition-transform">{link.icon}</span>
                     <span className="text-sm">{link.label}</span>
                   </Link>
@@ -65,20 +65,16 @@ const Sidebar: React.FC = () => {
         ))}
       </nav>
       
-      {/* Lien vers nouveau CRM */}
-      <div className="mt-auto pt-4 border-t border-gray-700">
-        <Link
-          href="/user/dashboard"
-          locale={locale}
-          className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50"
-        >
-          <UserIcon className="mr-3 h-5 w-5" />
+      {/* Lien vers nouveau CRM  */}
+      <div>
+        <Link href="/user">
+          <UserIcon />
           Dashboard Utilisateur
         </Link>
       </div>
     </aside>
   );
-}
+};
 
 export default Sidebar;
 export const dynamic = "force-dynamic";

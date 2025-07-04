@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { daznoApi } from '@/lib/dazno-api';
+import { NextRequest, NextResponse } from "next/server";
+import { daznoApi } from "@/lib/dazno-api";
 
 export const dynamic = "force-dynamic";
 
@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     const health = await daznoApi.checkHealth();
     
     const searchParams = request.nextUrl.searchParams;
-    const testPubkey = searchParams.get('pubkey');
+    const testPubkey = searchParams.get("pubkey");
     
     if (testPubkey) {
       // Test avec une pubkey spécifique
@@ -24,9 +24,9 @@ export async function GET(request: NextRequest) {
         health,
         test_pubkey: testPubkey,
         results: {
-          node_info: nodeInfo.status === 'fulfilled' ? nodeInfo.value : { error: nodeInfo.reason },
-          recommendations: recommendations.status === 'fulfilled' ? recommendations.value : { error: recommendations.reason },
-          priorities: priorities.status === 'fulfilled' ? priorities.value : { error: priorities.reason }
+          node_info: nodeInfo.status === "fulfilled" ? nodeInfo.value : { error: nodeInfo.reason },
+          recommendations: recommendations.status === "fulfilled" ? recommendations.value : { error: recommendations.reason },
+          priorities: priorities.status === "fulfilled" ? priorities.value : { error: priorities.reason }
         }
       });
     }
@@ -34,16 +34,16 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       health,
-      message: 'API Dazno test endpoint - add ?pubkey=<your_pubkey> to test with a specific node'
+      message: "API Dazno test endpoint - add ?pubkey=<your> to test with a specific node"
     });
 
   } catch (error) {
-    console.error('[API] Dazno test error:', error);
+    console.error("[API] Dazno test error:", error);
     
     return NextResponse.json({
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-      message: 'Dazno API test failed'
+      error: error instanceof Error ? error.message : "Unknown error",
+      message: "Dazno API test failed"
     }, { status: 500 });
   }
 }

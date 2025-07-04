@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
 
 export interface AnalyticsData {
   stats: {
@@ -31,17 +32,19 @@ export interface AnalyticsData {
 export interface ApiResponse {
   success: boolean;
   data: AnalyticsData;
-  source: 'mock' | 'umami' | 'mock_fallback';
+  source: "mock" | "umami" | "mock_fallback";
   timestamp: string;
   error?: string;
 }
 
 const AnalyticsPage: React.FC = () => {
+  const { t } = useAdvancedTranslation("analytics");
+
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [timeRange, setTimeRange] = useState('7d');
-  const [source, setSource] = useState<'mock' | 'umami' | 'mock_fallback'>('mock');
+  const [timeRange, setTimeRange] = useState("7d");
+  const [source, setSource] = useState<"mock" | "umami" | "mock_fallback">("mock");
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
   const loadAnalytics = useCallback(async () => {
@@ -57,10 +60,10 @@ const AnalyticsPage: React.FC = () => {
         setSource(data.source);
         setLastUpdated(data.timestamp);
       } else {
-        setError(data.error || 'Erreur lors du chargement des données');
+        setError(data.error || "Erreur lors du chargement des données");
       }
     } catch (err) {
-      setError('Erreur de connexion');
+      setError("Erreur de connexion");
     } finally {
       setLoading(false);
     }
@@ -76,8 +79,8 @@ const AnalyticsPage: React.FC = () => {
   }, [loadAnalytics]);
 
   const formatNumber = (num: number): string => {
-    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-    if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
+    if (num >= 1000) return (num / 1000).toFixed(1) + "k";
     return num.toString();
   };
 
@@ -98,7 +101,7 @@ const AnalyticsPage: React.FC = () => {
   };
 
   const calculateAvgSessionDuration = (): string => {
-    if (!analyticsData) return '0s';
+    if (!analyticsData) return "0s";
     const { totaltime, visits } = analyticsData.stats;
     const avgSeconds = visits.value > 0 ? Math.round(totaltime.value / visits.value) : 0;
     return formatDuration(avgSeconds);
@@ -106,15 +109,15 @@ const AnalyticsPage: React.FC = () => {
 
   const getSourceBadge = () => {
     const badges = {
-      'mock': { color: 'bg-yellow-100 text-yellow-800', text: "admin.adminadmin_donnes_de_test" },
-      'umami': { color: 'bg-green-100 text-green-800', text: "admin.adminadmin_umami_live" },
-      'mock_fallback': { color: 'bg-orange-100 text-orange-800', text: "admin.adminadmin_fallback" }
+      "mock": { color: "bg-yellow-100 text-yellow-800", text: "Données de test" },
+      "umami": { color: "bg-green-100 text-green-800", text: "Umami Live" },
+      "mock_fallback": { color: "bg-orange-100 text-orange-800", text: "Fallback" }
     };
     
     const badge = badges[source as keyof typeof badges] || badges.mock;
     
     return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${badge.color}`}>
+      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${badge.color}`}>
         {badge.text}
       </span>
     );
@@ -123,14 +126,14 @@ const AnalyticsPage: React.FC = () => {
   if (loading && !analyticsData) {
     return (
       <div className="p-6">
-        <div className="animate-pulse space-y-4">
+        <div className="animate-pulse">
           <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {[...Array(4)].map((_: any, i: any) => (
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+            {[...Array(4)].map((_, i) => (
               <div key={i} className="h-24 bg-gray-200 rounded"></div>
             ))}
           </div>
-          <div className="h-96 bg-gray-200 rounded"></div>
+          <div className="h-96 bg-gray-200 rounded mt-6"></div>
         </div>
       </div>
     );
@@ -140,11 +143,11 @@ const AnalyticsPage: React.FC = () => {
     return (
       <div className="p-6">
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <h2 className="text-lg font-semibold text-red-800 mb-2">{t('admin.erreur_de_chargement')}</h2>
+          <h2 className="text-lg font-semibold text-red-800 mb-2">Erreur de chargement</h2>
           <p className="text-red-600">{error}</p>
-          <button 
+          <button
             onClick={loadAnalytics}
-            className="mt-3 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+            className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
           >
             🔄 Réessayer
           </button>
@@ -154,183 +157,147 @@ const AnalyticsPage: React.FC = () => {
   }
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-        <div>
+    <div className="p-6">
+      {/* Header  */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+        <div className="mb-4 md:mb-0">
           <h1 className="text-2xl font-bold text-gray-900">Analytics</h1>
-          <div className="flex items-center space-x-3 mt-1">
-            <p className="text-gray-600">{t('admin.statistiques_de_trafic_et_deng')}</p>
+          <div className="flex items-center space-x-2 mt-1">
+            <p className="text-gray-600">Statistiques de trafic et d'engagement</p>
             {getSourceBadge()}
           </div>
         </div>
         
-        <div className="flex items-center space-x-3 mt-4 md:mt-0">
-          {/* Sélecteur de période */}
-          <select 
-            value={timeRange} 
-            onChange={(e: any) => setTimeRange(e.target.value)}
+        <div className="flex items-center space-x-3">
+          {/* Sélecteur de période  */}
+          <select
+            value={timeRange}
+            onChange={(e) => setTimeRange(e.target.value)}
             className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="24h">{t('admin.dernires_24h')}</option>
-            <option value="7d">{t('admin.7_derniers_jours')}</option>
-            <option value="30d">{t('admin.30_derniers_jours')}</option>
-            <option value="90d">{t('admin.90_derniers_jours')}</option>
+            <option value="24h">Dernières 24h</option>
+            <option value="7d">7 derniers jours</option>
+            <option value="30d">30 derniers jours</option>
+            <option value="90d">90 derniers jours</option>
           </select>
           
-          <button 
+          <button
             onClick={loadAnalytics}
             disabled={loading}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
           >
-            {loading ? '🔄' : '↻'} Actualiser
+            {loading ? "🔄" : "↻"} Actualiser
           </button>
         </div>
       </div>
 
-      {/* Stats en temps réel */}
+      {/* Stats en temps réel  */}
       {analyticsData && (
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="text-lg font-semibold text-blue-900 mb-3">{t('admin._temps_rel')}</h3>
-          <div className="grid grid-cols-3 gap-4">
+        <div className="bg-blue-50 rounded-lg p-4 mb-6">
+          <h3 className="text-lg font-semibold text-blue-900 mb-3">Temps réel</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">{analyticsData.realtime.active_visitors}</div>
-              <div className="text-sm text-blue-700">{t('admin.visiteurs_actifs')}</div>
+              <div className="text-sm text-blue-700">Visiteurs actifs</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">{analyticsData.realtime.active_sessions}</div>
-              <div className="text-sm text-blue-700">{t('admin.sessions_actives')}</div>
+              <div className="text-sm text-blue-700">Sessions actives</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">{analyticsData.realtime.current_pageviews}</div>
-              <div className="text-sm text-blue-700">{t('admin.pages_vues_maintenant')}</div>
+              <div className="text-sm text-blue-700">Pages vues</div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Statistiques principales */}
+      {/* Stats principales */}
       {analyticsData && (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-          <div className="bg-white p-6 rounded-lg shadow border">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
-              <div className="text-3xl">👁️</div>
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </div>
               <div className="ml-4">
-                <div className="text-2xl font-bold text-gray-900">
-                  {formatNumber(analyticsData.stats.pageviews.value)}
-                </div>
-                <div className="text-sm text-gray-600">{t('admin.pages_vues')}</div>
+                <p className="text-sm font-medium text-gray-600">Pages vues</p>
+                <p className="text-2xl font-semibold text-gray-900">{formatNumber(analyticsData.stats.pageviews.value)}</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow border">
+          <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
-              <div className="text-3xl">👥</div>
+              <div className="p-2 bg-green-100 rounded-lg">
+                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
               <div className="ml-4">
-                <div className="text-2xl font-bold text-gray-900">
-                  {formatNumber(analyticsData.stats.visitors.value)}
-                </div>
-                <div className="text-sm text-gray-600">{t('admin.visiteurs_uniques')}</div>
+                <p className="text-sm font-medium text-gray-600">Visiteurs</p>
+                <p className="text-2xl font-semibold text-gray-900">{formatNumber(analyticsData.stats.visitors.value)}</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow border">
+          <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
-              <div className="text-3xl">🔄</div>
+              <div className="p-2 bg-purple-100 rounded-lg">
+                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+              </div>
               <div className="ml-4">
-                <div className="text-2xl font-bold text-gray-900">{calculateBounceRate()}%</div>
-                <div className="text-sm text-gray-600">{t('admin.taux_de_rebond')}</div>
+                <p className="text-sm font-medium text-gray-600">Taux de rebond</p>
+                <p className="text-2xl font-semibold text-gray-900">{calculateBounceRate()}%</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow border">
+          <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
-              <div className="text-3xl">⏱️</div>
+              <div className="p-2 bg-orange-100 rounded-lg">
+                <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
               <div className="ml-4">
-                <div className="text-2xl font-bold text-gray-900">{calculateAvgSessionDuration()}</div>
-                <div className="text-sm text-gray-600">{t('admin.dure_moyenne')}</div>
+                <p className="text-sm font-medium text-gray-600">Durée moyenne</p>
+                <p className="text-2xl font-semibold text-gray-900">{calculateAvgSessionDuration()}</p>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Pages populaires */}
+      {/* Graphiques et métriques détaillées */}
       {analyticsData && (
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-          <div className="bg-white p-6 rounded-lg shadow border">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('admin._pages_populaires')}</h3>
-            <div className="space-y-3">
-              {analyticsData.pageviews.pageviews.slice(0, 8).map((page: any, index: any) => (
-                <div key={index} className="flex items-center justify-between">
-                  <div className="text-sm text-gray-600 truncate flex-1">{page.x}</div>
-                  <div className="text-sm font-medium text-gray-900 ml-2">
-                    {formatNumber(page.y)}
-                  </div>
-                </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Graphique des pages vues */}
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Évolution des pages vues</h3>
+            <div className="h-64 flex items-end justify-between space-x-1">
+              {analyticsData.pageviews.pageviews.slice(-7).map((point, index) => (
+                <div key={index} className="flex-1 bg-blue-500 rounded-t" style={{ height: `${(point.y / Math.max(...analyticsData.pageviews.pageviews.map(p => p.y))) * 100}%` }}></div>
               ))}
+            </div>
+            <div className="mt-4 text-sm text-gray-600">
+              Dernières 7 périodes
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow border">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('admin._pays')}</h3>
+          {/* Répartition par navigateur */}
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Navigateurs</h3>
             <div className="space-y-3">
-              {analyticsData.metrics.countries.slice(0, 8).map((country: any, index: any) => (
+              {analyticsData.metrics.browsers.slice(0, 5).map((browser, index) => (
                 <div key={index} className="flex items-center justify-between">
-                  <div className="text-sm text-gray-600">{country.x}</div>
-                  <div className="text-sm font-medium text-gray-900">
-                    {formatNumber(country.y)}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Navigateurs et OS */}
-      {analyticsData && (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          <div className="bg-white p-6 rounded-lg shadow border">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('admin._navigateurs')}</h3>
-            <div className="space-y-3">
-              {analyticsData.metrics.browsers.slice(0, 5).map((browser: any, index: any) => (
-                <div key={index} className="flex items-center justify-between">
-                  <div className="text-sm text-gray-600">{browser.x}</div>
-                  <div className="text-sm font-medium text-gray-900">
-                    {formatNumber(browser.y)}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow border">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('admin._systmes')}</h3>
-            <div className="space-y-3">
-              {analyticsData.metrics.os.slice(0, 5).map((os: any, index: any) => (
-                <div key={index} className="flex items-center justify-between">
-                  <div className="text-sm text-gray-600">{os.x}</div>
-                  <div className="text-sm font-medium text-gray-900">
-                    {formatNumber(os.y)}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow border">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('admin._appareils')}</h3>
-            <div className="space-y-3">
-              {analyticsData.metrics.devices.map((device: any, index: any) => (
-                <div key={index} className="flex items-center justify-between">
-                  <div className="text-sm text-gray-600">{device.x}</div>
-                  <div className="text-sm font-medium text-gray-900">
-                    {formatNumber(device.y)}
-                  </div>
+                  <span className="text-sm text-gray-600">{browser.x}</span>
+                  <span className="text-sm font-medium text-gray-900">{browser.y}%</span>
                 </div>
               ))}
             </div>
@@ -338,26 +305,9 @@ const AnalyticsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Événements */}
-      {analyticsData && analyticsData.events.length > 0 && (
-        <div className="bg-white p-6 rounded-lg shadow border">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('admin._vnements_personnaliss')}</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {analyticsData.events.map((event: any, index: any) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <div className="text-sm text-gray-600">{event.x}</div>
-                <div className="text-sm font-medium text-gray-900">
-                  {formatNumber(event.y)}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Footer avec info de mise à jour */}
+      {/* Footer avec timestamp */}
       {lastUpdated && (
-        <div className="text-center text-xs text-gray-500">
+        <div className="mt-8 text-center text-sm text-gray-500">
           Dernière mise à jour : {new Date(lastUpdated).toLocaleString('fr-FR')}
         </div>
       )}

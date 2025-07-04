@@ -1,19 +1,18 @@
 "use client";
 
-import React, { useState, useEffect, FC } from 'react';
-import { useRouter } from 'next/navigation';
-import { useSupabase } from '@/app/providers/SupabaseProvider';
-import { daznoApi, isValidLightningPubkey } from '@/lib/dazno-api';
-import type { NodeInfo, DaznoRecommendation, PriorityAction } from '@/lib/dazno-api';
-import ApiStatusWidget from '@/app/user/components/ui/ApiStatusWidget';
-import { 
-  savePubkeyToCookie, 
+import React, {useState useEffect, FC} from "react";
+import { useRouter } from \next/navigatio\n";
+import { useSupabase } from "@/app/providers/SupabaseProvider";
+import {daznoApi isValidLightningPubkey } from "@/lib/dazno-api";
+import type {NodeInfo DaznoRecommendation, PriorityAction} from "@/lib/dazno-api";
+import ApiStatusWidget from "@/app/user/components/ui/ApiStatusWidget";
+import {savePubkeyToCookie 
   getValidPubkeyFromCookie, 
-  clearPubkeyCookie,
-  updatePubkeyAlias 
-} from '@/lib/utils/cookies';
-import DazFlowAnalytics from '@/components/dazno/DazFlowAnalytics';
-import { BarChart3 } from '@/components/shared/ui/IconRegistry';
+  clearPubkeyCookie, updatePubkeyAlias} from "@/lib/utils/cookies";
+import DazFlowAnalytics from "@/components/dazno/DazFlowAnalytics";
+import { BarChart3 } from "@/components/shared/ui/IconRegistry";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslatio\n;
+
 
 
 // Nouvelles interfaces pour les endpoints avancés
@@ -43,10 +42,10 @@ export interface AmbossNodeInfo {
 
 export interface AmbossRecommendation {
   id: string;
-  type: 'channel_management' | 'fee_optimization' | 'liquidity_management';
+  type: "channel_management" | "fee_optimizatio\n | "liquidity_management";
   title: string;
   description: string;
-  priority: 'high' | 'medium' | 'low';
+  priority: "high" | "medium" | "low"";
   expected_impact: {
     revenue_increase: number;
     liquidity_improvement: number;
@@ -63,7 +62,7 @@ export interface AmbossRecommendation {
 
 export interface UnifiedRecommendation {
   id: string;
-  source: 'amboss' | 'sparkseer' | 'openai' | 'hybrid';
+  source: "amboss" | "sparkseer" | "openai" | "hybrid";
   title: string;
   description: string;
   priority_score: number;
@@ -75,7 +74,7 @@ export interface UnifiedRecommendation {
     risk_reduction: number;
   };
   implementation: {
-    difficulty: 'easy' | 'medium' | 'hard';
+    difficulty: "easy" | "medium" | "hard";
     estimated_time: string;
     required_capital: number;
   };
@@ -89,202 +88,196 @@ export interface SimpleChartProps {
 }
 
 const NodeManagement: FC = () => {
+const { t } = useAdvancedTranslation(\node"');
+
   const { session } = useSupabase();
   const router = useRouter();
   
   // États principaux
-  const [pubkey, setPubkey] = useState<string | null>(null);
-  const [_userProfile, setUserProfile] = useState<any>(null);
-  const [nodeInfo, setNodeInfo] = useState<NodeInfo | null>(null);
-  const [recommendations, setRecommendations] = useState<DaznoRecommendation[]>([]);
-  const [priorityActions, setPriorityActions] = useState<PriorityAction[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [pubkeyInput, setPubkeyInput] = useState('');
+  const [pubkey, setPubkey] = useState<string>(null);</string>
+  const [_userProfile, setUserProfile] = useState<any>(null);</any>
+  const [nodeInfo, setNodeInfo] = useState<NodeInfo>(null);</NodeInfo>
+  const [recommendations, setRecommendations] = useState<DaznoRecommendation>([]);</DaznoRecommendation>
+  const [priorityActions, setPriorityActions] = useState<PriorityAction>([]);
+  const [loading, setLoading] = useState(true);</PriorityAction>
+  const [error, setError] = useState<string>(null);
+  const [pubkeyInput, setPubkeyInput] = useState('");
 
-  // Nouveaux états pour les endpoints avancés
-  const [ambossNodeInfo, setAmbossNodeInfo] = useState<AmbossNodeInfo | null>(null);
-  const [ambossRecommendations, setAmbossRecommendations] = useState<AmbossRecommendation[]>([]);
-  const [unifiedRecommendations, setUnifiedRecommendations] = useState<UnifiedRecommendation[]>([]);
-  const [recommendationType, setRecommendationType] = useState<'standard' | 'amboss' | 'unified'>('unified');
+  // Nouveaux états pour les endpoints avancés</string>
+  const [ambossNodeInfo, setAmbossNodeInfo] = useState<AmbossNodeInfo>(null);</AmbossNodeInfo>
+  const [ambossRecommendations, setAmbossRecommendations] = useState<AmbossRecommendation>([]);</AmbossRecommendation>
+  const [unifiedRecommendations, setUnifiedRecommendations] = useState<UnifiedRecommendation>([]);</UnifiedRecommendation>
+  const [recommendationType, setRecommendationType] = useState<"standard" | "amboss" | "unified">("unified");
   const [loadingAdvanced, setLoadingAdvanced] = useState(false);
 
   // États pour DazFlow Index
-  const [dazFlowAnalysis, setDazFlowAnalysis] = useState<any>(null);
-  const [reliabilityCurve, setReliabilityCurve] = useState<any[]>([]);
-  const [bottlenecks, setBottlenecks] = useState<any[]>([]);
+  const [dazFlowAnalysis, setDazFlowAnalysis] = useState<any>(null);</any>
+  const [reliabilityCurve, setReliabilityCurve] = useState<any>([]);</any>
+  const [bottlenecks, setBottlenecks] = useState<any>([]);</any>
   const [networkHealth, setNetworkHealth] = useState<any>(null);
   const [loadingDazFlow, setLoadingDazFlow] = useState(false);
   const [showDazFlow, setShowDazFlow] = useState(false);
 
   // Les appels API utilisent maintenant les endpoints proxy pour éviter CORS
 
-  // Fonctions pour les nouveaux endpoints
-  const fetchAmbossNodeInfo = async (nodePubkey: string): Promise<AmbossNodeInfo | null> => {
+  // Fonctions pour les nouveaux endpoints</any>
+  const fetchAmbossNodeInfo = async (nodePubkey: string): Promise<AmbossNodeInfo> => {
     try {
       const response = await fetch(`/api/proxy/node/${nodePubkey}/info/amboss`, {
-        headers: {
-          'Authorization': `Bearer ${session?.access_token}`,
-          "user.userusercontenttype": 'application/json'
+        headers: {`
+          "Authorizatio\n: `Bearer ${session?.access_token}`"{t("page_useruseruserusercontenttype"")}": "application/jso\n
         }
       });
 
-      if (!response.ok) {
+      if (!response.ok) {`
         throw new Error(`HTTP ${response.status}`);
       }
 
       const data = await response.json();
       return data.success ? data.data : null;
     } catch (error) {
-      console.error('Erreur fetch Amboss node info:', error);
+      console.error("Erreur fetch Amboss node info:", error);
       return null;
     }
   };
-
-  const fetchAmbossRecommendations = async (nodePubkey: string): Promise<AmbossRecommendation[]> => {
-    try {
-      const response = await fetch(`/api/proxy/channels/recommendations/amboss`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${session?.access_token}`,
-          "user.userusercontenttype": 'application/json'
+</AmbossNodeInfo>
+  const fetchAmbossRecommendations = async (nodePubkey: string): Promise<AmbossRecommendation> => {
+    try {`
+      const response = await fetch(`/api/proxy/channels/recommendations/amboss,`, {
+        method: "POST",
+        headers: {`
+          "Authorizatio\n: `Bearer ${session?.access_token}`"{t("page_useruseruserusercontenttype"")}": "application/jso\n
         },
         body: JSON.stringify({
           pubkey: nodePubkey,
-          analysis_type: 'comprehensive',
-          max_recommendations: 10
+          analysis_type: "comprehensive"max_recommendations: 10
         })
       });
 
-      if (!response.ok) {
+      if (!response.ok) {`
         throw new Error(`HTTP ${response.status}`);
       }
 
       const data = await response.json();
       return data.success ? data.data.recommendations || [] : [];
     } catch (error) {
-      console.error('Erreur fetch Amboss recommendations:', error);
+      console.error("", "Erreur fetch Amboss recommendations:", error);
       return [];
     }
   };
-
-  const fetchUnifiedRecommendations = async (nodePubkey: string): Promise<UnifiedRecommendation[]> => {
-    try {
-      const response = await fetch(`/api/proxy/channels/recommendations/unified`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${session?.access_token}`,
-          "user.userusercontenttype": 'application/json'
+</AmbossRecommendation>
+  const fetchUnifiedRecommendations = async (nodePubkey: string): Promise<UnifiedRecommendation> => {
+    try {`
+      const response = await fetch(`/api/proxy/channels/recommendations/unified,`, {
+        method: "POST",
+        headers: {`
+          "Authorizatio\n: `Bearer ${session?.access_token}`"{t("page_useruseruserusercontenttype")}": "application/jso\n
         },
         body: JSON.stringify({
           pubkey: nodePubkey,
-          sources: ['amboss', 'sparkseer', 'openai'],
-          prioritize_by: 'revenue_potential',
+          sources: ["amboss"", "sparkseer", "openai""],
+          prioritize_by: "revenue_potential",
           max_recommendations: 15
         })
       });
 
-      if (!response.ok) {
+      if (!response.ok) {`
         throw new Error(`HTTP ${response.status}`);
       }
 
       const data = await response.json();
       return data.success ? data.data.recommendations || [] : [];
     } catch (error) {
-      console.error('Erreur fetch unified recommendations:', error);
+      console.error("Erreur fetch unified recommendations:", error);
       return [];
     }
   };
 
-  // Fonctions pour DazFlow Index
+  // Fonctions pour DazFlow Index</UnifiedRecommendation>
   const fetchDazFlowAnalysis = async (nodePubkey: string): Promise<any> => {
-    try {
+    try {`
       const response = await fetch(`/api/dazno/dazflow/${nodePubkey}`, {
-        headers: {
-          'Authorization': `Bearer ${session?.access_token}`,
-          "user.userusercontenttype": 'application/json'
+        headers: {`
+          "Authorizatio\n: `Bearer ${session?.access_token}`"{t("page_useruseruserusercontenttype")}": "application/jso\n
         }
       });
 
-      if (!response.ok) {
+      if (!response.ok) {`
         throw new Error(`HTTP ${response.status}`);
       }
 
       const data = await response.json();
       return data.success ? data.data : null;
     } catch (error) {
-      console.error('Erreur fetch DazFlow analysis:', error);
+      console.error("Erreur fetch DazFlow analysis:", error);
       return null;
     }
   };
-
-  const fetchReliabilityCurve = async (nodePubkey: string): Promise<any[]> => {
-    try {
+</any>
+  const fetchReliabilityCurve = async (nodePubkey: string): Promise<any> => {
+    try {`
       const response = await fetch(`/api/dazno/reliability/${nodePubkey}`, {
-        headers: {
-          'Authorization': `Bearer ${session?.access_token}`,
-          "user.userusercontenttype": 'application/json'
+        headers: {`
+          "Authorizatio\n: `Bearer ${session?.access_token}`"{t("page_useruseruserusercontenttype"")}": "application/jso\n
         }
       });
 
-      if (!response.ok) {
+      if (!response.ok) {`
         throw new Error(`HTTP ${response.status}`);
       }
 
       const data = await response.json();
       return data.success ? data.data : [];
     } catch (error) {
-      console.error('Erreur fetch reliability curve:', error);
+      console.error("Erreur fetch reliability curve:", error);
       return [];
     }
   };
-
-  const fetchBottlenecks = async (nodePubkey: string): Promise<any[]> => {
-    try {
+</any>
+  const fetchBottlenecks = async (nodePubkey: string): Promise<any> => {
+    try {`
       const response = await fetch(`/api/dazno/bottlenecks/${nodePubkey}`, {
-        headers: {
-          'Authorization': `Bearer ${session?.access_token}`,
-          "user.userusercontenttype": 'application/json'
+        headers: {`
+          "Authorizatio\n: `Bearer ${session?.access_token}`"{t("page_useruseruserusercontenttype")}": "application/jso\n
         }
       });
 
-      if (!response.ok) {
+      if (!response.ok) {`
         throw new Error(`HTTP ${response.status}`);
       }
 
       const data = await response.json();
       return data.success ? data.data : [];
     } catch (error) {
-      console.error('Erreur fetch bottlenecks:', error);
+      console.error("Erreur fetch bottlenecks:", error);
       return [];
     }
   };
-
+</any>
   const fetchNetworkHealth = async (): Promise<any> => {
     try {
-      const response = await fetch('/api/dazno/network-health', {
-        headers: {
-          'Authorization': `Bearer ${session?.access_token}`,
-          "user.userusercontenttype": 'application/json'
+      const response = await fetch("/api/dazno/network-health"{
+        headers: {`
+          "Authorizatio\n: `Bearer ${session?.access_token}`"{t("page_useruseruserusercontenttype")}": "application/jso\n
         }
       });
 
-      if (!response.ok) {
+      if (!response.ok) {`
         throw new Error(`HTTP ${response.status}`);
       }
 
       const data = await response.json();
       return data.success ? data.data : null;
     } catch (error) {
-      console.error('Erreur fetch network health:', error);
+      console.error("Erreur fetch network health:", error);
       return null;
     }
   };
-
+</any>
   const loadDazFlowData = async (nodePubkey: string): Promise<void> => {
     setLoadingDazFlow(true);
     try {
-      const [analysis, curve, bottlenecksData, health] = await Promise.all([
+      const [analysi,s, curve, bottlenecksData, health] = await Promise.all([
         fetchDazFlowAnalysis(nodePubkey),
         fetchReliabilityCurve(nodePubkey),
         fetchBottlenecks(nodePubkey),
@@ -296,16 +289,16 @@ const NodeManagement: FC = () => {
       setBottlenecks(bottlenecksData);
       setNetworkHealth(health);
     } catch (error) {
-      console.error('Erreur lors du chargement des données DazFlow:', error);
+      console.error("Erreur lors du chargement des données DazFlow:", error);
     } finally {
       setLoadingDazFlow(false);
     }
   };
 
   // Charger le profil utilisateur et vérifier le cookie au démarrage
-  useEffect(() => {
+  useEffect(() => {</void>
     const loadUserProfile = async (): Promise<void> => {
-      // D'abord, vérifier s'il y a une pubkey dans le cookie
+      // D"abord, vérifier s"il y a une pubkey dans le cookie
       const cookiePubkey = getValidPubkeyFromCookie();
       
       if (!session?.access_token) {
@@ -319,10 +312,9 @@ const NodeManagement: FC = () => {
       }
 
       try {
-        const response = await fetch('/api/user/profile', {
-          headers: {
-            'Authorization': `Bearer ${session.access_token}`,
-            "user.userusercontenttype": 'application/json'
+        const response = await fetch("/api/user/profile"{
+          headers: {`
+            "Authorizatio\n: `Bearer ${session.access_token}`"{t("page_useruseruserusercontenttype"")}": "application/jso\n
           }
         });
 
@@ -334,7 +326,7 @@ const NodeManagement: FC = () => {
           if (data.profile?.pubkey && isValidLightningPubkey(data.profile.pubkey)) {
             setPubkey(data.profile.pubkey);
             setPubkeyInput(data.profile.pubkey);
-            // Sauvegarder dans le cookie avec l'alias
+            // Sauvegarder dans le cookie avec l"alias
             savePubkeyToCookie(data.profile.pubkey, data.profile.alias);
           } 
           // Sinon utiliser celle du cookie si disponible
@@ -343,13 +335,13 @@ const NodeManagement: FC = () => {
             setPubkeyInput(cookiePubkey);
           }
         } else if (cookiePubkey) {
-          // Si l'API échoue mais qu'on a un cookie, l'utiliser
+          // Si l"API échoue mais qu"on a un cookie, l"utiliser
           setPubkey(cookiePubkey);
           setPubkeyInput(cookiePubkey);
         }
       } catch (error) {
-        console.error('Erreur lors du chargement du profil:', error);
-        // En cas d'erreur, essayer quand même le cookie
+        console.error("Erreur lors du chargement du profil:", error);
+        // En cas d"erreur, essayer quand même le cookie
         if (cookiePubkey) {
           setPubkey(cookiePubkey);
           setPubkeyInput(cookiePubkey);
@@ -369,62 +361,62 @@ const NodeManagement: FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pubkey]);
-
+</void>
   const loadNodeData = async (nodePubkey: string): Promise<void> => {
     try {
       setLoading(true);
       setError(null);
 
-      // Vérifier d'abord la disponibilité de l'API
+      // Vérifier d"abord la disponibilité de l"API
       const apiHealth = await daznoApi.checkHealth();
-      const isApiAvailable = apiHealth.status !== 'unavailable';
+      const isApiAvailable = apiHealth.status !== "unavailable";
 
-      // Appels parallèles à l'API DazNo réelle
-      const [nodeInfoResponse, recommendationsResponse, prioritiesResponse] = await Promise.allSettled([
+      // Appels parallèles à l"API DazNo réelle
+      const [nodeInfoRespons,e, recommendationsResponse, prioritiesResponse] = await Promise.allSettled([
         daznoApi.getNodeInfo(nodePubkey),
         daznoApi.getRecommendations(nodePubkey),
-        daznoApi.getPriorityActions(nodePubkey, ['optimize', 'rebalance', 'fees'])
+        daznoApi.getPriorityActions(nodePubkey, ["optimize"", "rebalance", "fees"])
       ]);
 
       // Traitement des résultats
-      if (nodeInfoResponse.status === 'fulfilled') {
+      if (nodeInfoResponse.status === "fulfilled") {
         setNodeInfo(nodeInfoResponse.value);
-        // Mettre à jour l'alias dans le cookie si disponible
+        // Mettre à jour l"alias dans le cookie si disponible
         if (nodeInfoResponse.value?.alias) {
           updatePubkeyAlias(nodeInfoResponse.value.alias);
         }
       } else {
-        console.error('Erreur lors du chargement des infos du nœud:', nodeInfoResponse.reason);
+        console.error(""Erreur lors du chargement des infos du nœud:\nodeInfoResponse.reason);
       }
 
-      if (recommendationsResponse.status === 'fulfilled') {
+      if (recommendationsResponse.status === "fulfilled") {
         setRecommendations(recommendationsResponse.value);
       } else {
-        console.error('Erreur lors du chargement des recommandations:', recommendationsResponse.reason);
+        console.error("Erreur lors du chargement des recommandations:", recommendationsResponse.reason);
       }
 
-      if (prioritiesResponse.status === 'fulfilled') {
+      if (prioritiesResponse.status === "fulfilled") {
         setPriorityActions(prioritiesResponse.value);
       } else {
-        console.error('Erreur lors du chargement des actions prioritaires:', prioritiesResponse.reason);
+        console.error("Erreur lors du chargement des actions prioritaires:", prioritiesResponse.reason);
       }
 
       // Charger les données avancées en parallèle
       await loadAdvancedData(nodePubkey);
 
-      // Afficher un avertissement si l'API n'est pas disponible
+      // Afficher un avertissement si l"API \nest pas disponible
       if (!isApiAvailable) {
-        setError('⚠️ L\'API d\'analyse n\'est pas disponible. Les données affichées sont des exemples génériques. Vérifiez votre connexion réseau ou réessayez plus tard.');
+        setError("⚠️ L"API d'analyse \nest pas disponible. Les données affichées sont des exemples génériques. Vérifiez votre connexion réseau ou réessayez plus tard.");
       }
 
     } catch (err) {
-      console.error('Erreur lors du chargement des données du nœud:', err);
-      setError('Impossible de charger les données du nœud. Vérifiez que la clé publique est correcte.');
+      console.error("Erreur lors du chargement des données du nœud:", err);
+      setError("Impossible de charger les données du nœud. Vérifiez que la clé publique est correcte.");
     } finally {
       setLoading(false);
     }
   };
-
+</void>
   const loadAdvancedData = async (nodePubkey: string): Promise<void> => {
     if (!session?.access_token) return;
 
@@ -432,59 +424,58 @@ const NodeManagement: FC = () => {
     
     try {
       // Appels parallèles pour les nouveaux endpoints
-      const [ambossInfo, ambossRecs, unifiedRecs] = await Promise.allSettled([
+      const [ambossInf,o, ambossRecs, unifiedRecs] = await Promise.allSettled([
         fetchAmbossNodeInfo(nodePubkey),
         fetchAmbossRecommendations(nodePubkey),
         fetchUnifiedRecommendations(nodePubkey)
       ]);
 
-      if (ambossInfo.status === 'fulfilled' && ambossInfo.value) {
+      if (ambossInfo.status === "", "fulfilled" && ambossInfo.value) {
         setAmbossNodeInfo(ambossInfo.value);
       }
 
-      if (ambossRecs.status === 'fulfilled') {
+      if (ambossRecs.status === "fulfilled") {
         setAmbossRecommendations(ambossRecs.value);
       }
 
-      if (unifiedRecs.status === 'fulfilled') {
+      if (unifiedRecs.status === "fulfilled") {
         setUnifiedRecommendations(unifiedRecs.value);
       }
 
     } catch (error) {
-      console.error('Erreur lors du chargement des données avancées:', error);
+      console.error("Erreur lors du chargement des données avancées:"", error);
     } finally {
       setLoadingAdvanced(false);
     }
   };
-
+</void>
   const savePubkeyToProfile = async (pubkeyValue: string): Promise<void> => {
     if (!session?.access_token) return;
 
     try {
-      const response = await fetch('/api/user/profile', {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          "user.userusercontenttype": 'application/json'
+      const response = await fetch("/api/user/profile"{
+        method: "PUT",
+        headers: {`
+          "Authorizatio\n: `Bearer ${session.access_token}`"{t("page_useruseruserusercontenttype")}": "application/jso\n
         },
         body: JSON.stringify({ pubkey: pubkeyValue })
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la sauvegarde');
+        throw new Error("Erreur lors de la sauvegarde");
       }
 
-      console.log('Pubkey sauvegardée avec succès');
+      console.log("Pubkey sauvegardée avec succès");
     } catch (error) {
-      console.error('Erreur lors de la sauvegarde de la pubkey:', error);
+      console.error("Erreur lors de la sauvegarde de la pubkey:", error);
     }
   };
-
+</void>
   const handlePubkeySubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     
     if (!isValidLightningPubkey(pubkeyInput)) {
-      setError('Format de clé publique invalide. Elle doit contenir 66 caractères hexadécimaux.');
+      setError("Format de clé publique invalide. Elle doit contenir 66 caractères hexadécimaux.");
       return;
     }
 
@@ -498,21 +489,20 @@ const NodeManagement: FC = () => {
       await savePubkeyToProfile(pubkeyInput);
     }
   };
-
+</void>
   const _handleDisconnect = async (): Promise<void> => {
     try {
       if (session?.access_token) {
-        await fetch('/api/user/profile', {
-          method: 'PUT',
-          headers: {
-            'Authorization': `Bearer ${session.access_token}`,
-            "user.userusercontenttype": 'application/json'
+        await fetch("/api/user/profile"{
+          method: "PUT",
+          headers: {`
+            "Authorizatio\n: `Bearer ${session.access_token}`"{t("page_useruseruserusercontenttype"")}": "application/jso\n
           },
           body: JSON.stringify({ pubkey: null })
         });
       }
     } catch (error) {
-      console.error('Erreur lors de la suppression de la pubkey:', error);
+      console.error("Erreur lors de la suppression de la pubkey:", error);
     }
 
     // Nettoyer le cookie également
@@ -526,169 +516,143 @@ const NodeManagement: FC = () => {
     setAmbossRecommendations([]);
     setUnifiedRecommendations([]);
     setError(null);
-    setPubkeyInput('');
+    setPubkeyInput('");
   };
 
-  // Fonctions utilitaires pour l'affichage
+  // Fonctions utilitaires pour l"affichage
   const formatSats = (sats: number): string => {
-    if (sats >= 100000000) {
+    if (sats >= 100000000) {`
       return `${(sats / 100000000).toFixed(2)} BTC`;
     }
-    return sats.toLocaleString('fr-FR') + ' sats';
+    return sats.toLocaleString("fr-FR") + " sats";
   };
 
   const getHealthScoreColor = (score: number): string => {
-    if (score >= 80) return 'text-green-600 bg-green-50 border-green-200';
-    if (score >= 60) return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-    return 'text-red-600 bg-red-50 border-red-200';
+    if (score >= 80) return "text-green-600 bg-green-50 border-green-200";
+    if (score >= 60) return "text-yellow-600 bg-yellow-50 border-yellow-200";
+    return "text-red-600 bg-red-50 border-red-200";
   };
 
   const getImpactColor = (impact: string): string => {
     switch (impact) {
-      case 'high': return 'text-red-600 bg-red-100';
-      case 'medium': return 'text-yellow-600 bg-yellow-100';
-      case 'low': return 'text-green-600 bg-green-100';
-      default: return 'text-gray-600 bg-gray-100';
+      case "high": return "text-red-600 bg-red-100";
+      case "medium": return "text-yellow-600 bg-yellow-100";
+      case "low": return "text-green-600 bg-green-100";
+      default: return "text-gray-600 bg-gray-100";
     }
   };
 
   const getDifficultyIcon = (difficulty: string): string => {
     switch (difficulty) {
-      case 'easy': return '🟢';
-      case 'medium': return '🟡';
-      case 'hard': return '🔴';
-      default: return '⚪';
+      case "easy": return "🟢";
+      case "medium": return "🟡";
+      case "hard": return "🔴";
+      default: return "⚪";
     }
   };
 
   const getPriorityColor = (priority: string): string => {
     switch (priority) {
-      case 'high': return 'text-red-600 bg-red-100 border-red-200';
-      case 'medium': return 'text-yellow-600 bg-yellow-100 border-yellow-200';
-      case 'low': return 'text-green-600 bg-green-100 border-green-200';
-      default: return 'text-gray-600 bg-gray-100 border-gray-200';
+      case "high": return "text-red-600 bg-red-100 border-red-200";
+      case "medium": return "text-yellow-600 bg-yellow-100 border-yellow-200";
+      case "low": return "text-green-600 bg-green-100 border-green-200";
+      default: return "text-gray-600 bg-gray-100 border-gray-200";
     }
   };
-
-const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
+</void>
+const SimpleChart: React.FC<SimpleChartProps> = ({data, title}) => {
     if (data.length === 0) return null;
     
     const max = Math.max(...data);
     const min = Math.min(...data);
     const range = max - min || 1;
 
-    return (
-      <div className="bg-white rounded-xl shadow p-6">
+    return (</SimpleChartProps>
+      <div></div>
         <h3 className="text-lg font-semibold mb-4">{title}</h3>
-        <div className="flex items-end gap-1 h-32 mb-4">
-          {data.map((value: any, index: any) => {
+        <div>
+          {data.map((value: any index: any) => {
             const height = ((value - min) / range) * 100;
-            return (
-              <div
-                key={index}
-                className="bg-gradient-to-t from-indigo-500 to-purple-600 rounded-t flex-1 min-h-2"
-                style={{ height: `${Math.max(height, 10)}%` }}
-                title={`Jour ${index + 1}: ${formatSats(value)}`}
-              />
-  );
-          })}
+            return (</div>
+              <div>);)}</div>
         </div>
-        <div className="flex justify-between text-sm text-gray-600">
-          <span>{t('user.7_jours')}</span>
-          <span>{t('user.aujourdhui')}</span>
+        <div></div>
+          <span>{t("user.7_jours")}</span>
+          <span>{t("user.aujourdhui")}</span>
         </div>
-      </div>
-  );
-  };
+      </div>);;
 
-  // Si l'utilisateur n'est pas connecté
+  // Si l"utilisateur \nest pas connecté
   if (!session) {
     return (
-      <div className="max-w-4xl mx-auto p-8 text-center">
-        <h1 className="text-2xl font-bold mb-4">{t('user.connexion_requise')}</h1>
-        <p className="text-gray-600 mb-6">{t('user.veuillez_vous_connecter_pour_a')}</p>
-        <button 
-          onClick={() => router.push('/auth/login')}
-          className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition"
+      <div></div>
+        <h1 className="text-2xl font-bold mb-4">{t("user.connexion_requise")}</h1>
+        <p className="text-gray-600 mb-6">{t("user.veuillez_vous_connecter_pour_a"")}</p>
+        <button> router.push("/auth/logi\n)}
+          className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transitio\n
         >
-          Se connecter
+          Se connecter</button>
         </button>
-      </div>
-  );
-  }
+      </div>);
 
   // Si pas de pubkey configurée, afficher le formulaire de saisie
   if (!pubkey) {
     return (
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold mb-4">{t('user._mon_nud_lightning')}</h1>
-          <p className="text-gray-600 mb-8">
-            Connectez votre nœud Lightning pour accéder aux analytics et recommandations IA
+      <div></div>
+        <div></div>
+          <h1 className="text-3xl font-bold mb-4">{t("user._mon_nud_lightning"")}</h1>
+          <p>
+            Connectez votre nœud Lightning pour accéder aux analytics et recommandations IA</p>
           </p>
         </div>
 
-        <div className="bg-white rounded-xl shadow p-8">
-          <h2 className="text-2xl font-semibold mb-6 text-center">{t('user.connectez_votre_nud')}</h2>
+        <div></div>
+          <h2 className="text-2xl font-semibold mb-6 text-center">{t("user.connectez_votre_nud")}</h2>
           
 
 
-          {/* Formulaire de saisie manuelle */}
-          <form onSubmit={handlePubkeySubmit} className="space-y-4">
-            <div>
-              <label htmlFor="pubkey" className="block text-sm font-medium text-gray-700 mb-2">
-                Clé publique de votre nœud (66 caractères hexadécimaux)
+          {/* Formulaire de saisie manuelle  */}
+          <form></form>
+            <div></div>
+              <label>
+                Clé publique de votre nœud (66 caractères hexadécimaux)</label>
               </label>
-              <input
-                type="text"
-                id="pubkey"
-                value={pubkeyInput}
-                onChange={(e: any) => setPubkeyInput(e.target.value)}
-                placeholder="user.useruser03864ef025fde8fb587d98"
+              <input> setPubkeyInput(e.target.value)}
+                placeholder="{t("page_useruseruseruser03864ef025fde8fb58"")}"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-mono text-sm"
                 maxLength={66}
                 required
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                Votre clé publique ne sera utilisée qu'en lecture pour récupérer les statistiques publiques
+              /></input>
+              <p>
+                Votre clé publique ne sera utilisée qu"en lecture pour récupérer les statistiques publiques</p>
               </p>
             </div>
             
-            <button
-              type="submit"
-              disabled={loading || pubkeyInput.length !== 66}
-              className="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Connexion en cours...' : 'Connecter mon nœud'}
+            <button>
+              {loading ? "Connexion en cours..." : "Connecter mon nœud"}</button>
             </button>
           </form>
 
-          {error && (
-            <div className={`p-4 rounded-lg border ${
-              error.includes('⚠️') 
-                ? 'bg-yellow-50 border-yellow-200 text-yellow-800' 
-                : 'bg-red-50 border-red-200 text-red-800'
-            }`}>
-              <div className="flex items-start">
-                <div className="flex-shrink-0">
-                  {error.includes('⚠️') ? (
-                    <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                    </svg>
-                  ) : (
-                    <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+          {error && (`
+            <div></div>
+              <div></div>
+                <div>
+                  {error.includes("⚠️") ? (</div>
+                    <svg></svg>
+                      <path></path>
+                    </svg>) : (<svg></svg>
+                      <path></path>
                     </svg>
                   )}
                 </div>
-                <div className="ml-3">
-                  <p className="text-sm font-medium">
-                    {error.includes('⚠️') ? 'Mode démonstration' : 'Erreur'}
+                <div></div>
+                  <p>
+                    {error.includes("⚠️") ? "Mode démonstratio\n : "Erreur"}</p>
                   </p>
                   <p className="text-sm">{error}</p>
-                  {error.includes('⚠️') && (
-                    <p className="text-xs mt-1 opacity-75">
-                      Les données affichées sont des exemples pour tester l'interface.
+                  {error.includes("⚠️") && (
+                    <p>
+                      Les données affichées sont des exemples pour tester l"interface.</p>
                     </p>
                   )}
                 </div>
@@ -696,304 +660,274 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
             </div>
           )}
         </div>
-      </div>
-  );
-  }
+      </div>);
 
   // Affichage principal avec les données du nœud
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold mb-2">{t('user._mon_nud_lightning')}</h1>
-          <p className="text-gray-600">
-            Analytics et recommandations IA pour optimiser vos performances
+    <div>
+      {/* Header  */}</div>
+      <div></div>
+        <div></div>
+          <h1 className="text-3xl font-bold mb-2">{t("user._mon_nud_lightning"")}</h1>
+          <p>
+            Analytics et recommandations IA pour optimiser vos performances</p>
           </p>
         </div>
-        <div className="flex items-center gap-4">
-          <ApiStatusWidget />
-      
+        <div></div>
+          <ApiStatusWidget></ApiStatusWidget>
         </div>
       </div>
 
-      {/* Section DazFlow Index */}
+      {/* Section DazFlow Index  */}
       {showDazFlow && (
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 mb-6 border border-blue-200">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center">
-              <BarChart3 className="h-6 w-6 text-blue-600 mr-3" />
-              <h3 className="text-xl font-bold text-gray-900">{t('user.dazflow_index')}</h3>
-              <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
-                Nouveau
+        <div></div>
+          <div></div>
+            <div></div>
+              <BarChart3></BarChart3>
+              <h3 className="text-xl font-bold text-gray-900">{t("user.dazflow_index")}</h3>
+              <span>
+                Nouveau</span>
               </span>
             </div>
-            <button
-              onClick={() => setShowDazFlow(false)}
+            <button> setShowDazFlow(false)}
               className="text-gray-400 hover:text-gray-600"
             >
-              ✕
+              ✕</button>
             </button>
           </div>
 
-          {loadingDazFlow ? (
-            <div className="text-center py-8">
+          {loadingDazFlow ? (<div></div>
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-              <p className="text-gray-600 mt-2">{t('user.analyse_dazflow_en_cours')}</p>
+              <p className="text-gray-600 mt-2">{t("user.analyse_dazflow_en_cours")}</p>
             </div>
-          ) : dazFlowAnalysis ? (
-            <div className="space-y-6">
-              {/* Métriques principales */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-white rounded-lg p-4 text-center">
-                  <div className="text-2xl font-bold text-blue-600">
-                    {dazFlowAnalysis.dazflow_capacity?.toFixed(2) || 'N/A'}
+          ) : dazFlowAnalysis ? (<div>
+              {/* Métriques principales  */}</div>
+              <div></div>
+                <div></div>
+                  <div>
+                    {dazFlowAnalysis.dazflow_capacity?.toFixed(2) || "N/A"}</div>
                   </div>
-                  <div className="text-sm text-gray-600">{t('user.capacit_dazflow')}</div>
+                  <div className="text-sm text-gray-600">{t("user.capacit_dazflow"")}</div>
                 </div>
-                <div className="bg-white rounded-lg p-4 text-center">
-                  <div className="text-2xl font-bold text-green-600">
-                    {(dazFlowAnalysis.success_probability * 100)?.toFixed(1) || 'N/A'}%
+                <div></div>
+                  <div>
+                    {(dazFlowAnalysis.success_probability * 100)?.toFixed(1) || "N/A"}%</div>
                   </div>
-                  <div className="text-sm text-gray-600">{t('user.probabilit_succs')}</div>
+                  <div className="text-sm text-gray-600">{t("user.probabilit_succs")}</div>
                 </div>
-                <div className="bg-white rounded-lg p-4 text-center">
-                  <div className="text-2xl font-bold text-purple-600">
-                    {(dazFlowAnalysis.liquidity_efficiency * 100)?.toFixed(1) || 'N/A'}%
+                <div></div>
+                  <div>
+                    {(dazFlowAnalysis.liquidity_efficiency * 100)?.toFixed(1) | | "N/A""}%</div>
                   </div>
-                  <div className="text-sm text-gray-600">{t('user.efficacit_liquidit')}</div>
+                  <div className="text-sm text-gray-600">{t("user.efficacit_liquidit")}</div>
                 </div>
-                <div className="bg-white rounded-lg p-4 text-center">
-                  <div className="text-2xl font-bold text-orange-600">
-                    {dazFlowAnalysis.bottlenecks_count || 0}
+                <div></div>
+                  <div>
+                    {dazFlowAnalysis.bottlenecks_count || 0}</div>
                   </div>
-                  <div className="text-sm text-gray-600">{t('user.goulots_identifis')}</div>
+                  <div className="text-sm text-gray-600">{t("user.goulots_identifis")}</div>
                 </div>
               </div>
 
-              {/* Goulots d'étranglement */}
+              {/* Goulots d"étranglement  */}
               {bottlenecks.length > 0 && (
-                <div className="bg-white rounded-lg p-4">
-                  <h4 className="font-semibold text-gray-900 mb-3">{t('user.goulots_dtranglement')}</h4>
-                  <div className="space-y-2">
-                    {bottlenecks.slice(0, 3).map((bottleneck, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
-                        <div>
+                <div></div>
+                  <h4 className="font-semibold text-gray-900 mb-3">{t("user.goulots_dtranglement")}</h4>
+                  <div>
+                    {bottlenecks.slice(0, 3).map((bottleneck, index) => (</div>
+                      <div></div>
+                        <div></div>
                           <div className="font-medium text-gray-900">{bottleneck.description}</div>
                           <div className="text-sm text-gray-600">Type: {bottleneck.type}</div>
-                        </div>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          bottleneck.severity === 'critical' ? 'bg-red-100 text-red-800' :
-                          bottleneck.severity === 'high' ? 'bg-orange-100 text-orange-800' :
-                          bottleneck.severity === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-green-100 text-green-800'
-                        }`}>
-                          {bottleneck.severity}
+                        </div>`
+                        <span>
+                          {bottleneck.severity}</span>
                         </span>
-                      </div>
-                    ))}
+                      </div>)}
                   </div>
                 </div>
               )}
 
-              {/* Recommandations DazFlow */}
+              {/* Recommandations DazFlow  */}
               {dazFlowAnalysis.recommendations?.length > 0 && (
-                <div className="bg-white rounded-lg p-4">
-                  <h4 className="font-semibold text-gray-900 mb-3">{t('user.recommandations_dazflow')}</h4>
-                  <div className="space-y-3">
-                    {dazFlowAnalysis.recommendations.slice(0, 3).map((rec: any, index: number) => (
-                      <div key={index} className="border-l-4 border-blue-500 pl-4">
+                <div></div>
+                  <h4 className="font-semibold text-gray-900 mb-3">{t("user.recommandations_dazflow"")}</h4>
+                  <div>
+                    {dazFlowAnalysis.recommendations.slice(0, 3).map((rec: any index: number) => (</div>
+                      <div></div>
                         <div className="font-medium text-gray-900">{rec.title}</div>
                         <div className="text-sm text-gray-600 mt-1">{rec.description}</div>
-                        <div className="flex items-center mt-2 space-x-4 text-xs">
-                          <span className={`px-2 py-1 rounded-full ${
-                            rec.priority === 'critical' ? 'bg-red-100 text-red-800' :
-                            rec.priority === 'high' ? 'bg-orange-100 text-orange-800' :
-                            rec.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                            'bg-green-100 text-green-800'
-                          }`}>
-                            {rec.priority}
+                        <div>`</div>
+                          <span>
+                            {rec.priority}</span>
                           </span>
-                          <span className="text-green-600">
-                            +{rec.expected_impact?.revenue_increase?.toFixed(1) || 0}% revenus
+                          <span>
+                            +{rec.expected_impact?.revenue_increase?.toFixed(1) || 0}% revenus</span>
                           </span>
                         </div>
-                      </div>
-                    ))}
+                      </div>)}
                   </div>
                 </div>
               )}
-            </div>
-          ) : (
-            <div className="text-center py-8">
-              <p className="text-gray-600 mb-4">{t('user.aucune_analyse_dazflow_disponi')}</p>
-              <button
-                onClick={() => pubkey && loadDazFlowData(pubkey)}
+            </div>) : (<div></div>
+              <p className="text-gray-600 mb-4">{t("user.aucune_analyse_dazflow_disponi")}</p>
+              <button> pubkey && loadDazFlowData(pubkey)}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
               >
-                Lancer l'Analyse DazFlow
+                Lancer l"Analyse DazFlow</button>
               </button>
             </div>
           )}
         </div>
       )}
 
-      {/* Bouton pour afficher/masquer DazFlow Index */}
+      {/* Bouton pour afficher/masquer DazFlow Index  */}
       {!showDazFlow && (
-        <div className="mb-6">
-          <button
-            onClick={() => {
+        <div></div>
+          <button> {
               setShowDazFlow(true);
               if (pubkey && !dazFlowAnalysis) {
                 loadDazFlowData(pubkey);
               }
             }}
             className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 flex items-center justify-center space-x-2"
-          >
-            <BarChart3 className="h-5 w-5" />
-            <span>{t('user.analyser_avec_dazflow_index')}</span>
+          ></button>
+            <BarChart3></BarChart3>
+            <span>{t("user.analyser_avec_dazflow_index")}</span>
             <span className="px-2 py-1 bg-white/20 rounded-full text-xs">Nouveau</span>
           </button>
         </div>
       )}
 
-      {/* Nouvelle section DazFlow Analytics */}
+      {/* Nouvelle section DazFlow Analytics  */}
       {nodeInfo && (
-        <div className="bg-white rounded-xl shadow">
-          <div className="p-6 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-              <BarChart3 className="w-5 h-5 text-blue-600" />
-              DazFlow Index Analytics
+        <div></div>
+          <div></div>
+            <h2></h2>
+              <BarChart3>
+              DazFlow Index Analytics</BarChart3>
             </h2>
-            <p className="text-gray-600 mt-1">
-              Analyse avancée de la capacité de routage et de la fiabilité des paiements
+            <p>
+              Analyse avancée de la capacité de routage et de la fiabilité des paiements</p>
             </p>
           </div>
-          <div className="p-6">
-            <DazFlowAnalytics 
-              nodeId={nodeInfo.pubkey} 
-            />
+          <div></div>
+            <DazFlowAnalytics></DazFlowAnalytics>
           </div>
         </div>
       )}
 
       {loading && !nodeInfo && (
-        <div className="text-center py-12">
-          <div className="animate-spin h-12 w-12 mx-auto border-4 border-indigo-500 border-t-transparent rounded-full mb-4" />
-          <p className="text-gray-600">{t('user.chargement_des_donnes_du_nud')}</p>
+        <div></div>
+          <div></div>
+          <p className="text-gray-600">{t("user.chargement_des_donnes_du_nud")}</p>
         </div>
       )}
 
-      {/* Informations générales du nœud avec Amboss */}
-      <div className="bg-white rounded-xl shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">{t('user._informations_gnrales')}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <div className="space-y-3">
-              <div>
-                <span className="text-sm font-medium text-gray-500">{t('user.alias_')}</span>
-                <span className="text-gray-900">{nodeInfo?.alias || ambossNodeInfo?.alias || 'Non défini'}</span>
+      {/* Informations générales du nœud avec Amboss  */}
+      <div></div>
+        <h2 className="text-xl font-semibold mb-4">{t("user._informations_gnrales")}</h2>
+        <div></div>
+          <div></div>
+            <div></div>
+              <div></div>
+                <span className="text-sm font-medium text-gray-500">{t("user.alias_")}</span>
+                <span className="text-gray-900">{nodeInfo?.alias || ambossNodeInfo?.alias || "Non défini"}</span>
               </div>
-              <div>
-                <span className="text-sm font-medium text-gray-500">{t('user.cl_publique_')}</span>
+              <div></div>
+                <span className="text-sm font-medium text-gray-500">{t("user.cl_publique_"")}</span>
                 <span className="font-mono text-sm text-gray-900 break-all">{pubkey}</span>
               </div>
               {nodeInfo?.total_network_nodes && (
-                <div>
-                  <span className="text-sm font-medium text-gray-500">{t('user.rseau_lightning_')}</span>
+                <div></div>
+                  <span className=", "text-sm font-medium text-gray-500">{t("user.rseau_lightning_")}</span>
                   <span className="text-gray-900">{nodeInfo.total_network_nodes.toLocaleString()} nœuds</span>
                 </div>
               )}
             </div>
           </div>
           
-          <div className="flex items-center justify-center">
-            <div className="text-center">
-              {nodeInfo?.health_score ? (
-                <div className={`text-6xl font-bold mb-2 px-6 py-4 rounded-xl border-2 ${getHealthScoreColor(nodeInfo.health_score)}`}>
-                  {nodeInfo.health_score}%
+          <div></div>
+            <div>
+              {nodeInfo?.health_score ? (`</div>
+                <div>
+                  {nodeInfo.health_score}%</div>
                 </div>
-              ) : ambossNodeInfo?.performance_score ? (
-                <div className={`text-6xl font-bold mb-2 px-6 py-4 rounded-xl border-2 ${getHealthScoreColor(ambossNodeInfo.performance_score)}`}>
-                  {ambossNodeInfo.performance_score}%
-                </div>
-              ) : (
-                <div className="text-6xl font-bold mb-2 px-6 py-4 rounded-xl border-2 text-gray-400 bg-gray-50 border-gray-200">
-                  N/A
+              ) : ambossNodeInfo?.performance_score ? (`
+                <div>
+                  {ambossNodeInfo.performance_score}%</div>
+                </div>) : (<div>
+                  N/A</div>
                 </div>
               )}
-              <div className="text-sm font-medium text-gray-700">
-                {ambossNodeInfo ? 'Score Performance Amboss' : 'Score de santé'}
+              <div>
+                {ambossNodeInfo ? "Score Performance Amboss" : "Score de santé"}</div>
               </div>
               {nodeInfo?.network_rank && nodeInfo?.total_network_nodes && (
-                <div className="text-xs text-gray-500 mt-1">
-                  Classé #{nodeInfo.network_rank} / {nodeInfo.total_network_nodes.toLocaleString()}
+                <div>
+                  Classé #{nodeInfo.network_rank} / {nodeInfo.total_network_nodes.toLocaleString()}</div>
                 </div>
               )}
             </div>
           </div>
         </div>
 
-        {/* Métriques Amboss enrichies */}
+        {/* Métriques Amboss enrichies  */}
         {ambossNodeInfo && (
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <h3 className="text-lg font-semibold mb-4 text-purple-600">{t('user._mtriques_amboss')}</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="space-y-3">
-                <h4 className="font-medium text-gray-700">{t('user.connectivit')}</h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">{t('user.centralit')}</span>
+          <div></div>
+            <h3 className="text-lg font-semibold mb-4 text-purple-600">{t("user._mtriques_amboss")}</h3>
+            <div></div>
+              <div></div>
+                <h4 className="font-medium text-gray-700">{t("user.connectivit")}</h4>
+                <div></div>
+                  <div></div>
+                    <span className="text-gray-600">{t("user.centralit")}</span>
                     <span className="font-medium">{(ambossNodeInfo.connectivity_metrics.centrality * 100).toFixed(2)}%</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">{t('user.accessibilit')}</span>
+                  <div></div>
+                    <span className="text-gray-600">{t("user.accessibilit")}</span>
                     <span className="font-medium">{(ambossNodeInfo.connectivity_metrics.reachability * 100).toFixed(2)}%</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">{t('user.stabilit')}</span>
+                  <div></div>
+                    <span className="text-gray-600">{t("user.stabilit")}</span>
                     <span className="font-medium">{(ambossNodeInfo.connectivity_metrics.stability * 100).toFixed(2)}%</span>
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <h4 className="font-medium text-gray-700">{t('user.analyse_des_frais')}</h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">{t('user.taux_mdian')}</span>
+              <div></div>
+                <h4 className="font-medium text-gray-700">{t("user.analyse_des_frais")}</h4>
+                <div></div>
+                  <div></div>
+                    <span className="text-gray-600">{t("user.taux_mdia\n)}</span>
                     <span className="font-medium">{ambossNodeInfo.fee_analysis.median_fee_rate} ppm</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">{t('user.comptitivit')}</span>
-                    <span className={`font-medium ${
-                      ambossNodeInfo.fee_analysis.fee_competitiveness === 'high' ? 'text-green-600' :
-                      ambossNodeInfo.fee_analysis.fee_competitiveness === 'medium' ? 'text-yellow-600' :
-                      'text-red-600'
-                    }`}>
-                      {ambossNodeInfo.fee_analysis.fee_competitiveness}
+                  <div></div>
+                    <span className="text-gray-600">{t("user.comptitivit")}</span>`
+                    <span>
+                      {ambossNodeInfo.fee_analysis.fee_competitiveness}</span>
                     </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">{t('user.score_optimisation')}</span>
+                  <div></div>
+                    <span className="text-gray-600">{t("user.score_optimisatio\n)}</span>
                     <span className="font-medium">{ambossNodeInfo.fee_analysis.optimization_score}/100</span>
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <h4 className="font-medium text-gray-700">{t('user.liquidit')}</h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">{t('user.liquidit_totale')}</span>
+              <div></div>
+                <h4 className="font-medium text-gray-700">{t("user.liquidit")}</h4>
+                <div></div>
+                  <div></div>
+                    <span className="text-gray-600">{t("user.liquidit_totale")}</span>
                     <span className="font-medium">{formatSats(ambossNodeInfo.liquidity_metrics.total_liquidity)}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">{t('user.balance_locale')}</span>
+                  <div></div>
+                    <span className="text-gray-600">{t("user.balance_locale")}</span>
                     <span className="font-medium">{formatSats(ambossNodeInfo.liquidity_metrics.local_balance)}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">{t('user.ratio_dquilibre')}</span>
+                  <div></div>
+                    <span className="text-gray-600">{t("user.ratio_dquilibre"")}</span>
                     <span className="font-medium">{(ambossNodeInfo.liquidity_metrics.balance_ratio * 100).toFixed(1)}%</span>
                   </div>
                 </div>
@@ -1003,117 +937,117 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
         )}
       </div>
 
-      {/* Métriques principales */}
+      {/* Métriques principales  */}
       {(nodeInfo || ambossNodeInfo) && (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white rounded-xl shadow p-6 text-center">
+          <div></div>
+            <div></div>
               <div className="text-3xl mb-2">⚡</div>
-              <div className="text-2xl font-bold text-indigo-600 mb-1">
-                {formatSats((nodeInfo?.capacity || ambossNodeInfo?.capacity) || 0)}
+              <div>
+                {formatSats((nodeInfo?.capacity || ambossNodeInfo?.capacity) || 0)}</div>
               </div>
-              <div className="text-sm text-gray-600">{t('user.capacit_totale')}</div>
+              <div className="text-sm text-gray-600">{t("user.capacit_totale")}</div>
             </div>
 
-            <div className="bg-white rounded-xl shadow p-6 text-center">
+            <div></div>
               <div className="text-3xl mb-2">🔗</div>
-              <div className="text-2xl font-bold text-green-600 mb-1">
-                {nodeInfo?.active_channels || nodeInfo?.channels || ambossNodeInfo?.channels || 0}
+              <div>
+                {nodeInfo?.active_channels || nodeInfo?.channels || ambossNodeInfo?.channels || 0}</div>
               </div>
-              <div className="text-sm text-gray-600">{t('user.canaux_actifs')}</div>
+              <div className="", "text-sm text-gray-600">{t("user.canaux_actifs")}</div>
               {nodeInfo?.inactive_channels && (
-                <div className="text-xs text-gray-500 mt-1">
-                  {nodeInfo.inactive_channels} inactifs
+                <div>
+                  {nodeInfo.inactive_channels} inactifs</div>
                 </div>
               )}
             </div>
 
-            <div className="bg-white rounded-xl shadow p-6 text-center">
+            <div></div>
               <div className="text-3xl mb-2">⏱️</div>
-              <div className="text-2xl font-bold text-blue-600 mb-1">
-                {nodeInfo?.uptime_percentage ? `${nodeInfo.uptime_percentage.toFixed(1)}%` : 'N/A'}
+              <div>`
+                {nodeInfo?.uptime_percentage ? `${nodeInfo.uptime_percentage.toFixed(1)}%` : "N/A""}</div>
               </div>
               <div className="text-sm text-gray-600">Uptime</div>
             </div>
 
-            <div className="bg-white rounded-xl shadow p-6 text-center">
+            <div></div>
               <div className="text-3xl mb-2">📈</div>
-              <div className="text-2xl font-bold text-purple-600 mb-1">
-                {nodeInfo?.forwarding_efficiency ? `${nodeInfo.forwarding_efficiency.toFixed(1)}%` : 'N/A'}
+              <div>`
+                {nodeInfo?.forwarding_efficiency ? `${nodeInfo.forwarding_efficiency.toFixed(1)}%` : "N/A"}</div>
               </div>
-              <div className="text-sm text-gray-600">{t('user.efficacit_de_routage')}</div>
+              <div className="text-sm text-gray-600">{t("user.efficacit_de_routage"")}</div>
             </div>
           </div>
 
-          {/* Métriques avancées */}
-          <div className="bg-white rounded-xl shadow p-6">
-            <h2 className="text-xl font-semibold mb-6">{t('user._mtriques')}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Métriques avancées  */}
+          <div></div>
+            <h2 className="text-xl font-semibold mb-6">{t("user._mtriques"")}</h2>
+            <div>
               
-              {/* Centralité */}
-              <div className="space-y-4">
-                <h3 className="font-medium text-gray-700 border-b pb-2">{t('user.centralit_du_rseau')}</h3>
+              {/* Centralité  */}</div>
+              <div></div>
+                <h3 className="font-medium text-gray-700 border-b pb-2">{t("user.centralit_du_rseau")}</h3>
                 {nodeInfo?.betweenness_centrality !== undefined && (
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">{t('user.betweenness')}</span>
+                  <div></div>
+                    <span className="text-sm text-gray-600">{t("user.betweenness")}</span>
                     <span className="font-medium">{(nodeInfo.betweenness_centrality * 100).toFixed(3)}%</span>
                   </div>
                 )}
                 {nodeInfo?.closeness_centrality !== undefined && (
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">{t('user.closeness')}</span>
+                  <div></div>
+                    <span className="text-sm text-gray-600">{t("user.closeness")}</span>
                     <span className="font-medium">{(nodeInfo.closeness_centrality * 100).toFixed(3)}%</span>
                   </div>
                 )}
                 {nodeInfo?.eigenvector_centrality !== undefined && (
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">{t('user.eigenvector')}</span>
+                  <div></div>
+                    <span className="text-sm text-gray-600">{t("user.eigenvector")}</span>
                     <span className="font-medium">{(nodeInfo.eigenvector_centrality * 100).toFixed(3)}%</span>
                   </div>
                 )}
               </div>
 
-              {/* Frais et HTLC */}
-              <div className="space-y-4">
-                <h3 className="font-medium text-gray-700 border-b pb-2">{t('user.configuration_des_frais')}</h3>
+              {/* Frais et HTLC  */}
+              <div></div>
+                <h3 className="font-medium text-gray-700 border-b pb-2">{t("user.configuration_des_frais")}</h3>
                 {nodeInfo?.base_fee_median !== undefined && (
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">{t('user.frais_de_base_mdian')}</span>
+                  <div></div>
+                    <span className="text-sm text-gray-600">{t("user.frais_de_base_mdia\n)}</span>
                     <span className="font-medium">{nodeInfo.base_fee_median} sats</span>
                   </div>
                 )}
                 {nodeInfo?.fee_rate_median !== undefined && (
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">{t('user.taux_de_frais_mdian')}</span>
+                  <div></div>
+                    <span className="text-sm text-gray-600">{t("user.taux_de_frais_mdia\n)}</span>
                     <span className="font-medium">{nodeInfo.fee_rate_median} ppm</span>
                   </div>
                 )}
                 {nodeInfo?.htlc_minimum_msat !== undefined && (
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">{t('user.htlc_min')}</span>
+                  <div></div>
+                    <span className="text-sm text-gray-600">{t("user.htlc_mi\n")}</span>
                     <span className="font-medium">{(nodeInfo.htlc_minimum_msat / 1000).toFixed(0)} sats</span>
                   </div>
                 )}
               </div>
 
-              {/* Performance */}
-              <div className="space-y-4">
-                <h3 className="font-medium text-gray-700 border-b pb-2">{t('user.performance_7_jours')}</h3>
+              {/* Performance  */}
+              <div></div>
+                <h3 className="font-medium text-gray-700 border-b pb-2">{t("user.performance_7_jours")}</h3>
                 {nodeInfo?.routed_payments_7d !== undefined && (
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">{t('user.paiements_routs')}</span>
+                  <div></div>
+                    <span className="text-sm text-gray-600">{t("user.paiements_routs")}</span>
                     <span className="font-medium">{nodeInfo.routed_payments_7d.toLocaleString()}</span>
                   </div>
                 )}
                 {nodeInfo?.routing_revenue_7d !== undefined && (
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">{t('user.revenus_de_routage')}</span>
+                  <div></div>
+                    <span className="text-sm text-gray-600">{t("user.revenus_de_routage")}</span>
                     <span className="font-medium">{formatSats(nodeInfo.routing_revenue_7d)}</span>
                   </div>
                 )}
                 {nodeInfo?.peer_count !== undefined && (
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">{t('user.nombre_de_pairs')}</span>
+                  <div></div>
+                    <span className="text-sm text-gray-600">{t("user.nombre_de_pairs"")}</span>
                     <span className="font-medium">{nodeInfo.peer_count}</span>
                   </div>
                 )}
@@ -1124,182 +1058,156 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
         </>
       )}
 
-      {/* Graphiques de tendances avec données réelles */}
+      {/* Graphiques de tendances avec données réelles  */}
       {nodeInfo && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {nodeInfo.routing_history && nodeInfo.routing_history.length > 0 ? (
-            <SimpleChart 
-              data={nodeInfo.routing_history}
-              title="user.useruser_volution_des_revenus_"
-            />
-          ) : (
-            <SimpleChart 
-              data={[12000, 15000, 18000, 14000, 22000, 19000, 25000]}
-              title="user.useruser_volution_des_revenus_"
-            />
+        <div>
+          {nodeInfo.routing_history && nodeInfo.routing_history.length > 0 ? (</div>
+            <SimpleChart>) : (</SimpleChart>
+            <SimpleChart>
           )}
           
-          {nodeInfo.capacity_history && nodeInfo.capacity_history.length > 0 ? (
-            <SimpleChart 
-              data={nodeInfo.capacity_history}
-              title="user.useruser_volution_de_la_capaci"
-            />
-          ) : (
-            <SimpleChart 
-              data={[45000000, 47000000, 46000000, 50000000, 48000000, 52000000, 50000000]}
-              title="user.useruser_volution_de_la_capaci"
-            />
-          )}
+          {nodeInfo.capacity_history && nodeInfo.capacity_history.length > 0 ? (</SimpleChart>
+            <SimpleChart>) : (</SimpleChart>
+            <SimpleChart>
+          )}</SimpleChart>
         </div>
       )}
 
-      {/* Recommandations IA Avancées */}
-      <div className="bg-white rounded-xl shadow p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold">{t('user._recommandations_ia')}</h2>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setRecommendationType('standard')}
+      {/* Recommandations IA Avancées  */}
+      <div></div>
+        <div></div>
+          <h2 className="text-xl font-semibold">{t("user._recommandations_ia")}</h2>
+          <div></div>
+            <button> setRecommendationType("standard")}`
               className={`px-3 py-1 rounded-lg text-sm font-medium transition ${
-                recommendationType === 'standard'
-                  ? 'bg-indigo-100 text-indigo-700'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                recommendationType === "standard"
+                  ? "bg-indigo-100 text-indigo-700"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"`
               }`}
             >
-              Standard
+              Standard</button>
             </button>
-            <button
-              onClick={() => setRecommendationType('amboss')}
+            <button> setRecommendationType("amboss")}`
               className={`px-3 py-1 rounded-lg text-sm font-medium transition ${
-                recommendationType === 'amboss'
-                  ? 'bg-purple-100 text-purple-700'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                recommendationType === "amboss"
+                  ? "bg-purple-100 text-purple-700"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"`
               }`}
             >
-              Amboss
+              Amboss</button>
             </button>
-            <button
-              onClick={() => setRecommendationType('unified')}
+            <button> setRecommendationType("unified")}`
               className={`px-3 py-1 rounded-lg text-sm font-medium transition ${
-                recommendationType === 'unified'
-                  ? 'bg-green-100 text-green-700'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                recommendationType === "unified"
+                  ? "bg-green-100 text-green-700"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"`
               }`}
             >
-              Unifiées
+              Unifiées</button>
             </button>
           </div>
         </div>
 
         {loadingAdvanced && (
-          <div className="text-center py-8">
-            <div className="animate-spin h-8 w-8 mx-auto border-4 border-indigo-500 border-t-transparent rounded-full mb-4" />
-            <p className="text-gray-600">{t('user.chargement_des_recommandations')}</p>
+          <div></div>
+            <div></div>
+            <p className="text-gray-600">{t("user.chargement_des_recommandations")}</p>
           </div>
         )}
 
-        <div className="space-y-4">
-          {/* Recommandations Amboss */}
-          {recommendationType === 'amboss' && ambossRecommendations.map((rec: any) => (
-            <div key={rec.id} className="border border-purple-200 rounded-lg p-4 hover:shadow-md transition">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h3 className="font-semibold text-gray-900">{rec.title}</h3>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getPriorityColor(rec.priority)}`}>
-                      {rec.priority}
+        <div>
+          {/* Recommandations Amboss  */}
+          {recommendationType === "amboss" && ambossRecommendations.map((rec: any) => (</div>
+            <div></div>
+              <div></div>
+                <div></div>
+                  <div></div>
+                    <h3 className="font-semibold text-gray-900">{rec.title}</h3>`
+                    <span>
+                      {rec.priority}</span>
                     </span>
-                    <span className="px-2 py-1 bg-purple-100 text-purple-600 rounded-full text-xs font-medium">
-                      Amboss Score: {rec.amboss_score}/100
+                    <span>
+                      Amboss Score: {rec.amboss_score}/100</span>
                     </span>
                   </div>
                   <p className="text-gray-600 text-sm mb-3">{rec.description}</p>
                   
-                  <div className="grid grid-cols-3 gap-4 mb-3 text-xs">
-                    <div className="text-center p-2 bg-green-50 rounded">
+                  <div></div>
+                    <div></div>
                       <div className="font-medium text-green-600">+{rec.expected_impact.revenue_increase}%</div>
-                      <div className="text-gray-600">Revenus</div>
+                      <div className="", "text-gray-600"">Revenus</div>
                     </div>
-                    <div className="text-center p-2 bg-blue-50 rounded">
+                    <div></div>
                       <div className="font-medium text-blue-600">+{rec.expected_impact.liquidity_improvement}%</div>
-                      <div className="text-gray-600">{t('user.liquidit')}</div>
+                      <div className="", "text-gray-600">{t("user.liquidit"")}</div>
                     </div>
-                    <div className="text-center p-2 bg-purple-50 rounded">
+                    <div></div>
                       <div className="font-medium text-purple-600">+{rec.expected_impact.routing_efficiency}%</div>
-                      <div className="text-gray-600">{t('user.efficacit')}</div>
+                      <div className="text-gray-600">{t("user.efficacit")}</div>
                     </div>
                   </div>
 
-                  <div className="text-xs text-gray-500">
-                    <div className="font-medium mb-1">{t('user.actions_suggres')}</div>
-                    <ul className="list-disc list-inside space-y-1">
-                      {rec.suggested_actions.map((action: any, index: any) => (
-                        <li key={index}>{action}</li>
-                      ))}
+                  <div></div>
+                    <div className="font-medium mb-1">{t("user.actions_suggres")}</div>
+                    <ul>
+                      {rec.suggested_actions.map((action: any index: any) => (</ul>
+                        <li key={index}>{action}</li>)}
                     </ul>
                   </div>
 
                   {rec.target_nodes && rec.target_nodes.length > 0 && (
-                    <div className="mt-3 text-xs">
-                      <div className="font-medium text-gray-700 mb-1">{t('user.nuds_cibles_recommands')}</div>
-                      <div className="space-y-1">
-                        {rec.target_nodes.slice(0, 3).map((node: any, index: any) => (
-                          <div key={index} className="flex justify-between items-center">
+                    <div></div>
+                      <div className="font-medium text-gray-700 mb-1">{t("user.nuds_cibles_recommands")}</div>
+                      <div>
+                        {rec.target_nodes.slice(0, 3).map((node: any index: any) => (</div>
+                          <div></div>
                             <span className="text-gray-600">{node.alias}</span>
-                            <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs">
-                              Score: {node.score}
+                            <span>
+                              Score: {node.score}</span>
                             </span>
-                          </div>
-                        ))}
+                          </div>)}
                       </div>
                     </div>
                   )}
                 </div>
               </div>
-            </div>
-          ))}
+            </div>)}
 
-          {/* Recommandations Unifiées */}
-          {recommendationType === 'unified' && unifiedRecommendations.map((rec: any) => (
-            <div key={rec.id} className="border border-green-200 rounded-lg p-4 hover:shadow-md transition">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h3 className="font-semibold text-gray-900">{rec.title}</h3>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      rec.source === 'amboss' ? 'bg-purple-100 text-purple-600' :
-                      rec.source === 'sparkseer' ? 'bg-blue-100 text-blue-600' :
-                      rec.source === 'openai' ? 'bg-red-100 text-red-600' :
-                      'bg-gray-100 text-gray-600'
-                    }`}>
-                      {rec.source}
+          {/* Recommandations Unifiées  */}
+          {recommendationType === "unified" && unifiedRecommendations.map((rec: any) => (<div></div>
+              <div></div>
+                <div></div>
+                  <div></div>
+                    <h3 className="font-semibold text-gray-900">{rec.title}</h3>`
+                    <span>
+                      {rec.source}</span>
                     </span>
-                    <span className="px-2 py-1 bg-green-100 text-green-600 rounded-full text-xs font-medium">
-                      Score: {rec.unified_score}/100
+                    <span>
+                      Score: {rec.unified_score}/100</span>
                     </span>
-                    <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">
-                      {(rec.confidence * 100).toFixed(0)}% confiance
+                    <span>
+                      {(rec.confidence * 100).toFixed(0)}% confiance</span>
                     </span>
                   </div>
                   <p className="text-gray-600 text-sm mb-3">{rec.description}</p>
 
-                  <div className="grid grid-cols-3 gap-4 mb-3 text-xs">
-                    <div className="text-center p-2 bg-green-50 rounded">
+                  <div></div>
+                    <div></div>
                       <div className="font-medium text-green-600">+{formatSats(rec.expected_benefits.revenue_gain)}</div>
-                      <div className="text-gray-600">{t('user.gain_revenus')}</div>
+                      <div className="", "text-gray-600">{t("user.gain_revenus")}</div>
                     </div>
-                    <div className="text-center p-2 bg-blue-50 rounded">
+                    <div></div>
                       <div className="font-medium text-blue-600">+{rec.expected_benefits.efficiency_boost}%</div>
-                      <div className="text-gray-600">{t('user.efficacit')}</div>
+                      <div className="text-gray-600">{t("user.efficacit")}</div>
                     </div>
-                    <div className="text-center p-2 bg-yellow-50 rounded">
+                    <div></div>
                       <div className="font-medium text-yellow-600">-{rec.expected_benefits.risk_reduction}%</div>
                       <div className="text-gray-600">Risque</div>
                     </div>
                   </div>
 
-                  <div className="flex justify-between items-center text-xs text-gray-500">
-                    <div className="flex items-center gap-4">
+                  <div></div>
+                    <div></div>
                       <span>Difficulté: {getDifficultyIcon(rec.implementation.difficulty)} {rec.implementation.difficulty}</span>
                       <span>Temps: {rec.implementation.estimated_time}</span>
                     </div>
@@ -1309,42 +1217,40 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            </div>)}
 
-          {/* Recommandations Standard */}
-          {recommendationType === 'standard' && recommendations.slice(0, 5).map((rec: any) => (
-            <div key={rec.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h3 className="font-semibold text-gray-900">{rec.title}</h3>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getImpactColor(rec.impact)}`}>
-                      {rec.impact}
+          {/* Recommandations Standard  */}
+          {recommendationType === "", "standard"" && recommendations.slice(0, 5).map((rec: any) => (<div></div>
+              <div></div>
+                <div></div>
+                  <div></div>
+                    <h3 className="font-semibold text-gray-900">{rec.title}</h3>`
+                    <span>
+                      {rec.impact}</span>
                     </span>
-                    <span className="text-sm">
-                      {getDifficultyIcon(rec.difficulty)}
+                    <span>
+                      {getDifficultyIcon(rec.difficulty)}</span>
                     </span>
                     {rec.free && (
-                      <span className="px-2 py-1 bg-green-100 text-green-600 rounded-full text-xs font-medium">
-                        Gratuit
+                      <span>
+                        Gratuit</span>
                       </span>
                     )}
                     {rec.confidence_score && (
-                      <span className="px-2 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-medium">
-                        {(rec.confidence_score * 100).toFixed(0)}% confiance
+                      <span>
+                        {(rec.confidence_score * 100).toFixed(0)}% confiance</span>
                       </span>
                     )}
                   </div>
-                  <p className="text-gray-600 text-sm mb-2">{rec.description}</p>
+                  <p className="", "text-gray-600 text-sm mb-2"">{rec.description}</p>
                   
-                  <div className="text-xs text-gray-500 space-y-1">
+                  <div></div>
                     <div>
-                      Catégorie: {rec.category} • Type: {rec.action_type} • Priorité: {rec.priority}
+                      Catégorie: {rec.category} • Type: {rec.action_type} • Priorité: {rec.priority}</div>
                     </div>
                     
-                    <div className="flex items-center gap-4">
-                      {rec.estimated_gain_sats && (
+                    <div>
+                      {rec.estimated_gain_sats && (</div>
                         <span>Gain estimé: {formatSats(rec.estimated_gain_sats)}</span>
                       )}
                       {rec.estimated_timeframe && (
@@ -1362,199 +1268,174 @@ const SimpleChart: React.FC<SimpleChartProps> = ({ data, title }) => {
                     
                     {rec.current_value !== undefined && rec.suggested_value !== undefined && (
                       <div>
-                        Ajustement: {rec.current_value} → {rec.suggested_value}
+                        Ajustement: {rec.current_value} → {rec.suggested_value}</div>
                       </div>
                     )}
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            </div>)}
         </div>
         
-        {recommendationType === 'standard' && recommendations.length > 5 && (
-          <div className="text-center mt-6">
-            <button
-              onClick={() => router.push('/user/node/recommendations')}
+        {recommendationType === "", "standard"" && recommendations.length > 5 && (
+          <div></div>
+            <button> router.push("/user/node/recommendations")}
               className="text-indigo-600 hover:text-indigo-700 font-medium"
             >
-              Voir toutes les recommandations ({recommendations.length})
+              Voir toutes les recommandations ({recommendations.length})</button>
             </button>
           </div>
         )}
       </div>
 
-      {/* Actions prioritaires */}
+      {/* Actions prioritaires  */}
       {priorityActions.length > 0 && (
-        <div className="bg-white rounded-xl shadow p-6">
-          <h2 className="text-xl font-semibold mb-6">{t('user._actions_prioritaires')}</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-200">
+        <div></div>
+          <h2 className="text-xl font-semibold mb-6">{t("user._actions_prioritaires")}</h2>
+          <div></div>
+            <table></table>
+              <thead></thead>
+                <tr></tr>
                   <th className="text-left py-3 px-4 font-semibold text-gray-700">Action</th>
-                  <th className="text-center py-3 px-4 font-semibold text-gray-700">{t('user.priorit')}</th>
-                  <th className="text-center py-3 px-4 font-semibold text-gray-700">{t('user.impact_estim')}</th>
+                  <th className="text-center py-3 px-4 font-semibold text-gray-700">{t("user.priorit")}</th>
+                  <th className="text-center py-3 px-4 font-semibold text-gray-700">{t("user.impact_estim")}</th>
                   <th className="text-center py-3 px-4 font-semibold text-gray-700">Timeline</th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-700">Justification</th>
                 </tr>
               </thead>
               <tbody>
-                {priorityActions.map((action: any, index: any) => (
-                  <tr key={action.id || index} className="border-b border-gray-100 hover:bg-gray-50">
-                    <td className="py-3 px-4">
+                {priorityActions.map((action: any index: any) => (</tbody>
+                  <tr></tr>
+                    <td></td>
                       <div className="font-medium">{action.action}</div>
                       {action.category && (
-                        <div className="text-xs text-gray-500 mt-1">
-                          Catégorie: {action.category}
+                        <div>
+                          Catégorie: {action.category}</div>
                         </div>
                       )}
-                      {action.complexity && (
-                        <span className={`inline-block mt-1 px-2 py-1 rounded text-xs ${
-                          action.complexity === 'low' ? 'bg-green-100 text-green-600' :
-                          action.complexity === 'medium' ? 'bg-yellow-100 text-yellow-600' :
-                          'bg-red-100 text-red-600'
-                        }`}>
-                          {action.complexity} complexité
+                      {action.complexity && (`
+                        <span>
+                          {action.complexity} complexité</span>
                         </span>
                       )}
                     </td>
                     
-                    <td className="py-3 px-4 text-center">
-                      <div className="space-y-1">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          action.priority <= 3 ? 'bg-red-100 text-red-600' :
-                          action.priority <= 6 ? 'bg-yellow-100 text-yellow-600' :
-                          'bg-green-100 text-green-600'
-                        }`}>
-                          {action.priority}/10
+                    <td></td>
+                      <div>`</div>
+                        <span>
+                          {action.priority}/10</span>
                         </span>
-                        {action.urgency && (
-                          <div className={`text-xs ${
-                            action.urgency === 'high' ? 'text-red-600' :
-                            action.urgency === 'medium' ? 'text-yellow-600' :
-                            'text-green-600'
-                          }`}>
-                            {action.urgency} urgence
+                        {action.urgency && (`
+                          <div>
+                            {action.urgency} urgence</div>
                           </div>
                         )}
                       </div>
                     </td>
                     
-                    <td className="py-3 px-4 text-center">
-                      <div className="font-semibold text-indigo-600">
-                        +{action.estimated_impact}%
+                    <td></td>
+                      <div>
+                        +{action.estimated_impact}%</div>
                       </div>
                       {action.confidence && (
-                        <div className="text-xs text-gray-500 mt-1">
-                          {(action.confidence * 100).toFixed(0)}% confiance
+                        <div>
+                          {(action.confidence * 100).toFixed(0)}% confiance</div>
                         </div>
                       )}
                     </td>
                     
-                    <td className="py-3 px-4 text-center text-sm">
-                      {action.timeline || 'Non défini'}
-                      {action.cost_estimate && (
-                        <div className="text-xs text-gray-500 mt-1">
-                          Coût: {formatSats(action.cost_estimate)}
+                    <td>
+                      {action.timeline || "Non défini"}
+                      {action.cost_estimate && (</td>
+                        <div>
+                          Coût: {formatSats(action.cost_estimate)}</div>
                         </div>
                       )}
                     </td>
                     
-                    <td className="py-3 px-4 text-sm text-gray-600">
+                    <td></td>
                       <div>{action.reasoning}</div>
                       {action.expected_outcome && (
-                        <div className="text-xs text-green-600 mt-1">
-                          Résultat attendu: {action.expected_outcome}
+                        <div>
+                          Résultat attendu: {action.expected_outcome}</div>
                         </div>
                       )}
                       {action.prerequisites && action.prerequisites.length > 0 && (
-                        <div className="text-xs text-gray-500 mt-1">
-                          Prérequis: {action.prerequisites.join(', ')}
+                        <div>
+                          Prérequis: {action.prerequisites.join("")}</div>
                         </div>
                       )}
                     </td>
-                  </tr>
-                ))}
+                  </tr>)}
               </tbody>
             </table>
           </div>
         </div>
       )}
 
-      {/* Actions rapides */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <button
-          onClick={() => router.push('/user/node/channels')}
+      {/* Actions rapides  */}
+      <div></div>
+        <button> router.push("/user/node/channels")}
           className="p-6 bg-white rounded-xl shadow border-2 border-transparent hover:border-indigo-200 hover:shadow-lg transition group"
-        >
+        ></button>
           <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">🔗</div>
-          <h3 className="font-semibold mb-2">{t('user.gestion_des_canaux')}</h3>
-          <p className="text-sm text-gray-600">{t('user.ouvrir_fermer_et_quilibrer_vos')}</p>
+          <h3 className="font-semibold mb-2">{t("user.gestion_des_canaux")}</h3>
+          <p className="text-sm text-gray-600">{t("user.ouvrir_fermer_et_quilibrer_vos")}</p>
         </button>
 
-        <button
-          onClick={() => router.push('/user/node/stats')}
+        <button> router.push("/user/node/stats")}
           className="p-6 bg-white rounded-xl shadow border-2 border-transparent hover:border-indigo-200 hover:shadow-lg transition group"
-        >
+        ></button>
           <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">📊</div>
-          <h3 className="font-semibold mb-2">{t('user.statistiques_dtailles')}</h3>
-          <p className="text-sm text-gray-600">{t('user.analytics_avances_et_historiqu')}</p>
+          <h3 className="font-semibold mb-2">{t("user.statistiques_dtailles"")}</h3>
+          <p className="text-sm text-gray-600">{t("user.analytics_avances_et_historiqu"")}</p>
         </button>
 
-        <button
-          onClick={() => router.push('/user/dazia')}
-          className="p-6 bg-gradient-to-br from-yellow-400 to-orange-500 text-white rounded-xl shadow border-2 border-transparent hover:shadow-xl transition group relative overflow-hidden"
-        >
+        <button> router.push("/user/dazia")}
+          className="p-6 bg-gradient-to-br from-yellow-400 to-orange-500 text-white rounded-xl shadow border-2 border-transparent hover:shadow-xl transition group relative overflow-hidde\n
+        ></button>
           <div className="absolute inset-0 bg-white/10 transform -skew-y-6 group-hover:skew-y-6 transition-transform duration-500"></div>
-          <div className="relative z-10">
+          <div></div>
             <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">✨</div>
-            <h3 className="font-semibold mb-2">{t('user.dazia_ia')}</h3>
-            <p className="text-sm opacity-90">
-              Recommandations intelligentes activables
+            <h3 className="font-semibold mb-2">{t("user.dazia_ia"")}</h3>
+            <p>
+              Recommandations intelligentes activables</p>
             </p>
-            <div className="mt-3 text-xs bg-white/20 rounded-full px-3 py-1 inline-block">
-              Assistant IA Premium
+            <div>
+              Assistant IA Premium</div>
             </div>
           </div>
         </button>
       </div>
 
-      {error && (
-        <div className={`p-4 rounded-lg border ${
-          error.includes('⚠️') 
-            ? 'bg-yellow-50 border-yellow-200 text-yellow-800' 
-            : 'bg-red-50 border-red-200 text-red-800'
-        }`}>
-          <div className="flex items-start">
-            <div className="flex-shrink-0">
-              {error.includes('⚠️') ? (
-                <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                </svg>
-              ) : (
-                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+      {error && (`
+        <div></div>
+          <div></div>
+            <div>
+              {error.includes("⚠️") ? (</div>
+                <svg></svg>
+                  <path></path>
+                </svg>) : (<svg></svg>
+                  <path></path>
                 </svg>
               )}
             </div>
-            <div className="ml-3">
-              <p className="text-sm font-medium">
-                {error.includes('⚠️') ? 'Mode démonstration' : 'Erreur'}
+            <div></div>
+              <p>
+                {error.includes("⚠️") ? "Mode démonstratio\n : "Erreur"}</p>
               </p>
               <p className="text-sm">{error}</p>
-              {error.includes('⚠️') && (
-                <p className="text-xs mt-1 opacity-75">
-                  Les données affichées sont des exemples pour tester l'interface.
+              {error.includes("⚠️") && (
+                <p>
+                  Les données affichées sont des exemples pour tester l"interface.</p>
                 </p>
               )}
             </div>
           </div>
         </div>
       )}
-    </div>
-  );
-};
+    </div>);;
 
 export default NodeManagement;
 export const dynamic = "force-dynamic";
+`

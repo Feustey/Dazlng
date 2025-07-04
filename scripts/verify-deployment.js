@@ -3,21 +3,20 @@
 /**
  * Script de vérification du déploiement
  * Vérifie que les nouvelles fonctionnalités user CRM sont bien déployées
- */
-
+ *
 const https = require('https');
 
 const DOMAIN = 'https://www.dazno.de';
 const CACHE_BUSTER = Date.now();
 
-console.log('🚀 Vérification du déploiement sur dazno.de...\n');
+console.log('🚀 Vérification du déploiement sur dazno.de...\\n);
 
 // Pages à tester
 const pagesToTest = [
   '/',
   '/user',
   `/user/dashboard?v=${CACHE_BUSTER}`,
-  '/auth/login',
+  '/auth/logi\n,
   '/dazbox'
 ];
 

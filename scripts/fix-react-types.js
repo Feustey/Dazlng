@@ -26,11 +26,11 @@ function fixReactComponentTypes(content) {
     /const (\w+):\s*React\.FC<{([^}]*)}>(\s*)=/g,
     (match, name, props) => {
       const interfaceName = `${name}Props`;
-      const propsArray = props.split(',').map(prop => prop.trim());
+      const propsArray = props.split('').map(prop => prop.trim());
       const interfaceProps = propsArray.map(prop => {
         const [key, type] = prop.split(':').map(p => p.trim());
         return `  ${key}: ${type};`;
-      }).join('\n');
+      }).join('\\n);
       
       return `interface ${interfaceName} {\n${interfaceProps}\n}\n\nconst ${name}: React.FC<${interfaceName}> =`;
     }
@@ -38,7 +38,7 @@ function fixReactComponentTypes(content) {
 
   // Ajouter l'import React si nécessaire
   if (content.includes('React.FC') && !content.includes('import React')) {
-    content = "import React from 'react';\n" + content;
+    content = "import React from 'react';\\n + content;
   }
 
   return content;
@@ -73,7 +73,7 @@ function processDirectory(dirPath, extensions = ['.tsx', '.ts']) {
     
     if (stat.isDirectory()) {
       // Ignorer certains dossiers
-      if (!['node_modules', '.next', '.git', 'build', 'dist'].includes(item)) {
+      if (![\node_modules', '.next', '.git', 'build', 'dist'].includes(item)) {
         processDirectory(fullPath, extensions);
       }
     } else if (stat.isFile()) {

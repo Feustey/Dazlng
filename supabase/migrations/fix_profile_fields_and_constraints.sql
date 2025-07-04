@@ -1,35 +1,35 @@
--- Migration pour corriger les champs du profil et ajouter les contraintes d'unicité
+-- Migration pour corriger les champs du profil et ajouter les contraintes d'unicité'
 -- Date: 2025-06-05
--- Description: Ajout de contraintes d'unicité et champs manquants pour le système de score
+-- Description: Ajout de contraintes d'unicité et champs manquants pour le système de score'
 
 -- 1. Ajouter le champ phone_verified manquant
-ALTER TABLE public.profiles 
+ALTER TABLE public.profiles;
 ADD COLUMN IF NOT EXISTS phone_verified BOOLEAN DEFAULT FALSE;
 
 -- 2. Ajouter le champ phone pour stocker le numéro
-ALTER TABLE public.profiles 
+ALTER TABLE public.profiles;
 ADD COLUMN IF NOT EXISTS phone TEXT;
 
--- 3. Ajouter contrainte d'unicité sur la pubkey (CRITIQUE pour éviter les conflits)
--- D'abord, nettoyer les doublons potentiels
+-- 3. Ajouter contrainte d'unicité sur la pubkey (CRITIQUE pour éviter les conflits)'
+-- D'abord, nettoyer les doublons potentiels'
 WITH duplicates AS (
-  SELECT pubkey, MIN(created_at) as first_created
+  SELECT pubkey, MIN(created_at) as first_created;
   FROM public.profiles 
   WHERE pubkey IS NOT NULL AND pubkey != ''
   GROUP BY pubkey 
   HAVING COUNT(*) > 1
 )
-UPDATE public.profiles 
+UPDATE public.profiles;
 SET pubkey = NULL 
 WHERE pubkey IN (SELECT pubkey FROM duplicates) 
   AND created_at NOT IN (SELECT first_created FROM duplicates);
 
--- Maintenant ajouter la contrainte d'unicité
-ALTER TABLE public.profiles 
+-- Maintenant ajouter la contrainte d'unicité'
+ALTER TABLE public.profiles;
 ADD CONSTRAINT unique_pubkey UNIQUE(pubkey) DEFERRABLE INITIALLY DEFERRED;
 
 -- 4. Ajouter contrainte d'unicité sur l'email (sécurité)
-ALTER TABLE public.profiles 
+ALTER TABLE public.profiles;
 ADD CONSTRAINT unique_email UNIQUE(email) DEFERRABLE INITIALLY DEFERRED;
 
 -- 5. Ajouter un index sur phone pour les recherches
@@ -37,22 +37,22 @@ CREATE INDEX IF NOT EXISTS idx_profiles_phone ON public.profiles(phone);
 CREATE INDEX IF NOT EXISTS idx_profiles_phone_verified ON public.profiles(phone_verified);
 
 -- 6. Ajouter des contraintes de validation
-ALTER TABLE public.profiles 
+ALTER TABLE public.profiles;
 ADD CONSTRAINT valid_pubkey_format 
 CHECK (pubkey IS NULL OR pubkey ~ '^[0-9a-fA-F]{66}$');
 
-ALTER TABLE public.profiles 
+ALTER TABLE public.profiles;
 ADD CONSTRAINT valid_email_format 
 CHECK (email ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 
-ALTER TABLE public.profiles 
+ALTER TABLE public.profiles;
 ADD CONSTRAINT valid_phone_format 
 CHECK (phone IS NULL OR phone ~ '^\+?[1-9]\d{1,14}$');
 
 -- 7. Créer une fonction pour calculer le score de profil
 CREATE OR REPLACE FUNCTION calculate_profile_score(profile_record public.profiles)
 RETURNS INTEGER AS $$
-DECLARE
+DECLARE;
   score INTEGER := 0;
 BEGIN
   -- Email vérifié (20 points)
@@ -85,13 +85,13 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- 8. Ajouter une colonne pour stocker le score calculé (cache)
-ALTER TABLE public.profiles 
+ALTER TABLE public.profiles;
 ADD COLUMN IF NOT EXISTS profile_score INTEGER DEFAULT 0;
 
 -- 9. Créer un trigger pour mettre à jour automatiquement le score
 CREATE OR REPLACE FUNCTION update_profile_score()
 RETURNS TRIGGER AS $$
-BEGIN
+BEGIN;
   NEW.profile_score := calculate_profile_score(NEW);
   RETURN NEW;
 END;
@@ -99,13 +99,13 @@ $$ LANGUAGE plpgsql;
 
 -- Créer le trigger
 DROP TRIGGER IF EXISTS trigger_update_profile_score ON public.profiles;
-CREATE TRIGGER trigger_update_profile_score
+CREATE TRIGGER trigger_update_profile_score;
   BEFORE INSERT OR UPDATE ON public.profiles
   FOR EACH ROW
   EXECUTE FUNCTION update_profile_score();
 
 -- 10. Mettre à jour les scores existants
-UPDATE public.profiles 
+UPDATE public.profiles;
 SET profile_score = calculate_profile_score(profiles.*);
 
 -- 11. Créer des index pour améliorer les performances
@@ -119,8 +119,8 @@ COMMENT ON CONSTRAINT unique_pubkey ON public.profiles IS 'Contrainte d''unicit�
 COMMENT ON CONSTRAINT unique_email ON public.profiles IS 'Contrainte d''unicité sur l''email pour éviter les doublons';
 
 -- 13. Ajouter une vue pour les statistiques de profil
-CREATE OR REPLACE VIEW profile_completion_stats AS
-SELECT 
+CREATE OR REPLACE VIEW profile_completion_stats AS;
+SELECT;
   COUNT(*) as total_profiles,
   COUNT(CASE WHEN email_verified THEN 1 END) as verified_emails,
   COUNT(CASE WHEN pubkey IS NOT NULL AND pubkey != '' THEN 1 END) as with_pubkey,
@@ -131,10 +131,10 @@ SELECT
   COUNT(CASE WHEN profile_score = 100 THEN 1 END) as complete_profiles
 FROM public.profiles;
 
--- 14. Fonction utilitaire pour obtenir les champs manquants d'un profil
+-- 14. Fonction utilitaire pour obtenir les champs manquants d'un profil'
 CREATE OR REPLACE FUNCTION get_missing_profile_fields(user_id UUID)
 RETURNS JSON AS $$
-DECLARE
+DECLARE;
   profile_record public.profiles;
   missing_fields JSON;
 BEGIN

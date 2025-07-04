@@ -6,7 +6,7 @@ DROP POLICY IF EXISTS "Allow public registration" ON users;
 DROP POLICY IF EXISTS "Enable all operations for service role" ON users;
 
 -- Pour le moment, désactiver RLS sur la table users pour éviter les problèmes
--- Cela permet à l'application de fonctionner pendant que nous testons
+-- Cela permet à l'application de fonctionner pendant que nous testons'
 ALTER TABLE users DISABLE ROW LEVEL SECURITY;
 
 -- Alternative : Si vous voulez activer RLS plus tard, utilisez ces politiques :
@@ -19,29 +19,29 @@ ALTER TABLE users DISABLE ROW LEVEL SECURITY;
 --   WITH CHECK (true);
 
 -- Permettre aux administrateurs de voir tous les utilisateurs
-CREATE POLICY "Admins can view all users" ON users
+CREATE POLICY "Admins can view all users" ON users;
   FOR SELECT 
   USING (
     EXISTS (
-      SELECT 1 FROM auth.users 
+      SELECT 1 FROM auth.users;
       WHERE auth.users.id = auth.uid() 
       AND auth.users.email IN ('admin@dazno.de', 'contact@dazno.de')
     )
   );
 
 -- Permettre aux administrateurs de modifier tous les utilisateurs
-CREATE POLICY "Admins can update all users" ON users
+CREATE POLICY "Admins can update all users" ON users;
   FOR UPDATE 
   USING (
     EXISTS (
-      SELECT 1 FROM auth.users 
+      SELECT 1 FROM auth.users;
       WHERE auth.users.id = auth.uid() 
       AND auth.users.email IN ('admin@dazno.de', 'contact@dazno.de')
     )
   )
   WITH CHECK (
     EXISTS (
-      SELECT 1 FROM auth.users 
+      SELECT 1 FROM auth.users;
       WHERE auth.users.id = auth.uid() 
       AND auth.users.email IN ('admin@dazno.de', 'contact@dazno.de')
     )

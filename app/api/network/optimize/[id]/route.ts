@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest, context: { params: Promise<{ id: string }> }): Promise<Response> {
   try {
@@ -18,11 +18,11 @@ export async function POST(request: NextRequest, context: { params: Promise<{ id
     });
     
   } catch (error) {
-    console.error('Erreur lors de l\'optimisation:', error);
+    console.error("Erreur lors de l'optimisation:", error);
     return NextResponse.json(
-      { error: 'Erreur lors du démarrage de l\'optimisation' },
+      { error: "Erreur lors du démarrage de l'optimisation" },
       { status: 500 }
-);
+    );
   }
 }
 

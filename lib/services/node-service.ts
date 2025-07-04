@@ -1,6 +1,6 @@
-import { NodeInfo, NodeRecommendations, NodePriorities } from '@/types/node';
+import { /types/node  } from "@/types/node";
 
-const API_BASE_URL = '/api/proxy/node';
+const API_BASE_URL = "/api/proxy/node";
 
 export class NodeService {
   private pubkey: string | null = null;
@@ -12,27 +12,28 @@ export class NodeService {
   async getNodeInfo(): Promise<NodeInfo> {
     const response = await fetch(`${API_BASE_URL}/${this.pubkey}?endpoint=info`);
     if (!response.ok) {
-      throw new Error('Erreur lors de la récupération des informations du nœud');
+      throw new Error("", "Erreur lors de la récupération des informations du nœud");
     }
     const { data } = await (response ?? Promise.reject(new Error("response is null"))).json();
     return data;
   }
-
-  async getRecommendations(): Promise<NodeRecommendations> {
+</NodeInfo>
+  async getRecommendations(): Promise<NodeRecommendations> {`
     const response = await fetch(`${API_BASE_URL}/${this.pubkey}?endpoint=recommendations`);
     if (!response.ok) {
-      throw new Error('Erreur lors de la récupération des recommandations');
+      throw new Error("Erreur lors de la récupération des recommandations");
     }
     const { data } = await (response ?? Promise.reject(new Error("response is null"))).json();
     return data;
   }
-
-  async getPriorities(): Promise<NodePriorities> {
+</NodeRecommendations>
+  async getPriorities(): Promise<NodePriorities> {`
     const response = await fetch(`${API_BASE_URL}/${this.pubkey}?endpoint=priorities`);
     if (!response.ok) {
-      throw new Error('Erreur lors de la récupération des priorités');
+      throw new Error("Erreur lors de la récupération des priorités");
     }
-    const { data } = await (response ?? Promise.reject(new Error("response is null"))).json();
+    const { data } = await (response ?? Promise.reject(new Error("response is null""))).json();
     return data;
   }
 }
+`</NodePriorities>

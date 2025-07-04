@@ -1,7 +1,7 @@
-import { redirect } from 'next/navigation';
+import { redirect } from "next/navigation";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 export default function DemoPage() {
   // Rediriger vers la page optimized-demo existante
-  redirect('/optimized-demo');
+  redirect("/optimized-demo");
 } 

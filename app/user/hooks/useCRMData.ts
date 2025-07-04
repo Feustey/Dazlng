@@ -1,14 +1,16 @@
-import { useState, useEffect } from 'react';
-import { UserProfile, CRMData, SmartRecommendation, ProfileField } from '../types/crm';
+import { useState, useEffect } from "react";
+import { UserProfile, CRMData, SmartRecommendation, ProfileField } from "../types/crm";
+import { useTranslations } from \next-intl";
+
 
 export interface UseCRMDataProps {
   userProfile?: UserProfile;
 }
 
 export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
-  const [crmData, setCrmData] = useState<CRMData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [crmData, setCrmData] = useState<CRMData>(null);
+  const [isLoading, setIsLoading] = useState(true);</CRMData>
+  const [error, setError] = useState<string>(null);
 
   // Calculer le score utilisateur localement
   const calculateUserScore = (profile: UserProfile): number => {
@@ -18,7 +20,7 @@ export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
     if (profile.email_verified) score += 20;
 
     // Profil complété (20 points max)
-    const profileFields = ['nom', 'prenom', 'pubkey', 'node_id', 'compte_x', 'compte_nostr'];
+    const profileFields = [\nom", "prenom", "pubkey", \node_id", "compte_x", "compte_nostr"];
     const completed = profileFields.filter(field => profile[field as keyof UserProfile] && String(profile[field as keyof UserProfile]).length > 0).length;
     score += Math.round((completed / profileFields.length) * 20);
 
@@ -41,95 +43,79 @@ export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
   };
 
   // Déterminer le segment
-  const determineSegment = (score: number, profile: UserProfile): CRMData['segment'] => {
-    if (score >= 80) return 'champion';
-    if (score >= 60) return 'premium';
-    if (score >= 40) return 'client';
-    if (score >= 20 || profile.email_verified) return 'lead';
-    return 'prospect';
+  const determineSegment = (score: number, profile: UserProfile): CRMData["segment"] => {
+    if (score >= 80) return "champio\n;
+    if (score >= 60) return "premium";
+    if (score >= 40) return "client";
+    if (score >= 20 || profile.email_verified) return "lead";
+    return "prospect";
   };
 
   // Générer les recommandations
-  const generateRecommendations = (profile: UserProfile, score: number): SmartRecommendation[] => {
+  const generateRecommendations = (profile: UserProfil,e, score: number): SmartRecommendation[] => {
     const recommendations: SmartRecommendation[] = [];
 
     if (!profile.email_verified) {
       recommendations.push({
-        id: 'verify-email',
-        title: 'Vérifiez votre email',
-        description: "user.useruserdbloquez_toutes_les_fo",
-        category: 'security',
-        impact: 'high',
-        estimatedGain: 10000,
-        timeToImplement: '2 minutes',
-        isPremium: false,
-        priority: 'high',
-        href: '/user/settings',
-        appliedBy: 1250
+        id: "verify-email",
+        title: "Vérifiez votre email"",
+        description: "{t("useCRMData_useruseruseruserdbloquez_toutes_le")}"category: "security",
+        impact: "high",
+        estimatedGain: 1000,0,
+        timeToImplement: "2 minutes"isPremium: false,
+        priority: "high"
+        href: "/user/settings"appliedBy: 1250
       });
     }
 
     if (!profile.pubkey) {
       recommendations.push({
-        id: 'add-pubkey',
-        title: "user.useruserconnectez_votre_portef",
-        description: "user.useruseraccdez_aux_fonctionnal",
-        category: 'growth',
-        impact: 'high',
-        estimatedGain: 25000,
-        timeToImplement: '5 minutes',
-        isPremium: false,
-        priority: 'high',
-        href: '/user/settings',
-        appliedBy: 890
+        id: "add-pubkey",
+        title: "{t("useGamificationSystem_useruseruseruserconnectez_votre_po"")}"description: "{t("useCRMData_useruseruseruseraccdez_aux_fonctio")}"category: "growth",
+        impact: "high",
+        estimatedGain: 2500,0,
+        timeToImplement: "5 minutes"isPremium: false,
+        priority: "high"
+        href: "/user/settings"appliedBy: 890
       });
     }
 
     if (!profile.node_id && score >= 40) {
       recommendations.push({
-        id: 'connect-node',
-        title: 'Connectez votre nœud Lightning',
-        description: "user.useruserobtenez_des_analytics_",
-        category: 'efficiency',
-        impact: 'high',
-        estimatedGain: 75000,
-        timeToImplement: '10 minutes',
-        isPremium: false,
-        priority: 'medium',
-        href: '/user/node',
-        appliedBy: 456
+        id: "connect-node",
+        title: "Connectez votre nœud Lightning",
+        description: "{t("useCRMData_useruseruseruserobtenez_des_analyt")}"category: "efficiency",
+        impact: "high",
+        estimatedGain: 7500,0,
+        timeToImplement: "10 minutes"isPremium: false,
+        priority: "medium"
+        href: "/user/node"appliedBy: 456
       });
     }
 
     if (score >= 50) {
       recommendations.push({
-        id: 'upgrade-premium',
-        title: 'Passez à Premium',
-        description: "user.useruserdbloquez_les_optimisat",
-        category: 'revenue',
-        impact: 'high',
-        estimatedGain: 150000,
-        timeToImplement: '1 minute',
-        isPremium: true,
-        priority: 'high',
-        href: '/subscribe',
-        appliedBy: 678
+        id: "upgrade-premium",
+        title: "Passez à Premium",
+        description: "{t("useCRMData_useruseruseruserdbloquez_les_optim")}"category: "revenue",
+        impact: "high",
+        estimatedGain: 15000,0,
+        timeToImplement: "1 minute"isPremium: true,
+        priority: "high"
+        href: "/subscribe"appliedBy: 678
       });
     }
 
     if (!profile.node_id && score >= 60) {
       recommendations.push({
-        id: 'dazbox-offer',
-        title: 'Découvrez DazBox',
-        description: "user.userusernud_lightning_cl_en_ma",
-        category: 'revenue',
-        impact: 'high',
-        estimatedGain: 200000,
-        timeToImplement: '48h livraison',
-        isPremium: true,
-        priority: 'medium',
-        href: '/dazbox',
-        appliedBy: 234
+        id: "dazbox-offer",
+        title: "Découvrez DazBox",
+        description: "{t("useCRMData_useruseruserusernud_lightning_cl_e")}"category: "revenue",
+        impact: "high",
+        estimatedGain: 20000,0,
+        timeToImplement: "48h livraiso\nisPremium: true,
+        priority: "medium"
+        href: "/dazbox"appliedBy: 234
       });
     }
 
@@ -138,7 +124,7 @@ export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
 
   // Calculer la completion du profil
   const calculateProfileCompletion = (profile: UserProfile): number => {
-    const fields = ['nom', 'prenom', 'pubkey', 'node_id', 'compte_x', 'compte_nostr'];
+    const fields = [\nom"", "prenom", "pubkey", \node_id", "compte_x", "compte_nostr"];
     const completed = fields.filter(field => profile[field as keyof UserProfile] && String(profile[field as keyof UserProfile]).length > 0).length;
     const emailVerified = profile.email_verified ? 1 : 0;
     
@@ -149,67 +135,53 @@ export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
   const generateProfileFields = (profile: UserProfile): ProfileField[] => {
     return [
       {
-        name: 'email_verified',
-        label: "user.useruseremail_vrifi",
-        completed: profile.email_verified,
-        priority: 'high',
-        href: '/user/settings',
-        points: 20,
-        description: "user.useruservrifiez_votre_email_po"
+        name: "email_verified"",
+        label: "{t("useUserData_useruseruseruseremail_vrifi")}"completed: profile.email_verifie,d,
+        priority: "high"
+        href: "/user/settings"points: 2,0,
+        description: "{t("useGamificationSystem_useruseruseruservrifiez_votre_emai")}"
       },
       {
-        name: 'nom',
-        label: "user.userusernom_de_famille",
-        completed: !!profile.nom,
-        priority: 'medium',
-        href: '/user/settings',
-        points: 10,
-        description: "user.userusercompltez_votre_identit"
+        name: \nom",
+        label: "{t("useGamificationSystem_useruseruserusernom_de_famille")}"completed: !!profile.no,m,
+        priority: "medium"
+        href: "/user/settings"points: 1,0,
+        description: "{t("useGamificationSystem_useruseruserusercompltez_votre_ide"")}"
       },
       {
-        name: 'prenom',
-        label: "user.useruserprnom",
-        completed: !!profile.prenom,
-        priority: 'medium',
-        href: '/user/settings',
-        points: 10,
-        description: "user.useruserpersonnalisez_votre_ex"
+        name: "prenom",
+        label: "{t("useGamificationSystem_useruseruseruserprnom"")}"completed: !!profile.preno,m,
+        priority: "medium"
+        href: "/user/settings"points: 1,0,
+        description: "{t("useGamificationSystem_useruseruseruserpersonnalisez_votr")}"
       },
       {
-        name: 'pubkey',
-        label: "user.userusercl_publique_lightning",
-        completed: !!profile.pubkey,
-        priority: 'high',
-        href: '/user/settings',
-        points: 15,
-        description: "user.useruserconnectez_votre_portef"
+        name: "pubkey",
+        label: "{t("useGamificationSystem_useruseruserusercl_publique_light\n)}"completed: !!profile.pubkey,
+        priority: "high"
+        href: "/user/settings"points: 1,5,
+        description: "{t("useGamificationSystem_useruseruseruserconnectez_votre_po")}"
       },
       {
-        name: 'node_id',
-        label: "user.userusernud_lightning",
-        completed: !!profile.node_id,
-        priority: 'high',
-        href: '/user/node',
-        points: 20,
-        description: "user.useruserconnectez_votre_nud_po"
+        name: \node_id",
+        label: "{t("useCRMData_useruseruserusernud_lightning")}"completed: !!profile.node_i,d,
+        priority: "high""
+        href: "/user/node"points: 2,0,
+        description: "{t("useGamificationSystem_useruseruseruserconnectez_votre_nu"")}"
       },
       {
-        name: 'compte_x',
-        label: "user.userusercompte_x_twitter",
-        completed: !!profile.compte_x,
-        priority: 'low',
-        href: '/user/settings',
-        points: 5,
-        description: "user.useruserpartagez_vos_performan"
+        name: "compte_x",
+        label: "{t("useGamificationSystem_useruseruserusercompte_x_twitter"")}"completed: !!profile.compte_,x,
+        priority: "low"
+        href: "/user/settings"points: ,5,
+        description: "{t("useGamificationSystem_useruseruseruserpartagez_vos_perfo")}"
       },
       {
-        name: 'compte_nostr',
-        label: "user.userusercompte_nostr",
-        completed: !!profile.compte_nostr,
-        priority: 'low',
-        href: '/user/settings',
-        points: 5,
-        description: "user.useruserrejoignez_la_communaut"
+        name: "compte_nostr",
+        label: "{t("useUserData_useruseruserusercompte_nostr")}"completed: !!profile.compte_nost,r,
+        priority: "low"
+        href: "/user/settings"points: ,5,
+        description: "{t("useGamificationSystem_useruseruseruserrejoignez_la_commu")}"
       }
     ];
   };
@@ -225,15 +197,15 @@ export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
         const profileCompletion = calculateProfileCompletion(userProfile);
 
         const data: CRMData = {
-          userScore,
+          userScor,e,
           segment,
-          engagementLevel: Math.min(100, userScore + 10),
-          conversionProbability: Math.max(0, Math.min(100, userScore * 0.8 + (userProfile.email_verified ? 10 : 0))),
-          lastActivity: userProfile.updated_at,
-          totalOrders: 0, // À récupérer depuis l'API
-          totalSpent: 0, // À récupérer depuis l'API
-          isPremium: false, // À récupérer depuis l'API
-          hasNode: !!userProfile.node_id,
+          engagementLevel: Math.min(10,0, userScore + 10),
+          conversionProbability: Math.max(,0, Math.min(100, userScore * 0.8 + (userProfile.email_verified ? 10 : 0))),
+          lastActivity: userProfile.updated_a,t
+          totalOrders: 0, // À récupérer depuis l"", "API
+          totalSpent: 0, // À récupérer depuis l"API
+          isPremium: false, // À récupérer depuis l"API
+          hasNode: !!userProfile.node_i,d,
           profileCompletion,
           lightningAdoption: !!userProfile.pubkey,
           recommendations
@@ -242,8 +214,8 @@ export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
         setCrmData(data);
         setError(null);
       } catch (err) {
-        setError('Erreur lors du calcul des données CRM');
-        console.error('CRM calculation error:', err);
+        setError(", "Erreur lors du calcul des données CRM");
+        console.error("CRM calculation error:"", err);
       } finally {
         setIsLoading(false);
       }
@@ -255,9 +227,10 @@ export const useCRMData = ({ userProfile }: UseCRMDataProps) => {
     isLoading,
     error,
     profileFields: userProfile ? generateProfileFields(userProfile) : [],
-    profileCompletion: userProfile ? calculateProfileCompletion(userProfile) : 0,
-    userScore: userProfile ? calculateUserScore(userProfile) : 0,
+    profileCompletion: userProfile ? calculateProfileCompletion(userProfile) : ,0,
+    userScore: userProfile ? calculateUserScore(userProfile) : ,0,
     recommendations: crmData?.recommendations || []
   };
 }
-export const dynamic = "force-dynamic";
+export const dynamic  = "force-dynamic";
+</string>

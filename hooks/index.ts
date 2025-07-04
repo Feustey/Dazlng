@@ -1,19 +1,19 @@
-// export * from './usePayment';
-// export * from './useAuth';
-export * from './useNetwork';
-// export * from './useLightningAuth'; 
+// export * from "./usePayment";
+// export * from "./useAuth";
+export * from "./useNetwork";
+// export * from "./useLightningAuth"; 
 
 // Hooks existants
-export { useSupabase } from '@/app/providers/SupabaseProvider';
-export { useSubscription } from '@/lib/hooks/useSubscription';
-export { usePubkeyCookie } from '@/app/user/hooks/usePubkeyCookie';
-export { useGamificationSystem } from '@/app/user/hooks/useGamificationSystem';
-export { useToast } from '@/hooks/useToast';
-export { useCache } from '@/hooks/useCache';
-export { useConversionTracking } from '@/hooks/useConversionTracking';
+export { useSupabase } from "@/app/providers/SupabaseProvider";
+export { useSubscription } from "@/lib/hooks/useSubscriptio\n;
+export { usePubkeyCookie } from "@/app/user/hooks/usePubkeyCookie";
+export { useGamificationSystem } from "@/app/user/hooks/useGamificationSystem";
+export { useToast } from "@/hooks/useToast";
+export { useCache } from "@/hooks/useCache";
+export { useConversionTracking } from "@/hooks/useConversionTracking";
 
 // Nouveau hook pour les liens localisés
-export { useLocalizedLink } from './useLocalizedLink';
+export { useLocalizedLink } from "./useLocalizedLink";
 
 // Hooks RAG
 export {
@@ -30,7 +30,7 @@ export {
   useRAGAsset,
   useRAGCacheClear,
   useRAGCacheStats
-} from '@/hooks/useRAG';
+} from "@/hooks/useRAG";
 
 // Hooks Lightning-RAG
 export {
@@ -43,4 +43,4 @@ export {
   useLightningRAGPredictions,
   useLightningRAGAlerts,
   useLightningRAGReports
-} from '@/hooks/useLightningRAG'; 
+} from "@/hooks/useLightningRAG'; ";

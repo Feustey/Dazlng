@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseAdminClient } from '@/lib/supabase';
-import { withAuth, handleApiError } from '@/lib/api-utils';
+import { getSupabaseAdminClient } from "@/lib/supabase";
+import { withAuth, handleApiError } from "@/lib/api-utils";
 
 // GET /api/users/me/metrics - Métriques utilisateur
 export async function GET(req: NextRequest): Promise<Response> {

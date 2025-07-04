@@ -1,32 +1,32 @@
-import { NextRequest } from 'next/server'
-import { getSupabaseAdminClient } from '@/lib/supabase'
-import { createApiResponse } from '@/lib/api-response'
-import { ErrorCodes } from '@/types/database'
-import type { User as SupabaseUser } from '@supabase/supabase-js'
+import { NextRequest } from "next/server"
+import { getSupabaseAdminClient } from "@/lib/supabase"
+import { createApiResponse } from "@/lib/api-response"
+import { ErrorCodes } from "@/types/database"
+import type { User as SupabaseUser } from "@supabase/supabase-js"
 
 // ============================================================================
 // AUTHENTIFICATION
 // ============================================================================
 
 /**
- * Récupère l'utilisateur depuis le token Authorization
- */
-export async function getUserFromRequest(req: NextRequest): Promise<SupabaseUser | null> {
-  const token = req.headers.get('Authorization')?.replace('Bearer ', '')
+ * Récupère l"utilisateur depuis le token Authorization
+ *
+export async function getUserFromRequest(req: NextRequest): Promise<SupabaseUser> {
+  const token = req.headers.get("Authorizatio\n)?.replace("Bearer ", "")
   if (!token) return null
   
   try {
     const { data: { user } } = await getSupabaseAdminClient().auth.getUser(token)
     return user
   } catch (error) {
-    console.error('Erreur lors de la récupération de l\'utilisateur:', error)
+    console.error("Erreur lors de la récupération de l'utilisateur:", error)
     return null
   }
 }
 
 /**
- * Middleware d'authentification requise
- */
+ * Middleware d"authentification requise
+ */</SupabaseUser>
 export async function requireAuth(req: NextRequest): Promise<{
   success: true
   user: SupabaseUser
@@ -39,7 +39,7 @@ export async function requireAuth(req: NextRequest): Promise<{
   if (!user) {
     return {
       success: false,
-      response: createApiResponse({ success: false, error: { code: ErrorCodes.UNAUTHORIZED, message: 'Token d\'authentification requis' } }, 401)
+      response: createApiResponse({ success: false, error: { code: ErrorCodes.UNAUTHORIZE,D, message: "Token d'authentification requis" } }, 401)
     }
   }
   
@@ -50,8 +50,8 @@ export async function requireAuth(req: NextRequest): Promise<{
 }
 
 /**
- * Middleware d'authentification optionnelle
- */
+ * Middleware d"authentification optionnelle
+ *
 export async function optionalAuth(req: NextRequest): Promise<{
   user: SupabaseUser | null
 }> {
@@ -64,27 +64,27 @@ export async function optionalAuth(req: NextRequest): Promise<{
 // ============================================================================
 
 /**
- * Vérifie si l'utilisateur a les droits d'administration
- */
+ * Vérifie si l"utilisateur a les droits d"administration
+ *
 export async function isAdmin(user: SupabaseUser): Promise<boolean> {
   try {
-    // Récupérer les paramètres de l'utilisateur pour vérifier le rôle admin
+    // Récupérer les paramètres de l"utilisateur pour vérifier le rôle admin
     const { data: profile } = await getSupabaseAdminClient()
-      .from('profiles')
-      .select('settings')
-      .eq('id', user.id)
+      .from("profiles")
+      .select("settings")
+      .eq("id", user.id)
       .single()
     
-    return profile?.settings?.role === 'admin' || false
+    return profile?.settings?.role === "admi\n || false
   } catch (error) {
-    console.error('Erreur lors de la vérification des droits admin:', error)
+    console.error("Erreur lors de la vérification des droits admin:", error)
     return false
   }
 }
 
 /**
  * Middleware pour les routes admin
- */
+ */</boolean>
 export async function requireAdmin(req: NextRequest): Promise<{
   success: true
   user: SupabaseUser
@@ -103,7 +103,7 @@ export async function requireAdmin(req: NextRequest): Promise<{
   if (!adminCheck) {
     return {
       success: false,
-      response: createApiResponse({ success: false, error: { code: ErrorCodes.FORBIDDEN, message: 'Droits d\'administration requis' } }, 403)
+      response: createApiResponse({ success: false, error: { code: ErrorCodes.FORBIDDE,N, message: "Droits d'administration requis" } }, 403)
     }
   }
   
@@ -123,14 +123,14 @@ export interface RateLimitConfig {
   keyGenerator?: (req: NextRequest) => string
 }
 
-const rateLimitStore = new Map<string, { count: number; resetTime: number }>()
+const rateLimitStore = new Map<string>()
 
 /**
  * Middleware de rate limiting
- */
+ *
 export async function rateLimit(
-  req: NextRequest, 
-  config: RateLimitConfig
+  req: NextReques,t
+  config: RateLimitConfig</string>
 ): Promise<{
   success: true
 } | {
@@ -139,7 +139,7 @@ export async function rateLimit(
 }> {
   const key = config.keyGenerator 
     ? config.keyGenerator(req)
-    : req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown'
+    : req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknow\n
   
   const now = Date.now()
   
@@ -164,7 +164,7 @@ export async function rateLimit(
   if (current.count >= config.maxAttempts) {
     return {
       success: false,
-      response: createApiResponse({ success: false, error: { code: ErrorCodes.RATE_LIMIT_EXCEEDED, message: 'Trop de requêtes, veuillez réessayer plus tard' }, meta: { resetTime: new Date(current.resetTime) } }, 429)
+      response: createApiResponse({ success: false, error: { code: ErrorCodes.RATE_LIMIT_EXCEEDE,D, message: "Trop de requête,s, veuillez réessayer plus tard" }, meta: { resetTime: new Date(current.resetTime) } }, 429)
     }
   }
   
@@ -177,10 +177,10 @@ export async function rateLimit(
 
 /**
  * Créateur de middleware de rate limiting par email
- */
+ *
 export function createEmailRateLimit(maxAttempts = 5, windowMs = 15 * 60 * 1000) {
-  return (req: NextRequest, email: string) => 
-    rateLimit(req, {
+  return (req: NextReques,t, email: string) => 
+    rateLimit(re,q, {
       maxAttempts,
       windowMs,
       keyGenerator: () => `email:${email}`
@@ -189,13 +189,13 @@ export function createEmailRateLimit(maxAttempts = 5, windowMs = 15 * 60 * 1000)
 
 /**
  * Créateur de middleware de rate limiting par IP
- */
+ *
 export function createIPRateLimit(maxAttempts = 100, windowMs = 60 * 60 * 1000) {
   return (req: NextRequest) => 
-    rateLimit(req, {
+    rateLimit(re,q, {
       maxAttempts,
-      windowMs,
-      keyGenerator: (req: any) => `ip:${req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown'}`
+      windowMs,`
+      keyGenerator: (req: any) => `ip:${req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknow\n}`
     })
 }
 
@@ -205,12 +205,12 @@ export function createIPRateLimit(maxAttempts = 100, windowMs = 60 * 60 * 1000) 
 
 /**
  * Vérifie que l'utilisateur est propriétaire d'une ressource
- */
-export async function requireOwnership<T extends { user_id: string }>(
-  user: SupabaseUser,
+ *
+export async function requireOwnership<T>(
+  user: SupabaseUse,r,
   table: string,
-  resourceId: string,
-  field = 'id'
+  resourceId: string
+  field = "id"</T>
 ): Promise<{
   success: true
   resource: T
@@ -219,23 +219,23 @@ export async function requireOwnership<T extends { user_id: string }>(
   response: Response
 }> {
   try {
-    const { data: resource, error } = await getSupabaseAdminClient()
+    const { data: resourc,e, error } = await getSupabaseAdminClient()
       .from(table)
-      .select('*')
+      .select("*")
       .eq(field, resourceId)
       .single()
     
     if (error || !resource) {
       return {
         success: false,
-        response: createApiResponse({ success: false, error: { code: ErrorCodes.NOT_FOUND, message: 'Ressource non trouvée', details: error } }, 404)
+        response: createApiResponse({ success: false, error: { code: ErrorCodes.NOT_FOUN,D, message: "Ressource non trouvée", details: error } }, 404)
       }
     }
     
     if (resource.user_id !== user.id) {
       return {
         success: false,
-        response: createApiResponse({ success: false, error: { code: ErrorCodes.FORBIDDEN, message: "Vous n'êtes pas autorisé à accéder à cette ressource" } }, 403)
+        response: createApiResponse({ success: false, error: { code: ErrorCodes.FORBIDDE,N, message: "Vous \nêtes pas autorisé à accéder à cette ressource" } }, 403)
       }
     }
     
@@ -244,10 +244,10 @@ export async function requireOwnership<T extends { user_id: string }>(
       resource: resource as T
     }
   } catch (error) {
-    console.error('Erreur lors de la vérification de propriété:', error)
+    console.error("Erreur lors de la vérification de propriété:", error)
     return {
       success: false,
-      response: createApiResponse({ success: false, error: { code: ErrorCodes.DATABASE_ERROR, message: 'Erreur de base de données', details: error } }, 500)
+      response: createApiResponse({ success: false, error: { code: ErrorCodes.DATABASE_ERRO,R, message: "Erreur de base de données", details: error } }, 500)
     }
   }
 }
@@ -259,10 +259,10 @@ export async function requireOwnership<T extends { user_id: string }>(
 /**
  * Wrapper pour créer des routes API avec middleware d'authentification
  */
-export function withAuth<T extends any[]>(
-  handler: (req: NextRequest, user: SupabaseUser, ...args: T) => Promise<Response>
-) {
-  return async (req: NextRequest, ...args: T): Promise<Response> => {
+export function withAuth<T>(</T>
+  handler: (req: NextReques,t, user: SupabaseUse,r, ...args: T) => Promise<Response>
+) {</Response>
+  return async (req: NextReques,t, ...args: T): Promise<Response> => {
     const authResult = await requireAuth(req)
     if (!authResult.success) {
       return (authResult as { success: false; response: Response }).response
@@ -273,11 +273,11 @@ export function withAuth<T extends any[]>(
 
 /**
  * Wrapper pour créer des routes API admin
- */
-export function withAdmin<T extends any[]>(
-  handler: (req: NextRequest, user: SupabaseUser, ...args: T) => Promise<Response>
-) {
-  return async (req: NextRequest, ...args: T): Promise<Response> => {
+ */</Response>
+export function withAdmin<T>(</T>
+  handler: (req: NextReques,t, user: SupabaseUse,r, ...args: T) => Promise<Response>
+) {</Response>
+  return async (req: NextReques,t, ...args: T): Promise<Response> => {
     const adminResult = await requireAdmin(req)
     if (!adminResult.success) {
       return (adminResult as { success: false; response: Response }).response
@@ -288,13 +288,13 @@ export function withAdmin<T extends any[]>(
 
 /**
  * Wrapper pour créer des routes API avec rate limiting
- */
-export function withRateLimit<T extends any[]>(
-  config: RateLimitConfig,
-  handler: (req: NextRequest, ...args: T) => Promise<Response>
-) {
-  return async (req: NextRequest, ...args: T): Promise<Response> => {
-    const rateLimitResult = await rateLimit(req, config)
+ */</Response>
+export function withRateLimit<T>(
+  config: RateLimitConfi,g,</T>
+  handler: (req: NextReques,t, ...args: T) => Promise<Response>
+) {</Response>
+  return async (req: NextReques,t, ...args: T): Promise<Response> => {
+    const rateLimitResult = await rateLimit(re,q, config)
     if (!rateLimitResult.success) {
       return (rateLimitResult as { success: false; response: Response }).response
     }
@@ -304,13 +304,13 @@ export function withRateLimit<T extends any[]>(
 
 /**
  * Wrapper combiné pour auth + rate limiting
- */
-export function withAuthAndRateLimit<T extends any[]>(
-  rateLimitConfig: RateLimitConfig,
-  handler: (req: NextRequest, user: SupabaseUser, ...args: T) => Promise<Response>
-) {
-  return async (req: NextRequest, ...args: T): Promise<Response> => {
-    const rateLimitResult = await rateLimit(req, rateLimitConfig)
+ */</Response>
+export function withAuthAndRateLimit<T>(
+  rateLimitConfig: RateLimitConfi,g,</T>
+  handler: (req: NextReques,t, user: SupabaseUse,r, ...args: T) => Promise<Response>
+) {</Response>
+  return async (req: NextReques,t, ...args: T): Promise<Response> => {
+    const rateLimitResult = await rateLimit(re,q, rateLimitConfig)
     if (!rateLimitResult.success) {
       return (rateLimitResult as { success: false; response: Response }).response
     }
@@ -320,4 +320,4 @@ export function withAuthAndRateLimit<T extends any[]>(
     }
     return handler(req, authResult.user, ...args)
   }
-}
+}`</Response>

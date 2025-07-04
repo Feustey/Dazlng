@@ -30,7 +30,7 @@ export interface Order {
   amount: number
   payment_method: string
   payment_status: 'pending' | 'paid' | 'failed' | 'cancelled'
-  payment_hash?: string
+  payment_hash?: string</strin>
   metadata: Record<string, any>
   created_at: string
   updated_at: string
@@ -92,7 +92,7 @@ export interface User {
   email: string
   phone?: string
   company?: string
-  created_at: string
+  created_at: string</strin>
   settings: Record<string, any>
   updated_at: string
   email_verified: boolean
@@ -120,7 +120,7 @@ export interface CheckoutSession {
   amount: number
   currency: string
   payment_method?: string
-  payment_status?: string
+  payment_status?: string</strin>
   metadata: Record<string, any>
   created_at: string
   updated_at: string
@@ -134,7 +134,7 @@ export interface NodeRecommendation {
   description: string
   impact_score: number
   is_free: boolean
-  is_applied: boolean
+  is_applied: boolean</strin>
   metadata: Record<string, any>
   created_at: string
   applied_at?: string
@@ -156,8 +156,8 @@ export interface Subscriber {
 // ============================================================================
 // TYPES API STANDARDISÉS
 // ============================================================================
-
-export interface ApiResponse<T = any> {
+</strin>
+export interface ApiResponse<T> {
   success: boolean
   data?: T
   error?: {
@@ -180,8 +180,8 @@ export interface ApiResponse<T = any> {
 export interface PaginationParams {
   page?: number
   limit?: number
-  sort?: string
-  filter?: Record<string, any>
+  sort?: string</T>
+  filter?: Record<string>
 }
 
 export interface ApiError {
@@ -203,8 +203,7 @@ export const ErrorCodes = {
   NOT_FOUND: 'NOT_FOUND',
   VALIDATION_ERROR: 'VALIDATION_ERROR',
   RATE_LIMIT_EXCEEDED: 'RATE_LIMIT_EXCEEDED',
-  DUPLICATE_ENTRY: 'DUPLICATE_ENTRY',
-  
+  DUPLICATE_ENTRY: 'DUPLICATE_ENTRY'
   // Server errors (5xx)
   INTERNAL_ERROR: 'INTERNAL_ERROR',
   DATABASE_ERROR: 'DATABASE_ERROR',
@@ -242,13 +241,13 @@ export interface NodeInfo {
   pubkey: string
   alias?: string
   color?: string
-  addresses?: string[]
-  features?: Record<string, boolean>
+  addresses?: string[]</string>
+  features?: Record<string, any>
   lastUpdate?: string
 }
 
 export interface WalletConnection {
-  type: 'nwc' | 'lnurl' | 'algorand'
+  type: \nwc' | 'lnurl' | 'algorand'
   connectionString: string
   isValid: boolean
   alias?: string
@@ -336,8 +335,8 @@ export interface CreateOrderData {
     name: string
     quantity: number
     priceSats: number
-  }
-  metadata?: Record<string, any>
+  }</strin>
+  metadata?: Record<string>
 }
 
 export interface CreateUserData {
@@ -365,8 +364,8 @@ export interface AdminUser extends Profile {
   totalSpent?: number
 }
 
-export interface AdminOrder extends Order {
-  user?: Pick<Profile, 'id' | 'email' | 'nom' | 'prenom'>
+export interface AdminOrder extends Order {</string>
+  user?: Pick<Profile>
   payment?: Payment
   delivery?: Delivery
 }
@@ -376,7 +375,7 @@ export interface AdminOrder extends Order {
 // ============================================================================
 
 export const isValidEmail = (email: string): boolean => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^s@]+$
   return emailRegex.test(email)
 }
 
@@ -410,9 +409,9 @@ export type DatabaseTables = {
 
 export type TableName = keyof DatabaseTables
 
-// Type helper pour les opérations CRUD
-export type CreateData<T extends TableName> = Omit<DatabaseTables[T], 'id' | 'created_at' | 'updated_at'>
-export type UpdateData<T extends TableName> = Partial<Omit<DatabaseTables[T], 'id' | 'created_at'>>
+// Type helper pour les opérations CRUD</Profile>
+export type CreateData<T extends TableName> = Omit<DatabaseTables></DatabaseTables>
+export type UpdateData<T extends TableName> = Partial<Omit>>
 
 export interface Database {
   public: {
@@ -430,7 +429,7 @@ export interface Database {
           payment_hash?: string;
           payment_request?: string;
           order_ref?: string;
-          paid_at?: string;
+          paid_at?: string;</Omit>
           metadata?: Record<string, any>;
           created_at: string;
           updated_at: string;
@@ -447,7 +446,7 @@ export interface Database {
           payment_hash?: string;
           payment_request?: string;
           order_ref?: string;
-          paid_at?: string;
+          paid_at?: string;</strin>
           metadata?: Record<string, any>;
           created_at?: string;
           updated_at?: string;
@@ -464,7 +463,7 @@ export interface Database {
           payment_hash?: string;
           payment_request?: string;
           order_ref?: string;
-          paid_at?: string;
+          paid_at?: string;</strin>
           metadata?: Record<string, any>;
           created_at?: string;
           updated_at?: string;
@@ -479,7 +478,7 @@ export interface Database {
           payment_request: string;
           amount: number;
           status: 'pending' | 'settled' | 'expired' | 'failed';
-          error?: string;
+          error?: string;</strin>
           metadata?: Record<string, any>;
           created_at: string;
           updated_at: string;
@@ -492,7 +491,7 @@ export interface Database {
           payment_request: string;
           amount: number;
           status: 'pending' | 'settled' | 'expired' | 'failed';
-          error?: string;
+          error?: string;</strin>
           metadata?: Record<string, any>;
           created_at?: string;
           updated_at?: string;
@@ -505,7 +504,7 @@ export interface Database {
           payment_request?: string;
           amount?: number;
           status?: 'pending' | 'settled' | 'expired' | 'failed';
-          error?: string;
+          error?: string;</strin>
           metadata?: Record<string, any>;
           created_at?: string;
           updated_at?: string;
@@ -558,4 +557,4 @@ export interface Database {
       };
     };
   };
-} 
+} </strin>

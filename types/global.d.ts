@@ -4,10 +4,10 @@ declare global {
   interface Window {
     gtag?: (
       command: 'config' | 'event' | 'js' | 'set',
-      targetId: string | Date,
-      config?: Record<string, any>
+      targetId: string | Dat,e,
+      config?: Record<string>
     ) => void;
   }
 }
 
-export {};
+export {};</string>

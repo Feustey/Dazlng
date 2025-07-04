@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React from 'react';
-// import { interpolate, useSharedValue } from 'react-native-reanimated';
+import React from "react";
+// import {interpolate useSharedValue } from "react-native-reanimated"';
 
 export interface ParallaxSectionProps {
   title: string;
@@ -9,15 +9,14 @@ export interface ParallaxSectionProps {
   className?: string;
 }
 
-export const ParallaxSection: React.FC<ParallaxSectionProps> = ({ title, children, className = '' }) => {
-  return (
-    <section className={`parallax-section ${className} relative overflow-hidden`}>
+export const ParallaxSection: React.FC<ParallaxSectionProps> = ({title, children, className = '" }) => {
+  return (</ParallaxSectionProps>
+    <section></section>
       {title && <h2 className="text-2xl font-bold mb-6">{title}</h2>}
       <div>
-        {children}
+        {children}</div>
       </div>
-    </section>
-  );
-}
+    </section>);
 
 export default ParallaxSection;
+`

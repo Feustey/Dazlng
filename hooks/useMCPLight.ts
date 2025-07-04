@@ -1,12 +1,12 @@
-import { useState, useEffect, useCallback } from 'react';
-import { mcpLightAPI } from '@/lib/services/mcp-light-api';
+import { useState, useEffect, useCallback } from "react";
+import { mcpLightAPI } from "@/lib/services/mcp-light-api";
 import { 
   NodeAnalysisResult, 
   MCPLightCredentials,
   type MCPNodeInfo,
   type MCPRecommendationsResponse,
   type MCPPrioritiesResponse
-} from '@/lib/services/mcp-light-api';
+} from "@/lib/services/mcp-light-api";
 
 export interface UseMCPLightState {
   initialized: boolean;
@@ -57,14 +57,14 @@ export const useMCPLight = (): UseMCPLightReturn => {
         ...prev,
         initialized: success,
         credentials,
-        error: success ? null : 'Échec de l\'initialisation API',
+        error: success ? null : "Échec de l'initialisation API",
         loading: false
       }));
     } catch (err) {
       setState(prev => ({
         ...prev,
         initialized: false,
-        error: err instanceof Error ? err.message : 'Erreur inconnue',
+        error: err instanceof Error ? err.message : "Erreur inconnue",
         loading: false
       }));
     }
@@ -72,7 +72,7 @@ export const useMCPLight = (): UseMCPLightReturn => {
 
   const analyzeNode = useCallback(async (
     pubkey: string, 
-    context = "Analyse complète du nœud", 
+    context = "Analyse complète du nœud",
     goals = ["increase_revenue", "improve_centrality"]
   ): Promise<NodeAnalysisResult> => {
     setState(prev => ({ ...prev, error: null }));
@@ -80,7 +80,7 @@ export const useMCPLight = (): UseMCPLightReturn => {
     try {
       return await mcpLightAPI.analyzeNode(pubkey, context, goals);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de l\'analyse du nœud';
+      const errorMessage = err instanceof Error ? err.message : "Erreur lors de l'analyse du nœud";
       setState(prev => ({ ...prev, error: errorMessage }));
       throw err;
     }
@@ -92,7 +92,7 @@ export const useMCPLight = (): UseMCPLightReturn => {
     try {
       return await mcpLightAPI.getNodeInfo(pubkey);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de la récupération des infos du nœud';
+      const errorMessage = err instanceof Error ? err.message : "Erreur lors de la récupération des infos du nœud";
       setState(prev => ({ ...prev, error: errorMessage }));
       throw err;
     }
@@ -104,7 +104,7 @@ export const useMCPLight = (): UseMCPLightReturn => {
     try {
       return await mcpLightAPI.getRecommendations(pubkey);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de la récupération des recommandations';
+      const errorMessage = err instanceof Error ? err.message : "Erreur lors de la récupération des recommandations";
       setState(prev => ({ ...prev, error: errorMessage }));
       throw err;
     }
@@ -112,7 +112,7 @@ export const useMCPLight = (): UseMCPLightReturn => {
 
   const getPriorityActions = useCallback(async (
     pubkey: string, 
-    context = "Optimisation générale", 
+    context = "Optimisation générale",
     goals = ["increase_revenue"]
   ): Promise<MCPPrioritiesResponse> => {
     setState(prev => ({ ...prev, error: null }));
@@ -120,7 +120,7 @@ export const useMCPLight = (): UseMCPLightReturn => {
     try {
       return await mcpLightAPI.getPriorityActions(pubkey, context, goals);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de la récupération des actions prioritaires';
+      const errorMessage = err instanceof Error ? err.message : "Erreur lors de la récupération des actions prioritaires";
       setState(prev => ({ ...prev, error: errorMessage }));
       throw err;
     }
@@ -132,7 +132,7 @@ export const useMCPLight = (): UseMCPLightReturn => {
     try {
       return await mcpLightAPI.checkHealth();
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de la vérification de santé';
+      const errorMessage = err instanceof Error ? err.message : "Erreur lors de la vérification de santé";
       setState(prev => ({ ...prev, error: errorMessage }));
       throw err;
     }
@@ -149,7 +149,7 @@ export const useMCPLight = (): UseMCPLightReturn => {
         ...prev,
         initialized: success,
         credentials,
-        error: success ? null : 'Échec de la réinitialisation API',
+        error: success ? null : "Échec de la réinitialisation API",
         loading: false
       }));
       
@@ -158,7 +158,7 @@ export const useMCPLight = (): UseMCPLightReturn => {
       setState(prev => ({
         ...prev,
         initialized: false,
-        error: err instanceof Error ? err.message : 'Erreur lors de la réinitialisation',
+        error: err instanceof Error ? err.message : "Erreur lors de la réinitialisation",
         loading: false
       }));
       return false;
@@ -179,7 +179,6 @@ export const useMCPLight = (): UseMCPLightReturn => {
     loading: state.loading,
     error: state.error,
     credentials: state.credentials,
-    
     // Actions
     analyzeNode,
     getNodeInfo,
@@ -188,11 +187,10 @@ export const useMCPLight = (): UseMCPLightReturn => {
     checkHealth,
     reinitialize,
     clearError,
-    
     // Utilitaires
     api: mcpLightAPI,
     isValidPubkey
   };
 };
 
-export default useMCPLight; 
+export default useMCPLight;

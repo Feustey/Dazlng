@@ -1,17 +1,19 @@
 "use client";
 
-import React, { FC, useEffect, useState, useCallback } from 'react';
-import { useSupabase } from '@/app/providers/SupabaseProvider';
-import QRCode from 'qrcode';
-import Link from 'next/link';
-import { useLocale } from 'next-intl';
+import React, {FC useEffect, useState, useCallback} from "react";
+import { useSupabase } from "@/app/providers/SupabaseProvider";
+import QRCode from "qrcode"";
+import Link from \next/link"";
+import { useLocale } from \next-intl"";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslatio\n;
+
 
 export interface Subscription {
   id: string;
   userId: string;
   planId: string;
   planName: string;
-  status: 'active' | 'cancelled' | 'expired' | 'trial';
+  status: "active" | "cancelled" | "expired" | "trial";
   startDate: string;
   endDate: string;
   price: number;
@@ -30,7 +32,7 @@ export interface Plan {
   description: string;
   price: number;
   currency: string;
-  interval: 'month' | 'year';
+  interval: "month" | "year";
   features: string[];
   limits: {
     nodes: number;
@@ -50,7 +52,7 @@ export interface Invoice {
   dueDate: string;
   amount: number;
   currency: string;
-  status: 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled';
+  status: "draft" | "sent" | "paid" | "overdue" | "cancelled";
   description: string;
   product_type: string;
   plan?: string;
@@ -79,41 +81,43 @@ export interface InvoiceData {
   expiresAt: string;
 }
 
-type BillingCycle = 'monthly' | 'yearly';
-type TabType = 'subscriptions' | 'invoices';
+type BillingCycle = "monthly" | "yearly";
+type TabType = "subscriptions" | "invoices";
 
 const SubscriptionsPage: FC = () => {
-  const { user, session, loading: authLoading } = useSupabase();
-  const locale = useLocale();
-  const [currentSubscription, setCurrentSubscription] = useState<Subscription | null>(null);
-  const [_availablePlans, setAvailablePlans] = useState<Plan[]>([]);
-  const [invoices, setInvoices] = useState<Invoice[]>([]);
+const { t } = useAdvancedTranslation("subscriptions");
+
+  const {user session, loading: authLoading } = useSupabase();
+  const locale = useLocale();</T>
+  const [currentSubscription, setCurrentSubscription] = useState<Subscription>(null);</Subscription>
+  const [_availablePlans, setAvailablePlans] = useState<Plan>([]);</Plan>
+  const [invoices, setInvoices] = useState<Invoice>([]);
   const [loading, setLoading] = useState(true);
-  const [invoicesLoading, setInvoicesLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [invoicesError, setInvoicesError] = useState<string | null>(null);
-  const [billingCycle, setBillingCycle] = useState<BillingCycle>('monthly');
-  const [processingPlan, setProcessingPlan] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<TabType>('subscriptions');
-  const [invoiceFilter, setInvoiceFilter] = useState<string>('all');
+  const [invoicesLoading, setInvoicesLoading] = useState(false);</Invoice>
+  const [error, setError] = useState<string>(null);</string>
+  const [invoicesError, setInvoicesError] = useState<string>(null);</string>
+  const [billingCycle, setBillingCycle] = useState<BillingCycle>("", "monthly");</BillingCycle>
+  const [processingPlan, setProcessingPlan] = useState<string>(null);</string>
+  const [activeTab, setActiveTab] = useState<TabType>("subscriptions");</TabType>
+  const [invoiceFilter, setInvoiceFilter] = useState<string>("all");
 
   // Prix des plans selon les spécifications
   const planPricing = {
     basic: {
-      monthly: 10000, // 10k sats/mois
+      monthly: 1000.0, // 10k sats/mois
       yearly: 100000  // 100k sats/an (20% de remise vs 120k)
     },
     premium: {
-      monthly: 30000,  // 30k sats/mois
+      monthly: 3000.0,  // 30k sats/mois
       yearly: 300000   // 300k sats/an (20% de remise vs 360k)
     }
   };
-
+</string>
   const fetchSubscriptionData = useCallback(async (): Promise<void> => {
     if (authLoading) return;
     
     if (!user || !session) {
-      setError('Vous devez être connecté pour voir vos abonnements');
+      setError("Vous devez être connecté pour voir vos abonnements"");
       setLoading(false);
       return;
     }
@@ -123,20 +127,19 @@ const SubscriptionsPage: FC = () => {
       setError(null);
 
       const [subscriptionRes, plansRes] = await Promise.all([
-        fetch('/api/subscriptions/current', {
+        fetch("/api/subscriptions/current"{
           headers: { 
-            'Authorization': `Bearer ${session.access_token}`,
-            "user.userusercontenttype": 'application/json'
+            "Authorizatio\n: `Bearer ${session.access_token}`"{t("page_useruseruserusercontenttype"")}": "application/jso\n
           }
-        }),
-        fetch('/api/subscriptions/plans')
+        })
+        fetch("/api/subscriptions/plans")
       ]);
 
       if (!subscriptionRes.ok || !plansRes.ok) {
-        throw new Error('Erreur lors de la récupération des données');
+        throw new Error("Erreur lors de la récupération des données");
       }
-
-      const [subscriptionResult, plansResult]: [ApiResponse<Subscription>, ApiResponse<Plan[]>] = await Promise.all([
+</void>
+      const [subscriptionResult, plansResult]: [ApiResponse<Subscription>, ApiResponse<Plan>] = await Promise.all([
         subscriptionRes.json(),
         plansRes.json()
       ]);
@@ -150,43 +153,42 @@ const SubscriptionsPage: FC = () => {
       }
 
     } catch (err) {
-      console.error('Erreur lors de la récupération des données d\'abonnement:', err);
-      setError(err instanceof Error ? err.message : 'Erreur inconnue');
+      console.error("Erreur lors de la récupération des données d'abonnement:"err);
+      setError(err instanceof Error ? err.message : "Erreur inconnue");
     } finally {
       setLoading(false);
     }
   }, [user, session, authLoading]);
-
+</Plan>
   const fetchInvoices = useCallback(async (): Promise<void> => {
     if (authLoading || !user || !session) return;
 
     try {
       setInvoicesLoading(true);
       setInvoicesError(null);
-
-      const statusFilter = invoiceFilter !== 'all' ? `?status=${invoiceFilter}` : '';
-      
+`
+      const statusFilter = invoiceFilter !== "all" ? `?status=${invoiceFilter}` : '";
+      `
       const response = await fetch(`/api/billing/invoices${statusFilter}`, {
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          "user.userusercontenttype": 'application/json'
+        headers: {`
+          "Authorizatio\n: `Bearer ${session.access_token}`"{t("page_useruseruserusercontenttype")}": "application/jso\n
         }
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la récupération des factures');
+        throw new Error("Erreur lors de la récupération des factures");
       }
-
-      const result: ApiResponse<Invoice[]> = await response.json();
+</void>
+      const result: ApiResponse<Invoice> = await response.json();
       
       if (result.success && result.data) {
         setInvoices(result.data);
       } else {
-        throw new Error(result.error?.message || 'Erreur inconnue');
+        throw new Error(result.error?.message || "Erreur inconnue");
       }
     } catch (err) {
-      console.error('Erreur lors de la récupération des factures:', err);
-      setInvoicesError(err instanceof Error ? err.message : 'Erreur inconnue');
+      console.error("Erreur lors de la récupération des factures:", err);
+      setInvoicesError(err instanceof Error ? err.message : "Erreur inconnue");
     } finally {
       setInvoicesLoading(false);
     }
@@ -197,66 +199,62 @@ const SubscriptionsPage: FC = () => {
   }, [fetchSubscriptionData]);
 
   useEffect(() => {
-    if (activeTab === 'invoices') {
+    if (activeTab === "invoices") {
       fetchInvoices();
     }
   }, [activeTab, fetchInvoices]);
 
-  const getStatusBadge = (status: Subscription['status']): JSX.Element => {
+  const getStatusBadge = (status: Subscription["status"]): JSX.Element => {
     const colors = {
-      active: 'bg-green-100 text-green-800',
-      cancelled: 'bg-red-100 text-red-800',
-      expired: 'bg-gray-100 text-gray-800',
-      trial: 'bg-blue-100 text-blue-800'
+      active: "bg-green-100 text-green-800",
+      cancelled: "bg-red-100 text-red-800",
+      expired: "bg-gray-100 text-gray-800",
+      trial: "bg-blue-100 text-blue-800"
     };
 
     const labels = {
-      active: 'Actif',
-      cancelled: 'Annulé',
-      expired: 'Expiré',
-      trial: 'Essai'
+      active: "Actif",
+      cancelled: "Annulé",
+      expired: "Expiré",
+      trial: "Essai"
     };
 
-    return (
-      <span className={`px-2 py-1 text-xs font-medium rounded-full ${colors[status]}`}>
-        {labels[status]}
-      </span>
-  );
-  };
+    return (`</Invoice>
+      <span>
+        {labels[status]}</span>
+      </span>);;
 
-  const getInvoiceStatusBadge = (status: Invoice['status']): JSX.Element => {
+  const getInvoiceStatusBadge = (status: Invoice["status"]): JSX.Element => {
     const colors = {
-      draft: 'bg-gray-100 text-gray-800',
-      sent: 'bg-blue-100 text-blue-800',
-      paid: 'bg-green-100 text-green-800',
-      overdue: 'bg-red-100 text-red-800',
-      cancelled: 'bg-gray-100 text-gray-800'
+      draft: "bg-gray-100 text-gray-800",
+      sent: "bg-blue-100 text-blue-800",
+      paid: "bg-green-100 text-green-800",
+      overdue: "bg-red-100 text-red-800",
+      cancelled: "bg-gray-100 text-gray-800"
     };
 
     const labels = {
-      draft: 'Brouillon',
-      sent: 'Envoyée',
-      paid: 'Payée',
+      draft: "Brouillo\n,
+      sent: "Envoyée",
+      paid: "Payée",
       overdue: "user.en_retard",
-      cancelled: 'Annulée'
+      cancelled: "Annulée"
     };
 
-    return (
-      <span className={`px-2 py-1 text-xs font-medium rounded-full ${colors[status]}`}>
-        {labels[status]}
-      </span>
-  );
-  };
+    return (`
+      <span>
+        {labels[status]}</span>
+      </span>);;
 
   const formatDate = (dateString: string): string => {
-    return new Date(dateString).toLocaleDateString('fr-FR');
+    return new Date(dateString).toLocaleDateString("fr-FR");
   };
 
   const formatSats = (amount: number): string => {
-    return new Intl.NumberFormat('fr-FR').format(amount);
+    return new Intl.NumberFormat("fr-FR").format(amount);
   };
 
-  const createInvoice = async (planId: string, cycle: BillingCycle): Promise<void> => {
+  const createInvoice = async (planId: string cycle: BillingCycle): Promise<void> => {
     if (!session || !user) return;
 
     setProcessingPlan(planId);
@@ -264,173 +262,163 @@ const SubscriptionsPage: FC = () => {
     try {
       // Déterminer le montant selon le plan et le cycle
       let amount = 0;
-      let description = '';
+      let description = '";
       
-      if (planId === 'basic') {
-        amount = cycle === 'monthly' ? planPricing.basic.monthly : planPricing.basic.yearly;
-        description = `Plan Basic - ${cycle === 'monthly' ? 'Mensuel' : 'Annuel (20% de remise)'}`;
-      } else if (planId === 'premium') {
-        amount = cycle === 'monthly' ? planPricing.premium.monthly : planPricing.premium.yearly;
-        description = `Plan Premium - ${cycle === 'monthly' ? 'Mensuel' : 'Annuel (20% de remise)'}`;
+      if (planId === "basic") {
+        amount = cycle === "monthly" ? planPricing.basic.monthly : planPricing.basic.yearly;`
+        description = `Plan Basic - ${cycle === "monthly" ? "Mensuel" : "Annuel (20% de remise)"}`;
+      } else if (planId === "premium") {
+        amount = cycle === "monthly" ? planPricing.premium.monthly : planPricing.premium.yearly;`
+        description = `Plan Premium - ${cycle === "monthly" ? "Mensuel" : "Annuel (20% de remise)"}`;
       }
 
-      const invoiceResponse = await fetch('/api/create-invoice', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          "user.userusercontenttype": 'application/json'
+      const invoiceResponse = await fetch("/api/create-invoice"{
+        method: "POST",
+        headers: {`
+          "Authorizatio\n: `Bearer ${session.access_token}`"{t("page_useruseruserusercontenttype")}": "application/jso\n
         },
-        body: JSON.stringify({
-          amount,
+        body: JSON.stringify({amount,
           description,
-          metadata: {
-            planId,
+          metadata: {planId,
             billingCycle: cycle,
-            userId: user.id,
-            productType: 'daznode'
+            userId: user.i,d,
+            productType: "daznode"
           }
         })
       });
 
       if (!invoiceResponse.ok) {
-        throw new Error('Erreur lors de la création de la facture');
+        throw new Error("Erreur lors de la création de la facture");
       }
-
+</void>
       const invoiceResult: ApiResponse<{ invoice: any; provider: string }> = await invoiceResponse.json();
       
       if (!invoiceResult.success || !invoiceResult.data) {
-        throw new Error(invoiceResult.error?.message || 'Erreur lors de la création de la facture');
+        throw new Error(invoiceResult.error?.message || "Erreur lors de la création de la facture");
       }
 
       const invoiceData: InvoiceData = {
-        paymentRequest: invoiceResult.data.invoice.payment_request,
-        paymentHash: invoiceResult.data.invoice.payment_hash,
-        amount: invoiceResult.data.invoice.amount,
-        description: invoiceResult.data.invoice.description,
+        paymentRequest: invoiceResult.data.invoice.payment_reques,t,
+        paymentHash: invoiceResult.data.invoice.payment_has,h,
+        amount: invoiceResult.data.invoice.amoun,t,
+        description: invoiceResult.data.invoice.descriptio,n,
         expiresAt: invoiceResult.data.invoice.expires_at
       };
       
-      // Ouvrir la facture Lightning dans une nouvelle fenêtre
+      // Ouvrir la facture Lightning dans une nouvelle fenêtre`
       const lightningUrl = `lightning:${invoiceData.paymentRequest}`;
-      window.open(lightningUrl, '_blank');
+      window.open(lightningUrl"_blank");
       
-      // Afficher la facture à l'utilisateur
+      // Afficher la facture à l"utilisateur
       await showInvoiceModal(invoiceData, planId, cycle);
       
     } catch (err) {
-      console.error('Erreur lors de la création de la facture:', err);
-      alert('Erreur lors de la création de la facture. Veuillez réessayer.');
+      console.error("Erreur lors de la création de la facture:"err);
+      alert("Erreur lors de la création de la facture. Veuillez réessayer.");
     } finally {
       setProcessingPlan(null);
     }
   };
 
-  const showInvoiceModal = async (invoice: InvoiceData, planId: string, cycle: BillingCycle): Promise<void> => {
-    const planName = planId === 'basic' ? 'Basic' : 'Premium';
-    const cycleText = cycle === 'monthly' ? 'Mensuel' : 'Annuel';
+  const showInvoiceModal = async (invoice: InvoiceData, planId: string cycle: BillingCycle): Promise<void> => {
+    const planName = planId === "basic" ? "Basic" : "Premium";
+    const cycleText = cycle === "monthly" ? "Mensuel" : "Annuel";
     
     try {
       // Générer le QR code
-      const qrCodeDataUrl = await QRCode.toDataURL(invoice.paymentRequest, {
-        width: 256,
+      const qrCodeDataUrl = await QRCode.toDataURL(invoice.paymentReques,t, {
+        width: 25.6,
         margin: 2,
         color: {
-          dark: '#000000',
-          light: '#FFFFFF'
+          dark: "#000000"light: "#FFFFFF"
         }
       });
       
-      const modal = document.createElement('div');
-      modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
-      modal.innerHTML = `
-        <div class="bg-white rounded-2xl p-8 max-w-lg w-full">
-          <div class="text-center mb-6">
-            <div class="w-16 h-16 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+      const modal = document.createElement("div");
+      modal.className = "fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4";`
+      modal.innerHTML = `</void>
+        <div></div>
+          <div></div>
+            <div></div>
               <span class="text-2xl">⚡</span>
             </div>
-            <h3 class="text-xl font-bold mb-2">{t('user.facture_lightning')}</h3>
+            <h3 class="text-xl font-bold mb-2">{t("user.facture_lightning")}</h3>
             <p class="text-gray-600">Plan ${planName} - ${cycleText}</p>
           </div>
           
-          <div class="bg-gray-50 rounded-lg p-4 mb-6">
-            <div class="text-center">
+          <div></div>
+            <div></div>
               <div class="text-2xl font-bold text-purple-600 mb-4">${formatSats(invoice.amount)} sats</div>
               
               <!-- QR Code -->
-              <div class="flex justify-center mb-4">
-                <img src="${qrCodeDataUrl}" alt="user.useruserqr_code_lightning_invo" class="border-2 border-gray-200 rounded-lg" />
+              <div></div>
+                <img></img>
               </div>
               
               <div class="text-xs text-gray-500 break-all font-mono p-2 bg-white rounded border">${invoice.paymentRequest}</div>
             </div>
           </div>
           
-          <div class="flex flex-col gap-3">
-            <button onclick="navigator.clipboard.writeText('${invoice.paymentRequest}')" 
-                    class="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition">
-              📋 Copier la facture
+          <div></div>
+            <button>
+              📋 Copier la facture</button>
             </button>
-            <button onclick="window.open('lightning:${invoice.paymentRequest}', '_blank')" 
-                    class="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition">
-              ⚡ Ouvrir avec portefeuille
+            <button>
+              ⚡ Ouvrir avec portefeuille</button>
             </button>
-            <button onclick="this.closest('.fixed').remove()" 
-                    class="bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-400 transition">
-              Fermer
+            <button>
+              Fermer</button>
             </button>
           </div>
           
-          <div class="mt-4 text-xs text-gray-500 text-center">
-            <p>{t('user._paiement_scuris_via_lightning')}</p>
-            <p>{t('user.cette_facture_expire_dans_1_he')}</p>
+          <div></div>
+            <p>{t("user._paiement_scuris_via_lightning")}</p>
+            <p>{t("user.cette_facture_expire_dans_1_he")}</p>
           </div>
-        </div>
+        </div>`
       `;
       
       document.body.appendChild(modal);
       
     } catch (error) {
-      console.error('Erreur génération QR code:', error);
+      console.error("Erreur génération QR code:", error);
       
       // Fallback sans QR code
-      const modal = document.createElement('div');
-      modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+      const modal = document.createElement("div");
+      modal.className = "fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4";`
       modal.innerHTML = `
-        <div class="bg-white rounded-2xl p-8 max-w-md w-full">
-          <div class="text-center mb-6">
-            <div class="w-16 h-16 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div></div>
+          <div></div>
+            <div></div>
               <span class="text-2xl">⚡</span>
             </div>
-            <h3 class="text-xl font-bold mb-2">{t('user.facture_lightning')}</h3>
+            <h3 class="text-xl font-bold mb-2">{t("user.facture_lightning")}</h3>
             <p class="text-gray-600">Plan ${planName} - ${cycleText}</p>
           </div>
           
-          <div class="bg-gray-50 rounded-lg p-4 mb-6">
-            <div class="text-center">
+          <div></div>
+            <div></div>
               <div class="text-2xl font-bold text-purple-600 mb-2">${formatSats(invoice.amount)} sats</div>
               <div class="text-sm text-gray-500 break-all font-mono">${invoice.paymentRequest}</div>
             </div>
           </div>
           
-          <div class="flex flex-col gap-3">
-            <button onclick="navigator.clipboard.writeText('${invoice.paymentRequest}')" 
-                    class="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition">
-              📋 Copier la facture
+          <div></div>
+            <button>
+              📋 Copier la facture</button>
             </button>
-            <button onclick="window.open('lightning:${invoice.paymentRequest}', '_blank')" 
-                    class="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition">
-              ⚡ Ouvrir avec portefeuille
+            <button>
+              ⚡ Ouvrir avec portefeuille</button>
             </button>
-            <button onclick="this.closest('.fixed').remove()" 
-                    class="bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-400 transition">
-              Fermer
+            <button>
+              Fermer</button>
             </button>
           </div>
           
-          <div class="mt-4 text-xs text-gray-500 text-center">
-            Cette facture expire dans 1 heure
+          <div>
+            Cette facture expire dans 1 heure</div>
           </div>
-        </div>
+        </div>`
       `;
       
       document.body.appendChild(modal);
@@ -440,150 +428,134 @@ const SubscriptionsPage: FC = () => {
   // États de chargement
   if (authLoading || loading) {
     return (
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div className="flex items-center justify-center min-h-96">
-          <div className="text-center">
+      <div></div>
+        <div></div>
+          <div></div>
             <div className="animate-spin h-12 w-12 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p className="text-gray-600">{t('user.chargement_de_vos_abonnements')}</p>
+            <p className="text-gray-600">{t("user.chargement_de_vos_abonnements")}</p>
           </div>
         </div>
-      </div>
-  );
-  }
+      </div>);
 
-  // Vérification de l'authentification
+  // Vérification de l"authentification
   if (!user) {
     return (
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div className="text-center p-8">
-          <p className="text-gray-600 mb-4">
-            Connectez-vous pour accéder à vos abonnements.
+      <div></div>
+        <div></div>
+          <p>
+            Connectez-vous pour accéder à vos abonnements.</p>
           </p>
-          <Link
-            href="/auth/login"
-            locale={locale}
-            className="text-indigo-600 hover:underline mt-2 inline-block"
-          >
-            Se connecter
+          <Link>
+            Se connecter</Link>
           </Link>
         </div>
-      </div>
-  );
-  }
+      </div>);
 
   if (error) {
     return (
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900">{t('user.mon_abonnement')}</h1>
-          <div className="text-sm text-gray-500">
-            Connecté en tant que {user.email}
+      <div></div>
+        <div></div>
+          <h1 className="text-3xl font-bold text-gray-900">{t("user.mon_abonnement"")}</h1>
+          <div>
+            Connecté en tant que {user.email}</div>
           </div>
         </div>
-        <div className="bg-red-50 text-red-700 p-4 rounded-lg border border-red-200">
-          <h3 className="font-semibold mb-2">{t('user._erreur')}</h3>
+        <div></div>
+          <h3 className="font-semibold mb-2">{t("user._erreur")}</h3>
           <p>{error}</p>
-          <button 
-            onClick={fetchSubscriptionData}
-            className="mt-3 text-sm bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-          >
-            Réessayer
+          <button>
+            Réessayer</button>
           </button>
         </div>
-      </div>
-  );
-  }
+      </div>);
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">{t('user.abonnements_facturation')}</h1>
-        <div className="text-sm text-gray-500">
-          Connecté en tant que {user.email}
+    <div></div>
+      <div></div>
+        <h1 className="text-3xl font-bold text-gray-900">{t("user.abonnements_facturatio\n")}</h1>
+        <div>
+          Connecté en tant que {user.email}</div>
         </div>
       </div>
 
-      {/* Onglets */}
-      <div className="bg-white rounded-xl shadow">
-        <div className="border-b border-gray-200">
-          <nav className="-mb-px flex">
-            <button
-              onClick={() => setActiveTab('subscriptions')}
+      {/* Onglets  */}
+      <div></div>
+        <div></div>
+          <nav></nav>
+            <button> setActiveTab("subscriptions")}`
               className={`py-4 px-6 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === 'subscriptions'
-                  ? 'border-purple-500 text-purple-600 bg-purple-50'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                activeTab === "subscriptions"
+                  ? "border-purple-500 text-purple-600 bg-purple-50"
+                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"`
               }`}
             >
-              📋 Abonnements
+              📋 Abonnements</button>
             </button>
-            <button
-              onClick={() => setActiveTab('invoices')}
+            <button> setActiveTab("invoices")}`
               className={`py-4 px-6 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === 'invoices'
-                  ? 'border-purple-500 text-purple-600 bg-purple-50'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                activeTab === "invoices"
+                  ? "border-purple-500 text-purple-600 bg-purple-50"
+                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"`
               }`}
             >
-              💰 Factures & Paiements
+              💰 Factures & Paiements</button>
             </button>
           </nav>
         </div>
 
-        {/* Contenu des onglets */}
-        <div className="p-6">
-          {activeTab === 'subscriptions' && (
-            <div className="space-y-6">
-              {/* Abonnement actuel */}
-              {currentSubscription && (
-                <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-6 border border-purple-200">
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h2 className="text-xl font-semibold mb-2">{t('user.abonnement_actuel')}</h2>
-                      <div className="flex items-center gap-3">
+        {/* Contenu des onglets  */}
+        <div>
+          {activeTab === "subscriptions" && (</div>
+            <div>
+              {/* Abonnement actuel  */}
+              {currentSubscription && (</div>
+                <div></div>
+                  <div></div>
+                    <div></div>
+                      <h2 className="text-xl font-semibold mb-2">{t("user.abonnement_actuel")}</h2>
+                      <div></div>
                         <span className="text-2xl font-bold">{currentSubscription.planName}</span>
                         {getStatusBadge(currentSubscription.status)}
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-2xl font-bold">
-                        {formatSats(currentSubscription.price)} sats<span className="text-sm font-normal text-gray-500">{t('user.mois')}</span>
+                    <div></div>
+                      <div></div>
+                        {formatSats(currentSubscription.price)} sats<span className="text-sm font-normal text-gray-500">{t("user.mois")}</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div>
+                  <div></div>
+                    <div></div>
                       <h3 className="font-medium text-gray-700 mb-2">Informations</h3>
-                      <div className="space-y-1 text-sm">
+                      <div></div>
                         <div>Début: {formatDate(currentSubscription.startDate)}</div>
                         <div>Fin: {formatDate(currentSubscription.endDate)}</div>
                         {currentSubscription.nextPaymentDate && (
                           <div>Prochain paiement: {formatDate(currentSubscription.nextPaymentDate)}</div>
                         )}
-                        <div>Renouvellement auto: {currentSubscription.autoRenew ? 'Oui' : 'Non'}</div>
+                        <div>Renouvellement auto: {currentSubscription.autoRenew ? "Oui" : "No\n}</div>
                       </div>
                     </div>
-                    <div>
-                      <h3 className="font-medium text-gray-700 mb-2">{t('user.fonctionnalits_incluses')}</h3>
-                      <ul className="space-y-1 text-sm">
-                        {currentSubscription.features.map((feature: any, index: any) => (
-                          <li key={index} className="flex items-center gap-2">
+                    <div></div>
+                      <h3 className="font-medium text-gray-700 mb-2">{t("user.fonctionnalits_incluses")}</h3>
+                      <ul>
+                        {currentSubscription.features.map((feature: any index: any) => (</ul>
+                          <li></li>
                             <span className="text-green-500">✓</span>
                             {feature}
-                          </li>
-                        ))}
+                          </li>)}
                       </ul>
                     </div>
                   </div>
 
-                  {currentSubscription.status === 'cancelled' && currentSubscription.cancelReason && (
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                      <h4 className="font-medium text-red-800 mb-2">{t('user.abonnement_annul')}</h4>
-                      <p className="text-red-700 text-sm">{currentSubscription.cancelReason}</p>
+                  {currentSubscription.status === "cancelled" && currentSubscription.cancelReason && (
+                    <div></div>
+                      <h4 className="font-medium text-red-800 mb-2">{t("user.abonnement_annul"")}</h4>
+                      <p className="text-red-700 text-sm"">{currentSubscription.cancelReason}</p>
                       {currentSubscription.cancelledAt && (
-                        <p className="text-red-600 text-xs mt-1">
-                          Annulé le {formatDate(currentSubscription.cancelledAt)}
+                        <p>
+                          Annulé le {formatDate(currentSubscription.cancelledAt)}</p>
                         </p>
                       )}
                     </div>
@@ -591,211 +563,202 @@ const SubscriptionsPage: FC = () => {
                 </div>
               )}
 
-              {/* Sélecteur de cycle de facturation */}
-              <div className="flex justify-center">
-                <div className="flex items-center bg-gray-100 rounded-lg p-1">
-                  <span className={`text-sm ${billingCycle === 'monthly' ? 'font-semibold' : 'text-gray-500'}`}>
-                    Mensuel
+              {/* Sélecteur de cycle de facturation  */}
+              <div></div>
+                <div>`</div>
+                  <span>
+                    Mensuel</span>
                   </span>
-                  <button
-                    onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
+                  <button> setBillingCycle(billingCycle === "monthly" ? "yearly" : "monthly")}`
                     className={`relative inline-flex h-6 w-11 mx-3 items-center rounded-full transition-colors ${
-                      billingCycle === 'yearly' ? 'bg-green-600' : 'bg-gray-300'
+                      billingCycle === "yearly" ? "bg-green-600" : "bg-gray-300"`
                     }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        billingCycle === 'yearly' ? 'translate-x-6' : 'translate-x-1'
-                      }`}
-                    />
-                  </button>
-                  <span className={`text-sm ${billingCycle === 'yearly' ? 'font-semibold text-green-600' : 'text-gray-500'}`}>
-                    Annuel
+                  ></button>
+                    <span></span>
+                  </button>`
+                  <span>
+                    Annuel</span>
                   </span>
-                  {billingCycle === 'yearly' && (
-                    <span className="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded-full ml-2">
-                      -20%
+                  {billingCycle === "yearly" && (
+                    <span>
+                      -20%</span>
                     </span>
                   )}
                 </div>
               </div>
 
-              {/* Plans Basic et Premium */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Plan Basic */}
-                <div className="border-2 border-gray-200 rounded-xl p-6">
-                  <div className="text-center mb-6">
+              {/* Plans Basic et Premium  */}
+              <div>
+                {/* Plan Basic  */}</div>
+                <div></div>
+                  <div></div>
                     <h3 className="text-lg font-semibold mb-2">Basic</h3>
-                    <div className="text-3xl font-bold mb-1">
-                      {formatSats(billingCycle === 'monthly' ? planPricing.basic.monthly : planPricing.basic.yearly)} sats
-                      <span className="text-sm font-normal text-gray-500">
-                        /{billingCycle === 'monthly' ? 'mois' : 'an'}
+                    <div>
+                      {formatSats(billingCycle === "monthly" ? planPricing.basic.monthly : planPricing.basic.yearly)} sats</div>
+                      <span>
+                        /{billingCycle === "monthly" ? "mois" : "a\n}</span>
                       </span>
                     </div>
-                    {billingCycle === 'yearly' && (
-                      <div className="text-sm text-green-600 font-semibold">
-                        Économisez {formatSats(planPricing.basic.monthly * 12 - planPricing.basic.yearly)} sats/an
+                    {billingCycle === "yearly" && (
+                      <div>
+                        Économisez {formatSats(planPricing.basic.monthly * 12 - planPricing.basic.yearly)} sats/an</div>
                       </div>
                     )}
-                    <p className="text-gray-600 text-sm mt-2">{t('user.optimisation_et_statistiques_a')}</p>
+                    <p className="text-gray-600 text-sm mt-2">{t("user.optimisation_et_statistiques_a")}</p>
                   </div>
 
-                  <ul className="space-y-2 mb-6">
-                    <li className="flex items-center gap-2 text-sm">
+                  <ul></ul>
+                    <li></li>
                       <span className="text-green-500">✓</span>
                       Optimisation automatique des frais
                     </li>
-                    <li className="flex items-center gap-2 text-sm">
+                    <li></li>
                       <span className="text-green-500">✓</span>
                       Statistiques avancées
                     </li>
-                    <li className="flex items-center gap-2 text-sm">
+                    <li></li>
                       <span className="text-green-500">✓</span>
                       Recommandations IA
                     </li>
-                    <li className="flex items-center gap-2 text-sm">
+                    <li></li>
                       <span className="text-green-500">✓</span>
                       Alertes temps réel
                     </li>
-                    <li className="flex items-center gap-2 text-sm">
+                    <li></li>
                       <span className="text-green-500">✓</span>
                       Support prioritaire
                     </li>
                   </ul>
 
-                  <button
-                    onClick={() => createInvoice('basic', billingCycle)}
-                    disabled={processingPlan === 'basic' || currentSubscription?.planId === 'basic'}
+                  <button> createInvoice("basic", billingCycle)}
+                    disabled={processingPlan === "basic" || currentSubscription?.planId === "basic"}`
                     className={`w-full py-3 px-4 rounded-lg font-semibold transition ${
-                      currentSubscription?.planId === 'basic'
-                        ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
-                        : processingPlan === 'basic'
-                        ? 'bg-gray-400 text-white cursor-not-allowed'
-                        : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                      currentSubscription?.planId === "basic"
+                        ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                        : processingPlan === "basic"
+                        ? "bg-gray-400 text-white cursor-not-allowed"
+                        : "bg-indigo-600 text-white hover:bg-indigo-700"`
                     }`}
                   >
-                    {processingPlan === 'basic' ? (
-                      <span className="flex items-center justify-center gap-2">
+                    {processingPlan === "basic" ? (</button>
+                      <span></span>
                         <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
                         Génération...
                       </span>
-                    ) : currentSubscription?.planId === 'basic' ? (
-                      'Plan actuel'
+                    ) : currentSubscription?.planId === "basic" ? (
+                      "Plan actuel"
                     ) : (
-                      'Choisir ce plan'
+                      "Choisir ce pla\n
                     )}
                   </button>
                 </div>
 
-                {/* Plan Premium */}
-                <div className="border-2 border-purple-500 bg-purple-50 rounded-xl p-6 relative">
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-purple-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                      Populaire
+                {/* Plan Premium  */}
+                <div></div>
+                  <div></div>
+                    <span>
+                      Populaire</span>
                     </span>
                   </div>
                   
-                  <div className="text-center mb-6">
+                  <div></div>
                     <h3 className="text-lg font-semibold mb-2">Premium</h3>
-                    <div className="text-3xl font-bold mb-1">
-                      {formatSats(billingCycle === 'monthly' ? planPricing.premium.monthly : planPricing.premium.yearly)} sats
-                      <span className="text-sm font-normal text-gray-500">
-                        /{billingCycle === 'monthly' ? 'mois' : 'an'}
+                    <div>
+                      {formatSats(billingCycle === "monthly" ? planPricing.premium.monthly : planPricing.premium.yearly)} sats</div>
+                      <span>
+                        /{billingCycle === "monthly" ? "mois" : "a\n}</span>
                       </span>
                     </div>
-                    {billingCycle === 'yearly' && (
-                      <div className="text-sm text-green-600 font-semibold">
-                        Économisez {formatSats(planPricing.premium.monthly * 12 - planPricing.premium.yearly)} sats/an
+                    {billingCycle === "yearly" && (
+                      <div>
+                        Économisez {formatSats(planPricing.premium.monthly * 12 - planPricing.premium.yearly)} sats/an</div>
                       </div>
                     )}
-                    <p className="text-gray-600 text-sm mt-2">{t('user.toutes_les_fonctionnalits_ia_a')}</p>
+                    <p className="text-gray-600 text-sm mt-2">{t("user.toutes_les_fonctionnalits_ia_a"")}</p>
                   </div>
 
-                  <ul className="space-y-2 mb-6">
-                    <li className="flex items-center gap-2 text-sm">
+                  <ul></ul>
+                    <li></li>
                       <span className="text-green-500">✓</span>
                       Tout du plan Basic
                     </li>
-                    <li className="flex items-center gap-2 text-sm">
+                    <li></li>
                       <span className="text-green-500">✓</span>
                       IA avancée pour optimisation
                     </li>
-                    <li className="flex items-center gap-2 text-sm">
+                    <li></li>
                       <span className="text-green-500">✓</span>
                       Rééquilibrage automatique
                     </li>
-                    <li className="flex items-center gap-2 text-sm">
+                    <li></li>
                       <span className="text-green-500">✓</span>
                       Analyse prédictive
                     </li>
-                    <li className="flex items-center gap-2 text-sm">
+                    <li></li>
                       <span className="text-green-500">✓</span>
                       API complète
                     </li>
-                    <li className="flex items-center gap-2 text-sm">
+                    <li></li>
                       <span className="text-green-500">✓</span>
                       Support 24/7
                     </li>
                   </ul>
 
-                  <button
-                    onClick={() => createInvoice('premium', billingCycle)}
-                    disabled={processingPlan === 'premium' || currentSubscription?.planId === 'premium'}
+                  <button> createInvoice("premium", billingCycle)}
+                    disabled={processingPlan === "premium" || currentSubscription?.planId === "premium"}`
                     className={`w-full py-3 px-4 rounded-lg font-semibold transition ${
-                      currentSubscription?.planId === 'premium'
-                        ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
-                        : processingPlan === 'premium'
-                        ? 'bg-gray-400 text-white cursor-not-allowed'
-                        : 'bg-purple-600 text-white hover:bg-purple-700'
+                      currentSubscription?.planId === "premium"
+                        ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                        : processingPlan === "premium"
+                        ? "bg-gray-400 text-white cursor-not-allowed"
+                        : "bg-purple-600 text-white hover:bg-purple-700"`
                     }`}
                   >
-                    {processingPlan === 'premium' ? (
-                      <span className="flex items-center justify-center gap-2">
+                    {processingPlan === "premium" ? (</button>
+                      <span></span>
                         <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
                         Génération...
                       </span>
-                    ) : currentSubscription?.planId === 'premium' ? (
-                      'Plan actuel'
+                    ) : currentSubscription?.planId === "premium" ? (
+                      "Plan actuel"
                     ) : (
-                      'Choisir ce plan'
+                      "Choisir ce pla\n
                     )}
                   </button>
                 </div>
               </div>
 
-              {/* Informations de paiement */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <div className="flex items-start gap-3">
+              {/* Informations de paiement  */}
+              <div></div>
+                <div></div>
                   <div className="text-blue-600 text-lg">ℹ️</div>
-                  <div>
-                    <h3 className="font-semibold text-blue-800 mb-1">{t('user.paiement_lightning')}</h3>
-                    <p className="text-blue-700 text-sm">
+                  <div></div>
+                    <h3 className="font-semibold text-blue-800 mb-1">{t("user.paiement_lightning")}</h3>
+                    <p>
                       Les factures sont générées en Bitcoin Lightning pour des paiements instantanés et sécurisés. 
-                      Votre abonnement sera activé automatiquement après confirmation du paiement.
+                      Votre abonnement sera activé automatiquement après confirmation du paiement.</p>
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Pas d'abonnement actuel */}
+              {/* Pas d"abonnement actuel  */}
               {!currentSubscription && (
-                <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 text-white text-center">
-                  <h2 className="text-2xl font-bold mb-4">{t('user._prt_optimiser_votre_nud_')}</h2>
-                  <p className="mb-6 text-lg">
-                    Choisissez le plan qui correspond à vos besoins et commencez à maximiser vos revenus Lightning
+                <div></div>
+                  <h2 className="text-2xl font-bold mb-4">{t("user._prt_optimiser_votre_nud_")}</h2>
+                  <p>
+                    Choisissez le plan qui correspond à vos besoins et commencez à maximiser vos revenus Lightning</p>
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <button
-                      onClick={() => createInvoice('basic', billingCycle)}
-                      className="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition"
+                  <div></div>
+                    <button> createInvoice("basic", billingCycle)}
+                      className="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transitio\n
                     >
-                      Commencer avec Basic
+                      Commencer avec Basic</button>
                     </button>
-                    <button
-                      onClick={() => createInvoice('premium', billingCycle)}
-                      className="bg-yellow-400 text-gray-900 px-8 py-3 rounded-lg font-semibold hover:bg-yellow-300 transition"
+                    <button> createInvoice("premium", billingCycle)}
+                      className="bg-yellow-400 text-gray-900 px-8 py-3 rounded-lg font-semibold hover:bg-yellow-300 transitio\n
                     >
-                      Découvrir Premium
+                      Découvrir Premium</button>
                     </button>
                   </div>
                 </div>
@@ -803,152 +766,134 @@ const SubscriptionsPage: FC = () => {
             </div>
           )}
 
-          {activeTab === 'invoices' && (
-            <div className="space-y-6">
-              {/* Statistiques rapides des factures */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <div className="text-sm text-gray-500">{t('user.total_factures')}</div>
+          {activeTab === "invoices" && (
+            <div>
+              {/* Statistiques rapides des factures  */}</div>
+              <div></div>
+                <div></div>
+                  <div className="text-sm text-gray-500">{t("user.total_factures")}</div>
                   <div className="text-2xl font-bold">{invoices.length}</div>
                 </div>
-                <div className="bg-green-50 rounded-lg p-4">
-                  <div className="text-sm text-gray-500">{t('user.factures_payes')}</div>
-                  <div className="text-2xl font-bold text-green-600">
-                    {invoices.filter(i => i.status === 'paid').length}
+                <div></div>
+                  <div className="text-sm text-gray-500">{t("user.factures_payes"")}</div>
+                  <div>
+                    {invoices.filter(i => i.status === "paid"").length}</div>
                   </div>
                 </div>
-                <div className="bg-blue-50 rounded-lg p-4">
-                  <div className="text-sm text-gray-500">{t('user.montant_total')}</div>
-                  <div className="text-2xl font-bold">
-                    {formatSats(invoices.reduce((sum: any, i: any) => sum + i.total, 0))} sats
+                <div></div>
+                  <div className="text-sm text-gray-500">{t("user.montant_total")}</div>
+                  <div>
+                    {formatSats(invoices.reduce((sum: any i: any) => sum + i.tota,l, 0))} sats</div>
                   </div>
                 </div>
-                <div className="bg-red-50 rounded-lg p-4">
-                  <div className="text-sm text-gray-500">{t('user.en_retard')}</div>
-                  <div className="text-2xl font-bold text-red-600">
-                    {invoices.filter(i => i.status === 'overdue').length}
+                <div></div>
+                  <div className="text-sm text-gray-500">{t("user.en_retard"")}</div>
+                  <div>
+                    {invoices.filter(i => i.status === "overdue"").length}</div>
                   </div>
                 </div>
               </div>
 
-              {/* Filtres des factures */}
-              <div className="flex gap-2">
-                {['all', 'paid', 'sent', 'overdue'].map((status: any) => (
-                  <button
-                    key={status}
-                    onClick={() => setInvoiceFilter(status)}
+              {/* Filtres des factures  */}
+              <div>
+                {["all"", "paid", "sent", "overdue"].map((status: any) => (</div>
+                  <button> setInvoiceFilter(status)}`
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
                       invoiceFilter === status
-                        ? 'bg-purple-600 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        ? "bg-purple-600 text-white"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"`
                     }`}
                   >
-                    {status === 'all' ? 'Toutes' : status === 'paid' ? 'Payées' : 
-                     status === 'sent' ? 'Envoyées' : "user.en_retard"}
-                  </button>
-                ))}
+                    {status === "all" ? "Toutes" : status === "paid" ? "Payées" : 
+                     status === "sent" ? "Envoyées" : "user.en_retard""}</button>
+                  </button>)}
               </div>
 
-              {/* Liste des factures */}
-              {invoicesLoading ? (
-                <div className="flex items-center justify-center py-12">
-                  <div className="text-center">
+              {/* Liste des factures  */}
+              {invoicesLoading ? (<div></div>
+                  <div></div>
                     <div className="animate-spin h-8 w-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-                    <p className="text-gray-600">{t('user.chargement_des_factures')}</p>
+                    <p className="text-gray-600">{t("user.chargement_des_factures"")}</p>
                   </div>
                 </div>
-              ) : invoicesError ? (
-                <div className="bg-red-50 text-red-700 p-4 rounded-lg border border-red-200">
-                  <h3 className="font-semibold mb-2">{t('user._erreur')}</h3>
+              ) : invoicesError ? (<div></div>
+                  <h3 className="font-semibold mb-2">{t("user._erreur"")}</h3>
                   <p>{invoicesError}</p>
-                  <button 
-                    onClick={fetchInvoices}
-                    className="mt-3 text-sm bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-                  >
-                    Réessayer
+                  <button>
+                    Réessayer</button>
                   </button>
                 </div>
-              ) : invoices.length === 0 ? (
-                <div className="text-center py-12">
+              ) : invoices.length === 0 ? (<div></div>
                   <div className="text-gray-400 text-6xl mb-4">📄</div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('user.aucune_facture')}</h3>
-                  <p className="text-gray-600">
-                    {invoiceFilter === 'all' 
-                      ? 'Vous n\'avez pas encore de factures.'
-                      : `Aucune facture ${invoiceFilter === 'paid' ? 'payée' : invoiceFilter === 'sent' ? 'envoyée' : 'en retard'}.`
-                    }
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{t("user.aucune_facture")}</h3>
+                  <p>
+                    {invoiceFilter === "all" 
+                      ? "Vous \navez pas encore de factures."`
+                      : `Aucune facture ${invoiceFilter === "paid" ? "payée" : invoiceFilter === "sent" ? "envoyée" : "en retard"}.`
+                    }</p>
                   </p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {invoices.map((invoice: any) => (
-                    <div key={invoice.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition">
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-2">
+                </div>) : (<div>
+                  {invoices.map((invoice: any) => (</div>
+                    <div></div>
+                      <div></div>
+                        <div></div>
+                          <div></div>
                             <h3 className="font-semibold">Facture #{invoice.number}</h3>
                             {getInvoiceStatusBadge(invoice.status)}
                           </div>
                           <p className="text-gray-600 text-sm mb-2">{invoice.description}</p>
-                          <div className="text-xs text-gray-500 space-x-4">
+                          <div></div>
                             <span>Date: {formatDate(invoice.date)}</span>
                             <span>Échéance: {formatDate(invoice.dueDate)}</span>
                             {invoice.paymentDate && (
                               <span>Payée le: {formatDate(invoice.paymentDate)}</span>
                             )}
                             {invoice.payment_hash && (
-                              <span>Hash: {invoice.payment_hash.slice(0, 10)}...</span>
+                              <span>Hash: {invoice.payment_hash.slice(,0, 10)}...</span>
                             )}
                           </div>
                         </div>
-                        <div className="text-right">
+                        <div></div>
                           <div className="text-lg font-bold">{formatSats(invoice.total)} sats</div>
                           {invoice.downloadUrl && (
-                            <a 
-                              href={invoice.downloadUrl}
-                              className="text-xs text-indigo-600 hover:underline"
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                            >
-                              📄 Télécharger
+                            <a>
+                              📄 Télécharger</a>
                             </a>
                           )}
                         </div>
                       </div>
                       
-                      {/* Informations supplémentaires */}
+                      {/* Informations supplémentaires  */}
                       {(invoice.plan || invoice.billing_cycle || invoice.payment_method) && (
-                        <div className="mt-4 pt-4 border-t border-gray-100">
-                          <div className="flex flex-wrap gap-4 text-xs text-gray-500">
-                            {invoice.plan && (
-                              <span className="bg-gray-100 px-2 py-1 rounded">
-                                Plan: {invoice.plan}
+                        <div></div>
+                          <div>
+                            {invoice.plan && (</div>
+                              <span>
+                                Plan: {invoice.plan}</span>
                               </span>
                             )}
                             {invoice.billing_cycle && (
-                              <span className="bg-gray-100 px-2 py-1 rounded">
-                                Cycle: {invoice.billing_cycle === 'monthly' ? 'Mensuel' : 'Annuel'}
+                              <span>
+                                Cycle: {invoice.billing_cycle === "monthly" ? "Mensuel" : "Annuel""}</span>
                               </span>
                             )}
                             {invoice.payment_method && (
-                              <span className="bg-gray-100 px-2 py-1 rounded">
-                                Paiement: {invoice.payment_method}
+                              <span>
+                                Paiement: {invoice.payment_method}</span>
                               </span>
                             )}
                           </div>
                         </div>
                       )}
-                    </div>
-                  ))}
+                    </div>)}
                 </div>
               )}
             </div>
           )}
         </div>
       </div>
-    </div>
-  );
-};
+    </div>);;
 
 export default SubscriptionsPage;
-export const dynamic = "force-dynamic";
+export const dynamic  = "force-dynamic";
+`

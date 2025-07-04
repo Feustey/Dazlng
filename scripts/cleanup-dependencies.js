@@ -18,7 +18,7 @@ const devDependenciesToRemove = [
 
 function cleanupPackageJson() {
   try {
-    const packageJsonPath = path.join(process.cwd(), 'package.json');
+    const packageJsonPath = path.join(process.cwd(), 'package.jso\n);
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
     
     let hasChanges = false;
@@ -43,9 +43,9 @@ function cleanupPackageJson() {
     
     if (hasChanges) {
       // Réécrire le package.json avec une indentation propre
-      fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
+      fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\\n);
       console.log('\n✅ package.json nettoyé avec succès!');
-      console.log('💡 Exécutez "npm install" pour mettre à jour node_modules');
+      console.log('💡 Exécutez \npm install" pour mettre à jour node_modules');
     } else {
       console.log('ℹ️  Aucune dépendance à supprimer trouvée.');
     }
@@ -61,7 +61,7 @@ function analyzeBundleSize() {
   console.log('\n📊 Analyse des dépendances:');
   console.log('========================');
   
-  const packageJsonPath = path.join(process.cwd(), 'package.json');
+  const packageJsonPath = path.join(process.cwd(), 'package.jso\n);
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
   
   const allDeps = {
@@ -74,7 +74,7 @@ function analyzeBundleSize() {
     { name: 'react-icons', size: '~150KB', issue: 'Remplacé par lucide-react' },
     { name: '@heroicons/react', size: '~50KB', issue: 'Remplacé par lucide-react' },
     { name: 'aos', size: '~30KB', issue: 'Remplacé par animations CSS optimisées' },
-    { name: 'framer-motion', size: '~200KB', issue: 'Considérer pour les animations complexes uniquement' },
+    { name: 'framer-motio\n, size: '~200KB', issue: 'Considérer pour les animations complexes uniquement' },
     { name: 'chart.js', size: '~100KB', issue: 'Utilisé uniquement si nécessaire' },
     { name: 'recharts', size: '~150KB', issue: 'Utilisé uniquement si nécessaire' },
   ];
@@ -93,7 +93,7 @@ function analyzeBundleSize() {
 }
 
 function main() {
-  console.log('🧹 Début du nettoyage des dépendances...\n');
+  console.log('🧹 Début du nettoyage des dépendances...\\n);
   
   const cleaned = cleanupPackageJson();
   analyzeBundleSize();

@@ -1,15 +1,22 @@
+import { createClient } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
-import { User, Product, Order, Delivery, Payment, Subscription } from '../types/database';
-import { getSupabaseAdminClient } from '../lib/supabase';
+import { Database } from '@/types/database';
 
-// Configuration
-const DEFAULT_PAGE_SIZE = 20;
-const MAX_PAGE_SIZE = 100;
+// Types
+type User = Database['public']['Tables']['users']['Row'];
+type Product = Database['public']['Tables']['products']['Row'];
+type Order = Database['public']['Tables']['orders']['Row'];
+type Delivery = Database['public']['Tables']['deliveries']['Row'];
+type Payment = Database['public']['Tables']['payments']['Row'];
+type Subscription = Database['public']['Tables']['subscriptions']['Row'];
 
 export interface PaginationParams {
   page?: number;
   pageSize?: number;
 }
+
+const DEFAULT_PAGE_SIZE = 10;
+const MAX_PAGE_SIZE = 100;
 
 interface PaginatedResponse<T> {
   data: T[];
@@ -48,7 +55,7 @@ export async function createUser(userData: Omit<User, 'id' | 'created_at' | 'upd
   }
 }
 
-export async function getUserById(id: string): Promise<User | null> {
+export async function getUserById(id: string): Promise<User> {
   const supabase = getSupabaseAdminClient();
   
   try {
@@ -66,7 +73,7 @@ export async function getUserById(id: string): Promise<User | null> {
   }
 }
 
-export async function getUserByEmail(email: string): Promise<User | null> {
+export async function getUserByEmail(email: string): Promise<User> {
   const supabase = getSupabaseAdminClient();
   
   try {
@@ -95,7 +102,7 @@ export async function getProducts(): Promise<Product[]> {
   return data || [];
 }
 
-export async function getProductById(id: string): Promise<Product | null> {
+export async function getProductById(id: string): Promise<Product> {
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('products')
@@ -128,7 +135,7 @@ export async function createOrder(orderData: Omit<Order, 'id' | 'created_at' | '
   }
 }
 
-export async function getOrderById(id: string): Promise<Order | null> {
+export async function getOrderById(id: string): Promise<Order> {
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('orders')
@@ -192,7 +199,7 @@ export async function createDelivery(deliveryData: Omit<Delivery, 'id' | 'create
   return data;
 }
 
-export async function getDeliveryById(id: string): Promise<Delivery | null> {
+export async function getDeliveryById(id: string): Promise<Delivery> {
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('deliveries')
@@ -204,7 +211,7 @@ export async function getDeliveryById(id: string): Promise<Delivery | null> {
   return data;
 }
 
-export async function getOrderDelivery(orderId: string): Promise<Delivery | null> {
+export async function getOrderDelivery(orderId: string): Promise<Delivery> {
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('deliveries')
@@ -237,7 +244,7 @@ export async function createPayment(paymentData: Omit<Payment, 'id' | 'created_a
   }
 }
 
-export async function getPaymentById(id: string): Promise<Payment | null> {
+export async function getPaymentById(id: string): Promise<Payment> {
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('payments')
@@ -307,7 +314,7 @@ export async function createSubscription(subscriptionData: Omit<Subscription, 'i
   }
 }
 
-export async function getSubscriptionById(id: string): Promise<Subscription | null> {
+export async function getSubscriptionById(id: string): Promise<Subscription> {
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('subscriptions')
@@ -319,49 +326,37 @@ export async function getSubscriptionById(id: string): Promise<Subscription | nu
   return data;
 }
 
-export async function getUserSubscriptions(userId: string, params?: PaginationParams): Promise<PaginatedResponse<Subscription>> {
+export async function getUserSubscription(userId: string): Promise<Subscription | null> {
   const supabase = getSupabaseAdminClient();
-  const { page = 1, pageSize = DEFAULT_PAGE_SIZE } = params || {};
-  const { start, end } = getPaginationRange(page, pageSize);
+  const { data, error } = await supabase
+    .from('subscriptions')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('status', 'active')
+    .single();
 
-  try {
-    // Récupérer le total
-    const { count: total, error: countError } = await supabase
-      .from('subscriptions')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', userId);
-
-    if (countError) throw countError;
-
-    // Récupérer les données paginées
-    const { data, error } = await supabase
-      .from('subscriptions')
-      .select('*')
-      .eq('user_id', userId)
-      .range(start, end)
-      .order('created_at', { ascending: false });
-
-    if (error) throw error;
-
-    return {
-      data: data || [],
-      total: total || 0,
-      page,
-      pageSize: end - start + 1,
-      totalPages: Math.ceil((total || 0) / (end - start + 1))
-    };
-  } catch (error) {
-    console.error(`Error fetching subscriptions for user ${userId}:`, error);
-    throw error;
-  }
+  if (error && error.code !== 'PGRST116') throw error;
+  return data;
 }
 
 export async function updateSubscriptionStatus(id: string, status: Subscription['status']): Promise<void> {
   const supabase = getSupabaseAdminClient();
   const { error } = await supabase
     .from('subscriptions')
-    .update({ status, updated_at: new Date().toISOString() })
+    .update({ status })
     .eq('id', id);
 
   if (error) throw error;
+}
+
+// Fonction utilitaire pour obtenir le client Supabase admin
+function getSupabaseAdminClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('Supabase configuration is missing');
+  }
+  
+  return createClient<Database>(supabaseUrl, supabaseServiceKey);
 }

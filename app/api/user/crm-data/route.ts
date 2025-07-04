@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseAdminClient } from '@/lib/supabase';
-import { createSupabaseServerClient } from '@/lib/supabase-auth';
+import { NextRequest, NextResponse } from "next/server";
+import { getSupabaseAdminClient } from "@/lib/supabase";
+import { createSupabaseServerClient } from "@/lib/supabase-auth";
 
 export interface UserProfile {
   id: string;
@@ -14,7 +14,7 @@ export interface UserProfile {
   email_verified: boolean;
   created_at: string;
   updated_at: string;
-  settings: Record<string, unknown>;
+  settings: Record<string, any>;
 }
 
 export interface UserOrder {
@@ -49,7 +49,7 @@ export interface CRMRecommendation {
   appliedBy: number;
 }
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function GET(_request: NextRequest) {
   try {
@@ -58,58 +58,59 @@ export async function GET(_request: NextRequest) {
 
     if (authError || !user) {
       return NextResponse.json(
-        { 
-          success: false, 
-          error: { 
-            code: 'UNAUTHORIZED', 
-            message: 'Non authentifié' 
-          } 
+        {
+          success: false,
+          error: {
+            code: "UNAUTHORIZED",
+            message: "Non authentifié"
+          }
         },
         { status: 401 }
-);
+      );
     }
 
     // Récupérer le profil utilisateur
     const { data: profile, error: profileError } = await getSupabaseAdminClient()
-      ?.from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single() || { data: null, error: new Error('Client non disponible') };
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single();
 
     if (profileError || !profile) {
       return NextResponse.json(
-        { 
-          success: false, 
-          error: { 
-            code: 'PROFILE_NOT_FOUND', 
-            message: 'Profil utilisateur non trouvé' 
-          } 
+        {
+          success: false,
+          error: {
+            code: "PROFILE_NOT_FOUND",
+            message: "Profil utilisateur non trouvé"
+          }
         },
         { status: 404 }
-);
+      );
     }
 
     // Récupérer les commandes de l'utilisateur
-    const { data: orders, error: _ordersError } = await getSupabaseAdminClient()
-      ?.from('orders')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false }) || { data: [], error: null };
+    const { data: ordersRaw, error: _ordersError } = await getSupabaseAdminClient()
+      .from("orders")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
+    const orders: UserOrder[] = Array.isArray(ordersRaw) ? ordersRaw : [];
 
     // Récupérer l'abonnement actuel
     const { data: subscription, error: _subscriptionError } = await getSupabaseAdminClient()
-      ?.from('subscriptions')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('status', 'active')
-      .single() || { data: null, error: null };
+      .from("subscriptions")
+      .select("*")
+      .eq("user_id", user.id)
+      .eq("status", "active")
+      .single();
 
     // Calculer les métriques CRM
-    const userScore = calculateUserScore(profile as UserProfile, orders as UserOrder[] || [], subscription as UserSubscription);
-    const segment = determineSegment(userScore, profile as UserProfile, orders as UserOrder[] || [], subscription as UserSubscription);
-    const profileCompletion = calculateProfileCompletion(profile as UserProfile);
-    const conversionProbability = calculateConversionProbability(userScore, profile as UserProfile);
-    const recommendations = generateRecommendations(profile as UserProfile, orders as UserOrder[] || [], subscription as UserSubscription, userScore);
+    const userScore = calculateUserScore(profile, orders, subscription);
+    const segment = determineSegment(userScore, profile, orders, subscription);
+    const profileCompletion = calculateProfileCompletion(profile);
+    const conversionProbability = calculateConversionProbability(userScore, profile);
+    const recommendations = generateRecommendations(profile, orders, subscription, userScore);
 
     const crmData = {
       userScore,
@@ -118,11 +119,11 @@ export async function GET(_request: NextRequest) {
       conversionProbability,
       recommendations,
       metrics: {
-        totalOrders: orders?.length || 0,
-        totalSpent: orders?.reduce((sum: number, order: UserOrder) => sum + order.amount, 0) || 0,
-        averageOrderValue: orders?.length ? (orders.reduce((sum: number, order: UserOrder) => sum + order.amount, 0) / orders.length) : 0,
-        lastOrderDate: orders?.[0]?.created_at || null,
-        subscriptionStatus: subscription?.status || 'none',
+        totalOrders: orders.length || 0,
+        totalSpent: orders.reduce((sum: number, order: UserOrder) => sum + order.amount, 0) || 0,
+        averageOrderValue: orders.length ? (orders.reduce((sum: number, order: UserOrder) => sum + order.amount, 0) / orders.length) : 0,
+        lastOrderDate: orders[0]?.created_at || null,
+        subscriptionStatus: subscription?.status || "none",
         daysSinceRegistration: Math.floor((Date.now() - new Date(profile.created_at).getTime()) / (1000 * 60 * 60 * 24))
       }
     };
@@ -135,64 +136,50 @@ export async function GET(_request: NextRequest) {
       },
       meta: {
         timestamp: new Date().toISOString(),
-        version: '1.0'
+        version: "1.0"
       }
     });
 
   } catch (error) {
-    console.error('Erreur API user CRM data:', error);
+    console.error("Erreur API user CRM data:", error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: { 
-          code: 'INTERNAL_ERROR', 
-          message: 'Erreur interne du serveur' 
-        } 
+      {
+        success: false,
+        error: {
+          code: "INTERNAL_ERROR",
+          message: "Erreur interne du serveur"
+        }
       },
       { status: 500 }
-);
+    );
   }
 }
 
 function calculateUserScore(profile: UserProfile, orders: UserOrder[], subscription: UserSubscription): number {
   let score = 0;
-
-  // Email vérifié (20 points)
   if (profile.email_verified) score += 20;
-
-  // Profil complété (20 points max)
   score += calculateProfileCompletion(profile) * 0.2;
-
-  // Pubkey Lightning (15 points)
   if (profile.pubkey) score += 15;
-
-  // Nœud connecté (20 points)
   if (profile.node_id) score += 20;
-
-  // Commandes (15 points max)
   if (orders.length > 0) {
     score += Math.min(15, orders.length * 5);
   }
-
-  // Abonnement Premium (10 points)
-  if (subscription?.status === 'active') score += 10;
-
+  if (subscription?.status === "active") score += 10;
   return Math.min(100, Math.round(score));
 }
 
 function determineSegment(score: number, profile: UserProfile, orders: UserOrder[], subscription: UserSubscription): string {
-  if (score >= 80) return 'champion';
-  if (score >= 60 || subscription?.status === 'active') return 'premium';
-  if (score >= 40 || orders.length > 0) return 'client';
-  if (score >= 20 || profile.email_verified) return 'lead';
-  return 'prospect';
+  if (score >= 80) return "champion";
+  if (score >= 60 || subscription?.status === "active") return "premium";
+  if (score >= 40 || orders.length > 0) return "client";
+  if (score >= 20 || profile.email_verified) return "lead";
+  return "prospect";
 }
 
 function calculateProfileCompletion(profile: UserProfile): number {
-  const fields = ['nom', 'prenom', 'pubkey', 'node_id', 'compte_x', 'compte_nostr'];
+  const fields = ["nom", "prenom", "pubkey", "node_id", "compte_x", "compte_nostr"];
   const completed = fields.filter(field => profile[field as keyof UserProfile] && String(profile[field as keyof UserProfile]).length > 0).length;
   const emailVerified = profile.email_verified ? 1 : 0;
-  
   return Math.round(((completed + emailVerified) / (fields.length + 1)) * 100);
 }
 
@@ -218,80 +205,80 @@ function generateRecommendations(profile: UserProfile, orders: UserOrder[], subs
   // Recommandations basées sur le profil
   if (!profile.email_verified) {
     recommendations.push({
-      id: 'verify-email',
-      title: 'Vérifiez votre email',
-      description: "user.useruserdbloquez_toutes_les_fo",
-      category: 'security',
-      impact: 'high',
-      estimatedGain: 10000,
-      timeToImplement: '2 minutes',
+      id: "verify-email",
+      title: "Vérifiez votre email",
+      description: "Débloquez toutes les fonctionnalités en vérifiant votre email.",
+      category: "security",
+      impact: "high",
+      estimatedGain: 1000,
+      timeToImplement: "2 minutes",
       isPremium: false,
-      priority: 'high',
-      href: '/user/settings',
+      priority: "high",
+      href: "/user/settings",
       appliedBy: 1250
     });
   }
 
   if (!profile.pubkey) {
     recommendations.push({
-      id: 'add-pubkey',
-      title: 'Connectez votre portefeuille Lightning',
-      description: "user.useruseraccdez_aux_fonctionnal",
-      category: 'growth',
-      impact: 'high',
-      estimatedGain: 25000,
-      timeToImplement: '5 minutes',
+      id: "add-pubkey",
+      title: "Connectez votre portefeuille Lightning",
+      description: "Accédez aux fonctionnalités Lightning en connectant votre pubkey.",
+      category: "growth",
+      impact: "high",
+      estimatedGain: 2500,
+      timeToImplement: "5 minutes",
       isPremium: false,
-      priority: 'high',
-      href: '/user/settings',
+      priority: "high",
+      href: "/user/settings",
       appliedBy: 890
     });
   }
 
   if (!profile.node_id && userScore >= 40) {
     recommendations.push({
-      id: 'connect-node',
-      title: 'Connectez votre nœud Lightning',
-      description: "user.useruserobtenez_des_analytics_",
-      category: 'efficiency',
-      impact: 'high',
-      estimatedGain: 75000,
-      timeToImplement: '10 minutes',
+      id: "connect-node",
+      title: "Connectez votre nœud Lightning",
+      description: "Obtenez des analytics avancées en connectant votre nœud.",
+      category: "efficiency",
+      impact: "high",
+      estimatedGain: 7500,
+      timeToImplement: "10 minutes",
       isPremium: false,
-      priority: 'medium',
-      href: '/user/node',
+      priority: "medium",
+      href: "/user/node",
       appliedBy: 456
     });
   }
 
   if (!subscription && userScore >= 50) {
     recommendations.push({
-      id: 'upgrade-premium',
-      title: 'Passez à Premium',
-      description: "user.useruserdbloquez_les_optimisat",
-      category: 'revenue',
-      impact: 'high',
-      estimatedGain: 150000,
-      timeToImplement: '1 minute',
+      id: "upgrade-premium",
+      title: "Passez à Premium",
+      description: "Débloquez les optimisations IA et le support prioritaire.",
+      category: "revenue",
+      impact: "high",
+      estimatedGain: 15000,
+      timeToImplement: "1 minute",
       isPremium: true,
-      priority: 'high',
-      href: '/subscribe',
+      priority: "high",
+      href: "/subscribe",
       appliedBy: 678
     });
   }
 
   if (!profile.node_id && userScore >= 60) {
     recommendations.push({
-      id: 'dazbox-offer',
-      title: 'Découvrez DazBox',
-      description: "user.userusernud_lightning_cl_en_ma",
-      category: 'revenue',
-      impact: 'high',
-      estimatedGain: 200000,
-      timeToImplement: '48h livraison',
+      id: "dazbox-offer",
+      title: "Découvrez DazBox",
+      description: "Nœud Lightning clé en main livré en 48h.",
+      category: "revenue",
+      impact: "high",
+      estimatedGain: 20000,
+      timeToImplement: "48h livraison",
       isPremium: true,
-      priority: 'medium',
-      href: '/dazbox',
+      priority: "medium",
+      href: "/dazbox",
       appliedBy: 234
     });
   }
@@ -299,30 +286,30 @@ function generateRecommendations(profile: UserProfile, orders: UserOrder[], subs
   // Recommandations Premium
   if (subscription) {
     recommendations.push({
-      id: 'ai-optimization',
-      title: 'Optimisation IA avancée',
-      description: "user.useruseranalyse_automatique_et",
-      category: 'efficiency',
-      impact: 'high',
-      estimatedGain: 100000,
-      timeToImplement: 'Automatique',
+      id: "ai-optimization",
+      title: "Optimisation IA avancée",
+      description: "Analyse automatique de vos canaux et recommandations IA.",
+      category: "efficiency",
+      impact: "high",
+      estimatedGain: 10000,
+      timeToImplement: "Automatique",
       isPremium: true,
-      priority: 'high',
-      href: '/user/node/optimization',
+      priority: "high",
+      href: "/user/node/optimization",
       appliedBy: 145
     });
 
     recommendations.push({
-      id: 'custom-alerts',
-      title: 'Alertes personnalisées',
-      description: "user.useruserconfigurez_des_alertes",
-      category: 'security',
-      impact: 'medium',
-      estimatedGain: 50000,
-      timeToImplement: '5 minutes',
+      id: "custom-alerts",
+      title: "Alertes personnalisées",
+      description: "Configurez des alertes sur mesure pour votre activité Lightning.",
+      category: "security",
+      impact: "medium",
+      estimatedGain: 5000,
+      timeToImplement: "5 minutes",
       isPremium: true,
-      priority: 'medium',
-      href: '/user/settings/alerts',
+      priority: "medium",
+      href: "/user/settings/alerts",
       appliedBy: 89
     });
   }

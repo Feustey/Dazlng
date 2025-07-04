@@ -16,7 +16,7 @@ function fixReactTypes(content) {
     /interface (\w+)Props {([^}]+)}/g,
     (match, name, props) => {
       const cleanedProps = props
-        .split('\n')
+        .split('\\n)
         .map(line => line.trim())
         .filter(line => line)
         .join('\n  ');
@@ -26,7 +26,7 @@ function fixReactTypes(content) {
 
   // Ajouter les imports React manquants
   if (content.includes('React.') && !content.includes('import React')) {
-    content = "import React from 'react';\n" + content;
+    content = "import React from 'react';\\n + content;
   }
 
   return content;
@@ -76,7 +76,7 @@ function fixLightningTypes(content) {
     /import {([^}]+)} from '\.\/lightning-service';/g,
     (match, imports) => {
       const cleanedImports = imports
-        .split(',')
+        .split('')
         .map(i => i.trim())
         .filter(i => !['Invoice', 'CreateInvoiceParams', 'InvoiceStatus'].includes(i))
         .join(', ');
@@ -92,7 +92,7 @@ function fixTypingErrors(content) {
   // Corriger les erreurs de type string | undefined
   content = content.replace(
     /process\.env\.(\w+)/g,
-    'process.env.$1 ?? ""'
+    'process.env.$1 ?? "'
   );
 
   // Corriger les erreurs de type any implicite
@@ -100,7 +100,7 @@ function fixTypingErrors(content) {
     /\(([\w\s,]+)\) =>/g,
     (match, params) => {
       const typedParams = params
-        .split(',')
+        .split('')
         .map(param => {
           param = param.trim();
           if (!param.includes(':')) {
@@ -154,7 +154,7 @@ function processDirectory(dirPath, extensions = ['.tsx', '.ts']) {
     
     if (stat.isDirectory()) {
       // Ignorer certains dossiers
-      if (!['node_modules', '.next', '.git', 'build', 'dist'].includes(item)) {
+      if (![\node_modules', '.next', '.git', 'build', 'dist'].includes(item)) {
         processDirectory(fullPath, extensions);
       }
     } else if (stat.isFile()) {

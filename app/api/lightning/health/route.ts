@@ -1,14 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createDaznoApiOnlyService } from '@/lib/services/dazno-api-only';
+import { NextRequest, NextResponse } from "next/server";
+import { createDaznoApiOnlyService } from "@/lib/services/dazno-api-only";
 
 export const dynamic = "force-dynamic";
 
 interface HealthResponse {
-  status: 'healthy' | 'degraded' | 'down';
+  status: "healthy" | "degraded" | "down";
   timestamp: string;
   service: {
     name: string;
-    status: 'online' | 'offline';
+    status: "online" | "offline";
     provider: string;
     lastCheck: string;
   };
@@ -16,17 +16,17 @@ interface HealthResponse {
 
 export async function GET(req: NextRequest): Promise<Response> {
   try {
-    console.log('🏥 Health check - Vérification api.dazno.de');
+    console.log("🏥 Health check - Vérification api.dazno.de");
     
     const lightningService = createDaznoApiOnlyService();
     const health = await lightningService.healthCheck();
     
     const healthResponse: HealthResponse = {
-      status: health.isOnline ? 'healthy' : 'down',
+      status: health.isOnline ? "healthy" : "down",
       timestamp: new Date().toISOString(),
       service: {
-        name: 'api.dazno.de',
-        status: health.isOnline ? 'online' : 'offline',
+        name: "api.dazno.de",
+        status: health.isOnline ? "online" : "offline",
         provider: health.provider,
         lastCheck: new Date().toISOString()
       }
@@ -39,15 +39,15 @@ export async function GET(req: NextRequest): Promise<Response> {
     });
 
   } catch (error) {
-    console.error('❌ Health check - Erreur:', error);
+    console.error("❌ Health check - Erreur:", error);
     
     const errorResponse: HealthResponse = {
-      status: 'down',
+      status: "down",
       timestamp: new Date().toISOString(),
       service: {
-        name: 'api.dazno.de',
-        status: 'offline',
-        provider: 'api.dazno.de',
+        name: "api.dazno.de",
+        status: "offline",
+        provider: "api.dazno.de",
         lastCheck: new Date().toISOString()
       }
     };
@@ -65,7 +65,7 @@ export async function HEAD(req: NextRequest): Promise<Response> {
     return new NextResponse(null, {
       status: health.isOnline ? 200 : 503,
       headers: {
-        "route.routeroutecachecontrol": 'no-cache'
+        "Cache-Control": "no-cache"
       }
     });
   } catch (error) {

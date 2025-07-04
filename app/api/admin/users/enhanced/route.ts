@@ -1,15 +1,15 @@
-import { NextRequest } from 'next/server';
+import { NextRequest } from "next/server";
 import { 
   AdminResponseBuilder, 
   parseAdminFilters, 
   withEnhancedAdminAuth,
   logAdminAction
-} from '@/lib/admin-utils';
-import { getSupabaseAdminClient } from '@/lib/supabase';
-import { ErrorCodes } from '@/types/database';
+} from "@/lib/admin-utils";
+import { getSupabaseAdminClient } from "@/lib/supabase";
+import { ErrorCodes } from "@/types/database";
 
 export const dynamic = "force-dynamic";
-export const runtime = 'nodejs';
+export const runtime = "nodejs";
 
 /**
  * GET /api/admin/users/enhanced - Liste enrichie des utilisateurs avec filtres avancés
@@ -21,19 +21,19 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
     if (!filterResult.success) {
       return AdminResponseBuilder.error(
         ErrorCodes.VALIDATION_ERROR,
-        filterResult.error || 'Paramètres invalides'
+        filterResult.error || "Paramètres invalides"
       );
     }
     
     const filters = filterResult.data!;
     const page = filters.page || 1;
     const limit = filters.limit || 20;
-    const sortBy = filters.sortBy || 'created_at';
-    const sortOrder = filters.sortOrder || 'desc';
+    const sortBy = filters.sortBy || "created_at";
+    const sortOrder = filters.sortOrder || "desc";
     
     // Construction de la requête de base avec jointures
     let query = getSupabaseAdminClient()
-      .from('profiles')
+      .from("profiles")
       .select(`
         id,
         email,
@@ -46,20 +46,20 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
         t4g_tokens,
         node_id,
         settings
-      `, { count: 'exact' });
+      `, { count: "exact" });
     
     // Application des filtres
     if (filters.search) {
       query = query.or(`email.ilike.%${filters.search}%,nom.ilike.%${filters.search}%,prenom.ilike.%${filters.search}%`);
     }
     
-    if (filters.filters?.status && filters.filters.status !== 'all') {
+    if (filters.filters?.status && filters.filters.status !== "all") {
       switch (filters.filters.status) {
-        case 'active':
-          query = query.eq('email_verified', true);
+        case "active":
+          query = query.eq("email_verified", true);
           break;
-        case 'pending':
-          query = query.eq('email_verified', false);
+        case "pending":
+          query = query.eq("email_verified", false);
           break;
       }
     }
@@ -67,15 +67,15 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
     // Filtre par plage de dates
     if (filters.filters?.dateRange) {
       if (filters.filters.dateRange.start) {
-        query = query.gte('created_at', filters.filters.dateRange.start);
+        query = query.gte("created_at", filters.filters.dateRange.start);
       }
       if (filters.filters.dateRange.end) {
-        query = query.lte('created_at', filters.filters.dateRange.end);
+        query = query.lte("created_at", filters.filters.dateRange.end);
       }
     }
     
     // Tri
-    query = query.order(sortBy, { ascending: sortOrder === 'asc' });
+    query = query.order(sortBy, { ascending: sortOrder === "asc" });
     
     // Pagination
     const from = (page - 1) * limit;
@@ -84,10 +84,10 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
     const { data: profiles, error: profilesError, count } = await query;
     
     if (profilesError) {
-      console.error('Erreur lors de la récupération des profils:', profilesError);
+      console.error("Erreur lors de la récupération des profils:", profilesError);
       return AdminResponseBuilder.error(
         ErrorCodes.DATABASE_ERROR,
-        'Erreur lors de la récupération des utilisateurs'
+        "Erreur lors de la récupération des utilisateurs"
       );
     }
     
@@ -102,15 +102,14 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
     const [ordersData, subscriptionsData] = await Promise.all([
       // Commandes par utilisateur
       getSupabaseAdminClient()
-        .from('orders')
-        .select('user_id, amount, payment_status')
-        .in('user_id', userIds),
-      
+        .from("orders")
+        .select("user_id, amount, payment_status")
+        .in("user_id", userIds),
       // Abonnements actifs
       getSupabaseAdminClient()
-        .from('subscriptions')
-        .select('user_id, status, plan_id, start_date, end_date')
-        .in('user_id', userIds)
+        .from("subscriptions")
+        .select("user_id, status, plan_id, start_date, end_date")
+        .in("user_id", userIds)
     ]);
     
     // Enrichissement des profils avec les statistiques
@@ -119,24 +118,26 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
       const userOrders = ordersData.data?.filter(o => o.user_id === profile.id) || [];
       const ordersCount = userOrders.length;
       const totalSpent = userOrders
-        .filter(o => o.payment_status === 'paid')
+        .filter(o => o.payment_status === "paid")
         .reduce((sum: any, order: any) => sum + (order.amount || 0), 0);
       
       // Abonnement actuel
       const activeSubscription = subscriptionsData.data?.find(
-        s => s.user_id === profile.id && s.status === 'active'
+        s => s.user_id === profile.id && s.status === "active"
       );
+      
       // Dernière activité
       const lastActivity = new Date(profile.updated_at);
       const daysSinceLastActivity = Math.floor(
         (Date.now() - lastActivity.getTime()) / (1000 * 60 * 60 * 24)
       );
+      
       return {
         ...profile,
         statistics: {
           ordersCount,
           totalSpent,
-          subscriptionStatus: activeSubscription?.plan_id || 'free',
+          subscriptionStatus: activeSubscription?.plan_id || "free",
           subscriptionStart: activeSubscription?.start_date,
           subscriptionEnd: activeSubscription?.end_date,
           daysSinceLastActivity,
@@ -149,14 +150,15 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
     await logAdminAction(
       req,
       adminId,
-      'users_viewed',
-      'users',
-      'bulk',
+      "users_viewed",
+      "users",
+      "bulk",
       { 
         count: enrichedProfiles.length,
         filters: filterResult.data
       }
     );
+    
     return AdminResponseBuilder.paginated(
       enrichedProfiles,
       count || 0,
@@ -172,10 +174,10 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
       }
     );
   } catch (error) {
-    console.error('Erreur lors de la récupération des utilisateurs enrichis:', error);
+    console.error("Erreur lors de la récupération des utilisateurs enrichis:", error);
     return AdminResponseBuilder.error(
       ErrorCodes.INTERNAL_ERROR,
-      'Erreur lors de la récupération des utilisateurs',
+      "Erreur lors de la récupération des utilisateurs",
       null,
       500
     );
@@ -187,5 +189,5 @@ async function getEnhancedUsersHandler(req: NextRequest, adminId: string): Promi
  */
 export const GET = withEnhancedAdminAuth(
   getEnhancedUsersHandler,
-  { resource: 'users', action: 'read' }
+  { resource: "users", action: "read" }
 );

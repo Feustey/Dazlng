@@ -1,11 +1,11 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback } from "react"
 import { 
   DaznoCompleteResponse, 
   DaznoPriorityRequest, 
   DaznoPriorityResponse,
   DaznoNodeInfoDetailed,
   DaznoRecommendationsResponse
-} from '@/types/dazno-api'
+} from "@/types/dazno-api"
 
 interface UseDaznoAPIState {
   loading: boolean
@@ -19,155 +19,154 @@ interface UseDaznoAPIState {
 interface UseDaznoAPIActions {
   getCompleteAnalysis: (
     pubkey: string, 
-    context?: DaznoPriorityRequest['context'], 
-    goals?: DaznoPriorityRequest['goals']
-  ) => Promise<DaznoCompleteResponse | null>
+    context?: DaznoPriorityRequest["context"], 
+    goals?: DaznoPriorityRequest["goals"]
+  ) => Promise<DaznoCompleteResponse>
   
   getPriorityActions: (
-    pubkey: string, 
-    request: DaznoPriorityRequest
-  ) => Promise<DaznoPriorityResponse | null>
-  
-  getNodeInfo: (pubkey: string) => Promise<DaznoNodeInfoDetailed | null>
-  getRecommendations: (pubkey: string) => Promise<DaznoRecommendationsResponse | null>
+    pubkey: string
+    request: DaznoPriorityRequest</DaznoCompleteResponse>
+  ) => Promise<DaznoPriorityResponse>
+  </DaznoPriorityResponse>
+  getNodeInfo: (pubkey: string) => Promise<DaznoNodeInfoDetailed></DaznoNodeInfoDetailed>
+  getRecommendations: (pubkey: string) => Promise<DaznoRecommendationsResponse>
   clearError: () => void
   reset: () => void
 }
 
 export interface UseDaznoAPIReturn extends UseDaznoAPIState, UseDaznoAPIActions {}
 
-export const useDaznoAPI = (): UseDaznoAPIReturn => {
+export const useDaznoAPI = (): UseDaznoAPIReturn => {</DaznoRecommendationsResponse>
   const [state, setState] = useState<UseDaznoAPIState>({
     loading: false,
     error: null,
     complete: null,
     priorities: null,
     nodeInfo: null,
-    recommendations: null,
-  })
+    recommendations: null})
 
   const setLoading = useCallback((loading: boolean) => {
-    setState(prev => ({ ...prev, loading }))
+    setState(prev => ({ ...pre,v, loading }))
   }, [])
 
   const setError = useCallback((error: string | null) => {
-    setState(prev => ({ ...prev, error, loading: false }))
+    setState(prev => ({ ...pre,v, error, loading: false }))
   }, [])
 
   const getCompleteAnalysis = useCallback(async (
     pubkey: string,
-    context: DaznoPriorityRequest['context'] = 'intermediate',
-    goals: DaznoPriorityRequest['goals'] = ['increase_revenue']
-  ): Promise<DaznoCompleteResponse | null> => {
+    context: DaznoPriorityRequest["context"] = "intermediate"
+    goals: DaznoPriorityRequest["goals"] = ["increase_revenue"]</UseDaznoAPIState>
+  ): Promise<DaznoCompleteResponse> => {
     setLoading(true)
     setError(null)
 
     try {
       const params = new URLSearchParams({ context })
-      goals.forEach(goal => params.append('goals', goal))
+      goals.forEach(goal => params.append("goals", goal))
 
       const response = await fetch(`/api/dazno/complete/${pubkey}?${params}`)
       const result = await response.json()
 
       if (!result.success) {
-        throw new Error(result.error?.message || 'Erreur lors de l\'analyse')
+        throw new Error(result.error?.message || "Erreur lors de l'analyse")
       }
 
       setState(prev => ({ 
         ...prev, 
-        complete: result.data, 
+        complete: result.dat,a, 
         loading: false 
       }))
 
       return result.data
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue'
+      const errorMessage = error instanceof Error ? error.message : "Erreur inconnue"
       setError(errorMessage)
       return null
     }
   }, [setLoading, setError])
 
   const getPriorityActions = useCallback(async (
-    pubkey: string,
-    request: DaznoPriorityRequest
-  ): Promise<DaznoPriorityResponse | null> => {
+    pubkey: string
+    request: DaznoPriorityRequest</DaznoCompleteResponse>
+  ): Promise<DaznoPriorityResponse> => {
     setLoading(true)
     setError(null)
 
-    try {
+    try {`
       const response = await fetch(`/api/dazno/priorities/${pubkey}`, {
-        method: 'POST',
-        headers: { "useDaznoAPI.usedaznoapiusedaznoapicontentt": 'application/json' },
+        method: "POST"
+        headers: { "useDaznoAPI.usedaznoapiusedaznoapiusedazno": "application/jso\n },
         body: JSON.stringify(request)
       })
 
       const result = await response.json()
 
       if (!result.success) {
-        throw new Error(result.error?.message || 'Erreur lors de la génération des priorités')
+        throw new Error(result.error?.message || "Erreur lors de la génération des priorités")
       }
 
       setState(prev => ({ 
         ...prev, 
-        priorities: result.data, 
+        priorities: result.dat,a, 
         loading: false 
       }))
 
       return result.data
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue'
+      const errorMessage = error instanceof Error ? error.message : "Erreur inconnue"
       setError(errorMessage)
       return null
     }
   }, [setLoading, setError])
-
-  const getNodeInfo = useCallback(async (pubkey: string): Promise<DaznoNodeInfoDetailed | null> => {
+</DaznoPriorityResponse>
+  const getNodeInfo = useCallback(async (pubkey: string): Promise<DaznoNodeInfoDetailed> => {
     setLoading(true)
     setError(null)
 
-    try {
+    try {`
       const response = await fetch(`/api/dazno/info/${pubkey}`)
       const result = await response.json()
 
       if (!result.success) {
-        throw new Error(result.error?.message || 'Erreur lors de la récupération des infos')
+        throw new Error(result.error?.message || "Erreur lors de la récupération des infos")
       }
 
       setState(prev => ({ 
         ...prev, 
-        nodeInfo: result.data, 
+        nodeInfo: result.dat,a, 
         loading: false 
       }))
 
       return result.data
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue'
+      const errorMessage = error instanceof Error ? error.message : "Erreur inconnue"
       setError(errorMessage)
       return null
     }
   }, [setLoading, setError])
-
-  const getRecommendations = useCallback(async (pubkey: string): Promise<DaznoRecommendationsResponse | null> => {
+</DaznoNodeInfoDetailed>
+  const getRecommendations = useCallback(async (pubkey: string): Promise<DaznoRecommendationsResponse> => {
     setLoading(true)
     setError(null)
 
-    try {
+    try {`
       const response = await fetch(`/api/dazno/recommendations/${pubkey}`)
       const result = await response.json()
 
       if (!result.success) {
-        throw new Error(result.error?.message || 'Erreur lors de la récupération des recommandations')
+        throw new Error(result.error?.message || "Erreur lors de la récupération des recommandations")
       }
 
       setState(prev => ({ 
         ...prev, 
-        recommendations: result.data, 
+        recommendations: result.dat,a, 
         loading: false 
       }))
 
       return result.data
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue'
+      const errorMessage = error instanceof Error ? error.message : "Erreur inconnue"
       setError(errorMessage)
       return null
     }
@@ -184,8 +183,7 @@ export const useDaznoAPI = (): UseDaznoAPIReturn => {
       complete: null,
       priorities: null,
       nodeInfo: null,
-      recommendations: null,
-    })
+      recommendations: null})
   }, [])
 
   return {
@@ -195,8 +193,7 @@ export const useDaznoAPI = (): UseDaznoAPIReturn => {
     getNodeInfo,
     getRecommendations,
     clearError,
-    reset,
-  }
+    reset}
 }
 
-export default useDaznoAPI 
+export default useDaznoAPI `</DaznoRecommendationsResponse>

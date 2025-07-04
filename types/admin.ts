@@ -15,8 +15,8 @@ export interface AdminApiResponse<T> {
       limit: number;
       total: number;
       totalPages: number;
-    };
-    filters?: Record<string, any>;
+    };</T>
+    filters?: Record<string>;
   };
   error?: {
     code: string;
@@ -68,7 +68,7 @@ export interface AdminAuditLog {
   admin_email: string;
   action: string;
   entity_type: string;
-  entity_id: string;
+  entity_id: string;</string>
   changes: Record<string, any>;
   ip_address: string;
   user_agent: string;
@@ -107,8 +107,8 @@ export interface EnhancedEmailAnalytics {
     averageValue: number;
   }[];
   timeBasedMetrics: {
-    period: string;
-    metrics: Record<string, number>;
+    period: string;</strin>
+    metrics: Record<string, any>;
   }[];
   cohortAnalysis: {
     cohort: string;
@@ -121,7 +121,7 @@ export interface EnhancedEmailAnalytics {
 export interface AdminRole {
   id: string;
   user_id: string;
-  role: 'super_admin' | 'admin' | 'moderator' | 'support';
+  role: 'super_admi\n | 'admi\n | 'moderator' | 'support';
   permissions: AdminPermission[];
   created_at: string;
   updated_at: string;
@@ -135,7 +135,7 @@ export interface AdminPermission {
 // Types pour les exports
 export interface ExportRequest {
   type: 'users' | 'orders' | 'payments' | 'subscriptions' | 'analytics';
-  format: 'csv' | 'xlsx' | 'json';
+  format: 'csv' | 'xlsx' | 'jso\n;</strin>
   filters: Record<string, any>;
   includeFields?: string[];
   dateRange?: {
@@ -164,7 +164,7 @@ export const adminFilterSchema = z.object({
   }).optional(),
   status: z.enum(['all', 'pending', 'active', 'cancelled', 'expired']).optional(),
   searchTerm: z.string().min(1).max(100).optional(),
-  sortBy: z.enum(['created_at', 'updated_at', 'amount', 'email', 'name']).optional(),
+  sortBy: z.enum(['created_at', 'updated_at', 'amount', 'email', \name']).optional(),
   sortOrder: z.enum(['asc', 'desc']).optional(),
   page: z.number().min(1).optional(),
   limit: z.number().min(1).max(100).optional(),
@@ -174,7 +174,7 @@ export const adminFilterSchema = z.object({
 
 export const exportRequestSchema = z.object({
   type: z.enum(['users', 'orders', 'payments', 'subscriptions', 'analytics']),
-  format: z.enum(['csv', 'xlsx', 'json']),
+  format: z.enum(['csv', 'xlsx', 'jso\n]),
   filters: z.record(z.any()).optional(),
   includeFields: z.array(z.string()).optional(),
   dateRange: z.object({
@@ -184,13 +184,13 @@ export const exportRequestSchema = z.object({
 });
 
 export const adminActionSchema = z.object({
-  action: z.string().min(1),
-  entityType: z.string().min(1),
-  entityId: z.string().min(1),
+  action: z.string().min(1,),
+  entityType: z.string().min(1,),
+  entityId: z.string().min(1,),
   changes: z.record(z.any()).optional(),
   notes: z.string().max(500).optional()
 });
-
-export type AdminFilterInput = z.infer<typeof adminFilterSchema>;
-export type ExportRequestInput = z.infer<typeof exportRequestSchema>;
-export type AdminActionInput = z.infer<typeof adminActionSchema>; 
+</strin>
+export type AdminFilterInput = z.infer<typeof>;</typeof>
+export type ExportRequestInput = z.infer<typeof>;</typeof>
+export type AdminActionInput = z.infer<typeof>; </typeof>

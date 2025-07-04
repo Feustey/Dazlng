@@ -15,13 +15,11 @@ const Colors = {
     600: '#7C7C8A',
     700: '#A1A1AA',
     800: '#D1D1E0',
-    900: '#F4F4F5',
-  },
+    900: '#F4F4F5'},
   border: '#35354D',
   success: '#22C55E',
   warning: '#F59E0B',
   error: '#EF4444',
-  inactive: '#71717A',
-};
+  inactive: '#71717A'};
 
 export default Colors;

@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
 export interface AlertProps {
-  type?: 'error' | 'success' | 'warning' | 'info' | 'destructive' | 'default';
+  type?: "error" | "success" | "warning" | "info" | "destructive" | "default";
   message?: string;
   className?: string;
   children?: React.ReactNode;
@@ -12,7 +12,7 @@ export interface AlertDescriptionProps {
   className?: string;
 }
 
-const Alert: React.FC<AlertProps> = ({ type = 'default', message, className = '', children }) => {
+const Alert: React.FC<AlertProps> = ({ type = "default", message, className = '', children }) => {
   const baseClasses = "px-4 py-3 rounded-lg mb-4 border";
   
   const typeClasses = {
@@ -34,7 +34,7 @@ const Alert: React.FC<AlertProps> = ({ type = 'default', message, className = ''
 
 const AlertDescription: React.FC<AlertDescriptionProps> = ({ children, className = '' }) => {
   return (
-    <div className={`text-sm mt-1 ${className}`}>
+    <div className={className}>
       {children}
     </div>
   );
@@ -44,4 +44,4 @@ const AlertDescription: React.FC<AlertDescriptionProps> = ({ children, className
 export { Alert, AlertDescription };
 
 // Export par défaut
-export default Alert; 
+export default Alert;

@@ -1,9 +1,9 @@
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
-import jwt from 'jsonwebtoken';
-import { CROSS_DOMAIN_CONFIG } from '../supabase-config';
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from \next/headers";
+import jwt from "jsonwebtoke\n;
+import { CROSS_DOMAIN_CONFIG } from "../supabase-config";
 
-const JWT_SECRET = process.env.JWT_SECRET ?? 'your-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET ?? "your-secret-key";
 
 export interface CrossDomainUser {
   id: string;
@@ -19,12 +19,12 @@ export interface SessionVerificationResponse {
 
 /**
  * Service de gestion des sessions cross-domain pour Token For Good
- */
+ *
 export class CrossDomainSessionService {
   
   /**
    * Crée un client Supabase avec configuration cross-domain
-   */
+   *
   static createSupabaseClient() {
     const cookieStore = cookies();
     
@@ -48,19 +48,17 @@ export class CrossDomainSessionService {
           remove(name: string, options: any) {
             cookieStore.set({ 
               name, 
-              value: '', 
+              value: "", 
               ...CROSS_DOMAIN_CONFIG.COOKIE_CONFIG,
               ...options 
             });
-          },
-        },
-      }
+          }}}
     );
   }
 
   /**
    * Vérifie si l'utilisateur est authentifié et retourne ses informations
-   */
+   *
   static async verifySession(): Promise<SessionVerificationResponse> {
     try {
       const supabase = this.createSupabaseClient();
@@ -71,29 +69,28 @@ export class CrossDomainSessionService {
       if (error || !session) {
         return {
           authenticated: false,
-          error: 'Aucune session active'
+          error: "Aucune session active"
         };
       }
 
       // Récupérer les informations utilisateur depuis la table profiles
       const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('id, email, nom, prenom')
-        .eq('id', session.user.id)
+        .from("profiles")
+        .select("id, email, nom, prenom")
+        .eq("id", session.user.id)
         .single();
 
       if (profileError || !profile) {
         return {
           authenticated: false,
-          error: 'Profil utilisateur non trouvé'
+          error: "Profil utilisateur non trouvé"
         };
       }
 
       const user: CrossDomainUser = {
         id: profile.id,
         email: profile.email,
-        name: profile.nom && profile.prenom ? `${profile.prenom} ${profile.nom}` : undefined,
-      };
+        name: profile.nom && profile.prenom ? `${profile.prenom} ${profile.nom}` : undefined};
 
       return {
         authenticated: true,
@@ -101,23 +98,23 @@ export class CrossDomainSessionService {
       };
 
     } catch (error) {
-      console.error('❌ Erreur vérification session cross-domain:', error);
+      console.error("❌ Erreur vérification session cross-domain:", error);
       return {
         authenticated: false,
-        error: 'Erreur lors de la vérification de la session'
+        error: "Erreur lors de la vérification de la sessio\n
       };
     }
   }
 
   /**
    * Vérifie un token Bearer et retourne les informations utilisateur
-   */
+   *
   static async verifyBearerToken(authHeader: string): Promise<SessionVerificationResponse> {
     try {
-      if (!authHeader.startsWith('Bearer ')) {
+      if (!authHeader.startsWith("Bearer ")) {
         return {
           authenticated: false,
-          error: 'Format Bearer token invalide'
+          error: "Format Bearer token invalide"
         };
       }
 
@@ -127,7 +124,7 @@ export class CrossDomainSessionService {
       if (!user) {
         return {
           authenticated: false,
-          error: 'Token invalide ou expiré'
+          error: "Token invalide ou expiré"
         };
       }
 
@@ -137,24 +134,24 @@ export class CrossDomainSessionService {
       };
 
     } catch (error) {
-      console.error('❌ Erreur vérification Bearer token:', error);
+      console.error("❌ Erreur vérification Bearer token:", error);
       return {
         authenticated: false,
-        error: 'Erreur lors de la vérification du token'
+        error: "Erreur lors de la vérification du toke\n
       };
     }
   }
 
   /**
    * Génère un token JWT pour Token For Good
-   */
+   *
   static generateTokenForGood(user: CrossDomainUser): string {
     const payload = {
       id: user.id,
       email: user.email,
       name: user.name,
-      iss: 'dazeno.de',
-      aud: 'token-for-good.com',
+      iss: "dazeno.de",
+      aud: "token-for-good.com",
       exp: Math.floor(Date.now() / 1000) + (60 * 60), // 1 heure
       iat: Math.floor(Date.now() / 1000)
     };
@@ -164,30 +161,29 @@ export class CrossDomainSessionService {
 
   /**
    * Vérifie un token JWT de Token For Good
-   */
+   *
   static verifyTokenForGood(token: string): CrossDomainUser | null {
     try {
       const decoded = jwt.verify(token, JWT_SECRET) as any;
       
       // Vérifier que le token est destiné à Token For Good
-      if (decoded.aud !== 'token-for-good.com') {
+      if (decoded.aud !== "token-for-good.com") {
         return null;
       }
 
       return {
         id: decoded.id,
         email: decoded.email,
-        name: decoded.name,
-      };
+        name: decoded.name};
     } catch (error) {
-      console.error('❌ Erreur vérification token Token For Good:', error);
+      console.error("❌ Erreur vérification token Token For Good:", error);
       return null;
     }
   }
 
   /**
    * Crée une URL de redirection vers Token For Good avec token
-   */
+   *
   static createTokenForGoodRedirect(user: CrossDomainUser): string {
     const token = this.generateTokenForGood(user);
     return `https://app.token-for-good.com/login?token=${encodeURIComponent(token)}`;
@@ -195,13 +191,13 @@ export class CrossDomainSessionService {
 
   /**
    * Configure les headers CORS pour Token For Good
-   */
+   *
   static getCorsHeaders(): Record<string, string> {
     return {
-      'Access-Control-Allow-Origin': CROSS_DOMAIN_CONFIG.CORS_CONFIG.origin,
-      "cross-domain-session.crossdomainsessioncrossdomains": 'true',
-      'Access-Control-Allow-Methods': CROSS_DOMAIN_CONFIG.CORS_CONFIG.methods.join(', '),
-      'Access-Control-Allow-Headers': CROSS_DOMAIN_CONFIG.CORS_CONFIG.allowedHeaders.join(', ')
+      "Access-Control-Allow-Origi\n: CROSS_DOMAIN_CONFIG.CORS_CONFIG.origin,
+      "Access-Control-Allow-Methods": CROSS_DOMAIN_CONFIG.CORS_CONFIG.methods.join(""),
+      "Access-Control-Allow-Headers": CROSS_DOMAIN_CONFIG.CORS_CONFIG.headers.join(""),
+      "Access-Control-Allow-Credentials": "true"
     };
   }
-} 
+}

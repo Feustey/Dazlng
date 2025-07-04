@@ -1,15 +1,22 @@
 declare module 'lightning' {
   export interface LndConfig {
-    lnd: any;
+    host: string;
+    port: number;
+    macaroon: string;
+    cert?: string;
   }
 
-  export interface DecodePaymentRequestParams extends LndConfig {
-    request: string;
+  export interface DecodePaymentRequestParams {
+    paymentRequest: string;
   }
 
-  export interface GetWalletInfoParams extends LndConfig {}
+  export interface GetWalletInfoParams {
+    provider: string;
+  }
 
-  export interface GetChannelsParams extends LndConfig {}
+  export interface GetChannelsParams {
+    provider: string;
+  }
 
   export interface CreateLndGrpcParams {
     socket: string;
@@ -18,45 +25,50 @@ declare module 'lightning' {
   }
 
   export interface DecodedPaymentRequest {
-    tokens: number;
+    amount: number;
     description: string;
-    id: string;
-    expires_at: string;
     destination: string;
+    timestamp: number;
+    expiry: number;
   }
 
   export interface WalletInfo {
-    public_key: string;
     alias: string;
-    current_block_height: number;
+    pubkey: string;
+    balance: number;
+    channels: number;
   }
 
   export interface Channels {
-    channels: Array<any>;
+    channels: Array<{
+      id: string;
+      capacity: number;
+      localBalance: number;
+      remoteBalance: number;
+      active: boolean;
+    }>;
   }
 
   export interface CreateInvoiceParams {
     amount: number;
     description: string;
-    expiry?: number;
     metadata?: Record<string, any>;
   }
 
   export interface Invoice {
-    id: string;
     paymentRequest: string;
     paymentHash: string;
     amount: number;
     description: string;
-    createdAt: string;
-    expiresAt: string;
-    status: 'pending' | 'settled' | 'failed' | 'expired';
+    timestamp: number;
+    expiry: number;
+    settled: boolean;
+    settledAt?: string;
     metadata?: Record<string, any>;
   }
 
   export interface InvoiceStatus {
-    status: 'pending' | 'settled' | 'failed' | 'expired';
-    amount: number;
+    settled: boolean;
     settledAt?: string;
     metadata?: Record<string, any>;
   }

@@ -1,4 +1,4 @@
-// Types partagés pour l'interface utilisateur
+// Types partagés pour l"interface utilisateur
 
 export interface UserProfile {
   email: string;
@@ -34,12 +34,12 @@ export interface Recommendation {
   id: string;
   title: string;
   description: string;
-  impact: 'low' | 'medium' | 'high';
-  difficulty: 'easy' | 'medium' | 'hard';
+  impact: "low" | "medium" | "high";
+  difficulty: "easy" | "medium" | "hard";
   isFree: boolean;
   estimatedGain: number;
   timeToImplement: string;
-  category: 'liquidity' | 'routing' | 'efficiency' | 'security';
+  category: "liquidity" | "routing" | "efficiency" | "security";
 }
 
 export interface Achievement {
@@ -56,14 +56,14 @@ export interface ProfileField {
   name: string;
   label: string;
   completed: boolean;
-  priority: 'high' | 'medium' | 'low';
+  priority: "high" | "medium" | "low";
   href: string;
 }
 
 export interface CRMData {
   profileCompletion: number;
   userScore: number;
-  engagementLevel: 'low' | 'medium' | 'high';
+  engagementLevel: "low" | "medium" | "high"';
   conversionPotential: number;
   lastActivity: Date;
 }

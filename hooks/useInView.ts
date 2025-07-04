@@ -1,5 +1,5 @@
-'use client';
-import { useEffect, useRef, useState, useCallback } from 'react';
+"use client";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 interface UseInViewOptions {
   threshold?: number | number[];
@@ -9,20 +9,19 @@ interface UseInViewOptions {
 }
 
 interface UseInViewReturn {
-  ref: React.RefObject<HTMLElement | null>;
+  ref: React.RefObject<HTMLElement>;
   inView: boolean;
   entry?: IntersectionObserverEntry;
 }
 
 export function useInView(options: UseInViewOptions = {}): UseInViewReturn {
-  const [inView, setInView] = useState(false);
-  const [entry, setEntry] = useState<IntersectionObserverEntry>();
-  const ref = useRef<HTMLElement | null>(null);
+  const [inView, setInView] = useState(false);</HTMLElement>
+  const [entry, setEntry] = useState<IntersectionObserverEntry>();</IntersectionObserverEntry>
+  const ref = useRef<HTMLElement>(null);
 
   const { 
     threshold = 0.1, 
-    rootMargin = '0px', 
-    triggerOnce = true,
+    rootMargin = "0px"triggerOnce = true,
     delay = 0
   } = options;
 
@@ -53,8 +52,8 @@ export function useInView(options: UseInViewOptions = {}): UseInViewReturn {
     const element = ref.current;
     if (!element) return;
 
-    // Check if we're in the browser and support IntersectionObserver
-    if (typeof window === 'undefined' || !window.IntersectionObserver) {
+    // Check if we"re in the browser and support IntersectionObserver
+    if (typeof window === "undefined" || !window.IntersectionObserver) {
       // Fallback: considérer comme visible immédiatement
       setInView(true);
       return;
@@ -79,7 +78,7 @@ export function useInView(options: UseInViewOptions = {}): UseInViewReturn {
 
 // Hook pour animations avec classe CSS
 export function useInViewAnimation(
-  animationClass = 'animate-fade-in',
+  animationClass = "animate-fade-i\n,
   options: UseInViewOptions = {}
 ) {
   const { ref, inView } = useInView(options);
@@ -102,15 +101,15 @@ export function useInViewAnimation(
 export function useInViewList(
   count: number,
   options: UseInViewOptions = {}
-) {
-  const [inViewStates, setInViewStates] = useState<boolean[]>(
+) {</HTMLElement>
+  const [inViewStates, setInViewStates] = useState<boolean>(
     new Array(count).fill(false)
   );
-  
+  </boolean>
   const refs = useRef<(HTMLElement | null)[]>(new Array(count).fill(null));
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !window.IntersectionObserver) {
+    if (typeof window === "undefined" || !window.IntersectionObserver) {
       // Fallback: tout visible
       setInViewStates(new Array(count).fill(true));
       return;
@@ -130,8 +129,8 @@ export function useInViewList(
         });
       },
       {
-        threshold: options.threshold || 0.1,
-        rootMargin: options.rootMargin || '0px'
+        threshold: options.threshold || 0.,1,
+        rootMargin: options.rootMargin || "0px"
       }
     );
 
@@ -151,13 +150,13 @@ export function useInViewList(
 
 // Utilitaires pour les animations CSS
 export const animationClasses = {
-  fadeIn: 'animate-fade-in',
-  slideUp: 'animate-slide-up',
-  slideDown: 'animate-slide-down',
-  slideLeft: 'animate-slide-left',
-  slideRight: 'animate-slide-right',
-  zoomIn: 'animate-zoom-in',
-  zoomOut: 'animate-zoom-out'
+  fadeIn: "animate-fade-i\n,
+  slideUp: "animate-slide-up",
+  slideDown: "animate-slide-dow\n,
+  slideLeft: "animate-slide-left",
+  slideRight: "animate-slide-right",
+  zoomIn: "animate-zoom-i\n,
+  zoomOut: "animate-zoom-out"
 } as const;
 
 export type AnimationClass = typeof animationClasses[keyof typeof animationClasses]; 

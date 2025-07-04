@@ -6,7 +6,7 @@ export const createDaznoApiClient = () => ({
   getNetworkRankings: async () => ({ rankings: [] }),
   getNodeInfo: async () => null,
   getRecommendations: async () => [],
-  checkApiHealth: async () => ({ isOnline: false, message: 'Stub mode' }),
+  checkApiHealth: async () => ({ isOnline: false, message: "Stub mode" }),
   // Autres méthodes stub...
 });
 
@@ -14,7 +14,7 @@ export const daznoApi = {
   getNodeInfo: async () => null,
   getRecommendations: async () => [],
   getPriorityActions: async () => [],
-  checkApiHealth: async () => ({ isOnline: false, message: 'Stub mode' }),
+  checkApiHealth: async () => ({ isOnline: false, message: "Stub mode" }),
   // Autres méthodes stub...
 };
 

@@ -1,7 +1,9 @@
-import { Metadata } from 'next';
+import { Metadata } from \next";
+import { useTranslations } from \next-intl";
+
 
 export const metadata: Metadata = {
-  title: 'Aide - DazNode',
-  description: "metadata.metadatametadatacentre_d"aide DazNode'
+  title: "Aide - DazNode",
+  description: "{t("metadata_metadatametadatametadatametadatacentre")}"aide DazNode"
 }
-export const dynamic = "force-dynamic";
+export const dynamic  = "force-dynamic";

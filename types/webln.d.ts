@@ -5,6 +5,9 @@ interface WebLN {
 
 declare global {
   interface Window {
-    webln?: WebLN;
+    webln: {
+      enable(): Promise<void>;
+      sendPayment(paymentRequest: string): Promise<{ preimage: string }>;
+    };
   }
 } 

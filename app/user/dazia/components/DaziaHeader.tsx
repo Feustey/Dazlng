@@ -1,48 +1,46 @@
-import { motion } from 'framer-motion';
-import { SparklesIcon } from '@/app/components/icons/SparklesIcon';
+import { motion } from "framer-motion";
+import { SparklesIcon } from "@/app/components/icons/SparklesIcon";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
 
 export const DaziaHeader = () => {
+  const { t } = useAdvancedTranslation();
+  
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="relative overflow-hidden rounded-xl bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 p-6 shadow-lg"
-    >
-      <div className="absolute inset-0 bg-black/10" />
+    <motion.div className="relative text-center mb-12">
       <div className="relative z-10">
-        <div className="flex items-center gap-3">
-          <SparklesIcon className="h-8 w-8 text-white" />
-          <h1 className="text-3xl font-bold text-white">{t('user.dazia_ia')}</h1>
+        <div className="flex items-center justify-center gap-3 mb-6">
+          <SparklesIcon className="w-8 h-8 text-yellow-400" />
+          <h1 className="text-3xl font-bold text-white">{t("user.dazia_ia")}</h1>
         </div>
-        <p className="mt-2 text-lg text-white/90">
+        <p className="text-xl text-gray-300 max-w-2xl mx-auto">
           Votre assistant IA personnel pour optimiser votre nœud Lightning
         </p>
       </div>
       
       {/* Particules animées */}
-      <div className="absolute inset-0">
-        {[...Array(20)].map((_: any, i: any) => (
+      <div className="absolute inset-0 pointer-events-none">
+        {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute h-1 w-1 rounded-full bg-white/30"
-            initial={{ 
-              x: Math.random() * 100 + '%',
-              y: Math.random() * 100 + '%',
-              opacity: 0
+            className="absolute w-2 h-2 bg-yellow-400 rounded-full opacity-20"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
             }}
             animate={{
-              y: [null, Math.random() * 100 + '%'],
-              opacity: [0, 1, 0],
+              y: [0, -20, 0],
+              opacity: [0.2, 0.8, 0.2],
             }}
             transition={{
-              duration: Math.random() * 3 + 2,
+              duration: 3,
               repeat: Infinity,
-              ease: "linear"
+              delay: i * 0.1,
             }}
           />
         ))}
       </div>
     </motion.div>
   );
-}
+};
+
 export const dynamic = "force-dynamic";

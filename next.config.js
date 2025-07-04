@@ -8,7 +8,7 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60 * 60 * 24 * 30,
     dangerouslyAllowSVG: true,
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;"
   },
   experimental: {
     optimizePackageImports: ['lucide-react'],
@@ -18,23 +18,23 @@ const nextConfig = {
       rules: {
         '*.svg': {
           loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
-      },
-    },
+          as: '*.js'
+        }
+      }
+    }
   },
   webpack: (config, { dev, isServer }) => {
     // Support SVG optimisé
     config.module.rules.push({
       test: /\.svg$/,
-      use: ['@svgr/webpack'],
+      use: ['@svgr/webpack']
     });
 
     // Tree shaking agressif pour les icônes
     if (!isServer) {
       config.resolve.alias = {
         ...config.resolve.alias,
-        'react-icons/fa': 'lucide-react',
+        'react-icons/fa': 'lucide-react'
       };
     }
 
@@ -50,17 +50,17 @@ const nextConfig = {
         tty: false, vm: false, worker_threads: false, child_process: false,
         cluster: false, dgram: false, dns: false, domain: false,
         module: false, process: false, readline: false, repl: false,
-        sys: false, v8: false,
+        sys: false, v8: false
       };
     }
 
     return config;
   },
   eslint: {
-    ignoreDuringBuilds: false,
+    ignoreDuringBuilds: false
   },
   typescript: {
-    ignoreBuildErrors: false,
+    ignoreBuildErrors: false
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production'
@@ -76,52 +76,52 @@ const nextConfig = {
         headers: [
           {
             key: 'X-Content-Type-Options',
-            value: 'nosniff',
+            value: 'nosniff'
           },
           {
             key: 'X-Frame-Options',
-            value: 'DENY',
+            value: 'DENY'
           },
           {
             key: 'X-XSS-Protection',
-            value: '1; mode=block',
+            value: '1; mode=block'
           },
           {
             key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
+            value: 'strict-origin-when-cross-origin'
           },
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()',
+            value: 'camera=(), microphone=(), geolocation=()'
           },
-        ],
+        ]
       },
       {
         source: '/assets/(.*)',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
+            value: 'public, max-age=31536000, immutable'
           },
-        ],
+        ]
       },
       {
         source: '/_next/static/css/(.*)',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
+            value: 'public, max-age=31536000, immutable'
           },
-        ],
+        ]
       },
       {
         source: '/api/(.*)',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'no-cache, no-store, must-revalidate',
+            value: 'no-cache, no-store, must-revalidate'
           },
-        ],
+        ]
       },
     ]
   },
@@ -131,29 +131,29 @@ const nextConfig = {
       {
         source: '/home',
         destination: '/',
-        permanent: true,
+        permanent: true
       },
       {
         source: '/index.html',
         destination: '/',
-        permanent: true,
+        permanent: true
       },
       {
         source: '/fr/index.html',
         destination: '/fr',
-        permanent: true,
+        permanent: true
       },
       {
         source: '/en/index.html',
         destination: '/en',
-        permanent: true,
+        permanent: true
       },
     ];
   },
   // Variables d'environnement publiques
   env: {
-    CUSTOM_KEY: process.env.CUSTOM_KEY,
-  },
+    CUSTOM_KEY: process.env.CUSTOM_KEY
+  }
 }
 
 const withNextIntl = require('next-intl/plugin')();

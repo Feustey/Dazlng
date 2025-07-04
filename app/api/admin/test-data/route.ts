@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseAdminClient } from '@/lib/supabase';
+import { getSupabaseAdminClient } from "@/lib/supabase";
 import { validateAdminAccess } from "@/utils/adminHelpers";
 
 // Données de test pour DazBox
@@ -30,7 +30,7 @@ const createTestOrder = async () => {
       .select()
       .single();
 
-    if (profileError && profileError.code !== '23505') { // Ignore duplicate key error
+    if (profileError && profileError.code !== "23505") { // Ignore duplicate key error
       console.error("Erreur création profil:", profileError);
       throw new Error(`Erreur création profil: ${profileError.message}`);
     }
@@ -63,7 +63,7 @@ const createTestOrder = async () => {
       .select()
       .single();
 
-    if (orderError && orderError.code !== '23505') {
+    if (orderError && orderError.code !== "23505") {
       console.error("Erreur création commande:", orderError);
       throw new Error(`Erreur création commande: ${orderError.message}`);
     }
@@ -74,7 +74,7 @@ const createTestOrder = async () => {
     const testDelivery = {
       id: "delivery-dazbox-001",
       order_id: testOrder.id,
-      address: "42 Rue des Bitcoiners, Appartement 3B",
+      address: "42 Rue des Bitcoineurs, Appartement 3B",
       city: "Lyon",
       zip_code: "69001",
       country: "France",
@@ -90,7 +90,7 @@ const createTestOrder = async () => {
       .select()
       .single();
 
-    if (deliveryError && deliveryError.code !== '23505') {
+    if (deliveryError && deliveryError.code !== "23505") {
       console.error("Erreur création livraison:", deliveryError);
       throw new Error(`Erreur création livraison: ${deliveryError.message}`);
     }
@@ -114,7 +114,7 @@ const createTestOrder = async () => {
       .select()
       .single();
 
-    if (paymentError && paymentError.code !== '23505') {
+    if (paymentError && paymentError.code !== "23505") {
       console.error("Erreur création paiement:", paymentError);
       throw new Error(`Erreur création paiement: ${paymentError.message}`);
     }
@@ -173,7 +173,7 @@ export async function GET(req: NextRequest): Promise<Response> {
   return NextResponse.json({
     info: "Endpoint pour créer des données de test",
     usage: "POST /api/admin/test-data",
-    description: "admin.adminadmincre_un_utilisateur_u",
+    description: "Crée un utilisateur de test avec une commande DazBox complète",
     test_order_id: "7d2d8bcb-2dd1-43da-a341-73c0757aecc4",
     test_user: "alice.dubois@example.fr",
     note: "Les données existantes seront mises à jour si elles existent déjà"

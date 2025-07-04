@@ -46,8 +46,8 @@ export interface DaznoRecommendation {
   type: string; // SparkSeer recommendation type
   title: string;
   description: string;
-  impact: 'low' | 'medium' | 'high';
-  difficulty: 'easy' | 'medium' | 'hard';
+  impact: "low" | "medium" | "high";
+  difficulty: "easy" | "medium" | "hard";
   priority: number;
   reasoning?: string;
   
@@ -57,8 +57,8 @@ export interface DaznoRecommendation {
   confidence_score?: number;
   
   // Contexte de la recommandation
-  category: 'channel_management' | 'fee_optimization' | 'liquidity' | 'routing' | 'connectivity' | 'fees';
-  action_type: 'open_channel' | 'close_channel' | 'adjust_fees' | 'rebalance' | 'other';
+  category: "channel_management" | "fee_optimizatio\n | "liquidity" | "routing" | "connectivity" | "fees";
+  action_type: "open_channel" | "close_channel" | "adjust_fees" | "rebalance" | "other";
   
   // Données additionnelles SparkSeer
   target_pubkey?: string;
@@ -81,29 +81,27 @@ export interface PriorityAction {
   
   // Données OpenAI enrichies
   timeline?: string;
-  complexity?: 'low' | 'medium' | 'high';
+  complexity?: "low" | "medium" | "high";
   prerequisites?: string[];
   expected_outcome?: string;
   confidence?: number;
   
   // Contexte spécifique
   category?: string;
-  urgency?: 'low' | 'medium' | 'high';
+  urgency?: "low" | "medium" | "high";
   cost_estimate?: number;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_DAZNO_API_URL || 'https://api.dazno.de';
+const API_BASE_URL = process.env.NEXT_PUBLIC_DAZNO_API_URL || "https://api.dazno.de";
 
 class DaznoApiClient {
   private async makeRequest<T>(endpoint: string, options?: RequestInit): Promise<T> {
     try {
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         headers: {
-          "dazno-api.daznoapidaznoapicontenttype": 'application/json',
-          ...options?.headers,
-        },
-        ...options,
-      });
+          "Content-Type": "application/jso\n,
+          ...options?.headers},
+        ...options});
 
       if (!response.ok) {
         throw new Error(`API Error: ${response.status} - ${response.statusText}`);
@@ -111,38 +109,38 @@ class DaznoApiClient {
 
       return await response.json();
     } catch (error) {
-      console.error('[DaznoAPI] Request failed:', endpoint, error);
+      console.error("[DaznoAPI] Request failed:", endpoint, error);
       throw error;
     }
   }
 
   async checkHealth(): Promise<{ status: string; timestamp: string; services?: any; error?: string }> {
     try {
-      return await this.makeRequest('/health');
+      return await this.makeRequest("/health");
     } catch (error) {
       // Fallback pour le health check
-      console.warn('[DaznoAPI] Health check failed, API may be unavailable:', error);
+      console.warn("[DaznoAPI] Health check failed, API may be unavailable:", error);
       return {
-        status: 'unavailable',
+        status: "unavailable",
         timestamp: new Date().toISOString(),
-        error: 'API not available'
+        error: "API not available"
       };
     }
   }
 
   async getNodeInfo(pubkey: string): Promise<NodeInfo> {
     if (!pubkey || pubkey.length !== 66) {
-      throw new Error('Invalid pubkey format');
+      throw new Error("Invalid pubkey format");
     }
     
     try {
       return await this.makeRequest(`/api/v1/node/${pubkey}/info`);
     } catch (error) {
-      console.warn('[DaznoAPI] Node info not available, using fallback data:', error);
+      console.warn("[DaznoAPI] Node info not available, using fallback data:", error);
       // Données de fallback basiques
       return {
         pubkey,
-        alias: 'Nœud inconnu',
+        alias: "Nœud inconnu",
         capacity: 0,
         channels: 0,
         active_channels: 0,
@@ -161,156 +159,98 @@ class DaznoApiClient {
 
   async getRecommendations(pubkey: string): Promise<DaznoRecommendation[]> {
     if (!pubkey || pubkey.length !== 66) {
-      throw new Error('Invalid pubkey format');
+      throw new Error("Invalid pubkey format");
     }
     
     try {
       return await this.makeRequest(`/api/v1/node/${pubkey}/recommendations`);
     } catch (error) {
-      console.warn('[DaznoAPI] Recommendations not available, using fallback data:', error);
+      console.warn("[DaznoAPI] Recommendations not available, using fallback data:", error);
       // Données de fallback avec recommandations génériques
       return [
         {
-          id: 'fallback-1',
-          type: 'channel_optimization',
-          title: 'Optimiser la gestion des canaux',
-          description: "dazno-api.daznoapidaznoapianalysez_vos_c"optimisation.',
-          impact: 'medium' as const,
-          difficulty: 'medium' as const,
+          id: "fallback-1",
+          type: "channel_optimizatio\n,
+          title: "Optimiser la gestion des canaux",
+          description: "Analysez vos canaux et optimisez leur configuratio\n,
+          impact: "medium" as const,
+          difficulty: "medium" as const,
           priority: 1,
-          category: 'channel_management' as const,
-          action_type: 'other' as const,
+          category: "channel_management" as const,
+          action_type: "other" as const,
           free: true,
           estimated_gain_sats: 1000
         },
         {
-          id: 'fallback-2',
-          type: 'fee_adjustment',
-          title: 'Ajuster les frais de routing',
-          description: "dazno-api.daznoapidaznoapioptimisez_vos_",
-          impact: 'high' as const,
-          difficulty: 'easy' as const,
+          id: "fallback-2",
+          type: "fee_adjustment",
+          title: "Ajuster les frais de routing",
+          description: "Optimisez vos frais pour maximiser les revenus",
+          impact: "high" as const,
+          difficulty: "easy" as const,
           priority: 2,
-          category: 'fee_optimization' as const,
-          action_type: 'adjust_fees' as const,
+          category: "fee_optimizatio\n as const,
+          action_type: "adjust_fees" as const,
           free: true,
           estimated_gain_sats: 2500
         },
         {
-          id: 'fallback-3',
-          type: 'liquidity_management',
-          title: 'Équilibrer la liquidité',
-          description: "dazno-api.daznoapidaznoapirquilibrez_vos",
-          impact: 'medium' as const,
-          difficulty: 'hard' as const,
+          id: "fallback-3",
+          type: "liquidity_management",
+          title: "Équilibrer la liquidité",
+          description: "Équilibrez vos canaux pour améliorer l'efficacité de votre routing",
+          impact: "medium" as const,
+          difficulty: "hard" as const,
           priority: 3,
-          category: 'liquidity' as const,
-          action_type: 'rebalance' as const,
-          free: true,
+          category: "liquidity" as const,
+          action_type: "rebalance" as const,
+          free: false,
+          requires_premium: true,
           estimated_gain_sats: 1500
         }
       ];
     }
   }
 
-  async getPriorityActions(pubkey: string, actions?: string[]): Promise<PriorityAction[]> {
+  async getPriorityActions(pubkey: string): Promise<PriorityAction[]> {
     if (!pubkey || pubkey.length !== 66) {
-      throw new Error('Invalid pubkey format');
-    }
-    
-    try {
-      const response = await this.makeRequest<any[]>(`/api/v1/node/${pubkey}/priorities`, {
-        method: 'POST',
-        body: JSON.stringify({ actions: actions || [] }),
-      });
-      
-      // Ajouter un ID si manquant dans la réponse de l'API
-      return response.map((action: any, index: number) => ({
-        id: action.id || `action-${index}`,
-        ...action
-      }));
-    } catch (error) {
-      console.warn('[DaznoAPI] Priority actions not available, using fallback data:', error);
-      // Actions prioritaires de fallback
-      return [
-        {
-          id: 'priority-1',
-          action: 'Vérifier la connectivité de votre nœud',
-          priority: 1,
-          estimated_impact: 85,
-          reasoning: 'Un nœud bien connecté améliore significativement les performances de routing.',
-          timeline: 'Immédiat',
-          complexity: 'low' as const,
-          category: 'connectivity',
-          urgency: 'high' as const
-        },
-        {
-          id: 'priority-2',
-          action: 'Optimiser les frais de vos canaux actifs',
-          priority: 2,
-          estimated_impact: 70,
-          reasoning: 'Des frais bien calibrés attirent plus de transactions tout en maximisant les revenus.',
-          timeline: '1-2 heures',
-          complexity: 'medium' as const,
-          category: 'fees',
-          urgency: 'medium' as const
-        },
-        {
-          id: 'priority-3',
-          action: 'Analyser la distribution de liquidité',
-          priority: 3,
-          estimated_impact: 60,
-          reasoning: 'Une liquidité bien répartie permet un routing plus efficace.',
-          timeline: '2-4 heures',
-          complexity: 'medium' as const,
-          category: 'liquidity',
-          urgency: 'medium' as const
-        }
-      ];
-    }
-  }
-
-  async getPriorities(pubkey: string): Promise<PriorityAction[]> {
-    if (!pubkey || pubkey.length !== 66) {
-      throw new Error('Invalid pubkey format');
+      throw new Error("Invalid pubkey format");
     }
     
     try {
       return await this.makeRequest(`/api/v1/node/${pubkey}/priorities`);
     } catch (error) {
-      console.warn('[DaznoAPI] Priorities not available, using fallback data:', error);
-      // Données de fallback avec priorités génériques
+      console.warn("[DaznoAPI] Priority actions not available, using fallback data:", error);
+      // Données de fallback avec actions prioritaires génériques
       return [
         {
-          id: 'priority-1',
-          action: 'Vérifier la connectivité de votre nœud',
+          id: "priority-1",
+          action: "Optimiser la configuration des frais",
           priority: 1,
-          estimated_impact: 85,
-          reasoning: 'Un nœud bien connecté améliore significativement les performances de routing.',
-          timeline: 'Immédiat',
-          complexity: 'low' as const,
-          category: 'connectivity',
-          urgency: 'high' as const
+          estimated_impact: 20,
+          reasoning: "Amélioration significative des revenus de routage",
+          timeline: "1-2 semaines",
+          complexity: "medium",
+          category: "fees",
+          urgency: "high"
         },
         {
-          id: 'priority-2',
-          action: 'Optimiser les frais de vos canaux actifs',
+          id: "priority-2",
+          action: "Ouvrir de nouveaux canaux stratégiques",
           priority: 2,
-          estimated_impact: 70,
-          reasoning: 'Des frais optimisés augmentent les revenus de routing.',
-          timeline: 'Court terme',
-          complexity: 'medium' as const,
-          category: 'fee_optimization',
-          urgency: 'medium' as const
+          estimated_impact: 15,
+          reasoning: "Amélioration de la connectivité et de la centralité",
+          timeline: "2-4 semaines",
+          complexity: "high",
+          category: "connectivity",
+          urgency: "medium"
         }
       ];
     }
   }
 }
 
-const daznoAPI = new DaznoApiClient();
-export const daznoApi = daznoAPI;
-export { daznoAPI };
+export const daznoApi = new DaznoApiClient();
 
 // Fonctions utilitaires pour l'intégration
 export function isValidLightningPubkey(pubkey: string): boolean {
@@ -321,12 +261,12 @@ export function mapDaznoRecommendationToLocal(rec: DaznoRecommendation): {
   id: string;
   title: string;
   description: string;
-  impact: 'low' | 'medium' | 'high';
-  difficulty: 'easy' | 'medium' | 'hard';
+  impact: "low" | "medium" | "high";
+  difficulty: "easy" | "medium" | "hard";
   isFree: boolean;
   estimatedGain: number;
   timeToImplement: string;
-  category: 'liquidity' | 'routing' | 'efficiency' | 'security';
+  category: "liquidity" | "routing" | "efficiency" | "security";
 } {
   return {
     id: rec.id,
@@ -336,10 +276,10 @@ export function mapDaznoRecommendationToLocal(rec: DaznoRecommendation): {
     difficulty: rec.difficulty,
     isFree: rec.free,
     estimatedGain: rec.estimated_gain_sats || 0,
-    timeToImplement: rec.difficulty === 'easy' ? '5 minutes' : 
-                     rec.difficulty === 'medium' ? '15 minutes' : 
-                     '30+ minutes',
-    category: rec.category as 'liquidity' | 'routing' | 'efficiency' | 'security'
+    timeToImplement: rec.difficulty === "easy" ? "5 minutes" : 
+                     rec.difficulty === "medium" ? "15 minutes" : 
+                     "30+ minutes",
+    category: rec.category as "liquidity" | "routing" | "efficiency" | "security"
   };
 }
 
@@ -370,7 +310,7 @@ export function mapNodeInfoToStats(nodeInfo: NodeInfo): {
 // Hook pour vérifier la disponibilité de l'API
 export async function checkApiHealth(): Promise<boolean> {
   try {
-    await daznoAPI.checkHealth();
+    await daznoApi.checkHealth();
     return true;
   } catch {
     return false;

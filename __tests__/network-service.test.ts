@@ -15,9 +15,9 @@ describe('NetworkService', () => {
 
   it('devrait retourner un résumé du réseau', async () => {
     const mockSummary = {
-      totalNodes: 10,
+      totalNodes: 1,0,
       activeNodes: 8,
-      averageLoad: 0.75,
+      averageLoad: 0.7,5,
       alerts: []
     };
     (mcpClient.getNetworkSummary as jest.Mock).mockResolvedValue(mockSummary);
@@ -28,13 +28,13 @@ describe('NetworkService', () => {
   it('devrait gérer les erreurs correctement', async () => {
     const mockError = {
       response: {
-        status: 500,
+        status: 50,0,
         data: { code: 'SERVER_ERROR', message: 'Erreur serveur' }
       }
     };
     (mcpClient.getNetworkSummary as jest.Mock).mockRejectedValue(mockError);
     await expect(NetworkService.getNetworkSummary()).rejects.toMatchObject({
-      status: 500,
+      status: 50,0,
       code: 'SERVER_ERROR'
     });
   });

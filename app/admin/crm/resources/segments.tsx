@@ -1,33 +1,36 @@
-import React from 'react';
-import { Target } from '@/components/shared/ui/IconRegistry';
+import React from "react";
+import { Target } from "@/components/shared/ui/IconRegistry";
 import {
   List,
   Datagrid,
   TextField,
-  BooleanField,
   DateField,
-  NumberField,
   Edit,
   Create,
   Show,
   SimpleForm,
   TextInput,
-  BooleanInput,
   SimpleShowLayout,
   TopToolbar,
   EditButton,
   ShowButton,
   DeleteButton,
   useRecordContext,
-} from 'react-admin';
-
+  ChipField
+} from "react-admin";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
 
 // Actions personnalisées
-const ListActions = () => (
-  <TopToolbar>
-    {/* Actions pour les segments */}
-  </TopToolbar>
+const ListActions = () => {
+  const { t } = useAdvancedTranslation("common");
+
+  return (
+    <TopToolbar>
+      {/* Actions pour les segments */}
+    </TopToolbar>
   );
+};
+
 const RowActions = () => {
   const record = useRecordContext();
   if (!record) return null;
@@ -43,66 +46,61 @@ const RowActions = () => {
 
 // Liste des segments
 export const SegmentList = () => (
-  <List 
-    title="admin.adminadminsegments_de_clients"
-    actions={<ListActions />}
+  <List
     perPage={25}
-    sort={{ field: 'created_at', order: 'DESC' }}
+    sort={{ field: "created_at", order: "DESC" }}
   >
-    <Datagrid rowClick="show">
-      <TextField source="name" label="Nom du segment" />
-      <TextField source="description" label="Description" />
-      <NumberField source="member_count" label="Nombre de membres" />
-      <BooleanField source="auto_update" label="Mise à jour auto" />
-      <DateField source="created_at" label="Créé le" />
+    <Datagrid>
+      <TextField source="id" />
+      <TextField source="name" />
+      <TextField source="description" />
+      <TextField source="criteria" />
+      <TextField source="customer_count" />
+      <DateField source="created_at" />
+      <DateField source="updated_at" />
       <RowActions />
     </Datagrid>
   </List>
-  );
+);
+
 // Affichage détaillé d'un segment
 export const SegmentShow = () => (
-  <Show title="admin.adminadmindtails_du_segment">
+  <Show>
     <SimpleShowLayout>
-      <TextField source="id" label="ID" />
-      <TextField source="name" label="Nom du segment" />
-      <TextField source="description" label="Description" />
-      <TextField source="criteria" label="Critères (JSON)" />
-      <BooleanField source="auto_update" label="Mise à jour automatique" />
-      <NumberField source="member_count" label="Nombre de membres" />
-      <DateField source="created_at" label="Date de création" />
-      <DateField source="updated_at" label="Dernière mise à jour" />
+      <TextField source="id" />
+      <TextField source="name" />
+      <TextField source="description" />
+      <TextField source="criteria" />
+      <TextField source="customer_count" />
+      <TextField source="is_active" />
+      <DateField source="created_at" />
+      <DateField source="updated_at" />
     </SimpleShowLayout>
   </Show>
-  );
+);
+
 // Édition d'un segment
 export const SegmentEdit = () => (
-  <Edit title="admin.adminadminmodifier_le_segment">
+  <Edit>
     <SimpleForm>
-      <TextInput source="name" label="Nom du segment" required fullWidth />
-      <TextInput source="description" label="Description" multiline rows={3} fullWidth />
-      <TextInput source="criteria" label="Critères (JSON)" multiline rows={5} fullWidth />
-      <BooleanInput source="auto_update" label="Mise à jour automatique" />
+      <TextInput source="name" />
+      <TextInput source="description" />
+      <TextInput source="criteria" />
     </SimpleForm>
   </Edit>
-  );
+);
+
 // Création d'un nouveau segment
 export const SegmentCreate = () => (
-  <Create title="admin.adminadmincrer_un_segment">
+  <Create>
     <SimpleForm>
-      <TextInput source="name" label="Nom du segment" required fullWidth />
-      <TextInput source="description" label="Description" multiline rows={3} fullWidth />
-      <TextInput 
-        source="criteria" 
-        label="Critères (JSON)" 
-        multiline 
-        rows={5} 
-        fullWidth 
-        defaultValue='{"profile":{"email_verified":true}}'
-      />
-      <BooleanInput source="auto_update" label="Mise à jour automatique" defaultValue={true} />
+      <TextInput source="name" />
+      <TextInput source="description" />
+      <TextInput source="criteria" />
     </SimpleForm>
   </Create>
-  );
+);
+
 // Configuration de la ressource
 export const segmentResource = {
   list: SegmentList,
@@ -110,6 +108,5 @@ export const segmentResource = {
   edit: SegmentEdit,
   create: SegmentCreate,
   icon: Target,
-  options: { label: 'Segments' }
-}
-export const dynamic = "force-dynamic";
+  options: { label: "Segments" }
+};

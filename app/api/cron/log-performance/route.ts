@@ -1,19 +1,19 @@
-import { NextResponse } from 'next/server';
-import { headers } from 'next/headers';
-import { getSupabaseAdminClient } from '@/lib/supabase';
-import { dazNodePerformanceService } from '@/lib/services/daznode-performance-service';
+import { NextResponse } from "next/server";
+import { headers } from "next/headers";
+import { getSupabaseAdminClient } from "@/lib/supabase";
+import { dazNodePerformanceService } from "@/lib/services/daznode-performance-service";
 
 // Vérifier le secret du cron
 const validateCronSecret = (request: Request): boolean => {
   const headersList = headers();
-  const authHeader = headersList.get('authorization');
+  const authHeader = headersList.get("authorization");
   
   if (!authHeader) {
     return false;
   }
 
-  const [type, token] = authHeader.split(' ');
-  return type === 'Bearer' && token === process.env.CRON_SECRET;
+  const [type, token] = authHeader.split(" ");
+  return type === "Bearer" && token === process.env.CRON_SECRET;
 };
 
 export async function POST(request: Request) {
@@ -23,8 +23,8 @@ export async function POST(request: Request) {
       return NextResponse.json({
         success: false,
         error: {
-          code: 'UNAUTHORIZED',
-          message: 'Non autorisé'
+          code: "UNAUTHORIZED",
+          message: "Non autorisé"
         }
       }, { status: 401 });
     }
@@ -32,13 +32,13 @@ export async function POST(request: Request) {
     // Récupérer tous les abonnements actifs
     const supabase = getSupabaseAdminClient();
     const { data: subscriptions, error: subscriptionError } = await supabase
-      .from('daznode_subscriptions')
-      .select('pubkey')
-      .eq('payment_status', 'paid')
-      .gt('end_date', new Date().toISOString());
+      .from("daznode_subscriptions")
+      .select("pubkey")
+      .eq("payment_status", "paid")
+      .gt("end_date", new Date().toISOString());
 
     if (subscriptionError) {
-      throw new Error('Erreur lors de la récupération des abonnements');
+      throw new Error("Erreur lors de la récupération des abonnements");
     }
 
     // Enregistrer les performances pour chaque nœud
@@ -56,7 +56,7 @@ export async function POST(request: Request) {
       } catch (error) {
         results.failed++;
         results.errors.push(
-          `${subscription.pubkey}: ${error instanceof Error ? error.message : 'Erreur inconnue'}`
+          `${subscription.pubkey}: ${error instanceof Error ? error.message : "Erreur inconnue"}`
         );
       }
     }
@@ -66,14 +66,15 @@ export async function POST(request: Request) {
       data: results
     });
   } catch (error) {
-    console.error('❌ Erreur log performances:', error);
+    console.error("❌ Erreur log performances:", error);
     return NextResponse.json({
       success: false,
       error: {
-        code: 'INTERNAL_ERROR',
-        message: error instanceof Error ? error.message : 'Erreur inattendue'
+        code: "INTERNAL_ERROR",
+        message: error instanceof Error ? error.message : "Erreur inattendue"
       }
     }, { status: 500 });
   }
-} 
+}
+
 export const dynamic = "force-dynamic";

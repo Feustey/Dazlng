@@ -38,7 +38,7 @@ export interface EmailCampaign {
   template_id?: string;
   content: string;
   segment_ids: string[];
-  status: 'draft' | 'scheduled' | 'sending' | 'sent' | 'cancelled';
+  status: "draft" | "scheduled" | "sending" | "sent" | "cancelled";
   scheduled_at?: string;
   sent_at?: string;
   stats: {
@@ -59,7 +59,7 @@ export interface EmailTemplate {
   name: string;
   subject?: string;
   content: string;
-  variables: Record<string, unknown>;
+  variables: Record<string, any>;
   category?: string;
   is_active: boolean;
   created_at: string;
@@ -71,13 +71,13 @@ export interface EmailSend {
   campaign_id: string;
   customer_id: string;
   email: string;
-  status: 'pending' | 'sent' | 'delivered' | 'opened' | 'clicked' | 'bounced' | 'failed';
+  status: "pending" | "sent" | "delivered" | "opened" | "clicked" | "bounced" | "failed"';
   sent_at?: string;
   opened_at?: string;
   clicked_at?: string;
   bounced_at?: string;
-  error_message?: string;
-  metadata: Record<string, unknown>;
+  error_message?: string;</strin>
+  metadata: Record<string, any>;
 }
 
 export interface Customer {
@@ -93,8 +93,8 @@ export interface Customer {
   email_verified: boolean;
   verified_at?: string;
   created_at: string;
-  updated_at: string;
-  settings: Record<string, unknown>;
+  updated_at: string;</strin>
+  settings: Record<string, any>;
   // Relations calculées
   total_orders?: number;
   total_spent?: number;
@@ -123,3 +123,4 @@ export interface EmailMarketingStats {
   bounceRate: number;
   unsubscribeRate: number;
 }
+</strin>

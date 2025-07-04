@@ -1,5 +1,5 @@
 -- Création de la table pour les recommandations journalières
-CREATE TABLE IF NOT EXISTS public.daily_recommendations (
+CREATE TABLE IF NOT EXISTS public.daily_recommendations (;
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
     pubkey TEXT NOT NULL,
@@ -7,34 +7,34 @@ CREATE TABLE IF NOT EXISTS public.daily_recommendations (
     expires_at TIMESTAMPTZ NOT NULL,
     recommendation_data JSONB NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
+    updated_at TIMESTAMPTZ DEFAULT NOW();
 );
 
 -- Index pour optimiser les requêtes
-CREATE INDEX IF NOT EXISTS idx_daily_recommendations_user_date 
+CREATE INDEX IF NOT EXISTS idx_daily_recommendations_user_date;
 ON public.daily_recommendations(user_id, generated_at);
 
-CREATE INDEX IF NOT EXISTS idx_daily_recommendations_pubkey 
+CREATE INDEX IF NOT EXISTS idx_daily_recommendations_pubkey;
 ON public.daily_recommendations(pubkey);
 
-CREATE INDEX IF NOT EXISTS idx_daily_recommendations_expires 
+CREATE INDEX IF NOT EXISTS idx_daily_recommendations_expires;
 ON public.daily_recommendations(expires_at);
 
 -- RLS (Row Level Security)
 ALTER TABLE public.daily_recommendations ENABLE ROW LEVEL SECURITY;
 
 -- Politique pour que les utilisateurs ne voient que leurs recommandations
-CREATE POLICY "Users can view their own daily recommendations" ON public.daily_recommendations
+CREATE POLICY "Users can view their own daily recommendations" ON public.daily_recommendations;
     FOR SELECT USING (auth.uid() = user_id);
 
-CREATE POLICY "Users can insert their own daily recommendations" ON public.daily_recommendations  
+CREATE POLICY "Users can insert their own daily recommendations" ON public.daily_recommendations;
     FOR INSERT WITH CHECK (auth.uid() = user_id);
 
 -- Fonction pour nettoyer les recommandations expirées (optionnel)
 CREATE OR REPLACE FUNCTION public.cleanup_expired_recommendations()
 RETURNS void AS $$
 BEGIN
-    DELETE FROM public.daily_recommendations 
+    DELETE FROM public.daily_recommendations ;
     WHERE expires_at < NOW() - INTERVAL '7 days';
 END;
 $$ LANGUAGE plpgsql;

@@ -1,6 +1,5 @@
 // Registre centralisé d'icônes pour optimiser les imports
-import { 
-  Gauge, ArrowRight, Loader2, TrendingUp, AlertTriangle, 
+import { Gauge, ArrowRight, Loader2, TrendingUp, AlertTriangle, 
   Target, Clock, DollarSign, Zap, CheckCircle, Shield,
   Users, MessageCircle, Star, Menu, X, ChevronDown, Check,
   Brain, BarChart3, Settings, Quote, HelpCircle, ChevronUp,
@@ -11,8 +10,7 @@ import {
   TrendingDown, AlertCircle, BarChart, PieChart, LineChart,
   XCircle, Bell, Smartphone, Eye, Network, Lightbulb, Cpu,
   Sparkles, Download, MousePointer, Plug, Cog,
-  Server, Box, CreditCard
-} from 'lucide-react';
+  Server, Box, CreditCard} from "lucide-react";
 
 // Registre centralisé avec toutes les icônes
 export const IconRegistry = {
@@ -24,13 +22,11 @@ export const IconRegistry = {
   Mail, Calendar, FileText, Send, Activity, Gift, Copy,
   Share2, Info, Search, Filter, Globe, Database, Trophy,
   Award, Headphones, Lock, ChevronRight, CheckCircle2, Circle,
-  
   // Icônes manquantes
   TrendingDown, AlertCircle, BarChart, PieChart, LineChart,
   XCircle, Bell, Smartphone, Eye, Network, Lightbulb, Cpu,
   Sparkles, Download, MousePointer, Plug, Cog,
   Server, Box, CreditCard,
-  
   // Alias pour compatibilité
   TargetIcon: Target,
   TrendingUpIcon: TrendingUp,
@@ -67,7 +63,6 @@ export const IconRegistry = {
   HeadphonesIcon: Headphones,
   LockIcon: Lock,
   ChevronRightIcon: ChevronRight,
-  
   // Alias pour react-icons (compatibilité)
   FaBolt: Zap,
   FaCheckCircle: CheckCircle,
@@ -94,7 +89,7 @@ export const useIcon = (name: IconName) => {
 };
 
 // Composant Icon optimisé
-export const Icon: React.FC<{ name: IconName; className?: string; size?: number }> = ({ 
+export const Icon: React.FC<{ name: IconName; className?: string; size?: number }> = ({
   name, 
   className = "", 
   size = 24 
@@ -110,8 +105,7 @@ export const Icon: React.FC<{ name: IconName; className?: string; size?: number 
 };
 
 // Export direct de toutes les icônes pour compatibilité
-export {
-  Gauge, ArrowRight, Loader2, TrendingUp, AlertTriangle,
+export {Gauge, ArrowRight, Loader2, TrendingUp, AlertTriangle,
   Target, Clock, DollarSign, Zap, CheckCircle, Shield,
   Users, MessageCircle, Star, Menu, X, ChevronDown, Check,
   Brain, BarChart3, Settings, Quote, HelpCircle, ChevronUp,
@@ -121,5 +115,4 @@ export {
   TrendingDown, AlertCircle, BarChart, PieChart, LineChart,
   XCircle, Bell, Smartphone, Eye, Network, Lightbulb, Cpu,
   Sparkles, Download, MousePointer, Plug, Cog,
-  Server, Box, CreditCard
-};
+  Server, Box, CreditCard};

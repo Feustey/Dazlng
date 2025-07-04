@@ -13,12 +13,12 @@ RETURNS TABLE(
     details TEXT,
     recommendation TEXT
 ) AS $$
-DECLARE
+DECLARE;
     table_count INTEGER;
     constraint_conflicts INTEGER;
     orphaned_records INTEGER;
 BEGIN
-    -- 1. Vérifier l'existence des tables CRM
+    -- 1. Vérifier l'existence des tables CRM'
     RETURN QUERY
     SELECT 
         'CRM Tables Existence'::TEXT as check_name,
@@ -40,7 +40,7 @@ BEGIN
         'Found ' || constraint_conflicts || ' existing constraints',
         CASE WHEN constraint_conflicts > 0 THEN 'Some constraints already exist, migration will handle this' ELSE 'No constraint conflicts' END;
     
-    -- 3. Vérifier l'état de la table crm_email_sends
+    -- 3. Vérifier l'état de la table crm_email_sends'
     RETURN QUERY
     SELECT 
         'Email Sends Table Status'::TEXT,
@@ -55,7 +55,7 @@ BEGIN
             ELSE 'Table exists but not partitioned'
         END,
         CASE 
-            WHEN NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'crm_email_sends') THEN 'Will create new partitioned table'
+            WHEN NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'crm_email_sends') THEN 'Will create NEW partitioned table'
             WHEN EXISTS (SELECT 1 FROM pg_partitioned_table pt JOIN pg_class c ON pt.partrelid = c.oid WHERE c.relname = 'crm_email_sends') THEN 'Migration will skip partitioning'
             ELSE 'Will backup and recreate as partitioned table'
         END;
@@ -73,7 +73,7 @@ BEGIN
         'Found ' || orphaned_records || ' orphaned segment members',
         CASE WHEN orphaned_records > 0 THEN 'Clean up orphaned records before migration' ELSE 'No orphaned records' END;
     
-    -- 5. Vérifier l'espace disque disponible
+    -- 5. Vérifier l'espace disque disponible'
     RETURN QUERY
     SELECT 
         'Database Size'::TEXT,
@@ -95,9 +95,9 @@ BEGIN
         'PostgreSQL Extensions'::TEXT,
         CASE WHEN COUNT(*) >= 1 THEN 'OK' ELSE 'WARNING' END,
         'Available extensions: ' || string_agg(name, ', '),
-        CASE WHEN COUNT(*) >= 1 THEN 'Required extensions available' ELSE 'Check extension availability' END
+        CASE WHEN COUNT(*) >= 1 THEN 'Required extensions available' ELSE 'CHECK extension availability' END
     FROM pg_available_extensions 
-    WHERE name IN ('uuid-ossp', 'pg_cron');
+    WHERE name IN ('UUID-ossp', 'pg_cron');
     
 END;
 $$ LANGUAGE plpgsql;
@@ -105,7 +105,7 @@ $$ LANGUAGE plpgsql;
 -- Fonction pour nettoyer les enregistrements orphelins
 CREATE OR REPLACE FUNCTION cleanup_orphaned_records()
 RETURNS TEXT AS $$
-DECLARE
+DECLARE;
     deleted_count INTEGER := 0;
 BEGIN
     -- Nettoyer les membres de segments orphelins
@@ -147,7 +147,7 @@ BEGIN
     LEFT JOIN pg_stat_user_tables s ON t.table_name = s.relname
     WHERE t.table_schema = 'public' 
     AND (t.table_name LIKE 'crm_%' OR t.table_name IN ('profiles', 'orders', 'admin_roles'))
-    AND t.table_type = 'BASE TABLE'
+    AND t.table_type = 'BASE TABLE';
     ORDER BY size_mb DESC;
 END;
 $$ LANGUAGE plpgsql;
@@ -157,26 +157,26 @@ $$ LANGUAGE plpgsql;
 -- ====================================================================
 
 -- Afficher le diagnostic complet
-SELECT 
+SELECT;
     '=== DIAGNOSTIC PRÉ-MIGRATION CRM ===' as title,
     NOW()::TEXT as timestamp;
 
 SELECT * FROM run_pre_migration_diagnostic();
 
-SELECT 
+SELECT;
     '=== RÉSUMÉ DES TABLES CRM ===' as title;
 
 SELECT * FROM show_crm_tables_summary();
 
 -- Recommandations finales
-SELECT 
+SELECT;
     '=== RECOMMANDATIONS ===' as title,
     'Exécutez "SELECT cleanup_orphaned_records();" si des enregistrements orphelins ont été détectés' as recommendation
 UNION ALL
-SELECT 
+SELECT;
     '',
     'Vérifiez que vous avez suffisamment d''espace disque avant de lancer la migration'
 UNION ALL
-SELECT 
+SELECT;
     '',
     'Sauvegardez votre base de données avant d''exécuter la migration d''optimisation'; 

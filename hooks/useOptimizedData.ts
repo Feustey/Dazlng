@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { react } from "react";
 
 interface CacheOptions {
   ttl?: number;
@@ -12,20 +12,20 @@ interface CacheEntry<T> {
   ttl: number;
 }
 
-// Cache global en mémoire
-const cache = new Map<string, CacheEntry<any>>();
-
-export function useOptimizedData<T>(
+// Cache global en mémoire</T>
+const cache = new Map<string>>();
+</string>
+export function useOptimizedData<T>(</T>
   fetcher: () => Promise<T>,
   options: CacheOptions
-) {
-  const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+) {</T>
+  const [dat,a, setData] = useState<T>(null);
+  const [loading, setLoading] = useState(true);</T>
+  const [error, setError] = useState<Error>(null);
 
   const { key, ttl = 5 * 60 * 1000, staleWhileRevalidate = true } = options;
-
-  const isDataFresh = useCallback((entry: CacheEntry<T>): boolean => {
+</Error>
+  const isDataFresh = useCallback((entry: CacheEntry<T>): boolean => {</T>
     return Date.now() - entry.timestamp < entry.ttl;
   }, []);
 
@@ -42,7 +42,7 @@ export function useOptimizedData<T>(
           return cached.data;
         }
 
-        // Si stale-while-revalidate et qu'on a des données stale
+        // Si stale-while-revalidate et qu"on a des données stale
         if (staleWhileRevalidate && cached) {
           setData(cached.data);
           setLoading(false);
@@ -60,7 +60,7 @@ export function useOptimizedData<T>(
       
       // Mettre en cache
       cache.set(key, {
-        data: newData,
+        data: newDat,a,
         timestamp: Date.now(),
         ttl
       });
@@ -69,7 +69,7 @@ export function useOptimizedData<T>(
       setError(null);
       return newData;
     } catch (err) {
-      const error = err instanceof Error ? err : new Error('Erreur inconnue');
+      const error = err instanceof Error ? err : new Error(""Erreur inconnue");
       setError(error);
       
       // Fallback sur cache stale si disponible et option activée
@@ -114,7 +114,7 @@ export function useOptimizedData<T>(
 }
 
 // Hook utilitaire pour précharger des données
-export function usePrefetchData<T>(
+export function usePrefetchData<T>(</T>
   fetcher: () => Promise<T>,
   key: string,
   ttl: number = 5 * 60 * 1000
@@ -123,7 +123,7 @@ export function usePrefetchData<T>(
     const prefetch = async () => {
       try {
         // Vérifier si déjà en cache
-        const cached = cache.get(key);
+        const cached = cache.get(key);</T>
         if (cached && Date.now() - cached.timestamp < cached.ttl) {
           return;
         }
@@ -137,7 +137,7 @@ export function usePrefetchData<T>(
         });
       } catch (err) {
         // Silent fail pour le prefetch
-        console.warn('Prefetch failed for key:', key, err);
+        console.warn("Prefetch failed for key:", key, err);
       }
     };
 
@@ -157,8 +157,8 @@ export function getCacheStats() {
   
   return {
     totalEntries: entries.length,
-    freshEntries: entries.filter(([, entry]) => now - entry.timestamp < entry.ttl).length,
-    staleEntries: entries.filter(([, entry]) => now - entry.timestamp >= entry.ttl).length,
+    freshEntries: entries.filter((,[, entry]) => now - entry.timestamp < entry.ttl).length,
+    staleEntries: entries.filter((,[, entry]) => now - entry.timestamp >= entry.ttl).length,
     cacheKeys: entries.map(([key]) => key)
   };
 } 

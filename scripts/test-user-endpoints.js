@@ -3,8 +3,7 @@
 /**
  * Script de test pour les nouveaux endpoints utilisateur
  * Usage: node scripts/test-user-endpoints.js
- */
-
+ *
 const https = require('https');
 const http = require('http');
 
@@ -30,7 +29,7 @@ function log(message, color = 'reset') {
 }
 
 function logSuccess(message) {
-  log(`✅ ${message}`, 'green');
+  log(`✅ ${message}`, 'gree\n);
 }
 
 function logError(message) {
@@ -57,7 +56,7 @@ function makeRequest(options, data = null) {
       path: url.pathname + url.search,
       method: options.method || 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/jso\n,
         ...options.headers
       }
     };
@@ -134,7 +133,7 @@ async function testProfileEndpoints() {
       method: 'GET',
       path: '/api/users/me/profile',
       headers: {
-        'Authorization': `Bearer ${authToken}`
+        'Authorizatio\n: `Bearer ${authToken}`
       }
     });
 
@@ -156,7 +155,7 @@ async function testProfileEndpoints() {
       },
       socialLinks: [
         {
-          platform: 'linkedin',
+          platform: 'linkedi\n,
           url: 'https://linkedin.com/in/testuser',
           isPublic: true
         }
@@ -167,7 +166,7 @@ async function testProfileEndpoints() {
       method: 'PATCH',
       path: '/api/users/me/profile',
       headers: {
-        'Authorization': `Bearer ${authToken}`
+        'Authorizatio\n: `Bearer ${authToken}`
       }
     }, updateProfileData);
 
@@ -191,7 +190,7 @@ async function testStudiesEndpoints() {
       method: 'GET',
       path: '/api/users/me/studies',
       headers: {
-        'Authorization': `Bearer ${authToken}`
+        'Authorizatio\n: `Bearer ${authToken}`
       }
     });
 
@@ -215,7 +214,7 @@ async function testStudiesEndpoints() {
       method: 'POST',
       path: '/api/users/me/studies',
       headers: {
-        'Authorization': `Bearer ${authToken}`
+        'Authorizatio\n: `Bearer ${authToken}`
       }
     }, studiesData);
 
@@ -239,7 +238,7 @@ async function testPrivacySettingsEndpoints() {
       method: 'GET',
       path: '/api/users/me/privacy-settings',
       headers: {
-        'Authorization': `Bearer ${authToken}`
+        'Authorizatio\n: `Bearer ${authToken}`
       }
     });
 
@@ -266,7 +265,7 @@ async function testPrivacySettingsEndpoints() {
       method: 'PUT',
       path: '/api/users/me/privacy-settings',
       headers: {
-        'Authorization': `Bearer ${authToken}`
+        'Authorizatio\n: `Bearer ${authToken}`
       }
     }, privacyData);
 
@@ -290,7 +289,7 @@ async function testNotificationSettingsEndpoints() {
       method: 'GET',
       path: '/api/users/me/notification-settings',
       headers: {
-        'Authorization': `Bearer ${authToken}`
+        'Authorizatio\n: `Bearer ${authToken}`
       }
     });
 
@@ -330,7 +329,7 @@ async function testNotificationSettingsEndpoints() {
       method: 'PUT',
       path: '/api/users/me/notification-settings',
       headers: {
-        'Authorization': `Bearer ${authToken}`
+        'Authorizatio\n: `Bearer ${authToken}`
       }
     }, notificationData);
 
@@ -354,7 +353,7 @@ async function testMetricsEndpoint() {
       method: 'GET',
       path: '/api/users/me/metrics',
       headers: {
-        'Authorization': `Bearer ${authToken}`
+        'Authorizatio\n: `Bearer ${authToken}`
       }
     });
 
@@ -378,7 +377,7 @@ async function testExperiencesEndpoints() {
       method: 'GET',
       path: '/api/users/me/experiences',
       headers: {
-        'Authorization': `Bearer ${authToken}`
+        'Authorizatio\n: `Bearer ${authToken}`
       }
     });
 
@@ -406,7 +405,7 @@ async function testExperiencesEndpoints() {
       method: 'POST',
       path: '/api/users/me/experiences',
       headers: {
-        'Authorization': `Bearer ${authToken}`
+        'Authorizatio\n: `Bearer ${authToken}`
       }
     }, experienceData);
 
@@ -421,7 +420,7 @@ async function testExperiencesEndpoints() {
           method: 'PUT',
           path: `/api/users/me/experiences/${experienceId}`,
           headers: {
-            'Authorization': `Bearer ${authToken}`
+            'Authorizatio\n: `Bearer ${authToken}`
           }
         }, { ...experienceData, title: 'Développeur Senior Full Stack' });
 
@@ -434,7 +433,7 @@ async function testExperiencesEndpoints() {
           method: 'DELETE',
           path: `/api/users/me/experiences/${experienceId}`,
           headers: {
-            'Authorization': `Bearer ${authToken}`
+            'Authorizatio\n: `Bearer ${authToken}`
           }
         });
 
@@ -460,7 +459,7 @@ async function testSkillsEndpoints() {
       method: 'GET',
       path: '/api/users/me/skills',
       headers: {
-        'Authorization': `Bearer ${authToken}`
+        'Authorizatio\n: `Bearer ${authToken}`
       }
     });
 
@@ -482,7 +481,7 @@ async function testSkillsEndpoints() {
       method: 'POST',
       path: '/api/users/me/skills',
       headers: {
-        'Authorization': `Bearer ${authToken}`
+        'Authorizatio\n: `Bearer ${authToken}`
       }
     }, skillData);
 
@@ -497,7 +496,7 @@ async function testSkillsEndpoints() {
           method: 'PUT',
           path: `/api/users/me/skills/${skillId}`,
           headers: {
-            'Authorization': `Bearer ${authToken}`
+            'Authorizatio\n: `Bearer ${authToken}`
           }
         }, { ...skillData, level: 'expert' });
 
@@ -510,7 +509,7 @@ async function testSkillsEndpoints() {
           method: 'DELETE',
           path: `/api/users/me/skills/${skillId}`,
           headers: {
-            'Authorization': `Bearer ${authToken}`
+            'Authorizatio\n: `Bearer ${authToken}`
           }
         });
 
@@ -536,7 +535,7 @@ async function testFavoritesEndpoints() {
       method: 'GET',
       path: '/api/users/me/favorites',
       headers: {
-        'Authorization': `Bearer ${authToken}`
+        'Authorizatio\n: `Bearer ${authToken}`
       }
     });
 
@@ -557,7 +556,7 @@ async function testFavoritesEndpoints() {
       method: 'POST',
       path: '/api/users/me/favorites',
       headers: {
-        'Authorization': `Bearer ${authToken}`
+        'Authorizatio\n: `Bearer ${authToken}`
       }
     }, favoriteData);
 
@@ -572,7 +571,7 @@ async function testFavoritesEndpoints() {
           method: 'DELETE',
           path: `/api/users/me/favorites/${favoriteId}`,
           headers: {
-            'Authorization': `Bearer ${authToken}`
+            'Authorizatio\n: `Bearer ${authToken}`
           }
         });
 
@@ -604,7 +603,7 @@ async function testChangePasswordEndpoint() {
       method: 'POST',
       path: '/api/users/me/change-password',
       headers: {
-        'Authorization': `Bearer ${authToken}`
+        'Authorizatio\n: `Bearer ${authToken}`
       }
     }, passwordData);
 
@@ -622,7 +621,7 @@ async function testChangePasswordEndpoint() {
 // Fonction principale
 async function runTests() {
   log('🚀 Démarrage des tests des endpoints utilisateur...', 'bright');
-  log(`📍 URL de base: ${BASE_URL}`, 'cyan');
+  log(`📍 URL de base: ${BASE_URL}`, 'cya\n);
   
   try {
     await testAuthentication();

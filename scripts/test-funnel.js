@@ -3,8 +3,7 @@
 /**
  * Script de test automatisé pour le funnel de conversion
  * Valide que tous les événements de tracking fonctionnent correctement
- */
-
+ *
 const puppeteer = require('puppeteer');
 
 async function testFunnel() {

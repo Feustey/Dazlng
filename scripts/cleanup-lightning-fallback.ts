@@ -3,37 +3,36 @@
 /**
  * Script de nettoyage complet du système Lightning et fallback
  * Supprime toutes les dépendances et services obsolètes
- */
-
+ *
 import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 
 class LightningCleanup {
   private filesToDelete: string[] = [
-    'lib/services/lightning-service.ts',
-    'lib/services/daznode-lightning-service.ts',
-    'lib/services/daznode-wallet-service.ts',
-    'lib/services/invoice-fallback-service.ts',
-    'lib/services/unified-lightning-service.ts',
-    'types/lightning.ts',
-    'lib/validations/lightning.ts',
-    'scripts/test-lightning-migration.ts',
-    'scripts/test-daznode-lightning.ts',
-    'scripts/test-daznode-localhost.ts',
-    'scripts/test-daznode-tor.ts',
-    'scripts/test-daznode-torify.ts',
-    'scripts/test-daznode-wallet.ts',
-    'scripts/test-daznode-api.ts',
-    'scripts/setup-ssh-tunnel.ts',
-    'scripts/test-invoice-fallback.ts',
-    'scripts/diagnostic-lightning-production.ts',
-    'scripts/diagnostic-lightning-simple.ts',
-    'scripts/fix-lightning-production.ts',
-    'scripts/quick-lightning-fix.ts',
-    'scripts/test-lightning-production.ts',
-    'scripts/lightning-jwt-setup.ts',
-    'scripts/test-lightning-jwt.ts',
+    'lib/services/lightning-service.ts'
+    'lib/services/daznode-lightning-service.ts'
+    'lib/services/daznode-wallet-service.ts'
+    'lib/services/invoice-fallback-service.ts'
+    'lib/services/unified-lightning-service.ts'
+    'types/lightning.ts'
+    'lib/validations/lightning.ts'
+    'scripts/test-lightning-migration.ts'
+    'scripts/test-daznode-lightning.ts'
+    'scripts/test-daznode-localhost.ts'
+    'scripts/test-daznode-tor.ts'
+    'scripts/test-daznode-torify.ts'
+    'scripts/test-daznode-wallet.ts'
+    'scripts/test-daznode-api.ts'
+    'scripts/setup-ssh-tunnel.ts'
+    'scripts/test-invoice-fallback.ts'
+    'scripts/diagnostic-lightning-production.ts'
+    'scripts/diagnostic-lightning-simple.ts'
+    'scripts/fix-lightning-production.ts'
+    'scripts/quick-lightning-fix.ts'
+    'scripts/test-lightning-production.ts'
+    'scripts/lightning-jwt-setup.ts'
+    'scripts/test-lightning-jwt.ts'
     'scripts/test-lightning-jwt-simple.ts',
     'LIGHTNING_MIGRATION_v2.md',
     'LIGHTNING_SETUP_GUIDE.md',
@@ -49,7 +48,7 @@ class LightningCleanup {
 
   async run(): Promise<void> {
     console.log('🧹 NETTOYAGE COMPLET SYSTÈME LIGHTNING');
-    console.log('=======================================\n');
+    console.log('=======================================\n);
 
     await this.backupImportantFiles();
     await this.deleteFiles();
@@ -59,7 +58,7 @@ class LightningCleanup {
     await this.cleanupEnvironmentVariables();
     await this.generateReport();
   }
-
+</void>
   private async backupImportantFiles(): Promise<void> {
     console.log('1️⃣ Sauvegarde des fichiers importants...');
     
@@ -69,52 +68,52 @@ class LightningCleanup {
     }
 
     const importantFiles = [
-      'package.json',
-      'next.config.js',
-      'tsconfig.json'
+      'package.jso\n,
+      \next.config.js',
+      'tsconfig.jso\n
     ];
 
     for (const file of importantFiles) {
       if (fs.existsSync(file)) {
         const backupPath = path.join(backupDir, `${file}.backup`);
-        fs.copyFileSync(file, backupPath);
+        fs.copyFileSync(file, backupPath);`
         console.log(`   ✅ ${file} sauvegardé`);
       }
     }
   }
-
+</void>
   private async deleteFiles(): Promise<void> {
-    console.log('\n2️⃣ Suppression des fichiers Lightning...');
+    console.log(\n2️⃣ Suppression des fichiers Lightning...');
     
     let deletedCount = 0;
     for (const file of this.filesToDelete) {
       if (fs.existsSync(file)) {
-        fs.unlinkSync(file);
+        fs.unlinkSync(file);`
         console.log(`   ✅ Supprimé: ${file}`);
         deletedCount++;
-      } else {
+      } else {`
         console.log(`   ⚠️ Non trouvé: ${file}`);
       }
     }
-    
+    `
     console.log(`   📊 ${deletedCount} fichiers supprimés`);
   }
-
+</void>
   private async deleteDirectories(): Promise<void> {
-    console.log('\n3️⃣ Suppression des répertoires...');
+    console.log(\n3️⃣ Suppression des répertoires...');
     
     for (const dir of this.directoriesToDelete) {
       if (fs.existsSync(dir)) {
-        fs.rmSync(dir, { recursive: true, force: true });
+        fs.rmSync(dir, { recursive: true, force: true });`
         console.log(`   ✅ Supprimé: ${dir}`);
       }
     }
   }
-
+</void>
   private async updatePackageJson(): Promise<void> {
-    console.log('\n4️⃣ Mise à jour package.json...');
+    console.log(\n4️⃣ Mise à jour package.json...');
     
-    const packageJsonPath = 'package.json';
+    const packageJsonPath = 'package.jso\n;
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
     
     // Supprimer la dépendance lightning
@@ -150,18 +149,18 @@ class LightningCleanup {
         scriptsRemoved++;
       }
     }
-    
+    `
     console.log(`   ✅ ${scriptsRemoved} scripts Lightning supprimés`);
     
     // Sauvegarder le package.json mis à jour
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
     console.log('   ✅ package.json mis à jour');
   }
-
+</void>
   private async updateScripts(): Promise<void> {
-    console.log('\n5️⃣ Mise à jour des scripts...');
+    console.log(\n5️⃣ Mise à jour des scripts...');
     
-    // Créer le nouveau service API uniquement
+    // Créer le nouveau service API uniquement`
     const newServiceContent = `import { LightningService, CreateInvoiceParams, Invoice, InvoiceStatus } from '@/types/lightning';
 import { logger } from '@/lib/logger';
 
@@ -178,13 +177,12 @@ export class DaznoApiOnlyService implements LightningService {
       logger.warn('⚠️ DAZNODE_API_KEY non configurée');
     }
   }
-
-  private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
-    const url = \`\${this.apiUrl}\${endpoint}\`;
+</void>
+  private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {`
+    const url = \`\${this.apiUrl}\${endpoint}`;
     const headers: HeadersInit = {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    };
+      'Content-Type': 'application/jso\n,
+      ...options?.headers};
 
     if (this.apiKey) {
       headers['X-Api-Key'] = this.apiKey;
@@ -192,24 +190,23 @@ export class DaznoApiOnlyService implements LightningService {
 
     const response = await fetch(url, {
       ...options,
-      headers,
-    });
+      headers});
 
-    if (!response.ok) {
-      throw new Error(\`API Error: \${response.status} - \${response.statusText}\`);
+    if (!response.ok) {`
+      throw new Error(\`API Error: \${response.status} - \${response.statusText}`);
     }
 
     return response.json();
   }
-
+</T>
   async generateInvoice(params: CreateInvoiceParams): Promise<Invoice> {
     logger.info(' Génération facture via api.dazno.de', { amount: params.amount });
-    
+    </Invoice>
     const response = await this.request<Invoice>('/api/v1/lightning/invoices', {
       method: 'POST',
       body: JSON.stringify({
-        amount: params.amount,
-        description: params.description,
+        amount: params.amoun,t,
+        description: params.descriptio,n,
         metadata: params.metadata || {},
         expiry: params.expiry || 3600
       })
@@ -220,18 +217,18 @@ export class DaznoApiOnlyService implements LightningService {
       provider: this.provider
     };
   }
-
+</Invoice>
   async checkInvoiceStatus(paymentHash: string): Promise<InvoiceStatus> {
     logger.info('🔍 Vérification statut via api.dazno.de', { paymentHash });
-    
-    const response = await this.request<InvoiceStatus>(\`/api/v1/lightning/invoices/\${paymentHash}/status\`);
+    `</InvoiceStatus>
+    const response = await this.request<InvoiceStatus>(\`/api/v1/lightning/invoices/\${paymentHash}/status`);
     
     return {
       ...response,
       provider: this.provider
     };
   }
-
+</InvoiceStatus>
   async healthCheck(): Promise<{ isOnline: boolean; provider: string }> {
     try {
       await this.request('/api/v1/lightning/health');
@@ -246,7 +243,7 @@ export class DaznoApiOnlyService implements LightningService {
     paymentHash: string;
     onPaid: () => Promise<void>;
     onExpired: () => void;
-    onError: (error: Error) => void;
+    onError: (error: Error) => void;</void>
   }): Promise<void> {
     logger.info('👀 Watch invoice via api.dazno.de', { paymentHash: params.paymentHash });
     
@@ -275,15 +272,15 @@ export class DaznoApiOnlyService implements LightningService {
 }
 
 export function createDaznoApiOnlyService(): DaznoApiOnlyService {
-  return new DaznoApiOnlyService();
+  return new DaznoApiOnlyService();`
 }`;
 
     fs.writeFileSync('lib/services/dazno-api-only.ts', newServiceContent);
     console.log('   ✅ Nouveau service dazno-api-only.ts créé');
   }
-
+</void>
   private async cleanupEnvironmentVariables(): Promise<void> {
-    console.log('\n6️⃣ Nettoyage des variables d\'environnement...');
+    console.log('\n6️⃣ Nettoyage des variables d'environnement...');
     
     const envVarsToRemove = [
       'LND_TLS_CERT',
@@ -298,20 +295,20 @@ export function createDaznoApiOnlyService(): DaznoApiOnlyService {
     ];
     
     console.log('   📝 Variables à supprimer de .env.local :');
-    envVarsToRemove.forEach(varName => {
+    envVarsToRemove.forEach(varName => {`
       console.log(`      - ${varName}`);
     });
     
-    console.log('   ✅ Variables Lightning identifiées pour suppression');
+    console.log('   ✅ Variables Lightning identifiées pour suppressio\n);
   }
-
+</void>
   private async generateReport(): Promise<void> {
-    console.log('\n📊 RAPPORT DE NETTOYAGE');
+    console.log(\n📊 RAPPORT DE NETTOYAGE');
     console.log('=======================');
     console.log('✅ Nettoyage terminé avec succès !');
     console.log('');
-    console.log('🗑️ Fichiers supprimés :');
-    console.log(`   - ${this.filesToDelete.length} fichiers Lightning`);
+    console.log('🗑️ Fichiers supprimés :');`
+    console.log(`   - ${this.filesToDelete.length} fichiers Lightning`);`
     console.log(`   - ${this.directoriesToDelete.length} répertoires`);
     console.log('');
     console.log('📦 Modifications package.json :');
@@ -323,9 +320,9 @@ export function createDaznoApiOnlyService(): DaznoApiOnlyService {
     console.log('');
     console.log('🔧 Prochaines étapes :');
     console.log('   1. npm install (pour supprimer lightning)');
-    console.log('   2. Mettre à jour les variables d\'environnement');
+    console.log('   2. Mettre à jour les variables d'environnement');
     console.log('   3. Tester les endpoints API');
-    console.log('   4. Redéployer l\'application');
+    console.log('   4. Redéployer l'applicatio\n);
     console.log('');
     console.log(' Architecture simplifiée :');
     console.log('   - Utilise uniquement api.dazno.de');
@@ -336,4 +333,4 @@ export function createDaznoApiOnlyService(): DaznoApiOnlyService {
 
 // Exécution du script
 const cleanup = new LightningCleanup();
-cleanup.run().catch(console.error); 
+cleanup.run().catch(console.error); `</void>

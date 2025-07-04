@@ -1,21 +1,21 @@
 {
-  "totalKeys": 556,
+  "totalKeys": 2839,
   "usedKeys": 21,
-  "unusedKeys": 535,
-  "missingKeys": 408,
-  "coveragePercentage": 3.78,
+  "unusedKeys": 2818,
+  "missingKeys": 374,
+  "coveragePercentage": 0.74,
   "namespaceBreakdown": {
     "metadata": {
-      "total": 19,
+      "total": 33,
       "used": 0,
-      "unused": 19,
+      "unused": 33,
       "missing": 0,
       "coverage": 0
     },
     "common": {
-      "total": 164,
+      "total": 466,
       "used": 0,
-      "unused": 164,
+      "unused": 466,
       "missing": 0,
       "coverage": 0
     },
@@ -27,9 +27,9 @@
       "coverage": 0
     },
     "home": {
-      "total": 130,
+      "total": 374,
       "used": 0,
-      "unused": 130,
+      "unused": 374,
       "missing": 0,
       "coverage": 0
     },
@@ -41,16 +41,16 @@
       "coverage": 0
     },
     "auth": {
-      "total": 36,
+      "total": 49,
       "used": 0,
-      "unused": 36,
+      "unused": 49,
       "missing": 3,
       "coverage": 0
     },
     "dashboard": {
-      "total": 21,
+      "total": 31,
       "used": 0,
-      "unused": 21,
+      "unused": 31,
       "missing": 0,
       "coverage": 0
     },
@@ -69,9 +69,9 @@
       "coverage": 0
     },
     "settings": {
-      "total": 29,
+      "total": 35,
       "used": 0,
-      "unused": 29,
+      "unused": 35,
       "missing": 0,
       "coverage": 0
     },
@@ -90,9 +90,9 @@
       "coverage": 0
     },
     "legal": {
-      "total": 9,
+      "total": 29,
       "used": 0,
-      "unused": 9,
+      "unused": 29,
       "missing": 0,
       "coverage": 0
     },
@@ -104,44 +104,541 @@
       "coverage": 50
     },
     "layout": {
-      "total": 11,
+      "total": 12,
       "used": 0,
-      "unused": 11,
+      "unused": 12,
       "missing": 0,
       "coverage": 0
     },
     "lightning": {
-      "total": 2,
+      "total": 91,
       "used": 0,
-      "unused": 2,
-      "missing": 12,
+      "unused": 91,
+      "missing": 11,
       "coverage": 0
     },
     "checkout": {
+      "total": 71,
+      "used": 0,
+      "unused": 71,
+      "missing": 0,
+      "coverage": 0
+    },
+    "user": {
+      "total": 550,
+      "used": 0,
+      "unused": 550,
+      "missing": 0,
+      "coverage": 0
+    },
+    "components": {
+      "total": 89,
+      "used": 0,
+      "unused": 89,
+      "missing": 0,
+      "coverage": 0
+    },
+    "admin": {
+      "total": 315,
+      "used": 0,
+      "unused": 315,
+      "missing": 2,
+      "coverage": 0
+    },
+    "route": {
+      "total": 9,
+      "used": 0,
+      "unused": 9,
+      "missing": 0,
+      "coverage": 0
+    },
+    "network": {
+      "total": 18,
+      "used": 0,
+      "unused": 18,
+      "missing": 2,
+      "coverage": 0
+    },
+    "ClientHero": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "Features": {
       "total": 3,
       "used": 0,
       "unused": 3,
       "missing": 0,
       "coverage": 0
     },
-    "user": {
+    "Hero": {
+      "total": 4,
+      "used": 0,
+      "unused": 4,
+      "missing": 0,
+      "coverage": 0
+    },
+    "Pricing": {
+      "total": 3,
+      "used": 0,
+      "unused": 3,
+      "missing": 0,
+      "coverage": 0
+    },
+    "useWalletAuth": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "page-old": {
+      "total": 3,
+      "used": 0,
+      "unused": 3,
+      "missing": 0,
+      "coverage": 0
+    },
+    "[plan]": {
+      "total": 4,
+      "used": 0,
+      "unused": 4,
+      "missing": 0,
+      "coverage": 0
+    },
+    "Footer": {
+      "total": 2,
+      "used": 0,
+      "unused": 2,
+      "missing": 0,
+      "coverage": 0
+    },
+    "NodeAnalysisPanel": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "PrioritiesEnhancedPanel": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "PerformanceExample": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "LightningCalculator": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "LiveMetrics": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "NetworkExplorer": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "NetworkRankings": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "MobileOptimized": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "ABTestManager": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "OptimizedHero": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "NodeAnalysis": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "AuthLayout": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "CommunitySection": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "ContactForm": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "CustomHeader": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "DetailedTestimonials": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "FirstStepsGuide": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "FunnelAnalytics": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "HowItWorks": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "LNURLAuthQR": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "LightningPayment": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "ProtonPayment": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "RealMetrics": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "RealTestimonials": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "SocialProof": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "SocialProofSection": {
       "total": 6,
       "used": 0,
       "unused": 6,
       "missing": 0,
       "coverage": 0
     },
-    "components": {
-      "total": 28,
+    "UXOptimizedNavbar": {
+      "total": 1,
       "used": 0,
-      "unused": 28,
+      "unused": 1,
       "missing": 0,
+      "coverage": 0
+    },
+    "VerifiedTechnicalProofs": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "WhyBecomeNodeRunner": {
+      "total": 9,
+      "used": 0,
+      "unused": 9,
+      "missing": 0,
+      "coverage": 0
+    },
+    "api-client": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "api-response": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "dazno-api": {
+      "total": 4,
+      "used": 0,
+      "unused": 4,
+      "missing": 0,
+      "coverage": 0
+    },
+    "useSubscription": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "monitoring": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "mcp-client": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "seo-config": {
+      "total": 9,
+      "used": 0,
+      "unused": 9,
+      "missing": 0,
+      "coverage": 0
+    },
+    "EmailConversionService": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "cross-domain-session": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "dazno-api-only": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "mcp-light-api": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "useDaznoAPI": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "useEmail": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "usePrioritiesEnhanced": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "hooks": {
+      "total": 4,
+      "used": 0,
+      "unused": 4,
+      "missing": 0,
+      "coverage": 0
+    },
+    "lib": {
+      "total": 68,
+      "used": 0,
+      "unused": 68,
+      "missing": 0,
+      "coverage": 0
+    },
+    "optimization": {
+      "total": 2,
+      "used": 0,
+      "unused": 2,
+      "missing": 1,
+      "coverage": 0
+    },
+    "mobile": {
+      "total": 18,
+      "used": 0,
+      "unused": 18,
+      "missing": 0,
+      "coverage": 0
+    },
+    "services": {
+      "total": 88,
+      "used": 0,
+      "unused": 88,
+      "missing": 0,
+      "coverage": 0
+    },
+    "email": {
+      "total": 1,
+      "used": 1,
+      "unused": 0,
+      "missing": 1,
+      "coverage": 100
+    },
+    "t4g": {
+      "total": 73,
+      "used": 0,
+      "unused": 73,
+      "missing": 0,
+      "coverage": 0
+    },
+    "instruments": {
+      "total": 6,
+      "used": 0,
+      "unused": 6,
+      "missing": 0,
+      "coverage": 0
+    },
+    "help": {
+      "total": 6,
+      "used": 0,
+      "unused": 6,
+      "missing": 0,
+      "coverage": 0
+    },
+    "docs": {
+      "total": 24,
+      "used": 0,
+      "unused": 24,
+      "missing": 0,
+      "coverage": 0
+    },
+    "dazpay": {
+      "total": 54,
+      "used": 1,
+      "unused": 53,
+      "missing": 0,
+      "coverage": 1.85
+    },
+    "daznode": {
+      "total": 28,
+      "used": 1,
+      "unused": 27,
+      "missing": 4,
+      "coverage": 3.57
+    },
+    "demo": {
+      "total": 1,
+      "used": 0,
+      "unused": 1,
+      "missing": 0,
+      "coverage": 0
+    },
+    "dazbox": {
+      "total": 46,
+      "used": 0,
+      "unused": 46,
+      "missing": 0,
+      "coverage": 0
+    },
+    "dazflow": {
+      "total": 43,
+      "used": 0,
+      "unused": 43,
+      "missing": 0,
+      "coverage": 0
+    },
+    "contact": {
+      "total": 8,
+      "used": 1,
+      "unused": 7,
+      "missing": 0,
+      "coverage": 12.5
+    },
+    "about": {
+      "total": 11,
+      "used": 0,
+      "unused": 11,
+      "missing": 1,
       "coverage": 0
     }
   },
   "recommendations": [
-    "🧹 Nettoyage recommandé: 535 clés non utilisées (96%)",
-    "🔍 Migration recommandée: 408 chaînes en dur détectées",
+    "🧹 Nettoyage recommandé: 2818 clés non utilisées (99%)",
+    "🔍 Migration recommandée: 374 chaînes en dur détectées",
     "📉 Namespace \"metadata\": faible utilisation (0% de couverture)",
     "📉 Namespace \"common\": faible utilisation (0% de couverture)",
     "📉 Namespace \"navigation\": faible utilisation (0% de couverture)",
@@ -159,6 +656,76 @@
     "📉 Namespace \"lightning\": faible utilisation (0% de couverture)",
     "📉 Namespace \"checkout\": faible utilisation (0% de couverture)",
     "📉 Namespace \"user\": faible utilisation (0% de couverture)",
-    "📉 Namespace \"components\": faible utilisation (0% de couverture)"
+    "📉 Namespace \"components\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"admin\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"route\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"network\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"ClientHero\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"Features\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"Hero\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"Pricing\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"useWalletAuth\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"page-old\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"[plan]\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"Footer\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"NodeAnalysisPanel\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"PrioritiesEnhancedPanel\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"PerformanceExample\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"LightningCalculator\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"LiveMetrics\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"NetworkExplorer\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"NetworkRankings\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"MobileOptimized\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"ABTestManager\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"OptimizedHero\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"NodeAnalysis\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"AuthLayout\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"CommunitySection\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"ContactForm\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"CustomHeader\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"DetailedTestimonials\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"FirstStepsGuide\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"FunnelAnalytics\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"HowItWorks\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"LNURLAuthQR\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"LightningPayment\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"ProtonPayment\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"RealMetrics\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"RealTestimonials\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"SocialProof\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"SocialProofSection\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"UXOptimizedNavbar\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"VerifiedTechnicalProofs\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"WhyBecomeNodeRunner\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"api-client\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"api-response\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"dazno-api\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"useSubscription\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"monitoring\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"mcp-client\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"seo-config\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"EmailConversionService\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"cross-domain-session\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"dazno-api-only\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"mcp-light-api\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"useDaznoAPI\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"useEmail\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"usePrioritiesEnhanced\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"hooks\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"lib\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"optimization\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"mobile\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"services\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"t4g\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"instruments\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"help\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"docs\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"dazpay\": faible utilisation (1.85% de couverture)",
+    "📉 Namespace \"daznode\": faible utilisation (3.57% de couverture)",
+    "📉 Namespace \"demo\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"dazbox\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"dazflow\": faible utilisation (0% de couverture)",
+    "📉 Namespace \"contact\": faible utilisation (12.5% de couverture)",
+    "📉 Namespace \"about\": faible utilisation (0% de couverture)"
   ]
 }

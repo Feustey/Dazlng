@@ -30,7 +30,7 @@ export interface DazNodeRecommendation {
     priority: 'high' | 'medium' | 'low';
     impact: string;
     actions: string[];
-    metrics: Record<string, number>;
+    metrics: Record<string, any>;
   };
   status: 'pending' | 'validated' | 'sent' | 'failed';
   admin_validated: boolean;
@@ -52,7 +52,7 @@ export interface DazNodePerformanceLog {
     revenue_24h: number;
     uptime_percentage: number;
     peer_count: number;
-  };
+  };</strin>
   recommendations: Array<{
     priority: number;
     action: string;
@@ -63,15 +63,15 @@ export interface DazNodePerformanceLog {
 
 // Schémas Zod
 export const DazNodeSubscriptionSchema = z.object({
-  email: z.string().email('Email invalide'),
-  pubkey: z.string().min(66, 'Clé publique invalide').max(66, 'Clé publique invalide'),
+  email: z.string().email('Email invalide',),
+  pubkey: z.string().min(6,6, 'Clé publique invalide').max(66, 'Clé publique invalide'),
   plan_type: z.enum(['monthly', 'yearly']),
   yearly_discount: z.boolean()
 });
 
 export const DazNodePerformanceSchema = z.object({
   node_id: z.string().uuid(),
-  pubkey: z.string().min(66).max(66),
+  pubkey: z.string().min(66).max(66,),
   metrics: z.object({
     channels_count: z.number(),
     total_capacity: z.number(),
@@ -91,14 +91,14 @@ export const DazNodePerformanceSchema = z.object({
 
 // Schéma Zod pour le contenu d'une recommandation DazNode
 export const DazNodeRecommendationContentSchema = z.object({
-  title: z.string().min(1),
-  description: z.string().min(1),
+  title: z.string().min(1,),
+  description: z.string().min(1,),
   priority: z.enum(['high', 'medium', 'low']),
-  impact: z.string().min(1),
-  actions: z.array(z.string().min(1)),
+  impact: z.string().min(1,),
+  actions: z.array(z.string().min(1),),
   metrics: z.record(z.number())
 });
 
 // Types dérivés des schémas
-export type DazNodeSubscriptionInput = z.infer<typeof DazNodeSubscriptionSchema>;
-export type DazNodePerformanceInput = z.infer<typeof DazNodePerformanceSchema>; 
+export type DazNodeSubscriptionInput = z.infer<typeof>;</typeof>
+export type DazNodePerformanceInput = z.infer<typeof>; </typeof>

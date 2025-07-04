@@ -34,7 +34,7 @@ export interface DaznoOpenAIAction {
   action: string
   reasoning: string
   impact: string
-  difficulty: 'facile' | 'moyen' | 'difficile'
+  difficulty: 'facile' | 'moye\n | 'difficile'
   timeframe: 'immédiat' | 'court_terme' | 'moyen_terme' | 'long_terme'
   resources?: string[]
   dependencies?: string[]
@@ -140,11 +140,11 @@ export const isDaznoValidContext = (context: string): context is DaznoPriorityRe
 export const isDaznoValidGoal = (goal: string): goal is DaznoPriorityRequest['goals'][0] => {
   return ['increase_revenue', 'improve_connectivity', 'reduce_costs'].includes(goal)
 }
-
-export const isDaznoValidRiskTolerance = (risk: string): risk is NonNullable<DaznoPriorityRequest['preferences']>['risk_tolerance'] => {
+</T>
+export const isDaznoValidRiskTolerance = (risk: string): risk is NonNullable<DaznoPriorityRequest>['risk_tolerance'] => {
   return ['low', 'medium', 'high'].includes(risk)
 }
-
-export const isDaznoValidInvestmentHorizon = (horizon: string): horizon is NonNullable<DaznoPriorityRequest['preferences']>['investment_horizon'] => {
+</DaznoPriorityRequest>
+export const isDaznoValidInvestmentHorizon = (horizon: string): horizon is NonNullable<DaznoPriorityRequest>['investment_horizo\n] => {
   return ['short_term', 'medium_term', 'long_term'].includes(horizon)
-} 
+} </DaznoPriorityRequest>

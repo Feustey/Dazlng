@@ -1,14 +1,8 @@
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
-import { type NextRequest, NextResponse } from "next/server";
+import { createServerClient } from '@supabase/ssr';
+import { type NextRequest, NextResponse } from 'next/server';
 
-export const createClient = (request: NextRequest) => {
-  const supabaseResponse = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  });
-
-  const supabase = createServerClient(
+export function createSupabaseMiddlewareClient(request: NextRequest) {
+  return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
     {
@@ -16,14 +10,37 @@ export const createClient = (request: NextRequest) => {
         get(name: string) {
           return request.cookies.get(name)?.value;
         },
-        set(name: string, value: string, options?: CookieOptions) {
-          supabaseResponse.cookies.set(name, value, options);
+        set(name: string, value: string, options: any) {
+          request.cookies.set({
+            name,
+            value,
+            ...options,
+          });
+          const response = NextResponse.next({
+            request,
+          });
+          response.cookies.set({
+            name,
+            value,
+            ...options,
+          });
         },
-        remove(name: string, options?: CookieOptions) {
-          supabaseResponse.cookies.set(name, '', { ...options, maxAge: 0 });
+        remove(name: string, options: any) {
+          request.cookies.set({
+            name,
+            value: '',
+            ...options,
+          });
+          const response = NextResponse.next({
+            request,
+          });
+          response.cookies.set({
+            name,
+            value: '',
+            ...options,
+          });
         },
       },
-    },
+    }
   );
-  return supabase;
-};
+}

@@ -8,11 +8,11 @@ export const handleError = (error: unknown): ErrorResponse => {
   if (error instanceof Error) {
     return {
       message: error.message,
-      code: 'INTERNAL_ERROR'
+      code: "INTERNAL_ERROR"
     }
   }
   return {
-    message: 'Une erreur inattendue est survenue',
-    code: 'UNKNOWN_ERROR'
+    message: "Une erreur inattendue est survenue",
+    code: "UNKNOWN_ERROR"'
   }
 }

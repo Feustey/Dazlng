@@ -1,30 +1,30 @@
-import { getSupabaseAdminClient } from '@/lib/supabase';
-import { createDaznoApiOnlyService } from './dazno-api-only';
-import { Invoice, CreateInvoiceParams, InvoiceStatus } from '@/types/lightning';
-import { PaymentLogger } from './payment-logger';
-import { OrderService } from './order-service';
-import { Order } from '@/types/database';
-import { z } from 'zod';
-import { logger } from '@/lib/logger';
+import { getSupabaseAdminClient } from "@/lib/supabase";
+import { createDaznoApiOnlyService } from "./dazno-api-only";
+import { Invoice, CreateInvoiceParams, InvoiceStatus } from "@/types/lightning";
+import { PaymentLogger } from "./payment-logger";
+import { OrderService } from "./order-service";
+import { Order } from "@/types/database";
+import { z } from "zod";
+import { logger } from "@/lib/logger";
 
 // Schéma de validation pour la création d'une commande
 const CreateOrderSchema = z.object({
-  product_type: z.enum(['daznode', 'dazbox', 'dazpay']),
+  product_type: z.enum(["daznode", "dazbox", "dazpay"]),
   amount: z.number().positive(),
   customer: z.object({
     name: z.string(),
     email: z.string().email(),
     address: z.string().optional(),
-    plan: z.enum(['basic', 'premium', 'enterprise']).optional()
+    plan: z.enum(["basic", "premium", "enterprise"]).optional()
   }),
-  plan: z.enum(['basic', 'premium', 'enterprise']).optional(),
-  billing_cycle: z.enum(['monthly', 'yearly']).optional(),
+  plan: z.enum(["basic", "premium", "enterprise"]).optional(),
+  billing_cycle: z.enum(["monthly", "yearly"]).optional(),
   metadata: z.record(z.any()).optional()
 });
 
 export type CreateOrderParams = z.infer<typeof CreateOrderSchema>;
 
-interface _ApiResponse<T> {
+interface ApiResponse<T> {
   success: boolean;
   data: T;
   error?: {
@@ -33,7 +33,7 @@ interface _ApiResponse<T> {
   };
 }
 
-export type PaymentStatus = 'pending' | 'settled' | 'failed' | 'expired';
+export type PaymentStatus = "pending" | "settled" | "failed" | "expired";
 
 export interface PaymentServiceResult {
   success: boolean;
@@ -45,17 +45,17 @@ export interface PaymentServiceResult {
 }
 
 export interface PaymentServiceConfig {
-  provider?: 'daznode';
+  provider?: "daznode";
 }
 
 export class PaymentService {
-  private provider: 'daznode';
+  private provider: "daznode";
   private logger: PaymentLogger | null = null;
   private lightningService = createDaznoApiOnlyService();
   private orderService = new OrderService();
 
   constructor(config?: PaymentServiceConfig) {
-    this.provider = config?.provider || 'daznode';
+    this.provider = config?.provider || "daznode";
     this.logger = new PaymentLogger();
   }
 
@@ -69,13 +69,13 @@ export class PaymentService {
   }> {
     try {
       // Création de la commande
-      const order = await this.orderService?.createOrder(params);
+      const order = await this.orderService.createOrder(params);
       const orderRef = order.id;
 
       // Génération de la facture
       const invoice = await this.createInvoice({
         amount: order.amount,
-        description: `${params.product_type.toUpperCase()} - ${params.plan?.toUpperCase() || 'BASIC'} - ${orderRef}`,
+        description: `${params.product_type.toUpperCase()} - ${params.plan?.toUpperCase() || "BASIC"} - ${orderRef}`,
         metadata: {
           orderId: orderRef,
           productType: params.product_type,
@@ -85,7 +85,7 @@ export class PaymentService {
 
       return { order, invoice, orderRef };
     } catch (error) {
-      console.error('Erreur création commande et facture:', error);
+      console.error("❌ Erreur création commande et facture:", error);
       throw error;
     }
   }
@@ -98,7 +98,7 @@ export class PaymentService {
       const status = await this.lightningService?.checkInvoiceStatus(paymentHash);
       return status as InvoiceStatus;
     } catch (error) {
-      console.error('Erreur vérification facture:', error);
+      console.error("❌ Erreur vérification facture:", error);
       throw error;
     }
   }
@@ -129,32 +129,32 @@ export class PaymentService {
 
           if (attempts >= maxAttempts) {
             clearInterval(watcher);
-            await this.logger?.updatePaymentStatus(params.invoice.paymentHash, 'expired');
+            await this.logger?.updatePaymentStatus(params.invoice.paymentHash, "expired");
             params.onExpired();
             return;
           }
 
-          const { status } = await this.checkInvoiceStatus(params.invoice.paymentHash);
+          const status = await this.checkInvoiceStatus(params.invoice.paymentHash);
 
-          if (status === 'settled') {
+          if (status.status === "settled") {
             clearInterval(watcher);
-            await this.orderService?.markOrderPaid(params.orderId);
-            await this.logger?.updatePaymentStatus(params.invoice.paymentHash, 'settled');
+            await this.orderService.markOrderPaid(params.orderId);
+            await this.logger?.updatePaymentStatus(params.invoice.paymentHash, "settled");
             await params.onPaid();
-          } else if (status === 'expired') {
+          } else if (status.status === "expired") {
             clearInterval(watcher);
-            await this.logger?.updatePaymentStatus(params.invoice.paymentHash, 'expired');
+            await this.logger?.updatePaymentStatus(params.invoice.paymentHash, "expired");
             params.onExpired();
           }
         } catch (error) {
           clearInterval(watcher);
-          await this.logger?.logPaymentError(params.invoice.paymentHash, error instanceof Error ? error : new Error('Erreur inconnue'));
-          params.onError(error instanceof Error ? error : new Error('Erreur inconnue'));
+          await this.logger?.logPaymentError(params.invoice.paymentHash, error instanceof Error ? error : new Error("Erreur inconnue"));
+          params.onError(error instanceof Error ? error : new Error("Erreur inconnue"));
         }
       }, checkInterval);
 
     } catch (error) {
-      console.error('❌ PaymentService - Erreur surveillance facture:', error);
+      console.error("❌ PaymentService - Erreur surveillance facture:", error);
       throw error;
     }
   }
@@ -166,12 +166,12 @@ export class PaymentService {
         payment_hash: invoice.paymentHash,
         amount: invoice.amount,
         description: invoice.description,
-        status: 'pending',
-        metadata: { event: 'invoice_created' }
+        status: "pending",
+        metadata: { event: "invoice_created" }
       });
       return invoice;
     } catch (error) {
-      console.error('Erreur création facture:', error);
+      console.error("❌ Erreur création facture:", error);
       throw error;
     }
   }
@@ -184,18 +184,18 @@ export class PaymentService {
   }): Promise<void> {
     const checkInterval = setInterval(async () => {
       try {
-        const { status } = await this.checkInvoiceStatus(params.paymentHash);
+        const status = await this.checkInvoiceStatus(params.paymentHash);
         
-        if (status === 'settled') {
+        if (status.status === "settled") {
           clearInterval(checkInterval);
           params.onPaid();
-        } else if (status === 'expired') {
+        } else if (status.status === "expired") {
           clearInterval(checkInterval);
           params.onExpired();
         }
       } catch (error) {
         clearInterval(checkInterval);
-        params.onError(error instanceof Error ? error : new Error('Erreur inconnue'));
+        params.onError(error instanceof Error ? error : new Error("Erreur inconnue"));
       }
     }, 5000); // Vérifier toutes les 5 secondes
   }
@@ -210,13 +210,14 @@ export class PaymentService {
         success: true,
         data: status.status
       };
+
     } catch (error) {
-      console.error('Erreur vérification paiement:', error);
+      console.error("❌ Erreur vérification paiement:", error);
       return {
         success: false,
         error: {
-          code: 'PAYMENT_CHECK_ERROR',
-          message: error instanceof Error ? error.message : 'Erreur inconnue'
+          code: "PAYMENT_CHECK_ERROR",
+          message: error instanceof Error ? error.message : "Erreur inconnue"
         }
       };
     }
@@ -224,10 +225,10 @@ export class PaymentService {
 
   async createPayment(orderId: string, amount: number, description: string): Promise<{ success: boolean; paymentHash?: string; error?: string }> {
     try {
-      logger.info('💰 Création paiement', { orderId, amount, provider: this.provider });
+      logger.info("💰 Création paiement", { orderId, amount, provider: this.provider });
 
       // Créer la facture Lightning
-      const invoice = await this.lightningService.generateInvoice({
+      const invoice = await this.lightningService?.generateInvoice({
         amount,
         description,
         metadata: {
@@ -236,70 +237,69 @@ export class PaymentService {
         }
       });
 
-      // Logger le paiement
       if (this.logger) {
         await this.logger.logPayment({
           payment_hash: invoice.paymentHash,
           amount,
           description,
-          status: 'pending',
+          status: "pending",
           metadata: { orderId, provider: this.provider }
         });
       }
 
-      logger.info('✅ Paiement créé avec succès', { paymentHash: invoice.paymentHash });
+      logger.info("✅ Paiement créé avec succès", { paymentHash: invoice.paymentHash });
       return { success: true, paymentHash: invoice.paymentHash };
 
     } catch (error) {
-      logger.error('❌ Erreur création paiement:', error);
+      logger.error("❌ Erreur création paiement:", error);
       return { 
         success: false, 
-        error: error instanceof Error ? error.message : 'Erreur inconnue' 
+        error: error instanceof Error ? error.message : "Erreur inconnue" 
       };
     }
   }
 
   async checkPaymentStatus(paymentHash: string): Promise<{ status: string; orderId?: string }> {
     try {
-      logger.info('🔍 Vérification statut paiement', { paymentHash });
+      logger.info("🔍 Vérification statut paiement", { paymentHash });
 
       const status = await this.lightningService.checkInvoiceStatus(paymentHash);
-      
-      if (status.status === 'settled') {
+
+      if (status.status === "settled") {
         // Logger le paiement réussi
         if (this.logger) {
-          await this.logger.updatePaymentStatus(paymentHash, 'paid' as any);
+          await this.logger.updatePaymentStatus(paymentHash, "paid" as any);
         }
 
-        logger.info('✅ Paiement confirmé', { paymentHash });
-        return { status: 'paid' };
+        logger.info("✅ Paiement confirmé", { paymentHash });
+        return { status: "paid" };
       }
 
       return { status: status.status };
 
     } catch (error) {
-      logger.error('❌ Erreur vérification paiement:', error);
-      return { status: 'error' };
+      logger.error("❌ Erreur vérification paiement:", error);
+      return { status: "error" };
     }
   }
 
-  async getPaymentHistory(orderId: string): Promise<any[]> {
+  async getPaymentHistory(userId: string): Promise<any[]> {
     try {
       const supabase = getSupabaseAdminClient();
-      const { data: payments, error } = await supabase
-        .from('payments')
-        .select('*')
-        .eq('order_id', orderId)
-        .order('created_at', { ascending: false });
+      const { data: payment, error } = await supabase
+        .from("payment_logs")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
 
       if (error) {
-        logger.error('❌ Erreur récupération historique paiements:', error);
+        logger.error("❌ Erreur récupération historique paiements:", error);
         return [];
       }
 
-      return payments || [];
+      return payment || [];
     } catch (error) {
-      logger.error('❌ Erreur historique paiements:', error);
+      logger.error("❌ Erreur récupération historique paiements:", error);
       return [];
     }
   }

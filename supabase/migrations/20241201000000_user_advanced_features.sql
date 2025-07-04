@@ -18,7 +18,7 @@ ALTER TABLE profiles ADD COLUMN IF NOT EXISTS total_transactions INTEGER DEFAULT
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS average_rating DECIMAL(3,2) DEFAULT 0;
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS total_reviews INTEGER DEFAULT 0;
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS completion_rate DECIMAL(5,2) DEFAULT 0;
-ALTER TABLE profiles ADD COLUMN IF NOT EXISTS response_time INTEGER DEFAULT 0; -- en secondes
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS response_time INTEGER DEFAULT 0; -- en secondes;
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS active_days INTEGER DEFAULT 0;
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS referral_count INTEGER DEFAULT 0;
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS last_login_at TIMESTAMP WITH TIME ZONE;
@@ -27,7 +27,7 @@ ALTER TABLE profiles ADD COLUMN IF NOT EXISTS last_login_at TIMESTAMP WITH TIME 
 -- TABLE DES EXPÉRIENCES PROFESSIONNELLES
 -- ============================================================================
 
-CREATE TABLE IF NOT EXISTS user_experiences (
+CREATE TABLE IF NOT EXISTS user_experiences (;
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   title VARCHAR(100) NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS user_experiences (
   is_current BOOLEAN DEFAULT FALSE,
   description TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW();
 );
 
 -- Index pour les performances
@@ -52,7 +52,7 @@ CREATE INDEX IF NOT EXISTS idx_user_experiences_from_date ON user_experiences(fr
 -- TABLE DES COMPÉTENCES
 -- ============================================================================
 
-CREATE TABLE IF NOT EXISTS user_skills (
+CREATE TABLE IF NOT EXISTS user_skills (;
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   name VARCHAR(100) NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS user_skills (
   endorsements INTEGER DEFAULT 0,
   endorsed_by UUID[] DEFAULT '{}',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW();
 );
 
 -- Index pour les performances
@@ -74,7 +74,7 @@ CREATE INDEX IF NOT EXISTS idx_user_skills_level ON user_skills(level);
 -- TABLE DES FAVORIS
 -- ============================================================================
 
-CREATE TABLE IF NOT EXISTS user_favorites (
+CREATE TABLE IF NOT EXISTS user_favorites (;
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   type VARCHAR(20) NOT NULL CHECK (type IN ('service', 'provider', 'benefit')),
@@ -88,14 +88,14 @@ CREATE INDEX IF NOT EXISTS idx_user_favorites_user_id ON user_favorites(user_id)
 CREATE INDEX IF NOT EXISTS idx_user_favorites_type ON user_favorites(type);
 CREATE INDEX IF NOT EXISTS idx_user_favorites_item_id ON user_favorites(item_id);
 
--- Contrainte d'unicité pour éviter les doublons
+-- Contrainte d'unicité pour éviter les doublons'
 CREATE UNIQUE INDEX IF NOT EXISTS idx_user_favorites_unique ON user_favorites(user_id, type, item_id);
 
 -- ============================================================================
--- TABLE DE L'HISTORIQUE DES MOTS DE PASSE
+-- TABLE DE L'HISTORIQUE DES MOTS DE PASSE'
 -- ============================================================================
 
-CREATE TABLE IF NOT EXISTS password_history (
+CREATE TABLE IF NOT EXISTS password_history (;
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   changed_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -114,7 +114,7 @@ CREATE INDEX IF NOT EXISTS idx_password_history_changed_at ON password_history(c
 -- Fonction pour mettre à jour updated_at automatiquement
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
-BEGIN
+BEGIN;
   NEW.updated_at = NOW();
   RETURN NEW;
 END;
@@ -122,11 +122,11 @@ $$ language 'plpgsql';
 
 -- Triggers pour mettre à jour updated_at
 CREATE TRIGGER update_user_experiences_updated_at 
-  BEFORE UPDATE ON user_experiences 
+  BEFORE UPDATE ON user_experiences ;
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_user_skills_updated_at 
-  BEFORE UPDATE ON user_skills 
+  BEFORE UPDATE ON user_skills ;
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- ============================================================================

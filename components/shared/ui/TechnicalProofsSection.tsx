@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
 interface PublicNode {
   alias: string;
@@ -22,38 +22,32 @@ const NodeProofCard: React.FC<PublicNode> = ({
   verifyLinks
 }) => {
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-      <div className="flex items-center justify-between mb-4">
+    <div>
+      <div>
         <h3 className="text-lg font-bold text-gray-900">{alias}</h3>
-        <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-semibold">
+        <span>
           Rank #{ranking}
         </span>
       </div>
       
-      <div className="space-y-3 mb-6">
+      <div>
         <div>
-          <span className="text-sm font-medium text-gray-500">{t('TechnicalProofsSection.capacit')}</span>
+          <span className="text-sm font-medium text-gray-500">Capacité</span>
           <span className="ml-2 font-mono text-gray-900">{capacity}</span>
         </div>
         <div>
-          <span className="text-sm font-medium text-gray-500">{t('TechnicalProofsSection.node_id')}</span>
-          <div className="font-mono text-xs text-gray-600 break-all mt-1">
+          <span className="text-sm font-medium text-gray-500">Node ID</span>
+          <div>
             {nodeId}
           </div>
         </div>
       </div>
       
-      <div className="space-y-2">
-        <p className="text-sm text-gray-600 mb-3">{t('TechnicalProofsSection.vrifier_sur')}</p>
-        <div className="flex flex-wrap gap-2">
+      <div>
+        <p className="text-sm text-gray-600 mb-3">Vérifier sur</p>
+        <div>
           {Object.entries(verifyLinks).map(([platform, url]) => (
-            <a
-              key={platform}
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-medium hover:bg-blue-100 transition-colors"
-            >
+            <a key={platform} href={url} target="_blank" rel="noopener noreferrer">
               🔍 {platform}
             </a>
           ))}
@@ -90,7 +84,7 @@ export const TechnicalProofsSection: React.FC = () => {
     {
       alias: "DazNode-Prod-03",
       nodeId: "03c9d8e7f6g5h4i3j2k1l0m9n8o7p6q5r4s3t2...",
-      capacity: "8.1 BTC", 
+      capacity: "8.1 BTC",
       ranking: "23",
       verifyLinks: {
         "1ML": "https://1ml.com/node/03c9d8e7f6g5h4i3j2k1l0m9n8o7p6q5r4s3t2...",
@@ -101,45 +95,45 @@ export const TechnicalProofsSection: React.FC = () => {
   ];
 
   return (
-    <section className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+    <section>
+      <div>
+        <div>
+          <h2>
             🔍 Preuves Techniques Vérifiables
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p>
             Nos nœuds publics sur le réseau Lightning Network. 
             Toutes les métriques sont vérifiables en temps réel.
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        <div>
           {publicNodes.map((node) => (
-            <NodeProofCard key={node.nodeId} {...node} />
+            <NodeProofCard key={node.alias} {...node} />
           ))}
         </div>
         
-        <div className="text-center">
-          <div className="bg-white rounded-xl shadow-lg p-8 max-w-4xl mx-auto">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+        <div>
+          <div>
+            <h3>
               📊 Métriques Temps Réel
             </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <div className="text-center">
+            <div>
+              <div>
                 <div className="text-3xl font-bold text-blue-600">99.9%</div>
-                <div className="text-sm text-gray-600">{t('TechnicalProofsSection.uptime_moyen')}</div>
+                <div className="text-sm text-gray-600">Uptime moyen</div>
               </div>
-              <div className="text-center">
+              <div>
                 <div className="text-3xl font-bold text-green-600">85%</div>
-                <div className="text-sm text-gray-600">{t('TechnicalProofsSection.forcecloses_vits')}</div>
+                <div className="text-sm text-gray-600">Force-closes évités</div>
               </div>
-              <div className="text-center">
+              <div>
                 <div className="text-3xl font-bold text-purple-600">+40%</div>
-                <div className="text-sm text-gray-600">{t('TechnicalProofsSection.revenus_optimiss')}</div>
+                <div className="text-sm text-gray-600">Revenus optimisés</div>
               </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-orange-600">{t('TechnicalProofsSection.17_btc')}</div>
-                <div className="text-sm text-gray-600">{t('TechnicalProofsSection.capacit_totale')}</div>
+              <div>
+                <div className="text-3xl font-bold text-orange-600">17 BTC</div>
+                <div className="text-sm text-gray-600">Capacité totale</div>
               </div>
             </div>
           </div>

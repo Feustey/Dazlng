@@ -7,17 +7,17 @@ import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 const JWT_SECRET = (process.env.JWT_SECRET ?? "") || 'your-secret-key';
 
-export interface UserWithOrders extends Omit<User, 'password'> {
+export interface User {
+  id: string;
+  email: string;
+  pubkey?: string;
+}
+
+export interface UserWithOrders extends User {
   orders: Array<{
-    order_number: string;
+    id: string;
     amount: number;
-    date: string;
-  }>;
-  subscriptions: Array<{
-    name: string;
-    is_active: boolean;
-    start_date: string;
-    end_date?: string;
+    status: string;
   }>;
 }
 
@@ -73,7 +73,7 @@ export async function loginUser(email: string, password: string): Promise<{ toke
   }
 
   const token = jwt.sign(
-    { id: user.id, email: user.email },
+    { id: user.id, email: user.email, name: user.name },
     JWT_SECRET,
     { expiresIn: '1h' }
   );
@@ -122,9 +122,9 @@ export async function getUserData(userId: string): Promise<UserWithOrders> {
   if (ordersError) throw ordersError;
 
   const orders = (ordersData || []).map((order: OrderResult) => ({
-    order_number: order.id,
+    id: order.id,
     amount: order.amount,
-    date: order.created_at
+    status: order.created_at
   }));
 
   const { data: subscriptionsData, error: subscriptionsError } = await supabase
@@ -135,8 +135,8 @@ export async function getUserData(userId: string): Promise<UserWithOrders> {
       ),
       status,
       start_date,
-      end_date
-    `)
+      end_date`
+    )
     .eq('user_id', userId);
 
   if (subscriptionsError) throw subscriptionsError;
@@ -154,35 +154,79 @@ export async function getUserData(userId: string): Promise<UserWithOrders> {
     name: user.name,
     created_at: user.created_at,
     updated_at: user.updated_at,
-    email_verified: true, // Par défaut car récupéré depuis la base
-    settings: {}, // Objet vide par défaut
+    email_verified: true,
+    settings: {},
     orders,
     subscriptions
   };
 }
 
-export function verifyToken(token: string): { id: string; email: string } {
+export interface AuthToken {
+  userId: string;
+  email: string;
+  pubkey?: string;
+  iat: number;
+  exp: number;
+}
+
+export interface AuthRequest extends NextRequest {
+  user?: User;
+}
+
+export function generateToken(user: User): string {
+  const secret = process.env.JWT_SECRET || 'fallback-secret';
+  return jwt.sign(
+    {
+      userId: user.id,
+      email: user.email,
+      pubkey: user.pubkey,
+    },
+    secret,
+    { expiresIn: '24h' }
+  );
+}
+
+export function verifyToken(token: string): AuthToken | null {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email: string };
-    return decoded;
+    const secret = process.env.JWT_SECRET || 'fallback-secret';
+    return jwt.verify(token, secret) as AuthToken;
   } catch (error) {
-    throw new Error('Token invalide');
+    console.error('Erreur de vérification du token:', error);
+    return null;
   }
 }
 
-export interface AuthToken {
-  token: string;
-  tenant_id: string;
-  expires_at: string;
+export function extractTokenFromRequest(req: NextRequest): string | null {
+  const authHeader = req.headers.get('authorization');
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return null;
+  }
+  return authHeader.substring(7);
 }
 
+export async function authenticateRequest(req: NextRequest): Promise<User | null> {
+  const token = extractTokenFromRequest(req);
+  if (!token) {
+    return null;
+  }
 
+  const authToken = verifyToken(token);
+  if (!authToken) {
+    return null;
+  }
+
+  return {
+    id: authToken.userId,
+    email: authToken.email,
+    pubkey: authToken.pubkey,
+  };
+}
 
 /**
  * Récupère l'utilisateur authentifié à partir d'une requête API
  * Utilise le token Bearer dans l'header Authorization
  */
-export async function getUserFromRequest(req: NextRequest): Promise<AuthUser | null> {
+export async function getUserFromRequest(req: NextRequest): Promise<AuthUser> {
   try {
     const authHeader = req.headers.get('Authorization');
     if (!authHeader?.startsWith('Bearer ')) {
@@ -215,7 +259,7 @@ export async function getUserFromRequest(req: NextRequest): Promise<AuthUser | n
  * Récupère l'utilisateur authentifié côté serveur
  * Utilise les cookies de session
  */
-export async function getUserFromSession(): Promise<AuthUser | null> {
+export async function getUserFromSession(): Promise<AuthUser> {
   try {
     // Utiliser le client serveur public sans cookies
     const supabaseServer = getSupabaseServerPublicClient();
@@ -277,7 +321,7 @@ export async function signOut(): Promise<void> {
 /**
  * Génère un token d'accès pour l'API
  */
-export async function getAccessToken(): Promise<string | null> {
+export async function getAccessToken(): Promise<string> {
   try {
     const { data: { session } } = await getSupabaseAdminClient().auth.getSession();
     return session?.access_token || null;
@@ -293,7 +337,7 @@ export async function getAccessToken(): Promise<string | null> {
  *   const user = requireAuth(req) // lève une erreur 401 si non authentifié
  */
 export function requireAuth(req: import('next/server').NextRequest): { id: string; email: string } {
-  const authHeader = req.headers.get('authorization');
+  const authHeader = req.headers.get('Authorization');
   if (!authHeader?.startsWith('Bearer ')) {
     throw new Error('Token manquant');
   }
@@ -309,13 +353,9 @@ export async function verifyPassword(password: string, hashedPassword: string): 
   return bcrypt.compare(password, hashedPassword);
 }
 
-export function generateToken(user: User): string {
-  return jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1d' });
-}
-
-export async function getCurrentUser(req: NextRequest): Promise<User | null> {
+export async function getCurrentUser(req: NextRequest): Promise<User> {
   try {
-    const token = req.headers.get('authorization')?.replace('Bearer ', '');
+    const token = req.headers.get('Authorization')?.replace('Bearer ', '');
     if (!token) return null;
 
     const { id } = verifyToken(token);
@@ -334,7 +374,7 @@ export async function getCurrentUser(req: NextRequest): Promise<User | null> {
   }
 }
 
-export async function getUserProfile(userId: string): Promise<UserWithOrders | null> {
+export async function getUserProfile(userId: string): Promise<UserWithOrders> {
   const supabase = getSupabaseAdminClient();
   
   try {
@@ -348,9 +388,9 @@ export async function getUserProfile(userId: string): Promise<UserWithOrders | n
     if (userError || !user) return null;
 
     // Récupérer les commandes
-    const { data: orders, error: ordersError } = await supabase
+    const { data: ordersData, error: ordersError } = await supabase
       .from('orders')
-      .select('order_number, amount, created_at')
+      .select('id, amount, created_at')
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .limit(5);
@@ -358,7 +398,7 @@ export async function getUserProfile(userId: string): Promise<UserWithOrders | n
     if (ordersError) throw ordersError;
 
     // Récupérer les abonnements
-    const { data: subscriptions, error: subsError } = await supabase
+    const { data: subscriptionsData, error: subsError } = await supabase
       .from('subscriptions')
       .select('name, is_active, start_date, end_date')
       .eq('user_id', userId)
@@ -369,12 +409,12 @@ export async function getUserProfile(userId: string): Promise<UserWithOrders | n
     // Construire le profil complet
     const userProfile: UserWithOrders = {
       ...user,
-      orders: orders?.map(order => ({
-        order_number: order.order_number,
+      orders: ordersData?.map((order: OrderResult) => ({
+        id: order.id,
         amount: order.amount,
-        date: order.created_at
+        status: order.created_at
       })) || [],
-      subscriptions: subscriptions?.map(sub => ({
+      subscriptions: subscriptionsData?.map(sub => ({
         name: sub.name,
         is_active: sub.is_active,
         start_date: sub.start_date,
@@ -389,7 +429,7 @@ export async function getUserProfile(userId: string): Promise<UserWithOrders | n
   }
 }
 
-export async function updateUserProfile(userId: string, data: Partial<User>): Promise<User | null> {
+export async function updateUserProfile(userId: string, data: Partial<User>): Promise<User> {
   const supabase = getSupabaseAdminClient();
   
   try {

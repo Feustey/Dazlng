@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Image from 'next/image';
-import { useState, useCallback } from 'react';
-import { cn } from '../../../lib/utils';
+import React from "react";
+import Image from "next/image";
+import { useState, useCallback } from "react";
+import { cn } from "../../../lib/utils";
 
 export interface OptimizedImageProps {
   src: string;
@@ -13,11 +13,11 @@ export interface OptimizedImageProps {
   className?: string;
   priority?: boolean;
   quality?: number;
-  placeholder?: 'blur' | 'empty';
+  placeholder?: "blur" | "empty";
   blurDataURL?: string;
   sizes?: string;
   fill?: boolean;
-  loading?: 'lazy' | 'eager';
+  loading?: "lazy" | "eager";
   style?: React.CSSProperties;
   onLoad?: () => void;
   onError?: () => void;
@@ -31,11 +31,11 @@ export function OptimizedImage({
   className,
   priority = false,
   quality = 85,
-  placeholder = 'empty',
+  placeholder = "empty",
   blurDataURL,
   sizes,
   fill = false,
-  loading = 'lazy',
+  loading = "lazy",
   style,
   onLoad,
   onError,
@@ -46,7 +46,7 @@ export function OptimizedImage({
 
   // Générer les sizes par défaut si fill est utilisé mais sizes non fourni
   const defaultSizes = fill && !sizes 
-    ? '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+    ? "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
     : sizes;
 
   // Placeholder blur par défaut si non fourni
@@ -66,74 +66,41 @@ export function OptimizedImage({
   // Affichage d'erreur avec placeholder SVG
   if (hasError) {
     return (
-      <div 
-        className={cn(
-          'flex items-center justify-center bg-gray-50 border border-gray-200 rounded-lg overflow-hidden',
-          className
-        )}
-        style={{ 
-          width: !fill ? width : undefined, 
-          height: !fill ? height : undefined, 
-          ...style 
-        }}
-      >
-        <svg 
-          width={width || 400} 
-          height={height || 300} 
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-full object-cover"
-        >
-          <rect width="100%" height="100%" fill="#f3f4f6"/>
-          <text 
-            x="50%" 
-            y="50%" 
-            textAnchor="middle" 
-            dy=".3em" 
-            fill="#9ca3af" 
-            fontFamily="system-ui, sans-serif" 
-            fontSize="14"
-          >
+      <div className={cn("flex items-center justify-center bg-gray-100", className)}>
+        <svg width={width || 200} height={height || 200} viewBox="0 0 200 200">
+          <rect width="200" height="200" fill="#f3f4f6" />
+          <text x="100" y="100" textAnchor="middle" dy=".3em" fill="#6b7280" fontSize="14">
             Image non disponible
           </text>
         </svg>
       </div>
-  );
+    );
   }
 
   return (
-    <div 
-      className={cn(
-        'relative overflow-hidden',
-        isLoading && 'animate-pulse bg-gray-200',
-        className
-      )}
-      style={!fill ? { width, height } : undefined}
-    >
+    <div className={cn("relative", className)}>
       <Image
         src={src}
         alt={alt}
-        width={fill ? undefined : width}
-        height={fill ? undefined : height}
-        fill={fill}
+        width={width}
+        height={height}
+        className={cn("transition-opacity duration-300", isLoading ? "opacity-0" : "opacity-100")}
         priority={priority}
         quality={quality}
         placeholder={placeholder}
-        blurDataURL={placeholder === 'blur' ? defaultBlurDataURL : undefined}
+        blurDataURL={defaultBlurDataURL}
         sizes={defaultSizes}
-        loading={priority ? 'eager' : loading}
+        fill={fill}
+        loading={loading}
+        style={style}
         onLoad={handleLoad}
         onError={handleError}
-        className={cn(
-          'transition-opacity duration-300 object-cover',
-          isLoading ? 'opacity-0' : 'opacity-100'
-        )}
-        style={style}
         {...props}
       />
       
-      {/* Skeleton loader pendant le chargement */}
+      {/* Skeleton loader pendant le chargement  */}
       {isLoading && (
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-pulse" />
+        <div className="absolute inset-0 bg-gray-200 animate-pulse" />
       )}
     </div>
   );

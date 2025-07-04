@@ -3,11 +3,10 @@
 /**
  * Script de vérification pour confirmer que les onglets de la section /user
  * ne passent plus sous le header global
- */
-
+ *
 const fs = require('fs');
 
-console.log('🔍 Vérification de la correction du layout user...\n');
+console.log('🔍 Vérification de la correction du layout user...\\n);
 
 // Vérifier que les modifications sont bien en place
 const userLayoutPath = 'app/user/layout.tsx';
@@ -27,7 +26,7 @@ try {
     allChecksPass = false;
   }
   
-  if (userLayoutContent.includes('éviter la superposition')) {
+  if (userLayoutContent.includes('éviter la superpositio\n)) {
     console.log('   ✅ Commentaire explicatif présent');
   } else {
     console.log('   ⚠️  Commentaire explicatif manquant');
@@ -55,7 +54,7 @@ try {
   }
   
   // Vérifier la structure de navigation
-  if (userLayoutContent.includes('navItems.map') && userLayoutContent.includes('Dashboard')) {
+  if (userLayoutContent.includes(\navItems.map') && userLayoutContent.includes('Dashboard')) {
     console.log('   ✅ Navigation user préservée');
   } else {
     console.log('   ❌ Navigation user compromise');
@@ -67,7 +66,7 @@ try {
   allChecksPass = false;
 }
 
-console.log('\n' + '='.repeat(60));
+console.log('\\n + '='.repeat(60));
 
 if (allChecksPass) {
   console.log('🎉 Correction validée avec succès !');

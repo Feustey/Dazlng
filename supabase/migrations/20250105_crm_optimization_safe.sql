@@ -14,15 +14,15 @@
 DROP TABLE IF EXISTS public.users CASCADE;
 
 -- 1.2. Optimiser la structure profiles
-ALTER TABLE public.profiles 
+ALTER TABLE public.profiles;
   ALTER COLUMN email SET NOT NULL;
 
--- 1.3. Ajouter contraintes si elles n'existent pas
+-- 1.3. Ajouter contraintes si elles n'existent pas'
 DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'profiles_email_format') THEN
     ALTER TABLE public.profiles 
-    ADD CONSTRAINT profiles_email_format 
+    ADD CONSTRAINT profiles_email_format ;
     CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$');
   END IF;
   
@@ -31,7 +31,7 @@ BEGIN
     ADD CONSTRAINT profiles_pubkey_format 
     CHECK (
       pubkey IS NULL OR 
-      (length(pubkey) = 66 AND pubkey ~ '^[0-9a-fA-F]{66}$')
+      (length(pubkey) = 66 AND pubkey ~ '^[0-9a-fA-F]{66}$');
     );
   END IF;
 END $$;
@@ -55,7 +55,7 @@ CREATE INDEX IF NOT EXISTS idx_orders_created_at ON public.orders(created_at);
 -- 3.1. Fonction pour vérifier les permissions admin
 CREATE OR REPLACE FUNCTION is_admin_user(user_id UUID DEFAULT auth.uid())
 RETURNS BOOLEAN AS $$
-DECLARE
+DECLARE;
     is_admin BOOLEAN := false;
 BEGIN
     SELECT EXISTS (
@@ -93,7 +93,7 @@ BEGIN
         -- Filtre pubkey existante
         CASE WHEN criteria->>'profile'->>'has_pubkey' = 'true' 
              THEN p.pubkey IS NOT NULL 
-             ELSE true END
+             ELSE true END;
     );
 END;
 $$ LANGUAGE plpgsql;
@@ -113,7 +113,7 @@ SELECT
     s.created_at,
     COUNT(sm.customer_id) as member_count
 FROM crm_customer_segments s
-LEFT JOIN crm_customer_segment_members sm ON s.id = sm.segment_id
+LEFT JOIN crm_customer_segment_members sm ON s.id = sm.segment_id;
 GROUP BY s.id, s.name, s.description, s.auto_update, s.created_at;
 
 CREATE UNIQUE INDEX idx_crm_segments_stats_simple_id ON crm_segments_stats_simple(id);
@@ -130,7 +130,7 @@ SELECT
     c.sent_at,
     COUNT(es.id) as total_recipients
 FROM crm_email_campaigns c
-LEFT JOIN crm_email_sends es ON c.id = es.campaign_id
+LEFT JOIN crm_email_sends es ON c.id = es.campaign_id;
 GROUP BY c.id, c.name, c.subject, c.status, c.created_at, c.sent_at;
 
 CREATE UNIQUE INDEX idx_crm_campaigns_stats_simple_id ON crm_campaigns_stats_simple(id);
@@ -155,7 +155,7 @@ CREATE POLICY "Admin access to campaigns simple" ON crm_email_campaigns
 -- 6.1. Fonction pour rafraîchir les vues matérialisées
 CREATE OR REPLACE FUNCTION refresh_crm_simple_views()
 RETURNS TEXT AS $$
-BEGIN
+BEGIN;
     REFRESH MATERIALIZED VIEW crm_segments_stats_simple;
     REFRESH MATERIALIZED VIEW crm_campaigns_stats_simple;
     
@@ -166,7 +166,7 @@ $$ LANGUAGE plpgsql;
 -- 6.2. Trigger pour mise à jour automatique des segments
 CREATE OR REPLACE FUNCTION auto_update_segments_simple()
 RETURNS TRIGGER AS $$
-DECLARE
+DECLARE;
     segment_record RECORD;
 BEGIN
     -- Mettre à jour les segments auto-update
@@ -198,7 +198,7 @@ DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'campaigns_status_valid') THEN
     ALTER TABLE crm_email_campaigns 
-    ADD CONSTRAINT campaigns_status_valid
+    ADD CONSTRAINT campaigns_status_valid;
       CHECK (status IN ('draft', 'scheduled', 'sending', 'sent', 'cancelled'));
   END IF;
 END $$;
@@ -208,7 +208,7 @@ DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'segments_name_not_empty') THEN
     ALTER TABLE crm_customer_segments
-    ADD CONSTRAINT segments_name_not_empty
+    ADD CONSTRAINT segments_name_not_empty;
       CHECK (length(trim(name)) > 0);
   END IF;
 END $$;
@@ -226,7 +226,7 @@ SELECT
     n_distinct,
     correlation
 FROM pg_stats 
-WHERE schemaname = 'public' 
+WHERE schemaname = 'public' ;
 AND tablename LIKE '%crm_%';
 
 -- Fonction de diagnostic simple
@@ -268,7 +268,7 @@ BEGIN
         'Largest Table'::TEXT,
         (SELECT schemaname||'.'||tablename 
          FROM pg_tables t 
-         ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC 
+         ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC ;
          LIMIT 1);
 END;
 $$ LANGUAGE plpgsql;
@@ -292,7 +292,7 @@ BEGIN
     LEFT JOIN pg_stat_user_tables s ON t.table_name = s.relname
     WHERE t.table_schema = 'public' 
     AND (t.table_name LIKE 'crm_%' OR t.table_name IN ('profiles', 'orders'))
-    AND t.table_type = 'BASE TABLE'
+    AND t.table_type = 'BASE TABLE';
     ORDER BY size_mb DESC;
 END;
 $$ LANGUAGE plpgsql;

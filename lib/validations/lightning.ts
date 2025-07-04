@@ -26,4 +26,4 @@ export function validateData<T>(schema: z.ZodSchema<T>, data: unknown): { succes
   } else {
     return { success: false, error: result.error };
   }
-} 
+}

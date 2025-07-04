@@ -2,17 +2,17 @@
 -- TRIGGERS ET NOTIFICATIONS AUTOMATIQUES
 -- ==========================================
 
--- Activer l'extension http pour les webhooks
+-- Activer l'extension http pour les webhooks'
 CREATE EXTENSION IF NOT EXISTS http;
 
 -- Fonction pour envoyer des notifications email automatiques
 CREATE OR REPLACE FUNCTION notify_new_order()
 RETURNS TRIGGER AS $$
-DECLARE
+DECLARE;
     customer_data JSONB;
     webhook_payload JSONB;
 BEGIN
-    -- Construire le payload pour l'email
+    -- Construire le payload pour l'email'
     SELECT jsonb_build_object(
         'order_id', NEW.id,
         'amount', NEW.amount,
@@ -23,13 +23,13 @@ BEGIN
         'created_at', NEW.created_at
     ) INTO webhook_payload;
 
-    -- Appeler l'Edge Function pour l'envoi d'email
+    -- Appeler l'Edge Function pour l'envoi d'email'
     PERFORM http((
         'POST',
         current_setting('app.settings.edge_function_url') || '/functions/v1/send-order-notification',
         ARRAY[http_header('Authorization', 'Bearer ' || current_setting('app.settings.service_role_key'))],
         'application/json',
-        webhook_payload::text
+        webhook_payload::TEXT
     )::http_request);
 
     RETURN NEW;
@@ -40,7 +40,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 DROP TRIGGER IF EXISTS trigger_notify_new_order ON orders;
 CREATE TRIGGER trigger_notify_new_order
     AFTER INSERT ON orders
-    FOR EACH ROW
+    FOR EACH ROW;
     EXECUTE FUNCTION notify_new_order();
 
 -- Fonction pour notifier les changements de statut de commande
@@ -59,7 +59,7 @@ BEGIN
                 'old_status', OLD.payment_status,
                 'new_status', NEW.payment_status,
                 'customer_email', NEW.metadata->>'customer'->>'email'
-            )::text
+            )::TEXT;
         )::http_request);
     END IF;
 
@@ -71,7 +71,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 DROP TRIGGER IF EXISTS trigger_notify_order_status_change ON orders;
 CREATE TRIGGER trigger_notify_order_status_change
     AFTER UPDATE ON orders
-    FOR EACH ROW
+    FOR EACH ROW;
     EXECUTE FUNCTION notify_order_status_change();
 
 -- Configuration des variables

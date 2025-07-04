@@ -1,11 +1,13 @@
-import React from 'react';
+import React from "react";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
 
 const WhyBecomeNodeRunner: React.FC = () => {
+  const { t } = useAdvancedTranslation("home");
+
   const benefits = [
     {
-      icon: "💰",
-      title: "Revenus Passifs",
-      description: "WhyBecomeNodeRunner.whybecomenoderunnerwhybecomeno",
+      title: "Revenus passifs",
+      description: "Générez des revenus passifs en participant au réseau Lightning",
       gradient: "from-green-500 to-emerald-600",
       details: [
         "0.1% à 0.5% de commission sur chaque transaction",
@@ -15,75 +17,54 @@ const WhyBecomeNodeRunner: React.FC = () => {
       ]
     },
     {
-      icon: "🛡️",
-      title: "Contribuer au Réseau",
-      description: "WhyBecomeNodeRunner.whybecomenoderunnerwhybecomeno",
+      title: "Sécurité maximale",
+      description: "Protection avancée contre les risques du Lightning Network",
       gradient: "from-blue-500 to-indigo-600",
       details: [
-        "Renforcez la résilience du Lightning Network",
-        "Aidez à connecter l'écosystème Bitcoin",
-        "Participez à l'adoption mondiale de Bitcoin",
-        "Devenez un acteur de la révolution financière"
+        "Monitoring 24/7 de vos canaux",
+        "Prédiction des force-close",
+        "Alertes intelligentes en temps réel",
+        "Sauvegarde automatique des configurations"
       ]
     },
     {
-      icon: "🚀",
-      title: "Technologie Avancée",
-      description: "WhyBecomeNodeRunner.whybecomenoderunnerwhybecomeno"une infrastructure de pointe",
+      title: "Simplicité totale",
+      description: "Configuration et gestion automatisées par notre IA",
       gradient: "from-purple-500 to-pink-600",
       details: [
-        "IA prédictive pour optimiser les performances",
-        "Monitoring 24/7 automatisé",
-        "Mise à jour automatique des canaux",
-        "Dashboard analytics en temps réel"
-      ]
-    },
-    {
-      icon: "📈",
-      title: "Croissance Continue",
-      description: "WhyBecomeNodeRunner.whybecomenoderunnerwhybecomeno"expansion du Lightning Network",
-      gradient: "from-orange-500 to-red-600",
-      details: [
-        "Adoption croissante de Bitcoin et Lightning",
-        "Nouveaux cas d'usage quotidiennement",
-        "Partenariats avec exchanges majeurs",
-        "ROI moyen de 12% à 25% par an"
+        "Installation en 5 minutes",
+        "Interface intuitive et moderne",
+        "Support technique 24/7",
+        "Formation gratuite incluse"
       ]
     }
   ];
 
   return (
-    <section id="why-become-runner" className="py-20 bg-gradient-to-b from-gray-50 to-white">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Pourquoi devenir opérateur de nœud Bitcoin ?
+    <section className="py-16 bg-white">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            Pourquoi devenir opérateur de nœud Lightning ?
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Découvrez les 4 raisons principales qui poussent des milliers de personnes 
-            à rejoindre la révolution Lightning Network
+            Découvrez les avantages uniques d'exploiter un nœud Lightning avec DazNode
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
-          {benefits.map((benefit: any, index: any) => (
-            <div 
-              key={index}
-              className="group bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
-            >
-              <div className={`bg-gradient-to-r ${benefit.gradient} p-8 text-white`}>
-                <div className="flex items-center mb-4">
-                  <span className="text-4xl mr-4">{benefit.icon}</span>
-                  <h3 className="text-2xl font-bold">{benefit.title}</h3>
-                </div>
-                <p className="text-lg opacity-90">{benefit.description}</p>
+        <div className="grid md:grid-cols-3 gap-8">
+          {benefits.map((benefit, index) => (
+            <div key={index} className="relative overflow-hidden rounded-lg shadow-lg">
+              <div className={`bg-gradient-to-br ${benefit.gradient} p-6 text-white`}>
+                <h3 className="text-2xl font-bold mb-2">{benefit.title}</h3>
+                <p className="text-white/90">{benefit.description}</p>
               </div>
               
-              <div className="p-8">
+              <div className="bg-white p-6">
                 <ul className="space-y-3">
-                  {benefit.details.map((detail: any, detailIndex: any) => (
+                  {benefit.details.map((detail, detailIndex) => (
                     <li key={detailIndex} className="flex items-start">
-                      <span className="text-green-500 mr-3 mt-1">✓</span>
+                      <span className="w-2 h-2 bg-amber-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
                       <span className="text-gray-700">{detail}</span>
                     </li>
                   ))}
@@ -93,25 +74,20 @@ const WhyBecomeNodeRunner: React.FC = () => {
           ))}
         </div>
 
-        {/* Stats rapides */}
-        <div className="mt-16 bg-gradient-to-r from-indigo-600 to-purple-700 rounded-2xl p-8 text-white">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div>
-              <div className="text-3xl font-bold text-yellow-300">847</div>
-              <div className="text-indigo-200">{t('WhyBecomeNodeRunner.node_runners_actifs')}</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-green-300">{t('WhyBecomeNodeRunner.24m')}</div>
-              <div className="text-indigo-200">{t('WhyBecomeNodeRunner.revenus_gnrs')}</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-blue-300">99.9%</div>
-              <div className="text-indigo-200">{t('WhyBecomeNodeRunner.uptime_moyen')}</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-pink-300">24/7</div>
-              <div className="text-indigo-200">{t('WhyBecomeNodeRunner.support_communaut')}</div>
-            </div>
+        <div className="text-center mt-12">
+          <div className="bg-gray-50 rounded-lg p-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              Prêt à commencer votre aventure Lightning ?
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Rejoignez plus de 1000 opérateurs qui génèrent déjà des revenus passifs
+            </p>
+            <a
+              href="/checkout"
+              className="inline-block bg-amber-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors"
+            >
+              Commencer maintenant
+            </a>
           </div>
         </div>
       </div>
@@ -119,4 +95,4 @@ const WhyBecomeNodeRunner: React.FC = () => {
   );
 };
 
-export default WhyBecomeNodeRunner; 
+export default WhyBecomeNodeRunner;

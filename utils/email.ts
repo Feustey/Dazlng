@@ -1,33 +1,16 @@
-// Conditional import pour éviter les erreurs côté client
-const ResendModule = typeof window === 'undefined' ? require('resend') : null;
+import { Resend } from 'resend';
 
-// Lazy initialization pour éviter les erreurs côté client
-let resend: any = null;
+let resendInstance: Resend | null = null;
 
-function getResendInstance(): any {
-  // Vérifier si on est côté serveur
-  if (typeof window !== 'undefined') {
-    throw new Error('L\'envoi d\'email ne peut se faire que côté serveur');
-  }
-
-  if (!resend && ResendModule) {
-    const apiKey = process.env.RESEND_API_KEY ?? "";
+function getResendInstance(): Resend {
+  if (!resendInstance) {
+    const apiKey = process.env.RESEND_API_KEY;
     if (!apiKey) {
-      console.warn('RESEND_API_KEY non définie - utilisation du mode simulation');
-      // Retourner un mock de Resend pour éviter les erreurs
-      return {
-        emails: {
-          send: async () => ({ data: { id: 'mock-email-id' }, error: null })
-        }
-      };
+      throw new Error('RESEND_API_KEY is not configured');
     }
-    resend = new ResendModule.Resend(apiKey);
+    resendInstance = new Resend(apiKey);
   }
-  return resend || {
-    emails: {
-      send: async () => ({ data: { id: 'mock-email-id' }, error: null })
-    }
-  };
+  return resendInstance;
 }
 
 export interface SendEmailParams {
@@ -49,17 +32,17 @@ export interface EmailTemplateParams {
 
 export function generateEmailTemplate({
   title,
-  subtitle = '',
-  username = '',
+  subtitle,
+  username,
   mainContent,
-  detailedContent = '',
-  ctaText = '',
-  ctaLink = ''
+  detailedContent,
+  ctaText,
+  ctaLink
 }: EmailTemplateParams): string {
-  // Template spécialisé pour les codes de connexion
-  if (title.toLowerCase().includes('code de connexion') || mainContent.toLowerCase().includes('code de connexion')) {
+  // Template pour les emails de vérification OTP
+  if (title.toLowerCase().includes('vérification') || title.toLowerCase().includes('code')) {
     return `<!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -69,86 +52,94 @@ export function generateEmailTemplate({
       margin: 0;
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-      min-height: 100vh;
+      background-color: #f3f4f6;
+      line-height: 1.6;
     }
-    .container {
-      max-width: 480px;
-      margin: 40px auto;
-      background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     .header {
       background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-      padding: 32px 24px;
+      padding: 40px 30px;
       text-align: center;
     }
     .logo {
-      max-width: 120px;
+      max-width: 150px;
       height: auto;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
-    .header-title {
+    .header-text {
       color: #ffffff;
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 600;
       margin: 0;
     }
     .content {
-      padding: 32px 24px;
-      text-align: center;
+      padding: 40px 30px;
     }
     .title {
-      font-size: 24px;
+      font-size: 28px;
       font-weight: 700;
-      margin-bottom: 16px;
       color: #1f2937;
+      margin-bottom: 20px;
+      text-align: center;
     }
     .text {
       font-size: 16px;
-      line-height: 1.6;
       color: #4b5563;
-      margin-bottom: 24px;
-    }
-    .code-box {
-      background: #f8fafc;
-      border: 2px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 20px;
-      margin: 24px 0;
-      font-family: 'Courier New', monospace;
-      font-size: 32px;
-      font-weight: bold;
-      letter-spacing: 8px;
-      color: #4f46e5;
+      margin-bottom: 20px;
     }
     .footer {
-      padding: 24px;
+      background-color: #1f2937;
+      padding: 30px;
       text-align: center;
-      background: #f9fafb;
-      border-top: 1px solid #e5e7eb;
     }
-    .footer-text {
+    .footer-links {
+      margin-bottom: 20px;
+    }
+    .footer-link {
+      color: #9ca3af;
+      text-decoration: none;
+      margin: 0 15px;
       font-size: 14px;
+    }
+    .footer-link:hover {
+      color: #d1d5db;
+    }
+    .copyright {
       color: #6b7280;
+      font-size: 12px;
       margin: 0;
+    }
+    @media (max-width: 600px) {
+      .email-container {
+        margin: 0;
+        border-radius: 0;
+      }
+      .content {
+        padding: 30px 20px;
+      }
+      .header {
+        padding: 30px 20px;
+      }
+      .title {
+        font-size: 24px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="email-container">
     <div class="header">
-      <img src="https://dazno.de/assets/images/logo-daznode.svg" alt="DazNode" class="logo" />
-      <p class="header-title">DazNode</p>
+      <img src="https://dazno.de/logo.png" alt="DazNode" class="logo">
+      <p class="header-text">DazNode</p>
     </div>
     <div class="content">
       <h1 class="title">${title}</h1>
-      <p class="text">${mainContent}</p>
-    </div>
-    <div class="footer">
-      <p class="footer-text">
+      <p class="text">
         Ce code expire dans 10 minutes pour votre sécurité.<br>
         L'équipe DazNode
       </p>
@@ -160,7 +151,7 @@ export function generateEmailTemplate({
 
   // Template général pour les autres emails
   return `<!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -288,7 +279,7 @@ export function generateEmailTemplate({
 <body>
   <div class="email-container">
     <div class="header">
-      <img src="https://dazno.de/assets/images/logo-daznode.svg" alt="DazNode" class="logo">
+      <img src="https://dazno.de/logo.png" alt="DazNode" class="logo">
       <p class="header-text">DazNode</p>
     </div>
     <div class="content">
@@ -316,7 +307,7 @@ export function generateEmailTemplate({
 export async function sendEmail({ to, subject, html, from }: SendEmailParams): Promise<{ id: string } | null> {
   // Vérifier si on est côté serveur
   if (typeof window !== 'undefined') {
-    throw new Error('L\'envoi d\'email ne peut se faire que côté serveur');
+    throw new Error("L'envoi d'email ne peut se faire que côté serveur");
   }
 
   let finalHtml = html;
@@ -333,18 +324,18 @@ export async function sendEmail({ to, subject, html, from }: SendEmailParams): P
       from: from || 'contact@dazno.de',
       to,
       subject,
-      html: finalHtml,
+      html: finalHtml
     });
     
     if (error) {
       console.error('Erreur Resend:', error);
-      throw new Error('Échec de l\'envoi de l\'email: ' + JSON.stringify(error));
+      throw new Error("Échec de l'envoi de l'email: " + JSON.stringify(error));
     }
     
     console.log('Email envoyé avec succès:', { to, subject });
     return data;
   } catch (error) {
-    console.error('Erreur lors de l\'envoi d\'email:', error);
-    throw new Error('Échec de l\'envoi de l\'email: ' + (error instanceof Error ? error.message : String(error)));
+    console.error("Erreur lors de l'envoi d'email:", error);
+    throw new Error("Échec de l'envoi de l'email: " + (error instanceof Error ? error.message : String(error)));
   }
 }

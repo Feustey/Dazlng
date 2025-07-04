@@ -38,4 +38,4 @@ export interface InvoiceStatus {
   metadata?: Record<string, any>;
 }
 
-export type PaymentStatus = 'pending' | 'settled' | 'failed' | 'expired'; 
+export type PaymentStatus = 'pending' | 'settled' | 'failed' | 'expired';

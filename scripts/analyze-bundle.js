@@ -2,14 +2,14 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-console.log('🔍 Analyse du bundle DazNode...\n');
+console.log('🔍 Analyse du bundle DazNode...\\n);
 
 // 1. Build avec analyse
 console.log('📦 Construction du projet...');
 try {
   process.env.ANALYZE = 'true';
-  execSync('npm run build', { stdio: 'inherit' });
-  console.log('✅ Build terminé\n');
+  execSync(\npm run build', { stdio: 'inherit' });
+  console.log('✅ Build terminé\\n);
 } catch (error) {
   console.error('❌ Erreur build:', error.message);
   process.exit(1);
@@ -20,7 +20,7 @@ const buildDir = path.join(process.cwd(), '.next');
 const staticDir = path.join(buildDir, 'static', 'chunks');
 
 if (fs.existsSync(staticDir)) {
-  console.log('📊 Tailles des chunks JavaScript:\n');
+  console.log('📊 Tailles des chunks JavaScript:\\n);
   
   const files = fs.readdirSync(staticDir)
     .filter(file => file.endsWith('.js'))
@@ -75,7 +75,7 @@ if (fs.existsSync(staticDir)) {
 // 3. Analyse des CSS
 const cssDir = path.join(buildDir, 'static', 'css');
 if (fs.existsSync(cssDir)) {
-  console.log('\n🎨 Tailles des fichiers CSS:\n');
+  console.log('\n🎨 Tailles des fichiers CSS:\\n);
   
   const cssFiles = fs.readdirSync(cssDir)
     .filter(file => file.endsWith('.css'))
@@ -103,7 +103,7 @@ if (fs.existsSync(cssDir)) {
 // 4. Analyse des dépendances lourdes
 console.log('\n📚 Analyse des dépendances...');
 try {
-  const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
+  const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.jso\n), 'utf8'));
   const dependencies = packageJson.dependencies || {};
   
   // Dépendances potentiellement lourdes
@@ -111,9 +111,9 @@ try {
     '@mui/material',
     '@emotion/react',
     '@emotion/styled',
-    'framer-motion',
+    'framer-motio\n,
     'recharts',
-    'react-admin',
+    'react-admi\n,
     'aos'
   ];
 
@@ -130,8 +130,8 @@ try {
 
   // Vérification des dépendances redondantes
   const redundantChecks = [
-    { deps: ['@mui/material', '@emotion/react', '@emotion/styled'], name: 'Material-UI/Emotion' },
-    { deps: ['aos', 'framer-motion'], name: 'Animations' },
+    { deps: ['@mui/material', '@emotion/react', '@emotion/styled'], name: 'Material-UI/Emotio\n },
+    { deps: ['aos', 'framer-motio\n], name: 'Animations' },
     { deps: ['recharts', 'chart.js'], name: 'Charts' }
   ];
 
@@ -143,11 +143,11 @@ try {
   });
 
 } catch (error) {
-  console.log('❌ Impossible de lire package.json');
+  console.log('❌ Impossible de lire package.jso\n);
 }
 
 // 5. Recommandations
-console.log('\n💡 Recommandations d\'optimisation:\n');
+console.log('\n💡 Recommandations d\'optimisation:\\n);
 
 const recommendations = [
   {
@@ -181,7 +181,7 @@ const recommendations = [
     category: '🎨 CSS',
     items: [
       'Purge CSS inutilisé avec Tailwind',
-      'Minification avancée en production',
+      'Minification avancée en productio\n,
       'Combinaison des fichiers CSS similaires',
       'Animations CSS au lieu de JavaScript quand possible'
     ]

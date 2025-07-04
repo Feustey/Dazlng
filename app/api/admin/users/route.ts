@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseAdminClient } from '@/lib/supabase';
-import { withAdminAuth, handleApiError } from '@/lib/api-utils';
-import { ErrorCodes } from '@/types/database';
-import { z } from 'zod';
+import { getSupabaseAdminClient } from "@/lib/supabase";
+import { withAdminAuth, handleApiError } from "@/lib/api-utils";
+import { ErrorCodes } from "@/types/database";
+import { z } from "zod";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 // Schéma de validation pour les paramètres de requête
 const querySchema = z.object({
   page: z.coerce.number().min(1).default(1),
   limit: z.coerce.number().min(1).max(100).default(20),
   search: z.string().optional(),
-  sort: z.string().regex(/^[a-zA-Z_]+:(asc|desc)$/).default('created_at:desc')
+  sort: z.string().regex(/^[a-zA-Z_]+:(asc|desc)$/).default("created_at:desc")
 });
 
 // GET /api/admin/users - Liste tous les utilisateurs avec pagination et filtres
@@ -33,11 +33,11 @@ export async function GET(req: NextRequest): Promise<Response> {
       }
 
       const { page, limit, search, sort } = result.data;
-      const [field, order] = sort.split(':');
+      const [field, order] = sort.split(":");
 
       // Construction de la requête
       let query = getSupabaseAdminClient()
-        .from('profiles')
+        .from("profiles")
         .select(`
           id,
           email,
@@ -55,8 +55,8 @@ export async function GET(req: NextRequest): Promise<Response> {
             status,
             plan_id
           )
-        `, { count: 'exact' })
-        .order(field, { ascending: order === 'asc' })
+        `, { count: "exact" })
+        .order(field, { ascending: order === "asc" })
         .range((page - 1) * limit, page * limit - 1);
 
       // Appliquer la recherche si spécifiée
@@ -72,10 +72,10 @@ export async function GET(req: NextRequest): Promise<Response> {
       const enrichedUsers = await Promise.all((data || []).map(async (user: any) => {
         // Récupérer le total dépensé
         const { data: ordersData } = await getSupabaseAdminClient()
-          .from('orders')
-          .select('amount')
-          .eq('user_id', user.id)
-          .eq('payment_status', 'paid');
+          .from("orders")
+          .select("amount")
+          .eq("user_id", user.id)
+          .eq("payment_status", "paid");
 
         const totalSpent = ordersData?.reduce((sum: any, order: any) => sum + (order.amount || 0), 0) || 0;
 
@@ -83,7 +83,7 @@ export async function GET(req: NextRequest): Promise<Response> {
           ...user,
           ordersCount: user.orders?.length || 0,
           totalSpent,
-          subscriptionStatus: user.subscriptions?.[0]?.status || 'free'
+          subscriptionStatus: user.subscriptions?.[0]?.status || "free"
         };
       }));
 

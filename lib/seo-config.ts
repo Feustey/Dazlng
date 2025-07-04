@@ -1,106 +1,106 @@
 export const seoConfig = {
   // Configuration de base
-  baseUrl: process.env.NODE_ENV === 'production' 
-    ? 'https://dazno.de' 
-    : 'http://localhost:3000',
+  baseUrl: process.env.NODE_ENV === "production"
+    ? "https://dazno.de"
+    : "http://localhost:3000",
   
   // Métadonnées par défaut
   defaultMetadata: {
-    title: 'DazNode | Solutions Lightning Network pour tous',
-    description: "seo-config.seoconfigseoconfigdaznode_simp"accès au réseau Lightning avec des solutions clés en main. Nœuds personnels, services de paiement et IA dédiée pour particuliers et professionnels.',
-    keywords: ['lightning network', 'bitcoin', 'daznode', 'dazbox', 'dazpay', 'paiement crypto', 'nœud lightning', 'finance décentralisée'],
-    authors: [{ name: 'DazNode' }],
-    creator: 'DazNode',
-    publisher: 'DazNode',
-    robots: 'index, follow',
+    title: "DazNode | Solutions Lightning Network pour tous",
+    description: "Accès au réseau Lightning avec des solutions clés en main. Nœuds personnels, services de paiement et IA dédiée pour particuliers et professionnels.",
+    keywords: ["lightning network", "bitcoin", "daznode", "dazbox", "dazpay", "paiement crypto", "nœud lightning", "finance décentralisée"],
+    authors: [{ name: "DazNode" }],
+    creator: "DazNode",
+    publisher: "DazNode",
+    robots: "index, follow"
   },
   
   // Métadonnées par page
   pageMetadata: {
-    '/': {
-      title: 'DazNode | Solutions Lightning Network pour tous',
-      description: "seo-config.seoconfigseoconfigdaznode_simp"accès au réseau Lightning avec des solutions clés en main. Nœuds personnels, services de paiement et IA dédiée.',
-      keywords: ['lightning network', 'bitcoin', 'daznode', 'solutions lightning', 'finance décentralisée'],
+    "/": {
+      title: "DazNode | Solutions Lightning Network pour tous",
+      description: "Accès au réseau Lightning avec des solutions clés en main. Nœuds personnels, services de paiement et IA dédiée.",
+      keywords: ["lightning network", "bitcoin", "daznode", "solutions lightning", "finance décentralisée"]
     },
-    '/daznode': {
-      title: 'DazNode | Nœud Lightning Personnel',
-      description: "seo-config.seoconfigseoconfigcrez_et_grez",
-      keywords: ['nœud lightning', 'lightning node', 'bitcoin node', 'daznode', 'lightning network'],
+    "/daznode": {
+      title: "DazNode | Nœud Lightning Personnel",
+      description: "Créez et gérez votre propre nœud Lightning Network avec notre solution clé en main.",
+      keywords: ["nœud lightning", "lightning node", "bitcoin node", "daznode", "lightning network"]
     },
-    '/dazbox': {
-      title: 'DazBox | Matériel Lightning Network',
-      description: "seo-config.seoconfigseoconfigmatriel_spci",
-      keywords: ['hardware lightning', 'matériel bitcoin', 'dazbox', 'lightning hardware', 'node equipment'],
+    "/dazbox": {
+      title: "DazBox | Matériel Lightning Network",
+      description: "Matériel spécialisé pour le réseau Lightning Network. Solutions hardware optimisées.",
+      keywords: ["hardware lightning", "matériel bitcoin", "dazbox", "lightning hardware", "node equipment"]
     },
-    '/dazpay': {
-      title: 'DazPay | Paiements Lightning Network',
-      description: "seo-config.seoconfigseoconfigacceptez_les",
-      keywords: ['paiement lightning', 'bitcoin payment', 'dazpay', 'crypto payment', 'lightning payments'],
+    "/dazpay": {
+      title: "DazPay | Paiements Lightning Network",
+      description: "Acceptez les paiements Lightning Network sur votre site web ou application.",
+      keywords: ["paiement lightning", "bitcoin payment", "dazpay", "crypto payment", "lightning payments"]
     },
-    '/dazflow': {
-      title: 'DazFlow Index | Analyse Lightning Network',
-      description: "seo-config.seoconfigseoconfigindex_d"analyse avancée pour optimiser vos performances Lightning Network. IA dédiée et métriques temps réel.',
-      keywords: ['dazflow', 'lightning analytics', 'lightning index', 'network analysis', 'lightning optimization'],
+    "/dazflow": {
+      title: "DazFlow Index | Analyse Lightning Network",
+      description: "Index et analyse avancée pour optimiser vos performances Lightning Network. IA dédiée et métriques temps réel.",
+      keywords: ["dazflow", "lightning analytics", "lightning index", "network analysis", "lightning optimization"]
     },
-    '/network': {
-      title: 'Lightning Network | Explorer et Analyse',
-      description: "seo-config.seoconfigseoconfigexplorez_le_",
-      keywords: ['lightning network', 'network explorer', 'bitcoin network', 'lightning stats', 'network analysis'],
+    "/network": {
+      title: "Lightning Network | Explorer et Analyse",
+      description: "Explorez et analysez le réseau Lightning Network en temps réel.",
+      keywords: ["lightning network", "network explorer", "bitcoin network", "lightning stats", "network analysis"]
     },
-    '/about': {
-      title: 'À propos | DazNode',
-      description: "seo-config.seoconfigseoconfigdcouvrez_l"équipe DazNode et notre mission de démocratiser l\'accès au réseau Lightning Network.',
-      keywords: ['daznode team', 'about daznode', 'lightning network company', 'bitcoin company'],
+    "/about": {
+      title: "À propos | DazNode",
+      description: "Découvrez l'équipe DazNode et notre mission de démocratiser l'accès au réseau Lightning Network.",
+      keywords: ["daznode team", "about daznode", "lightning network company", "bitcoin company"]
     },
-    '/contact': {
-      title: 'Contact | DazNode',
-      description: "seo-config.seoconfigseoconfigcontactez_l"équipe DazNode pour toute question sur nos solutions Lightning Network.',
-      keywords: ['contact daznode', 'support lightning', 'daznode contact', 'lightning support'],
+    "/contact": {
+      title: "Contact | DazNode",
+      description: "Contactez l'équipe DazNode pour toute question sur nos solutions Lightning Network.",
+      keywords: ["contact daznode", "support lightning", "daznode contact", "lightning support"]
     },
-    '/help': {
-      title: 'Aide et Support | DazNode',
-      description: "seo-config.seoconfigseoconfigcentre_d"aide et support pour toutes nos solutions Lightning Network. FAQ et guides détaillés.',
-      keywords: ['aide daznode', 'support lightning', 'faq lightning', 'lightning help', 'daznode support'],
+    "/help": {
+      title: "Aide et Support | DazNode",
+      description: "Centre d'aide et support pour toutes nos solutions Lightning Network. FAQ et guides détaillés.",
+      keywords: ["aide daznode", "support lightning", "faq lightning", "lightning help", "daznode support"]
     },
-    '/register': {
-      title: 'Inscription | DazNode',
-      description: "seo-config.seoconfigseoconfigcrez_votre_c",
-      keywords: ['inscription daznode', 'créer compte', 'signup lightning', 'daznode register'],
-    },
+    "/register": {
+      title: "Inscription | DazNode",
+      description: "Créez votre compte DazNode et accédez à toutes nos solutions Lightning Network.",
+      keywords: ["inscription daznode", "créer compte", "signup lightning", "daznode register"]
+    }
   },
   
   // Structure de données pour le sitemap
   sitemapStructure: {
     main: [
-      { path: '/', priority: 1.0, changefreq: 'daily' },
-      { path: '/fr', priority: 1.0, changefreq: 'daily' },
-      { path: '/en', priority: 1.0, changefreq: 'daily' },
+      { path: "/", priority: 1.0, changefreq: "daily" },
+      { path: "/fr", priority: 1.0, changefreq: "daily" },
+      { path: "/en", priority: 1.0, changefreq: "daily" },
     ],
     products: [
-      { path: '/daznode', priority: 0.9, changefreq: 'weekly' },
-      { path: '/dazbox', priority: 0.9, changefreq: 'weekly' },
-      { path: '/dazpay', priority: 0.9, changefreq: 'weekly' },
-      { path: '/dazflow', priority: 0.8, changefreq: 'weekly' },
+      { path: "/daznode", priority: 0.9, changefreq: "weekly" },
+      { path: "/dazbox", priority: 0.9, changefreq: "weekly" },
+      { path: "/dazpay", priority: 0.9, changefreq: "weekly" },
+      { path: "/dazflow", priority: 0.8, changefreq: "weekly" },
     ],
     info: [
-      { path: '/about', priority: 0.7, changefreq: 'monthly' },
-      { path: '/contact', priority: 0.6, changefreq: 'monthly' },
-      { path: '/help', priority: 0.6, changefreq: 'monthly' },
-      { path: '/terms', priority: 0.3, changefreq: 'yearly' },
+      { path: "/about", priority: 0.7, changefreq: "monthly" },
+      { path: "/contact", priority: 0.6, changefreq: "monthly" },
+      { path: "/help", priority: 0.6, changefreq: "monthly" },
+      { path: "/terms", priority: 0.3, changefreq: "yearly" },
     ],
     auth: [
-      { path: '/register', priority: 0.8, changefreq: 'monthly' },
-      { path: '/account', priority: 0.5, changefreq: 'monthly' },
+      { path: "/register", priority: 0.8, changefreq: "monthly" },
+      { path: "/account", priority: 0.5, changefreq: "monthly" },
     ],
     network: [
-      { path: '/network', priority: 0.8, changefreq: 'daily' },
-      { path: '/network/explorer', priority: 0.7, changefreq: 'daily' },
-      { path: '/network/mcp-analysis', priority: 0.7, changefreq: 'daily' },
-      { path: '/instruments', priority: 0.6, changefreq: 'weekly' },
+      { path: "/network", priority: 0.8, changefreq: "daily" },
+      { path: "/network/explorer", priority: 0.7, changefreq: "daily" },
+      { path: "/network/mcp-analysis", priority: 0.7, changefreq: "daily" },
+      { path: "/instruments", priority: 0.6, changefreq: "weekly" },
     ],
     special: [
-      { path: '/token-for-good', priority: 0.6, changefreq: 'monthly' },
-      { path: '/demo', priority: 0.5, changefreq: 'monthly' },
+      { path: "/token-for-good", priority: 0.6, changefreq: "monthly" },
+      { path: "/demo", priority: 0.5, changefreq: "monthly" },
     ]
   }
 };
@@ -113,4 +113,4 @@ export function getPageMetadata(pathname: string) {
 // Fonction utilitaire pour générer l'URL canonique
 export function getCanonicalUrl(pathname: string) {
   return `${seoConfig.baseUrl}${pathname}`;
-} 
+}

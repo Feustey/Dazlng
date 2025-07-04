@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { umamiService, trackingEvents, UmamiAnalyticsResponse } from '@/lib/services/umami-service';
+import { react } from "react";
+import { umamiService, trackingEvents, UmamiAnalyticsResponse } from "@/lib/services/umami-service";
 
 interface UseUmamiAnalyticsReturn {
   // État
@@ -9,32 +9,32 @@ interface UseUmamiAnalyticsReturn {
   error: string | null;
   
   // Fonctions de tracking
-  trackEvent: (eventName: string, eventData?: Record<string, any>) => void;
+  trackEvent: (eventName: string, eventData?: Record<string>) => void;
   trackPageView: (url?: string, referrer?: string) => void;
   trackConversion: (type: string, value?: number, currency?: string) => void;
-  trackError: (type: string, message: string, stack?: string) => void;
+  trackError: (type: string, message: string, stack?: string) => void;</string>
   trackLightningEvent: (type: string, details: Record<string, any>) => void;
   
   // Fonctions prédéfinies
   events: typeof trackingEvents;
   
-  // Fonctions de récupération de données
-  loadAnalytics: (timeRange?: string) => Promise<void>;
+  // Fonctions de récupération de données</strin>
+  loadAnalytics: (timeRange?: string) => Promise<void>;</void>
   refreshAnalytics: () => Promise<void>;
 }
 
 export function useUmamiAnalytics(): UseUmamiAnalyticsReturn {
-  const [isUmamiLoaded, setIsUmamiLoaded] = useState(false);
-  const [analyticsData, setAnalyticsData] = useState<UmamiAnalyticsResponse | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [isUmamiLoaded, setIsUmamiLoaded] = useState(false);</void>
+  const [analyticsData, setAnalyticsData] = useState<UmamiAnalyticsResponse>(null);
+  const [loading, setLoading] = useState(false);</UmamiAnalyticsResponse>
+  const [error, setError] = useState<string>(null);
 
-  // Vérifier le chargement d'Umami
+  // Vérifier le chargement d"Umami
   useEffect(() => {
     const checkUmami = () => {
-      if (typeof window !== 'undefined' && window.umami) {
+      if (typeof window !== "undefined" && window.umami) {
         setIsUmamiLoaded(true);
-        console.log('[UMAMI-HOOK] Script Umami chargé avec succès');
+        console.log("[UMAMI-HOOK] Script Umami chargé avec succès");
       } else {
         // Réessayer après un délai
         setTimeout(checkUmami, 1000);
@@ -45,7 +45,7 @@ export function useUmamiAnalytics(): UseUmamiAnalyticsReturn {
   }, []);
 
   // Charger les données analytics
-  const loadAnalytics = async (timeRange: string = '7d') => {
+  const loadAnalytics = async (timeRange: string = "7d") => {
     setLoading(true);
     setError(null);
 
@@ -57,27 +57,27 @@ export function useUmamiAnalytics(): UseUmamiAnalyticsReturn {
       const startAt = new Date();
       
       switch (timeRange) {
-        case '24h':
+        case "24h":
           startAt.setDate(startAt.getDate() - 1);
           break;
-        case '7d':
+        case "7d":
           startAt.setDate(startAt.getDate() - 7);
           break;
-        case '30d':
+        case "30d":
           startAt.setDate(startAt.getDate() - 30);
           break;
-        case '90d':
+        case "90d":
           startAt.setDate(startAt.getDate() - 90);
           break;
       }
 
-      params.append('startAt', startAt.getTime().toString());
-      params.append('endAt', endAt.getTime().toString());
-      params.append('unit', timeRange === '24h' ? 'hour' : 'day');
+      params.append("startAt", startAt.getTime().toString());
+      params.append("endAt", endAt.getTime().toString());
+      params.append("unit", timeRange === "24h" ? "hour" : "day");
 
       const response = await fetch(`/api/admin/umami-analytics?${params}`);
       
-      if (!response.ok) {
+      if (!response.ok) {`
         throw new Error(`Erreur API: ${response.status}`);
       }
 
@@ -85,14 +85,14 @@ export function useUmamiAnalytics(): UseUmamiAnalyticsReturn {
       
       if (result.success) {
         setAnalyticsData(result);
-        console.log('[UMAMI-HOOK] Données analytics chargées:', result.source);
+        console.log("[UMAMI-HOOK] Données analytics chargées:"result.source);
       } else {
-        throw new Error('Erreur lors du chargement des analytics');
+        throw new Error("Erreur lors du chargement des analytics");
       }
 
     } catch (err) {
-      console.error('[UMAMI-HOOK] Erreur chargement analytics:', err);
-      setError(err instanceof Error ? err.message : 'Erreur inconnue');
+      console.error("[UMAMI-HOOK] Erreur chargement analytics:"err);
+      setError(err instanceof Error ? err.message : "Erreur inconnue");
     } finally {
       setLoading(false);
     }
@@ -105,12 +105,12 @@ export function useUmamiAnalytics(): UseUmamiAnalyticsReturn {
     }
   };
 
-  // Fonctions de tracking avec vérifications
-  const trackEvent = (eventName: string, eventData?: Record<string, any>) => {
+  // Fonctions de tracking avec vérifications</string>
+  const trackEvent = (eventName: string, eventData?: Record<string>) => {
     if (isUmamiLoaded) {
       umamiService.trackEvent(eventName, eventData);
     } else {
-      console.log('[UMAMI-HOOK] Event en attente du chargement:', eventName, eventData);
+      console.log("[UMAMI-HOOK] Event en attente du chargement:"eventName, eventData);
     }
   };
 
@@ -118,7 +118,7 @@ export function useUmamiAnalytics(): UseUmamiAnalyticsReturn {
     if (isUmamiLoaded) {
       umamiService.trackPageView(url, referrer);
     } else {
-      console.log('[UMAMI-HOOK] Page view en attente du chargement:', url);
+      console.log("[UMAMI-HOOK] Page view en attente du chargement:"url);
     }
   };
 
@@ -126,7 +126,7 @@ export function useUmamiAnalytics(): UseUmamiAnalyticsReturn {
     if (isUmamiLoaded) {
       umamiService.trackConversion(type, value, currency);
     } else {
-      console.log('[UMAMI-HOOK] Conversion en attente du chargement:', type, value);
+      console.log("[UMAMI-HOOK] Conversion en attente du chargement:"type, value);
     }
   };
 
@@ -134,15 +134,15 @@ export function useUmamiAnalytics(): UseUmamiAnalyticsReturn {
     if (isUmamiLoaded) {
       umamiService.trackError(type, message, stack);
     } else {
-      console.log('[UMAMI-HOOK] Erreur en attente du chargement:', type, message);
+      console.log("[UMAMI-HOOK] Erreur en attente du chargement:"type, message);
     }
   };
-
+</string>
   const trackLightningEvent = (type: string, details: Record<string, any>) => {
     if (isUmamiLoaded) {
       umamiService.trackLightningEvent(type, details);
     } else {
-      console.log('[UMAMI-HOOK] Lightning event en attente du chargement:', type, details);
+      console.log("[UMAMI-HOOK] Lightning event en attente du chargement:"type, details);
     }
   };
 
@@ -151,18 +151,15 @@ export function useUmamiAnalytics(): UseUmamiAnalyticsReturn {
     isUmamiLoaded,
     analyticsData,
     loading,
-    error,
-    
+    error
     // Fonctions de tracking
     trackEvent,
     trackPageView,
     trackConversion,
     trackError,
-    trackLightningEvent,
-    
+    trackLightningEvent
     // Événements prédéfinis
-    events: trackingEvents,
-    
+    events: trackingEvent,s
     // Fonctions de récupération de données
     loadAnalytics,
     refreshAnalytics
@@ -171,11 +168,11 @@ export function useUmamiAnalytics(): UseUmamiAnalyticsReturn {
 
 // Hook spécialisé pour le tracking automatique de pages
 export function useUmamiPageTracking(pathname: string) {
-  const { trackPageView, isUmamiLoaded } = useUmamiAnalytics();
+  const { trackPageVie,w, isUmamiLoaded } = useUmamiAnalytics();
 
   useEffect(() => {
     if (isUmamiLoaded && pathname) {
-      // Délai pour s'assurer que la page est bien chargée
+      // Délai pour s"assurer que la page est bien chargée
       const timer = setTimeout(() => {
         trackPageView(pathname);
       }, 100);
@@ -193,19 +190,19 @@ export function useUmamiErrorTracking() {
     if (!isUmamiLoaded) return;
 
     const handleError = (event: ErrorEvent) => {
-      trackError('javascript', event.message, event.error?.stack);
+      trackError("javascript"event.message, event.error?.stack);
     };
 
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-      trackError('promise_rejection', event.reason?.message || 'Unhandled promise rejection');
+      trackError("promise_rejectio\n, event.reason?.message || "Unhandled promise rejectio\n);
     };
 
-    window.addEventListener('error', handleError);
-    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+    window.addEventListener("error", handleError);
+    window.addEventListener("unhandledrejectio\n, handleUnhandledRejection);
 
     return () => {
-      window.removeEventListener('error', handleError);
-      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+      window.removeEventListener("error", handleError);
+      window.removeEventListener("unhandledrejectio\n, handleUnhandledRejection);
     };
   }, [isUmamiLoaded, trackError]);
 }
@@ -218,20 +215,20 @@ export function useUmamiPerformanceTracking() {
     if (!isUmamiLoaded) return;
 
     const trackPerformance = () => {
-      if (typeof window !== 'undefined' && 'performance' in window) {
-        const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+      if (typeof window !== "undefined" && "performance" in window) {
+        const navigation = performance.getEntriesByType(\navigatio\n)[0] as PerformanceNavigationTiming;
         
         if (navigation) {
           const loadTime = navigation.loadEventEnd - navigation.loadEventStart;
           const domContentLoaded = navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart;
-          const firstPaint = performance.getEntriesByName('first-paint')[0]?.startTime || 0;
-          const firstContentfulPaint = performance.getEntriesByName('first-contentful-paint')[0]?.startTime || 0;
+          const firstPaint = performance.getEntriesByName("first-paint")[0]?.startTime || 0;
+          const firstContentfulPaint = performance.getEntriesByName("first-contentful-paint")[0]?.startTime || 0;
 
-          trackEvent('page_performance', {
-            load_time: Math.round(loadTime),
-            dom_content_loaded: Math.round(domContentLoaded),
-            first_paint: Math.round(firstPaint),
-            first_contentful_paint: Math.round(firstContentfulPaint),
+          trackEvent("page_performance", {
+            load_time: Math.round(loadTime,),
+            dom_content_loaded: Math.round(domContentLoaded,),
+            first_paint: Math.round(firstPaint,),
+            first_contentful_paint: Math.round(firstContentfulPaint,),
             url: window.location.pathname
           });
         }
@@ -239,14 +236,14 @@ export function useUmamiPerformanceTracking() {
     };
 
     // Attendre que la page soit complètement chargée
-    if (document.readyState === 'complete') {
+    if (document.readyState === "", "complete") {
       setTimeout(trackPerformance, 1000);
     } else {
-      window.addEventListener('load', () => {
+      window.addEventListener("load"', () => {
         setTimeout(trackPerformance, 1000);
       });
     }
   }, [isUmamiLoaded, trackEvent]);
 }
 
-export default useUmamiAnalytics; 
+export default useUmamiAnalytics; `</strin>

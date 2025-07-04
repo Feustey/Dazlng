@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { z } from 'zod'
-import { getSupabaseServerPublicClient } from '@/lib/supabase'
+import { NextRequest, NextResponse } from "next/server"
+import { z } from "zod"
+import { getSupabaseServerPublicClient } from "@/lib/supabase"
 
 const VerifyCodeSchema = z.object({
   email: z.string().email(),
@@ -17,8 +17,8 @@ export async function POST(req: NextRequest): Promise<Response> {
       return NextResponse.json({
         success: false,
         error: {
-          code: 'VALIDATION_ERROR',
-          message: 'Données invalides',
+          code: "VALIDATION_ERROR",
+          message: "Données invalides",
           details: parsed.error.flatten()
         }
       }, { status: 400 })
@@ -30,26 +30,26 @@ export async function POST(req: NextRequest): Promise<Response> {
     const { data, error: verifyError } = await supabase.auth.verifyOtp({
       email: parsed.data.email,
       token: parsed.data.code,
-      type: 'email',
+      type: "email"
     })
 
     if (verifyError) {
-      console.error('[VERIFY-CODE] Erreur Supabase:', verifyError)
+      console.error("[VERIFY-CODE] Erreur Supabase:", verifyError)
       return NextResponse.json({
         success: false,
         error: {
-          code: 'VERIFICATION_ERROR',
-          message: 'Code invalide ou expiré'
+          code: "VERIFICATION_ERROR",
+          message: "Code invalide ou expiré"
         }
       }, { status: 400 })
     }
 
-    console.log('[VERIFY-CODE] Code vérifié avec succès pour:', parsed.data.email)
+    console.log("[VERIFY-CODE] Code vérifié avec succès pour:", parsed.data.email)
 
     return NextResponse.json({
       success: true,
       data: { 
-        message: 'Code vérifié avec succès',
+        message: "Code vérifié avec succès",
         user: data.user 
       }
     })
@@ -59,8 +59,8 @@ export async function POST(req: NextRequest): Promise<Response> {
     return NextResponse.json({
       success: false,
       error: {
-        code: 'INTERNAL_ERROR',
-        message: 'Erreur serveur'
+        code: "INTERNAL_ERROR",
+        message: "Erreur serveur"
       }
     }, { status: 500 })
   }

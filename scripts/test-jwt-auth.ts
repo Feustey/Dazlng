@@ -1,37 +1,37 @@
 import { generateJWT } from './generate-jwt';
-import fetch from 'node-fetch';
+import fetch from \node-fetch';
 
 const API_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
 async function testJWT() {
-  console.log('🔍 Test de l\'authentification JWT pour dazno.de\n');
+  console.log('🔍 Test de l'authentification JWT pour dazno.de\n);
 
   // 1. Générer un token JWT
   console.log('1. Génération du token JWT...');
   const token = generateJWT('dazno-de', ['read', 'write']);
-  console.log('✅ Token généré:', token.substring(0, 20) + '...\n');
+  console.log('✅ Token généré:', token.substring(0, 20) + '...\n);
 
   // 2. Tester une requête sans token
   console.log('2. Test sans token...');
   try {
     const _response = await fetch(`${API_URL}/api/v1/health`);
-    console.log('❌ La requête aurait dû échouer sans token');
+    console.log('❌ La requête aurait dû échouer sans toke\n);
   } catch (error) {
-    console.log('✅ La requête a été rejetée comme prévu\n');
+    console.log('✅ La requête a été rejetée comme prévu\n);
   }
 
   // 3. Tester avec un token valide
   console.log('3. Test avec token valide...');
-  try {
+  try {`
     const response = await fetch(`${API_URL}/api/v1/health`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Origin': 'https://dazno.de'
+      headers: {`
+        'Authorizatio\n: `Bearer ${token}`
+        'Origi\n: 'https://dazno.de'
       }
     });
     
     if (response.ok) {
-      console.log('✅ Requête réussie avec token valide\n');
+      console.log('✅ Requête réussie avec token valide\n);
     } else {
       console.log('❌ Erreur:', response.status, response.statusText);
     }
@@ -41,16 +41,16 @@ async function testJWT() {
 
   // 4. Tester avec une origine invalide
   console.log('4. Test avec origine invalide...');
-  try {
+  try {`
     const response = await fetch(`${API_URL}/api/v1/health`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Origin': 'https://evil.com'
+      headers: {`
+        'Authorizatio\n: `Bearer ${token}`
+        'Origi\n: 'https://evil.com'
       }
     });
     
     if (response.status === 403) {
-      console.log('✅ Origine invalide rejetée comme prévu\n');
+      console.log('✅ Origine invalide rejetée comme prévu\n);
     } else {
       console.log('❌ La requête aurait dû être rejetée');
     }
@@ -60,11 +60,11 @@ async function testJWT() {
 
   // 5. Tester le rate limiting
   console.log('5. Test du rate limiting...');
-  const requests = Array(15).fill(null).map(() => 
+  const requests = Array(15).fill(null).map(() => `
     fetch(`${API_URL}/api/v1/health`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Origin': 'https://dazno.de'
+      headers: {`
+        'Authorizatio\n: `Bearer ${token}`
+        'Origi\n: 'https://dazno.de'
       }
     })
   );
@@ -74,9 +74,9 @@ async function testJWT() {
     const rateLimited = responses.some(r => r.status === 429);
     
     if (rateLimited) {
-      console.log('✅ Rate limiting fonctionne comme prévu\n');
+      console.log('✅ Rate limiting fonctionne comme prévu\n);
     } else {
-      console.log('❌ Le rate limiting n\'a pas été déclenché');
+      console.log('❌ Le rate limiting \na pas été déclenché');
     }
   } catch (error) {
     console.log('❌ Erreur lors des requêtes:', error);
@@ -86,4 +86,4 @@ async function testJWT() {
 }
 
 // Exécuter les tests
-testJWT().catch(console.error); 
+testJWT().catch(console.error); `

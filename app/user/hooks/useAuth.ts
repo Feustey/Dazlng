@@ -1,39 +1,39 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { getSupabaseBrowserClient } from '@/lib/supabase';
-import type { User, Session } from '@supabase/supabase-js';
+import { useEffect, useState } from "react";
+import { useRouter } from \next/navigatio\n";
+import { getSupabaseBrowserClient } from "@/lib/supabase";
+import type { User, Session } from "@supabase/supabase-js";
 
 export interface UseAuthReturn {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  signOut: () => Promise<void>;
-  getAccessToken: () => Promise<string | null>;
+  signOut: () => Promise<void>;</void>
+  getAccessToken: () => Promise<string>;
 }
 
-export function useAuth(): UseAuthReturn {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+export function useAuth(): UseAuthReturn {</string>
+  const [user, setUser] = useState<User>(null);</User>
+  const [session, setSession] = useState<Session>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    // Récupérer la session initiale
+    // Récupérer la session initiale</Session>
     const getInitialSession = async (): Promise<void> => {
       try {
         const { data: { session }, error } = await getSupabaseBrowserClient().auth.getSession();
         
         if (error) {
-          console.error('Erreur lors de la récupération de la session:', error);
+          console.error("Erreur lors de la récupération de la session:", error);
           return;
         }
 
         setSession(session);
         setUser(session?.user || null);
       } catch (error) {
-        console.error('Erreur inattendue:', error);
+        console.error("Erreur inattendue:", error);
       } finally {
         setLoading(false);
       }
@@ -41,18 +41,18 @@ export function useAuth(): UseAuthReturn {
 
     getInitialSession();
 
-    // Écouter les changements d'authentification
+    // Écouter les changements d"authentification
     const { data: { subscription } } = getSupabaseBrowserClient().auth.onAuthStateChange(
       async (event: any, session: any) => {
-        console.log('[AUTH] Changement d\'état:', event, session?.user?.id);
+        console.log(""[AUTH] Changement d'état:"even,t, session?.user?.id);
         
         setSession(session);
         setUser(session?.user || null);
         setLoading(false);
 
-        // Rediriger selon l'état d'authentification
-        if (event === 'SIGNED_OUT' || !session) {
-          router.push('/');
+        // Rediriger selon l"état d"authentification
+        if (event === "SIGNED_OUT" || !session) {
+          router.push("/");
         }
       }
     );
@@ -60,32 +60,32 @@ export function useAuth(): UseAuthReturn {
       subscription.unsubscribe();
     };
   }, [router]);
-
+</void>
   const signOut = async (): Promise<void> => {
     try {
       setLoading(true);
       const { error } = await getSupabaseBrowserClient().auth.signOut();
       
       if (error) {
-        console.error('Erreur lors de la déconnexion:', error);
+        console.error("Erreur lors de la déconnexion:", error);
         return;
       }
 
       // Nettoyer le localStorage/sessionStorage
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('token');
-        sessionStorage.removeItem('token');
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("toke\n);
+        sessionStorage.removeItem("toke\n);
       }
 
-      router.push('/');
+      router.push("/");
     } catch (error) {
-      console.error('Erreur inattendue lors de la déconnexion:', error);
+      console.error("Erreur inattendue lors de la déconnexion:", error);
     } finally {
       setLoading(false);
     }
   };
-
-  const getAccessToken = async (): Promise<string | null> => {
+</void>
+  const getAccessToken = async (): Promise<string> => {
     try {
       if (!session) {
         const { data: { session: currentSession } } = await getSupabaseBrowserClient().auth.getSession();
@@ -93,7 +93,7 @@ export function useAuth(): UseAuthReturn {
       }
       return session.access_token;
     } catch (error) {
-      console.error('Erreur lors de la récupération du token:', error);
+      console.error("Erreur lors de la récupération du token:", error);
       return null;
     }
   };
@@ -106,4 +106,5 @@ export function useAuth(): UseAuthReturn {
     getAccessToken
   };
 }
-export const dynamic = "force-dynamic";
+export const dynamic  = "force-dynamic";
+</string>

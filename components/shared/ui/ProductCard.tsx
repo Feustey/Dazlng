@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import Card from "./Card";
 import GradientTitle from "./GradientTitle";
 
@@ -14,31 +14,26 @@ export interface ProductCardProps {
   bonusFeatures?: Feature[];
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ title, subtitle, price, features, bonusFeatures }) => {
-  return (
-    <Card>
+const ProductCard: React.FC<ProductCardProps> = ({title, subtitle, price, features, bonusFeatures}) => {
+  return (</ProductCardProps>
+    <Card></Card>
       <GradientTitle>{title}</GradientTitle>
       <p className="text-gray-600 mb-4">{subtitle}</p>
-      <div className="bg-[#facc15] text-[#232336] font-semibold rounded px-5 py-2 mb-4 text-lg text-center">
-        {price}
+      <div>
+        {price}</div>
       </div>
-      <ul className="space-y-3">
-        {features.map((feature: any, index: any) => (
-          <li key={index} className="flex items-start">
+      <ul>
+        {features.map((feature: any index: any) => (</ul>
+          <li></li>
             <span className="text-green-500">{feature.text}</span>
-          </li>
-        ))}
+          </li>)}
       </ul>
       {bonusFeatures && (
-        <div className="bg-gray-100 rounded p-4 mt-4">
-          <span className="font-bold mb-2 text-[#C026D3] block text-center">{t('ProductCard.bonus_inclus_')}</span>
-          {bonusFeatures.map((feature: any, index: any) => (
-            <span key={index} className="mb-1 text-gray-700 text-sm block text-center">{feature.text}</span>
-          ))}
+        <div></div>
+          <span className="font-bold mb-2 text-[#C026D3] block text-center">{t("ProductCard.bonus_inclus_")}</span>
+          {bonusFeatures.map((feature: any index: any) => (<span key={index} className="mb-1 text-gray-700 text-sm block text-center">{feature.text}</span>)}
         </div>
       )}
-    </Card>
-  );
-};
+    </Card>);;
 
 export default ProductCard; 

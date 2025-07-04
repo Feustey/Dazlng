@@ -1,4 +1,4 @@
-import { getSupabaseAdminClient } from '../supabase';
+import { getSupabaseAdminClient } from "@/lib/supabase";
 
 export enum InvoiceStatus {
   pending = "pending",
@@ -6,31 +6,32 @@ export enum InvoiceStatus {
   expired = "expired",
   failed = "failed"
 }
-import { Database } from '@/types/database';
-import { z } from 'zod';
-import { PaymentService } from './payment-service';
-import { EmailService } from './email-service';
+
+import { Database } from "@/types/database";
+import { z } from "zod";
+import { PaymentService } from "./payment-service";
+import { EmailService } from "./email-service";
 
 // Schéma de validation pour la création d'une commande
 const CreateOrderSchema = z.object({
-  product_type: z.enum(['daznode', 'dazbox', 'dazpay']),
+  product_type: z.enum(["daznode", "dazbox", "dazpay"]),
   amount: z.number().positive(),
   customer: z.object({
     name: z.string(),
     email: z.string().email(),
     address: z.string().optional(),
-    plan: z.enum(['basic', 'premium', 'enterprise']).optional()
+    plan: z.enum(["basic", "premium", "enterprise"]).optional()
   }),
-  plan: z.enum(['basic', 'premium', 'enterprise']).optional(),
-  billing_cycle: z.enum(['monthly', 'yearly']).optional(),
+  plan: z.enum(["basic", "premium", "enterprise"]).optional(),
+  billing_cycle: z.enum(["monthly", "yearly"]).optional(),
   metadata: z.record(z.any()).optional()
 });
 
 export type CreateOrderParams = z.infer<typeof CreateOrderSchema>;
 
 export class OrderService {
-  private paymentService;
-  private emailService;
+  private paymentService: PaymentService;
+  private emailService: EmailService;
 
   constructor() {
     this.paymentService = new PaymentService();
@@ -49,11 +50,11 @@ export class OrderService {
 
       // 2. Création de la commande dans la base de données
       const { data: order, error } = await supabase
-        .from('orders')
+        .from("orders")
         .insert({
           product_type: validatedParams.product_type,
           amount: validatedParams.amount,
-          payment_method: 'lightning',
+          payment_method: "lightning",
           payment_status: InvoiceStatus.pending,
           metadata: {
             customer: validatedParams.customer,
@@ -66,11 +67,11 @@ export class OrderService {
         .single();
 
       if (error) throw error;
-      if (!order) throw new Error('Erreur lors de la création de la commande');
+      if (!order) throw new Error("Erreur lors de la création de la commande");
 
       return order;
     } catch (error) {
-      console.error('❌ OrderService - Erreur création commande:', error);
+      console.error("❌ OrderService - Erreur création commande:", error);
       throw error;
     }
   }
@@ -78,23 +79,23 @@ export class OrderService {
   /**
    * Met à jour une commande
    */
-  async updateOrder(orderId: string, updates: Partial<Database['public']['Tables']['orders']['Update']>) {
+  async updateOrder(orderId: string, updates: Partial<Database>) {
     try {
       const supabase = getSupabaseAdminClient();
       
       const { data: order, error } = await supabase
-        .from('orders')
+        .from("orders")
         .update(updates)
-        .eq('id', orderId)
+        .eq("id", orderId)
         .select()
         .single();
 
       if (error) throw error;
-      if (!order) throw new Error('Commande non trouvée');
+      if (!order) throw new Error("Commande non trouvée");
 
       return order;
     } catch (error) {
-      console.error('❌ OrderService - Erreur mise à jour commande:', error);
+      console.error("❌ OrderService - Erreur mise à jour commande:", error);
       throw error;
     }
   }
@@ -108,22 +109,22 @@ export class OrderService {
       
       // 1. Mise à jour du statut
       const { data: order, error } = await supabase
-        .from('orders')
+        .from("orders")
         .update({
-          payment_status: 'paid',
+          payment_status: "paid",
           updated_at: new Date().toISOString()
         })
-        .eq('id', orderId)
+        .eq("id", orderId)
         .select()
         .single();
 
       if (error) throw error;
-      if (!order) throw new Error('Commande non trouvée');
+      if (!order) throw new Error("Commande non trouvée");
 
       // 2. Si c'est une commande DazBox, envoyer un email détaillé
-      if (order.product_type === 'dazbox') {
+      if (order.product_type === "dazbox") {
         const metadata = order.metadata as any;
-        await (this ?? Promise.reject(new Error("this is null"))).emailService?.sendDazBoxOrderConfirmation({
+        await this.emailService?.sendDazBoxOrderConfirmation({
           to: metadata.customer.email,
           orderRef: order.order_ref || order.id.substring(0, 8),
           customerName: `${metadata.customer.firstName} ${metadata.customer.lastName}`,
@@ -133,11 +134,11 @@ export class OrderService {
             price: order.amount,
             plan: metadata.plan
           },
-          estimatedDelivery: '5-7 jours ouvrés'
+          estimatedDelivery: "5-7 jours ouvrés"
         });
 
         // Email interne pour le suivi
-        await (this ?? Promise.reject(new Error("this is null"))).emailService?.sendInternalDazBoxNotification({
+        await this.emailService?.sendInternalDazBoxNotification({
           orderRef: order.order_ref || order.id.substring(0, 8),
           customerDetails: {
             name: `${metadata.customer.firstName} ${metadata.customer.lastName}`,
@@ -154,7 +155,7 @@ export class OrderService {
 
       return order;
     } catch (error) {
-      console.error('❌ OrderService - Erreur marquage commande payée:', error);
+      console.error("❌ OrderService - Erreur marquage commande payée:", error);
       throw error;
     }
   }
@@ -167,15 +168,15 @@ export class OrderService {
       const supabase = getSupabaseAdminClient();
       
       const { data: order, error } = await supabase
-        .from('orders')
+        .from("orders")
         .select()
-        .eq('id', orderId)
+        .eq("id", orderId)
         .single();
 
       if (error) throw error;
       return order;
     } catch (error) {
-      console.error('❌ OrderService - Erreur récupération commande:', error);
+      console.error("❌ OrderService - Erreur récupération commande:", error);
       throw error;
     }
   }
@@ -188,36 +189,15 @@ export class OrderService {
       const supabase = getSupabaseAdminClient();
       
       const { data: order, error } = await supabase
-        .from('orders')
+        .from("orders")
         .select()
-        .eq('payment_hash', paymentHash)
+        .eq("payment_hash", paymentHash)
         .single();
 
       if (error) throw error;
       return order;
     } catch (error) {
-      console.error('❌ OrderService - Erreur récupération commande par hash:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Récupère les commandes d'un utilisateur
-   */
-  async getUserOrders(userId: string) {
-    try {
-      const supabase = getSupabaseAdminClient();
-      
-      const { data: orders, error } = await supabase
-        .from('orders')
-        .select()
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      return orders;
-    } catch (error) {
-      console.error('❌ OrderService - Erreur récupération commandes utilisateur:', error);
+      console.error("❌ OrderService - Erreur récupération commande par hash:", error);
       throw error;
     }
   }

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseAdminClient } from '@/lib/supabase';
+import { getSupabaseAdminClient } from "@/lib/supabase";
 import { experienceSchema, validateData } from "@/lib/validations";
 import { ApiResponse, ErrorCodes } from "@/types/database";
 import { handleApiError } from "@/lib/api-utils";
@@ -22,7 +22,7 @@ export async function PUT(
   try {
     const user = await getUserFromRequest(req);
     if (!user) {
-      return NextResponse.json<ApiResponse<null>>({
+      return NextResponse.json<ApiResponse<any>>({
         success: false,
         error: {
           code: ErrorCodes.UNAUTHORIZED,
@@ -35,12 +35,12 @@ export async function PUT(
     const validation = validateData(experienceSchema, body);
 
     if (!validation.success) {
-      return NextResponse.json<ApiResponse<null>>({
+      return NextResponse.json<ApiResponse<any>>({
         success: false,
         error: {
           code: ErrorCodes.VALIDATION_ERROR,
           message: "Données invalides",
-          details: validation.error.details
+          details: validation.error.errors
         }
       }, { status: 400 });
     }
@@ -54,7 +54,7 @@ export async function PUT(
       .single();
 
     if (checkError || !existingExperience) {
-      return NextResponse.json<ApiResponse<null>>({
+      return NextResponse.json<ApiResponse<any>>({
         success: false,
         error: {
           code: ErrorCodes.NOT_FOUND,
@@ -103,7 +103,7 @@ export async function DELETE(
   try {
     const user = await getUserFromRequest(req);
     if (!user) {
-      return NextResponse.json<ApiResponse<null>>({
+      return NextResponse.json<ApiResponse<any>>({
         success: false,
         error: {
           code: ErrorCodes.UNAUTHORIZED,
@@ -121,7 +121,7 @@ export async function DELETE(
       .single();
 
     if (checkError || !existingExperience) {
-      return NextResponse.json<ApiResponse<null>>({
+      return NextResponse.json<ApiResponse<any>>({
         success: false,
         error: {
           code: ErrorCodes.NOT_FOUND,

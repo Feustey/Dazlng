@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { withAdmin } from '@/lib/middleware';
-import type { User as SupabaseUser } from '@supabase/supabase-js';
+import { withAdmin } from "@/lib/middleware";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 
-const DAZNO_API_BASE_URL = (process.env.DAZNO_API_BASE_URL ?? "") || "https://api.dazno.de";
+const DAZNO_API_BASE_URL = process.env.DAZNO_API_BASE_URL ?? "https://api.dazno.de";
 const DAZNO_API_TOKEN = process.env.DAZNO_API_TOKEN ?? "";
 
 async function getHealthHandler(_req: NextRequest, _user: SupabaseUser): Promise<Response> {
@@ -13,7 +13,7 @@ async function getHealthHandler(_req: NextRequest, _user: SupabaseUser): Promise
       {
         headers: {
           Authorization: `Bearer ${DAZNO_API_TOKEN}`,
-          "admin.adminadmincontenttype": "application/json",
+          "Content-Type": "application/json"
         },
         // Pas de cache pour l'état de santé
         cache: "no-store"

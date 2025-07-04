@@ -1,18 +1,18 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse } from \next/server';
+import type { NextRequest } from \next/server';
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
-import createMiddleware from 'next-intl/middleware';
+import createMiddleware from \next-intl/middleware';
 import { match } from '@formatjs/intl-localematcher';
-import Negotiator from 'negotiator';
+import Negotiator from \negotiator';
 import { locales, defaultLocale } from './i18n/settings';
 
 // Fonction pour détecter la langue du navigateur
 function getLocaleFromHeaders(headers: Headers): string {
-  const negotiatorHeaders: Record<string, string> = {};
+  const negotiatorHeaders: Record<string, any> = {};
   headers.forEach((value, key) => (negotiatorHeaders[key] = value));
 
   const languages = new Negotiator({ headers: negotiatorHeaders }).languages();
-  const locales = ['fr', 'en'];
+  const locales = ['fr', 'e\n];
   const defaultLocale = 'fr';
 
   return match(languages, locales, defaultLocale);
@@ -20,7 +20,7 @@ function getLocaleFromHeaders(headers: Headers): string {
 
 // Création du middleware next-intl avec détection automatique
 const intlMiddleware = createMiddleware({
-  locales: ['fr', 'en'],
+  locales: ['fr', 'e\n],
   defaultLocale: 'fr',
   localePrefix: 'always',
   localeDetection: true,
@@ -30,106 +30,89 @@ const intlMiddleware = createMiddleware({
 // Mappings des redirections d'anciennes URLs
 const redirects = new Map([
   // Redirections principales
-  ['/home', '/'],
-  ['/accueil', '/'],
-  ['/index', '/'],
-  ['/index.html', '/'],
-  
+  ['/home', '/']
+  ['/accueil', '/']
+  ['/index', '/']
+  ['/index.html', '/']
   // Redirections produits
-  ['/produits', '/'],
-  ['/products', '/'],
-  ['/services', '/'],
-  ['/solutions', '/'],
-  
+  ['/produits', '/']
+  ['/products', '/']
+  ['/services', '/']
+  ['/solutions', '/']
   // Redirections spécifiques produits
-  ['/node', '/daznode'],
-  ['/lightning-node', '/daznode'],
-  ['/personal-node', '/daznode'],
-  ['/node-personnel', '/daznode'],
-  
-  ['/box', '/dazbox'],
-  ['/hardware', '/dazbox'],
-  ['/materiel', '/dazbox'],
-  ['/equipement', '/dazbox'],
-  
-  ['/pay', '/dazpay'],
-  ['/payment', '/dazpay'],
-  ['/paiement', '/dazpay'],
-  ['/paiements', '/dazpay'],
-  
-  ['/flow', '/dazflow'],
-  ['/index-flow', '/dazflow'],
-  ['/dazflow-index', '/dazflow'],
-  ['/analytics', '/dazflow'],
-  
+  ['/node', '/daznode']
+  ['/lightning-node', '/daznode']
+  ['/personal-node', '/daznode']
+  ['/node-personnel', '/daznode']
+  ['/box', '/dazbox']
+  ['/hardware', '/dazbox']
+  ['/materiel', '/dazbox']
+  ['/equipement', '/dazbox']
+  ['/pay', '/dazpay']
+  ['/payment', '/dazpay']
+  ['/paiement', '/dazpay']
+  ['/paiements', '/dazpay']
+  ['/flow', '/dazflow']
+  ['/index-flow', '/dazflow']
+  ['/dazflow-index', '/dazflow']
+  ['/analytics', '/dazflow']
   // Redirections pages d'information
-  ['/a-propos', '/about'],
-  ['/qui-sommes-nous', '/about'],
-  ['/equipe', '/about'],
-  ['/team', '/about'],
-  
-  ['/nous-contacter', '/contact'],
-  ['/contactez-nous', '/contact'],
-  ['/support', '/contact'],
-  
-  ['/aide', '/help'],
-  ['/faq', '/help'],
-  ['/questions', '/help'],
-  ['/assistance', '/help'],
-  
-  ['/conditions', '/terms'],
-  ['/conditions-utilisation', '/terms'],
-  ['/terms-of-service', '/terms'],
-  ['/mentions-legales', '/terms'],
-  ['/privacy', '/terms'],
-  ['/confidentialite', '/terms'],
-  
+  ['/a-propos', '/about']
+  ['/qui-sommes-nous', '/about']
+  ['/equipe', '/about']
+  ['/team', '/about']
+  ['/nous-contacter', '/contact']
+  ['/contactez-nous', '/contact']
+  ['/support', '/contact']
+  ['/aide', '/help']
+  ['/faq', '/help']
+  ['/questions', '/help']
+  ['/assistance', '/help']
+  ['/conditions', '/terms']
+  ['/conditions-utilisatio\n, '/terms']
+  ['/terms-of-service', '/terms']
+  ['/mentions-legales', '/terms']
+  ['/privacy', '/terms']
+  ['/confidentialite', '/terms']
   // Redirections authentification
-  ['/inscription', '/register'],
-  ['/signup', '/register'],
-  ['/creer-compte', '/register'],
-  ['/nouveau-compte', '/register'],
-  
-  ['/connexion', '/account'],
-  ['/login', '/account'],
-  ['/se-connecter', '/account'],
-  ['/mon-compte', '/account'],
-  ['/profile', '/account'],
-  ['/profil', '/account'],
-  
+  ['/inscriptio\n, '/register']
+  ['/signup', '/register']
+  ['/creer-compte', '/register']
+  ['/nouveau-compte', '/register']
+  ['/connexio\n, '/account']
+  ['/logi\n, '/account']
+  ['/se-connecter', '/account']
+  ['/mon-compte', '/account']
+  ['/profile', '/account']
+  ['/profil', '/account']
   // Redirections réseau
-  ['/reseau', '/network'],
-  ['/lightning-network', '/network'],
-  ['/explorateur', '/network/explorer'],
-  ['/explorer', '/network/explorer'],
-  ['/analyse', '/network/mcp-analysis'],
-  ['/analysis', '/network/mcp-analysis'],
-  
+  ['/reseau', '/network']
+  ['/lightning-network', '/network']
+  ['/explorateur', '/network/explorer']
+  ['/explorer', '/network/explorer']
+  ['/analyse', '/network/mcp-analysis']
+  ['/analysis', '/network/mcp-analysis']
   // Redirections outils
-  ['/outils', '/instruments'],
-  ['/tools', '/instruments'],
-  ['/calculateurs', '/instruments'],
-  ['/calculators', '/instruments'],
-  
+  ['/outils', '/instruments']
+  ['/tools', '/instruments']
+  ['/calculateurs', '/instruments']
+  ['/calculators', '/instruments']
   // Redirections spéciales
-  ['/t4g', '/token-for-good'],
-  ['/token4good', '/token-for-good'],
-  ['/good-token', '/token-for-good'],
-  
-  ['/demonstration', '/demo'],
-  ['/test', '/demo'],
-  ['/essai', '/demo'],
-  
+  ['/t4g', '/token-for-good']
+  ['/token4good', '/token-for-good']
+  ['/good-toke\n, '/token-for-good']
+  ['/demonstratio\n, '/demo']
+  ['/test', '/demo']
+  ['/essai', '/demo']
   // Redirections anciennes URLs avec paramètres
-  ['/checkout/daznode', '/checkout/daznode'],
-  ['/checkout/dazbox', '/checkout/dazbox'],
-  ['/checkout/dazpay', '/checkout/dazpay'],
-  
+  ['/checkout/daznode', '/checkout/daznode']
+  ['/checkout/dazbox', '/checkout/dazbox']
+  ['/checkout/dazpay', '/checkout/dazpay']
   // Redirections locales
-  ['/fr/accueil', '/fr'],
-  ['/en/home', '/en'],
-  ['/fr/produits', '/fr'],
-  ['/en/products', '/en'],
+  ['/fr/accueil', '/fr']
+  ['/en/home', '/e\n]
+  ['/fr/produits', '/fr']
+  ['/en/products', '/e\n],
 ]);
 
 export async function middleware(request: NextRequest) {
@@ -154,11 +137,11 @@ export async function middleware(request: NextRequest) {
   
   // Redirections d'anciens IDs de produits
   if (pathname.startsWith('/product/')) {
-    const productId = pathname.split('/')[2];
-    const productMap: Record<string, string> = {
-      'daznode': '/daznode',
-      'dazbox': '/dazbox', 
-      'dazpay': '/dazpay',
+    const productId = pathname.split('/')[2];</strin>
+    const productMap: Record<string, any> = {
+      'daznode': '/daznode'
+      'dazbox': '/dazbox'
+      'dazpay': '/dazpay'
       'dazflow': '/dazflow'
     };
     
@@ -175,32 +158,32 @@ export async function middleware(request: NextRequest) {
     const response = NextResponse.next();
     
     // Headers CORS pour toutes les APIs
-    response.headers.set('Access-Control-Allow-Origin', '*');
+    response.headers.set('Access-Control-Allow-Origi\n, '*');
     response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorizatio\n);
     
     // Routes API publiques - ne pas bloquer
     const publicApiRoutes = [
-      '/api/auth/',
-      '/api/contact',
-      '/api/create-invoice',
-      '/api/check-invoice',
-      '/api/check-payment',
-      '/api/send-email',
-      '/api/prospect',
-      '/api/webhook',
-      '/api/dazno/',
-      '/api/daznode/',
-      '/api/lightning/',
-      '/api/network/',
-      '/api/orders',
-      '/api/subscriptions',
-      '/api/user',
-      '/api/users',
-      '/api/admin/stats',
-      '/api/admin/users',
-      '/api/admin/orders',
-      '/api/admin/payments',
+      '/api/auth/'
+      '/api/contact'
+      '/api/create-invoice'
+      '/api/check-invoice'
+      '/api/check-payment'
+      '/api/send-email'
+      '/api/prospect'
+      '/api/webhook'
+      '/api/dazno/'
+      '/api/daznode/'
+      '/api/lightning/'
+      '/api/network/'
+      '/api/orders'
+      '/api/subscriptions'
+      '/api/user'
+      '/api/users'
+      '/api/admin/stats'
+      '/api/admin/users'
+      '/api/admin/orders'
+      '/api/admin/payments'
       '/api/admin/subscriptions'
     ];
     
@@ -213,7 +196,7 @@ export async function middleware(request: NextRequest) {
     }
     
     // Vérification auth uniquement pour routes API protégées
-    const supabase = createMiddlewareClient({ req: request, res: response });
+    const supabase = createMiddlewareClient({ req: reques,t, res: response });
     const { data: { session } } = await supabase.auth.getSession();
     
     if (!session) {
@@ -230,7 +213,7 @@ export async function middleware(request: NextRequest) {
   if (pathname === '/') {
     // Détecter la langue préférée du navigateur
     const acceptLanguage = request.headers.get('accept-language');
-    const preferredLocale = acceptLanguage?.includes('en') ? 'en' : 'fr';
+    const preferredLocale = acceptLanguage?.includes('e\n) ? 'e\n : 'fr';
     
     // Rediriger vers la version localisée
     const url = request.nextUrl.clone();
@@ -246,5 +229,5 @@ export default intlMiddleware;
 
 // Configuration des routes à intercepter
 export const config = {
-  matcher: ['/((?!api|_next|.*\\..*).*)']
-}; 
+  matcher: ['/((?!api|_next|.*\..*).*)']
+}; `</strin>

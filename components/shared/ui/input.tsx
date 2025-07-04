@@ -1,17 +1,18 @@
-'use client';
+"use client";
 
-import * as React from "react"
+import * as React from "react";
+import { cn } from "@/lib/utils";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
-  error?: string;
+  error?: boolean;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, error, ...props }, ref) => {
+  ({ className = '', type = 'text', error = false, ...props }, ref) => {
     const baseClasses = "flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
     const errorClasses = error ? "border-red-500" : "";
-    const finalClasses = `${baseClasses} ${errorClasses} ${className || ""}`.trim();
+    const finalClasses = cn(baseClasses, errorClasses, className);
     
     return (
       <div className="relative">
@@ -22,12 +23,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {error && (
-          <p className="mt-1 text-sm text-red-500">{error}</p>
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-red-500 text-xs">Erreur</span>
         )}
       </div>
-    )
+    );
   }
-)
-Input.displayName = "Input"
+);
 
-export { Input } 
+Input.displayName = "Input";
+
+export { Input };

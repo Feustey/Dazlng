@@ -1,134 +1,114 @@
-import React from 'react';
+import React from "react";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
 
 const FirstStepsGuide: React.FC = () => {
+  const { t } = useAdvancedTranslation("FirstStepsGuide");
+
   const steps = [
     {
       day: "Jour 1",
       icon: "🚀",
       title: "Installation & Configuration",
-      description: "FirstStepsGuide.firststepsguidefirststepsguide",
+      description: "Configuration initiale de votre nœud Lightning",
       color: "from-blue-500 to-blue-600",
       tasks: [
         "Réception et branchement de votre DazBox",
-        "Configuration automatique du nœud",
+        "Configuration réseau et sécurité",
         "Création de votre compte DazNode",
         "Première connexion au dashboard"
       ]
     },
     {
-      day: "Jour 2-3",
+      day: "Jour 7",
       icon: "⚡",
-      title: "Ouverture des Premiers Canaux",
-      description: "FirstStepsGuide.firststepsguidefirststepsguide",
+      title: "Premier Canal",
+      description: "Ouverture de votre premier canal Lightning",
       color: "from-green-500 to-green-600",
       tasks: [
-        "Analyse des recommandations DazFlow Index",
-        "Ouverture de 3-5 canaux optimaux",
+        "Analyse des meilleurs partenaires",
+        "Ouverture du premier canal",
         "Configuration des frais de routage",
-        "Monitoring des premiers paiements"
+        "Monitoring des premières transactions"
       ]
     },
     {
-      day: "Jour 4-5",
-      icon: "📊",
-      title: "Optimisation & Monitoring",
-      description: "FirstStepsGuide.firststepsguidefirststepsguide",
+      day: "Jour 30",
+      icon: "📈",
+      title: "Optimisation IA",
+      description: "Activation de l'optimisation automatique",
       color: "from-purple-500 to-purple-600",
       tasks: [
-        "Analyse des performances avec DazFlow Index",
-        "Ajustement des paramètres de routage",
-        "Identification des goulots d'étranglement",
-        "Optimisation de la liquidité"
-      ]
-    },
-    {
-      day: "Jour 6-7",
-      icon: "💰",
-      title: "Premiers Revenus & Scale-up",
-      description: "FirstStepsGuide.firststepsguidefirststepsguide",
-      color: "from-yellow-500 to-orange-500",
-      tasks: [
-        "Réception des premiers revenus de routage",
-        "Analyse des métriques de performance",
-        "Planification de l'expansion du nœud",
-        "Intégration à la communauté Token For Good"
+        "Activation de l'IA d'optimisation",
+        "Analyse des performances initiales",
+        "Ajustement des paramètres",
+        "Premiers revenus générés"
       ]
     }
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-gray-50">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Votre parcours en 7 jours
+    <section className="py-16 bg-gray-50">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            Vos premiers pas avec DazNode
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Un accompagnement structuré pour vous assurer de générer vos premiers revenus 
-            rapidement et en toute sécurité
+            Un guide étape par étape pour démarrer votre aventure Lightning Network en toute sérénité
           </p>
         </div>
 
-        <div className="relative">
-          {/* Timeline line */}
-          <div className="absolute left-8 md:left-1/2 transform md:-translate-x-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-400 to-purple-600 rounded-full"></div>
-
-          <div className="space-y-12">
-            {steps.map((step: any, index: any) => (
-              <div 
-                key={index}
-                className={`relative flex items-center ${
-                  index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
-                } flex-col md:justify-center`}
-              >
-                {/* Timeline dot */}
-                <div className="absolute left-8 md:left-1/2 transform md:-translate-x-1/2 w-8 h-8 bg-white border-4 border-purple-500 rounded-full flex items-center justify-center shadow-lg z-10">
-                  <span className="text-2xl">{step.icon}</span>
-                </div>
-
-                {/* Content card */}
-                <div className={`w-full md:w-5/12 ${index % 2 === 0 ? 'md:mr-auto md:ml-8' : 'md:ml-auto md:mr-8'} ml-20 md:ml-0`}>
-                  <div className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                    <div className={`bg-gradient-to-r ${step.color} rounded-xl p-4 mb-6`}>
-                      <div className="flex items-center justify-between text-white">
-                        <h3 className="text-xl font-bold">{step.day}</h3>
-                        <span className="text-3xl">{step.icon}</span>
-                      </div>
-                    </div>
-                    
-                    <h4 className="text-2xl font-bold text-gray-900 mb-4">{step.title}</h4>
-                    <p className="text-gray-600 mb-6 text-lg">{step.description}</p>
-                    
-                    <ul className="space-y-3">
-                      {step.tasks.map((task: any, taskIndex: any) => (
-                        <li key={taskIndex} className="flex items-start">
-                          <span className="text-green-500 mr-3 mt-1">✓</span>
-                          <span className="text-gray-700">{task}</span>
-                        </li>
-                      ))}
-                    </ul>
+        <div className="space-y-8">
+          {steps.map((step, index) => (
+            <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden">
+              <div className={`bg-gradient-to-r ${step.color} p-6 text-white`}>
+                <div className="flex items-center">
+                  <span className="text-3xl mr-4">{step.icon}</span>
+                  <div>
+                    <div className="text-sm font-medium opacity-90">{step.day}</div>
+                    <h3 className="text-2xl font-bold">{step.title}</h3>
+                    <p className="text-white/90 mt-1">{step.description}</p>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
+              
+              <div className="p-6">
+                <h4 className="font-semibold text-gray-900 mb-4">Tâches à accomplir :</h4>
+                <ul className="space-y-3">
+                  {step.tasks.map((task, taskIndex) => (
+                    <li key={taskIndex} className="flex items-start">
+                      <span className="w-2 h-2 bg-amber-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <span className="text-gray-700">{task}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* Garantie de résultat */}
-        <div className="mt-16 bg-gradient-to-r from-green-500 to-blue-600 rounded-2xl p-8 text-white text-center">
-          <h3 className="text-3xl font-bold mb-4">
-            🎯 Objectif : 50€ minimum dans vos 30 premiers jours
-          </h3>
-          <p className="text-xl text-green-100 mb-6">
-            Si vous ne générez pas au moins 50€ de revenus en suivant notre parcours, 
-            nous vous remboursons intégralement votre DazBox.
-          </p>
-          <div className="bg-white/20 rounded-xl p-4 backdrop-blur-sm">
-            <p className="text-lg font-medium">
-              <span className="text-yellow-300">{t('FirstStepsGuide._garantie_satisfait_ou_rembour')}</span><br />
-              <span className="text-green-200">{t('FirstStepsGuide._support_illimit_pendant_votre')}</span><br />
-              <span className="text-blue-200">{t('FirstStepsGuide._mentor_personnel_assign')}</span>
+        <div className="text-center mt-12">
+          <div className="bg-amber-50 rounded-lg p-8 border border-amber-200">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              Besoin d'aide pour commencer ?
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Notre équipe d'experts est là pour vous accompagner à chaque étape
             </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a
+                href="/checkout"
+                className="inline-block bg-amber-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors"
+              >
+                Commencer maintenant
+              </a>
+              <a
+                href="/contact"
+                className="inline-block border-2 border-amber-600 text-amber-600 px-8 py-3 rounded-lg font-semibold hover:bg-amber-600 hover:text-white transition-colors"
+              >
+                Nous contacter
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -136,4 +116,4 @@ const FirstStepsGuide: React.FC = () => {
   );
 };
 
-export default FirstStepsGuide; 
+export default FirstStepsGuide;

@@ -1,7 +1,8 @@
-import React from 'react';
-import { Metadata } from 'next';
-import DazNodePage from './components/DazNodePage';
-import { seoConfig } from '@/lib/seo-config';
+import React from "react";
+import { Metadata } from "next";
+import DazNodePage from "./components/DazNodePage";
+import { seoConfig } from "@/lib/seo-config";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
 
 // Structured data avancé pour DazNode
 const dazNodeStructuredData = {
@@ -40,7 +41,7 @@ const dazNodeStructuredData = {
       "description": "Plan de base pour débuter avec Lightning Network"
     },
     {
-      "@type": "Offer", 
+      "@type": "Offer",
       "name": "DazNode Pro",
       "price": "150000",
       "priceCurrency": "SATS",
@@ -49,7 +50,7 @@ const dazNodeStructuredData = {
       "description": "Plan professionnel avec IA d'optimisation"
     },
     {
-      "@type": "Offer", 
+      "@type": "Offer",
       "name": "DazNode Enterprise",
       "price": "400000",
       "priceCurrency": "SATS",
@@ -97,7 +98,7 @@ const dazNodeStructuredData = {
   ],
   "features": [
     "Optimisation IA des routes de paiement",
-    "Analytics predictives temps réel", 
+    "Analytics predictives temps réel",
     "Gestion multi-nœuds",
     "API complète pour intégrations",
     "Support prioritaire 24/7",
@@ -117,69 +118,63 @@ const dazNodeStructuredData = {
 };
 
 export const metadata: Metadata = {
-  title: 'DazNode | Gestion Avancée de Nœuds Lightning Network',
-  description: "common.commoncommondaznode_offre_une_"optimisation, analytics avancés et support expert. Maximisez vos revenus Lightning.',
+  title: "DazNode | Gestion Avancée de Nœuds Lightning Network",
+  description: "DazNode offre une gestion professionnelle de nœuds Lightning Network avec IA d'optimisation, analytics avancés et support expert. Maximisez vos revenus Lightning.",
   keywords: [
-    'DazNode',
-    'Lightning Network',
-    'Bitcoin',
-    'nœud Lightning professionnel',
-    'gestion nœud',
-    'optimisation IA',
-    'analytics Lightning',
-    'revenus Lightning',
-    'infrastructure Bitcoin',
-    'routing fees optimization'
+    "DazNode", "Lightning Network", "Bitcoin", "nœud Lightning professionnel", "gestion nœud", "optimisation IA", "analytics Lightning", "revenus Lightning", "infrastructure Bitcoin", "routing fees optimization"
   ],
-  authors: [{ name: 'DazNode' }],
-  creator: 'DazNode',
-  publisher: 'DazNode',
-  robots: 'index, follow',
+  authors: [{ name: "DazNode" }],
+  creator: "DazNode",
+  publisher: "DazNode",
+  robots: "index, follow",
   openGraph: {
-    type: 'website',
-    locale: 'fr_FR',
+    type: "website",
+    locale: "fr_FR",
     url: `${seoConfig.baseUrl}/daznode`,
-    title: 'DazNode | Gestion Avancée de Nœuds Lightning Network',
-    description: "common.commoncommondaznode_offre_une_"optimisation, analytics avancés et support expert. Maximisez vos revenus Lightning.',
-    siteName: 'DazNode',
+    title: "DazNode | Gestion Avancée de Nœuds Lightning Network",
+    description: "DazNode offre une gestion professionnelle de nœuds Lightning Network avec IA d'optimisation, analytics avancés et support expert. Maximisez vos revenus Lightning.",
+    siteName: "DazNode",
     images: [
       {
         url: `${seoConfig.baseUrl}/assets/images/daznode-og.png`,
         width: 1200,
         height: 630,
-        alt: 'DazNode - Gestion Avancée de Nœuds Lightning Network'
+        alt: "DazNode - Gestion Avancée de Nœuds Lightning Network"
       }
     ]
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'DazNode | Gestion Avancée de Nœuds Lightning Network',
-    description: "common.commoncommondaznode_offre_une_"optimisation.',
+    card: "summary_large_image",
+    title: "DazNode | Gestion Avancée de Nœuds Lightning Network",
+    description: "DazNode offre une gestion professionnelle avec IA d'optimisation.",
     images: [`${seoConfig.baseUrl}/assets/images/daznode-og.png`],
-    creator: '@daznode'
+    creator: "@daznode"
   },
   alternates: {
     canonical: `${seoConfig.baseUrl}/daznode`,
     languages: {
-      'fr': `${seoConfig.baseUrl}/fr/daznode`,
-      'en': `${seoConfig.baseUrl}/en/daznode`,
-      'x-default': `${seoConfig.baseUrl}/daznode`
+      "fr": `${seoConfig.baseUrl}/fr/daznode`,
+      "en": `${seoConfig.baseUrl}/en/daznode`,
+      "x-default": `${seoConfig.baseUrl}/daznode`
     }
   },
   verification: {
-    google: 'your-google-site-verification'
+    google: "your-google-site-verification"
   }
 };
 
 const DazNodePageWrapper: React.FC = () => {
+  const { t } = useAdvancedTranslation("daznode");
+
   return (
     <>
       {/* Structured data avancé */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(dazNodeStructuredData) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(dazNodeStructuredData)
+        }}
       />
-      
       <DazNodePage />
     </>
   );

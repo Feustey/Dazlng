@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { OrderService } from '@/lib/services/order-service';
-import { rateLimit } from '@/lib/rate-limit';
-import { handleApiError, createApiResponse } from '@/lib/api-response';
-import { createDaznoApiClient } from '@/lib/services/dazno-api';
-import { logger } from '@/lib/logger';
+import { NextRequest, NextResponse } from "next/server";
+import { OrderService } from "@/lib/services/order-service";
+import { rateLimit } from "@/lib/rate-limit";
+import { handleApiError, createApiResponse } from "@/lib/api-response";
+import { createDaznoApiClient } from "@/lib/services/dazno-api";
+import { logger } from "@/lib/logger";
 
 // Rate limiter : 60 requêtes par minute
 const rateLimiter = rateLimit({
@@ -19,14 +19,14 @@ export async function GET(req: NextRequest) {
 
     // 2. Récupérer l'ID de commande
     const { searchParams } = new URL(req.url);
-    const orderId = searchParams.get('order');
+    const orderId = searchParams.get("order");
 
     if (!orderId) {
       return createApiResponse({
         success: false,
         error: {
-          code: 'BAD_REQUEST',
-          message: 'ID de commande requis'
+          code: "BAD_REQUEST",
+          message: "ID de commande requis"
         }
       }, 400);
     }
@@ -39,18 +39,18 @@ export async function GET(req: NextRequest) {
       return createApiResponse({
         success: false,
         error: {
-          code: 'NOT_FOUND',
-          message: 'Commande introuvable'
+          code: "NOT_FOUND",
+          message: "Commande introuvable"
         }
       }, 404);
     }
 
     // 4. Si déjà payée, retourner le statut
-    if (order.status === 'paid') {
+    if (order.status === "paid") {
       return createApiResponse({
         success: true,
         data: {
-          status: 'settled',
+          status: "settled",
           paidAt: order.paid_at
         }
       });
@@ -61,8 +61,8 @@ export async function GET(req: NextRequest) {
       return createApiResponse({
         success: false,
         error: {
-          code: 'PAYMENT_NOT_FOUND',
-          message: 'Aucun paiement associé à cette commande'
+          code: "PAYMENT_NOT_FOUND",
+          message: "Aucun paiement associé à cette commande"
         }
       }, 400);
     }
@@ -72,7 +72,7 @@ export async function GET(req: NextRequest) {
     const status = await daznoApi.checkPayment(order.payment_hash);
     
     // 6. Si payé, mettre à jour la commande
-    if ((status as unknown as string) === 'settled') {
+    if (status === "settled") {
       await orderService.markOrderPaid(orderId);
     }
 
@@ -80,7 +80,7 @@ export async function GET(req: NextRequest) {
       success: true,
       data: {
         status,
-        paidAt: (status as unknown as string) === 'settled' ? new Date().toISOString() : null
+        paidAt: status === "settled" ? new Date().toISOString() : null
       }
     });
 
@@ -117,8 +117,8 @@ export async function POST(req: Request) {
         { 
           success: false, 
           error: { 
-            code: 'VALIDATION_ERROR',
-            message: 'Payment hash is required' 
+            code: "VALIDATION_ERROR",
+            message: "Payment hash is required" 
           } 
         },
         { status: 400 }
@@ -126,7 +126,7 @@ export async function POST(req: Request) {
     }
 
     const daznoApi = createDaznoApiClient({
-      apiKey: process.env.DAZNO_API_KEY,
+      apiKey: process.env.DAZNO_API_KEY
     });
 
     const status = await daznoApi.checkPayment(paymentHash);
@@ -136,21 +136,21 @@ export async function POST(req: Request) {
       data: { status },
       meta: {
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: "1.0.0"
       }
     });
   } catch (error) {
-    logger.error('Error checking payment:', error);
+    logger.error("Error checking payment:", error);
     return NextResponse.json(
       {
         success: false,
         error: {
-          code: 'INTERNAL_ERROR',
-          message: error instanceof Error ? error.message : 'An error occurred while checking the payment',
+          code: "INTERNAL_ERROR",
+          message: error instanceof Error ? error.message : "An error occurred while checking the payment"
         },
         meta: {
           timestamp: new Date().toISOString(),
-          version: '1.0.0'
+          version: "1.0.0"
         }
       },
       { status: 500 }

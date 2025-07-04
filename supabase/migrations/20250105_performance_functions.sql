@@ -1,17 +1,17 @@
--- Migration pour l'optimisation des performances - Partie 3
+-- Migration pour l'optimisation des performances - Partie 3'
 -- Fonctions de maintenance
 -- IMPORTANT: Exécuter chaque instruction séparément
 
 -- Fonction pour analyser les index
 CREATE OR REPLACE FUNCTION analyze_index_usage()
 RETURNS TABLE (
-    schemaname text,
-    tablename text,
-    indexname text,
-    idx_scan bigint,
-    idx_tup_read bigint,
-    idx_tup_fetch bigint,
-    index_size text
+    schemaname TEXT,
+    tablename TEXT,
+    indexname TEXT,
+    idx_scan BIGINT,
+    idx_tup_read BIGINT,
+    idx_tup_fetch BIGINT,
+    index_size TEXT
 ) AS $$
 BEGIN
     RETURN QUERY
@@ -25,7 +25,7 @@ BEGIN
         pg_size_pretty(pg_relation_size(i.indexrelid)) as index_size
     FROM pg_stat_user_indexes s
     JOIN pg_index i ON s.indexrelid = i.indexrelid
-    WHERE s.idx_scan = 0 -- Index non utilisés
+    WHERE s.idx_scan = 0 -- Index non utilisés;
     ORDER BY pg_relation_size(i.indexrelid) DESC;
 END;
 $$ LANGUAGE plpgsql;
@@ -33,13 +33,13 @@ $$ LANGUAGE plpgsql;
 -- Fonction pour nettoyer les index inutilisés
 CREATE OR REPLACE FUNCTION cleanup_unused_indexes(
     min_days_unused int DEFAULT 30,
-    dry_run boolean DEFAULT true
+    dry_run BOOLEAN DEFAULT true
 ) RETURNS TABLE (
-    index_name text,
-    table_name text,
-    action text
+    index_name TEXT,
+    table_name TEXT,
+    action TEXT
 ) AS $$
-DECLARE
+DECLARE;
     r RECORD;
 BEGIN
     FOR r IN
@@ -75,12 +75,12 @@ $$ LANGUAGE plpgsql;
 -- Fonction pour analyser la santé des index
 CREATE OR REPLACE FUNCTION analyze_index_health()
 RETURNS TABLE (
-    tablename text,
-    indexname text,
-    index_size text,
+    tablename TEXT,
+    indexname TEXT,
+    index_size TEXT,
     index_bloat_ratio numeric,
-    missing_stats boolean,
-    recommendation text
+    missing_stats BOOLEAN,
+    recommendation TEXT
 ) AS $$
 BEGIN
     RETURN QUERY
@@ -97,9 +97,9 @@ BEGIN
         WHERE schemaname = 'public'
     )
     SELECT
-        s.tablename::text,
-        s.indexname::text,
-        pg_size_pretty(s.raw_size)::text as index_size,
+        s.tablename::TEXT,
+        s.indexname::TEXT,
+        pg_size_pretty(s.raw_size)::TEXT as index_size,
         CASE 
             WHEN s.raw_size > 0 THEN
                 round(((pg_relation_size(s.indexname::regclass) - pg_relation_size(s.tablename::regclass)::numeric) / 
@@ -116,7 +116,7 @@ BEGIN
             WHEN s.last_analyze IS NULL AND s.last_autoanalyze IS NULL 
                 THEN 'Run ANALYZE to gather statistics'
             ELSE 'Index appears healthy'
-        END as recommendation
+        END as recommendation;
     FROM index_stats s;
 END;
 $$ LANGUAGE plpgsql; 

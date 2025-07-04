@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { createDaznoApiClient } from '@/lib/services/dazno-api'
-import { ApiResponse } from '@/types/database'
-import { DaznoNodeInfoDetailed } from '@/types/dazno-api'
-import type { NodeStatus } from '@/lib/services/dazno-api'
+import { NextRequest, NextResponse } from "next/server"
+import { createDaznoApiClient } from "@/lib/services/dazno-api"
+import { ApiResponse } from "@/types/database"
+import { DaznoNodeInfoDetailed } from "@/types/dazno-api"
+import type { NodeStatus } from "@/lib/services/dazno-api"
 
 export async function GET(
   req: NextRequest,
@@ -21,18 +21,17 @@ export async function GET(
       data,
       meta: {
         timestamp: new Date().toISOString(),
-        version: '1.0'
+        version: "1.0"
       }
     })
 
   } catch (error) {
-    console.error('Erreur informations nœud:', error)
-    
-    return NextResponse.json<ApiResponse<null>>({
+    console.error("Erreur informations nœud:", error)
+    return NextResponse.json<ApiResponse<NodeStatus>>({
       success: false,
       error: {
-        code: 'EXTERNAL_API_ERROR',
-        message: error instanceof Error ? error.message : 'Erreur lors de la récupération des informations du nœud'
+        code: "EXTERNAL_API_ERROR",
+        message: error instanceof Error ? error.message : "Erreur lors de la récupération des informations du nœud"
       }
     }, { status: 500 })
   }

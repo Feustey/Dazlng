@@ -1,7 +1,8 @@
-'use client';
+"use client";
 
-import React, { useEffect, useRef, useState } from 'react';
-import { useConversionTracking } from '../../../hooks/useConversionTracking';
+import React, { useEffect, useRef, useState } from "react";
+import { useConversionTracking } from "../../../hooks/useConversionTracking";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
 
 export interface Feature {
   id: string;
@@ -13,32 +14,34 @@ export interface Feature {
 }
 
 const DazBoxFeatures: React.FC = () => {
-  const { trackProductInterest } = useConversionTracking();
+  const { t } = useAdvancedTranslation("common");
+
+  const { trackEvent } = useConversionTracking();
   const [visibleFeatures, setVisibleFeatures] = useState<string[]>([]);
   const featureRefs = useRef<(HTMLDivElement | null)[]>([]);
   
   // Features data
   const features = [
     {
-      id: 'plug-play',
-      icon: '⚡',
-      title: 'Plug & Play',
-      description: "Features.featuresfeaturesprt_l"emploi en 5 minutes',
-      benefit: 'Installation simple'
+      id: "plug-play",
+      icon: "⚡",
+      title: "Plug & Play",
+      description: t("Features.emploi_en_5_minutes"),
+      benefit: "Installation simple"
     },
     {
-      id: 'performance',
-      icon: '🚀',
-      title: 'Haute Performance',
-      description: "Features.featuresfeatureshardware_optim",
-      benefit: 'Rapidité garantie'
+      id: "performance",
+      icon: "🚀",
+      title: "Haute Performance",
+      description: t("Features.hardware_optimise"),
+      benefit: "Rapidité garantie"
     },
     {
-      id: 'support',
-      icon: '🛠️',
-      title: 'Support Expert',
-      description: "Features.featuresfeaturesassistance_tec",
-      benefit: 'Accompagnement complet'
+      id: "support",
+      icon: "🛠️",
+      title: "Support Expert",
+      description: t("Features.assistance_247"),
+      benefit: "Accompagnement complet"
     }
   ];
 
@@ -47,10 +50,10 @@ const DazBoxFeatures: React.FC = () => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const featureId = entry.target.getAttribute('data-feature-id');
+            const featureId = entry.target.getAttribute("data-feature-id");
             if (featureId && !visibleFeatures.includes(featureId)) {
               setVisibleFeatures(prevVisible => [...prevVisible, featureId]);
-              trackProductInterest('dazbox', 'feature_view', { feature: featureId });
+              trackEvent("feature_view", { product: "dazbox", feature: featureId });
             }
           }
         });
@@ -63,46 +66,46 @@ const DazBoxFeatures: React.FC = () => {
     });
 
     return () => observer.disconnect();
-  }, [trackProductInterest]);
+  }, [trackEvent, visibleFeatures]);
 
   const handleFeatureClick = (featureId: string): void => {
-    trackProductInterest('dazbox', 'feature_interaction', { 
+    trackEvent("feature_interaction", { 
+      product: "dazbox",
       feature: featureId,
-      action: 'click'
+      action: "click"
     });
   };
 
   return (
-    <section id="features" className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4">
+    <section>
+      <div>
         {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Pourquoi Choisir{' '}
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">
+        <div>
+          <h2>
+            Pourquoi Choisir{" "}
+            <span>
               DazBox ?
             </span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p>
             DazBox révolutionne l'accès au Lightning Network avec une solution 
             simple, sécurisée et rentable pour tous.
           </p>
         </div>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature: any, index: any) => (
-            <div
+        <div>
+          {features.map((feature: any, index: number) => (
+            <div 
               key={feature.id}
-              data-feature-id={feature.id}
               onClick={() => handleFeatureClick(feature.id)}
               className={`
                 group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl 
                 transform transition-all duration-700 cursor-pointer
                 hover:scale-105 border border-gray-100
                 ${visibleFeatures.includes(feature.id) 
-                  ? 'translate-y-0 opacity-100' 
-                  : 'translate-y-8 opacity-0'
+                  ? "translate-y-0 opacity-100" 
+                  : "translate-y-8 opacity-0"
                 }
               `}
               style={{
@@ -110,34 +113,34 @@ const DazBoxFeatures: React.FC = () => {
               }}
             >
               {/* Icon */}
-              <div className="mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300">
+              <div>
+                <div>
                   {feature.icon}
                 </div>
               </div>
 
               {/* Content */}
-              <div className="space-y-4">
-                <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+              <div>
+                <h3>
                   {feature.title}
                 </h3>
                 
-                <p className="text-gray-600 leading-relaxed">
+                <p>
                   {feature.description}
                 </p>
 
                 {/* Benefit Badge */}
-                <div className="inline-flex items-center bg-gradient-to-r from-green-500 to-blue-500 text-white px-4 py-2 rounded-full text-sm font-bold">
-                  <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                <div>
+                  <svg>
+                    <path></path>
                   </svg>
                   {feature.benefit}
                 </div>
 
                 {/* Stats */}
                 {feature.stats && (
-                  <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-blue-500">
-                    <p className="text-sm text-gray-700 font-medium">
+                  <div>
+                    <p>
                       📊 {feature.stats}
                     </p>
                   </div>
@@ -145,19 +148,18 @@ const DazBoxFeatures: React.FC = () => {
               </div>
 
               {/* Hover indicator */}
-              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                <svg className="w-6 h-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              <div>
+                <svg>
+                  <path></path>
                 </svg>
               </div>
             </div>
           ))}
         </div>
-
-  
       </div>
     </section>
   );
 };
 
-export default DazBoxFeatures; export const dynamic = "force-dynamic";
+export default DazBoxFeatures;
+export const dynamic = "force-dynamic";

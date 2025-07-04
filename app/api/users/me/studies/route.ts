@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseAdminClient } from '@/lib/supabase';
+import { getSupabaseAdminClient } from "@/lib/supabase";
 import { studiesSchema, validateData } from "@/lib/validations";
 import { ApiResponse } from "@/types/database";
 
@@ -11,7 +11,7 @@ async function getUserFromRequest(req: NextRequest) {
 }
 
 // GET /api/users/me/studies - Récupération des informations d'études
-export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {
@@ -62,7 +62,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> 
 }
 
 // POST /api/users/me/studies - Mise à jour des informations d'études
-export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>> {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {

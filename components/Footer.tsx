@@ -1,196 +1,153 @@
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useLocale } from 'next-intl';
-
-const socialLinks = [
-  {
-    url: 'nostr:d2d8186182cce5d40e26e7db23ea38d3bf4e10dd98642cc4f5b1fb38efaf438e',
-    title: 'Suivez-nous sur Nostr',
-    icon: (
-      <svg width={24} height={24} viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 2a8 8 0 0 1 8 8 8 8 0 0 1-8 8 8 8 0 0 1-8-8 8 8 0 0 1 8-8zm0 2a6 6 0 1 0 6 6 6 6 0 0 0-6-6zm0 2a4 4 0 1 1-4 4 4 4 0 0 1 4-4z" />
-      </svg>
-    ),
-  },
-  {
-    url: 'https://t.me/daznode_bot',
-    title: 'Rejoignez-nous sur Telegram',
-    icon: (
-      <svg width={24} height={24} viewBox="0 0 24 24" fill="currentColor">
-        <path d="m20.665 3.717-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42 10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701h-.002l.002.001-.314 4.692c.46 0 .663-.211.921-.46l2.211-2.15 4.599 3.397c.848.467 1.457.227 1.668-.785l3.019-14.228c.309-1.239-.473-1.8-1.282-1.434z" />
-      </svg>
-    ),
-  },
-  {
-    url: 'https://discord.gg/vzHEYNwDVH',
-    title: 'Rejoignez-nous sur Discord',
-    icon: (
-      <svg width={24} height={24} viewBox="0 0 24 24" fill="currentColor">
-        <path d="M20.317 4.492c-1.53-.69-3.17-1.2-4.885-1.49a.075.075 0 0 0-.079.036c-.211.375-.445.865-.608 1.25a18.566 18.566 0 0 0-5.487 0 12.36 12.36 0 0 0-.617-1.25.077.077 0 0 0-.079-.036A19.818 19.818 0 0 0 3.677 4.492a.07.07 0 0 0-.032.027C.533 9.093-.32 13.555.099 17.961a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 2.98.078.078 0 0 0 .084-.026 14.09 14.09 0 0 0 1.226-1.963.074.074 0 0 0-.041-.104 13.107 13.107 0 0 1-1.872-.878.075.075 0 0 1-.008-.125 10.2 10.2 0 0 0 .372-.292.072.072 0 0 1 .078-.01c3.927 1.764 8.18 1.764 12.061 0a.072.072 0 0 1 .079.009c.12.098.246.19.373.293a.075.075 0 0 1-.006.125c-.598.344-1.22.635-1.873.877a.075.075 0 0 0-.041.105c.36.687.772 1.341 1.225 1.962a.077.077 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-2.981.076.076 0 0 0 .032-.055c.5-5.094-.838-9.52-3.549-13.442a.06.06 0 0 0-.031-.028zM8.02 15.278c-1.182 0-2.157-1.069-2.157-2.38 0-1.312.956-2.38 2.157-2.38 1.210 0 2.176 1.077 2.157 2.38 0 1.312-.956 2.38-2.157 2.38zm7.975 0c-1.183 0-2.157-1.069-2.157-2.38 0-1.312.955-2.38 2.157-2.38 1.210 0 2.176 1.077 2.157 2.38 0 1.312-.946 2.38-2.157 2.38z" />
-      </svg>
-    ),
-  },
-  {
-    url: 'https://linkedin.com/company/daznode',
-    title: 'Suivez-nous sur LinkedIn',
-    icon: (
-      <svg width={24} height={24} viewBox="0 0 24 24" fill="currentColor">
-        <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
-      </svg>
-    ),
-  },
-];
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useLocale } from "next-intl";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
 
 const Footer: React.FC = () => {
+  const { t } = useAdvancedTranslation("footer");
   const locale = useLocale();
 
   return (
-    <footer className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white overflow-hidden">
-      {/* Éléments décoratifs en arrière-plan */}
-      <div className="absolute inset-0 opacity-10 pointer-events-none select-none">
-        <div className="absolute -left-20 -top-20 w-72 h-72 rounded-full bg-blue-500 blur-3xl"></div>
-        <div className="absolute right-20 top-10 w-56 h-56 rounded-full bg-indigo-400 blur-3xl"></div>
-        <div className="absolute bottom-0 left-1/3 w-80 h-80 rounded-full bg-purple-500 blur-3xl"></div>
-      </div>
-      {/* Séparateur stylisé */}
-      <div className="absolute top-0 left-0 right-0 h-8 overflow-hidden">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="absolute bottom-0 w-full h-8 text-white">
-          <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="currentColor"></path>
-        </svg>
-      </div>
-      <div className="max-w-7xl mx-auto px-6 pt-20 pb-12 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-          {/* Section logo et description */}
-          <div className="col-span-1 md:col-span-1">
-            <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-white/20 h-full">
-              <Image 
-                src="/assets/images/logo-daznode.svg" 
-                width={150} 
-                height={40} 
-                alt="Footer.footerfooterdaz3_logo"
-                priority 
-                className="mb-4"
-                style={{ width: 'auto', height: 'auto' }}
+    <footer className="bg-gray-900 text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Logo et description */}
+          <div className="col-span-1 md:col-span-2">
+            <div className="flex items-center mb-4">
+              <Image
+                src="/assets/images/logo-daznode-white.svg"
+                alt="DazNode"
+                width={120}
+                height={40}
+                className="h-8 w-auto"
               />
-              <p className="text-blue-100 text-sm mb-4">{t('Footer.o_limagination_rencontre_linno')}</p>
-              {/* Icônes de réseaux sociaux */}
-              <div className="flex space-x-3 mt-6">
-                {socialLinks.map((link: any, index: any) => (
-                  <a
-                    key={index}
-                    href={link.url}
-                    title={link.title}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 bg-white/10 rounded-lg hover:bg-white/20 text-blue-100 hover:text-white transition-colors duration-300"
-                  >
-                    {link.icon}
-                  </a>
-                ))}
-              </div>
+            </div>
+            <p className="text-gray-300 mb-4 max-w-md">
+              {t("description")}
+            </p>
+            <div className="flex space-x-4">
+              <a
+                href="https://twitter.com/daznode"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <span className="sr-only">Twitter</span>
+                <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+                </svg>
+              </a>
+              <a
+                href="https://github.com/daznode"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <span className="sr-only">GitHub</span>
+                <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+                </svg>
+              </a>
             </div>
           </div>
-          {/* Colonnes de liens */}
-          <div className="col-span-1">
-            <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-white/20 h-full">
-              <h4 className="font-bold text-lg mb-4 text-blue-200">Produit</h4>
-              <ul className="space-y-3">
-                <li>
-                  <Link href="/daznode" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
-                    <span className="mr-2">→</span>DazNode
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/dazbox" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
-                    <span className="mr-2">→</span>DazBox
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/dazpay" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
-                    <span className="mr-2">→</span>DazPay
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/dazflow" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
-                    <span className="mr-2">→</span>DazFlow Index
-                  </Link>
-                </li>
-              </ul>
-            </div>
+
+          {/* Liens rapides */}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase mb-4">
+              {t("quick_links")}
+            </h3>
+            <ul className="space-y-2">
+              <li>
+                <Link
+                  href={`/${locale}/daznode`}
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  {t("daznode")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/dazbox`}
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  {t("dazbox")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/dazpay`}
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  {t("dazpay")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/network`}
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  {t("network")}
+                </Link>
+              </li>
+            </ul>
           </div>
-          <div className="col-span-1">
-            <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-white/20 h-full">
-              <h4 className="font-bold text-lg mb-4 text-blue-200">Transparence</h4>
-              <ul className="space-y-3">
-                <li>
-                  <Link href="/about" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
-                    <span className="mr-2">→</span>Notre équipe
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/docs" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
-                    <span className="mr-2">→</span>Documentation technique
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/docs/security/audit-2024" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
-                    <span className="mr-2">→</span>Audits de sécurité
-                  </Link>
-                </li>
-                <li>
-                  <a href="https://github.com/daznode" target="_blank" rel="noopener noreferrer" className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
-                    <span className="mr-2">→</span>Code source
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="col-span-1">
-            <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-white/20 h-full">
-              <h4 className="font-bold text-lg mb-4 text-blue-200">Aide</h4>
-              <ul className="space-y-3">
-                <li>
-                  <Link href="/help" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
-                    <span className="mr-2">→</span>Support
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/contact" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
-                    <span className="mr-2">→</span>Contact
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/terms" locale={locale} className="text-blue-100 hover:text-white flex items-center transform hover:translate-x-1 transition-all duration-300">
-                    <span className="mr-2">→</span>Conditions
-                  </Link>
-                </li>
-              </ul>
-            </div>
+
+          {/* Support */}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase mb-4">
+              {t("support")}
+            </h3>
+            <ul className="space-y-2">
+              <li>
+                <Link
+                  href={`/${locale}/docs`}
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  {t("documentation")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/help`}
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  {t("help")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/contact`}
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  {t("contact")}
+                </Link>
+              </li>
+            </ul>
           </div>
         </div>
-        {/* Section copyright */}
-        <div className="mt-16 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center">
-          <div className="text-blue-200 text-sm mb-4 sm:mb-0 flex items-center">
-            © 2025 - Réalisé avec <span className="animate-pulse mr-2">💙</span> passion par 
-            <a href="https://inoval.io" target="_blank" rel="noopener noreferrer" className="mx-1 underline decoration-dotted underline-offset-2 hover:text-white">Inoval</a> - Version 0.7
+
+        {/* Ligne de séparation */}
+        <div className="border-t border-gray-800 mt-8 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <p className="text-gray-400 text-sm">
+              © 2024 DazNode. {t("all_rights_reserved")}
+            </p>
+            <div className="flex space-x-6 mt-4 md:mt-0">
+              <Link
+                href={`/${locale}/terms`}
+                className="text-gray-400 hover:text-white text-sm transition-colors"
+              >
+                {t("terms")}
+              </Link>
+              <Link
+                href={`/${locale}/privacy`}
+                className="text-gray-400 hover:text-white text-sm transition-colors"
+              >
+                {t("privacy")}
+              </Link>
+            </div>
           </div>
-          {/* Bouton retour en haut */}
-          <a 
-            href="#top" 
-            className="group p-3 bg-white/10 rounded-full hover:bg-white/20 transition-all duration-300" 
-            title="Footer.footerfooterretour_en_haut"
-          >
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              className="h-5 w-5 text-blue-100 group-hover:text-white transition-colors"
-              fill="none" 
-              viewBox="0 0 24 24" 
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
-            </svg>
-          </a>
         </div>
       </div>
     </footer>

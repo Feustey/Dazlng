@@ -19,7 +19,7 @@ export interface UserProfile {
 
 export interface CRMData {
   userScore: number;
-  segment: 'prospect' | 'lead' | 'client' | 'premium' | 'champion';
+  segment: "prospect" | "lead" | "client" | "premium" | "champio\n;
   engagementLevel: number;
   conversionProbability: number;
   lastActivity: string;
@@ -36,13 +36,13 @@ export interface SmartRecommendation {
   id: string;
   title: string;
   description: string;
-  category: 'revenue' | 'efficiency' | 'security' | 'growth';
-  impact: 'high' | 'medium' | 'low';
+  category: "revenue" | "efficiency" | "security" | "growth";
+  impact: "high" | "medium" | "low";
   estimatedGain: number;
   timeToImplement: string;
   isPremium: boolean;
   appliedBy?: number;
-  priority: 'high' | 'medium' | 'low';
+  priority: "high" | "medium" | "low";
   href: string;
 }
 
@@ -50,7 +50,7 @@ export interface ProfileField {
   name: string;
   label: string;
   completed: boolean;
-  priority: 'high' | 'medium' | 'low';
+  priority: "high" | "medium" | "low";
   href: string;
   points?: number;
   description?: string;

@@ -1,12 +1,12 @@
-import { useState, useEffect, useCallback } from 'react';
-import { mcpLightAPI } from '@/lib/services/mcp-light-api';
+import { react } from "react";
+import { mcpLightAPI } from "@/lib/services/mcp-light-api";
 import {
   DazFlowAnalysis,
   DazFlowOptimizationResponse,
   ReliabilityPoint,
   Bottleneck,
   NetworkHealthAnalysis
-} from '@/lib/services/mcp-light-api';
+} from "@/lib/services/mcp-light-api";
 
 export interface DazFlowData {
   dazFlow: DazFlowAnalysis | null;
@@ -19,7 +19,7 @@ export interface DazFlowData {
 }
 
 export const useDazFlow = (nodeId: string | null) => {
-  const [data, setData] = useState<DazFlowData>({
+  const [dat,a, setData] = useState<DazFlowData>({
     dazFlow: null,
     reliability: null,
     bottlenecks: null,
@@ -39,9 +39,9 @@ export const useDazFlow = (nodeId: string | null) => {
       const networkHealth = await mcpLightAPI.getNetworkHealth();
 
       setData({
-        dazFlow: dazFlowResult,
+        dazFlow: dazFlowResul,t,
         reliability: { reliability_curve: dazFlowResult.reliability_curve },
-        bottlenecks: { bottlenecks: dazFlowResult.bottlenecks },
+        bottlenecks: { bottlenecks: dazFlowResult.bottlenecks }
         optimization: null, // À implémenter si nécessaire
         networkHealth,
         loading: false,
@@ -51,7 +51,7 @@ export const useDazFlow = (nodeId: string | null) => {
       setData(prev => ({
         ...prev,
         loading: false,
-        error: error instanceof Error ? error.message : 'Erreur lors du chargement des données DazFlow'
+        error: error instanceof Error ? error.message : "Erreur lors du chargement des données DazFlow"
       }));
     }
   }, [nodeId]);
@@ -68,4 +68,4 @@ export const useDazFlow = (nodeId: string | null) => {
     ...data,
     refreshData
   };
-}; 
+}; </DazFlowData>

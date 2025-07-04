@@ -1,5 +1,6 @@
-import { NextResponse } from 'next/server';
-import { OrderService } from '@/lib/services/order-service';
+import { NextResponse } from "next/server";
+import { OrderService } from "@/lib/services/order-service";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
 
 export interface LNbitsWebhookPayload {
   payment_hash: string;
@@ -13,11 +14,12 @@ export interface LNbitsWebhookPayload {
 }
 
 export async function POST(request: Request) {
+
   try {
     const payload = await request.json() as LNbitsWebhookPayload;
     
     if (!payload.payment_hash) {
-      return NextResponse.json({ error: 'Payment hash requis' }, { status: 400 });
+      return NextResponse.json({ error: "Payment hash requis" }, { status: 400 });
     }
 
     const _orderService = new OrderService();
@@ -26,11 +28,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true });
 
   } catch (error) {
-    console.error('Erreur webhook LNbits:', error);
+    console.error("Erreur webhook LNbits:", error);
     return NextResponse.json(
-      { error: 'Erreur lors du traitement du webhook' },
+      { error: "Erreur lors du traitement du webhook" },
       { status: 500 }
-);
+    );
   }
 }
 
@@ -39,10 +41,10 @@ export async function OPTIONS(_req: Request): Promise<Response> {
   return new NextResponse(null, {
     status: 200,
     headers: {
-      "route.routerouteaccesscontrolallowor": '*',
-      "route.routerouteaccesscontrolallowme": 'POST, OPTIONS',
-      "route.routerouteaccesscontrolallowhe": 'Content-Type, X-Api-Key',
-    },
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, X-Api-Key"
+    }
   });
 }
 

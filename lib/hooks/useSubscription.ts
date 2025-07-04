@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import { useSupabase } from '@/app/providers/SupabaseProvider';
+import { useState, useEffect } from "react";
+import { useSupabase } from "@/app/providers/SupabaseProvider";
 
 export interface Subscription {
   id: string;
   userId: string;
   planId: string;
   planName: string;
-  status: 'active' | 'cancelled' | 'expired' | 'trial';
+  status: "active" | "cancelled" | "expired" | "trial";
   startDate: string;
   endDate: string;
   price: number;
@@ -33,10 +33,10 @@ export function useSubscription() {
       }
 
       try {
-        const response = await fetch('/api/subscriptions/current', {
+        const response = await fetch("/api/subscriptions/current", {
           headers: {
-            'Authorization': `Bearer ${session.access_token}`,
-            "useSubscription.usesubscriptionusesubscription": 'application/json'
+            "Authorization": `Bearer ${session.access_token}`,
+            "Content-Type": "application/json"
           }
         });
 
@@ -46,10 +46,10 @@ export function useSubscription() {
             setSubscription(data.data);
           }
         } else {
-          throw new Error('Erreur lors de la récupération de l\'abonnement');
+          throw new Error("Erreur lors de la récupération de l'abonnement");
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erreur inconnue');
+        setError(err instanceof Error ? err.message : "Erreur inconnue");
       } finally {
         setLoading(false);
       }

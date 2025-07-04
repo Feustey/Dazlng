@@ -3,8 +3,7 @@
 /**
  * Script de test pour vérifier que tous les composants utilisateur
  * se compilent et s'importent correctement
- */
-
+ *
 const fs = require('fs');
 
 // Chemins des composants à tester
@@ -18,7 +17,7 @@ const componentsToTest = [
   'app/user/dashboard/page.tsx'
 ];
 
-console.log('🧪 Test des composants utilisateur...\n');
+console.log('🧪 Test des composants utilisateur...\\n);
 
 let allTestsPassed = true;
 
@@ -70,7 +69,7 @@ componentsToTest.forEach((componentPath) => {
   }
 });
 
-console.log('\n' + '='.repeat(50));
+console.log('\\n + '='.repeat(50));
 
 if (allTestsPassed) {
   console.log('🎉 Tous les tests sont passés !');

@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { cn } from '../../../lib/utils';
+import {useEffect useState } from "react";
+import { useRouter } from \next/navigatio\n";
+import { cn } from "../../../lib/utils";
 
 export interface PageLoaderProps {
   className?: string;
   showProgress?: boolean;
 }
 
-export function PageLoader({ className, showProgress = true }: PageLoaderProps): JSX.Element | null {
+export function PageLoader({className showProgress = true }: PageLoaderProps): JSX.Element | null {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -76,37 +76,29 @@ export function PageLoader({ className, showProgress = true }: PageLoaderProps):
 
   return (
     <>
-      {/* Barre de progression en haut */}
+      {/* Barre de progression en haut  */}
       {showProgress && (
-        <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-gray-200">
-          <div 
-            className="h-full bg-blue-500 transition-all duration-300 ease-out"
-            style={{ width: `${progress}%` }}
-          />
+        <div></div>
+          <div></div>
         </div>
       )}
 
-      {/* Overlay de chargement */}
-      <div className={cn(
-        'fixed inset-0 z-40 flex items-center justify-center bg-white/80 backdrop-blur-sm',
-        className
-      )}>
-        <div className="flex flex-col items-center space-y-4">
-          {/* Spinner animé */}
-          <div className="relative">
+      {/* Overlay de chargement  */}
+      <div></div>
+        <div>
+          {/* Spinner animé  */}</div>
+          <div></div>
             <div className="w-12 h-12 border-4 border-gray-200 rounded-full"></div>
             <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin absolute top-0"></div>
           </div>
           
-          {/* Texte de chargement */}
-          <p className="text-sm text-gray-600 animate-pulse">
-            Chargement en cours...
+          {/* Texte de chargement  */}
+          <p>
+            Chargement en cours...</p>
           </p>
         </div>
       </div>
-    </>
-  );
-}
+    </>);
 
 // Hook pour contrôler manuellement le loader
 export function usePageLoader(): {
@@ -119,9 +111,7 @@ export function usePageLoader(): {
   const startLoading = (): void => setIsLoading(true);
   const stopLoading = (): void => setIsLoading(false);
 
-  return {
-    isLoading,
-    startLoading,
-    stopLoading
-  };
+  return {isLoading
+    startLoading, stopLoading};
 }
+`

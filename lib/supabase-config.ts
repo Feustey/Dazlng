@@ -4,11 +4,9 @@ export const SUPABASE_SESSION_CONFIG = {
   SESSION_DURATION: 3600,
   
   // Configuration des tokens JWT
-  JWT_EXPIRY: '1h',
-  
+  JWT_EXPIRY: "1h",
   // Configuration refresh token (optionnel, peut être plus long)
-  REFRESH_TOKEN_EXPIRY: '1h',
-  
+  REFRESH_TOKEN_EXPIRY: "1h",
   // Auto-refresh avant expiration (en secondes)
   AUTO_REFRESH_BEFORE_EXPIRY: 300, // 5 minutes avant expiration
 } as const;
@@ -19,38 +17,37 @@ export const supabaseClientConfig = {
     persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true,
-    flowType: 'pkce' as const,
+    flowType: "pkce" as const,
     // Configuration personnalisée pour 1h
-    sessionTimeoutMs: SUPABASE_SESSION_CONFIG.SESSION_DURATION * 1000,
-  }
+    sessionTimeoutMs: SUPABASE_SESSION_CONFIG.SESSION_DURATION * 1000}
 };
 
 // Configuration cross-domain pour Token For Good
 export const CROSS_DOMAIN_CONFIG = {
   // Domaines autorisés pour le partage de session
   ALLOWED_DOMAINS: [
-    'https://app.token-for-good.com',
-    'https://token-for-good.com',
-    'https://dazeno.de',
-    'https://www.dazeno.de'
+    "https://app.token-for-good.com", 
+    "https://token-for-good.com", 
+    "https://dazeno.de", 
+    "https://www.dazeno.de"
   ],
   
   // Configuration des cookies cross-domain
   COOKIE_CONFIG: {
-    domain: '.dazeno.de', // Point pour partager entre sous-domaines
-    sameSite: 'None' as const,
+    domain: ".dazeno.de", // Point pour partager entre sous-domaines
+    sameSite: "None" as const,
     secure: true, // Requis pour SameSite=None
     httpOnly: false, // Permet l'accès côté client
     maxAge: SUPABASE_SESSION_CONFIG.SESSION_DURATION, // 1 heure
-    path: '/'
+    path: "/"
   },
   
   // Configuration CORS
   CORS_CONFIG: {
-    origin: 'https://app.token-for-good.com',
+    origin: "https://app.token-for-good.com",
     credentials: true,
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+    methods: ["GET", "POST", "OPTIONS"],
+    headers: ["Content-Type", "Authorizatio\n, "X-Requested-With"]
   }
 } as const;
 
@@ -72,4 +69,4 @@ export const CROSS_DOMAIN_CONFIG = {
  * 
  * Note: Les changements dans le dashboard Supabase peuvent prendre 
  * quelques minutes à se propager.
- */ 
+ *

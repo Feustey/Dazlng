@@ -1,14 +1,16 @@
 export interface NodeInfo {
   pubkey: string;
   alias: string;
+  color: string;
   capacity: number;
   channels: number;
   last_update: string;
-  custom_records?: Record<string, string>;
-  features?: Record<string, string>;
+  custom_records?: Record<string, any>;
+  features?: Record<string, any>;
   addresses?: Array<{
-    network: string;
-    addr: string;
+    type: string;
+    address: string;
+    port: number;
   }>;
 }
 

@@ -1,20 +1,20 @@
 -- Migration pour les fonctionnalités administrateur
 -- Date: 2024-12-13
--- Description: Création des tables pour l'audit, notifications, permissions et exports admin
+-- Description: Création des tables pour l'audit, notifications, permissions et exports admin'
 
 -- Table pour les rôles et permissions admin
-CREATE TABLE IF NOT EXISTS admin_roles (
+CREATE TABLE IF NOT EXISTS admin_roles (;
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
     role TEXT NOT NULL CHECK (role IN ('super_admin', 'admin', 'moderator', 'support')),
     permissions JSONB NOT NULL DEFAULT '[]',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now(),;
     UNIQUE(user_id)
 );
 
--- Table pour l'audit des actions admin
-CREATE TABLE IF NOT EXISTS admin_audit_logs (
+-- Table pour l'audit des actions admin'
+CREATE TABLE IF NOT EXISTS admin_audit_logs (;
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     admin_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
     admin_email TEXT NOT NULL,
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS admin_audit_logs (
 );
 
 -- Table pour les notifications admin
-CREATE TABLE IF NOT EXISTS admin_notifications (
+CREATE TABLE IF NOT EXISTS admin_notifications (;
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     admin_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
     type TEXT NOT NULL CHECK (type IN ('alert', 'info', 'success', 'warning')),
@@ -41,8 +41,8 @@ CREATE TABLE IF NOT EXISTS admin_notifications (
     expires_at TIMESTAMP WITH TIME ZONE
 );
 
--- Table pour les jobs d'export
-CREATE TABLE IF NOT EXISTS export_jobs (
+-- Table pour les jobs d'export'
+CREATE TABLE IF NOT EXISTS export_jobs (;
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     admin_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
     type TEXT NOT NULL CHECK (type IN ('users', 'orders', 'payments', 'subscriptions', 'analytics')),
@@ -52,12 +52,12 @@ CREATE TABLE IF NOT EXISTS export_jobs (
     error_message TEXT,
     metadata JSONB DEFAULT '{}',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now(),;
     completed_at TIMESTAMP WITH TIME ZONE
 );
 
 -- Table pour le tracking des emails (si pas déjà existante)
-CREATE TABLE IF NOT EXISTS user_email_tracking (
+CREATE TABLE IF NOT EXISTS user_email_tracking (;
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     email TEXT NOT NULL UNIQUE,
     first_seen_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS user_email_tracking (
     source TEXT,
     notes TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now();
 );
 
 -- Index pour optimiser les performances
@@ -88,7 +88,7 @@ CREATE INDEX IF NOT EXISTS idx_user_email_tracking_source ON user_email_tracking
 -- Fonction pour mettre à jour automatiquement updated_at
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
-BEGIN
+BEGIN;
     NEW.updated_at = now();
     RETURN NEW;
 END;
@@ -97,17 +97,17 @@ $$ language 'plpgsql';
 -- Triggers pour les mises à jour automatiques
 DROP TRIGGER IF EXISTS update_admin_roles_updated_at ON admin_roles;
 CREATE TRIGGER update_admin_roles_updated_at 
-    BEFORE UPDATE ON admin_roles 
+    BEFORE UPDATE ON admin_roles ;
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 DROP TRIGGER IF EXISTS update_export_jobs_updated_at ON export_jobs;
 CREATE TRIGGER update_export_jobs_updated_at 
-    BEFORE UPDATE ON export_jobs 
+    BEFORE UPDATE ON export_jobs ;
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 DROP TRIGGER IF EXISTS update_user_email_tracking_updated_at ON user_email_tracking;
 CREATE TRIGGER update_user_email_tracking_updated_at 
-    BEFORE UPDATE ON user_email_tracking 
+    BEFORE UPDATE ON user_email_tracking ;
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- RLS (Row Level Security) pour les tables admin
@@ -179,14 +179,14 @@ CREATE POLICY "Admins can manage exports" ON storage.objects
         )
     );
 
--- Données d'exemple pour un super admin (à adapter)
+-- Données d'exemple pour un super admin (à adapter)'
 -- INSERT INTO admin_roles (user_id, role, permissions) 
 -- VALUES (
 --     'UUID_DU_SUPER_ADMIN', 
 --     'super_admin', 
---     '[
+--     '['
 --         {"resource": "*", "actions": ["read", "write", "delete", "export"]}
---     ]'
+--     ]''
 -- )
 -- ON CONFLICT (user_id) DO NOTHING;
 

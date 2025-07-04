@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { createDaznoApiClient } from '@/lib/services/dazno-api'
-import { ApiResponse } from '@/types/database'
-import { DaznoPriorityRequest, DaznoPriorityResponse } from '@/types/dazno-api'
+import { NextRequest, NextResponse } from "next/server"
+import { createDaznoApiClient } from "@/lib/services/dazno-api"
+import { ApiResponse } from "@/types/database"
+import { DaznoPriorityRequest, DaznoPriorityResponse } from "@/types/dazno-api"
 
 // Fonction de validation de pubkey Lightning
 const isValidLightningPubkey = (pubkey: string): boolean => {
@@ -17,11 +17,11 @@ export async function POST(
     const pubkey = resolvedParams.pubkey
     
     if (!isValidLightningPubkey(pubkey)) {
-      return NextResponse.json<ApiResponse<null>>({
+      return NextResponse.json<ApiResponse<DaznoPriorityResponse>>({
         success: false,
         error: {
-          code: 'INVALID_PUBKEY',
-          message: 'Clé publique invalide'
+          code: "INVALID_PUBKEY",
+          message: "Clé publique invalide"
         }
       }, { status: 400 })
     }
@@ -30,11 +30,11 @@ export async function POST(
     
     // Validation des paramètres
     if (!body.context || !body.goals) {
-      return NextResponse.json<ApiResponse<null>>({
+      return NextResponse.json<ApiResponse<DaznoPriorityResponse>>({
         success: false,
         error: {
-          code: 'MISSING_PARAMETERS',
-          message: 'Paramètres manquants: context et goals sont requis'
+          code: "MISSING_PARAMETERS",
+          message: "Paramètres manquants: context et goals sont requis"
         }
       }, { status: 400 })
     }
@@ -46,23 +46,22 @@ export async function POST(
     // Utilisation d'un endpoint générique pour l'instant
     const data = await daznoApi.getUnifiedRecommendations({ pubkey })
 
-    return NextResponse.json<ApiResponse<any>>({
+    return NextResponse.json<ApiResponse<DaznoPriorityResponse>>({
       success: true,
       data,
       meta: {
         timestamp: new Date().toISOString(),
-        version: '1.0'
+        version: "1.0"
       }
     })
 
   } catch (error) {
-    console.error('Erreur actions prioritaires:', error)
-    
-    return NextResponse.json<ApiResponse<null>>({
+    console.error("Erreur actions prioritaires:", error)
+    return NextResponse.json<ApiResponse<DaznoPriorityResponse>>({
       success: false,
       error: {
-        code: 'EXTERNAL_API_ERROR',
-        message: error instanceof Error ? error.message : 'Erreur lors de la génération des actions prioritaires'
+        code: "EXTERNAL_API_ERROR",
+        message: error instanceof Error ? error.message : "Erreur lors de la génération des actions prioritaires"
       }
     }, { status: 500 })
   }

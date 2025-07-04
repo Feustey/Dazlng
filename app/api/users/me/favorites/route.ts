@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseAdminClient } from '@/lib/supabase';
+import { getSupabaseAdminClient } from "@/lib/supabase";
 import { favoriteSchema, validateData } from "@/lib/validations";
 import { ApiResponse } from "@/types/database";
 
@@ -11,7 +11,7 @@ async function getUserFromRequest(req: NextRequest) {
 }
 
 // GET /api/users/me/favorites - Liste des favoris
-export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {
@@ -62,7 +62,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> 
 }
 
 // POST /api/users/me/favorites - Ajouter aux favoris
-export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>> {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const user = await getUserFromRequest(req);
     if (!user) {
@@ -94,7 +94,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
       .from("user_favorites")
       .select("id")
       .eq("user_id", user.id)
-      .eq("item_id", validation.data.itemId)
+      .eq("name", validation.data.name)
       .eq("type", validation.data.type)
       .single();
 

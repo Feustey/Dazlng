@@ -1,4 +1,5 @@
-import React from 'react';
+import React from "react";
+import { useAdvancedTranslation } from "@/hooks/useAdvancedTranslation";
 
 interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -7,19 +8,23 @@ interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const FormInput: React.FC<FormInputProps> = ({ label, error, optional, ...props }) => {
+  const { t } = useAdvancedTranslation();
+  
   return (
-    <div className="mb-4">
-      <label className="block text-base font-semibold mb-1">
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">
         {label}
-        {optional && <span className="ml-2 text-sm text-gray-400 italic">{t('FormInput.optionnel')}</span>}
+        {optional && <span className="ml-2 text-sm text-gray-400 italic">{t("FormInput.optionnel")}</span>}
       </label>
       <input
-        className={`w-full bg-gray-100 border-2 border-gray-300 rounded-lg px-4 py-2 text-base focus:outline-none focus:border-blue-500 ${error ? 'border-red-500' : ''}`}
         {...props}
+        className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+          error ? 'border-red-500' : ''
+        }`}
       />
       {error && <div className="text-red-500 text-sm mt-1 font-medium">{error}</div>}
     </div>
   );
 };
 
-export default FormInput; 
+export default FormInput;

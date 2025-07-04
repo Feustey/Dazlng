@@ -1,11 +1,10 @@
-'use client';
+"use client";
 
-import React from 'react';
-
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { useInView } from 'react-intersection-observer';
-import { useVirtualizer } from '@tanstack/react-virtual';
-import { cn } from '../../../lib/utils';
+import React from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useInView } from "react-intersection-observer";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import { cn } from "../../../lib/utils";
 
 interface LazyListProps<T> {
   items: T[];
@@ -26,7 +25,7 @@ export function LazyList<T>({
   renderItem,
   loadingComponent,
   emptyComponent,
-  className = '',
+  className = "",
   overscan = 5,
   estimateSize = 50,
   onEndReached,
@@ -88,18 +87,8 @@ export function LazyList<T>({
   }
 
   return (
-    <div 
-      ref={parentRef}
-      className={`relative overflow-auto ${className}`}
-      style={{ height: '100%', maxHeight: '80vh' }}
-    >
-      <div
-        style={{
-          height: virtualizer.getTotalSize() + 'px',
-          width: '100%',
-          position: 'relative'
-        }}
-      >
+    <div className={cn("relative", className)}>
+      <div ref={parentRef} className="h-full overflow-auto">
         {virtualizer.getVirtualItems().map((virtualItem: any) => {
           const item = items[virtualItem.index];
           return (
@@ -110,25 +99,25 @@ export function LazyList<T>({
                 top: 0,
                 left: 0,
                 width: '100%',
-                height: virtualItem.size + 'px',
+                height: `${virtualItem.size}px`,
                 transform: `translateY(${virtualItem.start}px)`
               }}
             >
               {renderItem(item, virtualItem.index)}
             </div>
-  );
+          );
         })}
       </div>
 
-      {/* Indicateur de chargement */}
+      {/* Indicateur de chargement  */}
       {isLoading && loadingComponent && (
-        <div className="py-4">
+        <div className="flex justify-center p-4">
           {loadingComponent}
         </div>
       )}
 
-      {/* Élément observé pour détecter la fin */}
-      <div ref={endRef} className="h-px" />
+      {/* Élément observé pour détecter la fin  */}
+      <div ref={endRef} className="h-1" />
     </div>
   );
 }

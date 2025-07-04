@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseAdminClient } from '@/lib/supabase';
-import { withAdminAuth, handleApiError } from '@/lib/api-utils';
-import { z } from 'zod';
-import { ErrorCodes } from '@/types/database';
+import { getSupabaseAdminClient } from "@/lib/supabase";
+import { withAdminAuth, handleApiError } from "@/lib/api-utils";
+import { z } from "zod";
+import { ErrorCodes } from "@/types/database";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 // Schéma de validation pour les paramètres de requête
 const querySchema = z.object({
   id: z.string().uuid().optional(),
   limit: z.coerce.number().min(1).max(100).default(20),
-  sort: z.string().regex(/^[a-zA-Z_]+:(asc|desc)$/).default('created_at:desc'),
-  status: z.enum(['pending', 'paid', 'failed', 'refunded']).optional()
+  sort: z.string().regex(/^[a-zA-Z_]+:(asc|desc)$/).default("created_at:desc"),
+  status: z.enum(["pending", "paid", "failed", "refunded"]).optional()
 });
 
 // GET /api/admin/orders - Liste ou détails des commandes
@@ -33,7 +33,7 @@ export async function GET(req: NextRequest): Promise<Response> {
       }
 
       const { id, limit, sort, status } = result.data;
-      const [sortField, sortOrder] = sort.split(':');
+      const [sortField, sortOrder] = sort.split(":");
 
       // Si un ID est fourni, récupérer les détails complets de la commande
       if (id) {

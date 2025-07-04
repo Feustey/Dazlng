@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { mcpLightAPI } from '@/lib/services/mcp-light-api';
+import { NextRequest, NextResponse } from "next/server";
+import { mcpLightAPI } from "@/lib/services/mcp-light-api";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   try {
@@ -15,18 +15,18 @@ export async function GET(request: NextRequest) {
       data: networkHealth,
       meta: {
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: "1.0.0"
       }
     });
 
   } catch (error) {
-    console.error('❌ Erreur santé réseau:', error);
+    console.error("❌ Erreur santé réseau:", error);
     
     return NextResponse.json({
       success: false,
       error: {
-        code: 'NETWORK_HEALTH_ERROR',
-        message: error instanceof Error ? error.message : 'Erreur lors de l\'évaluation de la santé du réseau',
+        code: "NETWORK_HEALTH_ERROR",
+        message: error instanceof Error ? error.message : "Erreur lors de l'évaluation de la santé du réseau",
         details: error instanceof Error ? error.stack : undefined
       }
     }, { status: 500 });

@@ -4,7 +4,7 @@ export interface RAGAdvancedQuery {
   query: string;
   context?: string;
   limit?: number;
-  filters?: Record<string, unknown>;
+  filters?: Record<string, any>;
   similarity_threshold?: number;
   include_metadata?: boolean;
   response_format?: 'text' | 'structured' | 'hybrid';
@@ -14,7 +14,7 @@ export interface RAGQueryResponse {
   answer: string;
   sources: RAGDocument[];
   confidence: number;
-  metadata: Record<string, unknown>;
+  metadata: Record<string, any>;
   processing_time: number;
 }
 
@@ -60,7 +60,7 @@ export interface RAGCacheStats {
 
 export interface RAGCacheInvalidationRequest {
   document_ids?: string[];
-  filters?: Record<string, unknown>;
+  filters?: Record<string, any>;
   invalidate_all?: boolean;
 }
 
@@ -73,8 +73,11 @@ export interface RAGCacheInvalidationResponse {
 export interface RAGDocument {
   id: string;
   content: string;
-  metadata: Record<string, unknown>;
-  created_at: string;
+  metadata: Record<string, any>;
+  embedding?: number[];
+  confidence: number;
+  source: string;
+  timestamp: string;
 }
 
 // Lightning-RAG
@@ -92,7 +95,7 @@ export interface LightningRAGResponse {
   node_context: {
     pubkey: string;
     alias: string;
-    current_stats: Record<string, unknown>;
+    current_stats: Record<string, any>;
     relevant_channels: Array<{
       channel_id: string;
       remote_pubkey: string;
@@ -187,4 +190,71 @@ export interface LightningOptimizationResponse {
       action: string;
     }>;
   };
+}
+
+export interface RAGQuery {
+  query: string;
+  filters?: Record<string, any>;
+  limit?: number;
+  threshold?: number;
+}
+
+export interface RAGResponse {
+  documents: RAGDocument[];
+  query: string;
+  total_results: number;
+  processing_time: number;
+}
+
+export interface RAGInsight {
+  id: string;
+  type: 'analysis' | 'recommendation' | 'alert' | 'prediction';
+  title: string;
+  content: string;
+  confidence: number;
+  sources: RAGDocument[];
+  metadata: Record<string, any>;
+  created_at: string;
+  expires_at?: string;
+}
+
+export interface RAGOptimizationRequest {
+  node_pubkey: string;
+  optimization_goal: 'revenue_maximization' | 'risk_minimization' | 'efficiency_improvement' | 'network_growth';
+  constraints?: {
+    max_channels?: number;
+    max_liquidity?: number;
+    min_fees?: number;
+    max_risk_tolerance?: number;
+  };
+  include_rag_insights?: boolean;
+  historical_context?: boolean;
+}
+
+export interface RAGOptimizationResponse {
+  recommendations: Array<{
+    action: string;
+    description: string;
+    expected_impact: number;
+    confidence: number;
+    implementation_steps: string[];
+    risks: string[];
+  }>;
+  insights: RAGInsight[];
+  market_trends: string[];
+  opportunities: string[];
+  risks: string[];
+  summary: string;
+  processing_time: number;
+}
+
+export interface RAGDocumentStore {
+  documents: RAGDocument[];
+  addDocument(doc: RAGDocument): Promise<void>;
+  search(query: RAGQuery): Promise<RAGResponse>;
+  deleteDocument(id: string): Promise<void>;
+  updateDocument(id: string, updates: Partial<RAGDocument>): Promise<void>;
+  getDocument(id: string): Promise<RAGDocument | null>;
+  listDocuments(filters?: Record<string, any>): Promise<RAGDocument[]>;
+  clear(): Promise<void>;
 } 
