@@ -99,7 +99,7 @@ class DaznoApiClient {
     try {
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         headers: {
-          "Content-Type": "application/jso\n,
+          "Content-Type": "application/json",
           ...options?.headers},
         ...options});
 

@@ -101,7 +101,7 @@ const { t } = useAdvancedTranslation();
         const response = await fetch("/api/auth/me", {
           headers: {
             "Authorization": `Bearer ${session.access_token}`,
-            "Content-Type": "application/jso\n
+            "Content-Type": "application/json"
           }
         });
         
@@ -117,7 +117,7 @@ const { t } = useAdvancedTranslation();
           
           setProfile(userProfile);
           setError(null);
-        } else {`
+        } else {
           throw new Error(`Erreur API: ${response.status}`);
         }
       } catch (err) {
@@ -144,66 +144,83 @@ const { t } = useAdvancedTranslation();
     // 🏆 Définition des champs de profil avec logique cohérente
     const profileFields: ProfileField[] = [
       {
-        name: "email_verified"label: "{t("useUserData_useruseruseruseremail_vrifi")}"completed: isEmailVerifie,d,
-        priority: "high"
-        href: "/user/settings"points: 2,0,
-        description: "{t("useGamificationSystem_useruseruseruservrifiez_votre_emai")}"
+        name: "email_verified",
+        label: "Email vérifié",
+        completed: isEmailVerified,
+        priority: "high",
+        href: "/user/settings",
+        points: 20,
+        description: "Vérifiez votre email pour sécuriser votre compte"
       },
       {
-        name: \nom",
-        label: "{t("useGamificationSystem_useruseruserusernom_de_famille")}"completed: !!(profile.nom?.trim(),),
-        priority: "medium"
-        href: "/user/settings"points: 1,0,
-        description: "{t("useGamificationSystem_useruseruserusercompltez_votre_ide"")}"
+        name: "nom",
+        label: "Nom de famille",
+        completed: !!(profile.nom?.trim()),
+        priority: "medium",
+        href: "/user/settings",
+        points: 10,
+        description: "Complétez votre identité"
       },
       {
         name: "prenom",
-        label: "{t("useGamificationSystem_useruseruseruserprnom"")}"completed: !!(profile.prenom?.trim(),),
-        priority: "medium"
-        href: "/user/settings"points: 1,0,
-        description: "{t("useGamificationSystem_useruseruseruserpersonnalisez_votr")}"
+        label: "Prénom",
+        completed: !!(profile.prenom?.trim()),
+        priority: "medium",
+        href: "/user/settings",
+        points: 10,
+        description: "Personnalisez votre profil"
       },
       {
         name: "pubkey",
-        label: "{t("useGamificationSystem_useruseruserusercl_publique_light\n)}"completed: hasValidPubke,y,
-        priority: "high"
-        href: "/user/settings"points: 2,5,
-        description: "{t("useGamificationSystem_useruseruseruserconnectez_votre_po")}"
+        label: "Clé publique Lightning",
+        completed: hasValidPubkey,
+        priority: "high",
+        href: "/user/settings",
+        points: 25,
+        description: "Connectez votre portefeuille Lightning"
       },
       {
-        name: \node_connectio\n,
-        label: "{t("useGamificationSystem_useruseruserusernud_lightning_con\n)}"completed: hasNod,e,
-        priority: "high"
-        href: "/user/node"points: 3,0,
-        description: "{t("useGamificationSystem_useruseruseruserconnectez_votre_nu"")}"
+        name: "node_connection",
+        label: "Nœud Lightning connecté",
+        completed: hasNode,
+        priority: "high",
+        href: "/user/node",
+        points: 30,
+        description: "Connectez votre nœud Lightning"
       },
       {
         name: "compte_x",
-        label: "{t("useGamificationSystem_useruseruserusercompte_x_twitter"")}"completed: !!(profile.compte_x?.trim(),),
-        priority: "low"
-        href: "/user/settings"points: ,5,
-        description: "{t("useGamificationSystem_useruseruseruserpartagez_vos_perfo")}"
+        label: "Compte X (Twitter)",
+        completed: !!(profile.compte_x?.trim()),
+        priority: "low",
+        href: "/user/settings",
+        points: 5,
+        description: "Partagez vos performances"
       },
       {
         name: "compte_nostr",
-        label: "{t("useUserData_useruseruserusercompte_nostr")}"completed: !!(profile.compte_nostr?.trim(),),
-        priority: "low"
-        href: "/user/settings"points: ,5,
-        description: "{t("useGamificationSystem_useruseruseruserrejoignez_la_commu")}"
+        label: "Compte Nostr",
+        completed: !!(profile.compte_nostr?.trim()),
+        priority: "low",
+        href: "/user/settings",
+        points: 5,
+        description: "Rejoignez la communauté décentralisée"
       },
       {
         name: "phone_verified",
-        label: "{t("useUserData_useruseruserusertlphone_vrifi")}"completed: !!(profile.phone_verified,),
-        priority: "low""
-        href: "/user/settings"points: ,5,
-        description: "{t("useGamificationSystem_useruseruseruservrifiez_votre_tlph"")}"
+        label: "Téléphone vérifié",
+        completed: !!(profile.phone_verified),
+        priority: "low",
+        href: "/user/settings",
+        points: 5,
+        description: "Vérifiez votre téléphone"
       }
     ];
 
     // 📈 Calcul du score et progression
     const completedFields = profileFields.filter(f => f.completed);
-    const totalPossiblePoints = profileFields.reduce((sum: any, field: any) => sum + field.point,s, 0);
-    const earnedPoints = completedFields.reduce((sum: any, field: any) => sum + field.point,s, 0);
+    const totalPossiblePoints = profileFields.reduce((sum: any, field: any) => sum + field.points, 0);
+    const earnedPoints = completedFields.reduce((sum: any, field: any) => sum + field.points, 0);
     
     // Bonus pour utilisateur premium
     const premiumBonus = isPremium ? 15 : 0;
@@ -218,56 +235,67 @@ const { t } = useAdvancedTranslation();
     // Complétion profil
     const profileCompletion = Math.round((completedFields.length / profileFields.length) * 100);
 
-    // 🏅 Système d"achievements
+    // 🏅 Système d'achievements
     const achievements: Achievement[] = [
       {
-        id: "email_verified"title: "Première Connexio\n,
-        description: "{t("useUserData_useruseruseruseremail_vrifi"")}_avec_s"category: "startup",
-        unlocked: isEmailVerifie,d,
-        progress: isEmailVerified ? 1 : ,0,
+        id: "email_verified",
+        title: "Première Connexion",
+        description: "Email vérifié avec succès",
+        category: "startup",
+        unlocked: isEmailVerified,
+        progress: isEmailVerified ? 1 : 0,
         maxProgress: 1,
-        reward: 2,0,
-        icon: "✅"rarity: "commo\n
+        reward: 20,
+        icon: "✅",
+        rarity: "common"
       },
       {
-        id: "lightning_connected"",
-        title: "Lightning Adopter"",
-        description: "{t("useGamificationSystem_useruseruseruserpremire_cl_publiqu")}"category: "growth",
-        unlocked: hasValidPubke,y,
-        progress: hasValidPubkey ? 1 : ,0,
+        id: "lightning_connected",
+        title: "Lightning Adopter",
+        description: "Première clé publique connectée",
+        category: "growth",
+        unlocked: hasValidPubkey,
+        progress: hasValidPubkey ? 1 : 0,
         maxProgress: 1,
-        reward: 2,5,
-        icon: "⚡"rarity: "rare"
+        reward: 25,
+        icon: "⚡",
+        rarity: "rare"
       },
       {
-        id: \node_operator",
+        id: "node_operator",
         title: "Opérateur de Nœud",
-        description: "{t("useGamificationSystem_useruseruserusernud_lightning_netw")}"category: "performance",
-        unlocked: hasNod,e,
-        progress: hasNode ? 1 : ,0,
+        description: "Nœud Lightning Network opérationnel",
+        category: "performance",
+        unlocked: hasNode,
+        progress: hasNode ? 1 : 0,
         maxProgress: 1,
-        reward: 3,0,
-        icon: "🟢"rarity: "epic"
+        reward: 30,
+        icon: "🟢",
+        rarity: "epic"
       },
       {
         id: "social_connector",
         title: "Connecteur Social",
-        description: "{t("useGamificationSystem_useruseruserusercompte_social_con\n")}"category: "community",
-        unlocked: !!(profile.compte_x || profile.compte_nostr,),
-        progress: [profile.compte_,x, profile.compte_nostr].filter(Boolean).length,
+        description: "Comptes sociaux connectés",
+        category: "community",
+        unlocked: !!(profile.compte_x || profile.compte_nostr),
+        progress: [profile.compte_x, profile.compte_nostr].filter(Boolean).length,
         maxProgress: 2,
-        reward: 1,0,
-        icon: "🌐"rarity: "commo\n
+        reward: 10,
+        icon: "🌐",
+        rarity: "common"
       },
       {
-        id: "profile_master"",
-        title: "Profil Master"",
-        description: "{t("useGamificationSystem_useruseruseruserprofil_100_complt")}"category: "growth",
-        unlocked: profileCompletion >= 10,0,
-        progress: profileCompletio,n,
-        maxProgress: 10,0,
-        reward: 5,0,
-        icon: "🏆"rarity: "legendary"
+        id: "profile_master",
+        title: "Profil Master",
+        description: "Profil 100% complété",
+        category: "growth",
+        unlocked: profileCompletion >= 100,
+        progress: profileCompletion,
+        maxProgress: 100,
+        reward: 50,
+        icon: "🏆",
+        rarity: "legendary"
       }
     ];
 
@@ -280,7 +308,7 @@ const { t } = useAdvancedTranslation();
       .sort((a: any, b: any) => b.points - a.points);
     
     const nextActions = incompleteFields
-      .sort((a: ProfileFiel,d, b: ProfileField) => {</string>
+      .sort((a: ProfileField, b: ProfileField) => {
         const priorityOrder: Record<string, any> = { high: 3, medium: 2, low: 1 };
         return priorityOrder[b.priority] - priorityOrder[a.priority] || b.points - a.points;
       })
@@ -300,10 +328,10 @@ const { t } = useAdvancedTranslation();
       isEmailVerified,
       achievements,
       unlockedAchievements,
-      totalAchievements: achievements.length
-      rank: Math.floor(Math.random() * 500) + 5,0, // TODO: Calculer vraiment
-      totalUsers: 120,0, // TODO: Récupérer vraiment
-      nextAction,s,
+      totalAchievements: achievements.length,
+      rank: Math.floor(Math.random() * 500) + 50, // TODO: Calculer vraiment
+      totalUsers: 1200, // TODO: Récupérer vraiment
+      nextActions,
       priorityActions
     };
   }, [profile]);
@@ -313,10 +341,11 @@ const { t } = useAdvancedTranslation();
     if (!session) return;
 
     try {
-      const response = await fetch("/api/user/profile"{
+      const response = await fetch("/api/user/profile", {
         method: "PUT",
-        headers: {`
-          "Authorizatio\n: `Bearer ${session.access_token}`"{t("page_useruseruserusercontenttype"")}": "application/jso\n
+        headers: {
+          "Authorization": `Bearer ${session.access_token}`,
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(updates)
       });
@@ -339,14 +368,13 @@ const { t } = useAdvancedTranslation();
     gamificationData,
     isLoading,
     error,
-    updateProfile
+    updateProfile,
     // Computed values pour compatibilité
     hasNode: gamificationData?.hasNode || false,
-    userScore: gamificationData?.userScore || ,0,
-    profileCompletion: gamificationData?.profileCompletion || ,0,
+    userScore: gamificationData?.userScore || 0,
+    profileCompletion: gamificationData?.profileCompletion || 0,
     profileFields: gamificationData?.profileFields || [],
     achievements: gamificationData?.achievements || []
   };
 }
-export const dynamic  = "force-dynamic";
-`</UserProfile>
+export const dynamic = "force-dynamic";

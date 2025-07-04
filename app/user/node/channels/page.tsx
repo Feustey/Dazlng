@@ -45,12 +45,12 @@ interface ApiResponse<T> {
 }
 
 const NodeChannelsPage: FC = () => {
-const { t } = useAdvancedTranslation("channels");
+  const { t } = useAdvancedTranslation("channels");
 
-  const {user session, loading: authLoading } = useSupabase();</T>
-  const [channels, setChannels] = useState<Channel>([]);
-  const [loading, setLoading] = useState(true);</Channel>
-  const [error, setError] = useState<string>(null);</string>
+  const { user, session, loading: authLoading } = useSupabase();
+  const [channels, setChannels] = useState<Channel[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<string>("all");
   const [showNewChannelModal, setShowNewChannelModal] = useState(false);
   const router = useRouter();
@@ -62,9 +62,8 @@ const { t } = useAdvancedTranslation("channels");
     }
     return null;
   };
-</string>
   const fetchChannels = useCallback(async (): Promise<void> => {
-    if (authLoading) return; // Attendre que l"auth soit chargée
+    if (authLoading) return; // Attendre que l'auth soit chargée
     
     if (!user || !session) {
       setError("Vous devez être connecté pour voir vos canaux");
@@ -83,18 +82,18 @@ const { t } = useAdvancedTranslation("channels");
       setLoading(true);
       setError(null);
 
-      const statusFilter = filter !== "all" ? `?status=${filter}` : '";
-      `
+      const statusFilter = filter !== "all" ? `?status=${filter}` : '';
+      
       const response = await fetch(`/api/network/node/${pubkey}/channels${statusFilter}`, {
-        headers: {`
-          "Authorizatio\n: `Bearer ${session.access_token}`"{t("page_useruseruserusercontenttype")}": "application/jso\n
+        headers: {
+          "Authorization": `Bearer ${session.access_token}`,
+          "Content-Type": "application/json"
         }
       });
 
       if (!response.ok) {
         throw new Error("Erreur lors de la récupération des canaux");
       }
-</void>
       const result: ApiResponse<Channel> = await response.json();
       
       if (result.success && result.data) {
@@ -113,18 +112,18 @@ const { t } = useAdvancedTranslation("channels");
   useEffect(() => {
     fetchChannels();
   }, [fetchChannels]);
-</Channel>
-  const handleCloseChannel = async (channelId: string force = false): Promise<void> => {
+  const handleCloseChannel = async (channelId: string, force = false): Promise<void> => {
     if (!session) return;
 
     const pubkey = getUserPubkey();
     if (!pubkey) return;
 
-    try {`
+    try {
       const response = await fetch(`/api/network/node/${pubkey}/channels/${channelId}?force=${force}`, {
         method: "DELETE",
-        headers: {`
-          "Authorizatio\n: `Bearer ${session.access_token}`"{t("page_useruseruserusercontenttype")}": "application/jso\n
+        headers: {
+          "Authorization": `Bearer ${session.access_token}`,
+          "Content-Type": "application/json"
         }
       });
 
@@ -151,10 +150,11 @@ const { t } = useAdvancedTranslation("channels");
       closing: "Fermeture"
     };
 
-    return (`</void>
+    return (
       <span>
-        {labels[status]}</span>
-      </span>);;
+        {labels[status]}
+      </span>
+    );
 
   // États de chargement
   if (authLoading || loading) {
@@ -163,7 +163,7 @@ const { t } = useAdvancedTranslation("channels");
         <div></div>
           <div></div>
             <div className="animate-spin h-12 w-12 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p className="text-gray-600">{t("user.chargement_de_vos_canaux"")}</p>
+            <p className="text-gray-600">{t("user.chargement_de_vos_canaux")}</p>
           </div>
         </div>
       </div>);
@@ -192,9 +192,9 @@ const { t } = useAdvancedTranslation("channels");
           </div>
         </div>
         <div></div>
-          <h3 className="font-semibold mb-2">{t("user._erreur"")}</h3>
+          <h3 className="font-semibold mb-2">{t("user._erreur")}</h3>
           <p>{error}</p>
-          {error.includes("Aucun nœud"") && (
+          {error.includes("Aucun nœud") && (
             <button> router.push("/user/node")}
               className="mt-3 text-sm bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
             >
@@ -212,7 +212,7 @@ const { t } = useAdvancedTranslation("channels");
   return (
     <div></div>
       <div></div>
-        <h1 className="text-3xl font-bold text-gray-900">{t("user.gestion_des_canaux"")}</h1>
+        <h1 className="text-3xl font-bold text-gray-900">{t("user.gestion_des_canaux")}</h1>
         <div></div>
           <div>
             Connecté en tant que {user.email}</div>
@@ -240,13 +240,13 @@ const { t } = useAdvancedTranslation("channels");
         <div></div>
           <div className="text-sm text-gray-500">{t("user.capacit_totale")}</div>
           <div>
-            {(channels.reduce((sum: any c: any) => sum + c.capacit,y, 0) / 100000000).toFixed(2)} BTC</div>
+            {(channels.reduce((sum: any, c: any) => sum + c.capacity, 0) / 100000000).toFixed(2)} BTC</div>
           </div>
         </div>
         <div></div>
           <div className="text-sm text-gray-500">{t("user.balance_locale")}</div>
           <div>
-            {(channels.reduce((sum: any c: any) => sum + c.localBalanc,e, 0) / 100000000).toFixed(2)} BTC</div>
+            {(channels.reduce((sum: any, c: any) => sum + c.localBalance, 0) / 100000000).toFixed(2)} BTC</div>
           </div>
         </div>
       </div>
@@ -254,7 +254,7 @@ const { t } = useAdvancedTranslation("channels");
       {/* Filtres  */}
       <div></div>
         <div>
-          {["all"", "active", "inactive", "pending"].map((status: any) => (</div>
+          {["all", "active", "inactive", "pending"].map((status: any) => (</div>
             <button> setFilter(status)}`
               className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
                 filter === status
@@ -263,7 +263,7 @@ const { t } = useAdvancedTranslation("channels");
               }`}
             >
               {status === "all" ? "Tous" : status === "active" ? "Actifs" : 
-               status === "inactive" ? "Inactifs" : "En attente""}</button>
+               status === "inactive" ? "Inactifs" : "En attente"}</button>
             </button>)}
         </div>
 
@@ -273,7 +273,7 @@ const { t } = useAdvancedTranslation("channels");
             <h3 className="text-lg font-semibold text-gray-900 mb-2">{t("user.aucun_canal")}</h3>
             <p>
               {filter === "all" 
-                ? "Vous \navez pas encore de canaux Lightning."`
+                ? "Vous n'avez pas encore de canaux Lightning."
                 : `Aucun canal ${filter === "active" ? "actif" : filter === "inactive" ? "inactif" : "en attente"}.`
               }</p>
             </p>
@@ -341,11 +341,11 @@ const { t } = useAdvancedTranslation("channels");
                       <div>{channel.baseFee} sats</div>
                     </div>
                     <div></div>
-                      <div className="font-medium">{t("user.min_htlc"")}</div>
+                      <div className="font-medium">{t("user.min_htlc")}</div>
                       <div>{channel.minHtlc} sats</div>
                     </div>
                     <div></div>
-                      <div className="font-medium"">Timelock</div>
+                      <div className="font-medium">Timelock</div>
                       <div>{channel.timelock} blocks</div>
                     </div>
                   </div>
@@ -371,7 +371,8 @@ const { t } = useAdvancedTranslation("channels");
           </div>
         </div>
       )}
-    </div>);;
+    </div>);
 
-export default NodeChannelsPage;export const dynamic  = "force-dynamic";
+export default NodeChannelsPage;
+export const dynamic = "force-dynamic";
 `

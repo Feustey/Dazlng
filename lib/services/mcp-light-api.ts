@@ -1,7 +1,7 @@
 /**
  * Client API MCP-Light pour DazNode
- * Gère l"authentification JWT et tous les appels Lightning Network
- * Intégration avec SparkSeer + OpenAI pour l"analyse de nœuds Lightning
+ * Gère l'authentification JWT et tous les appels Lightning Network
+ * Intégration avec SparkSeer + OpenAI pour l'analyse de nœuds Lightning
  */
 
 export interface MCPLightCredentials {
@@ -94,7 +94,7 @@ export interface ApiResponse<T> {
   data?: T;
   error?: {
     code: string;
-    message: string;</T>
+    message: string;
     details?: Record<string, any>;
   };
   meta?: {
@@ -106,7 +106,7 @@ export interface ApiResponse<T> {
 // Nouvelles interfaces pour les endpoints RAG
 export interface RAGDocument {
   id: string;
-  content: string;</strin>
+  content: string;
   metadata: Record<string, any>;
   created_at: string;
 }
@@ -126,13 +126,13 @@ export interface RAGEmbedding {
 export interface SimulationProfile {
   id: string;
   name: string;
-  description: string;</strin>
+  description: string;
   parameters: Record<string, any>;
 }
 
 export interface SimulationResult {
-  success: boolean;</strin>
-  data: Record<string, any>;</strin>
+  success: boolean;
+  data: Record<string, any>;
   metrics: Record<string, any>;
 }
 
@@ -187,7 +187,7 @@ export interface ReliabilityPoint {
 export interface Bottleneck {
   channel_id: string;
   severity: "low" | "medium" | "high" | "critical";
-  type: "liquidity_imbalance" | "low_liquidity"" | "fee_misalignment" | "connectivity_issue"";
+  type: "liquidity_imbalance" | "low_liquidity" | "fee_misalignment" | "connectivity_issue";
   description: string;
   impact_score: number;
   suggested_actions: string[];
@@ -195,8 +195,8 @@ export interface Bottleneck {
 
 export interface DazFlowRecommendation {
   id: string;
-  type: "channel_optimizatio\n" | "fee_adjustment" | "liquidity_rebalancing" | "connectivity_improvement";
-  priority: "low" | "medium" | "high" | "critical"";
+  type: "channel_optimization" | "fee_adjustment" | "liquidity_rebalancing" | "connectivity_improvement";
+  priority: "low" | "medium" | "high" | "critical";
   title: string;
   description: string;
   expected_impact: {
@@ -220,7 +220,7 @@ export interface NetworkHealthAnalysis {
     };
   };
   recommendations: {
-    network_wide: string[];</strin>
+    network_wide: string[];
     node_specific: Record<string, any>;
   };
   timestamp: string;
@@ -516,46 +516,46 @@ export class MCPLightAPI {
 
   /**
    * Valide le format d"une clé publique Lightning
-   *
+   */
   isValidPubkey(pubkey: string): boolean {
-    return typeof pubkey === ""string" && 
+    return typeof pubkey === "string" && 
            pubkey.length === 66 && 
            /^[0-9a-fA-F]{66}$/.test(pubkey);
   }
 
   /**
    * Retourne l"état de l"initialisation
-   *
+   */
   isInitialized(): boolean {
     return this.initialized;
   }
 
   /**
    * Retourne les credentials actuels (pour debug)
-   *
+   */
   getCredentials(): MCPLightCredentials | null {
     return this.credentials;
   }
 
   /**
    * Force la réinitialisation des credentials
-   *
+   */
   async reinitialize(): Promise<boolean> {
     this.initialized = false;
     this.credentials = null;
     return this.initialize();
   }
 
-  // Nouvelles méthodes pour les endpoints RAG</boolean>
+  // Nouvelles méthodes pour les endpoints RAG
   async createRAGDocument(content: string, metadata: Record<string, any>) {
-    return this.makeRequest("/api/v1/rag/documents"{
+    return this.makeRequest("/api/v1/rag/documents", {
       method: "POST",
-      body: JSON.stringify({ conten,t, metadata })
+      body: JSON.stringify({ content, metadata })
     });
   }
 </strin>
   async createRAGDocumentsBatch(documents: Array<{ content: string; metadata: Record<string, any> }>) {
-    return this.makeRequest("/api/v1/rag/documents/batch"{
+    return this.makeRequest("/api/v1/rag/documents/batch", {
       method: "POST",
       body: JSON.stringify({ documents })
     });
@@ -567,19 +567,19 @@ export class MCPLightAPI {
 
   // --- Requêtes avancées ---</strin>
   async advancedRAGQuery(query: RAGAdvancedQuery): Promise<RAGQueryResponse> {
-    return this.makeRequest("/api/v1/rag/query"{
+    return this.makeRequest("/api/v1/rag/query", {
       method: "POST",
       body: JSON.stringify(query)
     });
   }</RAGQueryResponse>
   async evaluateRAGResponse(payload: RAGEvaluationRequest): Promise<RAGEvaluationResponse> {
-    return this.makeRequest("/api/v1/rag/evaluate"{
+    return this.makeRequest("/api/v1/rag/evaluate", {
       method: "POST",
       body: JSON.stringify(payload)
     });
   }</RAGEvaluationResponse>
   async expandRAGQuery(payload: RAGExpansionRequest): Promise<RAGExpansionResponse> {
-    return this.makeRequest("/api/v1/rag/expansio\n{
+    return this.makeRequest("/api/v1/rag/expansion", {
       method: "POST",
       body: JSON.stringify(payload)
     });

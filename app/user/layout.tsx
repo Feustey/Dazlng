@@ -17,7 +17,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
   const router = useRouter();
   const pathname = usePathname();
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
-</UserLayoutProps>
+  const t = useTranslations();
   const handleLogout = async (): Promise<void> => {
     try {
       await signOut();
@@ -30,9 +30,9 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
 
   // Page de chargement
   if (user === undefined) {
-    return (</void>
-      <div></div>
-        <div></div>
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
           <p className="text-gray-600">{t("user.chargement")}</p>
         </div>
@@ -44,17 +44,17 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
   }
 
   const navItems = [
-    { href: "/user/dashboard"label: "Dashboard", color: "indigo", icon: "📊" }
-    { href: "/user/node"label: "{t("layout_useruseruserusermon_nud"")}"color: "purple", icon: "⚡" }
-    { href: "/user/dazia"label: "{t("layout_useruseruseruserdazia_ia")}"color: "yellow", icon: "🤖" }
-    { href: "/user/simulatio\nlabel: "Simulatio\n, color: "orange", icon: "🔬" }
-    { href: "/user/rag-insights"label: "{t("layout_useruseruseruserrag_insights")}"color: "blue", icon: "🧠" }
-    { href: "/user/optimize"label: "Optimisatio\n, color: "emerald", icon: "🚀" }
+    { href: "/user/dashboard", label: "Dashboard", color: "indigo", icon: "📊" },
+    { href: "/user/node", label: "Mon nœud", color: "purple", icon: "⚡" },
+    { href: "/user/dazia", label: "Dazia IA", color: "yellow", icon: "🤖" },
+    { href: "/user/simulation", label: "Simulation", color: "orange", icon: "🔬" },
+    { href: "/user/rag-insights", label: "RAG Insights", color: "blue", icon: "🧠" },
+    { href: "/user/optimize", label: "Optimisation", color: "emerald", icon: "🚀" }
   ];
 
   const accountMenuItems = [
-    { href: "/user/subscriptions"label: "Abonnements", icon: "💳"color: "blue" }
-    { href: "/user/settings"label: "{t("layout_useruseruseruserparamtres"")}"icon: "⚙️"color: "gray" }
+    { href: "/user/subscriptions", label: "Abonnements", icon: "💳", color: "blue" },
+    { href: "/user/settings", label: "Paramètres", icon: "⚙️", color: "gray" }
   ];
 
   const getTabStyles = (item: typeof navItems[0], isActive: boolean): string => {
@@ -64,7 +64,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
           return "text-indigo-600 bg-indigo-50 border-indigo-200";
         case "purple":
           return "text-purple-600 bg-purple-50 border-purple-200";
-        case "gree\n:
+        case "green":
           return "text-green-600 bg-green-50 border-green-200";
         case "emerald":
           return "text-emerald-600 bg-emerald-50 border-emerald-200";
@@ -87,7 +87,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
         return "bg-indigo-600";
       case "purple":
         return "bg-purple-600";
-      case "gree\n:
+      case "green":
         return "bg-green-600";
       case "emerald":
         return "bg-emerald-600";
@@ -108,9 +108,9 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
 
   return (
     <div>
-      {/* Header redesigné avec logo et navigation moderne  */}</div>
-      <header></header>
-        <div></div>
+      {/* Header redesigné avec logo et navigation moderne  */}
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div>
             {/* Section gauche : Menu burger + Logo  */}</div>
             <div>
@@ -205,7 +205,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
           {children}</div>
         </div>
       </main>
-    </div>);;
+    </div>);
 
 export default UserLayout;
 

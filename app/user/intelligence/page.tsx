@@ -54,7 +54,7 @@ const { t } = useAdvancedTranslation("intelligence");
   const [prediction, setPrediction] = useState<Prediction | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<\network" | "predictio\n>(\network");
+  const [activeTab, setActiveTab] = useState<"network" | "prediction">("network");
 
   const analyzeNetwork = async () => {
     if (!pubkey) {
@@ -67,14 +67,16 @@ const { t } = useAdvancedTranslation("intelligence");
     setNetworkAnalysis(null);
 
     try {
-      const response = await fetch("/api/proxy/intelligence/network/analyze"{
+      const response = await fetch("/api/proxy/intelligence/network/analyze", {
         method: "POST",
         headers: {
-          "Authorizatio\n: `Bearer ${session?.access_token}`"{t("page_useruseruserusercontenttype"")}": "application/jso\n
+          "Authorization": `Bearer ${session?.access_token}`,
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          context: "{t("page_useruseruseruseranalyse_complte_du")}"include_global_metrics: true
-          include_bottlenecks: true
+          context: "analyse_complète_du_réseau",
+          include_global_metrics: true,
+          include_bottlenecks: true,
           include_recommendations: true
         })
       });
@@ -108,14 +110,16 @@ const { t } = useAdvancedTranslation("intelligence");
     setPrediction(null);
 
     try {
-      const response = await fetch("/api/proxy/intelligence/prediction/generate"{
+      const response = await fetch("/api/proxy/intelligence/prediction/generate", {
         method: "POST",
-        headers: {`
-          "Authorizatio\n: `Bearer ${session?.access_token}`"{t("page_useruseruserusercontenttype"")}": "application/jso\n
+        headers: {
+          "Authorization": `Bearer ${session?.access_token}`,
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          timeframe: "30d"include_network_effects: true
-          include_market_trends: true
+          timeframe: "30d",
+          include_network_effects: true,
+          include_market_trends: true,
           confidence_threshold: 0.7
         })
       });
@@ -150,24 +154,24 @@ const { t } = useAdvancedTranslation("intelligence");
 
   const getTrendIcon = (trend: string) => {
     switch (trend) {
-      case "up": return <TrendingUp>;</TrendingUp>
-      case "dow\n: return <TrendingUp>;</TrendingUp>
-      case "stable": return <Target>;</Target>
-      default: return <Activity>;
+      case "up": return <TrendingUp />;
+      case "down": return <TrendingUp />;
+      case "stable": return <Target />;
+      default: return <Activity />;
     }
   };
 
-  const formatNumber = (num: number): string => {`
-    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;`
+  const formatNumber = (num: number): string => {
+    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
     if (num >= 1000) return `${(num / 1000).toFixed(1)}k`;
     return num.toString();
   };
 
-  const formatPercentage = (value: number): string => {`
+  const formatPercentage = (value: number): string => {
     return `${(value * 100).toFixed(1)}%`;
   };
 
-  return (</Activity>
+  return (
     <div>
       {/* Header  */}</div>
       <div></div>
@@ -470,6 +474,6 @@ const { t } = useAdvancedTranslation("intelligence");
           </div>
         )}
       </div>
-    </div>);;
+    </div>);
 
 export default IntelligencePage; `
